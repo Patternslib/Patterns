@@ -1,11 +1,11 @@
 /**
-* Patterns selectbox - Expose select option
-* for (un)checking.
-*
-* Copyright 2012-2014 Simplon B.V. - Wichert Akkerman
-* Copyright 2012 JC Brand
-* Copyright 2012-2013 Florian Friesdorf
-*/
+ * Patterns selectbox - Expose select option
+ * for (un)checking.
+ *
+ * Copyright 2012-2014 Simplon B.V. - Wichert Akkerman
+ * Copyright 2012 JC Brand
+ * Copyright 2012-2013 Florian Friesdorf
+ */
 
 import $ from "jquery";
 import registry from "../../core/registry";
@@ -14,9 +14,9 @@ var selectbox = {
     name: "selectbox",
     trigger: ".pat-select",
 
-    init: function($el) {
+    init: function ($el) {
         var $forms = $();
-        $el.each(function() {
+        $el.each(function () {
             if (this.form !== null) {
                 var $form = $(this.form);
                 if ($form.data("pat-selectbox.reset")) return;
@@ -26,7 +26,7 @@ var selectbox = {
         });
 
         $el.find("select:not([multiple])")
-            .each(function() {
+            .each(function () {
                 var $el = $(this);
                 // create parent span if not direct child of a label
                 if ($el.parent("label").length === 0) $el.wrap("<span />");
@@ -37,29 +37,27 @@ var selectbox = {
         $forms.on("reset.pat-selectbox", selectbox.onFormReset);
     },
 
-    destroy: function($el) {
+    destroy: function ($el) {
         return $el.off(".pat-selectbox");
     },
 
-    onFormReset: function() {
+    onFormReset: function () {
         // This event is triggered before the form is reset, and we need
         // the post-reset state to update our pattern. Use a small delay
         // to fix this.
         var form = this;
-        setTimeout(function() {
-            $("select:not([multiple])", form).each(
-                selectbox.onChangeSelect
-            );
+        setTimeout(function () {
+            $("select:not([multiple])", form).each(selectbox.onChangeSelect);
         }, 50);
     },
 
-    onChangeSelect: function() {
+    onChangeSelect: function () {
         var $select = $(this);
         $select
             .parent()
             .attr("data-option", $select.find("option:selected").text());
         $select.parent().attr("data-option-value", $select.val());
-    }
+    },
 };
 
 registry.register(selectbox);

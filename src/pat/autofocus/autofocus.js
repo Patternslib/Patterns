@@ -6,13 +6,11 @@
 import $ from "jquery";
 import registry from "../../core/registry";
 
-
 var autofocus = {
     name: "autofocus",
     trigger: ":input.pat-autofocus,:input[autofocus]",
 
     init: function init($el) {
-
         this.setFocus(this.trigger);
         $(document).on("patterns-injected", function (e, data) {
             autofocus.setFocus($(e.target).find(autofocus.trigger));
@@ -23,12 +21,13 @@ var autofocus = {
     },
     setFocus: function (target) {
         var $all = $(target);
-        var $visible = $all.filter(function(index) {
+        var $visible = $all.filter(function (index) {
             if ($(this).is(":visible")) return true;
-        })
-        setTimeout(function() {$visible.get(0) && $visible.get(0).focus();}, 10);
-    }
-
+        });
+        setTimeout(function () {
+            $visible.get(0) && $visible.get(0).focus();
+        }, 10);
+    },
 };
 
 registry.register(autofocus);

@@ -23,9 +23,9 @@ var _ = {
     bounds: [0, 0],
     inputNames: ["x1", "y1", "x2", "y2", "w", "h"],
 
-    init: function($el, options) {
+    init: function ($el, options) {
         // initialize the elements
-        return $el.each(function() {
+        return $el.each(function () {
             var $this = $(this),
                 opts = parser.parse($this, options),
                 data = {};
@@ -46,9 +46,7 @@ var _ = {
                     data.preview.width = opts.preview.width;
                     data.preview.height = opts.preview.height;
                 } else {
-                    data.preview.width = data.preview.element
-                        .parent()
-                        .width();
+                    data.preview.width = data.preview.element.parent().width();
                     data.preview.height = data.preview.element
                         .parent()
                         .height();
@@ -93,7 +91,7 @@ var _ = {
             data.minSize = _._parseOpt(opts.minSize);
             data.maxSize = _._parseOpt(opts.maxSize);
 
-            var handler = function(c) {
+            var handler = function (c) {
                 _.onSelect(c, data);
             };
 
@@ -105,9 +103,9 @@ var _ = {
                     aspectRatio: data.aspectRatio,
                     setSelect: data.initialCoords,
                     minSize: data.minSize,
-                    maxSize: data.maxSize
+                    maxSize: data.maxSize,
                 },
-                function() {
+                function () {
                     data.api = this;
                     _.onSelect(this.tellSelect(), data);
                 }
@@ -115,7 +113,7 @@ var _ = {
         });
     },
 
-    _setupInput: function($form, prefix, name) {
+    _setupInput: function ($form, prefix, name) {
         var input = $form.find("input[name=" + prefix + name + "]");
         if (input.length === 0)
             input = $(
@@ -124,7 +122,7 @@ var _ = {
         return input;
     },
 
-    _parseOpt: function(val) {
+    _parseOpt: function (val) {
         var ret = val
             .replace(/\s{2,}/g, " ")
             .trim()
@@ -133,12 +131,12 @@ var _ = {
         return ret;
     },
 
-    onSelect: function(c, data) {
+    onSelect: function (c, data) {
         if (data.preview) _.updatePreview(c, data);
         _.updateInputs(c, data);
     },
 
-    updatePreview: function(c, data) {
+    updatePreview: function (c, data) {
         if (!data.api) return;
         if (parseInt(c.w, 10) > 0) {
             var rx = data.preview.width / c.w,
@@ -149,12 +147,12 @@ var _ = {
                 width: Math.round(rx * bounds[0]) + "px",
                 height: Math.round(ry * bounds[1]) + "px",
                 marginLeft: "-" + Math.round(rx * c.x) + "px",
-                marginTop: "-" + Math.round(ry * c.y) + "px"
+                marginTop: "-" + Math.round(ry * c.y) + "px",
             });
         }
     },
 
-    updateInputs: function(c, data) {
+    updateInputs: function (c, data) {
         if (c && c.w && parseInt(c.w, 10) > 0) {
             data.inputs.x1.attr("value", c.x);
             data.inputs.y1.attr("value", c.y);
@@ -163,7 +161,7 @@ var _ = {
             data.inputs.w.attr("value", c.w);
             data.inputs.h.attr("value", c.h);
         }
-    }
+    },
 };
 
 registry.register(_);

@@ -28,8 +28,8 @@ var carousel = {
     name: "carousel",
     trigger: ".pat-carousel",
 
-    init: function($el, opts) {
-        return $el.each(function() {
+    init: function ($el, opts) {
+        return $el.each(function () {
             var $carousel = $(this),
                 options = parser.parse($carousel, opts),
                 settings = {};
@@ -50,7 +50,7 @@ var carousel = {
         });
     },
 
-    setup: function($el, settings) {
+    setup: function ($el, settings) {
         var loaded = true,
             $images = $el.find("img"),
             img,
@@ -61,7 +61,7 @@ var carousel = {
         }
         if (!loaded) {
             log.debug("Delaying carousel setup until images have loaded.");
-            setTimeout(function() {
+            setTimeout(function () {
                 carousel.setup($el, settings);
             }, 50);
             return;
@@ -71,12 +71,11 @@ var carousel = {
 
         $carousel
             .children()
-            .each(function(index) {
+            .each(function (index) {
                 if (!this.id) return;
 
                 var $links = $("a[href=#" + this.id + "]");
-                if (index === control.currentPage)
-                    $links.addClass("current");
+                if (index === control.currentPage) $links.addClass("current");
                 else $links.removeClass("current");
                 $links.on(
                     "click.pat-carousel",
@@ -95,7 +94,7 @@ var carousel = {
             );
     },
 
-    _loadPanelImages: function(slider, page) {
+    _loadPanelImages: function (slider, page) {
         var $img;
         log.info("Loading lazy images on panel " + page);
         slider.$items
@@ -103,30 +102,30 @@ var carousel = {
             .find("img")
             .addBack()
             .filter("[data-src]")
-            .each(function() {
+            .each(function () {
                 $img = $(this);
                 this.src = $img.attr("data-src");
                 $img.removeAttr("data-src");
             });
     },
 
-    onPanelLinkClick: function(event) {
+    onPanelLinkClick: function (event) {
         event.data.control.gotoPage(event.data.index, false);
         event.preventDefault();
     },
 
-    onInitialized: function(event, slider) {
+    onInitialized: function (event, slider) {
         carousel._loadPanelImages(slider, slider.options.startPanel);
         carousel._loadPanelImages(slider, slider.options.startPanel + 1);
         carousel._loadPanelImages(slider, 0);
         carousel._loadPanelImages(slider, slider.pages + 1);
     },
 
-    onSlideInit: function(event, slider) {
+    onSlideInit: function (event, slider) {
         carousel._loadPanelImages(slider, slider.targetPage);
     },
 
-    onSlideComplete: function(event, slider) {
+    onSlideComplete: function (event, slider) {
         var $panel_links = event.data;
         $panel_links.removeClass("current");
         if (slider.$targetPage[0].id)
@@ -134,7 +133,7 @@ var carousel = {
                 .filter("[href=#" + slider.$targetPage[0].id + "]")
                 .addClass("current");
         carousel._loadPanelImages(slider, slider.targetPage + 1);
-    }
+    },
 };
 
 registry.register(carousel);

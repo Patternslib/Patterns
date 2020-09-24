@@ -1,24 +1,24 @@
 import pattern from "./image-crop";
 import $ from "jquery";
 
-describe("pat-image-crop", function() {
-    beforeEach(function() {
+describe("pat-image-crop", function () {
+    beforeEach(function () {
         $("<div/>", { id: "lab" }).appendTo(document.body);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         $("#lab").remove();
     });
 
-    describe("setup", function() {
-        it("Option parsing", function() {
+    describe("setup", function () {
+        it("Option parsing", function () {
             var opts = pattern._parseOpt(" 20  300     10  15 ");
 
             expect(opts.length).toBe(4);
             expect(opts).toEqual([20, 300, 10, 15]);
         });
 
-        it("Input setup - input already exists", function() {
+        it("Input setup - input already exists", function () {
             $("#lab").html('<form><input type="text" name="x1" /></form>');
 
             var form = $("#lab form");
@@ -28,7 +28,7 @@ describe("pat-image-crop", function() {
             expect(input.length).toBe(1);
         });
 
-        it("Input setup - input doesn't exist", function() {
+        it("Input setup - input doesn't exist", function () {
             $("#lab").html('<form><input type="text" name="x1" /></form>');
 
             var form = $("#lab form");
@@ -39,18 +39,18 @@ describe("pat-image-crop", function() {
         });
     });
 
-    describe("Position Update", function() {
+    describe("Position Update", function () {
         var data = {
             preview: {
                 width: 50,
-                height: 50
+                height: 50,
             },
             inputs: {},
             api: {
-                getBounds: function() {
+                getBounds: function () {
                     return [500, 600];
-                }
-            }
+                },
+            },
         };
 
         var c = {
@@ -59,10 +59,10 @@ describe("pat-image-crop", function() {
             x: 100,
             y: 300,
             x2: 300,
-            y2: 600
+            y2: 600,
         };
 
-        beforeEach(function() {
+        beforeEach(function () {
             data.preview.element = $("<div>");
             data.inputs.x1 = $('<input type="hidden" name="p_x1" />');
             data.inputs.x2 = $('<input type="hidden" name="p_x2" />');
@@ -72,7 +72,7 @@ describe("pat-image-crop", function() {
             data.inputs.h = $('<input type="hidden" name="p_h" />');
         });
 
-        it("Update preview", function() {
+        it("Update preview", function () {
             pattern.updatePreview(c, data);
 
             expect(data.preview.element.width()).toBe(125);
@@ -81,7 +81,7 @@ describe("pat-image-crop", function() {
             expect(data.preview.element.css("marginTop")).toBe("-50px");
         });
 
-        it("Update inputs", function() {
+        it("Update inputs", function () {
             pattern.updateInputs(c, data);
 
             expect(data.inputs.x1.val()).toBe("100");
@@ -92,7 +92,7 @@ describe("pat-image-crop", function() {
             expect(data.inputs.h.val()).toBe("300");
         });
 
-        it("Update from user interaction", function() {
+        it("Update from user interaction", function () {
             var spy_updatePreview = spyOn(pattern, "updatePreview");
             var spy_updateInputs = spyOn(pattern, "updateInputs");
 

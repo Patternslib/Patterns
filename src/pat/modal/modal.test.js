@@ -1,23 +1,23 @@
 import pattern from "./modal";
 import $ from "jquery";
 
-describe("pat-modal", function() {
-    beforeEach(function() {
+describe("pat-modal", function () {
+    beforeEach(function () {
         $("<div/>", { id: "lab" }).appendTo(document.body);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         $("#lab").remove();
         $("body").removeClass("modal-active");
     });
 
-    describe("init", function() {
-        it("Modal with single element", function() {
+    describe("init", function () {
+        it("Modal with single element", function () {
             $("#lab").html(
                 [
                     '<div class="pat-modal" id="modal">',
                     "  <p>Modal content</p>",
-                    "</div>"
+                    "</div>",
                 ].join("\n")
             );
             expect($("body").hasClass("modal-active")).toBeFalsy();
@@ -27,19 +27,17 @@ describe("pat-modal", function() {
             expect($modal.find(".header").text()).toBe("Close");
             expect($modal.find(".header .close-panel").length).toBeTruthy();
             expect($modal.find(".panel-content").length).toBeTruthy();
-            expect($modal.find(".panel-content").text()).toBe(
-                "Modal content"
-            );
+            expect($modal.find(".panel-content").text()).toBe("Modal content");
             expect($("body").hasClass("modal-active")).toBeTruthy();
         });
 
-        it("Modal with header ", function() {
+        it("Modal with header ", function () {
             $("#lab").html(
                 [
                     '<div class="pat-modal" id="modal">',
                     "  <h3>Modal header</h3>",
                     "  <p>Modal content</p>",
-                    "</div>"
+                    "</div>",
                 ].join("\n")
             );
             expect($("body").hasClass("modal-active")).toBeFalsy();
@@ -47,13 +45,11 @@ describe("pat-modal", function() {
             pattern.init($modal);
             expect($modal.find(".header").text()).toBe("Modal headerClose");
             expect($modal.find(".header .close-panel").length).toBeTruthy();
-            expect($modal.find(".panel-content").text()).toBe(
-                "Modal content"
-            );
+            expect($modal.find(".panel-content").text()).toBe("Modal content");
             expect($("body").hasClass("modal-active")).toBeTruthy();
         });
 
-        it("Modal with multiple content items ", function() {
+        it("Modal with multiple content items ", function () {
             $("#lab").html(
                 [
                     '<div class="pat-modal" id="modal">',
@@ -61,7 +57,7 @@ describe("pat-modal", function() {
                     "  <p>Modal content</p>",
                     "  <h4>Subheader</h4>",
                     "  <p>More content</p>",
-                    "</div>"
+                    "</div>",
                 ].join("\n")
             );
             expect($("body").hasClass("modal-active")).toBeFalsy();
@@ -74,7 +70,7 @@ describe("pat-modal", function() {
             expect($("body").hasClass("modal-active")).toBeTruthy();
         });
 
-        it("Modal with a form that has the pat-modal CSS class", function() {
+        it("Modal with a form that has the pat-modal CSS class", function () {
             var $modal, // main modal container
                 $modalLink; // link that triggers the modal
 
@@ -82,7 +78,7 @@ describe("pat-modal", function() {
                 [
                     '<a id="modalLink" class="pat-modal"',
                     '   href="../demo/bug_modal/modal-sources.html">Open a modal',
-                    "   containing a form with pat-modal CSS class.</a>"
+                    "   containing a form with pat-modal CSS class.</a>",
                 ].join("/n")
             );
 
@@ -109,12 +105,12 @@ describe("pat-modal", function() {
             expect($modal.length).toBeGreaterThan(0);
         });
 
-        it("Modal with single element that specifies a custom close button string", function() {
+        it("Modal with single element that specifies a custom close button string", function () {
             $("#lab").html(
                 [
                     '<div class="pat-modal" id="modal" data-pat-modal="close-text: Shutdown">',
                     "  <p>Modal content</p>",
-                    "</div>"
+                    "</div>",
                 ].join("\n")
             );
             expect($("body").hasClass("modal-active")).toBeFalsy();

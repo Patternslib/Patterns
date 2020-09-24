@@ -1,33 +1,30 @@
 import pattern from "./switch";
 import $ from "jquery";
 
-describe("pat-switch", function() {
-    beforeEach(function() {
+describe("pat-switch", function () {
+    beforeEach(function () {
         $("<div/>", { id: "lab" }).appendTo(document.body);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         $("#lab").remove();
     });
 
-    describe("When the switch is clicked", function() {
-        describe("if the switch is a hyperlink", function() {
-            it("the default click action is prevented", function() {
+    describe("When the switch is clicked", function () {
+        describe("if the switch is a hyperlink", function () {
+            it("the default click action is prevented", function () {
                 var $el = $("<a/>", {
-                    id: "anchor",
-                    href: "#anchor",
-                    text: "Switch",
-                    class: "pat-switch",
-                    "data-pat-switch": "#lab on off"
+                    "id": "anchor",
+                    "href": "#anchor",
+                    "text": "Switch",
+                    "class": "pat-switch",
+                    "data-pat-switch": "#lab on off",
                 }).appendTo(document.body);
                 var ev = {
                     type: "click",
-                    preventDefault: function() {}
+                    preventDefault: function () {},
                 };
-                var spy_onClick = spyOn(
-                    pattern,
-                    "_onClick"
-                ).and.callThrough();
+                var spy_onClick = spyOn(pattern, "_onClick").and.callThrough();
                 var spy_go = spyOn(pattern, "_go");
                 var spy_preventDefault = spyOn(ev, "preventDefault");
                 pattern.init($el);
@@ -39,23 +36,20 @@ describe("pat-switch", function() {
             });
         });
 
-        describe("if the switch is not a hyperlink", function() {
-            it("the default click action is not prevented", function() {
+        describe("if the switch is not a hyperlink", function () {
+            it("the default click action is not prevented", function () {
                 var $el = $("<button/>", {
-                    id: "anchor",
-                    text: "Switch",
-                    class: "pat-switch",
-                    "data-pat-switch": "#lab on off"
+                    "id": "anchor",
+                    "text": "Switch",
+                    "class": "pat-switch",
+                    "data-pat-switch": "#lab on off",
                 }).appendTo(document.body);
 
                 var ev = {
                     type: "click",
-                    preventDefault: function() {}
+                    preventDefault: function () {},
                 };
-                var spy_onClick = spyOn(
-                    pattern,
-                    "_onClick"
-                ).and.callThrough();
+                var spy_onClick = spyOn(pattern, "_onClick").and.callThrough();
                 var spy_go = spyOn(pattern, "_go");
                 var spy_preventDefault = spyOn(ev, "preventDefault");
                 pattern.init($el);
@@ -68,27 +62,27 @@ describe("pat-switch", function() {
         });
     });
 
-    describe("_validateOptions", function() {
-        it("Bad options", function() {
+    describe("_validateOptions", function () {
+        it("Bad options", function () {
             var options = pattern._validateOptions([{}]);
             expect(options).toEqual([]);
         });
 
-        it("Mix valid and invalid options", function() {
+        it("Mix valid and invalid options", function () {
             var options = pattern._validateOptions([
                 { selector: "#victim", add: "purple" },
-                {}
+                {},
             ]);
             expect(options.length).toBe(1);
             expect(options[0]).toEqual({
                 selector: "#victim",
-                add: "purple"
+                add: "purple",
             });
         });
     });
 
-    describe("_update", function() {
-        it("No targets", function() {
+    describe("_update", function () {
+        it("No targets", function () {
             var spy_addClass = spyOn($.fn, "addClass");
             var spy_removeClass = spyOn($.fn, "removeClass");
             pattern._update(".missing");
@@ -96,56 +90,56 @@ describe("pat-switch", function() {
             expect(spy_removeClass).not.toHaveBeenCalled();
         });
 
-        it("Remove basic class", function() {
+        it("Remove basic class", function () {
             $("#lab").html("<div class='on'/>");
             pattern._update("#lab div", "on");
             expect($("#lab div").hasClass("on")).toBe(false);
         });
 
-        it("Remove wildcard postfix class", function() {
+        it("Remove wildcard postfix class", function () {
             $("#lab").html("<div class='icon-small'/>");
             pattern._update("#lab div", "icon-*");
             expect($("#lab div").attr("class")).toBeFalsy();
         });
 
-        it("Add class", function() {
+        it("Add class", function () {
             $("#lab").html("<div/>");
             pattern._update("#lab div", null, "icon-alert");
             expect($("#lab div").attr("class")).toBe("icon-alert");
         });
 
-        it("Send pat-update event", function() {
+        it("Send pat-update event", function () {
             $("#lab").html("<div id='victim' class='always'/>");
             var spy_trigger = spyOn($.fn, "trigger");
             pattern._update("#lab div", null, "icon-alert");
             expect(spy_trigger).toHaveBeenCalledWith("pat-update", {
-                pattern: "switch"
+                pattern: "switch",
             });
         });
     });
 
-    describe("jQuery plugin usage", function() {
-        describe("Initialise via jQuery", function() {
-            it("Specify defaults via API", function() {
+    describe("jQuery plugin usage", function () {
+        describe("Initialise via jQuery", function () {
+            it("Specify defaults via API", function () {
                 $("#lab").html("<button>Click me</button>");
                 $("#lab button").patternSwitch({
                     selector: "#victim",
-                    add: "pink"
+                    add: "pink",
                 });
                 var $trigger = $("#lab button");
                 expect($trigger.data("patternSwitch")).toEqual([
-                    { store: "none", selector: "#victim", add: "pink" }
+                    { store: "none", selector: "#victim", add: "pink" },
                 ]);
             });
 
-            it("Invalid defaults via API", function() {
+            it("Invalid defaults via API", function () {
                 $("#lab").html("<button>Click me</button>");
                 $("#lab button").patternSwitch({ selector: "#victim" });
                 var $trigger = $("#lab button");
                 expect($trigger.data("patternSwitch")).toBeFalsy();
             });
 
-            it("Parse defaults from DOM", function() {
+            it("Parse defaults from DOM", function () {
                 $("#lab").html(
                     "<button data-pat-switch='#victim foo bar'>Click me</button>"
                 );
@@ -156,12 +150,12 @@ describe("pat-switch", function() {
                         store: "none",
                         selector: "#victim",
                         remove: "foo",
-                        add: "bar"
-                    }
+                        add: "bar",
+                    },
                 ]);
             });
 
-            it("Setup click event handler", function() {
+            it("Setup click event handler", function () {
                 // Note that this relies on jQuery implementation details to check
                 // for registered event handlers.
                 $("#lab").html(
@@ -174,7 +168,7 @@ describe("pat-switch", function() {
             });
         });
 
-        it("Execute changes", function() {
+        it("Execute changes", function () {
             $("#lab")
                 .append(
                     "<button data-pat-switch='#victim foo'>Click me</button>"
@@ -185,8 +179,8 @@ describe("pat-switch", function() {
             expect($("#victim").hasClass("foo")).toBeFalsy();
         });
 
-        describe("Destroy all hooks", function() {
-            it("Setup click event handler", function() {
+        describe("Destroy all hooks", function () {
+            it("Setup click event handler", function () {
                 // Note that this relies on jQuery implementation details to check
                 // for registered event handlers.
                 $("#lab").html(

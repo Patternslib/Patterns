@@ -4,19 +4,19 @@
  * Copyright 2018-2020 Johannes Raggam, Alexander Pilz, Syslab.com GmbH
  *
  * Basic push support connects to a push server and an exchange prefix.
- * it reads the name of the server and the exchange prefix from entries 
+ * it reads the name of the server and the exchange prefix from entries
  * in the meta header of the page
- * Then it sets up two bindings to two different exchanges, one to receive 
- * push markers and one to receive desktop notifications. 
+ * Then it sets up two bindings to two different exchanges, one to receive
+ * push markers and one to receive desktop notifications.
  * It assumes that the exchanges are named [prefix]_event and [prefix]_notification
- * 
+ *
  * If a message comes in on the [prefix]_event exchange, a javascript push event is triggered
- * which is listened to by all dom elements with class .pat-push on them. 
+ * which is listened to by all dom elements with class .pat-push on them.
  * pat-push will then compare the sent message with its own push_marker value and execute on match.
  *
  * If a message comes in on the [prefix]_notification exchange, a desktop notification is triggered
  * which will show a desktop marker.
- *  
+ *
  * User filtering
  * all subscriptions are topic subscriptions and will only bind to topics that start with the userid
  * that way, users will only receive updates explicitly directed to them.
@@ -33,13 +33,13 @@ import $ from "jquery";
 import { Client } from "@stomp/stompjs";
 
 const push_kit = {
-
     init() {
-        const push_url = $("meta[name=patterns-push-server-url]").attr("content");
-        const push_exchange = $("meta[name=patterns-push-exchange-base-name]").attr("content");
-        const push_user_id = $("meta[name=patterns-push-user-id]").attr("content");
-        const push_login = $("meta[name=patterns-push-login]").attr("content");
-        const push_pass = $("meta[name=patterns-push-password]").attr("content");
+        const push_url = $("meta[name=patterns-push-server-url]").attr("content"); // prettier-ignore
+        const push_exchange = $("meta[name=patterns-push-exchange-base-name]").attr("content"); // prettier-ignore
+        const push_user_id = $("meta[name=patterns-push-user-id]").attr("content"); // prettier-ignore
+        const push_login = $("meta[name=patterns-push-login]").attr("content"); // prettier-ignore
+        const push_pass = $("meta[name=patterns-push-password]").attr("content"); // prettier-ignore
+
         if (!push_url || !push_exchange) {
             return;
         }
@@ -110,7 +110,7 @@ const push_kit = {
         // If not yet permitted, we need to ask the user for permission.
         // Note, Chrome does not implement the permission static property
         // So we have to check for NOT 'denied' instead of 'default'
-        if (! Notification.permission in ["denied", "granted"]) {
+        if (!Notification.permission in ["denied", "granted"]) {
             Notification.requestPermission((permission) => {
                 // Whatever the user answers, we make sure Chrome stores the information
                 if (!("permission" in Notification)) {
@@ -123,15 +123,14 @@ const push_kit = {
         if (Notification.permission === "granted") {
             // If it's okay let's create a notification
             const message = {
-                body: text
-            }
+                body: text,
+            };
             if (img) {
                 message.icon = img;
             }
             new Notification("Update", message);
         }
-    }
-
+    },
 };
 
 push_kit.init();

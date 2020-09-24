@@ -2,7 +2,6 @@ import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 
-
 var parser = new Parser("sortable");
 parser.addArgument("selector", "li");
 parser.addArgument("drag-class", "dragged"); // Class to apply to item that is being dragged.
@@ -15,16 +14,14 @@ export default Base.extend({
     name: "sortable",
     trigger: ".pat-sortable",
 
-    init: function($el) {
+    init: function ($el) {
         this.$form = this.$el.closest("form");
         this.options = parser.parse(this.$el, false);
-        this.recordPositions()
-            .addHandles()
-            .initScrolling();
+        this.recordPositions().addHandles().initScrolling();
         this.$el.on("pat-update", this.onPatternUpdate.bind(this));
     },
 
-    onPatternUpdate: function(ev, data) {
+    onPatternUpdate: function (ev, data) {
         /* Handler which gets called when pat-update is triggered within
          * the .pat-sortable element.
          */
@@ -36,29 +33,29 @@ export default Base.extend({
         return true;
     },
 
-    recordPositions: function() {
+    recordPositions: function () {
         // use only direct descendants to support nested lists
         this.$sortables = this.$el.children().filter(this.options.selector);
-        this.$sortables.each(function(idx, $el) {
+        this.$sortables.each(function (idx, $el) {
             $(this).data("patterns.sortable", { position: idx });
         });
         return this;
     },
 
-    addHandles: function() {
+    addHandles: function () {
         /* Add handles and make them draggable for HTML5 and IE8/9
          * it has to be an "a" tag (or img) to make it draggable in IE8/9
          */
-        var $sortables_without_handles = this.$sortables.filter(function() {
+        var $sortables_without_handles = this.$sortables.filter(function () {
             return $(this).find(".sortable-handle").length === 0;
         });
-        var $handles = $(
-            '<a href="#" class="sortable-handle">⇕</a>'
-        ).appendTo($sortables_without_handles);
+        var $handles = $('<a href="#" class="sortable-handle">⇕</a>').appendTo(
+            $sortables_without_handles
+        );
         if ("draggable" in document.createElement("span")) {
             $handles.attr("draggable", true);
         } else {
-            $handles.on("selectstart", function(ev) {
+            $handles.on("selectstart", function (ev) {
                 ev.preventDefault();
             });
         }
@@ -67,13 +64,11 @@ export default Base.extend({
         return this;
     },
 
-    initScrolling: function() {
+    initScrolling: function () {
         // invisible scroll activation areas
         var scrollup = $('<div id="pat-scroll-up">&nbsp;</div>'),
             scrolldn = $('<div id="pat-scroll-dn">&nbsp;</div>'),
-            scroll = $()
-                .add(scrollup)
-                .add(scrolldn);
+            scroll = $().add(scrollup).add(scrolldn);
         scrollup.css({ top: 0 });
         scrolldn.css({ bottom: 0 });
         scroll.css({
@@ -81,9 +76,9 @@ export default Base.extend({
             zIndex: 999999,
             height: 32,
             left: 0,
-            right: 0
+            right: 0,
         });
-        scroll.on("dragover", function(ev) {
+        scroll.on("dragover", function (ev) {
             ev.preventDefault();
             if ($("html,body").is(":animated")) {
                 return;
@@ -96,7 +91,7 @@ export default Base.extend({
         return this;
     },
 
-    onDragEnd: function(ev) {
+    onDragEnd: function (ev) {
         var $dragged = $(ev.target).parent();
         $dragged.removeClass(this.options.dragClass);
         this.$sortables.off(".pat-sortable");
@@ -111,7 +106,7 @@ export default Base.extend({
         }
     },
 
-    submitChangedAmount: function($dragged) {
+    submitChangedAmount: function ($dragged) {
         /* If we are in a form, then submit the form with the right amount
          * that the sortable element was moved up or down.
          */
@@ -135,7 +130,7 @@ export default Base.extend({
         return change;
     },
 
-    onDragStart: function(ev) {
+    onDragStart: function (ev) {
         var $handle = $(ev.target),
             $dragged = $handle.parent(),
             that = this;
@@ -144,11 +139,7 @@ export default Base.extend({
             ev.originalEvent.dataTransfer.setData("Text", "");
             ev.originalEvent.dataTransfer.effectAllowed = ["move"];
             if ("setDragImage" in ev.originalEvent.dataTransfer) {
-                ev.originalEvent.dataTransfer.setDragImage(
-                    $dragged[0],
-                    0,
-                    0
-                );
+                ev.originalEvent.dataTransfer.setDragImage($dragged[0], 0, 0);
             }
         }
         $dragged.addClass(this.options.dragClass);
@@ -156,7 +147,7 @@ export default Base.extend({
         // Scroll the list if near the borders
         this.$el.on(
             "dragover.pat-sortable",
-            function(ev) {
+            function (ev) {
                 ev.preventDefault();
                 if (this.$el.is(":animated")) return;
 
@@ -181,12 +172,10 @@ export default Base.extend({
 
         this.$sortables.on(
             "dragover.pat-sortable",
-            function(ev) {
+            function (ev) {
                 // list elements are only drop targets when one element of the
                 // list is being dragged. avoids dragging between lists.
-                var $dropTarget = $(ev.target).closest(
-                        that.options.selector
-                    ),
+                var $dropTarget = $(ev.target).closest(that.options.selector),
                     midlineY =
                         $dropTarget.safeOffset().top -
                         $(document).scrollTop() +
@@ -195,9 +184,7 @@ export default Base.extend({
                 if ($dropTarget.is($dragged)) {
                     return;
                 }
-                $dropTarget.removeClass(
-                    "drop-target-above drop-target-below"
-                );
+                $dropTarget.removeClass("drop-target-above drop-target-below");
                 if (ev.originalEvent.clientY > midlineY)
                     $dropTarget.addClass("drop-target-below");
                 else $dropTarget.addClass("drop-target-above");
@@ -207,14 +194,14 @@ export default Base.extend({
 
         this.$sortables.on(
             "dragleave.pat-sortable",
-            function() {
+            function () {
                 this.$sortables.removeClass(
                     "drop-target-above drop-target-below"
                 );
             }.bind(this)
         );
 
-        this.$sortables.on("drop.pat-sortable", function(ev) {
+        this.$sortables.on("drop.pat-sortable", function (ev) {
             var $dropTarget = $(ev.target).closest(that.options.selector);
             if ($dropTarget.is($dragged)) {
                 return;
@@ -227,5 +214,5 @@ export default Base.extend({
             $dropTarget.removeClass("drop-target-above drop-target-below");
             ev.preventDefault();
         });
-    }
+    },
 });

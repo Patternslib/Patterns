@@ -35,9 +35,7 @@ UrlArgumentParser.prototype = {
             value;
 
         for (i = 0; i < parameters.length; i++) {
-            if (
-                (parts = this.keyvalue_pattern.exec(parameters[i])) === null
-            ) {
+            if ((parts = this.keyvalue_pattern.exec(parameters[i])) === null) {
                 key = this._decodeQS(parameters[i]);
                 value = null;
             } else {
@@ -56,12 +54,12 @@ UrlArgumentParser.prototype = {
         if (this._cache === null)
             this._cache = this._parse(window.location.search);
         return this._cache;
-    }
+    },
 };
 
 var url_parser = new UrlArgumentParser();
 
 export default {
     UrlArgumentParser: UrlArgumentParser,
-    parameters: url_parser.get.bind(url_parser)
+    parameters: url_parser.get.bind(url_parser),
 };

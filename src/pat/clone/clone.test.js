@@ -2,16 +2,16 @@ import registry from "../../core/registry";
 import "./clone";
 import $ from "jquery";
 
-describe("pat-clone", function() {
-    beforeEach(function() {
+describe("pat-clone", function () {
+    beforeEach(function () {
         $("div#lab").remove();
         $("<div/>", { id: "lab" }).appendTo(document.body);
     });
-    afterEach(function() {
+    afterEach(function () {
         $("#lab").remove();
     });
 
-    it("clones the node's first child when .add-clone is clicked and places the clone after the cloned element", function() {
+    it("clones the node's first child when .add-clone is clicked and places the clone after the cloned element", function () {
         var $lab = $("#lab");
         $lab.html(
             '<div class="pat-clone">' +
@@ -43,7 +43,7 @@ describe("pat-clone", function() {
         expect($("div.item").length).toBe(4);
     });
 
-    it("allows the trigger element to be configured", function() {
+    it("allows the trigger element to be configured", function () {
         var $lab = $("#lab");
         $lab.html(
             '<div class="pat-clone" data-pat-clone="trigger-element: .real-add-clone;">' +
@@ -60,7 +60,7 @@ describe("pat-clone", function() {
         expect($("div.item").length).toBe(2);
     });
 
-    it("allows the cloned element to be configured", function() {
+    it("allows the cloned element to be configured", function () {
         var $lab = $("#lab");
         $lab.html(
             '<div class="pat-clone" data-pat-clone="template: #my-template">' +
@@ -77,7 +77,7 @@ describe("pat-clone", function() {
         expect($("div.item:contains('Clone template')").length).toBe(2);
     });
 
-    it("will replace #{1} in element attributes with the number of the clone", function() {
+    it("will replace #{1} in element attributes with the number of the clone", function () {
         var $lab = $("#lab");
         $lab.html(
             '<div class="pat-clone">' +
@@ -87,26 +87,20 @@ describe("pat-clone", function() {
         );
         registry.scan($lab);
         expect($("p.legend").length).toBe(1);
-        expect($("p.legend:last").attr("class")).toBe(
-            "legend clone clone#{1}"
-        );
+        expect($("p.legend:last").attr("class")).toBe("legend clone clone#{1}");
 
         $lab.find(".add-clone").click();
         expect($("p.legend").length).toBe(2);
         expect($("p.legend:last").attr("name")).toBe("item-2");
-        expect($("p.legend:last").attr("class")).toBe(
-            "legend clone clone2"
-        );
+        expect($("p.legend:last").attr("class")).toBe("legend clone clone2");
 
         $lab.find(".add-clone").click();
         expect($("p.legend").length).toBe(3);
         expect($("p.legend:last").attr("name")).toBe("item-3");
-        expect($("p.legend:last").attr("class")).toBe(
-            "legend clone clone3"
-        );
+        expect($("p.legend:last").attr("class")).toBe("legend clone clone3");
     });
 
-    it("will replace #{1} in the element id with the number of the clone and remove ids without the substring #{1}", function() {
+    it("will replace #{1} in the element id with the number of the clone and remove ids without the substring #{1}", function () {
         var $lab = $("#lab");
         $lab.html(
             '<div class="pat-clone">' +
@@ -127,8 +121,8 @@ describe("pat-clone", function() {
         expect($("p.legend:last").attr("id")).toBe("world3");
     });
 
-    it('has a "clone-element" argument which is necessary when starting with pre-existing clones', function() {
-        spyOn(window, "confirm").and.callFake(function() {
+    it('has a "clone-element" argument which is necessary when starting with pre-existing clones', function () {
+        spyOn(window, "confirm").and.callFake(function () {
             return true;
         });
         var $lab = $("#lab");
@@ -159,8 +153,8 @@ describe("pat-clone", function() {
         expect($("div.item").length).toBe(0);
     });
 
-    it("will remove a clone when .remove-clone inside the clone is clicked.", function() {
-        var spy_window = spyOn(window, "confirm").and.callFake(function() {
+    it("will remove a clone when .remove-clone inside the clone is clicked.", function () {
+        var spy_window = spyOn(window, "confirm").and.callFake(function () {
             return true;
         });
         var $lab = $("#lab");
@@ -185,8 +179,8 @@ describe("pat-clone", function() {
         expect($("div.item").length).toBe(0);
     });
 
-    it("allows the remove element to be configured", function() {
-        var spy_window = spyOn(window, "confirm").and.callFake(function() {
+    it("allows the remove element to be configured", function () {
+        var spy_window = spyOn(window, "confirm").and.callFake(function () {
             return true;
         });
         var $lab = $("#lab");
@@ -211,8 +205,8 @@ describe("pat-clone", function() {
         expect($("div.item").length).toBe(0);
     });
 
-    it("will by default ask for confirmation before removing elements, but can be configured otherwise", function() {
-        var spy_confirm = spyOn(window, "confirm").and.callFake(function() {
+    it("will by default ask for confirmation before removing elements, but can be configured otherwise", function () {
+        var spy_confirm = spyOn(window, "confirm").and.callFake(function () {
             return true;
         });
         var $lab = $("#lab");

@@ -11,8 +11,8 @@ var zoom = {
     name: "zoom",
     trigger: ".pat-zoom",
 
-    init: function($el, opts) {
-        return $el.each(function() {
+    init: function ($el, opts) {
+        return $el.each(function () {
             var $block = $(this),
                 options = parser.parse($block, opts),
                 $slider,
@@ -22,7 +22,7 @@ var zoom = {
                 step: "any",
                 value: 1,
                 min: options.min,
-                max: options.max
+                max: options.max,
             });
 
             $slider
@@ -31,10 +31,10 @@ var zoom = {
         });
     },
 
-    onZoom: function(event) {
+    onZoom: function (event) {
         var $block = event.data;
         $block.css("zoom", this.value);
-    }
+    },
 };
 
 registry.register(zoom);

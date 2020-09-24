@@ -6,8 +6,8 @@ export default Base.extend({
     name: "syntax-highlight",
     trigger: ".pat-syntax-highlight",
 
-    init: function() {
+    init: function () {
         this.$el.addClass("prettyprint");
         utils.debounce(prettify.prettyPrint, 50)();
-    }
+    },
 });

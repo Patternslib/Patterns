@@ -18,7 +18,7 @@ parser.addArgument("first-day", 0);
 export default DatePicker.extend({
     name: "datetime-picker",
     trigger: ".pat-datetime-picker",
-    init: function() {
+    init: function () {
         this.options = $.extend(parser.parse(this.$el), this.options);
         var value = this.$el.val().split("T"),
             date_value = value[0] || "",
@@ -32,7 +32,7 @@ export default DatePicker.extend({
             behavior: this.options.behavior,
             format: this.options.format,
             weekNumbers: this.options.weekNumbers,
-            firstDay: this.options.firstDay
+            firstDay: this.options.firstDay,
         };
 
         this.$date = $(
@@ -42,7 +42,7 @@ export default DatePicker.extend({
             .patternDatePicker(date_options)
             .on(
                 "change",
-                function() {
+                function () {
                     if (!this.$time.val()) {
                         // Set time on date change, if time was empty.
                         this.$time.val(this.isotime());
@@ -52,9 +52,7 @@ export default DatePicker.extend({
             )
             .appendTo(this.$wrapper);
 
-        this.$time = $(
-            '<input class="time" type="time" placeholder="hh:mm"/>'
-        )
+        this.$time = $('<input class="time" type="time" placeholder="hh:mm"/>')
             .attr("value", time_value)
             .on("change", this.update.bind(this))
             .appendTo(this.$wrapper);
@@ -70,7 +68,7 @@ export default DatePicker.extend({
             )
                 .on(
                     "click",
-                    function(e) {
+                    function (e) {
                         e.preventDefault();
                         this.$date.val(this.isodate());
                         this.$time.val(this.isotime());
@@ -91,7 +89,7 @@ export default DatePicker.extend({
                 .addClass(this.options.classClearName)
                 .on(
                     "click",
-                    function(e) {
+                    function (e) {
                         e.preventDefault();
                         this.$date.val("");
                         this.$time.val("");
@@ -106,7 +104,7 @@ export default DatePicker.extend({
         this.$wrapper.insertAfter(this.$el);
     },
 
-    update: function() {
+    update: function () {
         if (this.$date.val() && this.$time.val()) {
             var date = moment(this.$date.val()).format(this.options.format);
             this.$el.val(date + "T" + this.$time.val());
@@ -116,8 +114,8 @@ export default DatePicker.extend({
         this.$el.trigger("change");
     },
 
-    isotime: function() {
+    isotime: function () {
         var now = new Date();
         return now.toTimeString().substr(0, 5);
-    }
+    },
 });

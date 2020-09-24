@@ -2,40 +2,38 @@ import pattern from "./inject";
 import $ from "jquery";
 import utils from "../../core/utils";
 
-describe("pat-inject", function() {
+describe("pat-inject", function () {
     var deferred;
 
-    var answer = function(html) {
+    var answer = function (html) {
         deferred.resolve(html, "ok", { responseText: html });
     };
 
-    beforeEach(function() {
+    beforeEach(function () {
         deferred = new $.Deferred();
         $("<div/>", { id: "lab" }).appendTo(document.body);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         $("#lab").remove();
     });
 
-    describe("The next-href argument", function() {
-        afterEach(function() {
+    describe("The next-href argument", function () {
+        afterEach(function () {
             $("#lab").empty();
         });
 
-        it("allows you to specify the href to be applied to the clicked element after injection", function() {
+        it("allows you to specify the href to be applied to the clicked element after injection", function () {
             var $a = $(
                 '<a class="pat-inject" data-pat-inject="next-href: http://patternslib.com" href="/src/pat/inject/inject-sources.html#pos-1">link</a>'
             );
             var $div = $('<div id="pos-1" />');
-            $("#lab")
-                .append($a)
-                .append($div);
+            $("#lab").append($a).append($div);
             var dummy_event = {
                 jqxhr: { responseText: "foo" },
-                isPropagationStopped: function() {
+                isPropagationStopped: function () {
                     return true;
-                }
+                },
             };
             var cfgs = pattern.extractConfig($a, {});
             pattern.verifyConfig(cfgs, $a);
@@ -45,21 +43,18 @@ describe("pat-inject", function() {
         });
     });
 
-    describe("The loading-class argument", function() {
-        afterEach(function() {
+    describe("The loading-class argument", function () {
+        afterEach(function () {
             $("#lab").empty();
         });
 
-        it("has a default value of 'injecting' and gets added to the target while content is still loading'", function() {
+        it("has a default value of 'injecting' and gets added to the target while content is still loading'", function () {
             spyOn($, "ajax").and.returnValue(deferred);
             var $a = $(
                 '<a class="pat-inject" href="test.html#someid">link</a>'
             );
             var $div = $('<div id="someid" />');
-            $("#lab")
-                .empty()
-                .append($a)
-                .append($div);
+            $("#lab").empty().append($a).append($div);
 
             var callback = jasmine.createSpy("patterns-injected");
             $(document).on("patterns-injected", callback);
@@ -81,16 +76,13 @@ describe("pat-inject", function() {
             expect(callback).toHaveBeenCalled();
         });
 
-        it("can be set to another string value which then gets added to the target while content is still loading'", function() {
+        it("can be set to another string value which then gets added to the target while content is still loading'", function () {
             spyOn($, "ajax").and.returnValue(deferred);
             var $a = $(
                 '<a class="pat-inject" data-pat-inject="loading-class: other-class;" href="test.html#someid">link</a>'
             );
             var $div = $('<div id="someid" />');
-            $("#lab")
-                .empty()
-                .append($a)
-                .append($div);
+            $("#lab").empty().append($a).append($div);
 
             pattern.init($a);
             $a.trigger("click");
@@ -108,16 +100,13 @@ describe("pat-inject", function() {
             expect($div.hasClass("other-class")).toBeFalsy();
         });
 
-        it("can be set to an empty string value so that nothing gets added to the target while content is still loading'", function() {
+        it("can be set to an empty string value so that nothing gets added to the target while content is still loading'", function () {
             spyOn($, "ajax");
             var $a = $(
                 '<a class="pat-inject" data-pat-inject="loading-class: ;" href="test.html#someid">link</a>'
             );
             var $div = $('<div id="someid" />');
-            $("#lab")
-                .empty()
-                .append($a)
-                .append($div);
+            $("#lab").empty().append($a).append($div);
             pattern.init($a);
             $a.trigger("click");
             var cfgs = pattern.extractConfig($a, {});
@@ -126,24 +115,19 @@ describe("pat-inject", function() {
         });
     });
 
-    describe("The confirm argument", function() {
-        afterEach(function() {
+    describe("The confirm argument", function () {
+        afterEach(function () {
             $("#lab").empty();
         });
 
-        it("is by default set to 'class', which means it asks for confirmation based on a class on the target", function() {
+        it("is by default set to 'class', which means it asks for confirmation based on a class on the target", function () {
             var $a = $(
                 '<a class="pat-inject" href="test.html#someid">link</a>'
             );
             var $div = $('<div id="someid" />');
-            $("#lab")
-                .empty()
-                .append($a)
-                .append($div);
+            $("#lab").empty().append($a).append($div);
             spyOn(pattern, "onTrigger").and.callThrough();
-            var spy_confirm = spyOn(window, "confirm").and.returnValue(
-                false
-            );
+            var spy_confirm = spyOn(window, "confirm").and.returnValue(false);
 
             // Test default value for parser argument
             var cfgs = pattern.extractConfig($a, {});
@@ -159,22 +143,14 @@ describe("pat-inject", function() {
             expect(spy_confirm).toHaveBeenCalled();
         });
 
-        it("can be set to 'never' to never ask for confirmation", function() {
+        it("can be set to 'never' to never ask for confirmation", function () {
             var $a = $(
                 '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: never">link</a>'
             );
             var $div = $('<div id="someid" />');
-            $("#lab")
-                .empty()
-                .append($a)
-                .append($div);
-            var spy_onTrigger = spyOn(
-                pattern,
-                "onTrigger"
-            ).and.callThrough();
-            var spy_confirm = spyOn(window, "confirm").and.returnValue(
-                false
-            );
+            $("#lab").empty().append($a).append($div);
+            var spy_onTrigger = spyOn(pattern, "onTrigger").and.callThrough();
+            var spy_confirm = spyOn(window, "confirm").and.returnValue(false);
 
             // Test default value for parser argument
             var cfgs = pattern.extractConfig($a, {});
@@ -187,22 +163,14 @@ describe("pat-inject", function() {
             expect(spy_onTrigger).toHaveBeenCalled();
         });
 
-        it("can be set to 'always' to always ask for confirmation before injecting", function() {
+        it("can be set to 'always' to always ask for confirmation before injecting", function () {
             var $a = $(
                 '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: always">link</a>'
             );
             var $div = $('<div id="someid" />');
-            $("#lab")
-                .empty()
-                .append($a)
-                .append($div);
-            var spy_onTrigger = spyOn(
-                pattern,
-                "onTrigger"
-            ).and.callThrough();
-            var spy_confirm = spyOn(window, "confirm").and.returnValue(
-                true
-            );
+            $("#lab").empty().append($a).append($div);
+            var spy_onTrigger = spyOn(pattern, "onTrigger").and.callThrough();
+            var spy_confirm = spyOn(window, "confirm").and.returnValue(true);
 
             // Test default value for parser argument
             var cfgs = pattern.extractConfig($a, {});
@@ -215,24 +183,16 @@ describe("pat-inject", function() {
             expect(spy_confirm).toHaveBeenCalled();
         });
 
-        it("can be set to 'form-data' to ask for confirmation before injecting over form fields changed by the user", function() {
+        it("can be set to 'form-data' to ask for confirmation before injecting over form fields changed by the user", function () {
             var $a = $(
                 '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: form-data">link</a>'
             );
             var $div = $(
                 '<form id="someid"><input type="text" name="name"/></form>'
             );
-            $("#lab")
-                .empty()
-                .append($a)
-                .append($div);
-            var spy_onTrigger = spyOn(
-                pattern,
-                "onTrigger"
-            ).and.callThrough();
-            var spy_confirm = spyOn(window, "confirm").and.returnValue(
-                true
-            );
+            $("#lab").empty().append($a).append($div);
+            var spy_onTrigger = spyOn(pattern, "onTrigger").and.callThrough();
+            var spy_confirm = spyOn(window, "confirm").and.returnValue(true);
 
             // Test default value for parser argument
             var cfgs = pattern.extractConfig($a, {});
@@ -251,20 +211,17 @@ describe("pat-inject", function() {
             expect(spy_onTrigger).toHaveBeenCalled();
         });
 
-        describe("The confirm-message argument", function() {
-            afterEach(function() {
+        describe("The confirm-message argument", function () {
+            afterEach(function () {
                 $("#lab").empty();
             });
 
-            it("can be used to provide a custom confirmation prompt message", function() {
+            it("can be used to provide a custom confirmation prompt message", function () {
                 var $a = $(
                     '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: always; confirm-message: Hello world">link</a>'
                 );
                 var $div = $('<div id="someid" />');
-                $("#lab")
-                    .empty()
-                    .append($a)
-                    .append($div);
+                $("#lab").empty().append($a).append($div);
                 spyOn(pattern, "onTrigger").and.callThrough();
                 var spy_confirm = spyOn(window, "confirm").and.returnValue(
                     false
@@ -283,8 +240,8 @@ describe("pat-inject", function() {
         });
     });
 
-    describe("rebaseHTML", function() {
-        it("Basic markup with DOCTYPE", function() {
+    describe("rebaseHTML", function () {
+        it("Basic markup with DOCTYPE", function () {
             expect(
                 pattern._rebaseHTML(
                     "base",
@@ -293,7 +250,7 @@ describe("pat-inject", function() {
             ).toBe("<p>This is a simple <em>test</em></p>");
         });
 
-        it("Basic markup", function() {
+        it("Basic markup", function () {
             expect(
                 pattern._rebaseHTML(
                     "base",
@@ -302,55 +259,56 @@ describe("pat-inject", function() {
             ).toBe("<p>This is a simple <em>test</em></p>");
         });
 
-        it("Recover from unclosed tags", function() {
+        it("Recover from unclosed tags", function () {
             expect(
-                pattern._rebaseHTML(
-                    "base",
-                    "<p>This is a simple <em>test</p>"
-                )
+                pattern._rebaseHTML("base", "<p>This is a simple <em>test</p>")
             ).toBe("<p>This is a simple <em>test</em></p>");
         });
 
-        it("Element without link attribute", function() {
+        it("Element without link attribute", function () {
             var spy_rebaseURL = spyOn(utils, "rebaseURL");
-            expect(
-                pattern._rebaseHTML("base", "<a>This is a test</a>")
-            ).toBe("<a>This is a test</a>");
+            expect(pattern._rebaseHTML("base", "<a>This is a test</a>")).toBe(
+                "<a>This is a test</a>"
+            );
             expect(spy_rebaseURL).not.toHaveBeenCalled();
         });
 
-        it("Element with link attribute", function() {
+        it("Element with link attribute", function () {
             expect(
                 pattern._rebaseHTML(
                     "http://example.com/test/",
                     '<a href="subsite/page.html">This is a test</a>'
                 )
-            ).toBe('<a href="http://example.com/test/subsite/page.html">This is a test</a>');
+            ).toBe(
+                '<a href="http://example.com/test/subsite/page.html">This is a test</a>'
+            );
         });
 
-        it("Automatically fix casing of attribute", function() {
+        it("Automatically fix casing of attribute", function () {
             expect(
                 pattern._rebaseHTML(
                     "http://example.com/test/",
                     '<a HrEF="subsite/page.html">This is a test</a>'
                 )
-            ).toBe('<a href="http://example.com/test/subsite/page.html">This is a test</a>');
+            ).toBe(
+                '<a href="http://example.com/test/subsite/page.html">This is a test</a>'
+            );
         });
 
-        it("Check if image is rebased correctly", function() {
+        it("Check if image is rebased correctly", function () {
             expect(
                 pattern._rebaseHTML(
                     "http://example.com/test/",
-                    '<img src="image.png">')
+                    '<img src="image.png">'
+                )
             ).toBe('<img src="http://example.com/test/image.png">');
         });
 
-        it("Leave non attribute occurences of src intact", function() {
+        it("Leave non attribute occurences of src intact", function () {
             expect(
                 pattern._rebaseHTML(
                     "base",
                     "<p>This string has    src = \"foo\" , src= bar , and SrC='foo'</p>"
-
                 )
             ).toBe(
                 "<p>This string has    src = \"foo\" , src= bar , and SrC='foo'</p>"
@@ -358,8 +316,8 @@ describe("pat-inject", function() {
         });
     });
 
-    describe("parseRawHtml", function() {
-        it("Roundtrip attributes with double quotes", function() {
+    describe("parseRawHtml", function () {
+        it("Roundtrip attributes with double quotes", function () {
             var value =
                     '{"plugins": "paste", "content_css": "/_themes/Style/tiny-body.css"}',
                 input = "<a data-tinymce-json='" + value + "'>Test</a>",
@@ -367,7 +325,7 @@ describe("pat-inject", function() {
             expect($output.find("a").attr("data-tinymce-json")).toBe(value);
         });
 
-        it("Roundtrip attributes with single quotes", function() {
+        it("Roundtrip attributes with single quotes", function () {
             var value =
                     "{'plugins': 'paste', 'content_css': '/_themes/Style/tiny-body.css'}",
                 input = '<a data-tinymce-json="' + value + '">Test</a>',
@@ -376,25 +334,23 @@ describe("pat-inject", function() {
         });
     });
 
-    describe("Functional tests", function() {
-        describe("extract/verifyConfig", function() {
+    describe("Functional tests", function () {
+        describe("extract/verifyConfig", function () {
             var $a, $target;
 
-            beforeEach(function() {
+            beforeEach(function () {
                 $a = $(
                     '<a class="pat-inject" href="test.html#someid">link</a>'
                 );
                 $target = $('<div id="someid">');
 
-                $("#lab")
-                    .append($a)
-                    .append($target);
+                $("#lab").append($a).append($target);
             });
-            afterEach(function() {
+            afterEach(function () {
                 $target.remove();
             });
 
-            it("fall back to href id", function() {
+            it("fall back to href id", function () {
                 var cfgs = pattern.extractConfig($a);
                 expect(pattern.verifyConfig(cfgs)).toBeTruthy();
 
@@ -403,7 +359,7 @@ describe("pat-inject", function() {
                 expect(cfgs[0].target).toBe("#someid");
             });
 
-            it("take first positional option as source and target", function() {
+            it("take first positional option as source and target", function () {
                 var cfgs;
                 $a.attr("data-pat-inject", "#otherid");
                 $target.attr("id", "otherid");
@@ -414,7 +370,7 @@ describe("pat-inject", function() {
                 expect(cfgs[0].target).toBe("#otherid");
             });
 
-            it("take two positional options as source and target resp.", function() {
+            it("take two positional options as source and target resp.", function () {
                 var cfgs;
 
                 $a.attr("data-pat-inject", "#otherid #yetanotherid");
@@ -426,7 +382,7 @@ describe("pat-inject", function() {
                 expect(cfgs[0].target).toBe("#yetanotherid");
             });
 
-            it("Use trigger as target", function() {
+            it("Use trigger as target", function () {
                 $a.attr("data-pat-inject", "target: self::after");
                 var cfgs = pattern.extractConfig($a);
                 expect(pattern.verifyConfig(cfgs, $a)).toBeTruthy();
@@ -434,7 +390,7 @@ describe("pat-inject", function() {
                 expect(cfgs[0].$target[0]).toBe($a[0]);
             });
 
-            it("create target if it doesn't exist", function() {
+            it("create target if it doesn't exist", function () {
                 var cfgs = pattern.extractConfig($a);
 
                 $target.remove();
@@ -445,11 +401,8 @@ describe("pat-inject", function() {
                 expect($target.parent().prop("tagName")).toBe("BODY");
             });
 
-            it("parse autload delay argument", function() {
-                $a.attr(
-                    "data-pat-inject",
-                    "trigger: autoload; delay: 1000;"
-                );
+            it("parse autload delay argument", function () {
+                $a.attr("data-pat-inject", "trigger: autoload; delay: 1000;");
                 var cfgs = pattern.extractConfig($a);
                 expect(pattern.verifyConfig(cfgs)).toBeTruthy();
                 expect(cfgs[0].trigger).toBe("autoload");
@@ -458,20 +411,17 @@ describe("pat-inject", function() {
         });
     });
 
-    describe("DOM tests", function() {
-        beforeEach(function() {});
+    describe("DOM tests", function () {
+        beforeEach(function () {});
 
-        describe("The patterns-injected event", function() {
-            it("gets triggered after injection has finished'", function() {
+        describe("The patterns-injected event", function () {
+            it("gets triggered after injection has finished'", function () {
                 spyOn($, "ajax").and.returnValue(deferred);
                 var $a = $(
                     '<a class="pat-inject" href="test.html#someid">link</a>'
                 );
                 var $div = $('<div id="someid" />');
-                $("#lab")
-                    .empty()
-                    .append($a)
-                    .append($div);
+                $("#lab").empty().append($a).append($div);
                 var callback = jasmine.createSpy("patterns-injected");
                 $(document).on("patterns-injected", callback);
                 pattern.init($a);
@@ -485,56 +435,48 @@ describe("pat-inject", function() {
             });
         });
 
-        describe("Injection on an anchor element", function() {
+        describe("Injection on an anchor element", function () {
             var $a, $div;
 
-            beforeEach(function() {
+            beforeEach(function () {
                 spyOn($, "ajax").and.returnValue(deferred);
                 $a = $(
                     '<a class="pat-inject" href="test.html#someid">link</a>'
                 );
                 $div = $('<div id="someid" />');
-                $("#lab")
-                    .append($a)
-                    .append($div);
+                $("#lab").append($a).append($div);
             });
 
-            it("fetches url on click", function() {
+            it("fetches url on click", function () {
                 pattern.init($a);
                 $a.trigger("click");
                 expect($.ajax).toHaveBeenCalled();
-                expect($.ajax.calls.mostRecent().args[0].url).toBe(
-                    "test.html"
-                );
+                expect($.ajax.calls.mostRecent().args[0].url).toBe("test.html");
             });
 
-            it("fetches url on autoload", function() {
+            it("fetches url on autoload", function () {
                 $a.attr("data-pat-inject", "autoload");
                 pattern.init($a);
                 expect($.ajax).toHaveBeenCalled();
-                expect($.ajax.calls.mostRecent().args[0].url).toBe(
-                    "test.html"
-                );
+                expect($.ajax.calls.mostRecent().args[0].url).toBe("test.html");
             });
 
-            it("fetches url on autoload-delayed", function() {
+            it("fetches url on autoload-delayed", function () {
                 $a.attr("data-pat-inject", "autoload-delayed");
                 pattern.init($a);
                 // this needs to be checked async - is beyond me
                 // expect($.ajax).toHaveBeenCalled();
                 // expect($.ajax.calls.mostRecent().args[0].url).toBe("test.html");
             });
-            it("fetches url on push_marker sent", function() {
+            it("fetches url on push_marker sent", function () {
                 $a.attr("data-pat-inject", "push-marker: content-updated");
                 pattern.init($a);
                 $("body").trigger("push", ["content-updated"]);
                 expect($.ajax).toHaveBeenCalled();
-                expect($.ajax.calls.mostRecent().args[0].url).toBe(
-                    "test.html"
-                );
+                expect($.ajax.calls.mostRecent().args[0].url).toBe("test.html");
             });
 
-            it("injects into existing div", function() {
+            it("injects into existing div", function () {
                 pattern.init($a);
                 $a.trigger("click");
                 answer(
@@ -544,7 +486,7 @@ describe("pat-inject", function() {
                 expect($div.html()).toBe("replacement");
             });
 
-            it("injects multiple times", function() {
+            it("injects multiple times", function () {
                 pattern.init($a);
                 $a.trigger("click");
                 answer(
@@ -558,7 +500,7 @@ describe("pat-inject", function() {
                 deferred = new $.Deferred();
                 $.ajax.calls.reset();
                 $.ajax.and.returnValue(
-                    (function() {
+                    (function () {
                         return deferred;
                     })()
                 );
@@ -570,7 +512,7 @@ describe("pat-inject", function() {
                 expect($div.html()).toBe("new replacement");
             });
 
-            it("takes multiple source-target pairs", function() {
+            it("takes multiple source-target pairs", function () {
                 $a.attr(
                     "data-pat-inject",
                     "#someid1 #otherid1 && #someid2 #otherid2"
@@ -592,7 +534,7 @@ describe("pat-inject", function() {
                 expect($target2.html()).toBe("repl2");
             });
 
-            it("acts on other selectors as well", function() {
+            it("acts on other selectors as well", function () {
                 $a.attr("data-pat-inject", "target: #someid > .someclass");
                 var $target1 = $('<div class="someclass" />'),
                     $target2 = $('<div class="someclass" />');
@@ -610,7 +552,7 @@ describe("pat-inject", function() {
                 expect($target2.html()).toBe("repl");
             });
 
-            it("copies into target if source has ::element", function() {
+            it("copies into target if source has ::element", function () {
                 $a.attr("data-pat-inject", "#otherid::element #someid");
 
                 pattern.init($a);
@@ -625,7 +567,7 @@ describe("pat-inject", function() {
                 expect($div.children().attr("class")).toBe("someclass");
             });
 
-            it("replaces target if both selectors have ::element", function() {
+            it("replaces target if both selectors have ::element", function () {
                 $a.attr(
                     "data-pat-inject",
                     "#someid::element #otherid::element"
@@ -644,7 +586,7 @@ describe("pat-inject", function() {
                 expect($div.children().attr("class")).toBe("someclass");
             });
 
-            it("allows ::before and ::after in target selector", function() {
+            it("allows ::before and ::after in target selector", function () {
                 $a.attr(
                     "data-pat-inject",
                     "target: #target1::after && target: #target2::before"
@@ -665,11 +607,8 @@ describe("pat-inject", function() {
                 expect($target2.html()).toBe("replcontent");
             });
 
-            it("allows mixing ::element and ::after in target", function() {
-                $a.attr(
-                    "data-pat-inject",
-                    "target: #otherid::element::after"
-                );
+            it("allows mixing ::element and ::after in target", function () {
+                $a.attr("data-pat-inject", "target: #otherid::element::after");
                 $div.append($('<div id="otherid" />'));
 
                 pattern.init($a);
@@ -680,30 +619,23 @@ describe("pat-inject", function() {
                         "</body></html>"
                 );
 
-                expect(
-                    $div
-                        .contents()
-                        .last()
-                        .text()
-                ).toBe("repl");
+                expect($div.contents().last().text()).toBe("repl");
             });
         });
 
-        describe("inject on forms", function() {
+        describe("inject on forms", function () {
             var $form, $div;
 
-            beforeEach(function() {
+            beforeEach(function () {
                 spyOn($, "ajax").and.returnValue(deferred);
                 $form = $(
                     '<form class="pat-inject" action="test.html#someid" />'
                 );
                 $div = $('<div id="someid" />');
-                $("#lab")
-                    .append($form)
-                    .append($div);
+                $("#lab").append($form).append($div);
             });
 
-            it("trigger injection on submit", function() {
+            it("trigger injection on submit", function () {
                 pattern.init($form);
                 $form.trigger("submit");
                 answer(
@@ -715,12 +647,10 @@ describe("pat-inject", function() {
                 expect($div.html()).toBe("repl");
             });
 
-            it("pass get form parameters in ajax call as data", function() {
+            it("pass get form parameters in ajax call as data", function () {
                 $form.attr("method", "get");
                 $form.append(
-                    $(
-                        '<input type="text" name="param" value="somevalue" />'
-                    )
+                    $('<input type="text" name="param" value="somevalue" />')
                 );
 
                 pattern.init($form);
@@ -731,12 +661,10 @@ describe("pat-inject", function() {
                 expect(ajaxargs.data).toContain("param=somevalue");
             });
 
-            it("pass post form parameters in ajax call as data", function() {
+            it("pass post form parameters in ajax call as data", function () {
                 $form.attr("method", "post");
                 $form.append(
-                    $(
-                        '<input type="text" name="param" value="somevalue" />'
-                    )
+                    $('<input type="text" name="param" value="somevalue" />')
                 );
 
                 pattern.init($form);
@@ -744,9 +672,9 @@ describe("pat-inject", function() {
 
                 var ajaxargs = $.ajax.calls.mostRecent().args[0];
                 expect($.ajax).toHaveBeenCalled();
-                expect(ajaxargs.data.get('param')).toContain("somevalue");
+                expect(ajaxargs.data.get("param")).toContain("somevalue");
             });
-            it("pass submit button value in ajax call as data", function() {
+            it("pass submit button value in ajax call as data", function () {
                 var $submit = $(
                     '<input type="submit" name="submit" value="label" />'
                 );
@@ -759,11 +687,11 @@ describe("pat-inject", function() {
 
                 var ajaxargs = $.ajax.calls.mostRecent().args[0];
                 expect($.ajax).toHaveBeenCalled();
-                expect(ajaxargs.data.get('submit')).toContain("label");
+                expect(ajaxargs.data.get("submit")).toContain("label");
             });
 
-            describe("formaction attribute on submit buttons", function() {
-                it("use submit button formaction value as action URL", function() {
+            describe("formaction attribute on submit buttons", function () {
+                it("use submit button formaction value as action URL", function () {
                     var $submit1 = $(
                             '<input type="submit" name="submit" value="default" />'
                         ),
@@ -783,7 +711,7 @@ describe("pat-inject", function() {
                     expect(ajaxargs.data).toBe("submit=special");
                 });
 
-                it("use an image submit with a formaction value as action URL", function() {
+                it("use an image submit with a formaction value as action URL", function () {
                     var $submit1 = $(
                             '<input type="submit" name="submit" value="default" />'
                         ),
@@ -803,7 +731,7 @@ describe("pat-inject", function() {
                     expect(ajaxargs.data).toBe("submit=special");
                 });
 
-                it("use fragment in formaction value as source + target selector", function() {
+                it("use fragment in formaction value as source + target selector", function () {
                     var $submit1 = $(
                             '<input type="submit" name="submit" value="default" />'
                         ),
@@ -831,7 +759,7 @@ describe("pat-inject", function() {
                     expect($target.html()).toBe("other");
                 });
 
-                it("use fragment in formaction value as source selector, respect target", function() {
+                it("use fragment in formaction value as source selector, respect target", function () {
                     var $submit1 = $(
                             '<input type="submit" name="submit" value="default" />'
                         ),
@@ -860,7 +788,7 @@ describe("pat-inject", function() {
                     expect($target.html()).toBe("other");
                 });
 
-                it("formaction works with multiple targets", function() {
+                it("formaction works with multiple targets", function () {
                     var $submit1 = $(
                             '<input type="submit" name="submit" value="default" />'
                         ),
@@ -894,7 +822,7 @@ describe("pat-inject", function() {
                     expect($target2.html()).toBe("other");
                 });
 
-                it("formaction works with multiple sources", function() {
+                it("formaction works with multiple sources", function () {
                     var $submit1 = $(
                             '<input type="submit" name="submit" value="default" />'
                         ),
@@ -929,7 +857,7 @@ describe("pat-inject", function() {
                     expect($target2.html()).toBe("other");
                 });
 
-                it("formaction works source and target on the button", function() {
+                it("formaction works source and target on the button", function () {
                     var $submit1 = $(
                             '<input type="submit" name="submit" value="default" />'
                         ),

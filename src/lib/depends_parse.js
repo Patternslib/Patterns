@@ -37,7 +37,7 @@ var result = {
      * which the parser was generated (see |PEG.buildParser|). If the parsing is
      * unsuccessful, throws |PEG.parser.SyntaxError| describing the error.
      */
-    parse: function(input, startRule) {
+    parse: function (input, startRule) {
         var parseFunctions = {
             expression: parse_expression,
             simple_expression: parse_simple_expression,
@@ -78,14 +78,12 @@ var result = {
             Nd: parse_Nd,
             Nl: parse_Nl,
             Pc: parse_Pc,
-            Zs: parse_Zs
+            Zs: parse_Zs,
         };
 
         if (startRule !== undefined) {
             if (parseFunctions[startRule] === undefined) {
-                throw new Error(
-                    "Invalid rule name: " + quote(startRule) + "."
-                );
+                throw new Error("Invalid rule name: " + quote(startRule) + ".");
             }
         } else {
             startRule = "expression";
@@ -174,7 +172,7 @@ var result = {
                 pos = pos1;
             }
             if (result0 !== null) {
-                result0 = (function(offset, node) {
+                result0 = (function (offset, node) {
                     return { type: "NOT", children: [node] };
                 })(pos0, result0[2]);
             }
@@ -199,7 +197,7 @@ var result = {
                                         result1,
                                         result2,
                                         result3,
-                                        result4
+                                        result4,
                                     ];
                                 } else {
                                     result0 = null;
@@ -222,10 +220,10 @@ var result = {
                     pos = pos1;
                 }
                 if (result0 !== null) {
-                    result0 = (function(offset, left, type, right) {
+                    result0 = (function (offset, left, type, right) {
                         return {
                             type: type.toUpperCase(),
-                            children: [left, right]
+                            children: [left, right],
                         };
                     })(pos0, result0[0], result0[2], result0[4]);
                 }
@@ -236,7 +234,7 @@ var result = {
                     pos0 = pos;
                     result0 = parse_simple_expression();
                     if (result0 !== null) {
-                        result0 = (function(offset, node) {
+                        result0 = (function (offset, node) {
                             return node;
                         })(pos0, result0);
                     }
@@ -285,7 +283,7 @@ var result = {
                                     result1,
                                     result2,
                                     result3,
-                                    result4
+                                    result4,
                                 ];
                             } else {
                                 result0 = null;
@@ -308,7 +306,7 @@ var result = {
                 pos = pos1;
             }
             if (result0 !== null) {
-                result0 = (function(offset, content) {
+                result0 = (function (offset, content) {
                     return content;
                 })(pos0, result0[2]);
             }
@@ -333,7 +331,7 @@ var result = {
                                         result1,
                                         result2,
                                         result3,
-                                        result4
+                                        result4,
                                     ];
                                 } else {
                                     result0 = null;
@@ -356,12 +354,12 @@ var result = {
                     pos = pos1;
                 }
                 if (result0 !== null) {
-                    result0 = (function(offset, input, op, value) {
+                    result0 = (function (offset, input, op, value) {
                         return {
                             type: "comparison",
                             operator: op,
                             input: input,
-                            value: value
+                            value: value,
                         };
                     })(pos0, result0[0], result0[2], result0[4]);
                 }
@@ -386,7 +384,7 @@ var result = {
                                             result1,
                                             result2,
                                             result3,
-                                            result4
+                                            result4,
                                         ];
                                     } else {
                                         result0 = null;
@@ -409,12 +407,12 @@ var result = {
                         pos = pos1;
                     }
                     if (result0 !== null) {
-                        result0 = (function(offset, input, op, value) {
+                        result0 = (function (offset, input, op, value) {
                             return {
                                 type: "comparison",
                                 operator: op,
                                 input: input,
-                                value: value
+                                value: value,
                             };
                         })(pos0, result0[0], result0[2], result0[4]);
                     }
@@ -425,7 +423,7 @@ var result = {
                         pos0 = pos;
                         result0 = parse_identifier();
                         if (result0 !== null) {
-                            result0 = (function(offset, input) {
+                            result0 = (function (offset, input) {
                                 return { type: "truthy", input: input };
                             })(pos0, result0);
                         }
@@ -592,7 +590,7 @@ var result = {
                 result0 = null;
             }
             if (result0 !== null) {
-                result0 = (function(offset, chars) {
+                result0 = (function (offset, chars) {
                     return chars.join("");
                 })(pos0, result0);
             }
@@ -623,7 +621,7 @@ var result = {
                 result0 = null;
             }
             if (result0 !== null) {
-                result0 = (function(offset, chars) {
+                result0 = (function (offset, chars) {
                     return chars.join("");
                 })(pos0, result0);
             }
@@ -673,7 +671,7 @@ var result = {
                 result0 = null;
             }
             if (result0 !== null) {
-                result0 = (function(offset, digits) {
+                result0 = (function (offset, digits) {
                     return parseInt(digits.join(""), 10);
                 })(pos0, result0);
             }
@@ -807,23 +805,18 @@ var result = {
                                         if (result0 === null) {
                                             pos0 = pos;
                                             if (
-                                                input.charCodeAt(pos) ===
-                                                8204
+                                                input.charCodeAt(pos) === 8204
                                             ) {
                                                 result0 = "\u200C";
                                                 pos++;
                                             } else {
                                                 result0 = null;
                                                 if (reportFailures === 0) {
-                                                    matchFailed(
-                                                        '"\\u200C"'
-                                                    );
+                                                    matchFailed('"\\u200C"');
                                                 }
                                             }
                                             if (result0 !== null) {
-                                                result0 = (function(
-                                                    offset
-                                                ) {
+                                                result0 = (function (offset) {
                                                     return "\u200C";
                                                 })(pos0);
                                             }
@@ -833,24 +826,21 @@ var result = {
                                             if (result0 === null) {
                                                 pos0 = pos;
                                                 if (
-                                                    input.charCodeAt(
-                                                        pos
-                                                    ) === 8205
+                                                    input.charCodeAt(pos) ===
+                                                    8205
                                                 ) {
                                                     result0 = "\u200D";
                                                     pos++;
                                                 } else {
                                                     result0 = null;
-                                                    if (
-                                                        reportFailures === 0
-                                                    ) {
+                                                    if (reportFailures === 0) {
                                                         matchFailed(
                                                             '"\\u200D"'
                                                         );
                                                     }
                                                 }
                                                 if (result0 !== null) {
-                                                    result0 = (function(
+                                                    result0 = (function (
                                                         offset
                                                     ) {
                                                         return "\u200D";
@@ -954,7 +944,7 @@ var result = {
                 }
             }
             if (result0 !== null) {
-                result0 = (function(offset, parts) {
+                result0 = (function (offset, parts) {
                     return parts[1];
                 })(pos0, result0);
             }
@@ -984,7 +974,7 @@ var result = {
                 result0 = null;
             }
             if (result0 !== null) {
-                result0 = (function(offset, chars) {
+                result0 = (function (offset, chars) {
                     return chars.join("");
                 })(pos0, result0);
             }
@@ -1010,7 +1000,7 @@ var result = {
                 result0 = null;
             }
             if (result0 !== null) {
-                result0 = (function(offset, chars) {
+                result0 = (function (offset, chars) {
                     return chars.join("");
                 })(pos0, result0);
             }
@@ -1068,7 +1058,7 @@ var result = {
                 pos = pos1;
             }
             if (result0 !== null) {
-                result0 = (function(offset, char_) {
+                result0 = (function (offset, char_) {
                     return char_;
                 })(pos0, result0[1]);
             }
@@ -1100,7 +1090,7 @@ var result = {
                     pos = pos1;
                 }
                 if (result0 !== null) {
-                    result0 = (function(offset, sequence) {
+                    result0 = (function (offset, sequence) {
                         return sequence;
                     })(pos0, result0[1]);
                 }
@@ -1159,7 +1149,7 @@ var result = {
                 pos = pos1;
             }
             if (result0 !== null) {
-                result0 = (function(offset, char_) {
+                result0 = (function (offset, char_) {
                     return char_;
                 })(pos0, result0[1]);
             }
@@ -1191,7 +1181,7 @@ var result = {
                     pos = pos1;
                 }
                 if (result0 !== null) {
-                    result0 = (function(offset, sequence) {
+                    result0 = (function (offset, sequence) {
                         return sequence;
                     })(pos0, result0[1]);
                 }
@@ -1241,7 +1231,7 @@ var result = {
                     pos = pos1;
                 }
                 if (result0 !== null) {
-                    result0 = (function(offset) {
+                    result0 = (function (offset) {
                         return "\0";
                     })(pos0);
                 }
@@ -1283,7 +1273,7 @@ var result = {
                 }
             }
             if (result0 !== null) {
-                result0 = (function(offset, char_) {
+                result0 = (function (offset, char_) {
                     return char_
                         .replace("b", "\b")
                         .replace("f", "\f")
@@ -1328,7 +1318,7 @@ var result = {
                 pos = pos1;
             }
             if (result0 !== null) {
-                result0 = (function(offset, char_) {
+                result0 = (function (offset, char_) {
                     return char_;
                 })(pos0, result0[1]);
             }
@@ -1411,7 +1401,7 @@ var result = {
                 pos = pos1;
             }
             if (result0 !== null) {
-                result0 = (function(offset, digits) {
+                result0 = (function (offset, digits) {
                     return String.fromCharCode(parseInt("0x" + digits));
                 })(pos0, result0[1]);
             }
@@ -1446,12 +1436,7 @@ var result = {
                         if (result3 !== null) {
                             result4 = parse_HexDigit();
                             if (result4 !== null) {
-                                result1 = [
-                                    result1,
-                                    result2,
-                                    result3,
-                                    result4
-                                ];
+                                result1 = [result1, result2, result3, result4];
                             } else {
                                 result1 = null;
                                 pos = pos2;
@@ -1479,7 +1464,7 @@ var result = {
                 pos = pos1;
             }
             if (result0 !== null) {
-                result0 = (function(offset, digits) {
+                result0 = (function (offset, digits) {
                     return String.fromCharCode(parseInt("0x" + digits));
                 })(pos0, result0[1]);
             }
@@ -1816,11 +1801,7 @@ var result = {
                     }
                     column = 1;
                     seenCR = false;
-                } else if (
-                    ch === "\r" ||
-                    ch === "\u2028" ||
-                    ch === "\u2029"
-                ) {
+                } else if (ch === "\r" || ch === "\u2028" || ch === "\u2029") {
                     line++;
                     column = 1;
                     seenCR = true;
@@ -1877,14 +1858,14 @@ var result = {
     },
 
     /* Returns the parser source code. */
-    toSource: function() {
+    toSource: function () {
         return this._source;
-    }
+    },
 };
 
 /* Thrown when a parser encounters a syntax error. */
 
-result.SyntaxError = function(expected, found, offset, line, column) {
+result.SyntaxError = function (expected, found, offset, line, column) {
     function buildMessage(expected, found) {
         var expectedHumanized, foundHumanized;
 

@@ -1,25 +1,25 @@
 import Stacks from "./stacks";
 import $ from "jquery";
 
-describe("pat-stacks", function() {
-    beforeEach(function() {
+describe("pat-stacks", function () {
+    beforeEach(function () {
         $("<div/>", { id: "lab" }).appendTo(document.body);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         $("#lab").remove();
     });
 
-    describe("The init method", function() {
-        it("Returns the jQuery-wrapped DOM node", function() {
+    describe("The init method", function () {
+        it("Returns the jQuery-wrapped DOM node", function () {
             var $el = $('<div class="pat-stacks"></div>');
             var pattern = new Stacks($el);
             expect(pattern.init($el)).toBe($el);
         });
     });
 
-    describe("_base_URL", function() {
-        it("URL without fragment", function() {
+    describe("_base_URL", function () {
+        it("URL without fragment", function () {
             var $el = $('<div class="pat-stacks"></div>');
             var pattern = new Stacks($el);
             pattern.document = { URL: document.URL };
@@ -29,7 +29,7 @@ describe("pat-stacks", function() {
             );
         });
 
-        it("URL with fragment", function() {
+        it("URL with fragment", function () {
             var $el = $('<div class="pat-stacks"></div>');
             var pattern = new Stacks($el);
             pattern.document = { URL: document.URL };
@@ -41,8 +41,8 @@ describe("pat-stacks", function() {
         });
     });
 
-    describe("_currentFragment", function() {
-        it(" without fragment", function() {
+    describe("_currentFragment", function () {
+        it(" without fragment", function () {
             var $el = $('<div class="pat-stacks"></div>');
             var pattern = new Stacks($el);
             pattern.document = { URL: document.URL };
@@ -50,7 +50,7 @@ describe("pat-stacks", function() {
             expect(pattern._currentFragment()).toBeNull();
         });
 
-        it("URL with fragment", function() {
+        it("URL with fragment", function () {
             var $el = $('<div class="pat-stacks"></div>');
             var pattern = new Stacks($el);
             pattern.document = { URL: document.URL };
@@ -60,15 +60,15 @@ describe("pat-stacks", function() {
         });
     });
 
-    describe("The _onClick method", function() {
-        beforeEach(function() {
+    describe("The _onClick method", function () {
+        beforeEach(function () {
             $("#lab").html(
                 "<a id='l1' href='#s1'>1</a><a id='l2' href='#s2'>2</a>" +
                     "<article class='pat-stacks' id='stack'><section id='s1'></section><section id='s2'></section></article>"
             );
         });
 
-        it("gets triggered when you click on an external link", function() {
+        it("gets triggered when you click on an external link", function () {
             var e = { currentTarget: { href: "http://other.domain#s1" } };
             var pattern = new Stacks($(".pat-stacks"));
             var spy_update = spyOn(pattern, "_updateAnchors");
@@ -76,7 +76,7 @@ describe("pat-stacks", function() {
             expect(spy_update).not.toHaveBeenCalled();
         });
 
-        it("gets triggered when you click on a link without fragment", function() {
+        it("gets triggered when you click on a link without fragment", function () {
             var pattern = new Stacks($(".pat-stacks"));
             pattern.document = { URL: document.URL };
             pattern.document.URL = "http://www.example.com";
@@ -86,27 +86,27 @@ describe("pat-stacks", function() {
             expect(spy_update).not.toHaveBeenCalled();
         });
 
-        it("gets tirggered when you click on a non-stack link", function() {
+        it("gets tirggered when you click on a non-stack link", function () {
             var pattern = new Stacks($(".pat-stacks"));
             pattern.document = { URL: document.URL };
             pattern.document.URL = "http://www.example.com";
             var e = {
-                currentTarget: { href: "http://www.example.com#other" }
+                currentTarget: { href: "http://www.example.com#other" },
             };
             var spy_update = spyOn(pattern, "_updateAnchors");
             pattern._onClick(e);
             expect(spy_update).not.toHaveBeenCalled();
         });
 
-        it("gets called when you click on the stack link", function() {
+        it("gets called when you click on the stack link", function () {
             var pattern = new Stacks($(".pat-stacks"));
             pattern.document = { URL: document.URL };
             pattern.document.URL = "http://www.example.com";
             const e_mock = {
                 preventDefault: () => {},
-                currentTarget: { href: "http://www.example.com#s1" }
+                currentTarget: { href: "http://www.example.com#s1" },
             };
-            jest.spyOn(e_mock, 'preventDefault');
+            jest.spyOn(e_mock, "preventDefault");
             const spy_update = jest.spyOn(pattern, "_updateAnchors");
             const spy_switch = jest.spyOn(pattern, "_switch");
             pattern._onClick(e_mock);
@@ -115,7 +115,7 @@ describe("pat-stacks", function() {
             expect(spy_switch).toHaveBeenCalled();
         });
 
-        it("triggers a pat-update event, which other patterns can listen for", function() {
+        it("triggers a pat-update event, which other patterns can listen for", function () {
             var $el = $(".pat-stacks");
             var pattern = new Stacks($el);
             pattern.document = { URL: document.URL };
@@ -124,8 +124,8 @@ describe("pat-stacks", function() {
             var e = {
                 target: $el,
                 type: "click",
-                preventDefault: function() {},
-                currentTarget: { href: "http://www.example.com#s1" }
+                preventDefault: function () {},
+                currentTarget: { href: "http://www.example.com#s1" },
             };
             pattern._onClick(e);
             expect(spy_trigger).toHaveBeenCalledWith(
@@ -135,15 +135,15 @@ describe("pat-stacks", function() {
         });
     });
 
-    describe("The _updateAnchors method", function() {
-        beforeEach(function() {
+    describe("The _updateAnchors method", function () {
+        beforeEach(function () {
             $("#lab").html(
                 "<a id='l1' href='#s1'>1</a><a id='l2' href='#s2'>2</a>" +
                     "<article class='pat-stacks' id='stack'><section id='s1'></section><section id='s2'></section></article>"
             );
         });
 
-        it("adds a selected class", function() {
+        it("adds a selected class", function () {
             var $container = $("#stack");
             var pattern = new Stacks($container);
             pattern._updateAnchors("s1");
@@ -151,7 +151,7 @@ describe("pat-stacks", function() {
             expect($("#l2").hasClass("current")).toBe(false);
         });
 
-        it("removes a selected class", function() {
+        it("removes a selected class", function () {
             var $container = $("#stack");
             var pattern = new Stacks($container);
             $("#l1").addClass("selected");

@@ -1,6 +1,6 @@
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/every (JS 1.6)
 if (!Array.prototype.every) {
-    Array.prototype.every = function(fun /*, thisp */) {
+    Array.prototype.every = function (fun /*, thisp */) {
         "use strict";
 
         if (this === null) throw new TypeError();
@@ -20,7 +20,7 @@ if (!Array.prototype.every) {
 
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/filter (JS 1.6)
 if (!Array.prototype.filter) {
-    Array.prototype.filter = function(fun /*, thisp */) {
+    Array.prototype.filter = function (fun /*, thisp */) {
         "use strict";
 
         if (this === null) throw new TypeError();
@@ -46,7 +46,7 @@ if (!Array.prototype.filter) {
 // Production steps of ECMA-262, Edition 5, 15.4.4.18
 // Reference: http://es5.github.com/#x15.4.4.18
 if (!Array.prototype.forEach) {
-    Array.prototype.forEach = function(callback, thisArg) {
+    Array.prototype.forEach = function (callback, thisArg) {
         var T, k;
 
         if (this === null) {
@@ -100,7 +100,7 @@ if (!Array.prototype.forEach) {
 
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf (JS 1.6)
 if (!Array.prototype.indexOf) {
-    Array.prototype.indexOf = function(searchElement /*, fromIndex */) {
+    Array.prototype.indexOf = function (searchElement /*, fromIndex */) {
         "use strict";
         if (this === null) {
             throw new TypeError();
@@ -135,7 +135,7 @@ if (!Array.prototype.indexOf) {
 
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/lastIndexOf (JS 1.6)
 if (!Array.prototype.lastIndexOf) {
-    Array.prototype.lastIndexOf = function(searchElement /*, fromIndex*/) {
+    Array.prototype.lastIndexOf = function (searchElement /*, fromIndex*/) {
         "use strict";
 
         if (this === null) throw new TypeError();
@@ -165,7 +165,7 @@ if (!Array.prototype.lastIndexOf) {
 // Production steps of ECMA-262, Edition 5, 15.4.4.19
 // Reference: http://es5.github.com/#x15.4.4.19
 if (!Array.prototype.map) {
-    Array.prototype.map = function(callback, thisArg) {
+    Array.prototype.map = function (callback, thisArg) {
         var T, A, k;
 
         if (this === null) {
@@ -248,9 +248,7 @@ if (!Array.prototype.reduce) {
 
         if (arguments.length < 2) {
             if (l === 0)
-                throw new TypeError(
-                    "Array length is 0 and no second argument"
-                );
+                throw new TypeError("Array length is 0 and no second argument");
             curr = this[0];
             i = 1; // start accumulating at the second element
         } else curr = arguments[1];
@@ -267,7 +265,7 @@ if (!Array.prototype.reduce) {
 
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/ReduceRight (JS 1.8)
 if (!Array.prototype.reduceRight) {
-    Array.prototype.reduceRight = function(callbackfn /*, initialValue */) {
+    Array.prototype.reduceRight = function (callbackfn /*, initialValue */) {
         "use strict";
 
         if (this === null) throw new TypeError();
@@ -313,7 +311,7 @@ if (!Array.prototype.reduceRight) {
 
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some (JS 1.6)
 if (!Array.prototype.some) {
-    Array.prototype.some = function(fun /*, thisp */) {
+    Array.prototype.some = function (fun /*, thisp */) {
         "use strict";
 
         if (this === null) throw new TypeError();
@@ -333,21 +331,21 @@ if (!Array.prototype.some) {
 
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/isArray (JS 1.8.5)
 if (!Array.isArray) {
-    Array.isArray = function(arg) {
+    Array.isArray = function (arg) {
         return Object.prototype.toString.call(arg) === "[object Array]";
     };
 }
 
 // source: https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/Trim (JS 1.8.1)
 if (!String.prototype.trim) {
-    String.prototype.trim = function() {
+    String.prototype.trim = function () {
         return this.replace(/^\s+|\s+$/g, "");
     };
 }
 
 // source: https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/bind
 if (!Function.prototype.bind) {
-    Function.prototype.bind = function(oThis) {
+    Function.prototype.bind = function (oThis) {
         if (typeof this !== "function") {
             // closest thing possible to the ECMAScript 5 internal IsCallable function
             throw new TypeError(
@@ -357,8 +355,8 @@ if (!Function.prototype.bind) {
 
         var aArgs = Array.prototype.slice.call(arguments, 1),
             fToBind = this,
-            fNOP = function() {},
-            fBound = function() {
+            fNOP = function () {},
+            fBound = function () {
                 return fToBind.apply(
                     this instanceof fNOP && oThis ? this : oThis,
                     aArgs.concat(Array.prototype.slice.call(arguments))
@@ -373,7 +371,7 @@ if (!Function.prototype.bind) {
 
 // https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/keys
 if (!Object.keys) {
-    Object.keys = (function() {
+    Object.keys = (function () {
         var _hasOwnProperty = Object.prototype.hasOwnProperty,
             hasDontEnumBug = !{ toString: null }.propertyIsEnumerable(
                 "toString"
@@ -385,11 +383,11 @@ if (!Object.keys) {
                 "hasOwnProperty",
                 "isPrototypeOf",
                 "propertyIsEnumerable",
-                "constructor"
+                "constructor",
             ],
             dontEnumsLength = dontEnums.length;
 
-        return function(obj) {
+        return function (obj) {
             if (
                 (typeof obj !== "object" && typeof obj !== "function") ||
                 obj === null

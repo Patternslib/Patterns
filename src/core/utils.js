@@ -1,12 +1,12 @@
 import $ from "jquery";
 import _ from "underscore";
 
-$.fn.safeClone = function() {
+$.fn.safeClone = function () {
     var $clone = this.clone();
     // IE BUG : Placeholder text becomes actual value after deep clone on textarea
     // https://connect.microsoft.com/IE/feedback/details/781612/placeholder-text-becomes-actual-value-after-deep-clone-on-textarea
     if (window.document.documentMode) {
-        $clone.findInclusive(":input[placeholder]").each(function(i, item) {
+        $clone.findInclusive(":input[placeholder]").each(function (i, item) {
             var $item = $(item);
             if ($item.attr("placeholder") === $item.val()) {
                 $item.val("");
@@ -19,7 +19,7 @@ $.fn.safeClone = function() {
 // Production steps of ECMA-262, Edition 5, 15.4.4.18
 // Reference: http://es5.github.io/#x15.4.4.18
 if (!Array.prototype.forEach) {
-    Array.prototype.forEach = function(callback, thisArg) {
+    Array.prototype.forEach = function (callback, thisArg) {
         var T, k;
         if (this === null) {
             throw new TypeError(" this is null or not defined");
@@ -62,7 +62,7 @@ if (!Array.prototype.forEach) {
     };
 }
 
-var singleBoundJQueryPlugin = function(pattern, method, options) {
+var singleBoundJQueryPlugin = function (pattern, method, options) {
     /* This is a jQuery plugin for patterns which are invoked ONCE FOR EACH
      * matched element in the DOM.
      *
@@ -71,7 +71,7 @@ var singleBoundJQueryPlugin = function(pattern, method, options) {
      * for all DOM nodes on which the pattern applies.
      */
     var $this = this;
-    $this.each(function() {
+    $this.each(function () {
         var pat,
             $el = $(this);
         pat = pattern.init($el, options);
@@ -87,10 +87,7 @@ var singleBoundJQueryPlugin = function(pattern, method, options) {
             }
             if (method.charAt(0) === "_") {
                 $.error(
-                    "Method " +
-                        method +
-                        " is private on jQuery." +
-                        pattern.name
+                    "Method " + method + " is private on jQuery." + pattern.name
                 );
                 return false;
             }
@@ -100,7 +97,7 @@ var singleBoundJQueryPlugin = function(pattern, method, options) {
     return $this;
 };
 
-var pluralBoundJQueryPlugin = function(pattern, method, options) {
+var pluralBoundJQueryPlugin = function (pattern, method, options) {
     /* This is a jQuery plugin for patterns which are invoked ONCE FOR ALL
      * matched elements in the DOM.
      *
@@ -115,10 +112,7 @@ var pluralBoundJQueryPlugin = function(pattern, method, options) {
             return pattern[method].apply($this, [$this].concat([options]));
         } else {
             $.error(
-                "Method " +
-                    method +
-                    " does not exist on jQuery." +
-                    pattern.name
+                "Method " + method + " does not exist on jQuery." + pattern.name
             );
         }
     } else {
@@ -127,8 +121,8 @@ var pluralBoundJQueryPlugin = function(pattern, method, options) {
     return $this;
 };
 
-var jqueryPlugin = function(pattern) {
-    return function(method, options) {
+var jqueryPlugin = function (pattern) {
+    return function (method, options) {
         var $this = this;
         if ($this.length === 0) {
             return $this;
@@ -138,19 +132,9 @@ var jqueryPlugin = function(pattern) {
             method = undefined;
         }
         if (typeof pattern === "function") {
-            return singleBoundJQueryPlugin.call(
-                this,
-                pattern,
-                method,
-                options
-            );
+            return singleBoundJQueryPlugin.call(this, pattern, method, options);
         } else {
-            return pluralBoundJQueryPlugin.call(
-                this,
-                pattern,
-                method,
-                options
-            );
+            return pluralBoundJQueryPlugin.call(this, pattern, method, options);
         }
     };
 };
@@ -171,7 +155,7 @@ function debounce(func, wait) {
     return function debounce_run() {
         var context = this,
             args = arguments;
-        var later = function() {
+        var later = function () {
             timeout = null;
             func.apply(context, args);
         };
@@ -204,10 +188,14 @@ function extend(obj) {
 
 function rebaseURL(base, url) {
     base = new URL(base, window.location).href; // If base is relative make it absolute.
-    if (url.indexOf("://") !== -1 || url[0] === "/" || url.indexOf("data:") === 0) {
+    if (
+        url.indexOf("://") !== -1 ||
+        url[0] === "/" ||
+        url.indexOf("data:") === 0
+    ) {
         return url;
     }
-    return base.slice(0, base.lastIndexOf("/")+1) + url;
+    return base.slice(0, base.lastIndexOf("/") + 1) + url;
 }
 
 function findLabel(input) {
@@ -262,7 +250,7 @@ function removeWildcardClass($targets, classes) {
         var matcher = classes.replace(/[\-\[\]{}()+?.,\\\^$|#\s]/g, "\\$&");
         matcher = matcher.replace(/[*]/g, ".*");
         matcher = new RegExp("^" + matcher + "$");
-        $targets.filter("[class]").each(function() {
+        $targets.filter("[class]").each(function () {
             var $this = $(this),
                 classes = $this.attr("class").split(/\s+/),
                 ok = [];
@@ -293,7 +281,7 @@ function hasValue(el) {
 var transitions = {
     none: { hide: "hide", show: "show" },
     fade: { hide: "fadeOut", show: "fadeIn" },
-    slide: { hide: "slideUp", show: "slideDown" }
+    slide: { hide: "slideUp", show: "slideDown" },
 };
 
 function hideOrShow($slave, visible, options, pattern_name) {
@@ -303,29 +291,28 @@ function hideOrShow($slave, visible, options, pattern_name) {
             : options.effect.duration;
 
     $slave.removeClass("visible hidden in-progress");
-    var onComplete = function() {
+    var onComplete = function () {
         $slave
             .removeClass("in-progress")
             .addClass(visible ? "visible" : "hidden")
             .trigger("pat-update", {
                 pattern: pattern_name,
-                transition: "complete"
+                transition: "complete",
             });
     };
     if (!duration) {
-        if (options.transition !== "css")
-            $slave[visible ? "show" : "hide"]();
+        if (options.transition !== "css") $slave[visible ? "show" : "hide"]();
         onComplete();
     } else {
         var t = transitions[options.transition];
         $slave.addClass("in-progress").trigger("pat-update", {
             pattern: pattern_name,
-            transition: "start"
+            transition: "start",
         });
         $slave[visible ? t.show : t.hide]({
             duration: duration,
             easing: options.effect.easing,
-            complete: onComplete
+            complete: onComplete,
         });
     }
 }
@@ -367,20 +354,18 @@ function removeDuplicateObjects(objs) {
     /* Given an array of objects, remove any duplicate objects which might
      * be present.
      */
-    var comparator = function(v, k) {
+    var comparator = function (v, k) {
         return this[k] === v;
     };
     return _.reduce(
         objs,
-        function(list, next_obj) {
+        function (list, next_obj) {
             var is_duplicate = false;
-            _.each(list, function(obj) {
+            _.each(list, function (obj) {
                 is_duplicate =
                     _.keys(obj).length === _.keys(next_obj).length &&
-                    !_.chain(obj)
-                        .omit(comparator.bind(next_obj))
-                        .keys()
-                        .value().length;
+                    !_.chain(obj).omit(comparator.bind(next_obj)).keys().value()
+                        .length;
             });
             if (!is_duplicate) {
                 list.push(next_obj);
@@ -403,7 +388,7 @@ function mergeStack(stack, length) {
     for (var i = 0; i < length; i++) {
         results.push({});
     }
-    _.each(stack, function(frame) {
+    _.each(stack, function (frame) {
         var frame_length = frame.length - 1;
         for (var x = 0; x < length; x++) {
             results[x] = $.extend(
@@ -515,7 +500,7 @@ function getCSSValue(el, property, asPixels) {
     /* Return a CSS property value for a given DOM node.
      * For length-values, relative values are converted to pixels.
      * Optionally parse as pixels, if applicable.
-    */
+     */
     var value = window.getComputedStyle(el).getPropertyValue(property);
     if (asPixels) {
         value = parseFloat(value) || 0.0;
@@ -525,8 +510,8 @@ function getCSSValue(el, property, asPixels) {
 
 function checkInputSupport(type, invalid_value) {
     /* Check input type support.
-    *  See: https://stackoverflow.com/a/10199306/1337474
-    */
+     *  See: https://stackoverflow.com/a/10199306/1337474
+     */
     let support = false;
     const input = document.createElement("input");
     input.setAttribute("type", type);
@@ -534,15 +519,15 @@ function checkInputSupport(type, invalid_value) {
 
     if (invalid_value !== undefined) {
         // Check for input type UI support
-        input.setAttribute('value', invalid_value);
+        input.setAttribute("value", invalid_value);
         support = input.value !== invalid_value;
     }
     return support;
 }
 
-const checkCSSFeature = (attribute, value, tag="div") => {
+const checkCSSFeature = (attribute, value, tag = "div") => {
     /* Check for browser support of specific CSS feature.
-    */
+     */
     tag = document.createElement(tag);
     let supported = tag.style[attribute] !== undefined;
     if (supported && value !== undefined) {
@@ -550,11 +535,11 @@ const checkCSSFeature = (attribute, value, tag="div") => {
         supported = tag.style[attribute] === value;
     }
     return supported;
-}
+};
 
-const timeout = ms => {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+const timeout = (ms) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+};
 
 var utils = {
     // pattern pimping - own module?
@@ -578,7 +563,7 @@ var utils = {
     getCSSValue: getCSSValue,
     checkInputSupport: checkInputSupport,
     checkCSSFeature: checkCSSFeature,
-    timeout: timeout
+    timeout: timeout,
 };
 
 export default utils;

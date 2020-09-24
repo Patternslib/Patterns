@@ -13,24 +13,18 @@ import utils from "../../core/utils";
 
 const parser = new Parser("auto-scale");
 parser.addArgument("method", "scale", ["scale", "zoom"]);
-parser.addArgument("size", "width", [
-    "width",
-    "height",
-    "contain",
-    "cover"
-]);
+parser.addArgument("size", "width", ["width", "height", "contain", "cover"]);
 parser.addArgument("min-width", 0);
 parser.addArgument("max-width", 1000000);
 parser.addArgument("min-height", 0);
 parser.addArgument("max-height", 1000000);
-
 
 export default Base.extend({
     name: "autoscale",
     trigger: ".pat-auto-scale",
     force_method: null,
 
-    init: function($el, opts) {
+    init: function ($el, opts) {
         this.options = parser.parse(this.$el, opts);
         if (this.force_method !== null) {
             this.options.method = this.force_method;
@@ -39,8 +33,8 @@ export default Base.extend({
         return this.$el;
     },
 
-    _setup: function() {
-        if (!utils.checkCSSFeature('zoom')) {
+    _setup: function () {
+        if (!utils.checkCSSFeature("zoom")) {
             // See https://bugzilla.mozilla.org/show_bug.cgi?id=390936
             this.force_method = "scale";
         }
@@ -50,7 +44,7 @@ export default Base.extend({
         return this;
     },
 
-    scale: function() {
+    scale: function () {
         var available_space, scale, scaled_height, scaled_width, container;
 
         if (this.$el[0].tagName === "BODY") {
@@ -58,9 +52,7 @@ export default Base.extend({
         } else {
             var $parent;
             if (this.$el.closest(".auto-scale-wrapper").length != 0) {
-                container = this.$el
-                    .closest(".auto-scale-wrapper")
-                    .parent()[0];
+                container = this.$el.closest(".auto-scale-wrapper").parent()[0];
             } else {
                 container = this.$el.parent()[0];
             }
@@ -73,7 +65,7 @@ export default Base.extend({
         var style = window.getComputedStyle(container);
         available_space = {
             width: parseInt(style.width, 10),
-            height: parseInt(style.height, 10)
+            height: parseInt(style.height, 10),
         };
 
         available_space.width = Math.min(
@@ -128,18 +120,12 @@ export default Base.extend({
                     (this.$el.parent().attr("class") != undefined &&
                         $.inArray(
                             "auto-scale-wrapper",
-                            this.$el
-                                .parent()
-                                .attr("class")
-                                .split(/\s+/)
+                            this.$el.parent().attr("class").split(/\s+/)
                         ) === -1)
                 ) {
                     this.$el.wrap("<div class='auto-scale-wrapper'></div>");
                 }
-                this.$el
-                    .parent()
-                    .height(scaled_height)
-                    .width(scaled_width);
+                this.$el.parent().height(scaled_height).width(scaled_width);
                 break;
             case "zoom":
                 this.$el.css("zoom", scale);
@@ -147,5 +133,5 @@ export default Base.extend({
         }
         this.$el.addClass("scaled");
         return this;
-    }
+    },
 });

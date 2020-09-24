@@ -13,34 +13,42 @@ parser.addArgument("current-class", "current");
 export default Base.extend({
     name: "navigation",
     trigger: "nav, .navigation, .pat-navigation",
-    init: function($el, opts) {
+    init: function ($el, opts) {
         this.options = parser.parse($el, opts);
         var current = this.options.currentClass;
         // check whether to load
         if ($el.hasClass("navigation-load-current")) {
-            $el.find("a." + current, "."  + current + " a").click();
+            $el.find("a." + current, "." + current + " a").click();
             // check for current elements injected here
-            $el.on("patterns-injected-scanned", function(ev) {
-                var $target = $(ev.target);
-                if ($target.is("a." + current))
-                    $target.click();
-                if ($target.is("." + current))
-                    $target.find("a").click();
-                this._updatenavpath($el);
-            }.bind(this));
+            $el.on(
+                "patterns-injected-scanned",
+                function (ev) {
+                    var $target = $(ev.target);
+                    if ($target.is("a." + current)) $target.click();
+                    if ($target.is("." + current)) $target.find("a").click();
+                    this._updatenavpath($el);
+                }.bind(this)
+            );
         }
 
         // An anchor within this navigation triggered injection
-        $el.on("patterns-inject-triggered", "a", function(ev) {
-            var $target = $(ev.target);
-            // remove all set current classes
-            $el.find("." + current).removeClass(current);
-            // set current class on target
-            $target.addClass(current);
-            // If target's parent is an LI, also set current class there
-            $target.parents(this.options.itemWrapper).first().addClass(current);
-            this._updatenavpath($el);
-        }.bind(this));
+        $el.on(
+            "patterns-inject-triggered",
+            "a",
+            function (ev) {
+                var $target = $(ev.target);
+                // remove all set current classes
+                $el.find("." + current).removeClass(current);
+                // set current class on target
+                $target.addClass(current);
+                // If target's parent is an LI, also set current class there
+                $target
+                    .parents(this.options.itemWrapper)
+                    .first()
+                    .addClass(current);
+                this._updatenavpath($el);
+            }.bind(this)
+        );
 
         var observer = new MutationObserver(this._initialSet.bind(this));
         observer.observe($el[0], {
@@ -56,9 +64,9 @@ export default Base.extend({
         var $el = this.$el;
         var current = this.options.currentClass;
         // Set current class if it is not set
-        if ($el[0].querySelectorAll('.' + current).length === 0) {
+        if ($el[0].querySelectorAll("." + current).length === 0) {
             var ael = $el[0].querySelectorAll("a");
-            for (var cnt=0; cnt<ael.length; cnt++) {
+            for (var cnt = 0; cnt < ael.length; cnt++) {
                 var $a = $(ael[cnt]),
                     $li = $a.parents(this.options.itemWrapper).first(),
                     url = $a.attr("href"),
@@ -78,35 +86,48 @@ export default Base.extend({
 
         // Set current class on item-wrapper, if not set.
         if (
-            this.options.itemWrapper
-            && $el[0].querySelectorAll('.' + current).length > 0
-            && $el[0].querySelectorAll(this.options.itemWrapper + '.' + current).length === 0
+            this.options.itemWrapper &&
+            $el[0].querySelectorAll("." + current).length > 0 &&
+            $el[0].querySelectorAll(this.options.itemWrapper + "." + current)
+                .length === 0
         ) {
-            $('.' + current, $el).parents(this.options.itemWrapper).first().addClass(current);
+            $("." + current, $el)
+                .parents(this.options.itemWrapper)
+                .first()
+                .addClass(current);
         }
 
         this._updatenavpath($el);
     },
-    _updatenavpath: function($el) {
+    _updatenavpath: function ($el) {
         var in_path = this.options.inPathClass;
-        if (! in_path) { return; }
-        $el.find('.' + in_path).removeClass(in_path);
-        $el.find(this.options.itemWrapper + ":not(." + this.options.currentClass + "):has(." + this.options.currentClass + ")").addClass(in_path);
+        if (!in_path) {
+            return;
+        }
+        $el.find("." + in_path).removeClass(in_path);
+        $el.find(
+            this.options.itemWrapper +
+                ":not(." +
+                this.options.currentClass +
+                "):has(." +
+                this.options.currentClass +
+                ")"
+        ).addClass(in_path);
     },
-    _match: function(curpath, path) {
+    _match: function (curpath, path) {
         if (!path) {
             log.debug("path empty");
             return false;
         }
         // current path needs to end in the anchor's path
-        if (path !== curpath.slice(- path.length)) {
+        if (path !== curpath.slice(-path.length)) {
             log.debug(curpath, "does not end in", path);
             return false;
         }
         // XXX: we might need more exclusion tests
         return true;
     },
-    _pathfromurl: function(url) {
+    _pathfromurl: function (url) {
         var path = url.split("#")[0].split("://");
         if (path.length > 2) {
             log.error("weird url", url);
@@ -114,5 +135,5 @@ export default Base.extend({
         }
         if (path.length === 1) return path[0];
         return path[1].split("/").slice(1).join("/");
-    }
+    },
 });

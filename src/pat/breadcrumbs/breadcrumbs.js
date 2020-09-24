@@ -11,9 +11,9 @@ import registry from "../../core/registry";
 var _ = {
     name: "breadcrumbs",
     trigger: "nav.pat-breadcrumbs",
-    init: function($el, opts) {
+    init: function ($el, opts) {
         if ($el.length > 1) {
-            return $el.map(function() {
+            return $el.map(function () {
                 return _.init($(this), opts);
             });
         }
@@ -25,19 +25,17 @@ var _ = {
             .parent();
 
         // shift ctrl
-        var $ctrl = $("<span class='button shift'>shift</span>").prependTo(
-            $el
-        );
+        var $ctrl = $("<span class='button shift'>shift</span>").prependTo($el);
 
         var shifted = false,
             shifting = false,
             difference = 0;
-        var shifter = function(toggle) {
-            return function() {
+        var shifter = function (toggle) {
+            return function () {
                 var margin;
                 if (toggle) {
                     margin = shifted ? 0 : difference;
-                    $content.animate({ "margin-left": margin }, function() {
+                    $content.animate({ "margin-left": margin }, function () {
                         $ctrl.toggleClass("shift-right shift-left");
                         shifted = !shifted;
                     });
@@ -48,7 +46,7 @@ var _ = {
             };
         };
 
-        var maybeshift = function() {
+        var maybeshift = function () {
             // account for other stuff on the same line (100px)
             difference = $el.innerWidth() - $content.width() - 100;
 
@@ -68,7 +66,7 @@ var _ = {
             } else {
                 // we should not be shifting
                 if (shifting) {
-                    $content.animate({ "margin-left": 0 }, function() {
+                    $content.animate({ "margin-left": 0 }, function () {
                         shifted = false;
                         shifting = false;
                         $el.removeClass("shifting");
@@ -80,12 +78,12 @@ var _ = {
         };
         $(window).on("resize.pat-breadcrumbs", maybeshift);
 
-        var recalculate = function() {
+        var recalculate = function () {
             // set fixed width on content
             var width = $content
                 .children()
                 .toArray()
-                .reduce(function(acc, el) {
+                .reduce(function (acc, el) {
                     // outerWidth is buggy http://bugs.jquery.com/ticket/8443 so
                     // add a magic buffer value of 5.
                     // XXX: maybe make the buffer configurable.
@@ -99,9 +97,9 @@ var _ = {
 
         return $el;
     },
-    destroy: function($el) {
+    destroy: function ($el) {
         $el.off(".pat-breadcrumbs");
-    }
+    },
 };
 registry.register(_);
 

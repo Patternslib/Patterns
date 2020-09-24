@@ -1,16 +1,16 @@
 import pattern from "./tabs";
 import $ from "jquery";
 
-describe("pat-tabs", function() {
-    describe("When the size of all the tabs cannot fit in the pat-tabs div", function() {
-        beforeEach(function() {
+describe("pat-tabs", function () {
+    describe("When the size of all the tabs cannot fit in the pat-tabs div", function () {
+        beforeEach(function () {
             $("<div/>", { id: "lab" }).appendTo(document.body);
         });
-        afterEach(function() {
+        afterEach(function () {
             $("#lab").remove();
         });
 
-        it("some tabs will be placed in the extra-tabs span, which is a child of the pat-tabs element", function() {
+        it("some tabs will be placed in the extra-tabs span, which is a child of the pat-tabs element", function () {
             $("#lab").html(
                 [
                     '<nav class="navigation tabs pat-tabs" style="width:400px;">',
@@ -18,7 +18,7 @@ describe("pat-tabs", function() {
                     '<a href="" style="width:100px; display:block;">Members</a>',
                     '<a href="" style="width:100px; display:block;">Security</a>',
                     '<a href="" style="width:100px; display:block;">Advanced</a>',
-                    "</nav>"
+                    "</nav>",
                 ].join("\n")
             );
             var $tabs = $(".pat-tabs");
@@ -27,15 +27,15 @@ describe("pat-tabs", function() {
         });
     });
 
-    describe("When the size of all the tabs (padding included) cannot fit in the pat-tabs div", function() {
-        beforeEach(function() {
+    describe("When the size of all the tabs (padding included) cannot fit in the pat-tabs div", function () {
+        beforeEach(function () {
             $("<div/>", { id: "lab" }).appendTo(document.body);
         });
-        afterEach(function() {
+        afterEach(function () {
             $("#lab").remove();
         });
 
-        it("some tabs will be placed in the extra-tabs span, which is a child of the pat-tabs element", function() {
+        it("some tabs will be placed in the extra-tabs span, which is a child of the pat-tabs element", function () {
             $("#lab").html(
                 [
                     '<nav class="navigation tabs pat-tabs" style="width:440px;">',
@@ -43,7 +43,7 @@ describe("pat-tabs", function() {
                     '<a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">Members</a>',
                     '<a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">Security</a>',
                     '<a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">Advanced</a>',
-                    "</nav>"
+                    "</nav>",
                 ].join("\n")
             );
             var $tabs = $(".pat-tabs");
@@ -52,15 +52,15 @@ describe("pat-tabs", function() {
         });
     });
 
-    describe("When the size of all the tabs can fit in the pat-tabs div", function() {
-        beforeEach(function() {
+    describe("When the size of all the tabs can fit in the pat-tabs div", function () {
+        beforeEach(function () {
             $("<div/>", { id: "lab" }).appendTo(document.body);
         });
-        afterEach(function() {
+        afterEach(function () {
             $("#lab").remove();
         });
 
-        it("the extra-tabs span will not exist as a child of the pat-tabs element", function() {
+        it("the extra-tabs span will not exist as a child of the pat-tabs element", function () {
             // XXX: Somehow the browsers doesn't behave so nicely, elements
             // wrap around even though according to our calculations they
             // don't have to. So we now check for 5% less than the
@@ -72,7 +72,7 @@ describe("pat-tabs", function() {
                     '<a href="" style="width:100px; display:block;">Members</a>',
                     '<a href="" style="width:100px; display:block;">Security</a>',
                     '<a href="" style="width:100px; display:block;">Advanced</a>',
-                    "</nav>"
+                    "</nav>",
                 ].join("\n")
             );
             var $tabs = $(".pat-tabs");
@@ -81,15 +81,15 @@ describe("pat-tabs", function() {
         });
     });
 
-    describe("When the size of all the tabs (padding included) can fit in the pat-tabs div", function() {
-        beforeEach(function() {
+    describe("When the size of all the tabs (padding included) can fit in the pat-tabs div", function () {
+        beforeEach(function () {
             $("<div/>", { id: "lab" }).appendTo(document.body);
         });
-        afterEach(function() {
+        afterEach(function () {
             $("#lab").remove();
         });
 
-        it("the extra-tabs span will not exist as a child of the pat-tabs element", function() {
+        it("the extra-tabs span will not exist as a child of the pat-tabs element", function () {
             // XXX: Somehow the browsers doesn't behave so nicely, elements
             // wrap around even though according to our calculations they
             // don't have to. So we now check for 5% less than the
@@ -101,7 +101,7 @@ describe("pat-tabs", function() {
                     '<a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">Members</a>',
                     '<a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">Security</a>',
                     '<a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">Advanced</a>',
-                    "</nav>"
+                    "</nav>",
                 ].join("\n")
             );
             var $tabs = $(".pat-tabs");

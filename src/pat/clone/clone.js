@@ -40,7 +40,7 @@ export default Base.extend({
         var $clones = this.$el.find(this.options.cloneElement);
         this.num_clones = $clones.length;
         $clones.each(
-            function(idx, clone) {
+            function (idx, clone) {
                 var $clone = $(clone);
                 $clone
                     .find(this.options.remove.element)
@@ -60,7 +60,7 @@ export default Base.extend({
         $clone.removeAttr("id").removeClass("cant-touch-this");
         $.each(
             ids,
-            function(idx, id) {
+            function (idx, id) {
                 // Re-add all ids that have the substring #{1} in them, while
                 // also replacing that substring with the number of clones.
                 if (id.indexOf("#{1}") !== -1) {
@@ -91,7 +91,7 @@ export default Base.extend({
         $clone.trigger("pat-update", {
             pattern: "clone",
             action: "clone",
-            $el: $clone
+            $el: $clone,
         });
         if (this.num_clones >= this.options.max) {
             $(this.options.triggerElement).hide();
@@ -104,7 +104,7 @@ export default Base.extend({
             .addBack()
             .contents()
             .filter(this.incrementValues.bind(this));
-        var callback = function(idx, attr) {
+        var callback = function (idx, attr) {
             if (attr.name === "type" || !$el.attr(attr.name)) {
                 return;
             }
@@ -143,7 +143,7 @@ export default Base.extend({
         this.$el.trigger("pat-update", {
             pattern: "clone",
             action: "remove",
-            $el: $el
+            $el: $el,
         });
-    }
+    },
 });

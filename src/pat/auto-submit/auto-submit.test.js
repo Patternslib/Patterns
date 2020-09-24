@@ -2,17 +2,17 @@ import pattern from "./auto-submit";
 import registry from "../../core/registry";
 import $ from "jquery";
 
-describe("pat-autosubmit", function() {
-    beforeEach(function() {
+describe("pat-autosubmit", function () {
+    beforeEach(function () {
         $("<div/>", { id: "lab" }).appendTo(document.body);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         $("#lab").remove();
     });
 
-    describe("Triggering of the pattern", function() {
-        it("happens when a form has the pat-autosubmit class", function() {
+    describe("Triggering of the pattern", function () {
+        it("happens when a form has the pat-autosubmit class", function () {
             var $form = $(
                 '<form class="pat-autosubmit">' +
                     "  <fieldset>" +
@@ -26,7 +26,7 @@ describe("pat-autosubmit", function() {
             expect(spy_init).toHaveBeenCalled();
         });
 
-        it("when a grouping of inputs has the pat-autosubmit class", function() {
+        it("when a grouping of inputs has the pat-autosubmit class", function () {
             var $form = $(
                 "<form>" +
                     '  <fieldset class="pat-autosubmit">' +
@@ -40,7 +40,7 @@ describe("pat-autosubmit", function() {
             expect(spy_init).toHaveBeenCalled();
         });
 
-        it("when a single input has the pat-autosubmit class", function() {
+        it("when a single input has the pat-autosubmit class", function () {
             var $form = $(
                 '<form><input class="pat-autosubmit" type="text" name="q" placeholder="Search query"/></form>'
             );
@@ -50,8 +50,8 @@ describe("pat-autosubmit", function() {
         });
     });
 
-    describe("parsing of the delay option", function() {
-        it("can be done in shorthand notation", function() {
+    describe("parsing of the delay option", function () {
+        it("can be done in shorthand notation", function () {
             pattern.$el = $("<form></form>");
             var pat = pattern.init(pattern.$el);
             var options = pat.parser.parse(
@@ -68,7 +68,7 @@ describe("pat-autosubmit", function() {
             expect(options.delay).toBe("defocus");
         });
 
-        it("can be done in longhand notation", function() {
+        it("can be done in longhand notation", function () {
             pattern.$el = $("<form></form>");
             var pat = pattern.init(pattern.$el);
             var options = pat.parser.parse(

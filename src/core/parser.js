@@ -1,9 +1,9 @@
 /**
-* Patterns parser - Argument parser
-*
-* Copyright 2012-2013 Florian Friesdorf
-* Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
-*/
+ * Patterns parser - Argument parser
+ *
+ * Copyright 2012-2013 Florian Friesdorf
+ * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
+ */
 
 import $ from "jquery";
 import _ from "underscore";
@@ -28,8 +28,8 @@ ArgumentParser.prototype = {
     named_param_pattern: /^\s*([a-z][a-z0-9\-]*)\s*:(.*)/i,
     token_pattern: /((["']).*?(?!\\)\2)|\s*(\S+)\s*/g,
 
-    _camelCase: function(str) {
-        return str.replace(/\-([a-z])/g, function(_, p1) {
+    _camelCase: function (str) {
+        return str.replace(/\-([a-z])/g, function (_, p1) {
             return p1.toUpperCase();
         });
     },
@@ -43,11 +43,13 @@ ArgumentParser.prototype = {
         if (this.parameters[original]) {
             this.parameters[original].alias = alias;
         } else {
-            throw 'Attempted to add an alias "' +
+            throw (
+                'Attempted to add an alias "' +
                 alias +
                 '" for a non-existing parser argument "' +
                 original +
-                '".';
+                '".'
+            );
         }
     },
 
@@ -63,9 +65,7 @@ ArgumentParser.prototype = {
                 field = m[2];
             if (group in this.possible_groups) {
                 var first_spec = this.possible_groups[group],
-                    first_name = first_spec.name.match(
-                        this.group_pattern
-                    )[2];
+                    first_name = first_spec.name.match(this.group_pattern)[2];
                 first_spec.group = group;
                 first_spec.dest = first_name;
                 this.groups[group] = new ArgumentParser();
@@ -94,10 +94,7 @@ ArgumentParser.prototype = {
         return spec;
     },
 
-    addJSONArgument: function argParserAddJSONArgument(
-        name,
-        default_value
-    ) {
+    addJSONArgument: function argParserAddJSONArgument(name, default_value) {
         /* Add an argument where the value is provided in JSON format.
          *
          * This is a different usecase than specifying all arguments to
@@ -111,7 +108,7 @@ ArgumentParser.prototype = {
             value: default_value,
             dest: name,
             group: null,
-            type: "json"
+            type: "json",
         });
     },
 
@@ -129,7 +126,7 @@ ArgumentParser.prototype = {
                     : default_value,
             multiple: multiple,
             dest: name,
-            group: null
+            group: null,
         };
         if (choices && Array.isArray(choices) && choices.length) {
             spec.choices = choices;
@@ -182,26 +179,31 @@ ArgumentParser.prototype = {
                                     value === "y" ||
                                     value === "yes" ||
                                     value === "y";
-                        } else if (typeof value === "number")
-                            value = !!value;
+                        } else if (typeof value === "number") value = !!value;
                         else
-                            throw "Cannot convert value for " +
+                            throw (
+                                "Cannot convert value for " +
                                 name +
-                                " to boolean";
+                                " to boolean"
+                            );
                         break;
                     case "number":
                         if (typeof value === "string") {
                             value = parseInt(value, 10);
                             if (isNaN(value))
-                                throw "Cannot convert value for " +
+                                throw (
+                                    "Cannot convert value for " +
                                     name +
-                                    " to number";
+                                    " to number"
+                                );
                         } else if (typeof value === "boolean")
                             value = value + 0;
                         else
-                            throw "Cannot convert value for " +
+                            throw (
+                                "Cannot convert value for " +
                                 name +
-                                " to number";
+                                " to number"
+                            );
                         break;
                     case "string":
                         value = value.toString();
@@ -210,10 +212,12 @@ ArgumentParser.prototype = {
                     case "undefined":
                         break;
                     default:
-                        throw "Do not know how to convert value for " +
+                        throw (
+                            "Do not know how to convert value for " +
                             name +
                             " to " +
-                            spec.type;
+                            spec.type
+                        );
                 }
             } catch (e) {
                 this.log.warn(e);
@@ -256,32 +260,25 @@ ArgumentParser.prototype = {
 
     _split: function argParserSplit(text) {
         var tokens = [];
-        text.replace(this.token_pattern, function(
-            match,
-            quoted,
-            _,
-            simple
-        ) {
+        text.replace(this.token_pattern, function (match, quoted, _, simple) {
             if (quoted) tokens.push(quoted);
             else if (simple) tokens.push(simple);
         });
         return tokens;
     },
 
-    _parseExtendedNotation: function argParserParseExtendedNotation(
-        argstring
-    ) {
+    _parseExtendedNotation: function argParserParseExtendedNotation(argstring) {
         var opts = {};
         var parts = argstring
             .replace(/;;/g, "\0x1f")
             .replace(/&amp;/g, "&amp\0x1f")
             .split(/;/)
-            .map(function(el) {
+            .map(function (el) {
                 return el.replace(new RegExp("\0x1f", "g"), ";");
             });
         _.each(
             parts,
-            function(part, i) {
+            function (part, i) {
                 if (!part) {
                     return;
                 }
@@ -396,9 +393,7 @@ ArgumentParser.prototype = {
                     result[name] = this.parameters[name].value($el, name);
                     this.parameters[name].type = typeof result[name];
                 } catch (e) {
-                    this.log.error(
-                        "Default function for " + name + " failed."
-                    );
+                    this.log.error("Default function for " + name + " failed.");
                 }
             else result[name] = this.parameters[name].value;
         return result;
@@ -448,7 +443,7 @@ ArgumentParser.prototype = {
     },
 
     parse: function argParserParse($el, options, multiple, inherit) {
-        if(!$el.jquery) {
+        if (!$el.jquery) {
             $el = $($el);
         }
         if (typeof options === "boolean" && multiple === undefined) {
@@ -472,8 +467,7 @@ ArgumentParser.prototype = {
          */
         if (
             !inherit ||
-            ($el.hasClass("pat-modal") &&
-                this.attribute === "data-pat-inject")
+            ($el.hasClass("pat-modal") && this.attribute === "data-pat-inject")
         ) {
             $possible_config_providers = $el;
         } else {
@@ -484,7 +478,7 @@ ArgumentParser.prototype = {
 
         _.each(
             $possible_config_providers,
-            function(provider) {
+            function (provider) {
                 var data, frame, _parse;
                 data = $(provider).attr(this.attribute);
                 if (!data) {
@@ -516,7 +510,7 @@ ArgumentParser.prototype = {
             this._cleanupOptions.bind(this)
         );
         return multiple ? results : results[0];
-    }
+    },
 };
 
 // BBB

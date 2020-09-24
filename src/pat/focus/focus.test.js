@@ -2,19 +2,19 @@ import $ from "jquery";
 import "./focus";
 import utils from "../../core/utils";
 
-describe("pat-focus", function() {
-    beforeEach(function() {
+describe("pat-focus", function () {
+    beforeEach(function () {
         $("<div/>", {
-            id: "lab"
+            id: "lab",
         }).appendTo(document.body);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         $("#lab").remove();
     });
 
-    describe("_findRelatives", function() {
-        it("Element without relations", function() {
+    describe("_findRelatives", function () {
+        it("Element without relations", function () {
             $("#lab").append("<input type='text' name='title'/>");
             var $input = $("#lab input"),
                 $relatives = utils.findRelatives($input[0]);
@@ -22,7 +22,7 @@ describe("pat-focus", function() {
             expect($relatives[0].tagName).toBe("INPUT");
         });
 
-        it("Element with parent label", function() {
+        it("Element with parent label", function () {
             $("#lab").append(
                 "<label><input type='text' name='title'/></label>"
             );
@@ -34,7 +34,7 @@ describe("pat-focus", function() {
             expect($relatives.filter("label").length).toBe(1);
         });
 
-        it("Element with parent fieldset", function() {
+        it("Element with parent fieldset", function () {
             $("#lab").append(
                 "<fieldset><input type='text' name='title'/></fieldset>"
             );
@@ -46,7 +46,7 @@ describe("pat-focus", function() {
             expect($relatives.filter("fieldset").length).toBe(1);
         });
 
-        it("Element with non-parent label referenced by id", function() {
+        it("Element with non-parent label referenced by id", function () {
             $("#lab").append(
                 "<label for='title'>Title</label><input id='title' title='text' name='ttl'/>"
             );
@@ -58,7 +58,7 @@ describe("pat-focus", function() {
             expect($relatives.filter("label").length).toBe(1);
         });
 
-        it("Element with non-parent label references by name", function() {
+        it("Element with non-parent label references by name", function () {
             $("#lab").append(
                 "<label for='title'>Title</label><input title='text' name='title'/>"
             );
@@ -70,7 +70,7 @@ describe("pat-focus", function() {
             expect($relatives.filter("label").length).toBe(1);
         });
 
-        it("Ignore label outside of form", function() {
+        it("Ignore label outside of form", function () {
             $("#lab").append(
                 "<label for='title'>Title</label><form><input title='text' name='title'/></form>"
             );

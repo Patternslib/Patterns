@@ -23,7 +23,7 @@ var parser = {
                 // parse options if string
                 if (typeof elOptions === "string") {
                     var tmpOptions = {};
-                    $.each(elOptions.split(";"), function(i, item) {
+                    $.each(elOptions.split(";"), function (i, item) {
                         item = item.split(":");
                         item.reverse();
                         var key = item.pop();
@@ -38,7 +38,7 @@ var parser = {
             }
         }
         return $.extend(true, {}, options, elOptions);
-    }
+    },
 };
 
 export default parser;

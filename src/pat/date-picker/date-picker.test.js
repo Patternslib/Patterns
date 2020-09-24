@@ -2,22 +2,22 @@ import $ from "jquery";
 import i18ndata from "./i18n.json";
 import pattern from "./date-picker";
 
-describe("pat-date-picker", function() {
-    beforeEach(function() {
+describe("pat-date-picker", function () {
+    beforeEach(function () {
         $(
             '<link href="src/pat/date-picker/date-picker.css" rel="stylesheet"/>'
         ).appendTo(document.head);
     });
-    afterEach(function() {
+    afterEach(function () {
         //$('head link[href$="date-picker.css"').remove();
         $("input.pat-date-picker").remove();
         $(".pika-single, .pika-lendar").remove();
     });
 
-    it("Default date picker.", function() {
-        var $pika = $(
-            '<input type="date" class="pat-date-picker"/>'
-        ).appendTo(document.body);
+    it("Default date picker.", function () {
+        var $pika = $('<input type="date" class="pat-date-picker"/>').appendTo(
+            document.body
+        );
         pattern.init($pika);
         $pika.click();
 
@@ -52,7 +52,7 @@ describe("pat-date-picker", function() {
         ).toBe("Sun");
     });
 
-    it("Date picker starts at Monday.", function() {
+    it("Date picker starts at Monday.", function () {
         var $pika = $(
             '<input type="date" class="pat-date-picker" data-pat-date-picker="first-day: 1" />'
         ).appendTo(document.body);
@@ -65,7 +65,7 @@ describe("pat-date-picker", function() {
         ).toBe("Mon");
     });
 
-    it("Date picker with pre-set value.", function() {
+    it("Date picker with pre-set value.", function () {
         var $pika = $(
             '<input type="date" class="pat-date-picker" value="1900-01-01"/>'
         ).appendTo(document.body);
@@ -91,7 +91,7 @@ describe("pat-date-picker", function() {
         ).toBe("1");
     });
 
-    it("Date picker with week numbers.", function() {
+    it("Date picker with week numbers.", function () {
         var $pika = $(
             '<input type="date" class="pat-date-picker" data-pat-date-picker="week-numbers: show;" value="2017-09-18"/>'
         ).appendTo(document.body);
@@ -99,32 +99,30 @@ describe("pat-date-picker", function() {
         $pika.click();
 
         expect(
-            document.querySelectorAll(".pika-lendar .pika-week")[0]
-                .textContent
+            document.querySelectorAll(".pika-lendar .pika-week")[0].textContent
         ).toBe("35");
     });
 
-    describe("Date picker with i18n", function() {
-
-        describe("with proper json URL", function() {
-            it("properly localizes the months and weekdays", function() {
+    describe("Date picker with i18n", function () {
+        describe("with proper json URL", function () {
+            it("properly localizes the months and weekdays", function () {
                 var $pika = $(
                     '<input type="date" class="pat-date-picker" value="2018-10-21" data-pat-date-picker="i18n:/path/to/i18njson" />'
                 ).appendTo(document.body);
                 // Simulate successful getJSON call
                 jest.spyOn($, "getJSON").mockImplementation(() => {
                     return {
-                        done: function(cb) {
+                        done: function (cb) {
                             cb(i18ndata);
                             return this;
                         },
-                        fail: function(cb) {
+                        fail: function (cb) {
                             return this;
                         },
-                        always: function(cb) {
+                        always: function (cb) {
                             cb();
                             return this;
-                        }
+                        },
                     };
                 });
                 pattern.init($pika);
@@ -138,25 +136,25 @@ describe("pat-date-picker", function() {
             });
         });
 
-        describe("with bogus json URL", function() {
-            it("falls back to default (english) month and weekday labels ", function() {
+        describe("with bogus json URL", function () {
+            it("falls back to default (english) month and weekday labels ", function () {
                 var $pika = $(
                     '<input type="date" class="pat-date-picker" value="2018-10-21" data-pat-date-picker="i18n:/path/to/i18njson" />'
                 ).appendTo(document.body);
                 // Simulate failing getJSON call
                 jest.spyOn($, "getJSON").mockImplementation(() => {
                     return {
-                        done: function(cb) {
+                        done: function (cb) {
                             return this;
                         },
-                        fail: function(cb) {
+                        fail: function (cb) {
                             cb();
                             return this;
                         },
-                        always: function(cb) {
+                        always: function (cb) {
                             cb();
                             return this;
-                        }
+                        },
                     };
                 });
                 pattern.init($pika);

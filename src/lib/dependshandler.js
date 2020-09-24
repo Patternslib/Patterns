@@ -10,13 +10,13 @@ function DependsHandler($el, expression) {
 }
 
 DependsHandler.prototype = {
-    _findInputs: function(name) {
+    _findInputs: function (name) {
         var $input = this.$context.find(":input[name='" + name + "']");
         if (!$input.length) $input = $("#" + name);
         return $input;
     },
 
-    _getValue: function(name) {
+    _getValue: function (name) {
         var $input = this._findInputs(name);
         if (!$input.length) return null;
 
@@ -28,22 +28,21 @@ DependsHandler.prototype = {
         else return $input.val();
     },
 
-    getAllInputs: function() {
+    getAllInputs: function () {
         var todo = [this.ast],
             $inputs = $(),
             node;
 
         while (todo.length) {
             node = todo.shift();
-            if (node.input)
-                $inputs = $inputs.add(this._findInputs(node.input));
+            if (node.input) $inputs = $inputs.add(this._findInputs(node.input));
             if (node.children && node.children.length)
                 todo.push.apply(todo, node.children);
         }
         return $inputs;
     },
 
-    _evaluate: function(node) {
+    _evaluate: function (node) {
         var value = node.input ? this._getValue(node.input) : null,
             i;
 
@@ -85,9 +84,9 @@ DependsHandler.prototype = {
         }
     },
 
-    evaluate: function() {
+    evaluate: function () {
         return this._evaluate(this.ast);
-    }
+    },
 };
 
 export default DependsHandler;

@@ -1,21 +1,21 @@
 /**
-* Patterns registry - Central registry and scan logic for patterns
-*
-* Copyright 2012-2013 Simplon B.V.
-* Copyright 2012-2013 Florian Friesdorf
-* Copyright 2013 Marko Durkovic
-* Copyright 2013 Rok Garbas
-* Copyright 2014-2015 Syslab.com GmBH, JC Brand
-*/
+ * Patterns registry - Central registry and scan logic for patterns
+ *
+ * Copyright 2012-2013 Simplon B.V.
+ * Copyright 2012-2013 Florian Friesdorf
+ * Copyright 2013 Marko Durkovic
+ * Copyright 2013 Rok Garbas
+ * Copyright 2014-2015 Syslab.com GmBH, JC Brand
+ */
 
 /*
-* changes to previous patterns.register/scan mechanism
-* - if you want initialised class, do it in init
-* - init returns set of elements actually initialised
-* - handle once within init
-* - no turnstile anymore
-* - set pattern.jquery_plugin if you want it
-*/
+ * changes to previous patterns.register/scan mechanism
+ * - if you want initialised class, do it in init
+ * - init returns set of elements actually initialised
+ * - handle once within init
+ * - no turnstile anymore
+ * - set pattern.jquery_plugin if you want it
+ */
 import $ from "jquery";
 import _ from "underscore";
 import logging from "./logging";
@@ -50,12 +50,9 @@ var registry = {
     // results in rescanning the DOM only for this pattern.
     initialized: false,
     init: function registry_init() {
-        $(document).ready(function() {
+        $(document).ready(function () {
             log.info(
-                "loaded: " +
-                    Object.keys(registry.patterns)
-                        .sort()
-                        .join(", ")
+                "loaded: " + Object.keys(registry.patterns).sort().join(", ")
             );
             registry.scan(document.body);
             registry.initialized = true;
@@ -69,7 +66,7 @@ var registry = {
         this.patterns = {};
     },
 
-    transformPattern: function(name, content) {
+    transformPattern: function (name, content) {
         /* Call the transform method on the pattern with the given name, if
          * it exists.
          */
@@ -90,7 +87,7 @@ var registry = {
         }
     },
 
-    initPattern: function(name, el, trigger) {
+    initPattern: function (name, el, trigger) {
         /* Initialize the pattern with the provided name and in the context
          * of the passed in DOM element.
          */
@@ -113,7 +110,7 @@ var registry = {
         }
     },
 
-    orderPatterns: function(patterns) {
+    orderPatterns: function (patterns) {
         // XXX: Bit of a hack. We need the validation pattern to be
         // parsed and initiated before the inject pattern. So we make
         // sure here, that it appears first. Not sure what would be
@@ -136,14 +133,14 @@ var registry = {
             patterns || Object.keys(registry.patterns)
         );
         patterns.forEach(_.partial(this.transformPattern, _, content));
-        patterns = _.each(patterns, function(name) {
+        patterns = _.each(patterns, function (name) {
             var pattern = registry.patterns[name];
             if (pattern.trigger) {
                 selectors.unshift(pattern.trigger);
             }
         });
         $match = $(content).findInclusive(selectors.join(",")); // Find all DOM elements belonging to a pattern
-        $match = $match.filter(function() {
+        $match = $match.filter(function () {
             // Filter out code examples wrapped in <pre> elements.
             return $(this).parents("pre").length === 0;
         });
@@ -152,9 +149,7 @@ var registry = {
         // walk list backwards and initialize patterns inside-out.
         $match.toArray().reduceRight(
             function registryInitPattern(acc, el) {
-                patterns.forEach(
-                    _.partial(this.initPattern, _, el, trigger)
-                );
+                patterns.forEach(_.partial(this.initPattern, _, el, trigger));
             }.bind(this),
             null
         );
@@ -178,7 +173,7 @@ var registry = {
 
         // register pattern as jquery plugin
         if (pattern.jquery_plugin) {
-            plugin_name = ("pat-" + name).replace(/-([a-zA-Z])/g, function(
+            plugin_name = ("pat-" + name).replace(/-([a-zA-Z])/g, function (
                 match,
                 p1
             ) {
@@ -186,15 +181,14 @@ var registry = {
             });
             $.fn[plugin_name] = utils.jqueryPlugin(pattern);
             // BBB 2012-12-10 and also for Mockup patterns.
-            $.fn[plugin_name.replace(/^pat/, "pattern")] =
-                $.fn[plugin_name];
+            $.fn[plugin_name.replace(/^pat/, "pattern")] = $.fn[plugin_name];
         }
         log.debug("Registered pattern:", name, pattern);
         if (registry.initialized) {
             registry.scan(document.body, [name]);
         }
         return true;
-    }
+    },
 };
 
 export default registry;

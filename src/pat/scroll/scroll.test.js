@@ -1,52 +1,52 @@
 import pattern from "./scroll";
 import $ from "jquery";
 
-describe("pat-scroll", function() {
-    describe("If the trigger is set to 'auto", function() {
-        beforeEach(function() {
+describe("pat-scroll", function () {
+    describe("If the trigger is set to 'auto", function () {
+        beforeEach(function () {
             $("<div/>", { id: "lab" }).appendTo(document.body);
         });
-        afterEach(function() {
+        afterEach(function () {
             $("#lab").remove();
         });
 
-        it("will automatically scroll to an anchor if the trigger is set to 'auto'", function(done) {
+        it("will automatically scroll to an anchor if the trigger is set to 'auto'", function (done) {
             $("#lab").html(
                 [
                     '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>',
-                    '<p id="p1"></p>'
+                    '<p id="p1"></p>',
                 ].join("\n")
             );
             // var spy_animate = spyOn($.fn, 'animate');
             pattern.init($(".pat-scroll"));
-            setTimeout(function() {
+            setTimeout(function () {
                 // heisenbug: expect(spy_animate).toHaveBeenCalled();
                 done();
             }, 2000);
         });
     });
 
-    describe("If the trigger is set to 'click'", function() {
-        beforeEach(function() {
+    describe("If the trigger is set to 'click'", function () {
+        beforeEach(function () {
             $("<div/>", { id: "lab" }).appendTo(document.body);
         });
-        afterEach(function() {
+        afterEach(function () {
             $("#lab").remove();
         });
 
-        it("will scroll to an anchor on click", function(done) {
+        it("will scroll to an anchor on click", function (done) {
             $("#lab").html(
                 [
                     '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click">p1</a>',
-                    '<p id="p1"></p>'
+                    '<p id="p1"></p>',
                 ].join("\n")
             );
             var $el = $(".pat-scroll");
             // var spy_animate = spyOn($.fn, 'animate');
             pattern.init($el);
-            setTimeout(function() {
+            setTimeout(function () {
                 $el.click();
-                setTimeout(function() {
+                setTimeout(function () {
                     // wait for scrolling via click to be done.
                     // heisenbug: expect(spy_animate).toHaveBeenCalled();
                     done();
@@ -54,11 +54,11 @@ describe("pat-scroll", function() {
             }, 2000);
         });
 
-        it("will scroll to an anchor on pat-update with originalEvent of click", function(done) {
+        it("will scroll to an anchor on pat-update with originalEvent of click", function (done) {
             $("#lab").html(
                 [
                     '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click">p1</a>',
-                    '<p id="p1"></p>'
+                    '<p id="p1"></p>',
                 ].join("\n")
             );
             var $el = $(".pat-scroll");
@@ -67,10 +67,10 @@ describe("pat-scroll", function() {
             $el.trigger("pat-update", {
                 pattern: "stacks",
                 originalEvent: {
-                    type: "click"
-                }
+                    type: "click",
+                },
             });
-            setTimeout(function() {
+            setTimeout(function () {
                 // heisenbug: expect(spy_animate).toHaveBeenCalled();
                 console.log("Heisenbug");
                 done();

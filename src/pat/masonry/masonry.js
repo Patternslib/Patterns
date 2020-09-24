@@ -1,7 +1,7 @@
 /**
-* Patternslib pattern for Masonry
-* Copyright 2015 Syslab.com GmBH
-*/
+ * Patternslib pattern for Masonry
+ * Copyright 2015 Syslab.com GmBH
+ */
 
 import $ from "jquery";
 import logging from "../../core/logging";
@@ -49,7 +49,7 @@ export default Base.extend({
         var imgLoad = imagesLoaded(this.$el);
         imgLoad.on(
             "progress",
-            function() {
+            function () {
                 if (!this.msnry) {
                     this.initMasonry();
                 }
@@ -58,7 +58,7 @@ export default Base.extend({
         );
         imgLoad.on(
             "always",
-            function() {
+            function () {
                 if (!this.msnry) {
                     this.initMasonry();
                 }
@@ -72,10 +72,7 @@ export default Base.extend({
                 "patterns-injected.pat-masonry",
                 utils.debounce(this.update.bind(this), 100)
             )
-            .on(
-                "pat-update",
-                utils.debounce(this.quicklayout.bind(this), 200)
-            );
+            .on("pat-update", utils.debounce(this.quicklayout.bind(this), 200));
 
         var callback = utils.debounce(this.quicklayout.bind(this), 400);
         var observer = new MutationObserver(callback);
@@ -87,12 +84,12 @@ export default Base.extend({
             characterData: false,
             attributeOldValue: true,
             attributes: true,
-            attributeFilter: ["class"]
+            attributeFilter: ["class"],
         };
         observer.observe(document.body, config);
     },
 
-    initMasonry: function() {
+    initMasonry: function () {
         var containerStyle;
         try {
             containerStyle = JSON.parse(this.options.containerStyle);
@@ -116,33 +113,33 @@ export default Base.extend({
             percentPosition: this.options.is["percent-position"],
             resize: this.options.is["resize"],
             stamp: this.options.stamp,
-            transitionDuration: this.options.transitionDuration
+            transitionDuration: this.options.transitionDuration,
         });
     },
 
-    update: function() {
+    update: function () {
         this.msnry.remove();
         this.initMasonry();
         this.layout();
     },
 
-    quicklayout: function() {
+    quicklayout: function () {
         if (!this.msnry) {
             // Not initialized yet
             return;
         }
         // call masonry layout on the children before calling it on this element
-        this.$el.find(".pat-masonry").each(function(idx, child) {
+        this.$el.find(".pat-masonry").each(function (idx, child) {
             $(child).patMasonry("quicklayout");
         });
         this.msnry.layout();
     },
 
-    layout: function() {
+    layout: function () {
         this.$el.removeClass("masonry-ready");
         this.msnry.on(
             "layoutComplete",
-            function() {
+            function () {
                 this.$el.addClass("masonry-ready");
             }.bind(this)
         );
@@ -150,8 +147,8 @@ export default Base.extend({
         this.quicklayout();
     },
 
-    getTypeCastedValue: function(original) {
+    getTypeCastedValue: function (original) {
         var val = Number(original);
         return isNaN(val) ? original || 0 : val;
-    }
+    },
 });

@@ -1,20 +1,20 @@
 import pattern from "./datetime-picker";
 import $ from "jquery";
 
-describe("pat-datetime-picker", function() {
-    beforeEach(function() {
+describe("pat-datetime-picker", function () {
+    beforeEach(function () {
         $(
             '<link href="src/pat/datetime-picker/datetime-picker.css" rel="stylesheet"/>'
         ).appendTo(document.head);
     });
-    afterEach(function() {
+    afterEach(function () {
         //$('head link[href$="date-picker.css"').remove();
         $("input.pat-datetime-picker").remove();
         $(".datetime-picker-wrapper").remove();
         $(".pika-single, .pika-lendar").remove();
     });
 
-    it("Default datetime picker.", function() {
+    it("Default datetime picker.", function () {
         var $el = $(
             '<input type="datetime-local" class="pat-datetime-picker"/>'
         ).appendTo(document.body);
@@ -51,7 +51,7 @@ describe("pat-datetime-picker", function() {
         ).toBe("Sun");
     });
 
-    it("Date/Time picker starts at Monday.", function() {
+    it("Date/Time picker starts at Monday.", function () {
         var $el = $(
             '<input type="date" class="pat-datetime-picker" data-pat-datetime-picker="first-day: 1" />'
         ).appendTo(document.body);
@@ -64,7 +64,7 @@ describe("pat-datetime-picker", function() {
         ).toBe("Mon");
     });
 
-    it("Date/Time picker with pre-set value.", function() {
+    it("Date/Time picker with pre-set value.", function () {
         var $el = $(
             '<input type="datetime-local" class="pat-datetime-picker" value="1900-01-01T00:00"/>'
         ).appendTo(document.body);
@@ -91,7 +91,7 @@ describe("pat-datetime-picker", function() {
         ).toBe("1");
     });
 
-    it("Date/Time picker with week numbers.", function() {
+    it("Date/Time picker with week numbers.", function () {
         var $el = $(
             '<input type="datetime-local" class="pat-datetime-picker" data-pat-datetime-picker="week-numbers: show;" value="2017-09-18T23:42"/>'
         ).appendTo(document.body);
@@ -100,8 +100,7 @@ describe("pat-datetime-picker", function() {
         $("input.date", $el.next()).click();
 
         expect(
-            document.querySelectorAll(".pika-lendar .pika-week")[0]
-                .textContent
+            document.querySelectorAll(".pika-lendar .pika-week")[0].textContent
         ).toBe("35");
     });
 

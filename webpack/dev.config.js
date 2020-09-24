@@ -1,15 +1,14 @@
-const baseConfig = require('./base.config.js');
-const merge = require('webpack-merge');
+const baseConfig = require("./base.config.js");
+const merge = require("webpack-merge");
 
-
-module.exports = env => {
+module.exports = (env) => {
     return merge(baseConfig(env), {
-        mode: 'development',
+        mode: "development",
         devServer: {
             inline: true,
-            contentBase: './',
-            port: '3001',
-            host: '0.0.0.0'
-        }
+            contentBase: "./",
+            port: "3001",
+            host: "0.0.0.0",
+        },
     });
 };
