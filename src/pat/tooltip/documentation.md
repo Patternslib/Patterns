@@ -34,21 +34,21 @@ tooltip, it naturally follows that the tooltip itself will be placed to
 the left of the triggering element.
 
 The position of the tip within the tooltip can be specified with a
-*position* property which specifies the preferred positions. This is
+_position_ property which specifies the preferred positions. This is
 formatted as `<preference>[,preference]*`. The possible preferences are:
 
-- `tl`: tip placed at the leftmost corner of the top side of the tooltip
-- `tm`: tip placed at the middle of the top side of the tooltip
-- `tr`: tip placed at the rightmost corner of the top side of the tooltip
-- `rt`: tip placed at the top corner of the right side of the tooltip
-- `rm`: tip placed at the middle of the right side of the tooltip
-- `rb`: tip placed at the bottom corner of the right side of the tooltip
-- `bl`: tip placed at the leftmost corner of the bottom side of the tooltip
-- `bm`: tip placed at the middle of the bottom side of the tooltip
-- `br`: tip placed at the rightmost corner of the bottom side of the tooltip
-- `lt`: tip placed at the top corner of the left side of the tooltip
-- `lm`: tip placed at the middle of the left side of the tooltip
-- `lb`: tip placed at the bottom corner of the left side of the tooltip
+-   `tl`: tip placed at the leftmost corner of the top side of the tooltip
+-   `tm`: tip placed at the middle of the top side of the tooltip
+-   `tr`: tip placed at the rightmost corner of the top side of the tooltip
+-   `rt`: tip placed at the top corner of the right side of the tooltip
+-   `rm`: tip placed at the middle of the right side of the tooltip
+-   `rb`: tip placed at the bottom corner of the right side of the tooltip
+-   `bl`: tip placed at the leftmost corner of the bottom side of the tooltip
+-   `bm`: tip placed at the middle of the bottom side of the tooltip
+-   `br`: tip placed at the rightmost corner of the bottom side of the tooltip
+-   `lt`: tip placed at the top corner of the left side of the tooltip
+-   `lm`: tip placed at the middle of the left side of the tooltip
+-   `lb`: tip placed at the bottom corner of the left side of the tooltip
 
 An example:
 
@@ -104,13 +104,12 @@ option:
 This will load the contents of the `#myTip` element of
 balloon-contents.html and display it in a tooltip.
 
-You can also use the ``::element`` modifier after a document fragment to select
+You can also use the `::element` modifier after a document fragment to select
 the element itself instead of it's contents. E.g.:
 
     <a href="balloon-contents.html#myTip::element" class="pat-tooltip" data-pat-tooltip="source: ajax">
      …
     </a>
-
 
 ### Generated markup
 
@@ -161,15 +160,15 @@ be temporarily shown with a progress indicator:
 The tooltip can be configured through a `data-pat-tooltip` attribute.
 The available options are:
 
-| Property | Default value | Values | Description | Type |
-| ----- | --------| -------- | ------- | ----------- |
-| `position-list`| `auto` | `tl` `tm` `tr` `rt` `rm` `rb`  `br` `bm` `bl` `lb` `lm` `lt` | The priority in which the pattern will try to position the tooltip. With the tooltip is positioned where the most space is on the screen. The two letters indicate the position of the triangle as opposed to the tooltip body. Adding `force` will force the tooltip position, even if it would end up out of view. | Multiple value |
-| `position-policy` | `auto` | `auto` `force` | Policy used to place a tooltip: either always use a listed position, or allow other positions if no space is available for the listed positions. | Mutually exclusive |
-| `trigger` | `click` | `click` `hover` | Sets which user action should make the tooltip appear. | Mutually exclusive |
-| `source` | `title` | `ajax` `content` `title` | Select where the contents of the tooltip is taken from: AJAX loading of the link target, the contents of element or its title attribute. | Mutually exclusive |
-| `delay` | `0` | *time* | `The delay for the tooltip to appear, expressed in milliseconds | Time |
-| `mark-inactive` | `true` | `true` `false` | Should we add inactive class to the tooltip trigger? | Bool |
-| `closing` | `auto` | `auto` `sticky` `close-button` | Auto means that the tooltip will disappear when the user clicks out of the tooltip, or — in case of hover triggered tooltips — hovers away from the trigger element. `close-button` will add a close button to the tooltip which must be used to close the tooltip. | Mutually exclusive |
-| `class` | *none* | *class value* | Assigns a class to the tooltip. For instance to give a specific tooltip a different colour | |
-| `ajax-data-type`| `html` | `html` `markdown` | Data type of content to be loaded when AJAX is used as source. | Mutually exclusive |
-| `target` | `body` | *selector* | Selects where the tooltip container is appended in the DOM | |
+| Property          | Default value | Values                                                      | Description                                                                                                                                                                                                                                                                                                          | Type               |
+| ----------------- | ------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| `position-list`   | `auto`        | `tl` `tm` `tr` `rt` `rm` `rb` `br` `bm` `bl` `lb` `lm` `lt` | The priority in which the pattern will try to position the tooltip. With the tooltip is positioned where the most space is on the screen. The two letters indicate the position of the triangle as opposed to the tooltip body. Adding `force` will force the tooltip position, even if it would end up out of view. | Multiple value     |
+| `position-policy` | `auto`        | `auto` `force`                                              | Policy used to place a tooltip: either always use a listed position, or allow other positions if no space is available for the listed positions.                                                                                                                                                                     | Mutually exclusive |
+| `trigger`         | `click`       | `click` `hover`                                             | Sets which user action should make the tooltip appear.                                                                                                                                                                                                                                                               | Mutually exclusive |
+| `source`          | `title`       | `ajax` `content` `title`                                    | Select where the contents of the tooltip is taken from: AJAX loading of the link target, the contents of element or its title attribute.                                                                                                                                                                             | Mutually exclusive |
+| `delay`           | `0`           | _time_                                                      | `The delay for the tooltip to appear, expressed in milliseconds                                                                                                                                                                                                                                                      | Time               |
+| `mark-inactive`   | `true`        | `true` `false`                                              | Should we add inactive class to the tooltip trigger?                                                                                                                                                                                                                                                                 | Bool               |
+| `closing`         | `auto`        | `auto` `sticky` `close-button`                              | Auto means that the tooltip will disappear when the user clicks out of the tooltip, or — in case of hover triggered tooltips — hovers away from the trigger element. `close-button` will add a close button to the tooltip which must be used to close the tooltip.                                                  | Mutually exclusive |
+| `class`           | _none_        | _class value_                                               | Assigns a class to the tooltip. For instance to give a specific tooltip a different colour                                                                                                                                                                                                                           |                    |
+| `ajax-data-type`  | `html`        | `html` `markdown`                                           | Data type of content to be loaded when AJAX is used as source.                                                                                                                                                                                                                                                       | Mutually exclusive |
+| `target`          | `body`        | _selector_                                                  | Selects where the tooltip container is appended in the DOM                                                                                                                                                                                                                                                           |                    |

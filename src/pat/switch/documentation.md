@@ -18,10 +18,10 @@ toggle pattern toggles between two states.
 
 This pattern takes three properties:
 
-- `selector`: the CSS selector identifying the elements that must be
-  updated
-- `remove`: the class that should be added
-- `add`: a class that should be removed
+-   `selector`: the CSS selector identifying the elements that must be
+    updated
+-   `remove`: the class that should be added
+-   `add`: a class that should be removed
 
 You must provide the selector and at least one of _remove_ or _add_.
 

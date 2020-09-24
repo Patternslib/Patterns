@@ -25,7 +25,6 @@ This will run [JSHint](http://jshint.com/) to make sure your
 code matches our style guide, additionally it runs the
 [Jasmine](http://jasmine.github.io/) tests.
 
-
 ## Indentation
 
 We indent 4 spaces. Proper indentation is very important for readability.
@@ -44,16 +43,15 @@ For example:
         ...
     }
 
-### jQuery objects are prefixed with $
+### jQuery objects are prefixed with \$
 
-We prefix jQuery objects with the $ sign, to distinguish them from normal DOM
+We prefix jQuery objects with the \$ sign, to distinguish them from normal DOM
 elements.
 
 For example:
 
     var divs = document.getElementsByTagName('div'); // List of DOM elements
     var $divs = $('div'); // jQuery object
-
 
 ## Spaces around operators
 
@@ -84,7 +82,7 @@ For example:
 
 ## Function declaration and invocation
 
-In his book, *Javascript, the good parts*, Douglas Crockford suggests that
+In his book, _Javascript, the good parts_, Douglas Crockford suggests that
 function names and the brackets that come afterwards should be separated with a space,
 to indicate that it's a declaration and not a function call or instantiation.
 
@@ -237,7 +235,7 @@ $el.on("click", function buttonClick(event) {
 An exception to this rule are trivial functions that do not call any
 other functions, such as functions passed to Array.filter or Array.forEach.
 
-Pattern methods must always be named, and the name should be prefixed 
+Pattern methods must always be named, and the name should be prefixed
 with the pattern name to make them easy to recognize.
 
     var mypattern = {
@@ -250,7 +248,7 @@ with the pattern name to make them easy to recognize.
 ## Custom events
 
 A pattern can send custom events for either internal purposes, or as a hook for
-third party javascript. Since IE8 is still supported 
+third party javascript. Since IE8 is still supported
 [CustomEvent](http://dochub.io/#dom/customevent) can not be used. Instead you must
 send custom events using [jQuery's trigger
 function](http://api.jquery.com/trigger/). Event names must follow the
@@ -259,7 +257,7 @@ function](http://api.jquery.com/trigger/). Event names must follow the
     $(el).trigger("pat-tooltip-open");
 
 The element must be dispatched from the element that caused something to
-happen, *not* from the elements that are changed as a result of an action.
+happen, _not_ from the elements that are changed as a result of an action.
 
 All extra data must be passed via a single object. In a future Patterns release
 this will be moved to the `detail` property of a CustomEvent instance.

@@ -118,9 +118,9 @@ To use this you requirements must be met:
 
 The possible values for the `store` parameter are:
 
-- `none`: do not remember the toggle state (default).
-- `local`: remember the state as part of the local storage.
-- `session`: remember the status as part of the session storage.
+-   `none`: do not remember the toggle state (default).
+-   `local`: remember the state as part of the local storage.
+-   `session`: remember the status as part of the session storage.
 
 ### Transitions
 

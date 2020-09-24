@@ -18,9 +18,9 @@ element and add links containing an image to it.
 
 The slideshow can be controlled in several ways:
 
-- You can navigate through the images using a mouse wheel, swiping or your keyboard.
-- Unless explicitly disabled via an option you can start a slideshow of the gallery by clicking on the Play-button.
-- The image caption and toolbar are automatically hidden if they are not used. They can be toggled by double-tapping or pressing the space bar.
+-   You can navigate through the images using a mouse wheel, swiping or your keyboard.
+-   Unless explicitly disabled via an option you can start a slideshow of the gallery by clicking on the Play-button.
+-   The image caption and toolbar are automatically hidden if they are not used. They can be toggled by double-tapping or pressing the space bar.
 
 ### Markup details
 
@@ -74,10 +74,10 @@ You can customise the behaviour of a gallery through options in the
       ...
     </ul>
 
-| Property | Default value | Values | Type |
-| -------- | ------------- | ------ | ---- |
-| `item-selector` | `a` | Any CSS selector | The selector for the link element, which contains the images to be added to the gallery. For example, you can set the `item-selector` to `a.add-to-gallery` and have only images wrapped in an anchor element with the class `add-to-gallery` added to the gallery. |
-| `loop` | true | `true` `false` | Indicates if a slideshow should loop back to the beginning.|Mutually exclusive |
-| `scale-method` | `fit` | `fit` `fitNoUpscale` `zoom` | How images will fit onto the screen. `fit` ensures the image always fits the screen. `fitNoUpscale` works like `fit` but will never upscale the image. `zoom` the image will always fill the full screen, this may cause the image to be "zoomed" in and cropped.|Mutually exclusive |
-| `delay` | `30000` | | The delay, in milliseconds, an image is shown in a slideshow. | Number |
-| `effect-duration` | | `250` | How long it will take in milliseconds for an image to slide into view. | Number |
+| Property          | Default value | Values                      | Type                                                                                                                                                                                                                                                                |
+| ----------------- | ------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `item-selector`   | `a`           | Any CSS selector            | The selector for the link element, which contains the images to be added to the gallery. For example, you can set the `item-selector` to `a.add-to-gallery` and have only images wrapped in an anchor element with the class `add-to-gallery` added to the gallery. |
+| `loop`            |  true         |  `true` `false`             | Indicates if a slideshow should loop back to the beginning.                                                                                                                                                                                                         | Mutually exclusive |
+| `scale-method`    | `fit`         | `fit` `fitNoUpscale` `zoom` | How images will fit onto the screen. `fit` ensures the image always fits the screen. `fitNoUpscale` works like `fit` but will never upscale the image. `zoom` the image will always fill the full screen, this may cause the image to be "zoomed" in and cropped.   | Mutually exclusive |
+| `delay`           | `30000`       |                             | The delay, in milliseconds, an image is shown in a slideshow.                                                                                                                                                                                                       | Number |
+| `effect-duration` |               | `250`                       | How long it will take in milliseconds for an image to slide into view.                                                                                                                                                                                              | Number |

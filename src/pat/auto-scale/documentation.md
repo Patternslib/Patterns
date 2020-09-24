@@ -47,11 +47,11 @@ Patterns will check if the browser supports the requested method; if the request
 method is known to not be supported then another method will be used. The current overrides
 are:
 
-- Firefox zoom does not support zoom ([mozilla bug
-  \#390936](https://bugzilla.mozilla.org/show_bug.cgi?id=390936)) so the scale
-  transform is always used.
-- IE versions before 9 do not support the scale transform, so zoom is always
-  used.
+-   Firefox zoom does not support zoom ([mozilla bug
+    \#390936](https://bugzilla.mozilla.org/show_bug.cgi?id=390936)) so the scale
+    transform is always used.
+-   IE versions before 9 do not support the scale transform, so zoom is always
+    used.
 
 ### Option reference
 

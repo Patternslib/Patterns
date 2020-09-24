@@ -20,6 +20,7 @@ and can rely on the classes being set consistently.
 </ul>
 
 On loading,
+
 <ul class="pat-menu">
   <li class = 'closed'>First item</li>
   <li class = 'closed'>Second item</li>
@@ -29,7 +30,8 @@ On loading,
   <li class = 'closed'>Sixth item</li>
 </ul>
 
- If the focus is on the second element,
+If the focus is on the second element,
+
  <ul class="pat-menu">
    <li class = 'closed'>First item</li>
    <li class = 'open'>Second item</li>

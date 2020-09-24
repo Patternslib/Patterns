@@ -40,7 +40,7 @@ name for your own pattern.
 ### The directory layout
 
 Each pattern should have a certain layout. Look for example at [pat-pickadate](https://github.com/Patternslib/pat-pickadate).
-There is one subdirectory, called *src*, inside the *pat-pickadate* repository.
+There is one subdirectory, called _src_, inside the _pat-pickadate_ repository.
 It contains the pattern's actual Javascript source file(s).
 
 The Yeoman generator will create the correct layout and all the necessary
@@ -49,7 +49,6 @@ files.
 However, if you are doing this manually instead of using Yeoman, then create this directory as well as the files required:
 
     touch README.md index.html src/pat-colorchanger.js
-
 
 ## Determining the HTML markup for the pattern
 
@@ -109,7 +108,7 @@ Put this code into `./src/pat-colorchanger.js`
 
     // Tell the interpreter to execute in "strict" mode.
     // For more info: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
-    "use strict"; 
+    "use strict";
 
     /* We instantiate a new Parser instance, which will parse HTML markup
      * looking for configuration settings for this pattern.
@@ -164,15 +163,15 @@ This pattern can be loaded directly in your browser after a standard Patterns bu
 <html>
   <body>
     <script src="patterns-2.0.0.js"></script>
-    <script src="/src/pat-colorchanger.js"></script> 
+    <script src="/src/pat-colorchanger.js"></script>
   </body>
 </html>
 ```
 
 There is a general rule that patterns should only trigger for elements that
-have a `pat-<pattern name>` class. This is reflected in the ``trigger`` for our
+have a `pat-<pattern name>` class. This is reflected in the `trigger` for our
 pattern: it specifies that this pattern applies to any DOM element with the
 `pat-colorchanger` class.
 
-When the page loads (and also when content is injected via AJAX) the ``init``
+When the page loads (and also when content is injected via AJAX) the `init`
 function of our pattern will be called once for each matched DOM element.

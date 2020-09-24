@@ -14,9 +14,9 @@ Patterns aims to support at least the two latest major versions of all popular b
 
 Currently that means:
 
-- Apple Safari 5+
-- Google Chrome 30+
-- Microsoft Internet Explorer 9+
+-   Apple Safari 5+
+-   Google Chrome 30+
+-   Microsoft Internet Explorer 9+
 
 Other browser version may work too, but are not actively tested against.
 
@@ -39,10 +39,10 @@ The individual patterns are located in their own folders in `./src/pat/`.
 
 Each pattern folder contains some or all of the following files:
 
-- _index.html_ which contains HTML markup that shows a demonstration of the pattern.
-- _documentation.md_ which is a Markdown file that documents the pattern's purpose, how to use it and how to configure it.
-- A javascript file which implements the pattern's functionality.
-- A Sass (.scss) file which provides the CSS associated with the pattern.
+-   _index.html_ which contains HTML markup that shows a demonstration of the pattern.
+-   _documentation.md_ which is a Markdown file that documents the pattern's purpose, how to use it and how to configure it.
+-   A javascript file which implements the pattern's functionality.
+-   A Sass (.scss) file which provides the CSS associated with the pattern.
 
 To generate CSS files from the pattern's included Sass files, type `make all_css`
 and the css files will be generated in the same location as the Sass files.
@@ -81,7 +81,6 @@ The simplest way to run the tests are to use make:
 
 This will install all required npm and bower packages and run the tests.
 
-
 ### Debugging tests
 
 Eventually add to tests:
@@ -97,10 +96,9 @@ Connect in chrome via:
 
     chrome://inspect
 
-You can pass Jest any parameter it accepts, like ``-t TESTPATTERN``::
+You can pass Jest any parameter it accepts, like `-t TESTPATTERN`::
 
     node --inspect-brk node_modules/.bin/jest --runInBand ./src/pat/tooltip/tooltip.test.js -t will.be.closed.when
-
 
 ### Bundle build analyzation
 
@@ -111,27 +109,24 @@ Build the stats.json file:
 
     yarn build:stats
 
-
 Check dependency tree and why which package was included:
 https://www.npmjs.com/package/whybundled
 
     whybundled stats.json
-
 
 Visualize dependency tree and analyze bundle size:
 https://www.npmjs.com/package/webpack-bundle-analyzer
 
     webpack-bundle-analyzer stats.json
 
-
 ### Organisations and projects which use Patternslib
 
-- [Overstroom ik?](http://www.overstroomik.nl), a website which informs Dutch citizens of their risk of flooding. It was introduced and highly praised by the Dutch minister of infrastructure and environment, Melanie Schultz.
-- [OiRA](https://client.oiraproject.eu/), an online risk assessment tool, created for the Occupational Health and Safety Agency (OSHA) of the European Union.
-- [Staralliance](http://www.staralliance.com) uses Patternslib in their intranet.
-- [Plone](http://plone.com) CMS and [Plone Intranet project](http://ploneintranet.com) both use Patternslib.
+-   [Overstroom ik?](http://www.overstroomik.nl), a website which informs Dutch citizens of their risk of flooding. It was introduced and highly praised by the Dutch minister of infrastructure and environment, Melanie Schultz.
+-   [OiRA](https://client.oiraproject.eu/), an online risk assessment tool, created for the Occupational Health and Safety Agency (OSHA) of the European Union.
+-   [Staralliance](http://www.staralliance.com) uses Patternslib in their intranet.
+-   [Plone](http://plone.com) CMS and [Plone Intranet project](http://ploneintranet.com) both use Patternslib.
 
 ### Interactive HTML/CSS prototypes made with Patternslib
 
-- [The Plone Intranet prototype](http://prototype.ploneintranet.net/dashboard.html)
-- The [Patternslib.com](http://patternslib.com) website uses Patternslib and is based upon a prototype, which can be found [here](https://github.com/patternslib/Patterns-site).
+-   [The Plone Intranet prototype](http://prototype.ploneintranet.net/dashboard.html)
+-   The [Patternslib.com](http://patternslib.com) website uses Patternslib and is based upon a prototype, which can be found [here](https://github.com/patternslib/Patterns-site).

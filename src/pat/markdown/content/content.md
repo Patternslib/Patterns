@@ -2,9 +2,9 @@
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ultrices purus vitae erat convallis iaculis.
 
-- Praesent vulputate blandit
-- Quam non sagittis
-- Nulla feugiat
+-   Praesent vulputate blandit
+-   Quam non sagittis
+-   Nulla feugiat
 
 **Faucibus convallis**
 
