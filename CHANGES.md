@@ -16,6 +16,8 @@
 -   IE11 is not supported by default anymore. There is a `polyfills` bundle, which adds IE11 support for the time being.
 -   pat tooltip: Remove undocumented "souce: content-html" parameter.
 -   pat tooltip: Remove undocumented "souce: auto" parameter. This parameter should not be used as it is not explicit enough and would lead to unintuitive behavior.
+-   Remove outdated pre IE9 browser compatibility polyfill `core/compat`.
+
 
 ### Features
 

@@ -49,7 +49,6 @@ require.config({
 
         parser: 'patterns_dir/core/parser',
         utils: 'patterns_dir/core/utils',
-        compat: 'patterns_dir/core/compat',
         'jquery-ext': 'patterns_dir/core/jquery-ext',
 
         registry: 'patterns_dir/core/registry',
