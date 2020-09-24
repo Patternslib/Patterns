@@ -107,18 +107,11 @@
     "tabWidth": 4,
     "quoteProps": "consistent"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
+  "browserslist": [
+    ">0.2%",
+    "ie >= 11",
+    "not dead"
+  ],
   "homepage": "https://gitub.com/Patternslib/Patterns",
   "docs": "http://patternslib.com/",
   "maintainers": [
