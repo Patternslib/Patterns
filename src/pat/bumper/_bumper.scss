@@ -2,16 +2,16 @@
 @import "../../../_sass/_settings.scss";
 
 .pat-bumper {
-  z-index: 99;
+    z-index: 99;
 
-  &.success {
-    background-color: $colour-success;
-    color: white;
-  }
-  &.warning {
-    background-color: $colour-warning;
-    color: black;
-  }
+    &.success {
+        background-color: $colour-success;
+        color: white;
+    }
+    &.warning {
+        background-color: $colour-warning;
+        color: black;
+    }
 }
 
 /* @end */

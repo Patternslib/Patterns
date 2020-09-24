@@ -1,35 +1,35 @@
 @import "settings";
 
 :fullscreen {
-  background-color: transparent;
+    background-color: transparent;
 }
 
 .pat-fullscreen {
-  cursor: pointer; // show the pointer-cursor also on element, where it wouldn't
+    cursor: pointer; // show the pointer-cursor also on element, where it wouldn't
 }
 
 .pat-fullscreen-close-fullscreen {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  cursor: pointer;
-  background: transparent;
-  height: 3rem;
-  width: 3rem;
-  line-height: 3rem;
-  margin: 0;
-  padding: 0;
-  text-indent: -1000px;
-  overflow: hidden;
-  border: none;
-
-  &:before {
-    content: "#{$glyph-close}";
-    text-indent: 0;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+    background: transparent;
+    height: 3rem;
     width: 3rem;
-    font: normal 3rem fontello;
-  }
+    line-height: 3rem;
+    margin: 0;
+    padding: 0;
+    text-indent: -1000px;
+    overflow: hidden;
+    border: none;
+
+    &:before {
+        content: "#{$glyph-close}";
+        text-indent: 0;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 3rem;
+        font: normal 3rem fontello;
+    }
 }
