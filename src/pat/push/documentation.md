@@ -5,6 +5,5 @@ When an element is equipped with class="pat-push" and a push ID it will listen t
 <a href="/apps/messages/"
    class="pat-push icon-chat"
    data-pat-push="push-id: message_counter; url: /message-counter">
-   Messages <sup class="counter digit-1">1</sup>
+Messages <sup class="counter digit-1">1</sup>
 </a>
-

@@ -29,48 +29,49 @@ they are:
 1.  options passed in to the parse() call
 2.  options for the `data-pat-<name>` attribute of the parsed element
 3.  options for the `data-pat-<name>` attribute of all parent elements
-4.  default values provided in the add\_argument() call
+4.  default values provided in the add_argument() call
 
 ## Parser API
 
 ### ArgumentParser(name)
 
-   :param string name: name of the pattern
+:param string name: name of the pattern
 
-   Create a new argument parser instance. The pattern name is used to find the
-   right attribute to parse for elements.
+Create a new argument parser instance. The pattern name is used to find the
+right attribute to parse for elements.
 
-
-- **ArgumentParser.addArgument(name[, default[, choices[, multiple]]])**
+-   **ArgumentParser.addArgument(name[, default[, choices[, multiple]]])**
 
     Parameters:
-    - **name** *(String)*: argument name
-    - **default**: default value
-    - **choices** *(Array)*: list of acceptable values
-    - **multiple**: *(Boolean)* flag indicating if argument is a list of values
+
+    -   **name** _(String)_: argument name
+    -   **default**: default value
+    -   **choices** _(Array)_: list of acceptable values
+    -   **multiple**: _(Boolean)_ flag indicating if argument is a list of values
 
     Register a new argument. The default value will be used if no value was
     found during parsing, and is used to determine what data type should be
     used.
 
-    As a special feature you can define an *argument-alias* as default value by
-    using a ```$<argument name>``` as default value. In that case if no value
+    As a special feature you can define an _argument-alias_ as default value by
+    using a `$<argument name>` as default value. In that case if no value
     for the argument was provided a copy of the referenced argument will be
     used.
 
     The default value can also be a function taking a jQuery wrapped element
     and the parameter name as arguments and which returns a default value.
 
-        parser.addArgument("delay", function($el, name) {
-            return 500;
-        });
+          parser.addArgument("delay", function($el, name) {
+              return 500;
+          });
 
-- **ArgumentParser.parse($el [, options][, multiple])**
+-   **ArgumentParser.parse(\$el [, options][, multiple])**
 
     Parameters:
-    - **$el**: *(jQuery object)* for element to parse
-    - **options** *(Object)*: default values to use
-    - **multiple** *(Boolean)*: flag indicating if multiple values should be returned.
+
+    -   **\$el**: _(jQuery object)_ for element to parse
+    -   **options** _(Object)_: default values to use
+    -   **multiple** _(Boolean)_: flag indicating if multiple values should be returned.
 
     This method returns the configuration for a pattern from an object. You can
     optionally provide options that will override default values and values
@@ -80,18 +81,18 @@ they are:
     options will be returned as a sub-object. For example a parser with
     these arguments:
 
-        parser.addArgument("selector", ".pattern");
-        parser.addArgument("control-arrows", false);
-        parser.addArgument("control-links", true);
-        parser.addArgument("control-index", false);
+          parser.addArgument("selector", ".pattern");
+          parser.addArgument("control-arrows", false);
+          parser.addArgument("control-links", true);
+          parser.addArgument("control-index", false);
 
     will return an object like this:
 
-        {
-            selector: ".pattern",
-            control: {
-                arrows: false,
-                links: true,
-                index: false
-            }
-        }
+          {
+              selector: ".pattern",
+              control: {
+                  arrows: false,
+                  links: true,
+                  index: false
+              }
+          }

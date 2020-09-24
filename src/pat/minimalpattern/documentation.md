@@ -14,20 +14,17 @@ Basic usage:
         hello.
     </div>
 
-
 Custom color:
 
     <div class="pat-minimalpattern" data-pat-minimalpattern="background-color: red">
         hello.
     </div>
 
-
 ### Option reference
 
 The fullscreen pattern can be configured through a `data-pat-fullscreen` attribute.
 The available options are:
 
-| Field               | Default | Options         | Description                                                          |
-| ------------------- | ------- | --------------- | -------------------------------------------------------------------- |
-| `background-color`  | `green` | CSS color value | This CSS color value is used as the background color of the element. |
-
+| Field              | Default | Options         | Description                                                          |
+| ------------------ | ------- | --------------- | -------------------------------------------------------------------- |
+| `background-color` | `green` | CSS color value | This CSS color value is used as the background color of the element. |

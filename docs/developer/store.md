@@ -23,24 +23,24 @@ it easier to use in patterns.
 
 ## The Store API
 
-- **store.supported**
+-   **store.supported**
 
     A boolean flag indicating if the browser supports web storage.
 
-- **store.local(name)**
+-   **store.local(name)**
 
-    - **name** *(String)*: identifier for the storage section. This should
-      almost always be the name of the pattern.
+    -   **name** _(String)_: identifier for the storage section. This should
+        almost always be the name of the pattern.
 
     Return a local storage instance. Local storage is persistant accross
     multiple browser sessions and tabs, and will survive a browser restart.
 
-- **store.session(name)**
+-   **store.session(name)**
 
     Parameters:
 
-    - **name** *(String)*: identifier for the storage section. This should
-      almost always be the name of the pattern.
+    -   **name** _(String)_: identifier for the storage section. This should
+        almost always be the name of the pattern.
 
     Return a session storage instance. Session storage is tied to a single
     browser session. If a browser has multiple tabs open on the same website
@@ -55,41 +55,41 @@ It differs in that it adds a method to remove all data for a pattern, can
 return all data as a single javascript object and can store all values that can
 be JSON serialized instead of only strings.
 
-- **storage.get(name)**
+-   **storage.get(name)**
 
     Parameters:
 
-    - **name** *(String)*: name of the stored variable to retrieve
+    -   **name** _(String)_: name of the stored variable to retrieve
 
     Retrieve (a copy of) a stored value from the storage. If no value for the
     given name was stored, `null` will be returned.
 
-- **storage.set(name, value)**
+-   **storage.set(name, value)**
 
     Parameters:
 
-    - **name** *(String)*: name of the variable to store
-    - **value** *(Object)*: value to store. Can be any type that is JSON serializable.
+    -   **name** _(String)_: name of the variable to store
+    -   **value** _(Object)_: value to store. Can be any type that is JSON serializable.
 
     Store a variable. This will replace an existing value if already present.
     Throws QuoteExceededError: This exception is thrown if the browser can not store this value.
 
-- **storage.remove(name)**
+-   **storage.remove(name)**
 
     Parameters:
 
-    - **name** *(String)*: name of the variable to remove
+    -   **name** _(String)_: name of the variable to remove
 
     Remove a variable from the storage. Unknown names are silently ignored.
 
-- **storage.clear()**
+-   **storage.clear()**
 
     This method removes all variables stored for the pattern.
 
-- **storage.all()**
+-   **storage.all()**
 
-    This method returns an object containing a copy of all stored data. Please 
+    This method returns an object containing a copy of all stored data. Please
     note that this is only a copy: modifications made to the returned object
-    will *not* be stored.
+    will _not_ be stored.
 
     Returns an object with all the stored data.

@@ -1,11 +1,11 @@
 # The declarative syntax for configuring a pattern
 
-You can change the bevaiour for some patterns by configuring them using ``data-pat-<pattern name>`` attributes in your markup.
-These attributes can be written either using the *extended notation* or a *shorthand notation*.
+You can change the bevaiour for some patterns by configuring them using `data-pat-<pattern name>` attributes in your markup.
+These attributes can be written either using the _extended notation_ or a _shorthand notation_.
 
 ## Extended notation
 
-The simplest notation you can use for parameters is the *extended notation*.
+The simplest notation you can use for parameters is the _extended notation_.
 When using this notation you always specify the property name and its value,
 separated by a colon.
 
@@ -66,7 +66,7 @@ can be written like this:
 </ul>
 ```
 
-If you prefix the name with ``no-`` the property will be set to false. If we
+If you prefix the name with `no-` the property will be set to false. If we
 want to use the same carousel as above but without expand we can write this:
 
 ```
@@ -76,9 +76,8 @@ want to use the same carousel as above but without expand we can write this:
 ```
 
 Enum values can also be used directly. For example the toggle pattern has a
-``store`` property which can the take three values ``none``, ``local`` and
-``session``. You can mention those directly:
-
+`store` property which can the take three values `none`, `local` and
+`session`. You can mention those directly:
 
 ```
 <button class="pat-toggle" data-pat-toggle=":input.myClass checked session">
@@ -108,9 +107,8 @@ need to repeat them everywhere.
 </section>
 ```
 
-The above example uses this mechanism to indicate that all ``#main`` is to
-be extracted and placed into ``#content`` for all links.
-
+The above example uses this mechanism to indicate that all `#main` is to
+be extracted and placed into `#content` for all links.
 
 ## Multiple values
 
@@ -141,8 +139,8 @@ but the option group syntax allows you to use a simpler notation:
 <div data-pat-navigation="control: startstop nav">...</div>
 ```
 
-This grouping is supported for all parameters that have the same *prefix*: a group
-name followed by a dash (``-``).
+This grouping is supported for all parameters that have the same _prefix_: a group
+name followed by a dash (`-`).
 
 Please note that this is still a grouping of options, which means that options
 set at a higher level are inherited. For example with this markup:
@@ -155,8 +153,8 @@ set at a higher level are inherited. For example with this markup:
 </div>
 ```
 
-at the inner ``div`` both *startstop* and *nav* would be enabled. If you do not want
-that you need to explicitly unset the *startstop*:
+at the inner `div` both _startstop_ and _nav_ would be enabled. If you do not want
+that you need to explicitly unset the _startstop_:
 
 ```
 <div data-pat-navigation="control: startstop">
@@ -169,7 +167,7 @@ that you need to explicitly unset the *startstop*:
 ## Multiple parameters
 
 Some patterns (for example toggle) accept multiple parameters. This can be
-done by separating them with ``&&``.
+done by separating them with `&&`.
 
 ```
 <button class="pat-toggle" data-pat-toggle="myClass class active && :input.myClass checked">
