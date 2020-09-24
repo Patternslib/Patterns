@@ -81,7 +81,7 @@ Base.extend = function (patternProps) {
     // The constructor function for the new subclass is either defined by you
     // (the "constructor" property in your `extend` definition), or defaulted
     // by us to simply call the parent's constructor.
-    if (patternProps.hasOwnProperty("constructor")) {
+    if (Object.hasOwnProperty.call(patternProps, "constructor")) {
         child = patternProps.constructor;
     } else {
         child = function () {

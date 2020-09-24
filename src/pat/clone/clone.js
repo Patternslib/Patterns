@@ -124,7 +124,7 @@ export default Base.extend({
         }
     },
 
-    confirmRemoval: function confirmRemoval($el, callback) {
+    confirmRemoval: function confirmRemoval($el) {
         if (this.options.remove.behaviour === "confirm") {
             if (window.confirm(this.options.remove.confirmation) === true) {
                 this.remove($el);

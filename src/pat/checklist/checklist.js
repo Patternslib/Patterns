@@ -107,34 +107,29 @@ var _ = {
         if (all_deselects.length === 0) {
             all_deselects = $(options.deselect);
         }
-        for (var i = 0; i < all_selects.length; i++) {
-            siblings = _._findSiblings(
-                all_selects[i],
-                "input[type=checkbox]:visible"
-            );
+        for (let select of all_selects) {
+            siblings = _._findSiblings(select, "input[type=checkbox]:visible");
             if (siblings && siblings.filter(":not(:checked)").length === 0) {
-                $(all_selects[i]).prop("disabled", true);
+                $(select).prop("disabled", true);
             } else {
-                $(all_selects[i]).prop("disabled", false);
+                $(select).prop("disabled", false);
             }
         }
-        for (var i = 0; i < all_deselects.length; i++) {
+        for (let deselect of all_deselects) {
             siblings = _._findSiblings(
-                all_deselects[i],
+                deselect,
                 "input[type=checkbox]:visible"
             );
             if (siblings && siblings.filter(":checked").length === 0) {
-                $(all_deselects[i]).prop("disabled", true);
+                $(deselect).prop("disabled", true);
             } else {
-                $(all_deselects[i]).prop("disabled", false);
+                $(deselect).prop("disabled", false);
             }
         }
     },
 
     onSelectAll: function (event) {
-        var $trigger = event.data.trigger,
-            options = $trigger.data("patternChecklist"),
-            button_clicked = event.currentTarget;
+        const button_clicked = event.currentTarget;
 
         /* look up checkboxes which are related to my button by going up one parent
         at a time until I find some for the first time */
@@ -150,9 +145,7 @@ var _ = {
     },
 
     onDeselectAll: function (event) {
-        var $trigger = event.data.trigger,
-            options = $trigger.data("patternChecklist"),
-            button_clicked = event.currentTarget;
+        const button_clicked = event.currentTarget;
 
         /* look up checkboxes which are related to my button by going up one parent
         at a time until I find some for the first time */
@@ -176,8 +169,7 @@ var _ = {
 
     _getSiblingsWithLabelsAndFieldsets: function (el) {
         var selector = 'input[name="' + el.name + '"]',
-            $related = el.form === null ? $(selector) : $(selector, el.form),
-            $result = $();
+            $related = el.form === null ? $(selector) : $(selector, el.form);
         var result = new Set();
         var label_and_fieldset;
         $related = $related.not(el);

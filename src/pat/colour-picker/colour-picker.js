@@ -6,7 +6,6 @@
  */
 
 import registry from "../../core/registry";
-import $ from "jquery";
 import "spectrum-colorpicker";
 
 var _ = {

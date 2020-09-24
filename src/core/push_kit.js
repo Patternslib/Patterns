@@ -58,16 +58,13 @@ const push_kit = {
             heartbeatOutgoing: 20000,
         });
 
-        let subscription_push_marker;
-        let subscription_desktop_notification;
-
-        client.onConnect = (frame) => {
-            subscription_push_marker = client.subscribe(
+        client.onConnect = () => {
+            client.subscribe(
                 "/exchange/" + push_exchange + "_event/" + push_user_id + ".#",
                 this.on_push_marker.bind(this)
             );
             // Only one subscription per connection is allowed. Otherwise the connection will terminate right away again.
-            // subscription_desktop_notification = client.subscribe(
+            // client.subscribe(
             //     "/exchange/" + push_exchange + "_notification/" + push_user_id + ".#",
             //     this.on_desktop_notification.bind(this)
             // );
@@ -102,7 +99,7 @@ const push_kit = {
         const img = $("meta[name=desktop-notification-image]").attr("content");
 
         // Let's check if the browser supports notifications
-        if (!"Notification" in window) {
+        if (!("Notification" in window)) {
             console.log("This browser does not support notifications.");
             return;
         }
@@ -110,7 +107,7 @@ const push_kit = {
         // If not yet permitted, we need to ask the user for permission.
         // Note, Chrome does not implement the permission static property
         // So we have to check for NOT 'denied' instead of 'default'
-        if (!Notification.permission in ["denied", "granted"]) {
+        if (!(Notification.permission in ["denied", "granted"])) {
             Notification.requestPermission((permission) => {
                 // Whatever the user answers, we make sure Chrome stores the information
                 if (!("permission" in Notification)) {

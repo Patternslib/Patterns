@@ -14,10 +14,9 @@ var zoom = {
     init: function ($el, opts) {
         return $el.each(function () {
             var $block = $(this),
-                options = parser.parse($block, opts),
-                $slider,
-                events;
-            $slider = $("<input/>", {
+                options = parser.parse($block, opts);
+
+            let $slider = $("<input/>", {
                 type: "range",
                 step: "any",
                 value: 1,

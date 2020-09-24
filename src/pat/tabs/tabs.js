@@ -4,10 +4,8 @@
 import $ from "jquery";
 import _ from "underscore";
 import Base from "../../core/base";
-import logging from "../../core/logging";
 import Parser from "../../core/parser";
 
-const log = logging.getLogger("tabs");
 const parser = new Parser("tabs");
 
 export default Base.extend({
@@ -39,7 +37,7 @@ export default Base.extend({
         }
     },
 
-    adjustTabs: function (ev, data) {
+    adjustTabs: function () {
         var container_width = this.$el.width() * 0.95,
             $children = this.$el.children(),
             total_width = 0,

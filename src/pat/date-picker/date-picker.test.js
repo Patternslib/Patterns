@@ -116,7 +116,7 @@ describe("pat-date-picker", function () {
                             cb(i18ndata);
                             return this;
                         },
-                        fail: function (cb) {
+                        fail: function () {
                             return this;
                         },
                         always: function (cb) {
@@ -144,7 +144,7 @@ describe("pat-date-picker", function () {
                 // Simulate failing getJSON call
                 jest.spyOn($, "getJSON").mockImplementation(() => {
                     return {
-                        done: function (cb) {
+                        done: function () {
                             return this;
                         },
                         fail: function (cb) {

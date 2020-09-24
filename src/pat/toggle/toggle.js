@@ -141,8 +141,7 @@ var toggle = {
     _validateOptions: function toggle_validateOptions(trigger, options) {
         var correct = [],
             i,
-            option,
-            store_error;
+            option;
 
         if (!options.length) return correct;
 
@@ -173,7 +172,6 @@ var toggle = {
                     );
                     option.store = "none";
                 } else if (!store.supported) {
-                    store_error = "browser does not support webstorage";
                     log.warn(
                         "state persistance requested, but browser does not support webstorage"
                     );

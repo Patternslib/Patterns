@@ -1,6 +1,5 @@
 import $ from "jquery";
 import Parser from "../../core/parser";
-import registry from "../../core/registry";
 import Base from "../../core/base";
 import utils from "../../core/utils";
 import inject from "../inject/inject";
@@ -70,10 +69,11 @@ export default Base.extend({
         }
 
         // We cannot handle text nodes here
+        let $children;
         if (this.options.panelHeaderContent === "none") {
-            var $children = this.$el.children();
+            $children = this.$el.children();
         } else {
-            var $children = this.$el.children(
+            $children = this.$el.children(
                 ":last, :not(" + this.options.panelHeaderContent + ")"
             );
         }
@@ -99,7 +99,6 @@ export default Base.extend({
     },
 
     _init_handlers: function () {
-        var $el = this.$el;
         $(document).on(
             "click.pat-modal",
             "#pat-modal .close-panel[type!=submit]",
@@ -218,13 +217,13 @@ export default Base.extend({
         if ($el.find("form").hasClass("pat-inject")) {
             // if pat-inject in modal form, listen to patterns-inject-triggered and destroy first
             // once that has been triggered
-            function destroy_handler() {
+            let destroy_handler = () => {
                 $(document).off(".pat-modal");
                 $el.remove();
                 $("body").removeClass("modal-active");
                 $("body").removeClass("modal-panel");
                 $("body").off("patterns-inject-triggered", destroy_handler);
-            }
+            };
             $("body").on("patterns-inject-triggered", destroy_handler);
         } else {
             // if working without injection, destroy right away.

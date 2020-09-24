@@ -1,4 +1,5 @@
 import $ from "jquery";
+import _ from "underscore";
 import utils from "../../core/utils";
 
 var pluggable = {

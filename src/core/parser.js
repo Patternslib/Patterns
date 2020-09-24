@@ -10,8 +10,7 @@ import _ from "underscore";
 import utils from "./utils.js";
 import logging from "./logging";
 
-function ArgumentParser(name, opts) {
-    opts = opts || {};
+function ArgumentParser(name) {
     this.order = [];
     this.parameters = {};
     this.attribute = "data-pat-" + name;
@@ -278,7 +277,7 @@ ArgumentParser.prototype = {
             });
         _.each(
             parts,
-            function (part, i) {
+            function (part) {
                 if (!part) {
                     return;
                 }

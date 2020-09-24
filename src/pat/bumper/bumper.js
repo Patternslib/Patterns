@@ -8,14 +8,11 @@
 
 import $ from "jquery";
 import _ from "underscore";
-import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import Base from "../../core/base";
 import utils from "../../core/utils";
 
-var parser = new Parser("bumper"),
-    log = logging.getLogger("bumper");
-
+const parser = new Parser("bumper");
 parser.addArgument("margin", 0);
 parser.addArgument("selector");
 parser.addArgument("bump-add", "bumped");
@@ -31,7 +28,6 @@ export default Base.extend({
     init: function initBumper($el, opts) {
         this.options = parser.parse(this.$el, opts);
         this.$container = this._findScrollContainer();
-        var container = this.$container[0];
 
         if (utils.checkCSSFeature("position", "sticky")) {
             this.$el.addClass("sticky-supported");

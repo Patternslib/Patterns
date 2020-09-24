@@ -81,7 +81,8 @@ describe("pat-sortable", function () {
         var $form = $("form");
 
         $("#item3").prependTo($("ol")); // Simulate dragging it to the top.
-        var submitCallback = jasmine.createSpy().and.returnValue(false);
+        var submitCallback = jest.fn();
+        submitCallback.mockReturnValue(false);
         $form.submit(submitCallback);
         $("#item3 a.sortable-handle").trigger("dragend");
         expect($(".sortable-amount").attr("value")).toEqual("2");

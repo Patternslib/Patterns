@@ -51,7 +51,7 @@ validate.moment = moment;
 validate.extend(validate.validators.datetime, {
     // The value is guaranteed not to be null or undefined but otherwise it
     // could be anything.
-    parse: function (value, options) {
+    parse: function (value) {
         return +moment.utc(value);
     },
     // Input is a unix timestamp
@@ -309,10 +309,7 @@ export default Base.extend({
         /* Handler which gets called when the entire form needs to be
          * validated. Will prevent the event's default action if validation fails.
          */
-        var has_errors = false,
-            input,
-            error,
-            i;
+        var has_errors = false;
         // Ignore invisible elements (otherwise pat-clone template
         // elements get validated). Not aware of other cases where this
         // might cause problems.
@@ -337,11 +334,11 @@ export default Base.extend({
         // We use for loops, to keep things synchronous, otherwise other
         // pattern's event handlers (like pat-inject) start getting called,
         // which we need to avoid.
-        for (i = 0; i < $single.length; i++) {
-            handleError(this.validateElement($single[i]));
+        for (let single of $single) {
+            handleError(this.validateElement(single));
         }
-        for (i = 0; i < group_names.length; i++) {
-            handleError(this.validateGroupedElement(group_names[i]));
+        for (let group_name of group_names) {
+            handleError(this.validateGroupedElement(group_name));
         }
     },
 

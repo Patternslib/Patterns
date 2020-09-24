@@ -1,12 +1,10 @@
 import $ from "jquery";
 import Base from "../../core/base";
 import utils from "../../core/utils";
-import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import _ from "underscore";
 import imagesLoaded from "imagesloaded";
 
-const log = logging.getLogger("scroll");
 const parser = new Parser("scroll");
 
 parser.addArgument("trigger", "click", ["click", "auto"]);
@@ -36,7 +34,7 @@ export default Base.extend({
         $(window).scroll(_.debounce(this.markIfVisible.bind(this), 50));
     },
 
-    onClick: function (ev) {
+    onClick: function () {
         //ev.preventDefault();
         history.pushState({}, null, this.$el.attr("href"));
         this.smoothScroll();
@@ -45,7 +43,7 @@ export default Base.extend({
         $("a.pat-scroll").trigger("hashchange");
     },
 
-    markBasedOnFragment: function (ev) {
+    markBasedOnFragment: function () {
         // Get the fragment from the URL and set the corresponding this.$el as current
         const fragment = window.location.hash.substr(1);
         if (fragment) {
@@ -55,7 +53,7 @@ export default Base.extend({
         }
     },
 
-    clearIfHidden: function (ev) {
+    clearIfHidden: function () {
         var active_target = "#" + window.location.hash.substr(1),
             $active_target = $(active_target),
             target = "#" + this.$el[0].href.split("#").pop();
@@ -70,7 +68,7 @@ export default Base.extend({
         }
     },
 
-    markIfVisible: function (ev) {
+    markIfVisible: function () {
         var fragment, $target, href;
         if (this.$el.hasClass("pat-scroll-animated")) {
             // this section is triggered when the scrolling is a result of the animate function

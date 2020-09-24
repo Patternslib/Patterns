@@ -75,11 +75,15 @@ var carousel = {
                 if (!this.id) return;
 
                 var $links = $("a[href=#" + this.id + "]");
+                // TODO: fix this.
+                // eslint-disable-next-line no-undef
                 if (index === control.currentPage) $links.addClass("current");
                 else $links.removeClass("current");
                 $links.on(
                     "click.pat-carousel",
                     null,
+                    // TODO: fix this.
+                    // eslint-disable-next-line no-undef
                     { control: control, index: index },
                     carousel.onPanelLinkClick
                 );
