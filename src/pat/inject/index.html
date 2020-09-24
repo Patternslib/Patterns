@@ -1,364 +1,632 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <!--meta name="patterns-push-server" content="ws://push.quaivecloud.com/ws" /-->
+        <meta name="patterns-push-server" content="ws://localhost:15674/ws" />
+        <meta name="patterns-push-exchange-base-name" content="patternslib" />
+        <meta name="patterns-push-login" content="guest" />
+        <meta name="patterns-push-password" content="guest" />
+        <meta name="patterns-push-user-id" content="allan_neece" />
+        <title>Injection pattern</title>
+        <link rel="stylesheet" href="/style/common.css" type="text/css" />
+        <script
+            src="/dist/bundle-vendors.js"
+            type="text/javascript"
+            charset="utf-8"
+        ></script>
+        <script
+            src="/dist/bundle.js"
+            type="text/javascript"
+            charset="utf-8"
+        ></script>
+    </head>
 
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <!--meta name="patterns-push-server" content="ws://push.quaivecloud.com/ws" /-->
-  <meta name="patterns-push-server" content="ws://localhost:15674/ws" />
-  <meta name="patterns-push-exchange-base-name" content="patternslib" />
-  <meta name="patterns-push-login" content="guest" />
-  <meta name="patterns-push-password" content="guest" />
-  <meta name="patterns-push-user-id" content="allan_neece" />
-  <title>Injection pattern</title>
-  <link rel="stylesheet" href="/style/common.css" type="text/css" />
-  <script src="/dist/bundle-vendors.js" type="text/javascript" charset="utf-8"></script>
-  <script src="/dist/bundle.js" type="text/javascript" charset="utf-8"></script>
-</head>
+    <body>
+        <section>
+            <p>
+                In this example, a
+                <a href="inject-sources.html" target="new"
+                    >Single HTML source</a
+                >
+                is used for various injections.
+            </p>
+            <ul>
+                <li>
+                    <a
+                        href="inject-sources.html#pos-1"
+                        class="pat-inject"
+                        data-pat-inject="delay: 2s"
+                        >Place "Rilke" in frame 1 after 2 seconds</a
+                    >
+                    <em
+                        class="iconified icon-info-circle pat-tooltip"
+                        data-pat-tooltip="trigger: click; source: content; class: large code"
+                        ><code class="pat-syntax-highlight"
+                            >&lt;a href=&quot;inject-sources.html#pos-1&quot;
+                            class=&quot;pat-inject&quot;&gt;</code
+                        ></em
+                    >
+                </li>
+                <li>
+                    <a href="inject-sources.html#pos-2" class="pat-inject"
+                        >Place "Wilde" in frame 2</a
+                    >
+                    <em
+                        class="iconified icon-info-circle pat-tooltip"
+                        data-pat-tooltip="trigger: click; source: content; class: large code"
+                        ><code class="pat-syntax-highlight"
+                            >&lt;a href=&quot;inject-sources.html#pos-2&quot;
+                            class=&quot;pat-inject&quot;&gt;</code
+                        ></em
+                    >
+                </li>
+                <li>
+                    <a href="inject-sources.html#pos-3" class="pat-inject"
+                        >Place "Cocteau" in frame 3</a
+                    >
+                    <em
+                        class="iconified icon-info-circle pat-tooltip"
+                        data-pat-tooltip="trigger: click; source: content; class: large code"
+                        ><code class="pat-syntax-highlight"
+                            >&lt;a href=&quot;inject-sources.html#pos-3&quot;
+                            class=&quot;pat-inject&quot;&gt;</code
+                        ></em
+                    >
+                </li>
+                <li>
+                    <a
+                        href="inject-sources.html"
+                        data-pat-inject="#pos-3 #pos-1 && #pos-1 #pos-2 && #pos-2 #pos-3"
+                        class="pat-inject"
+                        >Place "Cocteau" in frame 1, "Rilke" in frame 2 and
+                        "Wilde" in frame 3</a
+                    >
+                    <em
+                        class="iconified icon-info-circle pat-tooltip"
+                        data-pat-tooltip="trigger: click; source: content; class: large code"
+                        ><code class="pat-syntax-highlight"
+                            >&lt;a href=&quot;inject-sources.html&quot;
+                            data-pat-inject=&quot;#pos-3 #pos-1 &amp;&amp;#pos-1
+                            #pos-2 &amp;&amp;#pos-2 #pos-3&quot;
+                            class=&quot;pat-inject&quot;&gt;</code
+                        ></em
+                    >
+                </li>
+                <li>
+                    <a
+                        href="inject-sources.html#pos-3"
+                        data-pat-inject="source: #pos-3; target: .poem"
+                        class="pat-inject"
+                        >Place "Cocteau" in all frames</a
+                    >
+                    <em
+                        class="iconified icon-info-circle pat-tooltip"
+                        data-pat-tooltip="trigger: click; source: content; class: large code"
+                        ><code class="pat-syntax-highlight"
+                            >&lt;a href=&quot;inject-sources.html#pos-3&quot;
+                            data-pat-inject=&quot;source: #pos-3; target: .item
+                            article&quot; class=&quot;pat-inject&quot;&gt;Place
+                            &quot;Cocteau&quot; in all frames&lt;/a&gt;</code
+                        ></em
+                    >
+                </li>
+                <li>
+                    Autoloads "Wilde" in frame 3 after 2 seconds
+                    <a
+                        hidden
+                        href="inject-sources.html#pos-2"
+                        data-pat-inject="source: #pos-2; target: #pos-3; trigger: autoload; delay: 2000"
+                        class="pat-inject"
+                        id="delay-demo"
+                        >Load</a
+                    >
+                    <em
+                        class="iconified icon-info-circle pat-tooltip"
+                        data-pat-tooltip="trigger: click; source: content; class: large code"
+                        ><code class="pat-syntax-highlight"
+                            >&lt;a href=&quot;inject-sources.html#pos-2&quot;
+                            data-pat-inject=&quot;source: #pos-2; target:
+                            #pos-3; trigger: autload; delay: 2000&quot;
+                            class=&quot;pat-inject&quot;&gt;Autoloads
+                            &quot;Wilde&quot; in frame 3 after a 2 second
+                            delay&lt;/a&gt;</code
+                        ></em
+                    >
+                    <a
+                        href="inject-sources.html#demo-delay"
+                        data-pat-inject="source: #manually-replaced-note::element; target: #delay-demo::element"
+                        class="pat-inject"
+                        >Click quickly to prevent Wilde and load Rilke
+                        instead</a
+                    >
+                </li>
+                <li>
+                    Autoloads "Wilde" in frame 1 after you are idle for 2
+                    seconds
+                    <a
+                        hidden
+                        href="inject-sources.html#pos-2"
+                        data-pat-inject="source: #pos-2; target: #pos-1; trigger: autoload; trigger: idle; delay: 2000"
+                        class="pat-inject"
+                        >Load</a
+                    >
+                    <em
+                        class="iconified icon-info-circle pat-tooltip"
+                        data-pat-tooltip="trigger: click; source: content; class: large code"
+                        ><code class="pat-syntax-highlight"
+                            >&lt;a href=&quot;inject-sources.html#pos-2&quot;
+                            data-pat-inject=&quot;source: #pos-2; target:
+                            #pos-4; trigger: autload; delay: 2000&quot;
+                            class=&quot;pat-inject&quot;&gt;Autoloads
+                            &quot;Wilde&quot; in frame 4 after a 2 second
+                            delay&lt;/a&gt;</code
+                        ></em
+                    >
+                </li>
+                <li>
+                    <a
+                        href="inject-sources.html#pos-2"
+                        class="pat-inject"
+                        data-pat-inject="push-marker: content-updated"
+                        >Place "Wilde" in frame 2 on push (push_marker:
+                        content-updated)</a
+                    >
+                    <em
+                        class="iconified icon-info-circle pat-tooltip"
+                        data-pat-tooltip="trigger: click; source: content; class: large code"
+                        ><code class="pat-syntax-highlight"
+                            >&lt;a href=&quot;inject-sources.html#pos-2&quot;
+                            class=&quot;pat-inject&quot;
+                            data-pat-inject=&quot;push-marker:
+                            content-updated&quot;&gt;</code
+                        ></em
+                    >
+                </li>
+                <li>
+                    <a href="page-that-doesnt-exist#nothing" class="pat-inject"
+                        >Trigger an inject that fails. (Puts an error message in
+                        a data attribute on the body tag)</a
+                    >
+                    <em
+                        class="iconified icon-info-circle pat-tooltip"
+                        data-pat-tooltip="trigger: click; source: content; class: large code"
+                        ><code class="pat-syntax-highlight"
+                            >&lt;a href=&quot;page-that-doesnt-exist&quot;
+                            class=&quot;pat-inject&quot;&gt;</code
+                        ></em
+                    >
+                </li>
+                <li>
+                    Place "Wilde in column 2 when
+                    <button
+                        onclick="document.getElementById('autoload-visible-item').removeAttribute('style')"
+                    >
+                        the hidden link appears
+                    </button>
+                    <span id="autoload-visible-item" style="display: none">
+                        <a
+                            href="inject-sources.html#pos-2"
+                            class="pat-inject"
+                            data-pat-inject="trigger: autoload-visible"
+                            >I am visible now</a
+                        >
+                    </span>
+                </li>
+            </ul>
 
-<body>
+            <div class="poems">
+                <article class="poem" id="pos-1">
+                    <p>
+                        <strong class="placeholder">?</strong>
+                    </p>
+                </article>
+                <article class="poem" id="pos-2">
+                    <p>
+                        <strong class="placeholder">?</strong>
+                    </p>
+                </article>
+                <article class="poem" id="pos-3">
+                    <p>
+                        <strong class="placeholder">?</strong>
+                    </p>
+                </article>
+            </div>
+        </section>
 
-  <section>
-    <p>
-      In this example, a <a href="inject-sources.html" target="new">Single HTML source</a> is used for various injections.
-    </p>
-    <ul>
-      <li>
-        <a href="inject-sources.html#pos-1" class="pat-inject" data-pat-inject="delay: 2s">Place "Rilke" in frame 1 after 2 seconds</a>
-        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html#pos-1&quot; class=&quot;pat-inject&quot;&gt;</code></em>
-      </li>
-      <li>
-        <a href="inject-sources.html#pos-2" class="pat-inject">Place "Wilde" in frame 2</a>
-        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html#pos-2&quot; class=&quot;pat-inject&quot;&gt;</code></em>
-      </li>
-      <li>
-        <a href="inject-sources.html#pos-3" class="pat-inject">Place "Cocteau" in frame 3</a>
-        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html#pos-3&quot; class=&quot;pat-inject&quot;&gt;</code></em>
-      </li>
-      <li>
-        <a href="inject-sources.html" data-pat-inject="#pos-3 #pos-1 && #pos-1 #pos-2 && #pos-2 #pos-3" class="pat-inject">Place "Cocteau" in frame 1, "Rilke" in frame 2 and "Wilde" in frame 3</a>
-        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html&quot; data-pat-inject=&quot;#pos-3 #pos-1 &amp;&amp;#pos-1 #pos-2 &amp;&amp;#pos-2 #pos-3&quot; class=&quot;pat-inject&quot;&gt;</code></em>
-      </li>
-      <li>
-        <a href="inject-sources.html#pos-3" data-pat-inject="source: #pos-3; target: .poem" class="pat-inject">Place "Cocteau" in all frames</a>
-        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html#pos-3&quot; data-pat-inject=&quot;source: #pos-3; target: .item article&quot; class=&quot;pat-inject&quot;&gt;Place &quot;Cocteau&quot; in all frames&lt;/a&gt;</code></em>
-      </li>
-      <li>
-        Autoloads "Wilde" in frame 3 after 2 seconds
-        <a hidden href="inject-sources.html#pos-2" data-pat-inject="source: #pos-2; target: #pos-3; trigger: autoload; delay: 2000" class="pat-inject" id="delay-demo">Load</a>
-        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html#pos-2&quot; data-pat-inject=&quot;source: #pos-2; target: #pos-3; trigger: autload; delay: 2000&quot; class=&quot;pat-inject&quot;&gt;Autoloads &quot;Wilde&quot; in frame 3 after a 2 second delay&lt;/a&gt;</code></em>
-        <a href="inject-sources.html#demo-delay" data-pat-inject="source: #manually-replaced-note::element; target: #delay-demo::element" class="pat-inject">Click quickly to prevent Wilde and load Rilke instead</a>
-      </li>
-      <li>
-        Autoloads "Wilde" in frame 1 after you are idle for 2 seconds
-        <a hidden href="inject-sources.html#pos-2" data-pat-inject="source: #pos-2; target: #pos-1; trigger: autoload; trigger: idle; delay: 2000" class="pat-inject">Load</a>
-        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html#pos-2&quot; data-pat-inject=&quot;source: #pos-2; target: #pos-4; trigger: autload; delay: 2000&quot; class=&quot;pat-inject&quot;&gt;Autoloads &quot;Wilde&quot; in frame 4 after a 2 second delay&lt;/a&gt;</code></em>
-      </li>
-      <li>
-        <a href="inject-sources.html#pos-2" class="pat-inject" data-pat-inject="push-marker: content-updated">Place "Wilde" in frame 2 on push (push_marker: content-updated)</a>
-        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html#pos-2&quot; class=&quot;pat-inject&quot; data-pat-inject=&quot;push-marker: content-updated&quot;&gt;</code></em>
-      </li>
-      <li>
-        <a href="page-that-doesnt-exist#nothing" class="pat-inject">Trigger an inject that fails. (Puts an error message in a data attribute on the body tag)</a>
-        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;page-that-doesnt-exist&quot; class=&quot;pat-inject&quot;&gt;</code></em>
-      </li>
-      <li>
-        Place "Wilde in column 2 when <button onclick="document.getElementById('autoload-visible-item').removeAttribute('style')">the hidden link appears</button>
-        <span id="autoload-visible-item" style="display:none">
-          <a href="inject-sources.html#pos-2" class="pat-inject" data-pat-inject="trigger: autoload-visible">I am visible now</a>
-        </span>
-      </li>
-    </ul>
+        <section>
+            <h2>Inject and scroll demos</h2>
+            <ul>
+                <li>
+                    <a
+                        href="index.html"
+                        class="pat-inject"
+                        data-pat-inject="scroll:#demo-history"
+                        >1) Re-inject this entire page and scroll to the history
+                        example</a
+                    >
+                    <em
+                        class="iconified icon-info-circle pat-tooltip"
+                        data-pat-tooltip="trigger: click; source: content; class: large code"
+                        ><code class="pat-syntax-highlight">
+                            &lt;a href=&quot;index.html&quot;
+                            class=&quot;pat-inject&quot;
+                            data-pat-inject=&quot;scroll:#demo-history&quot;&gt;
+                        </code></em
+                    >
+                </li>
+                <li>
+                    <a
+                        href="index.html"
+                        class="pat-inject"
+                        data-pat-inject="scroll:top"
+                        >2) Re-inject this entire page and scroll to the top</a
+                    >
+                    <em
+                        class="iconified icon-info-circle pat-tooltip"
+                        data-pat-tooltip="trigger: click; source: content; class: large code"
+                        ><code class="pat-syntax-highlight">
+                            &lt;a href=&quot;index.html&quot;
+                            class=&quot;pat-inject&quot;
+                            data-pat-inject=&quot;scroll:top&quot;&gt;
+                        </code></em
+                    >
+                </li>
 
-    <div class="poems">
-      <article class="poem" id="pos-1">
-        <p>
-          <strong class="placeholder">?</strong>
-        </p>
-      </article>
-      <article class="poem" id="pos-2">
-        <p>
-          <strong class="placeholder">?</strong>
-        </p>
-      </article>
-      <article class="poem" id="pos-3">
-        <p>
-          <strong class="placeholder">?</strong>
-        </p>
-      </article>
-    </div>
+                <li>
+                    <a
+                        href="inject-text.html"
+                        class="pat-inject"
+                        data-pat-inject="scroll:#scroll-target"
+                        >3) Load text into body and scoll to #scroll-target</a
+                    >
+                    <em
+                        class="iconified icon-info-circle pat-tooltip"
+                        data-pat-tooltip="trigger: click; source: content; class: large code"
+                        ><code class="pat-syntax-highlight">
+                            &lt;a href=&quot;inject-text.html&quot;
+                            class=&quot;pat-inject&quot;
+                            data-pat-inject=&quot;scroll:#scroll-target&quot;&gt;
+                        </code></em
+                    >
+                </li>
+                <li>
+                    <a
+                        href="inject-text.html#scroll-target"
+                        class="pat-inject"
+                        data-pat-inject="scroll:target"
+                        >4) Scroll to the target defined in the URL part as
+                        anchor-reference</a
+                    >
+                    <em
+                        class="iconified icon-info-circle pat-tooltip"
+                        data-pat-tooltip="trigger: click; source: content; class: large code"
+                        ><code class="pat-syntax-highlight">
+                            &lt;a href=&quot;inject-text.html#pos-4&quot;
+                            class=&quot;pat-inject&quot;
+                            data-pat-inject=&quot;scroll:target&quot;&gt;
+                        </code></em
+                    >
+                </li>
+                <li>
+                    <a
+                        href="inject-text.html"
+                        class="pat-inject"
+                        data-pat-inject="scroll:none"
+                        >5) "scroll:none" Do not scroll (default behavior)</a
+                    >
+                    <em
+                        class="iconified icon-info-circle pat-tooltip"
+                        data-pat-tooltip="trigger: click; source: content; class: large code"
+                        ><code class="pat-syntax-highlight">
+                            &lt;a href=&quot;inject-text.html&quot;
+                            class=&quot;pat-inject&quot;
+                            data-pat-inject=&quot;scroll:none&quot;&gt;
+                        </code></em
+                    >
+                </li>
 
-  </section>
+                <li>
+                    <a
+                        href="inject-sources.html#pos-3"
+                        class="pat-inject"
+                        data-pat-inject="target:#pos-4; scroll: #dieu-nu-p-1"
+                        >6) Inject 'Cocteau' in the frame below and scroll to
+                        the first paragraph.</a
+                    >
+                    <em
+                        class="iconified icon-info-circle pat-tooltip"
+                        data-pat-tooltip="trigger: click; source: content; class: large code"
+                        ><code class="pat-syntax-highlight">
+                            &lt;a href=&quot;inject-sources.html#pos-3&quot;
+                            class=&quot;pat-inject&quot;
+                            data-pat-inject=&quot;target:#pos-4; scroll:
+                            #dieu-nu-p-1&quot;&gt;
+                        </code></em
+                    >
+                </li>
+                <li>
+                    <a
+                        href="inject-sources.html"
+                        class="pat-inject"
+                        data-pat-inject="target:#pos-4; scroll: #pos-2"
+                        >7) Inject all content from source in the frame below
+                        and scroll to the second article.</a
+                    >
+                    <em
+                        class="iconified icon-info-circle pat-tooltip"
+                        data-pat-tooltip="trigger: click; source: content; class: large code"
+                        ><code class="pat-syntax-highlight">
+                            &lt;a href=&quot;inject-sources.html&quot;
+                            class=&quot;pat-inject&quot;
+                            data-pat-inject=&quot;target:#pos-4; scroll:
+                            #pos-2&quot;&gt;
+                        </code></em
+                    >
+                </li>
+            </ul>
 
-  <section>
-    <h2>Inject and scroll demos</h2>
-    <ul>
-      <li>
-        <a href="index.html" class="pat-inject" data-pat-inject="scroll:#demo-history">1) Re-inject this entire page and scroll to the history example</a>
-        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">
-        &lt;a href=&quot;index.html&quot; class=&quot;pat-inject&quot; data-pat-inject=&quot;scroll:#demo-history&quot;&gt;
-        </code></em>
-      </li>
-      <li>
-        <a href="index.html" class="pat-inject" data-pat-inject="scroll:top">2) Re-inject this entire page and scroll to the top</a>
-        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">
-        &lt;a href=&quot;index.html&quot; class=&quot;pat-inject&quot; data-pat-inject=&quot;scroll:top&quot;&gt;
-        </code></em>
-      </li>
+            <div class="poems">
+                <article class="poem cols-full" id="pos-4">
+                    <p>
+                        <strong class="placeholder">?</strong>
+                    </p>
+                </article>
+            </div>
 
-      <li>
-        <a href="inject-text.html" class="pat-inject" data-pat-inject="scroll:#scroll-target">3) Load text into body and scoll to #scroll-target</a>
-        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">
-        &lt;a href=&quot;inject-text.html&quot; class=&quot;pat-inject&quot; data-pat-inject=&quot;scroll:#scroll-target&quot;&gt;
-        </code></em>
-      </li>
-      <li>
-        <a href="inject-text.html#scroll-target" class="pat-inject" data-pat-inject="scroll:target">4) Scroll to the target defined in the URL part as anchor-reference</a>
-        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">
-        &lt;a href=&quot;inject-text.html#pos-4&quot; class=&quot;pat-inject&quot; data-pat-inject=&quot;scroll:target&quot;&gt;
-        </code></em>
-      </li>
-      <li>
-        <a href="inject-text.html" class="pat-inject" data-pat-inject="scroll:none">5) "scroll:none" Do not scroll (default behavior)</a>
-        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">
-        &lt;a href=&quot;inject-text.html&quot; class=&quot;pat-inject&quot; data-pat-inject=&quot;scroll:none&quot;&gt;
-        </code></em>
-      </li>
+            <div class="poems">
+                <article class="poem cols-full" id="pos-5">
+                    <p>
+                        <strong class="placeholder">?</strong>
+                    </p>
+                </article>
+            </div>
 
+            <ul>
+                <li>
+                    Place "Wilde in the frame above when
+                    <a
+                        href="inject-sources.html#pos-2"
+                        class="pat-inject"
+                        data-pat-inject="trigger: autoload-visible; target: #pos-5"
+                        >this link</a
+                    >
+                    appears in view.
+                </li>
+                <li>
+                    <a
+                        href="inject-sources#pos-2"
+                        class="pat-inject"
+                        data-pat-inject="scroll: target"
+                        >Place "Cocteau" in the second frame on this page and
+                        scroll towards it.</a
+                    >
+                </li>
+            </ul>
+        </section>
 
-      <li>
-        <a href="inject-sources.html#pos-3" class="pat-inject" data-pat-inject="target:#pos-4; scroll: #dieu-nu-p-1">6) Inject 'Cocteau' in the frame below and scroll to the first paragraph.</a>
-        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">
-        &lt;a href=&quot;inject-sources.html#pos-3&quot; class=&quot;pat-inject&quot; data-pat-inject=&quot;target:#pos-4; scroll: #dieu-nu-p-1&quot;&gt;
-        </code></em>
-      </li>
-      <li>
-        <a href="inject-sources.html" class="pat-inject" data-pat-inject="target:#pos-4; scroll: #pos-2">7) Inject all content from source in the frame below and scroll to the second article.</a>
-        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">
-        &lt;a href=&quot;inject-sources.html&quot; class=&quot;pat-inject&quot; data-pat-inject=&quot;target:#pos-4; scroll: #pos-2&quot;&gt;
-        </code></em>
-      </li>
+        <section id="demo-history">
+            <h3>Inject history example</h3>
+            <p>
+                <a
+                    href="history-inject-source.html#content"
+                    class="pat-inject"
+                    data-pat-inject="history:record; source: #content; target: #history-inject-target"
+                    >Inject some text and record the history</a
+                >
+            </p>
 
-    </ul>
+            <p id="history-inject-target"><i>here goes the injection</i></p>
+        </section>
 
-    <div class="poems">
-      <article class="poem cols-full" id="pos-4">
-        <p>
-          <strong class="placeholder">?</strong>
-        </p>
-      </article>
-    </div>
+        <section>
+            <h3>Inject autosubmit with form using GET and POST</h3>
 
-    <div class="poems">
-      <article class="poem cols-full" id="pos-5">
-        <p>
-          <strong class="placeholder">?</strong>
-        </p>
-      </article>
-    </div>
+            <form
+                method="post"
+                class="pat-inject pat-autosubmit"
+                data-pat-inject="history:record"
+                action="inject-form.html?approach=questionable#form-submit-target"
+            >
+                <input type="text" name="title" value="Hello World" />
+                <button type="submit">Submit</button>
+            </form>
 
-    <ul>
-      <li>
-        Place "Wilde in the frame above when <a href="inject-sources.html#pos-2" class="pat-inject" data-pat-inject="trigger: autoload-visible; target: #pos-5">this link</a> appears in view.
-      </li>
-      <li>
-        <a href="inject-sources#pos-2" class="pat-inject" data-pat-inject="scroll: target">Place "Cocteau" in the second frame on this page and scroll towards it.</a>
-      </li>
-    </ul>
+            <p id="form-submit-target">
+                <i>here goes the injection</i>
+            </p>
+        </section>
 
-  </section>
+        <section>
+            <h3>Call something without injecting anything</h3>
+            <p>
+                You need to open your network inspector to actually validate
+                that the request is sent. It works if you see a call to
+                backend-action.html in the list of requested items.
+            </p>
 
+            <a
+                href="backend-action.html#something"
+                class="pat-inject"
+                data-pat-inject="target:none"
+                >Trigger something, but don't inject results</a
+            >
+        </section>
 
-  <section id="demo-history">
-    <h3>Inject history example</h3>
-    <p><a href="history-inject-source.html#content" class="pat-inject" data-pat-inject="history:record; source: #content; target: #history-inject-target">Inject some text and record the history</a></p>
+        <section>
+            <h3>
+                Inject nothing into the target, effectively destroying whatever
+                is in there.
+            </h3>
+            <p>
+                The source is nothing and the target is given, so when
+                triggering the injection, the target is removed.
+            </p>
+            <p id="to-be-killed">
+                I will be killed once you click the link below
+            </p>
+            <a
+                href="backend-action.html#something"
+                class="pat-inject"
+                data-pat-inject="source:none; target: #to-be-killed"
+                >Do something, but don't replace any content, just kill the
+                target.</a
+            >
+        </section>
 
-    <p id="history-inject-target"><i>here goes the injection</i></p>
-  </section>
+        <style>
+            body {
+                font-size: 16px;
+            }
 
-  <section>
-    <h3>Inject autosubmit with form using GET and POST</h3>
+            section {
+                margin: 0 0 4em 0;
+            }
 
-    <form method="post" class="pat-inject pat-autosubmit" data-pat-inject="history:record" action="inject-form.html?approach=questionable#form-submit-target">
-      <input type="text" name="title" value="Hello World">
-      <button type="submit">Submit</button>
-    </form>
+            .poems {
+                font-family: georgia;
+                margin-bottom: 2em;
+                overflow: hidden;
+            }
 
-    <p id="form-submit-target">
-      <i>here goes the injection</i>
-    </p>
-  </section>
+            .poems .poem figure {
+                /*width: 100%;*/
+                text-align: center;
+                margin: 0 auto;
+                display: block;
+                margin-bottom: 32px;
 
-  <section>
-    <h3>Call something without injecting anything</h3>
-    <p> You need to open your network inspector to actually validate that the request is sent. It works if you see a call to backend-action.html in the list of requested items.</p>
+                -webkit-animation: bounceIn 0.5s;
+                animation: bounceIn 0.5s;
+            }
 
-    <a href="backend-action.html#something" class="pat-inject" data-pat-inject="target:none">Trigger something, but don't inject results</a>
+            .poems img,
+            .poems .placeholder {
+                box-shadow: 0px 0px 0px 4px white, 0px 0px 0px 7px #000;
+                width: 6rem;
+                height: 9rem;
+                background-color: white;
+                border-radius: 50%;
+                display: block;
+                margin: 0.2em auto 0;
+            }
 
-  </section>
+            .poems .placeholder {
+                line-height: 9rem;
+                font-size: 4em;
+                text-align: center;
+            }
 
-  <section>
-    <h3>Inject nothing into the target, effectively destroying whatever is in there.</h3>
-    <p> The source is nothing and the target is given, so when triggering the injection, the target is removed.</p>
-    <p id="to-be-killed">I will be killed once you click the link below</p>
-    <a href="backend-action.html#something" class="pat-inject" data-pat-inject="source:none; target: #to-be-killed">Do something, but don't replace any content, just kill the target.</a>
+            .poems figcaption {
+                text-align: center;
+            }
 
-  </section>
+            .poems .poem {
+                background-color: #efefef;
+                box-shadow: inset 0 0 4em rgba(0, 0, 0, 0.3);
+                padding: 55px 20px 55px;
+                font-size: 1em;
+                line-height: 180%;
+                height: 310px;
+                overflow: auto;
+                width: 33.3333332%;
+                float: left;
 
-  <style>
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
 
-    body {
-      font-size: 16px;
-    }
+                border: double white 12px;
+            }
 
-    section {
-      margin: 0 0 4em 0;
-    }
+            .poems .poem.cols-full {
+                width: 100%;
+            }
 
-    .poems {
-      font-family: georgia;
-      margin-bottom: 2em;
-      overflow: hidden;
-    }
+            .poems article * {
+                text-align: center;
+                margin-bottom: 1em;
+            }
 
-    .poems .poem figure {
-      /*width: 100%;*/
-      text-align: center;
-      margin: 0 auto;
-      display: block;
-      margin-bottom: 32px;
+            .poems article article p {
+                text-align: center;
+                margin-bottom: 2em;
+            }
 
-      -webkit-animation: bounceIn 0.5s;
-      animation: bounceIn 0.5s;
-    }
+            .poems article article {
+                text-align: center;
+                margin-bottom: 3em;
+            }
 
-    .poems img,
-    .poems .placeholder {
-      box-shadow: 0px 0px 0px 4px white,
-        0px 0px 0px 7px #000;
-      width: 6rem;
-      height: 9rem;
-      background-color: white;
-      border-radius: 50%;
-      display: block;
-      margin: 0.2em auto 0;
-    }
+            .poems article {
+                margin-bottom: 4em;
+            }
 
-    .poems .placeholder {
-      line-height: 9rem;
-      font-size: 4em;
-      text-align: center;
-    }
+            .poems article h3 {
+                font-size: 1.5em;
+                font-weight: bold;
+                margin-bottom: 25px;
+            }
 
-    .poems figcaption {
-      text-align: center;
-    }
+            @-webkit-keyframes bounceIn {
+                0% {
+                    opacity: 0;
+                    -webkit-transform: scale(0.3);
+                }
 
-    .poems .poem {
-      background-color: #efefef;
-      box-shadow: inset 0 0 4em rgba(0, 0, 0, 0.3);
-      padding: 55px 20px 55px;
-      font-size: 1em;
-      line-height: 180%;
-      height: 310px;
-      overflow: auto;
-      width: 33.3333332%;
-      float: left;
+                50% {
+                    opacity: 1;
+                    -webkit-transform: scale(1.05);
+                }
 
-      -moz-box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
+                70% {
+                    -webkit-transform: scale(0.9);
+                }
 
-      border: double white 12px;
-    }
+                100% {
+                    -webkit-transform: scale(1);
+                }
+            }
 
-    .poems .poem.cols-full {
-      width: 100%;
-    }
+            @-moz-keyframes bounceIn {
+                0% {
+                    opacity: 0;
+                    -moz-transform: scale(0.3);
+                }
 
-    .poems article * {
-      text-align: center;
-      margin-bottom: 1em;
-    }
+                50% {
+                    opacity: 1;
+                    -moz-transform: scale(1.05);
+                }
 
-    .poems article article p {
-      text-align: center;
-      margin-bottom: 2em;
-    }
+                70% {
+                    -moz-transform: scale(0.9);
+                }
 
-    .poems article article {
-      text-align: center;
-      margin-bottom: 3em;
-    }
+                100% {
+                    -moz-transform: scale(1);
+                }
+            }
 
-    .poems article {
-      margin-bottom: 4em;
-    }
+            @keyframes bounceIn {
+                0% {
+                    opacity: 0;
+                    transform: scale(0.3);
+                }
 
-    .poems article h3 {
-      font-size: 1.5em;
-      font-weight: bold;
-      margin-bottom: 25px;
-    }
+                50% {
+                    opacity: 1;
+                    transform: scale(1.05);
+                }
 
-    @-webkit-keyframes bounceIn {
-      0% {
-        opacity: 0;
-        -webkit-transform: scale(.3);
-      }
+                70% {
+                    transform: scale(0.9);
+                }
 
-      50% {
-        opacity: 1;
-        -webkit-transform: scale(1.05);
-      }
-
-      70% {
-        -webkit-transform: scale(0.9);
-      }
-
-      100% {
-        -webkit-transform: scale(1);
-      }
-    }
-
-    @-moz-keyframes bounceIn {
-      0% {
-        opacity: 0;
-        -moz-transform: scale(0.3);
-      }
-
-      50% {
-        opacity: 1;
-        -moz-transform: scale(1.05);
-      }
-
-      70% {
-        -moz-transform: scale(0.9);
-      }
-
-      100% {
-        -moz-transform: scale(1);
-      }
-    }
-
-    @keyframes bounceIn {
-      0% {
-        opacity: 0;
-        transform: scale(0.3);
-      }
-
-      50% {
-        opacity: 1;
-        transform: scale(1.05);
-      }
-
-      70% {
-        transform: scale(0.9);
-      }
-
-      100% {
-        transform: scale(1);
-      }
-    }
-  </style>
-</body>
+                100% {
+                    transform: scale(1);
+                }
+            }
+        </style>
+    </body>
 </html>
