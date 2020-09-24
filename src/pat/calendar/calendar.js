@@ -15,7 +15,6 @@ import _ from "underscore";
 import momentTz from "./moment-timezone-with-data-2010-2020";
 import "fullcalendar";
 
-
 var log = logging.getLogger("calendar"),
     parser = new Parser("calendar");
 
@@ -29,7 +28,7 @@ parser.addArgument("default-view", "month", [
     "basicWeek",
     "basicDay",
     "agendaWeek",
-    "agendaDay"
+    "agendaDay",
 ]);
 parser.addArgument("drag-and-drop", true, [true, false]);
 parser.addArgument("drop-external-events", true, [true, false]);
@@ -52,16 +51,16 @@ var calendar = {
     classMap: {
         month: ".view-month",
         agendaWeek: ".view-week",
-        agendaDay: ".view-day"
+        agendaDay: ".view-day",
     },
     dayNames: ["su", "mo", "tu", "we", "th", "fr", "sa"],
 
-    _parseSearchString: function() {
+    _parseSearchString: function () {
         var context = {};
         window.location.search
             .substr(1)
             .split("&")
-            .forEach(function(str) {
+            .forEach(function (str) {
                 if (str) {
                     var keyValue = str.split("="),
                         key = keyValue[0],
@@ -79,7 +78,7 @@ var calendar = {
         return context;
     },
 
-    init: function($elem, opts) {
+    init: function ($elem, opts) {
         var lang = document
             .getElementsByTagName("html")[0]
             .getAttribute("lang");
@@ -105,10 +104,8 @@ var calendar = {
         this.$el = $el;
         this.cfg = cfg;
         this.storage = storage;
-        cfg.defaultDate =
-            (storage && storage.get("date")) || cfg.defaultDate;
-        cfg.defaultView =
-            (storage && storage.get("view")) || cfg.defaultView;
+        cfg.defaultDate = (storage && storage.get("date")) || cfg.defaultDate;
+        cfg.defaultView = (storage && storage.get("view")) || cfg.defaultView;
         cfg.tooltipConfig = $el.data("patCalendarTooltip");
         cfg.modalConfig = $el.data("patCalendarModal");
         if (cfg.tooltipConfig) {
@@ -152,11 +149,11 @@ var calendar = {
             drop: this._externalEventDropped,
             eventDrop: this._changeEventDates,
             eventResize: this._changeEventDates,
-            events: function(start, end, timezone, callback) {
+            events: function (start, end, timezone, callback) {
                 var events = calendar.parseEvents($el, timezone);
                 callback(events);
             },
-            eventAfterRender: function(ev, $event) {
+            eventAfterRender: function (ev, $event) {
                 var url = "";
                 if (ev.id === "pat-calendar-new-event") {
                     url = utils.addURLQueryParameter(
@@ -171,7 +168,7 @@ var calendar = {
                             .attr({ href: url })
                     );
                     $event.trigger("click.tooltip");
-                    $event.on("pat-update", function(event, data) {
+                    $event.on("pat-update", function (event, data) {
                         if (
                             data.pattern === "tooltip" &&
                             data.hidden === true
@@ -190,7 +187,7 @@ var calendar = {
                             .attr({ "data-pat-tooltip": cfg.tooltipConfig })
                             .attr({ href: url })
                     );
-                    $event.on("pat-update", function(event, data) {
+                    $event.on("pat-update", function (event, data) {
                         if (
                             data.pattern === "tooltip" &&
                             data.hidden === true
@@ -200,7 +197,7 @@ var calendar = {
                     });
                 }
             },
-            dayClick: function(moment, ev, view) {
+            dayClick: function (moment, ev, view) {
                 /* If "data-pat-calendar-tooltip" was configured, we open
                  * a tooltip when the user clicks on an day in the
                  * calendar.
@@ -220,15 +217,15 @@ var calendar = {
                     title: "New Event",
                     start: moment,
                     end: end,
-                    id: id
+                    id: id,
                 });
-            }
+            },
         };
 
         $el.categories = $(
             _.uniq(
-                $el.find(".cal-events .cal-event").map(function() {
-                    return this.className.split(" ").filter(function(cls) {
+                $el.find(".cal-events .cal-event").map(function () {
+                    return this.className.split(" ").filter(function (cls) {
                         return /^cal-cat/.test(cls);
                     });
                 })
@@ -236,9 +233,7 @@ var calendar = {
         );
         this._registerEventRefetchers($el);
         this._registerCategoryControls($el);
-        var $controlRoot = cfg.calendarControls
-            ? $(cfg.calendarControls)
-            : $el;
+        var $controlRoot = cfg.calendarControls ? $(cfg.calendarControls) : $el;
         $el.$controlRoot = $controlRoot;
         cfg.timezone = calOpts.timezone = $controlRoot
             .find("select.timezone")
@@ -253,7 +248,7 @@ var calendar = {
         calendar._registerCalendarControls($el);
         $el.find(".cal-events").css("display", "none");
         this._restoreCalendarControls();
-        setTimeout(function() {
+        setTimeout(function () {
             $el.fullCalendar(
                 "option",
                 "height",
@@ -264,7 +259,7 @@ var calendar = {
         //            } )
     },
 
-    _addNewEvent: function($el, $event, data) {
+    _addNewEvent: function ($el, $event, data) {
         /* Add a new event to the list of events parsed by fullcalendar.
          * Used when dropping a foreign element.
          */
@@ -295,24 +290,18 @@ var calendar = {
         $events.append($event);
     },
 
-    _externalEventDropped: function(moment, ev, obj, view) {
+    _externalEventDropped: function (moment, ev, obj, view) {
         var $event = $(this),
-            url = $event
-                .find("a")
-                .addBack("a")
-                .attr("href"),
+            url = $event.find("a").addBack("a").attr("href"),
             data = {
-                start: moment.format(),
-                "pat-calendar-event-drop": true
+                "start": moment.format(),
+                "pat-calendar-event-drop": true,
             };
         if (view.name === "month") {
             data.end = moment.clone().format();
             data.allDay = true;
         } else {
-            data.end = moment
-                .clone()
-                .add(30, "minutes")
-                .format();
+            data.end = moment.clone().add(30, "minutes").format();
             data.allDay = false;
         }
         calendar._addNewEvent(calendar.$el, $event, data);
@@ -320,7 +309,7 @@ var calendar = {
         $.getJSON(url, data);
     },
 
-    _changeEventDates: function(evt) {
+    _changeEventDates: function (evt) {
         /* Called when an event's dates have changed due to a drag&drop or
          * drag&resize action.
          */
@@ -332,9 +321,9 @@ var calendar = {
                 .format()
                 .match(regex),
             data = {
-                allDay: evt.allDay,
+                "allDay": evt.allDay,
                 "pat-calendar-event-drop": true,
-                start: evt.start.format()
+                "start": evt.start.format(),
             };
         if (evt.allDay === true) {
             // XXX: In fullcalendar 2 the end-date is no longer inclusive,
@@ -352,22 +341,16 @@ var calendar = {
         var tzstr = match && match.length > 0 ? match[0] : "";
         var startstr = data.start + tzstr;
         var endstr = data.end + tzstr;
-        $event
-            .find("time.start")
-            .attr("datetime", startstr)
-            .text(startstr);
-        $event
-            .find("time.end")
-            .attr("datetime", endstr)
-            .text(endstr);
+        $event.find("time.start").attr("datetime", startstr).text(startstr);
+        $event.find("time.end").attr("datetime", endstr).text(endstr);
         $.getJSON(evt.url, data);
     },
 
-    _refetchEvents: function($el) {
+    _refetchEvents: function ($el) {
         $el.fullCalendar("refetchEvents");
     },
 
-    _redrawCalendar: function() {
+    _redrawCalendar: function () {
         this.$el.fullCalendar(
             "option",
             "height",
@@ -375,11 +358,11 @@ var calendar = {
         );
     },
 
-    _registerRedrawHandlers: function() {
+    _registerRedrawHandlers: function () {
         if (calendar.cfg.height === "auto") {
             calendar._redrawCalendar();
 
-            $(window).on("resize.pat-calendar", function(ev) {
+            $(window).on("resize.pat-calendar", function (ev) {
                 if ($(ev.target).hasClass("fc-event")) {
                     // Don't do anything if the element being resized is a
                     // calendar event.
@@ -392,14 +375,12 @@ var calendar = {
                     calendar.$el.find(".fc-view-container").height()
                 );
             });
-            $(document).on("pat-update.pat-calendar", function(ev) {
+            $(document).on("pat-update.pat-calendar", function (ev) {
                 // Don't redraw if the change was in a tooltip, otherwise
                 // it will close the tooltip prematurely (assuming here
                 // it's a calendar event tooltip).
-                if (
-                    $(ev.target).parents(".tooltip-container").length === 0
-                ) {
-                    setTimeout(function() {
+                if ($(ev.target).parents(".tooltip-container").length === 0) {
+                    setTimeout(function () {
                         calendar.$el.fullCalendar(
                             "option",
                             "height",
@@ -411,7 +392,7 @@ var calendar = {
         }
     },
 
-    _registerEventRefetchers: function($el) {
+    _registerEventRefetchers: function ($el) {
         /* Register handlers for those IO events that necessitate a refetching
          * of the calendar's event objects.
          */
@@ -437,7 +418,7 @@ var calendar = {
         );
     },
 
-    _registerCategoryControls: function($el) {
+    _registerCategoryControls: function ($el) {
         /* The "category controls" are checkboxes that cause different
          * types of events to be shown or hidden.
          *
@@ -449,7 +430,7 @@ var calendar = {
             ? $(calendar.cfg.categoryControls)
             : $el;
         $el.$catControls = $categoryRoot.find("input[type=checkbox]");
-        $el.$catControls.on("change.pat-calendar", function() {
+        $el.$catControls.on("change.pat-calendar", function () {
             if (this.id) {
                 calendar.storage.set(this.id, this.checked);
             }
@@ -457,54 +438,46 @@ var calendar = {
         });
     },
 
-    _registerCalendarControls: function($el) {
+    _registerCalendarControls: function ($el) {
         /* Register handlers for the calendar control elements.
          *
          * Configured via the "calendar-controls" parser argument.
          */
-        $el.$controlRoot.on("click.pat-calendar", ".jump-next", function() {
+        $el.$controlRoot.on("click.pat-calendar", ".jump-next", function () {
             $el.fullCalendar("next");
             calendar._viewChanged($el);
         });
-        $el.$controlRoot.on("click.pat-calendar", ".jump-prev", function() {
+        $el.$controlRoot.on("click.pat-calendar", ".jump-prev", function () {
             $el.fullCalendar("prev");
             calendar._viewChanged($el);
         });
-        $el.$controlRoot.on(
-            "click.pat-calendar",
-            ".jump-today",
-            function() {
-                $el.fullCalendar("today");
-                calendar._viewChanged($el);
-            }
-        );
-        $el.$controlRoot.on(
-            "click.pat-calendar",
-            ".view-month",
-            function() {
-                $el.fullCalendar("changeView", "month");
-                calendar._viewChanged($el);
-            }
-        );
-        $el.$controlRoot.on("click.pat-calendar", ".view-week", function() {
+        $el.$controlRoot.on("click.pat-calendar", ".jump-today", function () {
+            $el.fullCalendar("today");
+            calendar._viewChanged($el);
+        });
+        $el.$controlRoot.on("click.pat-calendar", ".view-month", function () {
+            $el.fullCalendar("changeView", "month");
+            calendar._viewChanged($el);
+        });
+        $el.$controlRoot.on("click.pat-calendar", ".view-week", function () {
             $el.fullCalendar("changeView", "agendaWeek");
             calendar._viewChanged($el);
         });
-        $el.$controlRoot.on("click.pat-calendar", ".view-day", function() {
+        $el.$controlRoot.on("click.pat-calendar", ".view-day", function () {
             $el.fullCalendar("changeView", "agendaDay");
             calendar._viewChanged($el);
         });
         $el.$controlRoot.on(
             "change.pat-calendar",
             "select.timezone",
-            function() {
+            function () {
                 calendar.destroy($el);
                 calendar.init($el, { ignoreUrl: true });
             }
         );
     },
 
-    destroy: function($el) {
+    destroy: function ($el) {
         $el.off(".pat-calendar");
         $el.$catControls.off(".pat-calendar");
         $el.$controlRoot.off(".pat-calendar");
@@ -514,7 +487,7 @@ var calendar = {
         $el.fullCalendar("destroy");
     },
 
-    _viewChanged: function($el) {
+    _viewChanged: function ($el) {
         // update title
         var $title = $el.find(".cal-title");
         $title.html($el.fullCalendar("getView").title);
@@ -533,7 +506,7 @@ var calendar = {
         calendar.storage.set("view", view);
     },
 
-    highlightButtons: function(view, element) {
+    highlightButtons: function (view, element) {
         var $el = element.parents(".pat-calendar").first(),
             $body = element.parents("body").first(),
             $today = $el.find(".jump-today");
@@ -555,56 +528,39 @@ var calendar = {
         $body.find(calendar.classMap[view.name]).addClass("active");
     },
 
-    findEventByURL: function($el, url) {
+    findEventByURL: function ($el, url) {
         var regex = new RegExp("^" + url + "$");
-        return $el.find(".cal-events .cal-event").filter(function() {
-            return regex.test(
-                $(this)
-                    .find("a")
-                    .attr("href")
-            );
+        return $el.find(".cal-events .cal-event").filter(function () {
+            return regex.test($(this).find("a").attr("href"));
         });
     },
 
-    _restoreCalendarControls: function() {
+    _restoreCalendarControls: function () {
         /* Restore values of the calendar controls as stored in
          * localStorage.
          */
         var calKeys = calendar.storage._allKeys();
-        calendar.$el.$catControls.each(function() {
+        calendar.$el.$catControls.each(function () {
             if (!this.id) {
                 return;
             }
             if (
-                calKeys.indexOf(calendar.storage.prefix + ":" + this.id) !==
-                -1
+                calKeys.indexOf(calendar.storage.prefix + ":" + this.id) !== -1
             ) {
                 if (calendar.storage.get(this.id) === false) {
-                    $(this)
-                        .prop("checked", false)
-                        .trigger("change");
-                    $(this)
-                        .parent()
-                        .removeClass("checked");
-                    $(this)
-                        .parent()
-                        .addClass("unchecked");
+                    $(this).prop("checked", false).trigger("change");
+                    $(this).parent().removeClass("checked");
+                    $(this).parent().addClass("unchecked");
                 } else {
-                    $(this)
-                        .prop("checked", true)
-                        .trigger("change");
-                    $(this)
-                        .parent()
-                        .removeClass("unchecked");
-                    $(this)
-                        .parent()
-                        .addClass("checked");
+                    $(this).prop("checked", true).trigger("change");
+                    $(this).parent().removeClass("unchecked");
+                    $(this).parent().addClass("checked");
                 }
             }
         });
     },
 
-    parseEvents: function($el, timezone) {
+    parseEvents: function ($el, timezone) {
         var $events = $el.find(".cal-events"),
             $filter = $el.find(".filter"),
             searchText,
@@ -615,27 +571,20 @@ var calendar = {
             searchText = $(".search-text", $filter).val();
             regex = new RegExp(searchText, "i");
         }
-        var shownCats = $el.categories.filter(function() {
+        var shownCats = $el.categories.filter(function () {
             var cat = this;
-            return $el.$catControls.filter(function() {
+            return $el.$catControls.filter(function () {
                 return (
-                    this.checked &&
-                    $(this)
-                        .parents()
-                        .addBack()
-                        .hasClass(cat)
+                    this.checked && $(this).parents().addBack().hasClass(cat)
                 );
             }).length;
         });
 
         var events = $events
             .find(".cal-event")
-            .filter(function() {
+            .filter(function () {
                 var $event = $(this);
-                if (
-                    searchText &&
-                    !regex.test($event.find(".title").text())
-                ) {
+                if (searchText && !regex.test($event.find(".title").text())) {
                     log.debug(
                         "remove due to search-text=" + searchText,
                         $event
@@ -646,24 +595,20 @@ var calendar = {
                     // In case we don't use filter categories, always return all events
                     return true;
                 }
-                return shownCats.filter(function() {
+                return shownCats.filter(function () {
                     return $event.hasClass(this);
                 }).length;
             })
-            .map(function(idx, event) {
+            .map(function (idx, event) {
                 var attr, i;
                 // classNames: all event classes without "event" + anchor classes
                 var classNames = $(event)
                     .attr("class")
                     .split(/\s+/)
-                    .filter(function(cls) {
+                    .filter(function (cls) {
                         return cls !== "cal-event";
                     })
-                    .concat(
-                        $("a", event)
-                            .attr("class")
-                            .split(/\s+/)
-                    );
+                    .concat($("a", event).attr("class").split(/\s+/));
                 // attrs: all "data-" attrs from anchor
                 var allattrs = $("a", event)[0].attributes,
                     attrs = {};
@@ -693,9 +638,7 @@ var calendar = {
                 }
                 var ev = {
                     title:
-                        $(".title", event)
-                            .text()
-                            .trim() +
+                        $(".title", event).text().trim() +
                         (location ? " (" + location + ")" : ""),
                     start: start.format(),
                     end: end.format(),
@@ -703,7 +646,7 @@ var calendar = {
                     url: $("a", event).attr("href"),
                     className: classNames,
                     attrs: attrs,
-                    editable: $(event).hasClass("editable")
+                    editable: $(event).hasClass("editable"),
                 };
                 if (!ev.title) {
                     log.error("No event title for:", event);
@@ -719,7 +662,7 @@ var calendar = {
             .toArray();
 
         return events;
-    }
+    },
 };
 registry.register(calendar);
 

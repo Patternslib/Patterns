@@ -1,8 +1,8 @@
 /**
-* Patterns remove - send event when objects are removed from the DOM
-*
-* Copyright 2012 Simplon B.V. - Wichert Akkerman
-*/
+ * Patterns remove - send event when objects are removed from the DOM
+ *
+ * Copyright 2012 Simplon B.V. - Wichert Akkerman
+ */
 import $ from "jquery";
 
 var real_cleanData = $.cleanData;

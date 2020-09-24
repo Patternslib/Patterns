@@ -1,27 +1,26 @@
 /**
-* A Base pattern for creating scoped patterns. It's similar to Backbone's
-* Model class. The advantage of this approach is that each instance of a
-* pattern has its own local scope (closure).
-*
-* A new instance is created for each DOM element on which a pattern applies.
-*
-* You can assign values, such as $el, to `this` for an instance and they
-* will remain unique to that instance.
-*
-* Older Patternslib patterns on the other hand have a single global scope for
-* all DOM elements.
-*/
+ * A Base pattern for creating scoped patterns. It's similar to Backbone's
+ * Model class. The advantage of this approach is that each instance of a
+ * pattern has its own local scope (closure).
+ *
+ * A new instance is created for each DOM element on which a pattern applies.
+ *
+ * You can assign values, such as $el, to `this` for an instance and they
+ * will remain unique to that instance.
+ *
+ * Older Patternslib patterns on the other hand have a single global scope for
+ * all DOM elements.
+ */
 
 import $ from "jquery";
 import Registry from "./registry";
 import logging from "./logging";
 import mockupParser from "./mockup-parser";
 
-
 var log = logging.getLogger("Patternslib Base");
 
-var initBasePattern = function($el, options, trigger) {
-    if(!$el.jquery) {
+var initBasePattern = function ($el, options, trigger) {
+    if (!$el.jquery) {
         $el = $($el);
     }
     var name = this.prototype.name;
@@ -35,18 +34,15 @@ var initBasePattern = function($el, options, trigger) {
                     : options;
             pattern = new Registry.patterns[name]($el, options, trigger);
         } catch (e) {
-            log.error(
-                "Failed while initializing '" + name + "' pattern.",
-                e
-            );
+            log.error("Failed while initializing '" + name + "' pattern.", e);
         }
         $el.data("pattern-" + name, pattern);
     }
     return pattern;
 };
 
-var Base = function($el, options, trigger) {
-    if(!$el.jquery) {
+var Base = function ($el, options, trigger) {
+    if (!$el.jquery) {
         $el = $($el);
     }
     this.$el = $el;
@@ -57,22 +53,19 @@ var Base = function($el, options, trigger) {
 
 Base.prototype = {
     constructor: Base,
-    on: function(eventName, eventCallback) {
-        this.$el.on(
-            eventName + "." + this.name + ".patterns",
-            eventCallback
-        );
+    on: function (eventName, eventCallback) {
+        this.$el.on(eventName + "." + this.name + ".patterns", eventCallback);
     },
-    emit: function(eventName, args) {
+    emit: function (eventName, args) {
         // args should be a list
         if (args === undefined) {
             args = [];
         }
         this.$el.trigger(eventName + "." + this.name + ".patterns", args);
-    }
+    },
 };
 
-Base.extend = function(patternProps) {
+Base.extend = function (patternProps) {
     /* Helper function to correctly set up the prototype chain for new patterns.
      */
     var parent = this;
@@ -91,7 +84,7 @@ Base.extend = function(patternProps) {
     if (patternProps.hasOwnProperty("constructor")) {
         child = patternProps.constructor;
     } else {
-        child = function() {
+        child = function () {
             parent.apply(this, arguments);
         };
     }
@@ -106,7 +99,7 @@ Base.extend = function(patternProps) {
 
     // Set the prototype chain to inherit from `parent`, without calling
     // `parent`'s constructor function.
-    var Surrogate = function() {
+    var Surrogate = function () {
         this.constructor = child;
     };
     Surrogate.prototype = parent.prototype;

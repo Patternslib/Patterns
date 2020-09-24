@@ -11,7 +11,6 @@ import Parser from "../../core/parser";
 import registry from "../../core/registry";
 import "select2";
 
-
 var log = logging.getLogger("autosuggest");
 var parser = new Parser("autosuggest");
 parser.addArgument("ajax-data-type", "JSON");
@@ -20,10 +19,10 @@ parser.addArgument("ajax-url", "");
 parser.addArgument("allow-new-words", true); // Should custom tags be allowed?
 parser.addArgument("max-selection-size", 0);
 parser.addArgument("minimum-input-length"); // Don't restrict by default so that all results show
-parser.addArgument("placeholder", function($el) {
+parser.addArgument("placeholder", function ($el) {
     return $el.attr("placeholder") || undefined;
 });
-parser.addArgument("prefill", function($el) {
+parser.addArgument("prefill", function ($el) {
     return $el.val();
 });
 parser.addArgument("prefill-json", ""); // JSON format for pre-filling
@@ -45,9 +44,9 @@ parser.addAlias("pre-fill", "prefill");
 var _ = {
     name: "autosuggest",
     trigger: ".pat-autosuggest,.pat-auto-suggest",
-    init: function($el, opts) {
+    init: function ($el, opts) {
         if ($el.length > 1) {
-            return $el.each(function() {
+            return $el.each(function () {
                 _.init($(this), opts);
             });
         }
@@ -58,7 +57,7 @@ var _ = {
             maximumSelectionSize: pat_config.maxSelectionSize,
             minimumInputLength: pat_config.minimumInputLength,
             allowClear:
-                pat_config.maxSelectionSize === 1 && !$el.prop("required")
+                pat_config.maxSelectionSize === 1 && !$el.prop("required"),
         };
         if ($el.attr("readonly")) {
             config.placeholder = "";
@@ -68,12 +67,12 @@ var _ = {
 
         if (pat_config.selectionClasses) {
             // We need to customize the formatting/markup of the selection
-            config.formatSelection = function(obj, container) {
+            config.formatSelection = function (obj, container) {
                 var selectionClasses = null;
                 try {
-                    selectionClasses = JSON.parse(
-                        pat_config.selectionClasses
-                    )[obj.text];
+                    selectionClasses = JSON.parse(pat_config.selectionClasses)[
+                        obj.text
+                    ];
                 } catch (SyntaxError) {
                     log.error(
                         "SyntaxError: non-JSON data given to pat-autosuggest (selection-classes)"
@@ -92,7 +91,7 @@ var _ = {
             config = this.configureInput($el, pat_config, config);
         }
         $el.select2(config);
-        $el.on("pat-update", function(e, data) {
+        $el.on("pat-update", function (e, data) {
             if (data.pattern === "depends") {
                 if (data.enabled === true) {
                     $el.select2("enable", true);
@@ -105,7 +104,7 @@ var _ = {
         // suppress propagation for second input field
         $el.prev().on(
             "input-change input-defocus input-change-delayed",
-            function(e) {
+            function (e) {
                 e.stopPropagation();
             }
         );
@@ -113,23 +112,23 @@ var _ = {
         // Clear the values when a reset button is pressed
         $el.closest("form")
             .find("button[type=reset]")
-            .on("click", function() {
+            .on("click", function () {
                 $el.select2("val", "");
             });
         return $el;
     },
 
-    configureInput: function($el, pat_config, select2_config) {
+    configureInput: function ($el, pat_config, select2_config) {
         var d,
             data,
             words = [],
             ids = [],
             prefill;
 
-        select2_config.createSearchChoice = function(term, data) {
+        select2_config.createSearchChoice = function (term, data) {
             if (pat_config.allowNewWords) {
                 if (
-                    $(data).filter(function() {
+                    $(data).filter(function () {
                         return this.text.localeCompare(term) === 0;
                     }).length === 0
                 ) {
@@ -150,14 +149,14 @@ var _ = {
                 );
             }
             if (!Array.isArray(words)) {
-                words = $.map(words, function(v, k) {
+                words = $.map(words, function (v, k) {
                     return { id: k, text: v };
                 });
             }
         }
         if (pat_config.words) {
             words = pat_config.words.split(/\s*,\s*/);
-            words = $.map(words, function(v) {
+            words = $.map(words, function (v) {
                 return { id: v, text: v };
             });
         }
@@ -178,7 +177,7 @@ var _ = {
         if (pat_config.prefill && pat_config.prefill.length) {
             prefill = pat_config.prefill.split(",");
             $el.val(prefill);
-            select2_config.initSelection = function(element, callback) {
+            select2_config.initSelection = function (element, callback) {
                 var i,
                     data = [],
                     values = element.val().split(",");
@@ -209,7 +208,7 @@ var _ = {
                     }
                 }
                 $el.val(ids);
-                select2_config.initSelection = function(element, callback) {
+                select2_config.initSelection = function (element, callback) {
                     var d,
                         _data = [];
                     for (d in data) {
@@ -239,20 +238,20 @@ var _ = {
                         dataType: pat_config.ajax["data-type"],
                         type: "GET",
                         quietMillis: 400,
-                        data: function(term, page) {
+                        data: function (term, page) {
                             return {
                                 index: pat_config.ajax["search-index"],
                                 q: term, // search term
                                 page_limit: 10,
-                                page: page
+                                page: page,
                             };
                         },
-                        results: function(data, page) {
+                        results: function (data, page) {
                             // parse the results into the format expected by Select2.
                             // data must be a list of objects with keys "id" and "text"
                             return { results: data, page: page };
-                        }
-                    }
+                        },
+                    },
                 },
                 select2_config
             );
@@ -260,15 +259,15 @@ var _ = {
         return select2_config;
     },
 
-    destroy: function($el) {
+    destroy: function ($el) {
         $el.off(".pat-autosuggest");
         $el.select2("destroy");
     },
 
-    transform: function($content) {
+    transform: function ($content) {
         $content
             .findInclusive("input[type=text].pat-autosuggest")
-            .each(function() {
+            .each(function () {
                 var $src = $(this),
                     $dest = $("<input type='hidden'/>").insertAfter($src);
 
@@ -277,14 +276,14 @@ var _ = {
                     $dest.css("width", $src.outerWidth(false) + "px");
                 }
                 $src.detach();
-                $.each($src.prop("attributes"), function() {
+                $.each($src.prop("attributes"), function () {
                     if (this.name !== "type") {
                         $dest.attr(this.name, this.value);
                     }
                 });
                 $src.remove();
             });
-    }
+    },
 };
 registry.register(_);
 export default _;

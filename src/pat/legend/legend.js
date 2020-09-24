@@ -5,8 +5,8 @@ var legend = {
     name: "legend",
     trigger: "legend",
 
-    _convertToIframes: function($root) {
-        $root.findInclusive("object[type='text/html']").each(function() {
+    _convertToIframes: function ($root) {
+        $root.findInclusive("object[type='text/html']").each(function () {
             var $object = $(this),
                 $iframe = $("<iframe allowtransparency='true'/>");
 
@@ -20,15 +20,11 @@ var legend = {
         });
     },
 
-    transform: function($root) {
-        $root
-            .findInclusive("legend:not(.cant-touch-this)")
-            .each(function() {
-                $(this).replaceWith(
-                    "<p class='legend'>" + $(this).html() + "</p>"
-                );
-            });
-    }
+    transform: function ($root) {
+        $root.findInclusive("legend:not(.cant-touch-this)").each(function () {
+            $(this).replaceWith("<p class='legend'>" + $(this).html() + "</p>");
+        });
+    },
 };
 registry.register(legend);
 export default legend;

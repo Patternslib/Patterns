@@ -3,7 +3,6 @@ import inject from "../inject/inject";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
 
-
 var parser = new Parser("expandable");
 
 parser.addArgument("load-content");
@@ -12,11 +11,9 @@ var _ = {
     name: "expandable",
     trigger: "ul.pat-expandable",
     jquery_plugin: true,
-    init: function($el) {
+    init: function ($el) {
         // make sure inject folders have a ul
-        $el.find(".folder[data-pat-expandable]:not(:has(ul))").append(
-            "<ul />"
-        );
+        $el.find(".folder[data-pat-expandable]:not(:has(ul))").append("<ul />");
 
         // find all folders that contain a ul
         var $folders = $el.find("li.folder:has(ul)");
@@ -32,10 +29,10 @@ var _ = {
 
         // wire spans as control elements
         var $ctrls = $el.find("span.toggle");
-        $ctrls.each(function() {
+        $ctrls.each(function () {
             var $ctrl = $(this),
                 $folder = $ctrl.parent();
-            $ctrl.on("click.pat-expandable", function() {
+            $ctrl.on("click.pat-expandable", function () {
                 $folder
                     .toggleClass("open closed")
                     .filter(".open[data-pat-expandable]")
@@ -44,8 +41,8 @@ var _ = {
         });
         return $el;
     },
-    loadContent: function($el) {
-        return $el.each(function() {
+    loadContent: function ($el) {
+        return $el.each(function () {
             var $el = $(this),
                 url = parser.parse($el).loadContent,
                 components = url.split("#"),
@@ -56,12 +53,12 @@ var _ = {
                         url: base_url,
                         source: id,
                         $target: $el.find("ul"),
-                        dataType: "html"
-                    }
+                        dataType: "html",
+                    },
                 ];
             inject.execute(opts, $el);
         });
-    }
+    },
 };
 registry.register(_);
 export default _;

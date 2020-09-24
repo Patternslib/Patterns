@@ -12,7 +12,7 @@ var Markdown = Base.extend({
     name: "markdown",
     trigger: ".pat-markdown",
 
-    init: function($el, options) {
+    init: function ($el, options) {
         if (this.$el.is(this.trigger)) {
             /* This pattern can either be used standalone or as an enhancement
              * to pat-inject. The following only applies to standalone, when
@@ -25,30 +25,24 @@ var Markdown = Base.extend({
         }
     },
 
-    render: function(text) {
+    render: function (text) {
         var $rendering = $("<div/>"),
             converter = new Showdown.Converter({
                 tables: true,
-                extensions: ["prettify"]
+                extensions: ["prettify"],
             });
         $rendering.html(converter.makeHtml(text));
         return $rendering;
     },
 
-    renderForInjection: function(cfg, data) {
+    renderForInjection: function (cfg, data) {
         var header,
             source = data;
-        if (
-            cfg.source &&
-            (header = /^#+\s*(.*)/.exec(cfg.source)) !== null
-        ) {
+        if (cfg.source && (header = /^#+\s*(.*)/.exec(cfg.source)) !== null) {
             source = this.extractSection(source, header[1]);
             if (source === null) {
                 log.warn(
-                    'Could not find section "' +
-                        cfg.source +
-                        '" in ' +
-                        cfg.url
+                    'Could not find section "' + cfg.source + '" in ' + cfg.url
                 );
                 return $("<div/>").attr("data-src", cfg.url);
             }
@@ -60,7 +54,7 @@ var Markdown = Base.extend({
         );
     },
 
-    extractSection: function(text, header) {
+    extractSection: function (text, header) {
         var pattern, level;
         header = utils.escapeRegExp(header);
         var matcher = new RegExp(
@@ -98,16 +92,16 @@ var Markdown = Base.extend({
             log.error("Failed to find section with known present header?");
         }
         return match !== null ? match[0] : null;
-    }
+    },
 });
 
 // Add support for syntax highlighting via pat-syntax-highlight
-Showdown.extensions.prettify = function(converter) {
+Showdown.extensions.prettify = function (converter) {
     return [
         {
             type: "output",
-            filter: function(source) {
-                return source.replace(/(<pre>)?<code>/gi, function(
+            filter: function (source) {
+                return source.replace(/(<pre>)?<code>/gi, function (
                     match,
                     pre
                 ) {
@@ -117,12 +111,12 @@ Showdown.extensions.prettify = function(converter) {
                         return '<code class="pat-syntax-highlight">';
                     }
                 });
-            }
-        }
+            },
+        },
     ];
 };
 
-$(document).ready(function() {
+$(document).ready(function () {
     $(document.body).on(
         "patterns-inject-triggered.pat-markdown",
         "a.pat-inject",
@@ -131,7 +125,7 @@ $(document).ready(function() {
              * datatype so that we can register a type handler for them.
              */
             var cfgs = $(this).data("pat-inject");
-            cfgs.forEach(function(cfg) {
+            cfgs.forEach(function (cfg) {
                 if (is_markdown_resource.test(cfg.url)) {
                     cfg.dataType = "markdown";
                 }
@@ -141,12 +135,12 @@ $(document).ready(function() {
 });
 
 inject.registerTypeHandler("markdown", {
-    sources: function(cfgs, data) {
-        return cfgs.map(function(cfg) {
+    sources: function (cfgs, data) {
+        return cfgs.map(function (cfg) {
             var pat = Markdown.init(cfg.$target);
             return pat.renderForInjection(cfg, data);
         });
-    }
+    },
 });
 
 export default Markdown;

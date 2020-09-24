@@ -1,10 +1,10 @@
 /**
-* Patterns switch - toggle classes on click
-*
-* Copyright 2013 Simplon B.V. - Wichert Akkerman
-* Copyright 2012 Florian Friesdorf
-* Copyright 2012 SYSLAB.COM GmbH
-*/
+ * Patterns switch - toggle classes on click
+ *
+ * Copyright 2013 Simplon B.V. - Wichert Akkerman
+ * Copyright 2012 Florian Friesdorf
+ * Copyright 2012 SYSLAB.COM GmbH
+ */
 import $ from "jquery";
 import registry from "../../core/registry";
 import logging from "../../core/logging";
@@ -25,8 +25,8 @@ var switcher = {
     trigger: ".pat-switch",
     jquery_plugin: true,
 
-    init: function($el, defaults) {
-        return $el.each(function() {
+    init: function ($el, defaults) {
+        return $el.each(function () {
             var $trigger = $(this),
                 options = parser.parse($trigger, defaults, true);
             options = switcher._validateOptions(options);
@@ -58,29 +58,27 @@ var switcher = {
         });
     },
 
-    destroy: function($el) {
-        return $el.each(function() {
-            $(this)
-                .removeData("patternSwitch")
-                .off("click.patternSwitch");
+    destroy: function ($el) {
+        return $el.each(function () {
+            $(this).removeData("patternSwitch").off("click.patternSwitch");
         });
     },
 
     // jQuery API to toggle a switch
-    execute: function($el) {
-        return $el.each(function() {
+    execute: function ($el) {
+        return $el.each(function () {
             switcher._go($(this));
         });
     },
 
-    _onClick: function(ev) {
+    _onClick: function (ev) {
         if ($(ev.currentTarget).is("a")) {
             ev.preventDefault();
         }
         switcher._go($(this));
     },
 
-    _go: function($trigger) {
+    _go: function ($trigger) {
         var options = $trigger.data("patternSwitch"),
             option,
             i;
@@ -96,13 +94,13 @@ var switcher = {
             if (option._storage)
                 option._storage.set(option.selector, {
                     remove: option.remove,
-                    add: option.add
+                    add: option.add,
                 });
         }
         $trigger.trigger("resize");
     },
 
-    _validateOptions: function(options) {
+    _validateOptions: function (options) {
         var correct = [];
 
         for (var i = 0; i < options.length; i++) {
@@ -117,7 +115,7 @@ var switcher = {
         return correct;
     },
 
-    _update: function(selector, remove, add) {
+    _update: function (selector, remove, add) {
         var $targets = $(selector);
 
         if (!$targets.length) return;
@@ -125,7 +123,7 @@ var switcher = {
         if (remove) utils.removeWildcardClass($targets, remove);
         if (add) $targets.addClass(add);
         $targets.trigger("pat-update", { pattern: "switch" });
-    }
+    },
 };
 
 registry.register(switcher);

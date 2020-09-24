@@ -10,7 +10,6 @@ import registry from "../../core/registry";
 import utils from "../../core/utils";
 import "../../core/jquery-ext";
 
-
 var parser = new Parser("checklist");
 parser.addArgument("select", ".select-all");
 parser.addArgument("deselect", ".deselect-all");
@@ -20,9 +19,9 @@ var _ = {
     trigger: ".pat-checklist",
     jquery_plugin: true,
 
-    init: function($el, opts) {
+    init: function ($el, opts) {
         function _init() {
-            return $el.each(function() {
+            return $el.each(function () {
                 var $trigger = $(this),
                     options = parser.parse($trigger, opts, false);
 
@@ -64,8 +63,8 @@ var _ = {
         return _init();
     },
 
-    destroy: function($el) {
-        return $el.each(function() {
+    destroy: function ($el) {
+        return $el.each(function () {
             var $trigger = $(this),
                 options = $trigger.data("patternChecklist");
             $trigger.scopedFind(options.select).off(".pat-checklist");
@@ -75,7 +74,7 @@ var _ = {
         });
     },
 
-    _findSiblings: function(elem, sel) {
+    _findSiblings: function (elem, sel) {
         // Looks for the closest elements that match the `sel` selector
         var checkbox_children, $parent;
         var parents = $(elem).parents();
@@ -95,7 +94,7 @@ var _ = {
         // a .pat-checklist parent
         return $([]);
     },
-    onChange: function(event) {
+    onChange: function (event) {
         var $trigger = event.data.trigger,
             options = $trigger.data("patternChecklist");
         var siblings;
@@ -113,10 +112,7 @@ var _ = {
                 all_selects[i],
                 "input[type=checkbox]:visible"
             );
-            if (
-                siblings &&
-                siblings.filter(":not(:checked)").length === 0
-            ) {
+            if (siblings && siblings.filter(":not(:checked)").length === 0) {
                 $(all_selects[i]).prop("disabled", true);
             } else {
                 $(all_selects[i]).prop("disabled", false);
@@ -135,7 +131,7 @@ var _ = {
         }
     },
 
-    onSelectAll: function(event) {
+    onSelectAll: function (event) {
         var $trigger = event.data.trigger,
             options = $trigger.data("patternChecklist"),
             button_clicked = event.currentTarget;
@@ -146,16 +142,14 @@ var _ = {
             button_clicked,
             "input[type=checkbox]:not(:checked)"
         );
-        checkbox_siblings.each(function() {
-            $(this)
-                .prop("checked", true)
-                .trigger("change");
+        checkbox_siblings.each(function () {
+            $(this).prop("checked", true).trigger("change");
         });
 
         event.preventDefault();
     },
 
-    onDeselectAll: function(event) {
+    onDeselectAll: function (event) {
         var $trigger = event.data.trigger,
             options = $trigger.data("patternChecklist"),
             button_clicked = event.currentTarget;
@@ -166,41 +160,38 @@ var _ = {
             button_clicked,
             "input[type=checkbox]:checked"
         );
-        checkbox_siblings.each(function() {
-            $(this)
-                .prop("checked", false)
-                .trigger("change");
+        checkbox_siblings.each(function () {
+            $(this).prop("checked", false).trigger("change");
         });
         event.preventDefault();
     },
 
     /* The following methods are moved here from pat-checked-flag, which is being deprecated */
-    _getLabelAndFieldset: function(el) {
+    _getLabelAndFieldset: function (el) {
         var result = new Set();
         result.add($(utils.findLabel(el)));
         result.add($(el).closest("fieldset"));
         return result;
     },
 
-    _getSiblingsWithLabelsAndFieldsets: function(el) {
+    _getSiblingsWithLabelsAndFieldsets: function (el) {
         var selector = 'input[name="' + el.name + '"]',
-            $related =
-                el.form === null ? $(selector) : $(selector, el.form),
+            $related = el.form === null ? $(selector) : $(selector, el.form),
             $result = $();
         var result = new Set();
         var label_and_fieldset;
         $related = $related.not(el);
-        $related.each(function(idx, item) {
+        $related.each(function (idx, item) {
             result.add(item);
             label_and_fieldset = _._getLabelAndFieldset(item);
-            label_and_fieldset.forEach(function(item) {
+            label_and_fieldset.forEach(function (item) {
                 result.add(item);
             });
         });
         return result;
     },
 
-    _onChangeCheckbox: function() {
+    _onChangeCheckbox: function () {
         var $el = $(this),
             $label = $(utils.findLabel(this)),
             $fieldset = $el.closest("fieldset");
@@ -210,10 +201,7 @@ var _ = {
         }
 
         if (this.checked) {
-            $label
-                .add($fieldset)
-                .removeClass("unchecked")
-                .addClass("checked");
+            $label.add($fieldset).removeClass("unchecked").addClass("checked");
         } else {
             $label.addClass("unchecked").removeClass("checked");
             if ($fieldset.find("input:checked").length) {
@@ -222,15 +210,15 @@ var _ = {
         }
     },
 
-    _initRadio: function() {
+    _initRadio: function () {
         _._updateRadio(this, false);
     },
 
-    _onChangeRadio: function() {
+    _onChangeRadio: function () {
         _._updateRadio(this, true);
     },
 
-    _updateRadio: function(input, update_siblings) {
+    _updateRadio: function (input, update_siblings) {
         var $el = $(input),
             $label = $(utils.findLabel(input)),
             $fieldset = $el.closest("fieldset"),
@@ -238,24 +226,19 @@ var _ = {
         if ($el.closest("ul.radioList").length) {
             $label = $label.add($el.closest("li"));
             var newset = new Set();
-            siblings.forEach(function(sibling) {
+            siblings.forEach(function (sibling) {
                 newset.add($(sibling).closest("li"));
             });
             siblings = newset;
         }
 
         if (update_siblings) {
-            siblings.forEach(function(sibling) {
-                $(sibling)
-                    .removeClass("checked")
-                    .addClass("unchecked");
+            siblings.forEach(function (sibling) {
+                $(sibling).removeClass("checked").addClass("unchecked");
             });
         }
         if (input.checked) {
-            $label
-                .add($fieldset)
-                .removeClass("unchecked")
-                .addClass("checked");
+            $label.add($fieldset).removeClass("unchecked").addClass("checked");
         } else {
             $label.addClass("unchecked").removeClass("checked");
             if ($fieldset.find("input:checked").length) {
@@ -264,7 +247,7 @@ var _ = {
                 $fieldset.addClass("unchecked").removeClass("checked");
             }
         }
-    }
+    },
 };
 registry.register(_);
 

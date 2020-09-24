@@ -1,15 +1,15 @@
 import pattern from "./masonry";
 import $ from "jquery";
 
-describe("pat-masonry", function() {
-    beforeEach(function() {
+describe("pat-masonry", function () {
+    beforeEach(function () {
         $("<div/>", { id: "lab" }).appendTo(document.body);
     });
-    afterEach(function() {
+    afterEach(function () {
         $("#lab").remove();
     });
 
-    it("Sets class masonry-ready on the element after masonry has finished", function() {
+    it("Sets class masonry-ready on the element after masonry has finished", function () {
         var $msnry;
         $("#lab").html(
             "<div class='pat-masonry'>" +
@@ -24,7 +24,7 @@ describe("pat-masonry", function() {
         $msnry = $("#lab .pat-masonry");
         expect($msnry.hasClass("masonry-ready")).toBeFalsy();
         pattern.init($msnry);
-        setTimeout(function() {
+        setTimeout(function () {
             // XXX: Reenable when pattern.init returns a promise
             // expect($msnry.hasClass("masonry-ready")).toBeTruthy();
         }, 2000);

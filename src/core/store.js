@@ -1,10 +1,10 @@
 /**
-* Patterns store - store pattern state locally in the browser
-*
-* Copyright 2008-2012 Simplon B.V.
-* Copyright 2011 Humberto Sermeño
-* Copyright 2011 Florian Friesdorf
-*/
+ * Patterns store - store pattern state locally in the browser
+ *
+ * Copyright 2008-2012 Simplon B.V.
+ * Copyright 2011 Humberto Sermeño
+ * Copyright 2011 Florian Friesdorf
+ */
 function Storage(backend, prefix) {
     this.prefix = prefix;
     this.backend = backend;
@@ -90,11 +90,11 @@ ValueStorage.prototype.remove = function ValueStorage_remove() {
 var store = {
     supported: false,
 
-    local: function(name) {
+    local: function (name) {
         return new Storage(window.localStorage, name);
     },
 
-    session: function(name) {
+    session: function (name) {
         return new Storage(window.sessionStorage, name);
     },
 
@@ -104,9 +104,7 @@ var store = {
     updateOptions: function store_updateOptions(trigger, options) {
         if (options.store !== "none") {
             if (!trigger.id) {
-                log.warn(
-                    "state persistance requested, but element has no id"
-                );
+                log.warn("state persistance requested, but element has no id");
                 options.store = "none";
             } else if (!store.supported) {
                 log.warn(
@@ -116,7 +114,7 @@ var store = {
             }
         }
         return options;
-    }
+    },
 };
 
 // Perform the test separately since this may throw a SecurityError as

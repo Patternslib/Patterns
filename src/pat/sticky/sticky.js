@@ -5,7 +5,7 @@ import Base from "../../core/base";
 import logging from "../../core/logging";
 import utils from "../../core/utils";
 import Stickyfill from "stickyfilljs";
-"use strict";
+("use strict");
 var parser = new Parser("sticky");
 var log = logging.getLogger("sticky");
 parser.addArgument("selector", "");
@@ -13,7 +13,7 @@ parser.addArgument("selector", "");
 export default Base.extend({
     name: "sticky",
     trigger: ".pat-sticky",
-    init: function() {
+    init: function () {
         this.options = parser.parse(this.$el);
         this.makeSticky();
         $("body").on(
@@ -25,21 +25,21 @@ export default Base.extend({
 
         return this.$el;
     },
-    onPatternUpdate: function(ev, data) {
+    onPatternUpdate: function (ev, data) {
         /* Handler which gets called when pat-update is triggered within
          * the .pat-sticky element.
          */
         Stickyfill.refreshAll();
         return true;
     },
-    makeSticky: function() {
+    makeSticky: function () {
         if (this.options.selector === "") {
             this.$stickies = this.$el;
         } else {
             this.$stickies = this.$el.find(this.options.selector);
         }
-        this.$stickies.each(function(idx, elem) {
+        this.$stickies.each(function (idx, elem) {
             Stickyfill.add(elem);
         });
-    }
+    },
 });

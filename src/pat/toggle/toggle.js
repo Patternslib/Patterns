@@ -1,8 +1,8 @@
 /**
-* Patterns toggle - toggle class on click
-*
-* Copyright 2012-2014 Simplon B.V. - Wichert Akkerman
-*/
+ * Patterns toggle - toggle class on click
+ *
+ * Copyright 2012-2014 Simplon B.V. - Wichert Akkerman
+ */
 import $ from "jquery";
 import registry from "../../core/registry";
 import logging from "../../core/logging";
@@ -34,15 +34,14 @@ ClassToggler.prototype = {
     get: function Toggler_get(el) {
         var classes = el.className.split(/\s+/);
         for (var i = 0; i < this.values.length; i++)
-            if (classes.indexOf(this.values[i]) !== -1)
-                return this.values[i];
+            if (classes.indexOf(this.values[i]) !== -1) return this.values[i];
         return null;
     },
 
     set: function Toggler_set(el, value) {
         var classes = el.className.split(/\s+/),
             values = this.values;
-        classes = classes.filter(function(v) {
+        classes = classes.filter(function (v) {
             return v.length && values.indexOf(v) === -1;
         });
         if (value) {
@@ -53,12 +52,11 @@ ClassToggler.prototype = {
     },
 
     next: function Toggler_next(current) {
-        if (this.values.length === 1)
-            return current ? null : this.values[0];
+        if (this.values.length === 1) return current ? null : this.values[0];
         for (var i = 0; i < this.values.length - 1; i++)
             if (this.values[i] === current) return this.values[i + 1];
         return this.values[0];
-    }
+    },
 };
 
 function AttributeToggler(attribute) {
@@ -133,7 +131,7 @@ var toggle = {
     _makeToggler: function toggle_makeToggler(options) {
         if (options.attr === "class") {
             var values = options.value.split(/\s+/);
-            values = values.filter(function(v) {
+            values = values.filter(function (v) {
                 return v.length;
             });
             return new this._ClassToggler(values);
@@ -161,9 +159,7 @@ var toggle = {
                 continue;
             }
             if (option.attr === "class" && !option.value) {
-                log.error(
-                    "Toggle pattern needs values for class attributes."
-                );
+                log.error("Toggle pattern needs values for class attributes.");
                 continue;
             }
             if (i && option.store !== "none") {
@@ -236,7 +232,7 @@ var toggle = {
         if (keycode === "13") {
             $(this).trigger("click", event);
         }
-    }
+    },
 };
 
 registry.register(toggle);

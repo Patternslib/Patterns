@@ -1,31 +1,30 @@
 /*
-* HTML Parser By John Resig (ejohn.org)
-* Original code by Erik Arvidsson, Mozilla Public License
-* http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
-*
-* Modified by Wichert Akkerman to support act as a module and handle new
-* HTML5 elements.
-*
-* // Use like so:
-* HTMLParser(htmlString, {
-*     start: function(tag, attrs, unary) {},
-*     end: function(tag) {},
-*     chars: function(text) {},
-*     comment: function(text) {}
-* });
-*
-* // or to get an XML string:
-* HTMLtoXML(htmlString);
-*
-* // or to get an XML DOM Document
-* HTMLtoDOM(htmlString);
-*
-* // or to inject into an existing document/DOM node
-* HTMLtoDOM(htmlString, document);
-* HTMLtoDOM(htmlString, document.body);
-*
-*/
-
+ * HTML Parser By John Resig (ejohn.org)
+ * Original code by Erik Arvidsson, Mozilla Public License
+ * http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
+ *
+ * Modified by Wichert Akkerman to support act as a module and handle new
+ * HTML5 elements.
+ *
+ * // Use like so:
+ * HTMLParser(htmlString, {
+ *     start: function(tag, attrs, unary) {},
+ *     end: function(tag) {},
+ *     chars: function(text) {},
+ *     comment: function(text) {}
+ * });
+ *
+ * // or to get an XML string:
+ * HTMLtoXML(htmlString);
+ *
+ * // or to get an XML DOM Document
+ * HTMLtoDOM(htmlString);
+ *
+ * // or to inject into an existing document/DOM node
+ * HTMLtoDOM(htmlString, document);
+ * HTMLtoDOM(htmlString, document.body);
+ *
+ */
 
 // Regular Expressions for parsing tags and attributes
 var startTag = /^<([\-A-Za-z0-9:_]+)((?:\s+[\-A-Za-z0-9:_]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/,
@@ -59,13 +58,13 @@ var fillAttrs = makeMap(
 // Special Elements (can contain anything) Reference: http://www.w3.org/TR/html-markup/syntax.html#replaceable-character-data
 var special = makeMap("script,style,textarea,title");
 
-var HTMLParser = function(html, handler) {
+var HTMLParser = function (html, handler) {
     var index,
         chars,
         match,
         stack = [],
         last = html;
-    stack.last = function() {
+    stack.last = function () {
         return this[this.length - 1];
     };
 
@@ -125,7 +124,7 @@ var HTMLParser = function(html, handler) {
         } else {
             html = html.replace(
                 new RegExp("(.*)</" + stack.last() + "[^>]*>"),
-                function(all, text) {
+                function (all, text) {
                     text = text
                         .replace(/<!--(.*?)-->/g, "$1")
                         .replace(/<!\[CDATA\[(.*?)\]\]>/g, "$1");
@@ -166,7 +165,7 @@ var HTMLParser = function(html, handler) {
         if (handler.start) {
             var attrs = [];
 
-            rest.replace(attr, function(match, name) {
+            rest.replace(attr, function (match, name) {
                 var value = arguments[2]
                     ? arguments[2]
                     : arguments[3]
@@ -180,7 +179,7 @@ var HTMLParser = function(html, handler) {
                 attrs.push({
                     name: name,
                     value: value,
-                    escaped: value.replace(/"/g, "&quot;")
+                    escaped: value.replace(/"/g, "&quot;"),
                 });
             });
 
@@ -208,41 +207,40 @@ var HTMLParser = function(html, handler) {
     }
 };
 
-var HTMLtoXML = function(html) {
+var HTMLtoXML = function (html) {
     var results = "";
 
     HTMLParser(html, {
-        start: function(tag, attrs, unary) {
+        start: function (tag, attrs, unary) {
             results += "<" + tag;
 
             for (var i = 0; i < attrs.length; i++)
-                results +=
-                    " " + attrs[i].name + '="' + attrs[i].escaped + '"';
+                results += " " + attrs[i].name + '="' + attrs[i].escaped + '"';
 
             results += (unary ? "/" : "") + ">";
         },
-        end: function(tag) {
+        end: function (tag) {
             results += "</" + tag + ">";
         },
-        chars: function(text) {
+        chars: function (text) {
             results += text;
         },
-        comment: function(text) {
+        comment: function (text) {
             results += "<!--" + text + "-->";
-        }
+        },
     });
 
     return results;
 };
 
-var HTMLtoDOM = function(html, doc) {
+var HTMLtoDOM = function (html, doc) {
     // There can be only one of these elements
     var one = makeMap("html,head,body,title");
 
     // Enforce a structure for the document
     var structure = {
         link: "head",
-        base: "head"
+        base: "head",
     };
 
     if (!doc) {
@@ -269,7 +267,7 @@ var HTMLtoDOM = function(html, doc) {
     // If we're dealing with an empty document then we
     // need to pre-populate it with the HTML document structure
     if (!documentElement && doc.createElement)
-        (function() {
+        (function () {
             var html = doc.createElement("html");
             var head = doc.createElement("head");
             head.appendChild(doc.createElement("title"));
@@ -287,7 +285,7 @@ var HTMLtoDOM = function(html, doc) {
     var curParentNode = one.body;
 
     HTMLParser(html, {
-        start: function(tagName, attrs, unary) {
+        start: function (tagName, attrs, unary) {
             // If it's a pre-built element, then we can ignore
             // its construction
             if (one[tagName]) {
@@ -316,18 +314,18 @@ var HTMLtoDOM = function(html, doc) {
                 curParentNode = elem;
             }
         },
-        end: function(/* tag */) {
+        end: function (/* tag */) {
             elems.length -= 1;
 
             // Init the new parentNode
             curParentNode = elems[elems.length - 1];
         },
-        chars: function(text) {
+        chars: function (text) {
             curParentNode.appendChild(doc.createTextNode(text));
         },
-        comment: function(/* text */) {
+        comment: function (/* text */) {
             // create comment node
-        }
+        },
     });
 
     return doc;
@@ -343,5 +341,5 @@ function makeMap(str) {
 export default {
     HTMLParser: HTMLParser,
     HTMLtoXML: HTMLtoXML,
-    HTMLtoDOM: HTMLtoDOM
+    HTMLtoDOM: HTMLtoDOM,
 };

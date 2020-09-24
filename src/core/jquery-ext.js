@@ -1,20 +1,20 @@
 /**
-* @license
-* Patterns @VERSION@ jquery-ext - various jQuery extensions
-*
-* Copyright 2011 Humberto Sermeño
-*/
+ * @license
+ * Patterns @VERSION@ jquery-ext - various jQuery extensions
+ *
+ * Copyright 2011 Humberto Sermeño
+ */
 
 import $ from "jquery";
 
 var methods = {
-    init: function(options) {
+    init: function (options) {
         var settings = {
             time: 3 /* time it will wait before moving to "timeout" after a move event */,
             initialTime: 8 /* time it will wait before first adding the "timeout" class */,
-            exceptionAreas: [] /* IDs of elements that, if the mouse is over them, will reset the timer */
+            exceptionAreas: [] /* IDs of elements that, if the mouse is over them, will reset the timer */,
         };
-        return this.each(function() {
+        return this.each(function () {
             var $this = $(this),
                 data = $this.data("timeout");
 
@@ -27,13 +27,13 @@ var methods = {
                     trueTime: settings.time,
                     time: settings.initialTime,
                     untouched: true,
-                    inExceptionArea: false
+                    inExceptionArea: false,
                 });
 
                 $this.on("mouseover.timeout", methods.mouseMoved);
                 $this.on("mouseenter.timeout", methods.mouseMoved);
 
-                $(settings.exceptionAreas).each(function() {
+                $(settings.exceptionAreas).each(function () {
                     $this
                         .find(this)
                         .live(
@@ -54,21 +54,21 @@ var methods = {
         });
     },
 
-    enteredException: function(event) {
+    enteredException: function (event) {
         var data = event.data.parent.data("timeout");
         data.inExceptionArea = true;
         event.data.parent.data("timeout", data);
         event.data.parent.trigger("mouseover");
     },
 
-    leftException: function(event) {
+    leftException: function (event) {
         var data = event.data.parent.data("timeout");
         data.inExceptionArea = false;
         event.data.parent.data("timeout", data);
     },
 
-    destroy: function() {
-        return this.each(function() {
+    destroy: function () {
+        return this.each(function () {
             var $this = $(this),
                 data = $this.data("timeout");
 
@@ -78,7 +78,7 @@ var methods = {
         });
     },
 
-    mouseMoved: function() {
+    mouseMoved: function () {
         var $this = $(this),
             data = $this.data("timeout");
 
@@ -94,10 +94,10 @@ var methods = {
         $this.data("timeout", data);
     },
 
-    startTimer: function() {
+    startTimer: function () {
         var $this = $(this),
             data = $this.data("timeout");
-        var fn = function() {
+        var fn = function () {
             var data = $this.data("timeout");
             if (data && data.lastEvent) {
                 if (data.inExceptionArea) {
@@ -105,8 +105,7 @@ var methods = {
                 } else {
                     var now = new Date();
                     var diff =
-                        Math.floor(data.time * 1000) -
-                        (now - data.lastEvent);
+                        Math.floor(data.time * 1000) - (now - data.lastEvent);
                     if (diff > 0) {
                         // the timeout has not ocurred, so set the timeout again
                         setTimeout(fn, diff + 100);
@@ -119,10 +118,10 @@ var methods = {
         };
 
         setTimeout(fn, Math.floor(data.time * 1000));
-    }
+    },
 };
 
-$.fn.timeout = function(method) {
+$.fn.timeout = function (method) {
     if (methods[method]) {
         return methods[method].apply(
             this,
@@ -137,7 +136,7 @@ $.fn.timeout = function(method) {
 
 // Custom jQuery selector to find elements with scrollbars
 $.extend($.expr[":"], {
-    scrollable: function(element) {
+    scrollable: function (element) {
         var vertically_scrollable, horizontally_scrollable;
         if (
             $(element).css("overflow") === "scroll" ||
@@ -150,10 +149,8 @@ $.extend($.expr[":"], {
             element.clientHeight < element.scrollHeight &&
             ($.inArray($(element).css("overflowY"), ["scroll", "auto"]) !==
                 -1 ||
-                $.inArray($(element).css("overflow"), [
-                    "scroll",
-                    "auto"
-                ]) !== -1);
+                $.inArray($(element).css("overflow"), ["scroll", "auto"]) !==
+                    -1);
 
         if (vertically_scrollable) return true;
 
@@ -161,16 +158,14 @@ $.extend($.expr[":"], {
             element.clientWidth < element.scrollWidth &&
             ($.inArray($(element).css("overflowX"), ["scroll", "auto"]) !==
                 -1 ||
-                $.inArray($(element).css("overflow"), [
-                    "scroll",
-                    "auto"
-                ]) !== -1);
+                $.inArray($(element).css("overflow"), ["scroll", "auto"]) !==
+                    -1);
         return horizontally_scrollable;
-    }
+    },
 });
 
 // Make Visible in scroll
-$.fn.makeVisibleInScroll = function(parent_id) {
+$.fn.makeVisibleInScroll = function (parent_id) {
     var absoluteParent = null;
     if (typeof parent_id === "string") {
         absoluteParent = $("#" + parent_id);
@@ -178,7 +173,7 @@ $.fn.makeVisibleInScroll = function(parent_id) {
         absoluteParent = $(parent_id);
     }
 
-    return this.each(function() {
+    return this.each(function () {
         var $this = $(this),
             parent;
         if (!absoluteParent) {
@@ -201,16 +196,14 @@ $.fn.makeVisibleInScroll = function(parent_id) {
         if (elemTop < viewTop) {
             parent.scrollTop(elemTop);
         } else if (elemBottom > viewBottom - parent.height() / 2) {
-            parent.scrollTop(
-                elemTop - (parent.height() - $this.height()) / 2
-            );
+            parent.scrollTop(elemTop - (parent.height() - $this.height()) / 2);
         }
     });
 };
 
 //Work around warning for jQuery 3.x:
 //JQMIGRATE: jQuery.fn.offset() requires an element connected to a document
-$.fn.safeOffset = function() {
+$.fn.safeOffset = function () {
     var docElem,
         elem = this[0],
         origin = { top: 0, left: 0 };
@@ -228,8 +221,8 @@ $.fn.safeOffset = function() {
 };
 
 //Make absolute location
-$.fn.setPositionAbsolute = function(element, offsettop, offsetleft) {
-    return this.each(function() {
+$.fn.setPositionAbsolute = function (element, offsettop, offsetleft) {
+    return this.each(function () {
         // set absolute location for based on the element passed
         // dynamically since every browser has different settings
         var $this = $(this);
@@ -241,24 +234,21 @@ $.fn.setPositionAbsolute = function(element, offsettop, offsetleft) {
         var settop = pos.top + height + offsettop;
         $this.css({
             "z-index": 1,
-            position: "absolute",
-            marginLeft: 0,
-            marginTop: 0,
-            left: setleft + "px",
-            top: settop + "px",
-            width: thiswidth
+            "position": "absolute",
+            "marginLeft": 0,
+            "marginTop": 0,
+            "left": setleft + "px",
+            "top": settop + "px",
+            "width": thiswidth,
         });
-        $this
-            .remove()
-            .appendTo("body")
-            .show();
+        $this.remove().appendTo("body").show();
     });
 };
 
-$.fn.positionAncestor = function(selector) {
+$.fn.positionAncestor = function (selector) {
     var left = 0;
     var top = 0;
-    this.each(function() {
+    this.each(function () {
         // check if current element has an ancestor matching a selector
         // and that ancestor is positioned
         var $ancestor = $(this).closest(selector);
@@ -268,8 +258,7 @@ $.fn.positionAncestor = function(selector) {
                 $child.safeOffset().left -
                 parseInt($child.css("marginLeft"), 10);
             var childMarginEdgeTop =
-                $child.safeOffset().top -
-                parseInt($child.css("marginTop"), 10);
+                $child.safeOffset().top - parseInt($child.css("marginTop"), 10);
             var ancestorPaddingEdgeLeft =
                 $ancestor.safeOffset().left +
                 parseInt($ancestor.css("borderLeftWidth"), 10);
@@ -285,7 +274,7 @@ $.fn.positionAncestor = function(selector) {
     });
     return {
         left: left,
-        top: top
+        top: top,
     };
 };
 
@@ -293,41 +282,34 @@ $.fn.positionAncestor = function(selector) {
 // but these two seem to be only convenience. Do we really want to
 // include these as part of patterns?
 if (!String.prototype.startsWith) {
-    String.prototype.startsWith = function(str) {
+    String.prototype.startsWith = function (str) {
         return this.match("^" + str) !== null;
     };
 }
 if (!String.prototype.endsWith) {
-    String.prototype.endsWith = function(str) {
+    String.prototype.endsWith = function (str) {
         return this.match(str + "$") !== null;
     };
 }
 
-$.fn.findInclusive = function(selector) {
-    return this.find("*")
-        .addBack()
-        .filter(selector);
+$.fn.findInclusive = function (selector) {
+    return this.find("*").addBack().filter(selector);
 };
 
-$.fn.slideIn = function(speed, easing, callback) {
+$.fn.slideIn = function (speed, easing, callback) {
     return this.animate({ width: "show" }, speed, easing, callback);
 };
 
-$.fn.slideOut = function(speed, easing, callback) {
+$.fn.slideOut = function (speed, easing, callback) {
     return this.animate({ width: "hide" }, speed, easing, callback);
 };
 
 // case-insensitive :contains
-$.expr[":"].Contains = function(a, i, m) {
-    return (
-        $(a)
-            .text()
-            .toUpperCase()
-            .indexOf(m[3].toUpperCase()) >= 0
-    );
+$.expr[":"].Contains = function (a, i, m) {
+    return $(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
 };
 
-$.fn.scopedFind = function(selector) {
+$.fn.scopedFind = function (selector) {
     /*  If the selector starts with an object id do a global search,
      *  otherwise do a local search.
      */
@@ -337,6 +319,5 @@ $.fn.scopedFind = function(selector) {
         return this.find(selector);
     }
 };
-
 
 export default undefined;

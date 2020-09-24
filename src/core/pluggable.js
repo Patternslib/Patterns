@@ -2,15 +2,15 @@ import $ from "jquery";
 import utils from "../../core/utils";
 
 var pluggable = {
-    extend: function(attrs) {
+    extend: function (attrs) {
         return utils.extend(this, attrs);
     },
 
-    registerPlugin: function(name, callback) {
+    registerPlugin: function (name, callback) {
         this.plugins[name] = callback;
     },
 
-    initializePlugins: function() {
+    initializePlugins: function () {
         var i,
             keys = _.keys(this.plugins);
         var args = arguments;
@@ -18,7 +18,7 @@ var pluggable = {
             $.proxy(this.plugins[keys[i]], this).apply(this, args);
         }
         return args;
-    }
+    },
 };
 
 export default pluggable;

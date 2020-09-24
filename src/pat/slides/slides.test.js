@@ -2,18 +2,18 @@ import pattern from "./slides";
 import $ from "jquery";
 import utils from "../../core/utils";
 
-describe("pat-slides", function() {
-    beforeEach(function() {
+describe("pat-slides", function () {
+    beforeEach(function () {
         $("<div/>", { id: "lab" }).appendTo(document.body);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         $("#lab").remove();
     });
 
-    describe("init", function() {
-        it("Return result from _hook", function() {
-            var spy_hook = spyOn(pattern, "_hook").and.callFake(function() {
+    describe("init", function () {
+        it("Return result from _hook", function () {
+            var spy_hook = spyOn(pattern, "_hook").and.callFake(function () {
                 return "jq";
             });
             var elements = $();
@@ -22,53 +22,51 @@ describe("pat-slides", function() {
         });
     });
 
-    describe("_hook", function() {
-        it("Return jQuery object", function() {
+    describe("_hook", function () {
+        it("Return jQuery object", function () {
             const mock = {
-                on: function () { return this; },
-                off: function () { return this; },
+                on: function () {
+                    return this;
+                },
+                off: function () {
+                    return this;
+                },
             };
             expect(pattern._hook(mock)).toBe(mock);
         });
     });
 
-    describe("_collapse_ids", function() {
-        it("Single id", function() {
+    describe("_collapse_ids", function () {
+        it("Single id", function () {
             expect(pattern._collapse_ids(["foo"])).toEqual(["foo"]);
         });
 
-        it("Comma-separated list of ids", function() {
-            expect(pattern._collapse_ids(["foo,bar"])).toEqual([
-                "foo",
-                "bar"
-            ]);
+        it("Comma-separated list of ids", function () {
+            expect(pattern._collapse_ids(["foo,bar"])).toEqual(["foo", "bar"]);
         });
 
-        it("Skip empty ids", function() {
-            expect(pattern._collapse_ids(["foo,,bar"])).toEqual([
-                "foo",
-                "bar"
-            ]);
+        it("Skip empty ids", function () {
+            expect(pattern._collapse_ids(["foo,,bar"])).toEqual(["foo", "bar"]);
         });
 
-        it("Parameter without value", function() {
+        it("Parameter without value", function () {
             expect(pattern._collapse_ids([null])).toEqual([]);
         });
 
-        it("Parameter with empty value", function() {
+        it("Parameter with empty value", function () {
             expect(pattern._collapse_ids([""])).toEqual([]);
         });
 
-        it("Multiple parameters", function() {
+        it("Multiple parameters", function () {
             expect(pattern._collapse_ids(["foo", "bar"])).toEqual([
                 "foo",
-                "bar"
+                "bar",
             ]);
         });
     });
 
-    describe("_remove_slides", function() {
-        it("Remove slides from DOM", function() {
+    describe("_remove_slides", function () {
+        it("Remove slides from DOM", function () {
             var $show = $("<div/>", { class: "pat-slides" });
             for (var i = 1; i <= 4; i++)
                 $("<div/>", { class: "slide", id: "slide" + i }).appendTo(
@@ -76,20 +74,20 @@ describe("pat-slides", function() {
                 );
             pattern._remove_slides($show, ["slide1", "slide3"]);
             var ids = $.makeArray(
-                $show.find(".slide").map(function(idx, el) {
+                $show.find(".slide").map(function (idx, el) {
                     return el.id;
                 })
             );
             expect(ids).toEqual(["slide1", "slide3"]);
         });
 
-        xit("Trigger reset when removing slides", function() {
+        xit("Trigger reset when removing slides", function () {
             var $show = $("<div/>", { class: "pat-slides" });
             for (var i = 1; i <= 4; i++)
                 $("<div/>", { class: "slide", id: "slide" + i }).appendTo(
                     $show
                 );
-            spyOn(utils, "debounce").and.callFake(function(func) {
+            spyOn(utils, "debounce").and.callFake(function (func) {
                 return func;
             });
             var spy_reset = spyOn(pattern, "_reset");
@@ -98,7 +96,7 @@ describe("pat-slides", function() {
             expect(spy_reset).toHaveBeenCalled();
         });
 
-        it("Do not trigger reset when not doing anything", function() {
+        it("Do not trigger reset when not doing anything", function () {
             var $show = $("<div/>", { class: "pat-slides" });
             for (var i = 1; i <= 2; i++)
                 $("<div/>", { class: "slide", id: "slide" + i }).appendTo(

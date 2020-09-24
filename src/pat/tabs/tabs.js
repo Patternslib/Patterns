@@ -1,6 +1,6 @@
 /**
-* Copyright 2015 Syslab.com GmbH - witekdev
-*/
+ * Copyright 2015 Syslab.com GmbH - witekdev
+ */
 import $ from "jquery";
 import _ from "underscore";
 import Base from "../../core/base";
@@ -15,14 +15,14 @@ export default Base.extend({
     trigger: ".pat-tabs",
     jquery_plugin: true,
 
-    init: function($el, opts) {
+    init: function ($el, opts) {
         this.options = parser.parse(this.$el, opts); // redundant - at the moment we have no parameter options
         $(window).resize(_.debounce(this.adjustTabs.bind(this), 100));
         $("body").on("pat-update", this.filterByPatternsUpdate.bind(this));
         this.adjustTabs();
     },
 
-    filterByPatternsUpdate: function(ev, data) {
+    filterByPatternsUpdate: function (ev, data) {
         // determine when to call adjustTabs depending as to which pattern triggered pat-update
         var allowed_patterns = [
             "stacks",
@@ -31,7 +31,7 @@ export default Base.extend({
             "grid",
             "equaliser",
             "masonry",
-            "zoom"
+            "zoom",
         ];
         // XXX TODO add other (or remove redundant) layout modifying patterns
         if ($.inArray(data.pattern, allowed_patterns) > -1) {
@@ -39,7 +39,7 @@ export default Base.extend({
         }
     },
 
-    adjustTabs: function(ev, data) {
+    adjustTabs: function (ev, data) {
         var container_width = this.$el.width() * 0.95,
             $children = this.$el.children(),
             total_width = 0,
@@ -59,7 +59,7 @@ export default Base.extend({
             // precalculate the collective size of all the tabs
             total_width = _.reduce(
                 $children,
-                function(value, el) {
+                function (value, el) {
                     return value + $(el).outerWidth(true);
                 },
                 0
@@ -82,11 +82,8 @@ export default Base.extend({
                 }
                 $overflowing = this.$el.children(":gt(" + (idx - 1) + ")");
                 // move obscured tabs to a special 'extra-tabs' span
-                this.$el
-                    .children()
-                    .filter(".extra-tabs")
-                    .append($overflowing); // move tabs into it
+                this.$el.children().filter(".extra-tabs").append($overflowing); // move tabs into it
             }
         }
-    }
+    },
 });

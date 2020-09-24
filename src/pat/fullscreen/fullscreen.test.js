@@ -4,8 +4,8 @@ import screenful from "screenfull";
 
 import $ from "jquery";
 
-describe("Open in fullscreen", function() {
-    beforeEach(function() {
+describe("Open in fullscreen", function () {
+    beforeEach(function () {
         var el = document.createElement("div");
         el.setAttribute("class", "fs");
         el.setAttribute("id", "fs");
@@ -13,17 +13,15 @@ describe("Open in fullscreen", function() {
         spyOn(screenful, "request")();
         spyOn(screenful, "exit").and.callThrough();
     });
-    afterEach(function() {
+    afterEach(function () {
         document.body.removeChild(document.querySelector("#fs"));
-        var exit = document.querySelector(
-            ".pat-fullscreen-close-fullscreen"
-        );
+        var exit = document.querySelector(".pat-fullscreen-close-fullscreen");
         if (exit) {
             document.body.removeChild(exit);
         }
     });
 
-    it("Test 1: Define fullscreen element via href-target", function(done) {
+    it("Test 1: Define fullscreen element via href-target", function (done) {
         var fs_el = document.querySelector("#fs");
         var pat_el = document.createElement("a");
         pat_el.setAttribute("class", "pat-fullscreen");
@@ -38,7 +36,7 @@ describe("Open in fullscreen", function() {
         done();
     });
 
-    it("Test 2: data-attr configuration: selector and close-button", function(done) {
+    it("Test 2: data-attr configuration: selector and close-button", function (done) {
         var fs_el = document.querySelector("#fs");
         var pat_el = document.createElement("button");
         pat_el.setAttribute("class", "pat-fullscreen");
@@ -59,7 +57,7 @@ describe("Open in fullscreen", function() {
         done();
     });
 
-    it("Test 3: Existing .close-fullscreen elements.", function(done) {
+    it("Test 3: Existing .close-fullscreen elements.", function (done) {
         var fs_el = document.querySelector("#fs");
         var pat_el = document.createElement("button");
         pat_el.setAttribute("class", "pat-fullscreen");
@@ -82,7 +80,7 @@ describe("Open in fullscreen", function() {
         done();
     });
 
-    it("Test 4: No fullscreen element definition opens fullscreen on body.", function(done) {
+    it("Test 4: No fullscreen element definition opens fullscreen on body.", function (done) {
         var fs_el = document.querySelector("#fs");
         var pat_el = document.createElement("button");
         pat_el.setAttribute("class", "pat-fullscreen");

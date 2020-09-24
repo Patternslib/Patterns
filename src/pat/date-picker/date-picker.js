@@ -27,10 +27,10 @@ parser.addAlias("behaviour", "behavior");
 export default Base.extend({
     name: "date-picker",
     trigger: ".pat-date-picker",
-    init: function() {
+    init: function () {
         this.options = $.extend(parser.parse(this.$el), this.options);
         this.polyfill = this.options.behavior === "native";
-        if (this.polyfill && utils.checkInputSupport('date', 'invalid date')) {
+        if (this.polyfill && utils.checkInputSupport("date", "invalid date")) {
             return;
         }
         if (this.$el.attr("type") === "date") {
@@ -42,17 +42,15 @@ export default Base.extend({
             format: this.options.format,
             firstDay: this.options.firstDay,
             showWeekNumber: this.options.weekNumbers === "show",
-            toString: function(date, format) {
+            toString: function (date, format) {
                 var date = moment(date).format(format);
                 return date;
             },
-            onSelect: function() {
-                $(this._o.field)
-                    .closest("form")
-                    .trigger("input-change");
+            onSelect: function () {
+                $(this._o.field).closest("form").trigger("input-change");
                 /* Also trigger input change on date field to support pat-autosubmit. */
                 $(this._o.field).trigger("input-change");
-            }
+            },
         };
 
         if (this.$el.attr("min")) {
@@ -64,18 +62,18 @@ export default Base.extend({
 
         if (this.options.i18n) {
             $.getJSON(this.options.i18n)
-                .done(function(data) {
+                .done(function (data) {
                     config.i18n = data;
                 })
                 .fail(
-                    $.proxy(function() {
+                    $.proxy(function () {
                         console.error(
                             "date-picker could not load i18n: " +
                                 this.options.i18n
                         );
                     }, this)
                 )
-                .always(function() {
+                .always(function () {
                     new Pikaday(config);
                 });
         } else {
@@ -84,8 +82,8 @@ export default Base.extend({
         return this.$el;
     },
 
-    isodate: function() {
+    isodate: function () {
         var now = new Date();
         return now.toISOString().substr(0, 10);
-    }
+    },
 });

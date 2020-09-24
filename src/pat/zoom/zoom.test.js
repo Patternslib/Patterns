@@ -2,17 +2,17 @@ import pattern from "./zoom";
 import $ from "jquery";
 import utils from "../../core/utils";
 
-describe("pat-zoom", function() {
-    beforeEach(function() {
+describe("pat-zoom", function () {
+    beforeEach(function () {
         $("<div/>", { id: "lab" }).appendTo(document.body);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         $("#lab").remove();
     });
 
-    describe("init", function() {
-        it("Create default range input", function() {
+    describe("init", function () {
+        it("Create default range input", function () {
             $("#lab").append("<div id=block/>");
             var $block = $("#lab div");
             pattern.init($block);
@@ -23,7 +23,7 @@ describe("pat-zoom", function() {
             expect($range[0].value).toBe("1");
         });
 
-        it("Tweak ranges", function() {
+        it("Tweak ranges", function () {
             $("#lab").append("<div id=block/>");
             var $block = $("#lab div");
             pattern.init($block, { min: 0.5, max: 5 });
@@ -34,8 +34,8 @@ describe("pat-zoom", function() {
         });
     });
 
-    describe("Integration tests", function() {
-        it("Zoom in", function() {
+    describe("Integration tests", function () {
+        it("Zoom in", function () {
             $("#lab").append("<div id=block/>");
             var $block = $("#lab div");
             pattern.init($block);

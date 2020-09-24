@@ -2,16 +2,16 @@ import registry from "../../core/registry";
 import $ from "jquery";
 import Sortable from "./sortable";
 
-describe("pat-sortable", function() {
-    beforeEach(function() {
+describe("pat-sortable", function () {
+    beforeEach(function () {
         $("div#lab").remove();
         $("<div/>", { id: "lab" }).appendTo(document.body);
     });
-    afterEach(function() {
+    afterEach(function () {
         $("#lab").remove();
     });
 
-    it("adds class on drag start", function() {
+    it("adds class on drag start", function () {
         var $el = $(
             "" +
                 '<ul class="pat-sortable">' +
@@ -27,7 +27,7 @@ describe("pat-sortable", function() {
         expect($dragged.hasClass(sortable.options.dragClass)).toEqual(true);
     });
 
-    it("adds a sortable handle to sortable elements", function() {
+    it("adds a sortable handle to sortable elements", function () {
         var $lab = $("#lab");
         $lab.html(
             '<ul class="pat-sortable">' +
@@ -45,7 +45,7 @@ describe("pat-sortable", function() {
         }
     });
 
-    it("submits a form if there is a .sortable-amount input and .sortable-button-(up|down) buttons", function() {
+    it("submits a form if there is a .sortable-amount input and .sortable-button-(up|down) buttons", function () {
         var $lab = $("#lab");
         $lab.html(
             "<form>" +

@@ -2,25 +2,25 @@ import pattern from "./toggle";
 import $ from "jquery";
 import registry from "../../core/registry";
 
-describe("pat-toggle", function() {
-    describe("ClassToggler", function() {
+describe("pat-toggle", function () {
+    describe("ClassToggler", function () {
         var ClassToggler = pattern._ClassToggler;
 
-        describe("Check if ClassToggler.get()", function() {
-            it("handles elements without classes.", function() {
+        describe("Check if ClassToggler.get()", function () {
+            it("handles elements without classes.", function () {
                 var el = document.createElement("div"),
                     toggler = new ClassToggler(["red", "green", "blue"]);
                 expect(toggler.get(el)).toBeNull();
             });
 
-            it("handles elements unknown classes.", function() {
+            it("handles elements unknown classes.", function () {
                 var el = document.createElement("div"),
                     toggler = new ClassToggler(["red", "green", "blue"]);
                 el.className = "yellow";
                 expect(toggler.get(el)).toBeNull();
             });
 
-            it("handles elements with handled class.", function() {
+            it("handles elements with handled class.", function () {
                 var el = document.createElement("div"),
                     toggler = new ClassToggler(["red", "green", "blue"]);
                 el.className = "green";
@@ -28,15 +28,15 @@ describe("pat-toggle", function() {
             });
         });
 
-        describe("Check if ClassToggler.set()", function() {
-            it("can set a first class", function() {
+        describe("Check if ClassToggler.set()", function () {
+            it("can set a first class", function () {
                 var el = document.createElement("div"),
                     toggler = new ClassToggler(["red", "green", "blue"]);
                 toggler.set(el, "green");
                 expect(el.className).toBe("green");
             });
 
-            it("correctly replaces a managed class", function() {
+            it("correctly replaces a managed class", function () {
                 var el = document.createElement("div"),
                     toggler = new ClassToggler(["red", "green", "blue"]);
                 el.className = "red";
@@ -44,7 +44,7 @@ describe("pat-toggle", function() {
                 expect(el.className).toBe("green");
             });
 
-            it("keeps unmanaged classes in tact", function() {
+            it("keeps unmanaged classes in tact", function () {
                 var el = document.createElement("div"),
                     toggler = new ClassToggler(["red", "green", "blue"]);
                 el.className = "red error";
@@ -52,7 +52,7 @@ describe("pat-toggle", function() {
                 expect(el.className).toBe("error green");
             });
 
-            it("can set null class", function() {
+            it("can set null class", function () {
                 var el = document.createElement("div"),
                     toggler = new ClassToggler(["active"]);
                 el.className = "active";
@@ -61,23 +61,23 @@ describe("pat-toggle", function() {
             });
         });
 
-        describe("Check if ClassToggler.next()", function() {
-            it("returns first value if given null input", function() {
+        describe("Check if ClassToggler.next()", function () {
+            it("returns first value if given null input", function () {
                 var toggler = new ClassToggler(["red", "green", "blue"]);
                 expect(toggler.next(null)).toBe("red");
             });
 
-            it("will advance to next known value", function() {
+            it("will advance to next known value", function () {
                 var toggler = new ClassToggler(["red", "green", "blue"]);
                 expect(toggler.next("red")).toBe("green");
             });
 
-            it("cycles back to first value", function() {
+            it("cycles back to first value", function () {
                 var toggler = new ClassToggler(["red", "green", "blue"]);
                 expect(toggler.next("blue")).toBe("red");
             });
 
-            it("can handle toggling a single value", function() {
+            it("can handle toggling a single value", function () {
                 var toggler = new ClassToggler(["active"]);
                 expect(toggler.next("active")).toBeNull();
                 expect(toggler.next(null)).toBe("active");
@@ -85,17 +85,17 @@ describe("pat-toggle", function() {
         });
     });
 
-    describe("AttributeToggler", function() {
+    describe("AttributeToggler", function () {
         var AttributeToggler = pattern._AttributeToggler;
 
-        describe("Check if AttributeToggler.get()", function() {
-            it("handles null attribute value.", function() {
+        describe("Check if AttributeToggler.get()", function () {
+            it("handles null attribute value.", function () {
                 var el = document.createElement("input"),
                     toggler = new AttributeToggler("disabled");
                 expect(toggler.get(el)).toBe(false);
             });
 
-            it("handles known attribute value.", function() {
+            it("handles known attribute value.", function () {
                 var el = document.createElement("input"),
                     toggler = new AttributeToggler("disabled");
                 el.disabled = true;
@@ -103,8 +103,8 @@ describe("pat-toggle", function() {
             });
         });
 
-        describe("Check if AttributeToggler.set()", function() {
-            it("Can clear a boolean property", function() {
+        describe("Check if AttributeToggler.set()", function () {
+            it("Can clear a boolean property", function () {
                 var el = document.createElement("input"),
                     toggler = new AttributeToggler("disabled");
                 el.disabled = true;
@@ -112,7 +112,7 @@ describe("pat-toggle", function() {
                 expect(el.disabled).toBe(false);
             });
 
-            it("Can set a boolean property", function() {
+            it("Can set a boolean property", function () {
                 var el = document.createElement("input"),
                     toggler = new AttributeToggler("disabled");
                 el.disabled = false;
@@ -121,13 +121,13 @@ describe("pat-toggle", function() {
             });
         });
 
-        describe("Check if AttributeToggler.next()", function() {
-            it("knows false must become true", function() {
+        describe("Check if AttributeToggler.next()", function () {
+            it("knows false must become true", function () {
                 var toggler = new AttributeToggler("disabled");
                 expect(toggler.next(false)).toBe(true);
             });
 
-            it("knows true must become false", function() {
+            it("knows true must become false", function () {
                 var toggler = new AttributeToggler("disabled");
                 expect(toggler.next(true)).toBe(false);
             });
@@ -135,44 +135,44 @@ describe("pat-toggle", function() {
     });
 });
 
-describe("Pattern implementation", function() {
+describe("Pattern implementation", function () {
     var toggle = pattern;
 
-    describe("When validating options", function() {
-        it("make sure a selector is provided", function() {
+    describe("When validating options", function () {
+        it("make sure a selector is provided", function () {
             expect(
                 toggle._validateOptions(null, [{ attr: "disabled" }])
             ).toEqual([]);
         });
 
-        it("verify values are provided when class attribute is used", function() {
-            expect(
-                toggle._validateOptions(null, [{ attr: "class" }])
-            ).toEqual([]);
+        it("verify values are provided when class attribute is used", function () {
+            expect(toggle._validateOptions(null, [{ attr: "class" }])).toEqual(
+                []
+            );
         });
 
-        it("verify values are not provided when a non-class attribute is used", function() {
+        it("verify values are not provided when a non-class attribute is used", function () {
             expect(
                 toggle._validateOptions(null, [
-                    { attr: "disabled", values: "true false" }
+                    { attr: "disabled", values: "true false" },
                 ])
             ).toEqual([]);
         });
 
-        it("check trigger has an id when storage is requested", function() {
+        it("check trigger has an id when storage is requested", function () {
             var trigger = document.createElement("div");
             expect(
                 toggle._validateOptions(trigger, [
-                    { attr: "disabled", store: "local" }
+                    { attr: "disabled", store: "local" },
                 ])
             ).toEqual([]);
         });
 
-        it("accept valid options", function() {
+        it("accept valid options", function () {
             var input = {
                     selector: "div",
                     attr: "disabled",
-                    store: "none"
+                    store: "none",
                 },
                 output;
             output = toggle._validateOptions(null, [input]);
@@ -182,15 +182,15 @@ describe("Pattern implementation", function() {
             expect(output).toEqual({
                 selector: "div",
                 attr: "disabled",
-                store: "none"
+                store: "none",
             });
         });
     });
 
-    describe("When clicking on a toggle", function() {
+    describe("When clicking on a toggle", function () {
         var lab, trigger, victims;
 
-        beforeEach(function() {
+        beforeEach(function () {
             lab = document.createElement("div");
             lab.id = "lab";
             trigger = document.createElement("a");
@@ -208,11 +208,11 @@ describe("Pattern implementation", function() {
             document.body.appendChild(lab);
         });
 
-        afterEach(function() {
+        afterEach(function () {
             document.body.removeChild(lab);
         });
 
-        it("the class is toggled", function() {
+        it("the class is toggled", function () {
             var $trigger = $(trigger);
             $(victims).addClass("foo");
             trigger.dataset.patToggle = ".victim; value: foo bar";
@@ -223,7 +223,7 @@ describe("Pattern implementation", function() {
             expect(victims[0].className).toBe("victim foo");
         });
 
-        it("attributes are updated", function() {
+        it("attributes are updated", function () {
             var $trigger = $(trigger);
             trigger.dataset.patToggle = ".victim; attr: disabled";
             pattern.init($trigger);
@@ -234,8 +234,8 @@ describe("Pattern implementation", function() {
         });
     });
 
-    describe("Toggle event triggers", function() {
-        it("by default on click event", function() {
+    describe("Toggle event triggers", function () {
+        it("by default on click event", function () {
             $(
                 "" +
                     '<div id="lab">' +
@@ -249,7 +249,7 @@ describe("Pattern implementation", function() {
             ).appendTo(document.body);
 
             expect($(".toggled").length).toEqual(0);
-            pattern.init($('.pat-toggle'));
+            pattern.init($(".pat-toggle"));
 
             expect($(".toggled").length).toEqual(0);
             $(".pat-toggle").click();
@@ -258,7 +258,7 @@ describe("Pattern implementation", function() {
             expect($(".toggled").length).toEqual(0);
         });
 
-        it("can also listen to custom event", function() {
+        it("can also listen to custom event", function () {
             $(
                 "" +
                     '<div id="lab">' +
@@ -272,7 +272,7 @@ describe("Pattern implementation", function() {
             ).appendTo(document.body);
 
             expect($(".toggled").length).toEqual(0);
-            pattern.init($('.pat-toggle'));
+            pattern.init($(".pat-toggle"));
 
             expect($(".toggled").length).toEqual(0);
             $(".pat-toggle").trigger("onmouseenter");

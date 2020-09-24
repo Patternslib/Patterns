@@ -11,9 +11,7 @@ if (lang && lang != "en" && lang != null) {
     // we don't support any country-specific language variants, always use first 2 letters
     lang = lang.substr(0, 2).toLowerCase();
     import(
-        /* webpackChunkName: "moment_locale_" */ "moment/locale/" +
-            lang +
-            ".js"
+        /* webpackChunkName: "moment_locale_" */ "moment/locale/" + lang + ".js"
     ).then(() => {
         moment.locale(lang);
     });
@@ -80,5 +78,5 @@ export default Base.extend({
             }
             this.$el.text(date);
         });
-    }
+    },
 });

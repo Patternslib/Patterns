@@ -1,18 +1,17 @@
 import $ from "jquery";
 import pattern from "./forward";
 
-
-describe("pat-forward", function() {
-    beforeEach(function() {
+describe("pat-forward", function () {
+    beforeEach(function () {
         $("<div/>", { id: "lab" }).appendTo(document.body);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         $("#lab").remove();
     });
 
-    describe("Clicking on a button sends the click to another element", function() {
-        it("allows you to forward the click from an element to another one", function() {
+    describe("Clicking on a button sends the click to another element", function () {
+        it("allows you to forward the click from an element to another one", function () {
             var $lab = $("#lab");
             $lab.append(
                 $(
@@ -30,8 +29,8 @@ describe("pat-forward", function() {
         });
     });
 
-    describe("Setting the trigger auto option triggers the click on init", function() {
-        it("allows you to forward the click authomatically when the pattern is initialized", function() {
+    describe("Setting the trigger auto option triggers the click on init", function () {
+        it("allows you to forward the click authomatically when the pattern is initialized", function () {
             var $lab = $("#lab");
             $lab.append(
                 $(

@@ -22,13 +22,7 @@ parser.addArgument("bump-add", "bumped");
 parser.addArgument("bump-remove");
 parser.addArgument("unbump-add");
 parser.addArgument("unbump-remove", "bumped");
-parser.addArgument("side", "top", [
-    "all",
-    "top",
-    "right",
-    "bottom",
-    "left"
-]);
+parser.addArgument("side", "top", ["all", "top", "right", "bottom", "left"]);
 
 export default Base.extend({
     name: "bumper",
@@ -39,21 +33,17 @@ export default Base.extend({
         this.$container = this._findScrollContainer();
         var container = this.$container[0];
 
-        if (utils.checkCSSFeature('position', 'sticky')) {
+        if (utils.checkCSSFeature("position", "sticky")) {
             this.$el.addClass("sticky-supported");
         }
         this.$el[0].style.position = "relative";
         if (!this.$container.length) {
             $(window).on("scroll.bumper", this._updateStatus.bind(this));
         } else {
-            this.$container.on(
-                "scroll.bumper",
-                this._updateStatus.bind(this)
-            );
+            this.$container.on("scroll.bumper", this._updateStatus.bind(this));
         }
         var bumpall = this.options.side.indexOf("all") > -1;
-        this.options.bumptop =
-            bumpall || this.options.side.indexOf("top") > -1;
+        this.options.bumptop = bumpall || this.options.side.indexOf("top") > -1;
         this.options.bumpright =
             bumpall || this.options.side.indexOf("right") > -1;
         this.options.bumpbottom =
@@ -98,7 +88,7 @@ export default Base.extend({
         }
     },
 
-    _updateStatus: function() {
+    _updateStatus: function () {
         const sticker = this.$el[0];
         const margin = this.options ? this.options.margin : 0;
         const box = this._getBoundingBox(this.$el, margin);
@@ -111,8 +101,8 @@ export default Base.extend({
             frame = this._getViewport(); // Scrolling on the window
         }
 
-        delta.top = utils.getCSSValue(sticker, 'top', true) || 0;
-        delta.left = utils.getCSSValue(sticker, 'left', true) || 0;
+        delta.top = utils.getCSSValue(sticker, "top", true) || 0;
+        delta.left = utils.getCSSValue(sticker, "left", true) || 0;
 
         box.top -= delta.top;
         box.bottom -= delta.top;
@@ -143,7 +133,7 @@ export default Base.extend({
         const $win = $(window);
         let view = {
             top: $win.scrollTop(),
-            left: $win.scrollLeft()
+            left: $win.scrollLeft(),
         };
         view.right = view.left + $win.width();
         view.bottom = view.top + $win.height();
@@ -161,5 +151,5 @@ export default Base.extend({
         box.right = box.left + $sticker.outerWidth(true) + 2 * margin;
         box.bottom = box.top + $sticker.outerHeight(true) + 2 * margin;
         return box;
-    }
+    },
 });

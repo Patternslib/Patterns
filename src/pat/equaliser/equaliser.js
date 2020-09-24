@@ -1,8 +1,8 @@
 /**
-* equaliser - Equalise height of elements in a row
-*
-* Copyright 2013 Simplon B.V. - Wichert Akkerman
-*/
+ * equaliser - Equalise height of elements in a row
+ *
+ * Copyright 2013 Simplon B.V. - Wichert Akkerman
+ */
 import $ from "jquery";
 import registry from "../../core/registry";
 import Parser from "../../core/parser";
@@ -18,8 +18,8 @@ var equaliser = {
     name: "equaliser",
     trigger: ".pat-equaliser, .pat-equalizer",
 
-    init: function($el, opts) {
-        return $el.each(function() {
+    init: function ($el, opts) {
+        return $el.each(function () {
             var $container = $(this),
                 options = parser.parse($container, opts);
             $container.data("pat-equaliser", options);
@@ -36,26 +36,23 @@ var equaliser = {
             );
             imagesLoaded(
                 this,
-                $.proxy(function() {
+                $.proxy(function () {
                     equaliser._update(this);
                 }, this)
             );
-            const callback = utils.debounce(
-                equaliser._update.bind(this),
-                100
-            );
+            const callback = utils.debounce(equaliser._update.bind(this), 100);
             const observer = new MutationObserver(callback);
             const config = {
                 childList: true,
                 subtree: true,
                 characterData: true,
-                attributes: true
+                attributes: true,
             };
             observer.observe(document.body, config);
         });
     },
 
-    _update: function(container) {
+    _update: function (container) {
         var $container = $(container),
             options = $container.data("pat-equaliser"),
             $children = $container.children(),
@@ -82,7 +79,7 @@ var equaliser = {
                     new_css,
                     options.effect.duration,
                     options.effect.easing,
-                    function() {
+                    function () {
                         $(this).addClass("equalised");
                     }
                 );
@@ -91,11 +88,11 @@ var equaliser = {
         $container.trigger("pat-update", { pattern: "equaliser" });
     },
 
-    _onEvent: function(event) {
+    _onEvent: function (event) {
         if (typeof event.data !== "undefined") {
             equaliser._update(event.data);
         }
-    }
+    },
 };
 
 registry.register(equaliser);

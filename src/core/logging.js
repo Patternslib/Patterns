@@ -1,12 +1,12 @@
 /**
-* Patterns logging - minimal logging framework
-*
-* Copyright 2012 Simplon B.V.
-*/
+ * Patterns logging - minimal logging framework
+ *
+ * Copyright 2012 Simplon B.V.
+ */
 
 // source: https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/bind
 if (!Function.prototype.bind) {
-    Function.prototype.bind = function(oThis) {
+    Function.prototype.bind = function (oThis) {
         if (typeof this !== "function") {
             // closest thing possible to the ECMAScript 5 internal IsCallable function
             throw new TypeError(
@@ -16,8 +16,8 @@ if (!Function.prototype.bind) {
 
         var aArgs = Array.prototype.slice.call(arguments, 1),
             fToBind = this,
-            fNOP = function() {},
-            fBound = function() {
+            fNOP = function () {},
+            fBound = function () {
                 return fToBind.apply(
                     this instanceof fNOP && oThis ? this : oThis,
                     aArgs.concat(Array.prototype.slice.call(arguments))
@@ -38,13 +38,13 @@ var Level = {
     INFO: 20,
     WARN: 30,
     ERROR: 40,
-    FATAL: 50
+    FATAL: 50,
 };
 
 function IEConsoleWriter() {}
 
 IEConsoleWriter.prototype = {
-    output: function(log_name, level, messages) {
+    output: function (log_name, level, messages) {
         // console.log will magically appear in IE8 when the user opens the
         // F12 Developer Tools, so we have to test for it every time.
         if (
@@ -74,23 +74,22 @@ IEConsoleWriter.prototype = {
             else if (level <= Level.WARN) console.warn(message);
             else console.error(message);
         }
-    }
+    },
 };
 
 function ConsoleWriter() {}
 
 ConsoleWriter.prototype = {
-    output: function(log_name, level, messages) {
+    output: function (log_name, level, messages) {
         if (log_name) messages.unshift(log_name + ":");
         if (level <= Level.DEBUG) {
             // console.debug exists but is deprecated
             messages.unshift("[DEBUG]");
             console.log.apply(console, messages);
-        } else if (level <= Level.INFO)
-            console.info.apply(console, messages);
+        } else if (level <= Level.INFO) console.info.apply(console, messages);
         else if (level <= Level.WARN) console.warn.apply(console, messages);
         else console.error.apply(console, messages);
-    }
+    },
 };
 
 function Logger(name, parent) {
@@ -104,7 +103,7 @@ function Logger(name, parent) {
 }
 
 Logger.prototype = {
-    getLogger: function(name) {
+    getLogger: function (name) {
         var path = name.split("."),
             root = this,
             route = this.name ? [this.name] : [];
@@ -118,7 +117,7 @@ Logger.prototype = {
         return root;
     },
 
-    _getFlag: function(flag) {
+    _getFlag: function (flag) {
         var context = this;
         flag = "_" + flag;
         while (context !== null) {
@@ -128,15 +127,15 @@ Logger.prototype = {
         return null;
     },
 
-    setEnabled: function(state) {
+    setEnabled: function (state) {
         this._enabled = !!state;
     },
 
-    isEnabled: function() {
+    isEnabled: function () {
         this._getFlag("enabled");
     },
 
-    setLevel: function(level) {
+    setLevel: function (level) {
         if (typeof level === "number") this._level = level;
         else if (typeof level === "string") {
             level = level.toUpperCase();
@@ -144,11 +143,11 @@ Logger.prototype = {
         }
     },
 
-    getLevel: function() {
+    getLevel: function () {
         return this._getFlag("level");
     },
 
-    log: function(level, messages) {
+    log: function (level, messages) {
         if (
             !messages.length ||
             !this._getFlag("enabled") ||
@@ -159,25 +158,25 @@ Logger.prototype = {
         writer.output(this.name, level, messages);
     },
 
-    debug: function() {
+    debug: function () {
         this.log(Level.DEBUG, arguments);
     },
 
-    info: function() {
+    info: function () {
         this.log(Level.INFO, arguments);
     },
 
-    warn: function() {
+    warn: function () {
         this.log(Level.WARN, arguments);
     },
 
-    error: function() {
+    error: function () {
         this.log(Level.ERROR, arguments);
     },
 
-    fatal: function() {
+    fatal: function () {
         this.log(Level.FATAL, arguments);
-    }
+    },
 };
 
 function getWriter() {
@@ -221,7 +220,7 @@ var api = {
     error: root.error.bind(root),
     fatal: root.fatal.bind(root),
     getWriter: getWriter,
-    setWriter: setWriter
+    setWriter: setWriter,
 };
 
 export default api;

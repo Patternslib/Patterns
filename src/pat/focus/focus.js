@@ -1,25 +1,24 @@
 /**
-* @license
-* Patterns @VERSION@ focus - Manage focus class on fieldsets
-*
-* Copyright 2012 Simplon B.V.
-*/
+ * @license
+ * Patterns @VERSION@ focus - Manage focus class on fieldsets
+ *
+ * Copyright 2012 Simplon B.V.
+ */
 
 import $ from "jquery";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 
-
 var focus = {
     name: "focus",
 
-    onNewContent: function() {
+    onNewContent: function () {
         if ($(document.activeElement).is(":input"))
             focus._doFocus(document.activeElement);
     },
 
-    transform: function($root) {
-        $root.find(":input[placeholder]").each(function(ix, el) {
+    transform: function ($root) {
+        $root.find(":input[placeholder]").each(function (ix, el) {
             var $relatives = utils.findRelatives(el);
             if (el.placeholder)
                 $relatives.attr("data-placeholder", el.placeholder);
@@ -27,11 +26,11 @@ var focus = {
         $root.find(":input").each(focus.onChange);
     },
 
-    onFocus: function() {
+    onFocus: function () {
         focus._doFocus(this);
     },
 
-    _updateHasValue: function(el) {
+    _updateHasValue: function (el) {
         var $relatives = utils.findRelatives(el);
         var hv = utils.hasValue(el);
 
@@ -39,7 +38,7 @@ var focus = {
             $relatives.addClass("has-value").attr("data-value", el.value);
         } else {
             $relatives
-                .filter(function(ix, e) {
+                .filter(function (ix, e) {
                     const inputs = $(":input", e);
                     for (var i = 0; i < inputs.length; i++)
                         if (utils.hasValue(inputs[i])) return false;
@@ -50,25 +49,23 @@ var focus = {
         }
     },
 
-    _doFocus: function(el) {
+    _doFocus: function (el) {
         var $relatives = utils.findRelatives(el);
         $relatives.addClass("focus");
         this._updateHasValue($relatives);
     },
 
-    onBlur: function() {
+    onBlur: function () {
         var $relatives = utils.findRelatives(this);
 
-        $(document).one("mouseup keyup", function() {
-            $relatives
-                .filter(":not(:has(:input:focus))")
-                .removeClass("focus");
+        $(document).one("mouseup keyup", function () {
+            $relatives.filter(":not(:has(:input:focus))").removeClass("focus");
         });
     },
 
-    onChange: function() {
+    onChange: function () {
         focus._updateHasValue(this);
-    }
+    },
 };
 
 $(document)

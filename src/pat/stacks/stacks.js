@@ -1,8 +1,8 @@
 /**
-* Stacks pattern
-*
-* Copyright 2013 Simplon B.V. - Wichert Akkerman
-*/
+ * Stacks pattern
+ *
+ * Copyright 2013 Simplon B.V. - Wichert Akkerman
+ */
 import $ from "jquery";
 import Parser from "../../core/parser";
 import Base from "../../core/base";
@@ -21,14 +21,14 @@ export default Base.extend({
     trigger: ".pat-stacks",
     document: document,
 
-    init: function($el, opts) {
+    init: function ($el, opts) {
         this.options = parser.parse(this.$el, opts);
         this._setupStack();
         $(this.document).on("click", "a", this._onClick.bind(this));
         return $el;
     },
 
-    _setupStack: function() {
+    _setupStack: function () {
         var selected = this._currentFragment(),
             $sheets = this.$el.find(this.options.selector),
             $visible = [],
@@ -53,20 +53,15 @@ export default Base.extend({
         }
         $invisible = $sheets.not($visible);
         utils.hideOrShow($visible, true, { transition: "none" }, this.name);
-        utils.hideOrShow(
-            $invisible,
-            false,
-            { transition: "none" },
-            this.name
-        );
+        utils.hideOrShow($invisible, false, { transition: "none" }, this.name);
         this._updateAnchors(selected);
     },
 
-    _base_URL: function() {
+    _base_URL: function () {
         return this.document.URL.split("#")[0];
     },
 
-    _currentFragment: function() {
+    _currentFragment: function () {
         var parts = this.document.URL.split("#");
         if (parts.length === 1) {
             return null;
@@ -74,7 +69,7 @@ export default Base.extend({
         return parts[parts.length - 1];
     },
 
-    _onClick: function(e) {
+    _onClick: function (e) {
         var base_url = this._base_URL(),
             href_parts = e.currentTarget.href.split("#");
         // Check if this is an in-document link and has a fragment
@@ -89,14 +84,14 @@ export default Base.extend({
         this._switch(href_parts[1]);
         $(e.target).trigger("pat-update", {
             pattern: "stacks",
-            originalEvent: e
+            originalEvent: e,
         });
     },
 
-    _updateAnchors: function(selected) {
+    _updateAnchors: function (selected) {
         var $sheets = this.$el.find(this.options.selector),
             base_url = this._base_URL();
-        $sheets.each(function(idx, sheet) {
+        $sheets.each(function (idx, sheet) {
             // This may appear odd, but: when querying a browser uses the
             // original href of an anchor as it appeared in the document
             // source, but when you access the href property you always get
@@ -118,7 +113,7 @@ export default Base.extend({
         });
     },
 
-    _switch: function(sheet_id) {
+    _switch: function (sheet_id) {
         var $sheet = this.$el.find("#" + sheet_id);
         if (!$sheet.length || $sheet.hasClass("visible")) {
             return;
@@ -126,5 +121,5 @@ export default Base.extend({
         var $invisible = this.$el.find(this.options.selector).not($sheet);
         utils.hideOrShow($invisible, false, this.options, this.name);
         utils.hideOrShow($sheet, true, this.options, this.name);
-    }
+    },
 });

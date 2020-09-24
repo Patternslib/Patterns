@@ -5,7 +5,7 @@ var namespace = "input-change-events";
 const log = logging.getLogger(namespace);
 
 var _ = {
-    setup: function($el, pat) {
+    setup: function ($el, pat) {
         if (!pat) {
             log.error("The name of the calling pattern has to be set.");
             return;
@@ -18,7 +18,7 @@ var _ = {
             log.debug("installing handlers");
             _.setupInputHandlers($el);
 
-            $el.on("patterns-injected." + namespace, function(event) {
+            $el.on("patterns-injected." + namespace, function (event) {
                 _.setupInputHandlers($(event.target));
             });
         }
@@ -28,7 +28,7 @@ var _ = {
         }
     },
 
-    setupInputHandlers: function($el) {
+    setupInputHandlers: function ($el) {
         if (!$el.is(":input")) {
             // We've been given an element that is not a form input. We
             // therefore assume that it's a container of form inputs and
@@ -41,7 +41,7 @@ var _ = {
         }
     },
 
-    registerHandlersForElement: function() {
+    registerHandlersForElement: function () {
         var $el = $(this),
             isNumber = $el.is("input[type=number]"),
             isText = $el.is("input:text, input[type=search], textarea");
@@ -50,7 +50,7 @@ var _ = {
             // for <input type="number" /> we want to trigger the change
             // on keyup
             if ("onkeyup" in window) {
-                $el.on("keyup." + namespace, function() {
+                $el.on("keyup." + namespace, function () {
                     log.debug("translating keyup");
                     $el.trigger("input-change");
                 });
@@ -58,7 +58,7 @@ var _ = {
         }
         if (isText || isNumber) {
             if ("oninput" in window) {
-                $el.on("input." + namespace, function() {
+                $el.on("input." + namespace, function () {
                     log.debug("translating input");
                     $el.trigger("input-change");
                 });
@@ -66,12 +66,12 @@ var _ = {
                 // this is the legacy code path for IE8
                 // Work around buggy placeholder polyfill.
                 if ($el.attr("placeholder")) {
-                    $el.on("keyup." + namespace, function() {
+                    $el.on("keyup." + namespace, function () {
                         log.debug("translating keyup");
                         $el.trigger("input-change");
                     });
                 } else {
-                    $el.on("propertychange." + namespace, function(ev) {
+                    $el.on("propertychange." + namespace, function (ev) {
                         if (ev.originalEvent.propertyName === "value") {
                             log.debug("translating propertychange");
                             $el.trigger("input-change");
@@ -80,23 +80,23 @@ var _ = {
                 }
             }
         } else {
-            $el.on("change." + namespace, function() {
+            $el.on("change." + namespace, function () {
                 log.debug("translating change");
                 $el.trigger("input-change");
             });
         }
 
-        $el.on("blur", function() {
+        $el.on("blur", function () {
             $el.trigger("input-defocus");
         });
     },
 
-    remove: function($el, pat) {
+    remove: function ($el, pat) {
         var patterns = $el.data(namespace) || [];
         if (patterns.indexOf(pat) === -1) {
             log.warn("input-change-events were never installed for " + pat);
         } else {
-            patterns = patterns.filter(function(e) {
+            patterns = patterns.filter(function (e) {
                 return e !== pat;
             });
             if (patterns.length) {
@@ -108,7 +108,7 @@ var _ = {
                 $el.off("." + namespace);
             }
         }
-    }
+    },
 };
 
 export default _;

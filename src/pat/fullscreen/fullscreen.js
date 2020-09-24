@@ -56,7 +56,7 @@ export default Base.extend({
             exit_el.className = "pat-fullscreen-close-fullscreen";
             exit_el.title = "Exit fullscreen";
             exit_el.appendChild(document.createTextNode("Exit fullscreen"));
-            exit_el.addEventListener("click", e => {
+            exit_el.addEventListener("click", (e) => {
                 e.preventDefault();
                 screenful.exit();
             });
@@ -69,5 +69,5 @@ export default Base.extend({
                 fs_el.removeChild(exit_el);
             }
         });
-    }
+    },
 });

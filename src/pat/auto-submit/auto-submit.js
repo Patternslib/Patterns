@@ -26,16 +26,16 @@ export default Base.extend({
     name: "autosubmit",
     trigger: ".pat-autosubmit, .pat-auto-submit",
     parser: {
-        parse: function($el, opts) {
+        parse: function ($el, opts) {
             var cfg = parser.parse($el, opts);
             if (cfg.delay !== "defocus") {
                 cfg.delay = parseInt(cfg.delay.replace(/[^\d]*/g, ""), 10);
             }
             return cfg;
-        }
+        },
     },
 
-    init: function() {
+    init: function () {
         this.options = this.parser.parse(this.$el, arguments[1]);
         input_change_events.setup(this.$el, "autosubmit");
         this.registerListeners();
@@ -43,16 +43,13 @@ export default Base.extend({
         return this.$el;
     },
 
-    registerListeners: function() {
-        this.$el.on(
-            "input-change-delayed.pat-autosubmit",
-            this.onInputChange
-        );
+    registerListeners: function () {
+        this.$el.on("input-change-delayed.pat-autosubmit", this.onInputChange);
         this.registerSubformListeners();
         this.$el.on("patterns-injected", this.refreshListeners.bind(this));
     },
 
-    registerSubformListeners: function(ev) {
+    registerSubformListeners: function (ev) {
         /* If there are subforms, we need to listen on them as well, so
          * that only the subform gets submitted if an element inside it
          * changes.
@@ -61,7 +58,7 @@ export default Base.extend({
         $el.find(".pat-subform")
             .not(".pat-autosubmit")
             .each(
-                function(idx, el) {
+                function (idx, el) {
                     $(el).on(
                         "input-change-delayed.pat-autosubmit",
                         this.onInputChange
@@ -70,16 +67,14 @@ export default Base.extend({
             );
     },
 
-    refreshListeners: function(ev, cfg, el, injected) {
+    refreshListeners: function (ev, cfg, el, injected) {
         this.registerSubformListeners();
         // Register change event handlers for new inputs injected into this form
         input_change_events.setup($(injected), "autosubmit");
     },
 
-    registerTriggers: function() {
-        var isText = this.$el.is(
-            "input:text, input[type=search], textarea"
-        );
+    registerTriggers: function () {
+        var isText = this.$el.is("input:text, input[type=search], textarea");
         if (this.options.delay === "defocus" && !isText) {
             log.error(
                 "The defocus delay value makes only sense on text input elements."
@@ -105,13 +100,13 @@ export default Base.extend({
         }
     },
 
-    destroy: function($el) {
+    destroy: function ($el) {
         input_change_events.remove($el, "autosubmit");
         if (this.$el.is("form")) {
             this.$el
                 .find(".pat-subform")
                 .addBack(this.$el)
-                .each(function(idx, el) {
+                .each(function (idx, el) {
                     $(el).off(".pat-autosubmit");
                 });
         } else {
@@ -119,9 +114,9 @@ export default Base.extend({
         }
     },
 
-    onInputChange: function(ev) {
+    onInputChange: function (ev) {
         ev.stopPropagation();
         $(this).submit();
         log.debug("triggered by " + ev.type);
-    }
+    },
 });

@@ -9,9 +9,9 @@ var log = logging.getLogger("form-state");
 var _ = {
     name: "form-state",
     trigger: "form.pat-form-state",
-    init: function($form) {
+    init: function ($form) {
         if ($form.length > 1)
-            return $form.each(function() {
+            return $form.each(function () {
                 _.init($(this));
             });
 
@@ -29,13 +29,13 @@ var _ = {
 
         return $form;
     },
-    saveState: function() {
+    saveState: function () {
         var $form = $(this);
         $form.data("pat-ajax.previous-state", $form.data("pat-ajax.state"));
         $form.data("pat-ajax.state", $form.serializeArray());
         $form.trigger("pat-form-state-saved");
     },
-    setModified: function() {
+    setModified: function () {
         var $form = $(this);
 
         $form.find("[type=reset]").prop("disabled", false);
@@ -49,7 +49,7 @@ var _ = {
             .one("pat-ajax-success.pat-form-state", _.setSaved);
         log.debug("modified");
     },
-    setReset: function() {
+    setReset: function () {
         var $form = $(this);
 
         // hide only if form has changeable inputs
@@ -71,7 +71,7 @@ var _ = {
             .one("input-change.pat-form-state", _.setModified);
         log.debug("reset");
     },
-    setError: function(event) {
+    setError: function (event) {
         var msg = [event.jqxhr.status, event.jqxhr.statusText].join(" ");
         modal.init(
             $(
@@ -92,7 +92,7 @@ var _ = {
             ).appendTo($("body"))
         );
     },
-    setSaved: function(event) {
+    setSaved: function (event) {
         if (event.target !== this) return;
 
         var $form = $(this);
@@ -115,7 +115,7 @@ var _ = {
         );
 
         $form.addClass("saved");
-    }
+    },
 };
 registry.register(_);
 

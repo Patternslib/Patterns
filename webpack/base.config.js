@@ -1,15 +1,14 @@
 // Organised as described in https://simonsmith.io/organising-webpack-config-environments/
 process.traceDeprecation = true;
-const path = require('path');
-const webpack = require('webpack');
+const path = require("path");
+const webpack = require("webpack");
 
 // plugins
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 
-module.exports = env => {
-
+module.exports = (env) => {
     console.log(env.NODE_ENV);
 
     return {
@@ -17,26 +16,28 @@ module.exports = env => {
             "bundle": path.resolve(__dirname, "../src/patterns.js"),
             "bundle-polyfills": path.resolve(__dirname, "../src/polyfills.js"),
         },
-        externals: [{
-            "window": "window"
-        }],
+        externals: [
+            {
+                window: "window",
+            },
+        ],
         output: {
             filename: "[name].js",
-            chunkFilename: 'chunks/[name].[contenthash].js',
-            publicPath: '/dist',
-            path: path.resolve(__dirname, '../dist'),
+            chunkFilename: "chunks/[name].[contenthash].js",
+            publicPath: "/dist",
+            path: path.resolve(__dirname, "../dist"),
         },
         optimization: {
             splitChunks: {
-                chunks: 'async',
+                chunks: "async",
                 cacheGroups: {
                     commons: {
                         test: /[\\/]node_modules[\\/]/,
-                        name: 'vendors',
-                        chunks: 'initial',
-                        filename: 'bundle-[name].js',
-                    }
-                }
+                        name: "vendors",
+                        chunks: "initial",
+                        filename: "bundle-[name].js",
+                    },
+                },
             },
             minimize: true,
             minimizer: [
@@ -56,43 +57,48 @@ module.exports = env => {
                 {
                     test: /\.js$/,
                     exclude: /node_modules/,
-                    loader: "babel-loader"
+                    loader: "babel-loader",
                 },
                 {
                     test: /\.html$/i,
-                    use: 'raw-loader',
+                    use: "raw-loader",
                 },
                 {
-                    test: require.resolve('jquery'),
-                    use: [{
-                            loader: 'expose-loader',
-                            query: '$'
+                    test: require.resolve("jquery"),
+                    use: [
+                        {
+                            loader: "expose-loader",
+                            query: "$",
                         },
                         {
-                            loader: 'expose-loader',
-                            query: 'jQuery'
-                        }
-                    ]
+                            loader: "expose-loader",
+                            query: "jQuery",
+                        },
+                    ],
                 },
                 {
                     test: /showdown-prettify/,
                     use: [
                         {
-                          loader: 'imports-loader?showdown,google-code-prettify',
-                        }
-                    ]
+                            loader:
+                                "imports-loader?showdown,google-code-prettify",
+                        },
+                    ],
                 },
                 {
                     test: /\.css$/,
-                    use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+                    use: [{ loader: "style-loader" }, { loader: "css-loader" }],
                 },
-            ]
+            ],
         },
         resolve: {
             alias: {
-                'moment': path.resolve(__dirname, '../node_modules/moment'),
-                'moment-timezone': path.resolve(__dirname, '../node_modules/moment-timezone'),
-            }
+                "moment": path.resolve(__dirname, "../node_modules/moment"),
+                "moment-timezone": path.resolve(
+                    __dirname,
+                    "../node_modules/moment-timezone"
+                ),
+            },
         },
         plugins: [
             new CleanWebpackPlugin(),
@@ -100,12 +106,12 @@ module.exports = env => {
             new webpack.ProvidePlugin({
                 $: "jquery",
                 jQuery: "jquery",
-                jquery: "jquery"
+                jquery: "jquery",
             }),
             new DuplicatePackageCheckerPlugin({
                 verbose: true,
-                emitError: true
+                emitError: true,
             }),
-        ]
+        ],
     };
 };

@@ -1,24 +1,22 @@
 import pattern from "./equaliser";
 import $ from "jquery";
 
-describe("pat-equaliser", function() {
-    beforeEach(function() {
+describe("pat-equaliser", function () {
+    beforeEach(function () {
         $("<div/>", { id: "lab" }).appendTo(document.body);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         $("#lab").remove();
     });
 
-    describe("_update", function() {
-        beforeEach(function() {
+    describe("_update", function () {
+        beforeEach(function () {
             var style,
                 head =
-                    document.head ||
-                    document.getElementsByTagName("head")[0],
+                    document.head || document.getElementsByTagName("head")[0],
                 css =
-                    ".small { height: 50px; }\n" +
-                    ".large { height: 100px; }";
+                    ".small { height: 50px; }\n" + ".large { height: 100px; }";
 
             style = document.createElement("style");
             style.id = "pat-equaliser-style";
@@ -28,11 +26,11 @@ describe("pat-equaliser", function() {
             head.appendChild(style);
         });
 
-        afterEach(function() {
+        afterEach(function () {
             $("#pat-equaliser-style").remove();
         });
 
-        it("Basic setup", function() {
+        it("Basic setup", function () {
             var $container = $("<div/>");
             $("<div/>", { class: "small" }).appendTo($container);
             $("<div/>", { class: "large" }).appendTo($container);
@@ -49,7 +47,7 @@ describe("pat-equaliser", function() {
             ).toBeTruthy();
         });
 
-        it("Ignore inline styles", function() {
+        it("Ignore inline styles", function () {
             // This is necessary so we do not get fooled by the height we
             // set ourselves.
             var $container = $("<div/>");
