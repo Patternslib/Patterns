@@ -1,7 +1,6 @@
 import "../inject/inject"; // Register ``patterns-injected`` event handler
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
-import _ from "underscore";
 import Base from "../../core/base";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
@@ -374,6 +373,7 @@ export default Base.extend({
             return tmp.innerHTML;
         },
 
+        // eslint-disable-next-line no-unused-vars
         markdown(text, url, selector, modifier) {
             const pat = pat_markdown.init($("<div/>"));
             const cfg = { url };

@@ -1,5 +1,5 @@
-import Pattern from "./navigation";
-import Pattern2 from "../inject/inject";
+import "./navigation";
+import "../inject/inject";
 import Registry from "../../core/registry";
 
 describe("Navigation pattern tests", function () {

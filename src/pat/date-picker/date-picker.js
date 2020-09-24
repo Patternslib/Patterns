@@ -1,8 +1,6 @@
 /* pat-date-picker  - Polyfill for input type=date */
 import $ from "jquery";
-import _ from "underscore";
 import Parser from "../../core/parser";
-import registry from "../../core/registry";
 import Base from "../../core/base";
 import Pikaday from "pikaday";
 import moment from "moment";
@@ -43,8 +41,7 @@ export default Base.extend({
             firstDay: this.options.firstDay,
             showWeekNumber: this.options.weekNumbers === "show",
             toString: function (date, format) {
-                var date = moment(date).format(format);
-                return date;
+                return moment(date).format(format);
             },
             onSelect: function () {
                 $(this._o.field).closest("form").trigger("input-change");

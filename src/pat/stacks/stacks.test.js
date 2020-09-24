@@ -130,7 +130,7 @@ describe("pat-stacks", function () {
             pattern._onClick(e);
             expect(spy_trigger).toHaveBeenCalledWith(
                 "pat-update",
-                jasmine.objectContaining({ pattern: "stacks" })
+                expect.objectContaining({ pattern: "stacks" })
             );
         });
     });

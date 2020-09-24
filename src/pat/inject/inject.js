@@ -100,18 +100,18 @@ const inject = {
             var timeout = parseInt(cfgs[0].idleTrigger, 10);
             var timer;
 
-            function onTimeout() {
+            const onTimeout = () => {
                 inject.onTrigger.apply($el[0], []);
                 unsub();
                 clearTimeout(timer);
-            }
+            };
 
             var onInteraction = utils.debounce(function onInteraction() {
                 clearTimeout(timer);
                 timer = setTimeout(onTimeout, cfgs[0].trigger);
             }, timeout);
 
-            function unsub() {
+            const unsub = () => {
                 ["scroll", "resize"].forEach(function (e) {
                     window.removeEventListener(e, onInteraction);
                 });
@@ -125,7 +125,7 @@ const inject = {
                 ].forEach(function (e) {
                     document.removeEventListener(e, onInteraction);
                 });
-            }
+            };
 
             onInteraction();
 
@@ -178,7 +178,7 @@ const inject = {
                         $el.attr("data-pat-inject-uid", uid);
 
                         // function to trigger the autoload and mark as triggered
-                        function delayed_trigger(uid) {
+                        const delayed_trigger = (uid) => {
                             // Check if the element has been removed from the dom
                             var still_there = $(
                                 "[data-pat-inject-uid='" + uid + "']"
@@ -188,7 +188,7 @@ const inject = {
                             $el.data("pat-inject-autoloaded", true);
                             inject.onTrigger.apply($el[0], []);
                             return true;
-                        }
+                        };
                         window.setTimeout(
                             delayed_trigger.bind(null, uid),
                             cfgs[0].delay

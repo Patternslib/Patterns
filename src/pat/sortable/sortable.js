@@ -14,7 +14,7 @@ export default Base.extend({
     name: "sortable",
     trigger: ".pat-sortable",
 
-    init: function ($el) {
+    init: function () {
         this.$form = this.$el.closest("form");
         this.options = parser.parse(this.$el, false);
         this.recordPositions().addHandles().initScrolling();
@@ -36,7 +36,7 @@ export default Base.extend({
     recordPositions: function () {
         // use only direct descendants to support nested lists
         this.$sortables = this.$el.children().filter(this.options.selector);
-        this.$sortables.each(function (idx, $el) {
+        this.$sortables.each(function (idx) {
             $(this).data("patterns.sortable", { position: idx });
         });
         return this;

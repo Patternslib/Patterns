@@ -321,8 +321,9 @@ describe("The Patterns parser", function () {
         });
 
         it("Default value from function", function () {
-            var parser = new ArgumentParser(),
-                func = jasmine.createSpy("func").and.returnValue("default");
+            var parser = new ArgumentParser();
+            var func = jest.fn();
+            func.mockReturnValue("default");
             parser.addArgument("selector", func);
             var defaults = parser._defaults("element");
             expect(defaults.selector).toBe("default");
@@ -511,9 +512,10 @@ describe("The Patterns parser", function () {
         });
 
         it("Coerce to type from default function", function () {
-            var parser = new ArgumentParser("mypattern"),
-                func = jasmine.createSpy("func").and.returnValue(15),
-                $content = $("<div data-pat-mypattern='value: 32'/>");
+            var parser = new ArgumentParser("mypattern");
+            var func = jest.fn();
+            func.mockReturnValue(15);
+            var $content = $("<div data-pat-mypattern='value: 32'/>");
             parser.addArgument("value", func);
             var defaults = parser.parse($content);
             expect(defaults.value).toBe(32);

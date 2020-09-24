@@ -54,7 +54,7 @@ export default Base.extend({
             }
         };
 
-        scroll_listener.addEventListener("scroll", (e) => {
+        scroll_listener.addEventListener("scroll", () => {
             if (!timeout_id) {
                 scroll_y = this.get_scroll_y(scroll_listener);
                 set_scroll_classes(scroll_y);

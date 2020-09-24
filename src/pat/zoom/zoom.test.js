@@ -1,6 +1,5 @@
 import pattern from "./zoom";
 import $ from "jquery";
-import utils from "../../core/utils";
 
 describe("pat-zoom", function () {
     beforeEach(function () {

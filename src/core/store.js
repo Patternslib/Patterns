@@ -5,6 +5,10 @@
  * Copyright 2011 Humberto Sermeño
  * Copyright 2011 Florian Friesdorf
  */
+import logging from "./logging";
+
+const log = logging.getLogger("Patternslib Store");
+
 function Storage(backend, prefix) {
     this.prefix = prefix;
     this.backend = backend;
@@ -35,7 +39,7 @@ Storage.prototype.get = function Storage_get(name) {
         try {
             value = JSON.parse(value);
         } catch {
-            console.log(`Cannot parse storage value for key ${key}`);
+            log.warn(`Cannot parse storage value for key ${key}`);
             return;
         }
     }
@@ -121,6 +125,8 @@ var store = {
 // reported in #326
 try {
     store.supported = typeof window.sessionStorage !== "undefined";
-} catch (e) {}
+} catch (e) {
+    // just ignore.
+}
 
 export default store;

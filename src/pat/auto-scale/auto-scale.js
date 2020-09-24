@@ -50,7 +50,6 @@ export default Base.extend({
         if (this.$el[0].tagName === "BODY") {
             container = this.$el[0];
         } else {
-            var $parent;
             if (this.$el.closest(".auto-scale-wrapper").length != 0) {
                 container = this.$el.closest(".auto-scale-wrapper").parent()[0];
             } else {

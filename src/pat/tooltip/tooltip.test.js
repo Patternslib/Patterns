@@ -162,13 +162,11 @@ describe("pat-tooltip", () => {
                     id: "tooltip2",
                     title: "tooltip2",
                 });
-                const title1 = $el1.attr("title");
-                const title2 = $el2.attr("title");
 
-                const instance1 = new pattern($el1);
-                const instance2 = new pattern($el2);
+                new pattern($el1);
+                new pattern($el2);
 
-                let container, visible_container;
+                let container;
 
                 testutils.click($el1);
                 await utils.timeout(1);
@@ -192,7 +190,7 @@ describe("pat-tooltip", () => {
                     data:
                         "source: title; trigger: click; class: wasabi kohlrabi",
                 });
-                const instance = new pattern($el);
+                new pattern($el);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -457,7 +455,7 @@ describe("pat-tooltip", () => {
                 "onShow"
             ).and.callThrough();
 
-            let container, visible_container;
+            let container;
 
             testutils.click($el1);
             await utils.timeout(1);
@@ -493,7 +491,7 @@ describe("pat-tooltip", () => {
             const $el = testutils.createTooltip({
                 data: "position-list: lt",
             });
-            const instance = new pattern($el);
+            new pattern($el);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -509,7 +507,7 @@ describe("pat-tooltip", () => {
             const $el = testutils.createTooltip({
                 data: "position-list: lb",
             });
-            const instance = new pattern($el);
+            new pattern($el);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -524,7 +522,7 @@ describe("pat-tooltip", () => {
                 data: "position-list: lm",
             });
 
-            const instance = new pattern($el);
+            new pattern($el);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -539,7 +537,7 @@ describe("pat-tooltip", () => {
                 data: "position-list: bl",
             });
 
-            const instance = new pattern($el);
+            new pattern($el);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -554,7 +552,7 @@ describe("pat-tooltip", () => {
                 data: "position-list: br",
             });
 
-            const instance = new pattern($el);
+            new pattern($el);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -569,7 +567,7 @@ describe("pat-tooltip", () => {
                 data: "position-list: bm",
             });
 
-            const instance = new pattern($el);
+            new pattern($el);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -585,7 +583,7 @@ describe("pat-tooltip", () => {
                     data: "position-list: tl; position-policy: force",
                 });
 
-                const instance = new pattern($el);
+                new pattern($el);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -602,7 +600,7 @@ describe("pat-tooltip", () => {
                     data: "position-list: tr; position-policy: force",
                 });
 
-                const instance = new pattern($el);
+                new pattern($el);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -619,7 +617,7 @@ describe("pat-tooltip", () => {
                     data: "position-list: tm; position-policy: force",
                 });
 
-                const instance = new pattern($el);
+                new pattern($el);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -634,7 +632,7 @@ describe("pat-tooltip", () => {
                     data: "position-list: rt; position-policy: force",
                 });
 
-                const instance = new pattern($el);
+                new pattern($el);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -651,7 +649,7 @@ describe("pat-tooltip", () => {
                     data: "position-list: rb; position-policy: force",
                 });
 
-                const instance = new pattern($el);
+                new pattern($el);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -668,7 +666,7 @@ describe("pat-tooltip", () => {
                     data: "position-list: rm; position-policy: force",
                 });
 
-                const instance = new pattern($el);
+                new pattern($el);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -698,7 +696,7 @@ describe("pat-tooltip", () => {
                     "onHide"
                 ).and.callThrough();
 
-                let containers, expected;
+                let containers;
 
                 expect(el.classList.contains("active")).toBeFalsy();
                 expect(el.classList.contains("inactive")).toBeTruthy();
@@ -709,8 +707,6 @@ describe("pat-tooltip", () => {
                 expect(spy_show).toHaveBeenCalled();
                 containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
-                expected = containers[0].querySelector(".tippy-content")
-                    .textContent;
                 expect(el.classList.contains("active")).toBeTruthy();
                 expect(el.classList.contains("inactive")).toBeFalsy();
 
@@ -865,7 +861,7 @@ describe("pat-tooltip", () => {
                     data: "target: body",
                     href: "#",
                 });
-                const instance = new pattern($el);
+                new pattern($el);
                 testutils.click($el);
                 await utils.timeout(1);
 
@@ -882,7 +878,7 @@ describe("pat-tooltip", () => {
                     data: "target: parent",
                     href: "#",
                 });
-                const instance = new pattern($el);
+                new pattern($el);
                 testutils.click($el);
                 await utils.timeout(1);
 
@@ -910,7 +906,7 @@ describe("pat-tooltip", () => {
                 `;
                 document.body.appendChild(container);
 
-                const instance = new pattern($el);
+                new pattern($el);
                 testutils.click($el);
                 await utils.timeout(1);
 
@@ -930,7 +926,7 @@ describe("pat-tooltip", () => {
                 data: "source: title; trigger: click",
             });
             const title = $el[0].title;
-            const instance = new pattern($el);
+            new pattern($el);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -949,7 +945,7 @@ describe("pat-tooltip", () => {
                 data: "source: content; trigger: click",
                 content: content,
             });
-            const instance = new pattern($el);
+            new pattern($el);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -1305,7 +1301,7 @@ this will be extracted.
                 data: "source: ajax; trigger: click",
                 href: "http://test.com",
             });
-            const instance = new pattern($el);
+            new pattern($el);
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1335,7 +1331,7 @@ this will be extracted.
                 data: "source: ajax; trigger: click; target: form",
                 href: "http://test.com",
             });
-            const instance = new pattern($el);
+            new pattern($el);
 
             const instance2 = new autosubmit($(form));
             const spy_handler1 = spyOn(
@@ -1368,7 +1364,7 @@ this will be extracted.
             const $el = testutils.createTooltip({
                 data: "source: content; trigger: click",
             });
-            const instance = new pattern($el);
+            new pattern($el);
 
             const spy_scan = spyOn(registry, "scan");
 
@@ -1395,7 +1391,7 @@ this will be extracted.
                 data: "source: ajax; trigger: click",
                 href: "http://test.com/#outer::element",
             });
-            const instance = new pattern($el);
+            new pattern($el);
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1421,7 +1417,7 @@ this will be extracted.
                 data: "source: ajax; trigger: click",
                 href: "http://test.com/#outer",
             });
-            const instance = new pattern($el);
+            new pattern($el);
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1446,7 +1442,7 @@ this will be extracted.
                 data: "source: ajax; trigger: click",
                 href: "#local-content::element",
             });
-            const instance = new pattern($el);
+            new pattern($el);
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1470,7 +1466,7 @@ this will be extracted.
                 data: "source: ajax; trigger: click",
                 href: "#local-content",
             });
-            const instance = new pattern($el);
+            new pattern($el);
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch

@@ -12,7 +12,7 @@ var Markdown = Base.extend({
     name: "markdown",
     trigger: ".pat-markdown",
 
-    init: function ($el, options) {
+    init: function () {
         if (this.$el.is(this.trigger)) {
             /* This pattern can either be used standalone or as an enhancement
              * to pat-inject. The following only applies to standalone, when
@@ -96,7 +96,7 @@ var Markdown = Base.extend({
 });
 
 // Add support for syntax highlighting via pat-syntax-highlight
-Showdown.extensions.prettify = function (converter) {
+Showdown.extensions.prettify = function () {
     return [
         {
             type: "output",

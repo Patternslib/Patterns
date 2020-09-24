@@ -10,18 +10,18 @@ var autofocus = {
     name: "autofocus",
     trigger: ":input.pat-autofocus,:input[autofocus]",
 
-    init: function init($el) {
+    init: function init() {
         this.setFocus(this.trigger);
-        $(document).on("patterns-injected", function (e, data) {
+        $(document).on("patterns-injected", function (e) {
             autofocus.setFocus($(e.target).find(autofocus.trigger));
         });
-        $(document).on("pat-update", function (e, data) {
+        $(document).on("pat-update", function (e) {
             autofocus.setFocus($(e.target).find(autofocus.trigger));
         });
     },
     setFocus: function (target) {
         var $all = $(target);
-        var $visible = $all.filter(function (index) {
+        var $visible = $all.filter(function () {
             if ($(this).is(":visible")) return true;
         });
         setTimeout(function () {

@@ -15,7 +15,7 @@ describe("Minimalpattern tests", function () {
         el.setAttribute("class", "pat-minimalpattern");
         document.body.appendChild(el);
 
-        const instance = new Pattern(el);
+        new Pattern(el);
 
         expect(el.getAttribute("style")).toBeFalsy();
         el.click();
@@ -33,7 +33,7 @@ describe("Minimalpattern tests", function () {
         el.setAttribute("data-pat-minimalpattern", "background-color: red;");
         document.body.appendChild(el);
 
-        const instance = new Pattern(el);
+        new Pattern(el);
 
         expect(el.getAttribute("style")).toBeFalsy();
         el.click();

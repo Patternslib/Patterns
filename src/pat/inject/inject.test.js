@@ -56,7 +56,7 @@ describe("pat-inject", function () {
             var $div = $('<div id="someid" />');
             $("#lab").empty().append($a).append($div);
 
-            var callback = jasmine.createSpy("patterns-injected");
+            var callback = jest.fn();
             $(document).on("patterns-injected", callback);
 
             pattern.init($a);
@@ -422,7 +422,7 @@ describe("pat-inject", function () {
                 );
                 var $div = $('<div id="someid" />');
                 $("#lab").empty().append($a).append($div);
-                var callback = jasmine.createSpy("patterns-injected");
+                var callback = jest.fn();
                 $(document).on("patterns-injected", callback);
                 pattern.init($a);
                 $a.trigger("click");

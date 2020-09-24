@@ -1,6 +1,5 @@
 import pattern from "./toggle";
 import $ from "jquery";
-import registry from "../../core/registry";
 
 describe("pat-toggle", function () {
     describe("ClassToggler", function () {
