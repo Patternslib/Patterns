@@ -14,7 +14,6 @@
 // Import base
 import registry from "./core/registry.js";
 import jquery from "jquery";
-import "prefixfree";
 
 // Import all used patterns for the bundle to be generated
 import "./core/push_kit.js";
