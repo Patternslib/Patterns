@@ -28,21 +28,10 @@ module.exports = (env) => {
             path: path.resolve(__dirname, "../dist"),
         },
         optimization: {
-            splitChunks: {
-                chunks: "async",
-                cacheGroups: {
-                    commons: {
-                        test: /[\\/]node_modules[\\/]/,
-                        name: "vendors",
-                        chunks: "initial",
-                        filename: "bundle-[name].js",
-                    },
-                },
-            },
             minimize: true,
             minimizer: [
                 new TerserPlugin({
-                    include: /(\.min\.js$|bundle-vendors.js$)/,
+                    include: /(\.min\.js$)/,
                     extractComments: false,
                     terserOptions: {
                         output: {
