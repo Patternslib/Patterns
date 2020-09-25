@@ -73,29 +73,5 @@ import "./pat/zoom/zoom.js";
 // example pattern
 import "./pat/minimalpattern/minimalpattern";
 
-// Import locales for moment
-import "moment/locale/de";
-// import 'moment/locale/bg';
-// import 'moment/locale/hr';
-// import 'moment/locale/cs';
-// import 'moment/locale/da';
-// import 'moment/locale/nl';
-// import 'moment/locale/es';
-// import 'moment/locale/fi';
-// import 'moment/locale/fr';
-// import 'moment/locale/el';
-// import 'moment/locale/hu';
-// import 'moment/locale/it';
-// import 'moment/locale/lt';
-// import 'moment/locale/lv';
-// import 'moment/locale/mt';
-// import 'moment/locale/pl';
-// import 'moment/locale/pt';
-// import 'moment/locale/ro';
-// import 'moment/locale/sl';
-// import 'moment/locale/sk';
-// import 'moment/locale/es';
-// import 'moment/locale/sv';
-
 window.jQuery = jquery;
 registry.init();
