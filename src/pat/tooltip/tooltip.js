@@ -331,7 +331,7 @@ export default Base.extend({
                 // TODO: use pat-inject, once it supports async
                 const response = await fetch(url);
                 const text = await response.text();
-                content = handler(text, url, selector, modifier);
+                content = await handler(text, url, selector, modifier);
             } catch (e) {
                 log.error(`Error on ajax request ${e}`);
             }
@@ -381,7 +381,8 @@ export default Base.extend({
             if (selector) {
                 cfg.source = selector;
             }
-            return pat.renderForInjection(cfg, text)[0];
+            const ret = await pat.renderForInjection(cfg, text);
+            return ret[0];
         },
     },
 });

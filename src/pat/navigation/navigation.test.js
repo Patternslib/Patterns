@@ -1,6 +1,7 @@
 import "./navigation";
 import "../inject/inject";
 import Registry from "../../core/registry";
+import utils from "../../core/utils";
 
 describe("Navigation pattern tests", function () {
     beforeEach(function () {
@@ -82,7 +83,7 @@ describe("Navigation pattern tests", function () {
         document.body.removeChild(document.querySelector("#page_wrapper"));
     });
 
-    it("Test 1: Test roundtrip", function (done) {
+    it("Test 1: Test roundtrip", async function (done) {
         var injection_area = document.querySelector("#injection_area");
 
         var nav1 = document.querySelector(".nav1");
@@ -98,8 +99,11 @@ describe("Navigation pattern tests", function () {
         var a21 = nav2.querySelector(".a21");
 
         Registry.scan("body");
+        await utils.timeout(1); // wait a tick for async to settle.
 
         a1.click();
+        await utils.timeout(1); // wait a tick for async to settle.
+
         expect(injection_area.textContent === "test content").toBeTruthy();
         expect(w1.classList.contains("current")).toBeTruthy();
         expect(w1.classList.contains("navigation-in-path")).toBeFalsy();
@@ -113,6 +117,8 @@ describe("Navigation pattern tests", function () {
         injection_area.innerHTML = "";
 
         a11.click();
+        await utils.timeout(1); // wait a tick for async to settle.
+
         expect(injection_area.textContent === "test content").toBeTruthy();
         expect(w1.classList.contains("current")).toBeFalsy();
         expect(w1.classList.contains("navigation-in-path")).toBeTruthy();
@@ -126,6 +132,8 @@ describe("Navigation pattern tests", function () {
         injection_area.innerHTML = "";
 
         a2.click();
+        await utils.timeout(1); // wait a tick for async to settle.
+
         expect(injection_area.textContent === "test content").toBeTruthy();
         expect(w2.classList.contains("active")).toBeTruthy();
         expect(w2.classList.contains("in-path")).toBeFalsy();
@@ -139,6 +147,8 @@ describe("Navigation pattern tests", function () {
         injection_area.innerHTML = "";
 
         a21.click();
+        await utils.timeout(1); // wait a tick for async to settle.
+
         expect(injection_area.textContent === "test content").toBeTruthy();
         expect(w2.classList.contains("active")).toBeFalsy();
         expect(w2.classList.contains("in-path")).toBeTruthy();
@@ -152,7 +162,7 @@ describe("Navigation pattern tests", function () {
         done();
     });
 
-    it("Test 2: Auto load current", function (done) {
+    it("Test 2: Auto load current", async function (done) {
         var injection_area = document.querySelector("#injection_area");
 
         var nav2 = document.querySelector(".nav2");
@@ -165,6 +175,7 @@ describe("Navigation pattern tests", function () {
         a21.classList.add("active");
 
         Registry.scan("body");
+        await utils.timeout(1); // wait a tick for async to settle.
 
         expect(injection_area.textContent === "test content").toBeTruthy();
         expect(w2.classList.contains("active")).toBeFalsy();

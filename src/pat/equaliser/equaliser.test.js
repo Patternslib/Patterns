@@ -1,5 +1,6 @@
-import pattern from "./equaliser";
 import $ from "jquery";
+import pattern from "./equaliser";
+import "imagesloaded"; // no lazy-load for tests to please jest.
 
 describe("pat-equaliser", function () {
     beforeEach(function () {

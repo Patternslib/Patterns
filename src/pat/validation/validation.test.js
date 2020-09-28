@@ -1,5 +1,6 @@
-import pattern from "./validation";
 import $ from "jquery";
+import pattern from "./validation";
+import utils from "../../core/utils";
 
 describe("pat-validation", function () {
     beforeEach(function () {
@@ -10,13 +11,14 @@ describe("pat-validation", function () {
         $("#lab").remove();
     });
 
-    it("validates required inputs", function () {
+    it("validates required inputs", async function () {
         var $el = $(
             '<form class="pat-validation">' +
                 '<input type="text" name="name" required="required">' +
                 "</form>"
         );
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $el.find(":input").trigger("change");
         expect($el.find("em.warning").length).toBe(1);
 
@@ -27,17 +29,19 @@ describe("pat-validation", function () {
                 "</form>"
         );
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $el.find(":input").trigger("change");
         expect($el.find("em.warning").length).toBe(0);
     });
 
-    it("validates required pat-autosuggest inputs on form submit", function () {
+    it("validates required pat-autosuggest inputs on form submit", async function () {
         var $el = $(
             '<form class="pat-validation">' +
                 '<input type="hidden" name="name" required="required" class="pat-autosuggest" data-pat-autosuggest="words: one, two">' +
                 "</form>"
         );
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $el.submit();
         expect($el.find("em.warning").length).toBe(1);
 
@@ -48,22 +52,24 @@ describe("pat-validation", function () {
                 "</form>"
         );
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $el.submit();
         expect($el.find("em.warning").length).toBe(0);
     });
 
-    it("validates required inputs with HTML5 required attribute style", function () {
+    it("validates required inputs with HTML5 required attribute style", async function () {
         var $el = $(
             '<form class="pat-validation">' +
                 '<input type="text" name="name" required>' +
                 "</form>"
         );
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $el.find(":input").trigger("change");
         expect($el.find("em.warning").length).toBe(1);
     });
 
-    it("can show custom validation messages", function () {
+    it("can show custom validation messages", async function () {
         var $el = $(
             '<form class="pat-validation" data-pat-validation="message-required: I\'m sorry Dave, I can\'t let you do that.">' +
                 '<input type="text" name="name" required="required">' +
@@ -71,6 +77,7 @@ describe("pat-validation", function () {
         );
         var $input = $el.find(":input");
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $input.trigger("change");
         expect($el.find("em.warning").length).toBe(1);
         expect($el.find("em.warning").text()).toBe(
@@ -78,7 +85,7 @@ describe("pat-validation", function () {
         );
     });
 
-    it("can show custom per-field validation messages", function () {
+    it("can show custom per-field validation messages", async function () {
         var $el = $(
             '<form class="pat-validation" data-pat-validation="message-required: I\'m sorry Dave, I can\'t let you do that.">' +
                 '<input type="text" name="name" required="required" data-pat-validation="message-required: Computer says no">' +
@@ -86,12 +93,13 @@ describe("pat-validation", function () {
         );
         var $input = $el.find(":input");
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $input.trigger("change");
         expect($el.find("em.warning").length).toBe(1);
         expect($el.find("em.warning").text()).toBe("Computer says no");
     });
 
-    it("validates email inputs", function () {
+    it("validates email inputs", async function () {
         var $el = $(
             '<form class="pat-validation">' +
                 '<input type="email" name="email">' +
@@ -100,6 +108,7 @@ describe("pat-validation", function () {
         var $input = $el.find(":input");
         $input.val("invalid email");
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $input.trigger("change");
         expect($el.find("em.warning").length).toBe(1);
         expect($el.find("em.warning").text()).toBe(
@@ -113,11 +122,12 @@ describe("pat-validation", function () {
         $input = $el.find(":input");
         $input.val("person@mail.com");
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $input.trigger("change");
         expect($el.find("em.warning").length).toBe(0);
     });
 
-    it("validates number limits", function () {
+    it("validates number limits", async function () {
         var $el = $(
             '<form class="pat-validation">' +
                 '<input type="number" min="5" name="number">' +
@@ -126,6 +136,7 @@ describe("pat-validation", function () {
         var $input = $el.find(":input");
         $input.val(4);
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $input.trigger("change");
         expect($el.find("em.warning").length).toBe(1);
         expect($el.find("em.warning").text()).toBe(
@@ -134,6 +145,7 @@ describe("pat-validation", function () {
 
         $input.val(6);
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $input.trigger("change");
         expect($el.find("em.warning").length).toBe(0);
 
@@ -145,6 +157,7 @@ describe("pat-validation", function () {
         $input = $el.find(":input");
         $input.val(6);
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $input.trigger("change");
         expect($el.find("em.warning").length).toBe(1);
         expect($el.find("em.warning").text()).toBe(
@@ -152,7 +165,7 @@ describe("pat-validation", function () {
         );
     });
 
-    it("validates integers", function () {
+    it("validates integers", async function () {
         var $el = $(
             '<form class="pat-validation">' +
                 '<input type="number" name="integer" data-pat-validation="type: integer;">' +
@@ -161,6 +174,7 @@ describe("pat-validation", function () {
         var $input = $el.find(":input");
         $input.val(4.5);
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $input.trigger("change");
         expect($el.find("em.warning").length).toBe(1);
         expect($el.find("em.warning").text()).toBe(
@@ -176,6 +190,7 @@ describe("pat-validation", function () {
         $input = $el.find(":input");
         $input.val(4.5);
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $input.trigger("change");
         expect($el.find("em.warning").length).toBe(1);
         expect($el.find("em.warning").text()).toBe("Slegs heelgetalle");
@@ -186,7 +201,7 @@ describe("pat-validation", function () {
     // setting values.
     // See: https://twitter.com/thetetet/status/1285239806205755393
 
-    it("validates dates", function () {
+    it("validates dates", async function () {
         var $el = $(
             '<form class="pat-validation">' +
                 '<input type="text" name="date" data-pat-validation="type: date">' +
@@ -196,6 +211,7 @@ describe("pat-validation", function () {
         var $input = $el.find(":input");
         $input.val("2000-02-30");
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $input.trigger("change");
         expect($el.find("em.warning").length).toBe(1);
         expect($el.find("em.warning").text()).toBe(
@@ -207,7 +223,7 @@ describe("pat-validation", function () {
         expect($el.find("em.warning").length).toBe(0);
     });
 
-    it("validates dates with before/after constraints", function () {
+    it("validates dates with before/after constraints", async function () {
         var $el = $(
             '<form class="pat-validation">' +
                 '<input type="text" id="start" name="start" data-pat-validation="type: date; not-after: #end; message-date: The start date must on or before the end date.">' +
@@ -217,6 +233,7 @@ describe("pat-validation", function () {
         $("#lab").append($el);
 
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
 
         var $start = $el.find("#start");
         var $end = $el.find("#end");
@@ -272,7 +289,7 @@ describe("pat-validation", function () {
         expect($el.find("em.warning").length).toBe(0);
     });
 
-    it("doesn't validate empty optional dates", function () {
+    it("doesn't validate empty optional dates", async function () {
         var $el = $(
             '<form class="pat-validation">' +
                 '<input type="text" name="date" data-pat-validation="type: date">' +
@@ -282,11 +299,12 @@ describe("pat-validation", function () {
         var $input = $el.find(":input");
         $input.val("");
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $input.trigger("change");
         expect($el.find("em.warning").length).toBe(0);
     });
 
-    it("do require-validate non-empty required dates", function () {
+    it("do require-validate non-empty required dates", async function () {
         var $el = $(
             '<form class="pat-validation">' +
                 '<input type="text" name="date" required="required" data-pat-validation="type: date">' +
@@ -296,24 +314,26 @@ describe("pat-validation", function () {
         var $input = $el.find(":input");
         $input.val("");
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $input.trigger("change");
 
         expect($el.find("em.warning").length).toBe(1);
         expect($el.find("em.warning").text()).toBe("This field is required");
     });
 
-    it("doesn't validate disabled elements", function () {
+    it("doesn't validate disabled elements", async function () {
         var $el = $(
             '<form class="pat-validation">' +
                 '<input type="text" name="disabled" required="required" disabled="disabled">' +
                 "</form>"
         );
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $el.find(":input").trigger("change");
         expect($el.find("em.warning").length).toBe(0);
     });
 
-    it("validates radio buttons", function () {
+    it("validates radio buttons", async function () {
         var $el = $(
             '<form class="pat-validation">' +
                 '<label><input name="colour" required="required" type="radio" value="blue"/> Blue</label>' +
@@ -323,6 +343,7 @@ describe("pat-validation", function () {
                 "</form>"
         );
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $el.submit();
         expect($el.find("em.warning").length).toBe(1);
         expect($el.find("em.warning").text()).toBe("This field is required");
@@ -336,7 +357,7 @@ describe("pat-validation", function () {
         expect($el.find("em.warning").length).toBe(0);
     });
 
-    it("removes a field's error message if it becomes valid", function () {
+    it("removes a field's error message if it becomes valid", async function () {
         /* Check that an error message appears after the field with invalid data.
          * Also check that the message gets removed if the field's data
          * becomes valid, but that other messages are *not* removed.
@@ -350,6 +371,7 @@ describe("pat-validation", function () {
         var $input1 = $el.find(':input[name="integer1"]');
         $input1.val(4.5);
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $input1.trigger("change");
         expect($el.find("em.warning").length).toBe(1);
         expect($el.find("em.warning").text()).toBe(
@@ -372,7 +394,7 @@ describe("pat-validation", function () {
         expect($el.find("em.warning").length).toBe(1);
     });
 
-    it("can disable certain form elements when validation fails", function () {
+    it("can disable certain form elements when validation fails", async function () {
         /* Tests the disable-selector argument */
         var $el = $(
             '<form class="pat-validation" data-pat-validation="disable-selector:#form-buttons-create">' +
@@ -384,6 +406,7 @@ describe("pat-validation", function () {
         var $input = $el.find(":input");
         $input.val(4.5);
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $input.trigger("change");
         expect($el.find("em.warning").length).toBe(1);
         expect($el.find("em.warning").text()).toBe(
@@ -397,7 +420,7 @@ describe("pat-validation", function () {
         expect($el.find("#form-buttons-create")[0].disabled).toBe(false);
     });
 
-    it("can check for password confirmation", function () {
+    it("can check for password confirmation", async function () {
         var $el = $(
             '<form class="pat-validation" data-pat-validation="disable-selector:#form-buttons-create">' +
                 '  <input type="password" name="password">' +
@@ -413,6 +436,7 @@ describe("pat-validation", function () {
         $password.val("foo");
         $password_confirmation.val("bar");
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $password_confirmation.trigger("change");
         expect($el.find("em.warning").length).toBe(1);
         expect($el.find("em.warning").text()).toBe(
