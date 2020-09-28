@@ -1,5 +1,6 @@
-import pattern from "./depends";
 import $ from "jquery";
+import pattern from "./depends";
+import utils from "../../core/utils";
 
 describe("pat-depends", function () {
     describe("init", function () {
@@ -11,7 +12,7 @@ describe("pat-depends", function () {
             $("#lab").remove();
         });
 
-        it("Hide if condition is not met initially", function () {
+        it("Hide if condition is not met initially", async function () {
             $("#lab").html(
                 [
                     '<input type="checkbox" id="control" value="yes"/>',
@@ -20,10 +21,12 @@ describe("pat-depends", function () {
             );
             var $slave = $("#slave");
             pattern.init($slave, { condition: "control" });
+            await utils.timeout(1); // wait a tick for async to settle.
+
             expect($slave.css("display")).toBe("none");
         });
 
-        it("Show if condition is not met initially", function () {
+        it("Show if condition is not met initially", async function () {
             $("#lab").html(
                 [
                     '<input type="checkbox" id="control" value="yes" checked="checked"/>',
@@ -32,6 +35,7 @@ describe("pat-depends", function () {
             );
             var $slave = $("#slave");
             pattern.init($slave, { condition: "control" });
+            await utils.timeout(1); // wait a tick for async to settle.
             expect($slave.css("display")).not.toBe("none");
         });
     });
@@ -45,7 +49,7 @@ describe("pat-depends", function () {
             $("#lab").remove();
         });
 
-        it("Input element", function () {
+        it("Input element", async function () {
             $("#lab").html(
                 [
                     '<input type="checkbox" id="control" value="yes" checked="checked"/>',
@@ -55,22 +59,22 @@ describe("pat-depends", function () {
             var pat = pattern.init($(".pat-depends"), {
                 condition: "control",
             });
+            await utils.timeout(1); // wait a tick for async to settle.
             var $slave = $("#slave");
             pat.disable();
             expect($slave[0].disabled).toBeTruthy();
             expect($slave.hasClass("disabled")).toBe(true);
         });
 
-        it("Anchor", function () {
+        it("Anchor", async function () {
             $("#lab").html(
                 [
                     '<input type="checkbox" id="control" value="yes" checked="checked"/>',
                     '<a class="pat-depends" href="#target">Click me</a>',
                 ].join("\n")
             );
-            var pat = pattern.init($(".pat-depends"), {
-                condition: "control",
-            });
+            var pat = pattern.init($(".pat-depends"), { condition: "control" });
+            await utils.timeout(1); // wait a tick for async to settle.
             var $slave = $("#lab a");
             pat.disable();
             var events = $._data($slave[0]).events;
@@ -89,7 +93,7 @@ describe("pat-depends", function () {
             $("#lab").remove();
         });
 
-        it("Input element", function () {
+        it("Input element", async function () {
             $("#lab").html(
                 [
                     '<input type="checkbox" id="control" value="yes" checked="checked"/>',
@@ -99,13 +103,14 @@ describe("pat-depends", function () {
             var pat = pattern.init($(".pat-depends"), {
                 condition: "control",
             });
+            await utils.timeout(1); // wait a tick for async to settle.
             var $slave = $("#lab button");
             pat.enable();
             expect($slave[0].disabled).toBeFalsy();
             expect($slave.hasClass("disabled")).toBe(false);
         });
 
-        it("Anchor", function () {
+        it("Anchor", async function () {
             $("#lab").html(
                 [
                     '<input type="checkbox" id="control" value="yes" checked="checked"/>',
@@ -115,6 +120,7 @@ describe("pat-depends", function () {
             var pat = pattern.init($(".pat-depends"), {
                 condition: "control",
             });
+            await utils.timeout(1); // wait a tick for async to settle.
             var $slave = $("#lab a");
             $slave.on("click.patternDepends", false);
             pat.enable();

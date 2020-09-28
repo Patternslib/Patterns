@@ -1,8 +1,8 @@
+import $ from "jquery";
 import Pattern from "./fullscreen";
 import Pattern2 from "./fullscreen-close";
-import screenful from "screenfull";
-
-import $ from "jquery";
+import utils from "../../core/utils";
+import screenfull from "screenfull";
 
 describe("Open in fullscreen", function () {
     beforeEach(function () {
@@ -10,8 +10,8 @@ describe("Open in fullscreen", function () {
         el.setAttribute("class", "fs");
         el.setAttribute("id", "fs");
         document.body.appendChild(el);
-        spyOn(screenful, "request")();
-        spyOn(screenful, "exit").and.callThrough();
+        spyOn(screenfull, "request")();
+        spyOn(screenfull, "exit").and.callThrough();
     });
     afterEach(function () {
         document.body.removeChild(document.querySelector("#fs"));
@@ -21,7 +21,7 @@ describe("Open in fullscreen", function () {
         }
     });
 
-    it("Test 1: Define fullscreen element via href-target", function (done) {
+    it("Test 1: Define fullscreen element via href-target", async function (done) {
         var fs_el = document.querySelector("#fs");
         var pat_el = document.createElement("a");
         pat_el.setAttribute("class", "pat-fullscreen");
@@ -30,13 +30,14 @@ describe("Open in fullscreen", function () {
         fs_el.appendChild(pat_el);
 
         Pattern.init($(".pat-fullscreen"));
+        await utils.timeout(1); // wait a tick for async to settle.
         $(".pat-fullscreen").click();
-        expect(screenful.request).toHaveBeenCalled();
+        expect(screenfull.request).toHaveBeenCalled();
 
         done();
     });
 
-    it("Test 2: data-attr configuration: selector and close-button", function (done) {
+    it("Test 2: data-attr configuration: selector and close-button", async function (done) {
         var fs_el = document.querySelector("#fs");
         var pat_el = document.createElement("button");
         pat_el.setAttribute("class", "pat-fullscreen");
@@ -48,16 +49,17 @@ describe("Open in fullscreen", function () {
         fs_el.appendChild(pat_el);
 
         Pattern.init($(".pat-fullscreen"));
+        await utils.timeout(1); // wait a tick for async to settle.
         $(".pat-fullscreen").click();
-        expect(screenful.request).toHaveBeenCalled();
+        expect(screenfull.request).toHaveBeenCalled();
 
         $(".pat-fullscreen-close-fullscreen").click();
-        expect(screenful.exit).toHaveBeenCalled();
+        expect(screenfull.exit).toHaveBeenCalled();
 
         done();
     });
 
-    it("Test 3: Existing .close-fullscreen elements.", function (done) {
+    it("Test 3: Existing .close-fullscreen elements.", async function (done) {
         var fs_el = document.querySelector("#fs");
         var pat_el = document.createElement("button");
         pat_el.setAttribute("class", "pat-fullscreen");
@@ -70,17 +72,19 @@ describe("Open in fullscreen", function () {
         fs_el.appendChild(pat_close);
 
         Pattern.init($(".pat-fullscreen"));
+        await utils.timeout(1); // wait a tick for async to settle.
         $(".pat-fullscreen").click();
-        expect(screenful.request).toHaveBeenCalled();
+        expect(screenfull.request).toHaveBeenCalled();
 
         Pattern2.init($(".close-fullscreen"));
+        await utils.timeout(1); // wait a tick for async to settle.
         $(".close-fullscreen").click();
-        expect(screenful.exit).toHaveBeenCalled();
+        expect(screenfull.exit).toHaveBeenCalled();
 
         done();
     });
 
-    it("Test 4: No fullscreen element definition opens fullscreen on body.", function (done) {
+    it("Test 4: No fullscreen element definition opens fullscreen on body.", async function (done) {
         var fs_el = document.querySelector("#fs");
         var pat_el = document.createElement("button");
         pat_el.setAttribute("class", "pat-fullscreen");
@@ -88,8 +92,9 @@ describe("Open in fullscreen", function () {
         fs_el.appendChild(pat_el);
 
         Pattern.init($(".pat-fullscreen"));
+        await utils.timeout(1); // wait a tick for async to settle.
         $(".pat-fullscreen").click();
-        expect(screenful.request).toHaveBeenCalled();
+        expect(screenfull.request).toHaveBeenCalled();
 
         done();
     });

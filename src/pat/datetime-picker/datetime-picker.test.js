@@ -1,5 +1,6 @@
-import pattern from "./datetime-picker";
 import $ from "jquery";
+import pattern from "./datetime-picker";
+import utils from "../../core/utils";
 
 describe("pat-datetime-picker", function () {
     beforeEach(function () {
@@ -14,11 +15,12 @@ describe("pat-datetime-picker", function () {
         $(".pika-single, .pika-lendar").remove();
     });
 
-    it("Default datetime picker.", function () {
+    it("Default datetime picker.", async function () {
         var $el = $(
             '<input type="datetime-local" class="pat-datetime-picker"/>'
         ).appendTo(document.body);
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
 
         $("input.date", $el.next()).click();
 
@@ -51,11 +53,12 @@ describe("pat-datetime-picker", function () {
         ).toBe("Sun");
     });
 
-    it("Date/Time picker starts at Monday.", function () {
+    it("Date/Time picker starts at Monday.", async function () {
         var $el = $(
             '<input type="date" class="pat-datetime-picker" data-pat-datetime-picker="first-day: 1" />'
         ).appendTo(document.body);
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         $("input.date", $el.next()).click();
 
         expect(
@@ -64,11 +67,12 @@ describe("pat-datetime-picker", function () {
         ).toBe("Mon");
     });
 
-    it("Date/Time picker with pre-set value.", function () {
+    it("Date/Time picker with pre-set value.", async function () {
         var $el = $(
             '<input type="datetime-local" class="pat-datetime-picker" value="1900-01-01T00:00"/>'
         ).appendTo(document.body);
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
 
         $("input.date", $el.next()).click();
 
@@ -91,11 +95,12 @@ describe("pat-datetime-picker", function () {
         ).toBe("1");
     });
 
-    it("Date/Time picker with week numbers.", function () {
+    it("Date/Time picker with week numbers.", async function () {
         var $el = $(
             '<input type="datetime-local" class="pat-datetime-picker" data-pat-datetime-picker="week-numbers: show;" value="2017-09-18T23:42"/>'
         ).appendTo(document.body);
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
 
         $("input.date", $el.next()).click();
 
@@ -105,7 +110,7 @@ describe("pat-datetime-picker", function () {
     });
 
     /* TODO: fix and properly mock with jasmine.Clock().mockTime in jasmine 2.x
-    it('Set Date/Time to today.', function () {
+    it('Set Date/Time to today.', async function () {
 
         var baseDate = new Date('2010-10-10T12:34:00.000Z');
 
@@ -125,6 +130,7 @@ describe("pat-datetime-picker", function () {
 
         var $el = $('<input type="datetime-local"/>').appendTo(document.body);
         pattern.init($el);
+        await utils.timeout(1); // wait a tick for async to settle.
         var $wrapper = $el.next();
         var $date = $('input.date', $wrapper);
         var $time = $('input.time', $wrapper);

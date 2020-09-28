@@ -1,5 +1,6 @@
-import pattern from "./carousel";
 import $ from "jquery";
+import pattern from "./carousel";
+import utils from "../../core/utils";
 
 describe("carousel-plugin", function () {
     beforeEach(function () {
@@ -8,21 +9,30 @@ describe("carousel-plugin", function () {
 
     afterEach(function () {
         $("#lab").remove();
+        jest.restoreAllMocks();
     });
 
     describe("init", function () {
-        it("Default options", function () {
+        it("Default options", async () => {
             $("#lab").html(
                 "<ul class='pat-carousel'>" +
                     "  <li>Panel 1</li>" +
                     "  <li>Panel 2</li>" +
                     "</ul>"
             );
+
+            pattern.init(document.createElement("div")); // Just to async-load slick before initializing the spy.
+            await utils.timeout(1); // wait a tick for async to settle.
+
             var $carousel = $("#lab ul");
-            var spy_slick = spyOn($.fn, "slick").and.callThrough();
+            var spy_slick = jest.spyOn($.fn, "slick");
+
             pattern.init($carousel);
+            await utils.timeout(1); // wait a tick for async to settle.
+
             expect(spy_slick).toHaveBeenCalled();
-            var options = $.fn.slick.calls.argsFor(0)[0];
+
+            var options = spy_slick.mock.calls[0][0];
             expect(options.autoplay).toBe(false);
             expect(options.autoplaySpeed).toBe(1000);
             expect(options.speed).toBe(500);
@@ -34,7 +44,7 @@ describe("carousel-plugin", function () {
             expect(options.appendDots).toBe(undefined);
         });
 
-        it("Default options (DOM test)", function () {
+        it("Default options (DOM test)", async () => {
             $("#lab").html(
                 "<ul class='pat-carousel'>" +
                     "  <li>Panel 1</li>" +
@@ -43,15 +53,19 @@ describe("carousel-plugin", function () {
             );
             var $carousel = $("#lab ul");
             pattern.init($carousel);
+            await utils.timeout(1); // wait a tick for async to settle.
+
             // has been initialized
             expect($carousel.hasClass("slick-initialized")).toBe(true);
+
             // arrows created
             expect($carousel.find(".slick-arrow").length).toBe(2);
+
             // No navigation boxes
             expect($carousel.find(".slick-dots").length).toBe(1);
         });
 
-        it("Tweak options via DOM", function () {
+        it("Tweak options via DOM", async () => {
             $("#lab").html(
                 "<ul class='pat-carousel' data-pat-carousel='auto-play: true; auto-play-speed: 345; height: adaptive'>" +
                     "  <li>Panel 1</li>" +
@@ -59,10 +73,12 @@ describe("carousel-plugin", function () {
                     "</ul>"
             );
             var $carousel = $("#lab ul");
-            var spy_slick = spyOn($.fn, "slick").and.callThrough();
+            var spy_slick = jest.spyOn($.fn, "slick");
             pattern.init($carousel);
+            await utils.timeout(1); // wait a tick for async to settle.
+
             expect(spy_slick).toHaveBeenCalled();
-            var options = $.fn.slick.calls.argsFor(0)[0];
+            var options = spy_slick.mock.calls[0][0];
             expect(options.autoplay).toBe(true);
             expect(options.autoplaySpeed).toBe(345);
             expect(options.adaptiveHeight).toBe(true);

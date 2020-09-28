@@ -1,6 +1,5 @@
 import $ from "jquery";
 import autosubmit from "../auto-submit/auto-submit";
-import logging from "../../core/logging";
 import pattern from "./tooltip";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
@@ -10,10 +9,6 @@ const mockFetch = (text = "") => () =>
         text: () => Promise.resolve(text),
     });
 
-jest.setTimeout(1000000);
-
-let start;
-const log = logging.getLogger("pat-tooltip.tests");
 const testutils = {
     createTooltip(c) {
         var cfg = c || {};
@@ -58,16 +53,6 @@ const testutils = {
         testutils.dispatchEvent($target, "mouseleave");
     },
 
-    delayed(name, timeout) {
-        return (...args) => {
-            setTimeout(() => {
-                pattern[name].and.callThrough();
-                pattern[name].apply(null, args);
-                pattern[name].and.callFake(testutils.delayed(name, timeout));
-            }, timeout);
-        };
-    },
-
     stopwatch(spy, name, timer) {
         return (...args) => {
             timer[name] = Date.now();
@@ -76,19 +61,12 @@ const testutils = {
             spy.and.callFake(testutils.stopwatch(name, timer));
         };
     },
-
-    log(msg) {
-        log.debug(String(Date.now() - start) + " " + msg);
-    },
 };
-
-log.setLevel(20);
 
 describe("pat-tooltip", () => {
     beforeEach(() => {
         testutils.cleanup();
         $("<div/>", { id: "lab" }).appendTo(document.body);
-        start = Date.now();
     });
 
     afterEach(() => {
@@ -1159,11 +1137,8 @@ describe("pat-tooltip", () => {
             const instance = await new pattern($el);
             await utils.timeout(1);
 
-            const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
-            const spy_show = spyOn(
-                instance.tippy.props,
-                "onShow"
-            ).and.callThrough();
+            const spy_ajax = jest.spyOn(instance, "_getContent");
+            const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
