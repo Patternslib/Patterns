@@ -29,8 +29,7 @@ describe("Open in fullscreen", function () {
         pat_el.appendChild(document.createTextNode("Open in fullscreen"));
         fs_el.appendChild(pat_el);
 
-        Pattern.init($(".pat-fullscreen"));
-        await utils.timeout(1); // wait a tick for async to settle.
+        await Pattern.init($(".pat-fullscreen"));
         $(".pat-fullscreen").click();
         expect(screenfull.request).toHaveBeenCalled();
 
@@ -48,8 +47,7 @@ describe("Open in fullscreen", function () {
         pat_el.appendChild(document.createTextNode("Open in fullscreen"));
         fs_el.appendChild(pat_el);
 
-        Pattern.init($(".pat-fullscreen"));
-        await utils.timeout(1); // wait a tick for async to settle.
+        await Pattern.init($(".pat-fullscreen"));
         $(".pat-fullscreen").click();
         expect(screenfull.request).toHaveBeenCalled();
 
@@ -71,13 +69,11 @@ describe("Open in fullscreen", function () {
         pat_close.appendChild(document.createTextNode("Close fullscreen"));
         fs_el.appendChild(pat_close);
 
-        Pattern.init($(".pat-fullscreen"));
-        await utils.timeout(1); // wait a tick for async to settle.
+        await Pattern.init($(".pat-fullscreen"));
         $(".pat-fullscreen").click();
         expect(screenfull.request).toHaveBeenCalled();
 
-        Pattern2.init($(".close-fullscreen"));
-        await utils.timeout(1); // wait a tick for async to settle.
+        await Pattern2.init($(".close-fullscreen"));
         $(".close-fullscreen").click();
         expect(screenfull.exit).toHaveBeenCalled();
 
@@ -91,8 +87,7 @@ describe("Open in fullscreen", function () {
         pat_el.appendChild(document.createTextNode("Open in fullscreen"));
         fs_el.appendChild(pat_el);
 
-        Pattern.init($(".pat-fullscreen"));
-        await utils.timeout(1); // wait a tick for async to settle.
+        await Pattern.init($(".pat-fullscreen"));
         $(".pat-fullscreen").click();
         expect(screenfull.request).toHaveBeenCalled();
 

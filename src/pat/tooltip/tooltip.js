@@ -48,6 +48,7 @@ export default Base.extend({
     },
 
     async init(el, opts) {
+        console.log("0.1");
         Tippy = await import("tippy.js");
         Tippy = Tippy.default;
 
@@ -95,6 +96,8 @@ export default Base.extend({
                 event.stopPropagation();
             });
         }
+
+        console.log("0.2");
     },
 
     parseOptionsForTippy(opts) {

@@ -11,7 +11,7 @@ describe("pat-collapsible", function () {
         $("#lab").remove();
     });
 
-    it("wraps the collapsible within a div.panel-content", function () {
+    it("wraps the collapsible within a div.panel-content", async function () {
         var $lab = $("#lab");
         $lab.html(
             [
@@ -22,12 +22,12 @@ describe("pat-collapsible", function () {
             ].join("\n")
         );
         var $collapsible = $("#lab .pat-collapsible");
-        pattern.init($collapsible);
+        await pattern.init($collapsible);
         expect($collapsible.find(".panel-content").length).toBe(1);
     });
 
     describe("A Collapsible", function () {
-        it("is open by default", function () {
+        it("is open by default", async function () {
             var $lab = $("#lab");
             $lab.html(
                 [
@@ -38,11 +38,11 @@ describe("pat-collapsible", function () {
                 ].join("\n")
             );
             var $collapsible = $("#lab .pat-collapsible");
-            pattern.init($collapsible);
+            await pattern.init($collapsible);
             expect($collapsible.hasClass("open")).toBeTruthy();
         });
 
-        it("can be explicitly closed by adding the class 'closed'", function () {
+        it("can be explicitly closed by adding the class 'closed'", async function () {
             var $lab = $("#lab");
             $lab.html(
                 [
@@ -53,11 +53,11 @@ describe("pat-collapsible", function () {
                 ].join("\n")
             );
             var $collapsible = $("#lab .pat-collapsible");
-            pattern.init($collapsible);
+            await pattern.init($collapsible);
             expect($collapsible.hasClass("open")).toBeFalsy();
         });
 
-        it("can be toggled closed if it's open", function () {
+        it("can be toggled closed if it's open", async function () {
             var $lab = $("#lab");
             $lab.html(
                 [
@@ -68,7 +68,7 @@ describe("pat-collapsible", function () {
                 ].join("\n")
             );
             var $collapsible = $("#lab .pat-collapsible");
-            var pat = pattern.init($collapsible, { transition: "none" });
+            var pat = await pattern.init($collapsible, { transition: "none" });
             pat.toggle($collapsible);
             expect($collapsible.hasClass("open")).toBe(false);
             expect($collapsible.hasClass("closed")).toBe(true);
@@ -77,7 +77,7 @@ describe("pat-collapsible", function () {
             expect($trigger.hasClass("collapsible-closed")).toBe(true);
         });
 
-        it("can be toggled open if it's closed", function () {
+        it("can be toggled open if it's closed", async function () {
             var $lab = $("#lab");
             $lab.html(
                 [
@@ -88,7 +88,7 @@ describe("pat-collapsible", function () {
                 ].join("\n")
             );
             var $collapsible = $("#lab .pat-collapsible");
-            var pat = pattern.init($collapsible, { transition: "none" });
+            var pat = await pattern.init($collapsible, { transition: "none" });
             pat.toggle($collapsible);
             expect($collapsible.hasClass("open")).toBe(true);
             expect($collapsible.hasClass("closed")).toBe(false);

@@ -1,6 +1,7 @@
+import $ from "jquery";
 import pattern from "./auto-submit";
 import registry from "../../core/registry";
-import $ from "jquery";
+import utils from "../../core/utils";
 
 describe("pat-autosubmit", function () {
     beforeEach(function () {
@@ -12,7 +13,7 @@ describe("pat-autosubmit", function () {
     });
 
     describe("Triggering of the pattern", function () {
-        it("happens when a form has the pat-autosubmit class", function () {
+        it("happens when a form has the pat-autosubmit class", async function () {
             var $form = $(
                 '<form class="pat-autosubmit">' +
                     "  <fieldset>" +
@@ -23,10 +24,11 @@ describe("pat-autosubmit", function () {
             );
             var spy_init = spyOn(pattern, "init");
             registry.scan($form);
+            await utils.timeout(1); // wait a tick for async to settle.
             expect(spy_init).toHaveBeenCalled();
         });
 
-        it("when a grouping of inputs has the pat-autosubmit class", function () {
+        it("when a grouping of inputs has the pat-autosubmit class", async function () {
             var $form = $(
                 "<form>" +
                     '  <fieldset class="pat-autosubmit">' +
@@ -37,6 +39,7 @@ describe("pat-autosubmit", function () {
             );
             var spy_init = spyOn(pattern, "init");
             registry.scan($form);
+            await utils.timeout(1); // wait a tick for async to settle.
             expect(spy_init).toHaveBeenCalled();
         });
 
@@ -51,9 +54,9 @@ describe("pat-autosubmit", function () {
     });
 
     describe("parsing of the delay option", function () {
-        it("can be done in shorthand notation", function () {
+        it("can be done in shorthand notation", async function () {
             pattern.$el = $("<form></form>");
-            var pat = pattern.init(pattern.$el);
+            var pat = await pattern.init(pattern.$el);
             var options = pat.parser.parse(
                 $("<input data-pat-autosubmit='500ms'/>")
             );
@@ -68,9 +71,9 @@ describe("pat-autosubmit", function () {
             expect(options.delay).toBe("defocus");
         });
 
-        it("can be done in longhand notation", function () {
+        it("can be done in longhand notation", async function () {
             pattern.$el = $("<form></form>");
-            var pat = pattern.init(pattern.$el);
+            var pat = await pattern.init(pattern.$el);
             var options = pat.parser.parse(
                 $(
                     "<input class=\"pat-autosubmit\" data-pat-autosubmit='delay: 500ms'/>"

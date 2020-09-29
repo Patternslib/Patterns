@@ -12,6 +12,7 @@
  * all DOM elements.
  */
 
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Registry from "./registry";
 import logging from "./logging";
@@ -19,7 +20,7 @@ import mockupParser from "./mockup-parser";
 
 var log = logging.getLogger("Patternslib Base");
 
-var initBasePattern = function ($el, options, trigger) {
+var initBasePattern = async function ($el, options, trigger) {
     if (!$el.jquery) {
         $el = $($el);
     }
@@ -32,7 +33,7 @@ var initBasePattern = function ($el, options, trigger) {
                 this.prototype.parser === "mockup"
                     ? mockupParser.getOptions($el, name, options)
                     : options;
-            pattern = new Registry.patterns[name]($el, options, trigger);
+            pattern = await new Registry.patterns[name]($el, options, trigger);
         } catch (e) {
             log.error("Failed while initializing '" + name + "' pattern.", e);
         }
@@ -41,13 +42,13 @@ var initBasePattern = function ($el, options, trigger) {
     return pattern;
 };
 
-var Base = function ($el, options, trigger) {
+var Base = async function ($el, options, trigger) {
     if (!$el.jquery) {
         $el = $($el);
     }
     this.$el = $el;
     this.options = $.extend(true, {}, this.defaults || {}, options || {});
-    this.init($el, options, trigger);
+    await this.init($el, options, trigger);
     this.emit("init");
 };
 
