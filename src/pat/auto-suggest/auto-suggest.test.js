@@ -1,7 +1,6 @@
 import $ from "jquery";
 import pattern from "./auto-suggest";
 import utils from "../../core/utils";
-import "select2"; // no lazy-load for tests to please jest.
 
 var testutils = {
     createInputElement: function (c) {

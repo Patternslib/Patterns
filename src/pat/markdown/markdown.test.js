@@ -1,7 +1,6 @@
 import $ from "jquery";
 import pattern from "./markdown";
 import utils from "../../core/utils";
-import "showdown";
 
 describe("pat-markdown", function () {
     beforeEach(function () {

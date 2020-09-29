@@ -1,7 +1,6 @@
 import pattern from "./calendar";
 import $ from "jquery";
 import utils from "../../core/utils";
-import "fullcalendar"; // no lazy-load for tests to please jest.
 
 describe("pat-calendar", function () {
     beforeEach(function () {

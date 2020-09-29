@@ -1,8 +1,6 @@
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import pattern from "./carousel";
 import utils from "../../core/utils";
-import "slick-carousel"; // no lazy-load for tests to please jest.
 
 describe("carousel-plugin", function () {
     beforeEach(function () {
@@ -22,6 +20,10 @@ describe("carousel-plugin", function () {
                     "  <li>Panel 2</li>" +
                     "</ul>"
             );
+
+            pattern.init(document.createElement("div")); // Just to async-load slick before initializing the spy.
+            await utils.timeout(1); // wait a tick for async to settle.
+
             var $carousel = $("#lab ul");
             var spy_slick = jest.spyOn($.fn, "slick");
 

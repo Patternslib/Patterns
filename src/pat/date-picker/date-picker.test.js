@@ -2,8 +2,6 @@ import $ from "jquery";
 import i18ndata from "./i18n.json";
 import pattern from "./date-picker";
 import utils from "../../core/utils";
-import "pikaday"; // no lazy-load for tests to please jest.
-import "moment"; // no lazy-load for tests to please jest.
 
 describe("pat-date-picker", function () {
     beforeEach(function () {
