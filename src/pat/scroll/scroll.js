@@ -1,9 +1,12 @@
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Base from "../../core/base";
 import utils from "../../core/utils";
 import Parser from "../../core/parser";
 import _ from "underscore";
-import imagesLoaded from "imagesloaded";
+
+// Lazy loading modules.
+let ImagesLoaded;
 
 const parser = new Parser("scroll");
 
@@ -17,14 +20,18 @@ export default Base.extend({
     trigger: ".pat-scroll",
     jquery_plugin: true,
 
-    init: function ($el, opts) {
+    async init($el, opts) {
         this.options = parser.parse(this.$el, opts);
         if (this.options.trigger == "auto") {
+            ImagesLoaded = await import("imagesloaded");
+            ImagesLoaded = ImagesLoaded.default;
             // Only calculate the offset when all images are loaded
-            var that = this;
-            imagesLoaded($("body"), function () {
-                that.smoothScroll();
-            });
+            ImagesLoaded(
+                $("body"),
+                function () {
+                    this.smoothScroll();
+                }.bind(this)
+            );
         } else if (this.options.trigger == "click") {
             this.$el.click(this.onClick.bind(this));
         }

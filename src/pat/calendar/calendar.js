@@ -5,6 +5,7 @@
  * Copyright 2014 Florian Friesdorf
  * Copyright 2014 Syslab.com GmbH
  */
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
@@ -12,8 +13,9 @@ import store from "../../core/store";
 import utils from "../../core/utils";
 import registry from "../../core/registry";
 import _ from "underscore";
-import momentTz from "./moment-timezone-with-data-2010-2020";
-import "fullcalendar";
+
+// Lazy loading modules.
+let MomentTZData;
 
 var log = logging.getLogger("calendar"),
     parser = new Parser("calendar");
@@ -78,20 +80,18 @@ var calendar = {
         return context;
     },
 
-    init: function ($elem, opts) {
+    async init($elem, opts) {
+        MomentTZData = await import("./moment-timezone-with-data-2010-2020");
+        await import("fullcalendar");
+
         var lang = document
             .getElementsByTagName("html")[0]
             .getAttribute("lang");
         if (lang && lang != "en" && lang != null) {
             // we don't support any country-specific language variants, always use first 2 letters
             lang = lang.substr(0, 2).toLowerCase();
-            import(
-                /* webpackChunkName: "fullcalendar" */ "fullcalendar/dist/lang/" +
-                    lang +
-                    ".js"
-            ).then(() => {
-                console.log("loaded cal locale for " + lang);
-            });
+            await import(`fullcalendar/dist/lang/${lang}.js`);
+            console.log("loaded cal locale for " + lang);
         }
 
         opts = opts || {};
@@ -152,7 +152,7 @@ var calendar = {
             events: function (start, end, timezone, callback) {
                 var events = calendar.parseEvents($el, timezone);
                 callback(events);
-            },
+            }.bind(this),
             eventAfterRender: function (ev, $event) {
                 var url = "";
                 if (ev.id === "pat-calendar-new-event") {
@@ -599,66 +599,68 @@ var calendar = {
                     return $event.hasClass(this);
                 }).length;
             })
-            .map(function (idx, event) {
-                var attr, i;
-                // classNames: all event classes without "event" + anchor classes
-                var classNames = $(event)
-                    .attr("class")
-                    .split(/\s+/)
-                    .filter(function (cls) {
-                        return cls !== "cal-event";
-                    })
-                    .concat($("a", event).attr("class").split(/\s+/));
-                // attrs: all "data-" attrs from anchor
-                var allattrs = $("a", event)[0].attributes,
-                    attrs = {};
-                for (attr, i = 0; i < allattrs.length; i++) {
-                    attr = allattrs.item(i);
-                    if (attr.nodeName.slice(0, 5) === "data-") {
-                        attrs[attr.nodeName] = attr.nodeValue;
+            .map(
+                function (idx, event) {
+                    var attr, i;
+                    // classNames: all event classes without "event" + anchor classes
+                    var classNames = $(event)
+                        .attr("class")
+                        .split(/\s+/)
+                        .filter(function (cls) {
+                            return cls !== "cal-event";
+                        })
+                        .concat($("a", event).attr("class").split(/\s+/));
+                    // attrs: all "data-" attrs from anchor
+                    var allattrs = $("a", event)[0].attributes,
+                        attrs = {};
+                    for (attr, i = 0; i < allattrs.length; i++) {
+                        attr = allattrs.item(i);
+                        if (attr.nodeName.slice(0, 5) === "data-") {
+                            attrs[attr.nodeName] = attr.nodeValue;
+                        }
                     }
-                }
 
-                var location = ($(".location", event).html() || "").trim();
+                    var location = ($(".location", event).html() || "").trim();
 
-                var startstr = $(".start", event).attr("datetime"),
-                    endstr = $(".end", event).attr("datetime"),
-                    start = momentTz.parseZone(startstr),
-                    end = momentTz.parseZone(endstr),
-                    allday = $(event).hasClass("all-day");
-                if (allday) {
-                    // XXX: In fullcalendar 2 the end-date is no longer inclusive, but
-                    // it should be. We fix that by adding a day so that the
-                    // pat-calendar API stays the same and stays intuitive.
-                    end.add(1, "days");
-                }
-                if (timezone) {
-                    start = start.tz(timezone);
-                    end = end.tz(timezone);
-                }
-                var ev = {
-                    title:
-                        $(".title", event).text().trim() +
-                        (location ? " (" + location + ")" : ""),
-                    start: start.format(),
-                    end: end.format(),
-                    allDay: allday,
-                    url: $("a", event).attr("href"),
-                    className: classNames,
-                    attrs: attrs,
-                    editable: $(event).hasClass("editable"),
-                };
-                if (!ev.title) {
-                    log.error("No event title for:", event);
-                }
-                if (!ev.start) {
-                    log.error("No event start for:", event);
-                }
-                if (!ev.url) {
-                    log.error("No event url for:", event);
-                }
-                return ev;
-            })
+                    var startstr = $(".start", event).attr("datetime"),
+                        endstr = $(".end", event).attr("datetime"),
+                        start = MomentTZData.parseZone(startstr),
+                        end = MomentTZData.parseZone(endstr),
+                        allday = $(event).hasClass("all-day");
+                    if (allday) {
+                        // XXX: In fullcalendar 2 the end-date is no longer inclusive, but
+                        // it should be. We fix that by adding a day so that the
+                        // pat-calendar API stays the same and stays intuitive.
+                        end.add(1, "days");
+                    }
+                    if (timezone) {
+                        start = start.tz(timezone);
+                        end = end.tz(timezone);
+                    }
+                    var ev = {
+                        title:
+                            $(".title", event).text().trim() +
+                            (location ? " (" + location + ")" : ""),
+                        start: start.format(),
+                        end: end.format(),
+                        allDay: allday,
+                        url: $("a", event).attr("href"),
+                        className: classNames,
+                        attrs: attrs,
+                        editable: $(event).hasClass("editable"),
+                    };
+                    if (!ev.title) {
+                        log.error("No event title for:", event);
+                    }
+                    if (!ev.start) {
+                        log.error("No event start for:", event);
+                    }
+                    if (!ev.url) {
+                        log.error("No event url for:", event);
+                    }
+                    return ev;
+                }.bind(this)
+            )
             .toArray();
 
         return events;

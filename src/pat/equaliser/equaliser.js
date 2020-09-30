@@ -3,11 +3,14 @@
  *
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import registry from "../../core/registry";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";
-import imagesLoaded from "imagesloaded";
+
+// Lazy loading modules.
+let ImagesLoaded;
 
 var parser = new Parser("equaliser");
 parser.addArgument("transition", "none", ["none", "grow"]);
@@ -18,7 +21,10 @@ var equaliser = {
     name: "equaliser",
     trigger: ".pat-equaliser, .pat-equalizer",
 
-    init: function ($el, opts) {
+    async init($el, opts) {
+        ImagesLoaded = await import("imagesloaded");
+        ImagesLoaded = ImagesLoaded.default;
+
         return $el.each(function () {
             var $container = $(this),
                 options = parser.parse($container, opts);
@@ -34,7 +40,7 @@ var equaliser = {
                 this,
                 utils.debounce(equaliser._onEvent, 100)
             );
-            imagesLoaded(
+            ImagesLoaded(
                 this,
                 $.proxy(function () {
                     equaliser._update(this);

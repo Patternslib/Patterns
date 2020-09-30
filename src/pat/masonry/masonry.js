@@ -2,14 +2,16 @@
  * Patternslib pattern for Masonry
  * Copyright 2015 Syslab.com GmBH
  */
-
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import Base from "../../core/base";
 import utils from "../../core/utils";
-import Masonry from "masonry-layout";
-import imagesLoaded from "imagesloaded";
+
+// Lazy loading modules.
+let ImagesLoaded;
+let Masonry;
 
 var log = logging.getLogger("pat.masonry");
 var parser = new Parser("masonry");
@@ -41,12 +43,17 @@ export default Base.extend({
     name: "masonry",
     trigger: ".pat-masonry",
 
-    init: function masonryInit($el, opts) {
+    async init($el, opts) {
+        Masonry = await import("masonry-layout");
+        Masonry = Masonry.default;
+        ImagesLoaded = await import("imagesloaded");
+        ImagesLoaded = ImagesLoaded.default;
+
         this.options = parser.parse(this.$el, opts);
         // Initialize
         this.initMasonry();
 
-        var imgLoad = imagesLoaded(this.$el);
+        const imgLoad = await ImagesLoaded(this.$el);
         imgLoad.on(
             "progress",
             function () {
@@ -89,7 +96,7 @@ export default Base.extend({
         observer.observe(document.body, config);
     },
 
-    initMasonry: function () {
+    async initMasonry() {
         var containerStyle;
         try {
             containerStyle = JSON.parse(this.options.containerStyle);

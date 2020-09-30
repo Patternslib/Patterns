@@ -1,3 +1,4 @@
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import _ from "underscore";
 import ajax from "../ajax/ajax";
@@ -654,7 +655,7 @@ const inject = {
         $el.trigger("pat-inject-success");
     },
 
-    _onInjectSuccess: function ($el, cfgs, ev) {
+    async _onInjectSuccess($el, cfgs, ev) {
         var sources$,
             data = ev && ev.jqxhr && ev.jqxhr.responseText;
         if (!data) {
@@ -669,11 +670,12 @@ const inject = {
             $el.trigger("pat-inject-hook-" + hook);
         });
         inject.stopBubblingFromRemovedElement($el, cfgs, ev);
-        sources$ = inject.callTypeHandler(cfgs[0].dataType, "sources", $el, [
-            cfgs,
-            data,
-            ev,
-        ]);
+        sources$ = await inject.callTypeHandler(
+            cfgs[0].dataType,
+            "sources",
+            $el,
+            [cfgs, data, ev]
+        );
         /* pick the title source for dedicated handling later
           Title - if present - is always appended at the end. */
         var title;
@@ -1157,15 +1159,10 @@ const inject = {
         inject.handlers[type] = handler;
     },
 
-    callTypeHandler: function inject_callTypeHandler(
-        type,
-        fn,
-        context,
-        params
-    ) {
+    async callTypeHandler(type, fn, context, params) {
         type = type || "html";
         if (inject.handlers[type] && $.isFunction(inject.handlers[type][fn])) {
-            return inject.handlers[type][fn].apply(context, params);
+            return await inject.handlers[type][fn].apply(context, params);
         } else {
             return null;
         }

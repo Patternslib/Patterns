@@ -18,10 +18,12 @@
 -   pat tooltip: Remove undocumented "souce: auto" parameter. This parameter should not be used as it is not explicit enough and would lead to unintuitive behavior.
 -   Remove outdated pre IE9 browser compatibility polyfill `core/compat`.
 -   Remove unused `lib/htmlparser`.
+-   Remove obsolete library `prefixfree`.
 
 
 ### Features
 
+-   Implenent lazy loading for external libraries via dynamic imports. Leads to significantly reduced bundle sizes.
 -   Upgrade pat-calendar to use lates fullcalendar version (5.3.0).
 -   pat tooltip: Use tippy v6 based implementation.
 

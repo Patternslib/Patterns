@@ -1,8 +1,11 @@
 /* pat-datetime-picker  - Polyfill for input type=datetime-local */
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Parser from "../../core/parser";
 import DatePicker from "../date-picker/date-picker";
-import moment from "moment";
+
+// Lazy loading modules.
+let Moment;
 
 var parser = new Parser("datetime-picker");
 parser.addArgument("behavior", "styled", ["native", "styled"]);
@@ -16,7 +19,10 @@ parser.addArgument("first-day", 0);
 export default DatePicker.extend({
     name: "datetime-picker",
     trigger: ".pat-datetime-picker",
-    init: function () {
+    async init() {
+        Moment = await import("moment");
+        Moment = Moment.default;
+
         this.options = $.extend(parser.parse(this.$el), this.options);
         var value = this.$el.val().split("T"),
             date_value = value[0] || "",
@@ -102,9 +108,9 @@ export default DatePicker.extend({
         this.$wrapper.insertAfter(this.$el);
     },
 
-    update: function () {
+    update() {
         if (this.$date.val() && this.$time.val()) {
-            var date = moment(this.$date.val()).format(this.options.format);
+            var date = Moment(this.$date.val()).format(this.options.format);
             this.$el.val(date + "T" + this.$time.val());
         } else {
             this.$el.val("");
@@ -112,7 +118,7 @@ export default DatePicker.extend({
         this.$el.trigger("change");
     },
 
-    isotime: function () {
+    isotime() {
         var now = new Date();
         return now.toTimeString().substr(0, 5);
     },

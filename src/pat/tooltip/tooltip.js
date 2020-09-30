@@ -1,13 +1,13 @@
-import "../inject/inject"; // Register ``patterns-injected`` event handler
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Base from "../../core/base";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
-import pat_markdown from "../markdown/markdown";
 import registry from "../../core/registry";
-import tippy from "tippy.js";
 import utils from "../../core/utils";
+
+// Lazy loading modules.
+let Tippy;
 
 const log = logging.getLogger("pat-tooltip");
 
@@ -41,16 +41,16 @@ export default Base.extend({
     name: "tooltip",
     trigger: ".pat-tooltip, .pat-tooltip-ng",
 
-    jquery_plugin: true,
-
     tippy: null,
-
     ajax_state: {
         isFetching: false,
         canFetch: true,
     },
 
-    init(el, opts) {
+    async init(el, opts) {
+        Tippy = await import("tippy.js");
+        Tippy = Tippy.default;
+
         if (el.jquery) {
             el = el[0];
         }
@@ -72,8 +72,8 @@ export default Base.extend({
             trigger: "click",
         };
 
-        tippy.setDefaultProps(defaultProps);
-        this.tippy = tippy(el, this.tippy_options);
+        Tippy.setDefaultProps(defaultProps);
+        this.tippy = new Tippy(el, this.tippy_options);
 
         if (el.getAttribute("title")) {
             // Remove title attribute to disable browser's built-in tooltip feature
@@ -331,7 +331,7 @@ export default Base.extend({
                 // TODO: use pat-inject, once it supports async
                 const response = await fetch(url);
                 const text = await response.text();
-                content = handler(text, url, selector, modifier);
+                content = await handler(text, url, selector, modifier);
             } catch (e) {
                 log.error(`Error on ajax request ${e}`);
             }
@@ -374,13 +374,15 @@ export default Base.extend({
         },
 
         // eslint-disable-next-line no-unused-vars
-        markdown(text, url, selector, modifier) {
-            const pat = pat_markdown.init($("<div/>"));
+        async markdown(text, url, selector, modifier) {
+            const pat_markdown = await import("../markdown/markdown");
+            const pat = pat_markdown.default.init($("<div/>"));
             const cfg = { url };
             if (selector) {
                 cfg.source = selector;
             }
-            return pat.renderForInjection(cfg, text)[0];
+            const ret = await pat.renderForInjection(cfg, text);
+            return ret[0];
         },
     },
 });

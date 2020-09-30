@@ -1,5 +1,6 @@
-import pattern from "./markdown";
 import $ from "jquery";
+import pattern from "./markdown";
+import utils from "../../core/utils";
 
 describe("pat-markdown", function () {
     beforeEach(function () {
@@ -11,22 +12,26 @@ describe("pat-markdown", function () {
     });
 
     describe("when initialized", function () {
-        it("replaces the DOM element with the rendered Markdown content.", function () {
+        afterEach(() => {
+            jest.restoreAllMocks();
+        });
+        it("replaces the DOM element with the rendered Markdown content.", async function () {
             var $el = $('<p class="pat-markdown"></p>');
             $el.appendTo("#lab");
-            spyOn(pattern.prototype, "render").and.returnValue(
-                $("<p>Rendering</p>")
-            );
+            jest.spyOn(pattern.prototype, "render").mockImplementation(() => {
+                return $("<p>Rendering</p>");
+            });
             pattern.init($el);
+            await utils.timeout(1); // wait a tick for async to settle.
             expect($("#lab").html()).toBe("<p>Rendering</p>");
         });
 
         it("does not replace the DOM element if it doesn't have the pattern trigger", function () {
             var $el = $("<p></p>");
             $el.appendTo("#lab");
-            spyOn(pattern.prototype, "render").and.returnValue(
-                $("<p>Rendering</p>")
-            );
+            jest.spyOn(pattern.prototype, "render").mockImplementation(() => {
+                return $("<p>Rendering</p>");
+            });
             pattern.init($el);
             expect($("#lab").html()).toBe("<p></p>");
         });
@@ -34,9 +39,11 @@ describe("pat-markdown", function () {
         it("uses content for non-input elements", function () {
             var $el = $('<p class="pat-markdown"/>').text("This is markdown");
             $el.appendTo("#lab");
-            var spy_render = spyOn(pattern.prototype, "render").and.returnValue(
-                $("<p/>")
-            );
+            const spy_render = jest
+                .spyOn(pattern.prototype, "render")
+                .mockImplementation(() => {
+                    return $("<p/>");
+                });
             pattern.init($el);
             expect(spy_render).toHaveBeenCalledWith("This is markdown");
         });
@@ -46,22 +53,28 @@ describe("pat-markdown", function () {
                 "This is markdown"
             );
             $el.appendTo("#lab");
-            var spy_render = spyOn(pattern.prototype, "render").and.returnValue(
-                $("<p/>")
-            );
+            const spy_render = jest
+                .spyOn(pattern.prototype, "render")
+                .mockImplementation(() => {
+                    return $("<p/>");
+                });
             pattern.init($el);
             expect(spy_render).toHaveBeenCalledWith("This is markdown");
         });
     });
 
     describe("when rendering", function () {
-        it("wraps rendering in a div", function () {
-            var $rendering = pattern.prototype.render("*This is markdown*");
+        it("wraps rendering in a div", async function () {
+            const $rendering = await pattern.prototype.render(
+                "*This is markdown*"
+            );
             expect($rendering[0].tagName).toBe("DIV");
         });
 
-        it("converts markdown into HTML", function () {
-            var $rendering = pattern.prototype.render("*This is markdown*");
+        it("converts markdown into HTML", async function () {
+            const $rendering = await pattern.prototype.render(
+                "*This is markdown*"
+            );
             expect($rendering.html()).toBe("<p><em>This is markdown</em></p>");
         });
     });

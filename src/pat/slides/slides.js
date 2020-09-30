@@ -3,9 +3,9 @@
  *
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import registry from "../../core/registry";
-import Presentation from "slides/src/slides";
 import utils from "../../core/utils";
 import url from "../../core/url";
 import "../../core/remove";
@@ -18,14 +18,16 @@ var slides = {
         $(document).on("patterns-injected", utils.debounce(slides._reset, 100));
     },
 
-    init: function ($el) {
+    async init($el) {
+        await import("slides/src/slides"); // loads ``Presentation`` globally.
+
         var parameters = url.parameters();
         if (parameters.slides !== undefined) {
             var requested_ids = slides._collapse_ids(parameters.slides);
             if (requested_ids) slides._remove_slides($el, requested_ids);
         }
         $el.each(function () {
-            var presentation = new Presentation(this),
+            var presentation = new window.Presentation(this),
                 $container = $(this);
             $container
                 .data("pat-slide", presentation)

@@ -1,5 +1,5 @@
-import pattern from "./equaliser";
 import $ from "jquery";
+import pattern from "./equaliser";
 
 describe("pat-equaliser", function () {
     beforeEach(function () {

@@ -3,13 +3,16 @@
  *
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import _ from "underscore";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
-import PhotoSwipe from "photoswipe";
-import PhotoSwipeUI from "photoswipe/dist/photoswipe-ui-default";
-import template from "./template.html";
+
+// Lazy loading modules.
+let Template;
+let PhotoSwipe;
+let PhotoSwipeUI;
 
 var parser = new Parser("gallery");
 parser.addArgument("item-selector", "a"); // selector for anchor element, which is added to the gallery.
@@ -23,10 +26,16 @@ export default Base.extend({
     trigger: ".pat-gallery",
     origBodyOverflow: "auto",
 
-    init: function patGalleryInit($el, opts) {
+    async init($el, opts) {
+        PhotoSwipe = await import("photoswipe");
+        PhotoSwipe = PhotoSwipe.default;
+        PhotoSwipeUI = await import("photoswipe/dist/photoswipe-ui-default");
+        PhotoSwipeUI = PhotoSwipeUI.default;
+
         this.options = parser.parse(this.$el, opts);
         if ($("#photoswipe-template").length === 0) {
-            $("body").append(_.template(template)());
+            Template = await import("./template.html");
+            $("body").append(_.template(Template)());
         }
 
         // Search for itemSelector including the current node
@@ -53,6 +62,7 @@ export default Base.extend({
             pinchToClose: false,
             closeOnScroll: false,
         };
+
         image_wrapper.click(function (ev) {
             if (
                 this.tagName.toLowerCase() === "img" &&
@@ -62,6 +72,7 @@ export default Base.extend({
                 return;
             }
             ev.preventDefault();
+
             // Get the index of the clicked gallery item in the list of images.
             options.index =
                 _.indexOf(_.pluck(images, "src"), this.href || this.src) || 0;

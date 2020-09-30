@@ -5,11 +5,11 @@
  * Copyright 2012 JC Brand
  * Copyright 2013 Marko Durkovic
  */
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
-import "select2";
 
 var log = logging.getLogger("autosuggest");
 var parser = new Parser("autosuggest");
@@ -44,7 +44,9 @@ parser.addAlias("pre-fill", "prefill");
 var _ = {
     name: "autosuggest",
     trigger: ".pat-autosuggest,.pat-auto-suggest",
-    init: function ($el, opts) {
+    async init($el, opts) {
+        await import("select2");
+
         if ($el.length > 1) {
             return $el.each(function () {
                 _.init($(this), opts);

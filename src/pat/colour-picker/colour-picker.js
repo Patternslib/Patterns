@@ -4,14 +4,14 @@
  * Copyright 2014 Marko Durkovic
  * Copyright 2014 Simplon B.V. - Wichert Akkerman
  */
-
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import registry from "../../core/registry";
-import "spectrum-colorpicker";
 
 var _ = {
     name: "polyfill-color",
     trigger: "input.pat-colour-picker,input.pat-color-picker",
-    init: function ($el) {
+    async init($el) {
+        await import("spectrum-colorpicker");
         return $el.spectrum({ preferredFormat: "hex" });
     },
 };
