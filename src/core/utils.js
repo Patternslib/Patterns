@@ -541,6 +541,12 @@ const timeout = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
+const isIE = () => {
+    // See: https://stackoverflow.com/a/9851769/1337474
+    // Internet Explorer 6-11
+    return /*@cc_on!@*/ false || !!document.documentMode;
+};
+
 var utils = {
     // pattern pimping - own module?
     jqueryPlugin: jqueryPlugin,
@@ -564,6 +570,7 @@ var utils = {
     checkInputSupport: checkInputSupport,
     checkCSSFeature: checkCSSFeature,
     timeout: timeout,
+    isIE: isIE,
 };
 
 export default utils;

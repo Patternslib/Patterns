@@ -20,7 +20,6 @@
 -   Remove unused `lib/htmlparser`.
 -   Remove obsolete library `prefixfree`.
 
-
 ### Features
 
 -   Implenent lazy loading for external libraries via dynamic imports. Leads to significantly reduced bundle sizes.
@@ -46,6 +45,8 @@
 -   Core utils: Add `checkCSSFeature` method to be used instead of `modernizr` feature detection.
 -   Core: Allow plain DOM nodes for initalization in base and parser.
 -   Build infrastructure: Build into /dist and cleanup before building.
+-   utils: Add `isIE` method to detect Internet Explorer browsers.
+
 
 ## 3.0.0-dev - unreleased
 
