@@ -35,6 +35,7 @@ export default Base.extend({
         this.options = parser.parse(this.$el, opts);
         if ($("#photoswipe-template").length === 0) {
             Template = await import("./template.html");
+            Template = Template.default;
             $("body").append(_.template(Template)());
         }
 
