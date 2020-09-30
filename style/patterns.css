@@ -8,7 +8,6 @@
 @import "/style/fontello/css/fontello.css";
 @import "/style/fontello/css/fontello.css";
 @import "/style/fontello/css/fontello.css";
-@import "/style/fontello/css/fontello.css";
 .pat-button {
   font-family: "Source Sans Pro", sans-serif;
   margin: 0 0.5em 0 0;
@@ -90,25 +89,32 @@ textarea:focus {
   padding-right: 12px;
 }
 
-a.button.dropdown[class*=icon-]:after, button.dropdown[class*=icon-]:after {
+a.button.dropdown[class*=icon-]:after,
+button.dropdown[class*=icon-]:after {
   display: none;
 }
 
-a.button.tentative, button.tentative, ul.cal-events label[data-option=Tentative] select {
+a.button.tentative,
+button.tentative,
+ul.cal-events label[data-option=Tentative] select {
   background-color: #ff9300;
   color: white;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#c9de96", endColorstr="#398235",GradientType=0 );
   border: 1px solid #c46f00;
 }
 
-a.button.confirmative, button.confirmative, ul.cal-events label[data-option=Confirmed] select {
+a.button.confirmative,
+button.confirmative,
+ul.cal-events label[data-option=Confirmed] select {
   background-color: #5bb75b;
   color: white;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#c9de96", endColorstr="#398235",GradientType=0 );
   border: 1px solid #298f00;
 }
 
-a.button.negative, button.negative, ul.cal-events label[data-option=Declined] select {
+a.button.negative,
+button.negative,
+ul.cal-events label[data-option=Declined] select {
   background-color: red;
   color: white;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffcb91", endColorstr="#ff1a00",GradientType=0 );
@@ -139,7 +145,8 @@ button.pat-button[disabled=disabled], button.pat-button:disabled {
 .button-cluster.float-before {
   margin-right: 5px;
 }
-.button-cluster button, .button-cluster a.button {
+.button-cluster button,
+.button-cluster a.button {
   margin: 0;
   border-radius: 0;
   border-left-style: none;
@@ -2240,6 +2247,7 @@ a.fc-more:hover {
   display: none;
 }
 
+/*# sourceMappingURL=calendar.css.map */
 /* Slider */
 .slick-slider {
   position: relative;
@@ -2463,25 +2471,32 @@ textarea:focus {
   padding-right: 12px;
 }
 
-a.button.dropdown[class*=icon-]:after, button.dropdown[class*=icon-]:after {
+a.button.dropdown[class*=icon-]:after,
+button.dropdown[class*=icon-]:after {
   display: none;
 }
 
-a.button.tentative, button.tentative, ul.cal-events label[data-option=Tentative] select {
+a.button.tentative,
+button.tentative,
+ul.cal-events label[data-option=Tentative] select {
   background-color: #ff9300;
   color: white;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#c9de96", endColorstr="#398235",GradientType=0 );
   border: 1px solid #c46f00;
 }
 
-a.button.confirmative, button.confirmative, ul.cal-events label[data-option=Confirmed] select {
+a.button.confirmative,
+button.confirmative,
+ul.cal-events label[data-option=Confirmed] select {
   background-color: #5bb75b;
   color: white;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#c9de96", endColorstr="#398235",GradientType=0 );
   border: 1px solid #298f00;
 }
 
-a.button.negative, button.negative, ul.cal-events label[data-option=Declined] select {
+a.button.negative,
+button.negative,
+ul.cal-events label[data-option=Declined] select {
   background-color: red;
   color: white;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffcb91", endColorstr="#ff1a00",GradientType=0 );
@@ -2512,7 +2527,8 @@ button.pat-button[disabled=disabled], button.pat-button:disabled {
 .button-cluster.float-before {
   margin-right: 5px;
 }
-.button-cluster button, .button-cluster a.button {
+.button-cluster button,
+.button-cluster a.button {
   margin: 0;
   border-radius: 0;
   border-left-style: none;
@@ -3103,25 +3119,32 @@ textarea:focus {
   padding-right: 12px;
 }
 
-a.button.dropdown[class*=icon-]:after, button.dropdown[class*=icon-]:after {
+a.button.dropdown[class*=icon-]:after,
+button.dropdown[class*=icon-]:after {
   display: none;
 }
 
-a.button.tentative, button.tentative, ul.cal-events label[data-option=Tentative] select {
+a.button.tentative,
+button.tentative,
+ul.cal-events label[data-option=Tentative] select {
   background-color: #ff9300;
   color: white;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#c9de96", endColorstr="#398235",GradientType=0 );
   border: 1px solid #c46f00;
 }
 
-a.button.confirmative, button.confirmative, ul.cal-events label[data-option=Confirmed] select {
+a.button.confirmative,
+button.confirmative,
+ul.cal-events label[data-option=Confirmed] select {
   background-color: #5bb75b;
   color: white;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#c9de96", endColorstr="#398235",GradientType=0 );
   border: 1px solid #298f00;
 }
 
-a.button.negative, button.negative, ul.cal-events label[data-option=Declined] select {
+a.button.negative,
+button.negative,
+ul.cal-events label[data-option=Declined] select {
   background-color: red;
   color: white;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffcb91", endColorstr="#ff1a00",GradientType=0 );
@@ -3152,7 +3175,8 @@ button.pat-button[disabled=disabled], button.pat-button:disabled {
 .button-cluster.float-before {
   margin-right: 5px;
 }
-.button-cluster button, .button-cluster a.button {
+.button-cluster button,
+.button-cluster a.button {
   margin: 0;
   border-radius: 0;
   border-left-style: none;
@@ -3273,39 +3297,6 @@ button.pat-button[disabled=disabled], button.pat-button:disabled {
 fieldset.focus > .legend,
 label.focus {
   color: #0198e1;
-}
-
-:fullscreen {
-  background-color: transparent;
-}
-
-.pat-fullscreen {
-  cursor: pointer;
-}
-
-.pat-fullscreen-close-fullscreen {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  cursor: pointer;
-  background: transparent;
-  height: 3rem;
-  width: 3rem;
-  line-height: 3rem;
-  margin: 0;
-  padding: 0;
-  text-indent: -1000px;
-  overflow: hidden;
-  border: none;
-}
-.pat-fullscreen-close-fullscreen:before {
-  content: "󢀅";
-  text-indent: 0;
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 3rem;
-  font: normal 3rem fontello;
 }
 
 /*! PhotoSwipe main CSS by Dmitry Semenov | photoswipe.com | MIT license */
@@ -5355,25 +5346,32 @@ textarea:focus {
   padding-right: 12px;
 }
 
-a.button.dropdown[class*=icon-]:after, button.dropdown[class*=icon-]:after {
+a.button.dropdown[class*=icon-]:after,
+button.dropdown[class*=icon-]:after {
   display: none;
 }
 
-a.button.tentative, button.tentative, ul.cal-events label[data-option=Tentative] select {
+a.button.tentative,
+button.tentative,
+ul.cal-events label[data-option=Tentative] select {
   background-color: #ff9300;
   color: white;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#c9de96", endColorstr="#398235",GradientType=0 );
   border: 1px solid #c46f00;
 }
 
-a.button.confirmative, button.confirmative, ul.cal-events label[data-option=Confirmed] select {
+a.button.confirmative,
+button.confirmative,
+ul.cal-events label[data-option=Confirmed] select {
   background-color: #5bb75b;
   color: white;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#c9de96", endColorstr="#398235",GradientType=0 );
   border: 1px solid #298f00;
 }
 
-a.button.negative, button.negative, ul.cal-events label[data-option=Declined] select {
+a.button.negative,
+button.negative,
+ul.cal-events label[data-option=Declined] select {
   background-color: red;
   color: white;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffcb91", endColorstr="#ff1a00",GradientType=0 );
@@ -5404,7 +5402,8 @@ button.pat-button[disabled=disabled], button.pat-button:disabled {
 .button-cluster.float-before {
   margin-right: 5px;
 }
-.button-cluster button, .button-cluster a.button {
+.button-cluster button,
+.button-cluster a.button {
   margin: 0;
   border-radius: 0;
   border-left-style: none;
