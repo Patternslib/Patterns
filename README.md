@@ -39,6 +39,27 @@ which contains Patterns and all its dependencies:
 
 Alternatively, you can [download a bundle at patternslib.com](http://patternslib.com/download.html).
 
+
+## Overriding the path where JavaScript and other assets are loaded
+
+The bundle itself is included via a ``<script>`` tag.
+But the bundle loads also other assets dynamically - most importantly other JavaScript files from a webpack-built directory called ``chunks``.
+By default the path where these files are loaded is the absolute path ``/dist/``.
+You might want to override this path for your application.
+There are two ways to do this:
+
+1) Similar to ``src/patterns.js`` you can import on top of all other imports another file like ``src/public_path.js`` and define the public path for webpack like so:
+```
+__webpack_public_path__ = "/my-other-dist-directory";
+```
+
+2) You can dynamically set the public path from your web framework and include a ``<script>`` tag in your header BEFORE you load the bundle like so:
+
+```
+<script>window.__patternslib_public_path__ = "/my-other-dist-directory/";</script>
+```
+
+
 ## Layout
 
 The individual patterns are located in their own folders in `./src/pat/`.
