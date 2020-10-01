@@ -9,7 +9,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 
 module.exports = (env) => {
-    return {
+    const config = {
         entry: {
             "bundle": path.resolve(__dirname, "../src/patterns.js"),
             "bundle-polyfills": path.resolve(__dirname, "../src/polyfills.js"),
@@ -22,8 +22,10 @@ module.exports = (env) => {
         output: {
             filename: "[name].js",
             chunkFilename: "chunks/[name].[contenthash].js",
-            publicPath: "/dist",
-            path: path.resolve(__dirname, "../dist"),
+            path: path.resolve(__dirname, "../dist/"),
+            // publicPath set in bundle entry points via __webpack_public_path__
+            // See: https://webpack.js.org/guides/public-path/
+            // publicPath: "/dist/",
         },
         optimization: {
             minimize: true,
@@ -101,4 +103,10 @@ module.exports = (env) => {
             }),
         ],
     };
+    if (env.NODE_ENV === "development") {
+        // Set public path to override __webpack_public_path__
+        // for webpack-dev-server
+        config.output.publicPath = "/dist/";
+    }
+    return config;
 };
