@@ -3,6 +3,7 @@
  */
 
 // Import base
+import "./public_path"; // first import
 import registry from "./core/registry";
 import jquery from "jquery";
 
