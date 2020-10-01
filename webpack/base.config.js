@@ -9,8 +9,6 @@ const TerserPlugin = require("terser-webpack-plugin");
 const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 
 module.exports = (env) => {
-    console.log(env.NODE_ENV);
-
     return {
         entry: {
             "bundle": path.resolve(__dirname, "../src/patterns.js"),
