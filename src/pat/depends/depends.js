@@ -1,10 +1,3 @@
-/**
- * Patterns depends - show/hide/disable content based on form status
- *
- * Copyright 2012-2013 Florian Friesdorf
- * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
- */
-
 import $ from "jquery";
 import Base from "../../core/base";
 import utils from "../../core/utils";
@@ -14,8 +7,8 @@ import Parser from "../../core/parser";
 // Lazy loading modules.
 let DependsHandler;
 
-var log = logging.getLogger("depends"),
-    parser = new Parser("depends");
+const log = logging.getLogger("depends");
+const parser = new Parser("depends");
 
 parser.addArgument("condition");
 parser.addArgument("action", "show", ["show", "enable", "both"]);
@@ -28,30 +21,23 @@ export default Base.extend({
     trigger: ".pat-depends",
     jquery_plugin: true,
 
-    transitions: {
-        none: { hide: "hide", show: "show" },
-        fade: { hide: "fadeOut", show: "fadeIn" },
-        slide: { hide: "slideUp", show: "slideDown" },
-    },
-
     async init($el, opts) {
-        const depdendent = this.$el[0];
-        const options = parser.parse(this.$el, opts);
-        let handler;
-        let state;
-        this.$modal = this.$el.parents(".pat-modal");
-
         DependsHandler = await import("../../lib/dependshandler");
         DependsHandler = DependsHandler.default;
 
+        const dependent = this.$el[0];
+        const options = parser.parse(this.$el, opts);
+        this.$modal = this.$el.parents(".pat-modal");
+
+        let handler;
         try {
             handler = new DependsHandler(this.$el, options.condition);
         } catch (e) {
-            log.error("Invalid condition: " + e.message, depdendent);
+            log.error("Invalid condition: " + e.message, dependent);
             return;
         }
 
-        state = handler.evaluate();
+        let state = handler.evaluate();
         switch (options.action) {
             case "show":
                 utils.hideOrShow($el, state, options, this.name);
@@ -74,22 +60,22 @@ export default Base.extend({
                 break;
         }
 
-        var data = {
+        const data = {
             handler: handler,
             options: options,
-            depdendent: depdendent,
+            dependent: dependent,
         };
 
         for (let input of handler.getAllInputs()) {
             if (input.form) {
-                var $form = $(input.form);
-                var depdendents = $form.data("patDepends.depdendents");
-                if (!depdendents) {
-                    depdendents = [data];
-                    $form.on("reset.pat-depends", this.onReset.bind(this));
-                } else if (depdendents.indexOf(data) === -1)
-                    depdendents.push(data);
-                $form.data("patDepends.depdendents", depdendents);
+                let $form = $(input.form);
+                let dependents = $form.data("patDepends.dependents");
+                if (!dependents) {
+                    dependents = [data];
+                    $form.on("reset.pat-depends", () => this.onReset);
+                } else if (dependents.indexOf(data) === -1)
+                    dependents.push(data);
+                $form.data("patDepends.dependents", dependents);
             }
             $(input).on(
                 "change.pat-depends",
@@ -106,19 +92,17 @@ export default Base.extend({
         }
     },
 
-    onReset(event) {
-        const depdendents = $(event.target).data("patDepends.depdendents");
-        setTimeout(() => {
-            for (let depdendent of depdendents) {
-                event.data = depdendent;
-                this.onChange(event);
-            }
-        }, 50);
+    async onReset(event) {
+        const dependents = $(event.target).data("patDepends.dependents");
+        await utils.timeout(50);
+        for (let dependent of dependents) {
+            event.data = dependent;
+            this.onChange(event);
+        }
     },
 
     updateModal() {
-        /* If we're in a modal, make sure that it gets resized.
-         */
+        // If we're in a modal, make sure that it gets resized.
         if (this.$modal.length) {
             $(document).trigger("pat-update", { pattern: "depends" });
         }
@@ -159,11 +143,11 @@ export default Base.extend({
     },
 
     onChange(event) {
-        var handler = event.data.handler,
-            options = event.data.options,
-            depdendent = event.data.depdendent,
-            $depdendent = $(depdendent),
-            state = handler.evaluate();
+        const handler = event.data.handler;
+        const options = event.data.options;
+        const dependent = event.data.dependent;
+        const $depdendent = $(dependent);
+        const state = handler.evaluate();
 
         switch (options.action) {
             case "show":
@@ -171,19 +155,21 @@ export default Base.extend({
                 this.updateModal();
                 break;
             case "enable":
-                if (state) this.enable();
-                else this.disable();
+                if (state) {
+                    this.enable();
+                } else {
+                    this.disable();
+                }
                 break;
             case "both":
                 utils.hideOrShow($depdendent, state, options, this.name);
                 this.updateModal();
-                if (state) this.enable();
-                else this.disable();
+                if (state) {
+                    this.enable();
+                } else {
+                    this.disable();
+                }
                 break;
         }
-    },
-
-    blockDefault(event) {
-        event.preventDefault();
     },
 });
