@@ -124,7 +124,6 @@ export default Base.extend({
     },
 
     onInitialized: function (event, slider) {
-        debugger;
         this._loadPanelImages(slider, slider.options.startPanel);
         this._loadPanelImages(slider, slider.options.startPanel + 1);
         this._loadPanelImages(slider, 0);
@@ -132,7 +131,6 @@ export default Base.extend({
     },
 
     onSlideInit: function (event, slider) {
-        debugger;
         this._loadPanelImages(slider, slider.targetPage);
     },
 
