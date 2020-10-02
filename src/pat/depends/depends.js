@@ -125,9 +125,12 @@ export default Base.extend({
     },
 
     enable() {
-        if (this.$el.is(":input")) this.$el[0].disabled = null;
-        else if (this.$el.is("a")) this.$el.off("click.patternDepends");
-        else if (this.$el.hasClass("pat-autosuggest")) {
+        if (this.$el.is(":input")) {
+            this.$el[0].disabled = null;
+        } else if (this.$el.is("a")) {
+            this.$el.off("click.patternDepends");
+        }
+        if (this.$el.hasClass("pat-autosuggest")) {
             this.$el
                 .findInclusive("input.pat-autosuggest")
                 .trigger("pat-update", {
@@ -139,10 +142,12 @@ export default Base.extend({
     },
 
     disable() {
-        if (this.$el.is(":input")) this.$el[0].disabled = "disabled";
-        else if (this.$el.is("a"))
-            this.$el.on("click.patternDepends", this.blockDefault);
-        else if (this.$el.hasClass("pat-autosuggest")) {
+        if (this.$el.is(":input")) {
+            this.$el[0].disabled = "disabled";
+        } else if (this.$el.is("a")) {
+            this.$el.on("click.patternDepends", (e) => e.preventDefault());
+        }
+        if (this.$el.hasClass("pat-autosuggest")) {
             this.$el
                 .findInclusive("input.pat-autosuggest")
                 .trigger("pat-update", {

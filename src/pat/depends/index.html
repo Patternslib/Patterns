@@ -11,6 +11,7 @@
         ></script>
     </head>
     <body>
+      <div id="pat-depends-demo">
         <form action="#">
             <fieldset class="pat-button-bar">
                 <button type="reset" class="pat-button">Reset</button>
@@ -19,6 +20,10 @@
                 <fieldset class="group pat-checklist radio">
                     <legend>Flavour</legend>
 
+                    <label
+                        ><input type="radio" name="flavour" value="margherita" />
+                        Margherita</label
+                    >
                     <label
                         ><input type="radio" name="flavour" value="hawaii" />
                         Hawaii</label
@@ -31,6 +36,20 @@
                         ><input type="radio" name="flavour" value="sea" />
                         Fruits de mer</label
                     >
+                </fieldset>
+
+                <fieldset
+                    class="pat-depends group"
+                    data-pat-depends="condition:flavour=hawaii; transition: slide"
+                >
+                    <legend>Select the type of ananas</legend>
+                    <input
+                        class="pat-autosuggest"
+                        placeholder="Choose a type of ananas"
+                        data-pat-autosuggest="words: Smooth Cayenne, Kew, Natal Queen, Singapore Spanish, Paulista, Perolera;
+                                              allow-new-words: false; max-selection-size: 1;"
+                        type="text"
+                    />
                 </fieldset>
 
                 <fieldset class="group pat-checklist">
@@ -77,5 +96,10 @@
         >
             Bad, but <em>extremely</em> tasty!
         </p>
+      </div>
+
+      <h2>Open a form in a modal</h2>
+      <a href="./index.html#pat-depends-demo" class="pat-modal">Open form</a>.
+
     </body>
 </html>
