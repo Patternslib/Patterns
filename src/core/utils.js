@@ -278,22 +278,21 @@ function hasValue(el) {
     return false;
 }
 
-var transitions = {
+const transitions = {
     none: { hide: "hide", show: "show" },
     fade: { hide: "fadeOut", show: "fadeIn" },
     slide: { hide: "slideUp", show: "slideDown" },
 };
 
-function hideOrShow($slave, visible, options, pattern_name) {
-    var duration =
+function hideOrShow($el, visible, options, pattern_name) {
+    const duration =
         options.transition === "css" || options.transition === "none"
             ? null
             : options.effect.duration;
 
-    $slave.removeClass("visible hidden in-progress");
-    var onComplete = function () {
-        $slave
-            .removeClass("in-progress")
+    $el.removeClass("visible hidden in-progress");
+    const onComplete = function () {
+        $el.removeClass("in-progress")
             .addClass(visible ? "visible" : "hidden")
             .trigger("pat-update", {
                 pattern: pattern_name,
@@ -301,15 +300,17 @@ function hideOrShow($slave, visible, options, pattern_name) {
             });
     };
     if (!duration) {
-        if (options.transition !== "css") $slave[visible ? "show" : "hide"]();
+        if (options.transition !== "css") {
+            $el[visible ? "show" : "hide"]();
+        }
         onComplete();
     } else {
-        var t = transitions[options.transition];
-        $slave.addClass("in-progress").trigger("pat-update", {
+        const t = transitions[options.transition];
+        $el.addClass("in-progress").trigger("pat-update", {
             pattern: pattern_name,
             transition: "start",
         });
-        $slave[visible ? t.show : t.hide]({
+        $el[visible ? t.show : t.hide]({
             duration: duration,
             easing: options.effect.easing,
             complete: onComplete,
