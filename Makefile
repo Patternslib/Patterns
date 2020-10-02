@@ -1,7 +1,7 @@
 ESLINT 		?= node_modules/.bin/eslint
 PEGJS		?= node_modules/.bin/pegjs
 SASS		?= node_modules/.bin/sass
-YARN 		?= node_modules/.bin/yarn
+YARN 		?= yarn
 
 SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/lib/*.js)
 GENERATED	= src/lib/depends_parse.js
@@ -13,7 +13,6 @@ all:: bundle css
 ## Install dependencies
 
 stamp-yarn:
-	npm install --no-package-lock --no-save yarn
 	$(YARN) install
 	touch stamp-yarn
 

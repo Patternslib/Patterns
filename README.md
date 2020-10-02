@@ -20,16 +20,22 @@ Currently that means:
 
 Other browser version may work too, but are not actively tested against.
 
+## Installation requirements
+
+Make sure, you have these requirements installed:
+
+    - Node.js ( https://nodejs.org/en/ )
+    - yarn ( https://yarnpkg.com/ )
+
+
 ## Installation
 
-You need to be on a recent node version and have yarn installed.
+The following commands will generate a `bundle.js` file in the `dist` directory
+which contains Patterns and all its dependencies:
 
     git clone git://github.com/Patternslib/Patterns.git
     cd Patterns
     make
-
-This will generate a `bundle.js` file which contains Patterns and all its
-dependencies.
 
 Alternatively, you can [download a bundle at patternslib.com](http://patternslib.com/download.html).
 
