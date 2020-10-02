@@ -47,6 +47,11 @@
 -   Build infrastructure: Build into /dist and cleanup before building.
 -   utils: Add `isIE` method to detect Internet Explorer browsers.
 
+### Fixes
+
+-   pat calendar: Fix language loading error "Error: Cannot find module './en.js'"
+-   pat depends, pat auto suggest: Fix a problem with initialization of ``pat-auto-suggest`` which occurred after the lazy loading changes.
+
 
 ## 3.0.0-dev - unreleased
 
