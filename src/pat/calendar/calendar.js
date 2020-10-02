@@ -87,11 +87,17 @@ var calendar = {
         var lang = document
             .getElementsByTagName("html")[0]
             .getAttribute("lang");
-        if (lang && lang != "en" && lang != null) {
+        if (lang) {
             // we don't support any country-specific language variants, always use first 2 letters
             lang = lang.substr(0, 2).toLowerCase();
-            await import(`fullcalendar/dist/lang/${lang}.js`);
-            console.log("loaded cal locale for " + lang);
+            if (lang !== "en") {
+                try {
+                    await import(`fullcalendar/dist/lang/${lang}.js`);
+                    console.log("loaded cal locale for " + lang);
+                } catch {
+                    // ignore. default is english.
+                }
+            }
         }
 
         opts = opts || {};
