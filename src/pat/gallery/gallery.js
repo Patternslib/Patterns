@@ -5,7 +5,11 @@
  */
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
-import _ from "underscore";
+import {
+    indexOf as _indexOf,
+    pluck as _pluck,
+    template as _template,
+} from "underscore";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 
@@ -36,7 +40,7 @@ export default Base.extend({
         if ($("#photoswipe-template").length === 0) {
             Template = await import("./template.html");
             Template = Template.default;
-            $("body").append(_.template(Template)());
+            $("body").append(_template(Template)());
         }
 
         // Search for itemSelector including the current node
@@ -76,7 +80,7 @@ export default Base.extend({
 
             // Get the index of the clicked gallery item in the list of images.
             options.index =
-                _.indexOf(_.pluck(images, "src"), this.href || this.src) || 0;
+                _indexOf(_pluck(images, "src"), this.href || this.src) || 0;
             // Fix reload on gallery close which was induced by a history back call.
             options.history = false;
 

@@ -1,6 +1,11 @@
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
-import _ from "underscore";
+import {
+    chain as _chain,
+    each as _each,
+    partial as _partial,
+    property as _property,
+} from "underscore";
 import ajax from "../ajax/ajax";
 import Parser from "../../core/parser";
 import logging from "../../core/logging";
@@ -325,7 +330,7 @@ const inject = {
         var should_confirm = false,
             message;
 
-        _.each(cfgs, function (cfg) {
+        _each(cfgs, function (cfg) {
             var _confirm = false;
             if (cfg.confirm == "always") {
                 _confirm = true;
@@ -407,7 +412,7 @@ const inject = {
          * Verification for each cfg in the array needs to succeed.
          */
         return cfgs.every(
-            _.partial(inject.verifySingleConfig, $el, cfgs[0].url)
+            _partial(inject.verifySingleConfig, $el, cfgs[0].url)
         );
     },
 
@@ -774,15 +779,15 @@ const inject = {
         }
         $el.data("pat-inject-triggered", true);
         // possibility for spinners on targets
-        _.chain(cfgs)
-            .filter(_.property("loadingClass"))
+        _chain(cfgs)
+            .filter(_property("loadingClass"))
             .each(function (cfg) {
                 if (cfg.target != "none")
                     cfg.$target.addClass(cfg.loadingClass);
             });
         // Put the execute class on the elem that has pat inject on it
-        _.chain(cfgs)
-            .filter(_.property("loadingClass"))
+        _chain(cfgs)
+            .filter(_property("loadingClass"))
             .each(function (cfg) {
                 $el.addClass(cfg.executingClass);
             });

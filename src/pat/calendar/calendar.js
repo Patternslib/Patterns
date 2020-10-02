@@ -7,12 +7,12 @@
  */
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
+import { uniq as _uniq } from "underscore";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import store from "../../core/store";
 import utils from "../../core/utils";
 import registry from "../../core/registry";
-import _ from "underscore";
 
 // Lazy loading modules.
 let MomentTZData;
@@ -223,7 +223,7 @@ var calendar = {
         };
 
         $el.categories = $(
-            _.uniq(
+            _uniq(
                 $el.find(".cal-events .cal-event").map(function () {
                     return this.className.split(" ").filter(function (cls) {
                         return /^cal-cat/.test(cls);

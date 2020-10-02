@@ -6,7 +6,13 @@
  */
 
 import $ from "jquery";
-import _ from "underscore";
+import {
+    chain as _chain,
+    compose as _compose,
+    each as _each,
+    map as _map,
+    partial as _partial,
+} from "underscore";
 import utils from "./utils.js";
 import logging from "./logging";
 
@@ -275,7 +281,7 @@ ArgumentParser.prototype = {
             .map(function (el) {
                 return el.replace(new RegExp("\0x1f", "g"), ";");
             });
-        _.each(
+        _each(
             parts,
             function (part) {
                 if (!part) {
@@ -290,7 +296,7 @@ ArgumentParser.prototype = {
                 }
                 var name = matches[1],
                     value = matches[2].trim(),
-                    arg = _.chain(this.parameters)
+                    arg = _chain(this.parameters)
                         .where({ alias: name })
                         .value(),
                     is_alias = arg.length === 1;
@@ -475,7 +481,7 @@ ArgumentParser.prototype = {
                 .addBack();
         }
 
-        _.each(
+        _each(
             $possible_config_providers,
             function (provider) {
                 var data, frame, _parse;
@@ -501,10 +507,10 @@ ArgumentParser.prototype = {
         if (!multiple) {
             final_length = 1;
         }
-        var results = _.map(
-            _.compose(
+        var results = _map(
+            _compose(
                 utils.removeDuplicateObjects,
-                _.partial(utils.mergeStack, _, final_length)
+                _partial(utils.mergeStack, _, final_length)
             )(stack),
             this._cleanupOptions.bind(this)
         );

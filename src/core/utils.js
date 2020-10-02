@@ -1,5 +1,11 @@
 import $ from "jquery";
-import _ from "underscore";
+import {
+    chains as _chain,
+    each as _each,
+    every as _every,
+    keys as _keys,
+    reduce as _reduce,
+} from "underscore";
 
 $.fn.safeClone = function () {
     var $clone = this.clone();
@@ -357,14 +363,14 @@ function removeDuplicateObjects(objs) {
     var comparator = function (v, k) {
         return this[k] === v;
     };
-    return _.reduce(
+    return _reduce(
         objs,
         function (list, next_obj) {
             var is_duplicate = false;
-            _.each(list, function (obj) {
+            _each(list, function (obj) {
                 is_duplicate =
-                    _.keys(obj).length === _.keys(next_obj).length &&
-                    !_.chain(obj).omit(comparator.bind(next_obj)).keys().value()
+                    _keys(obj).length === _keys(next_obj).length &&
+                    !_chain(obj).omit(comparator.bind(next_obj)).keys().value()
                         .length;
             });
             if (!is_duplicate) {
@@ -388,7 +394,7 @@ function mergeStack(stack, length) {
     for (var i = 0; i < length; i++) {
         results.push({});
     }
-    _.each(stack, function (frame) {
+    _each(stack, function (frame) {
         var frame_length = frame.length - 1;
         for (var x = 0; x < length; x++) {
             results[x] = $.extend(
@@ -418,7 +424,7 @@ function isElementInViewport(el, partial, offset) {
     var rec = el.getBoundingClientRect(),
         rec_values = [rec.top, rec.bottom, rec.left, rec.right];
     if (
-        _.every(rec_values, function zero(v) {
+        _every(rec_values, function zero(v) {
             if (v === 0) {
                 return true;
             }

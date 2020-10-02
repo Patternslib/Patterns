@@ -8,7 +8,7 @@
 import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
-import _ from "underscore";
+import { debounce as _debounce } from "underscore";
 import utils from "../../core/utils";
 
 const parser = new Parser("auto-scale");
@@ -38,7 +38,7 @@ export default Base.extend({
             // See https://bugzilla.mozilla.org/show_bug.cgi?id=390936
             this.force_method = "scale";
         }
-        var scaler = _.debounce(this.scale.bind(this), 250);
+        var scaler = _debounce(this.scale.bind(this), 250);
         $(window).on("resize.autoscale", scaler);
         $(document).on("pat-update.autoscale", scaler);
         return this;

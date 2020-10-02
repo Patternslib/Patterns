@@ -17,7 +17,11 @@
  * - set pattern.jquery_plugin if you want it
  */
 import $ from "jquery";
-import _ from "underscore";
+import {
+    contains as _contains,
+    each as _each,
+    partial as _partial,
+} from "underscore";
 import logging from "./logging";
 import utils from "./utils";
 
@@ -116,8 +120,8 @@ var registry = {
         // the best solution. Perhaps some kind of way to register
         // patterns "before" or "after" other patterns.
         if (
-            _.contains(patterns, "validation") &&
-            _.contains(patterns, "inject")
+            _contains(patterns, "validation") &&
+            _contains(patterns, "inject")
         ) {
             patterns.splice(patterns.indexOf("validation"), 1);
             patterns.unshift("validation");
@@ -131,8 +135,8 @@ var registry = {
         patterns = this.orderPatterns(
             patterns || Object.keys(registry.patterns)
         );
-        patterns.forEach(_.partial(this.transformPattern, _, content));
-        patterns = _.each(patterns, function (name) {
+        patterns.forEach(_partial(this.transformPattern, _, content));
+        patterns = _each(patterns, function (name) {
             var pattern = registry.patterns[name];
             if (pattern.trigger) {
                 selectors.unshift(pattern.trigger);
@@ -148,7 +152,7 @@ var registry = {
         // walk list backwards and initialize patterns inside-out.
         $match.toArray().reduceRight(
             function registryInitPattern(acc, el) {
-                patterns.forEach(_.partial(this.initPattern, _, el, trigger));
+                patterns.forEach(_partial(this.initPattern, _, el, trigger));
             }.bind(this),
             null
         );

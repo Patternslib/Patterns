@@ -2,7 +2,7 @@
  * Copyright 2015 Syslab.com GmbH - witekdev
  */
 import $ from "jquery";
-import _ from "underscore";
+import { debounce as _debounce, reduce as _reduce } from "underscore";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 
@@ -15,7 +15,7 @@ export default Base.extend({
 
     init: function ($el, opts) {
         this.options = parser.parse(this.$el, opts); // redundant - at the moment we have no parameter options
-        $(window).resize(_.debounce(this.adjustTabs.bind(this), 100));
+        $(window).resize(_debounce(this.adjustTabs.bind(this), 100));
         $("body").on("pat-update", this.filterByPatternsUpdate.bind(this));
         this.adjustTabs();
     },
@@ -55,7 +55,7 @@ export default Base.extend({
             $children = this.$el.children();
 
             // precalculate the collective size of all the tabs
-            total_width = _.reduce(
+            total_width = _reduce(
                 $children,
                 function (value, el) {
                     return value + $(el).outerWidth(true);

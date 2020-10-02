@@ -1,5 +1,5 @@
 import $ from "jquery";
-import _ from "underscore";
+import { keys as _keys } from "underscore";
 import utils from "../../core/utils";
 
 var pluggable = {
@@ -13,7 +13,7 @@ var pluggable = {
 
     initializePlugins: function () {
         var i,
-            keys = _.keys(this.plugins);
+            keys = _keys(this.plugins);
         var args = arguments;
         for (i = 0; i < keys.length; i++) {
             $.proxy(this.plugins[keys[i]], this).apply(this, args);

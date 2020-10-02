@@ -1,9 +1,9 @@
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
+import { debounce as _debounce } from "underscore";
 import Base from "../../core/base";
-import utils from "../../core/utils";
 import Parser from "../../core/parser";
-import _ from "underscore";
+import utils from "../../core/utils";
 
 // Lazy loading modules.
 let ImagesLoaded;
@@ -38,7 +38,7 @@ export default Base.extend({
         this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
         this.markBasedOnFragment();
         this.on("hashchange", this.clearIfHidden.bind(this));
-        $(window).scroll(_.debounce(this.markIfVisible.bind(this), 50));
+        $(window).scroll(_debounce(this.markIfVisible.bind(this), 50));
     },
 
     onClick: function () {

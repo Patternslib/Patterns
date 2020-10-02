@@ -6,7 +6,12 @@
  */
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
-import _ from "underscore";
+import {
+    contains as _contains,
+    each as _each,
+    partial as _partial,
+    pick as _pick,
+} from "underscore";
 import Parser from "../../core/parser";
 import Base from "../../core/base";
 import utils from "../../core/utils";
@@ -65,21 +70,13 @@ export default Base.extend({
         this.$inputs = this.$el.find(
             "input[name], select[name], textarea[name]"
         );
-        this.$el.find("input[type=number]").on(
-            "keyup mouseup",
-            _.debounce(
-                function (ev) {
-                    this.validateElement(ev.target);
-                }.bind(this),
-                500
-            )
-        );
-        this.$inputs.on(
-            "change.pat-validation",
-            function (ev) {
-                this.validateElement(ev.target);
-            }.bind(this)
-        );
+        this.$el.find("input[type=number]").on("keyup mouseup", async (ev) => {
+            await utils.timeout(500);
+            this.validateElement(ev.target);
+        });
+        this.$inputs.on("change.pat-validation", (ev) => {
+            this.validateElement(ev.target);
+        });
         // formaction causes form validation to be skipped, so validate on
         // submit button click instead.
         this.$el
@@ -124,7 +121,7 @@ export default Base.extend({
     getFieldType: function (input) {
         var opts = parser.parse($(input));
         var type = input.getAttribute("type");
-        if (_.contains(["datetime", "date"], opts.type)) {
+        if (_contains(["datetime", "date"], opts.type)) {
             type = opts.type;
         }
         if (type === "datetime-local") {
@@ -144,7 +141,7 @@ export default Base.extend({
             return constraints;
         }
 
-        _.each(["before", "after"], function (relation) {
+        _each(["before", "after"], function (relation) {
             var relative = opts.not ? opts.not[relation] : undefined;
             var $ref;
             if (typeof relative === "undefined") {
@@ -161,7 +158,7 @@ export default Base.extend({
                     console.log(e);
                 }
                 var arr = $ref.data("pat-validation-refs") || [];
-                if (!_.contains(arr, input)) {
+                if (!_contains(arr, input)) {
                     arr.unshift(input);
                     $ref.data("pat-validation-refs", arr);
                 }
@@ -184,14 +181,14 @@ export default Base.extend({
             type = this.getFieldType(input),
             opts = parser.parse($(input)),
             constraint = constraints[name];
-        if (_.contains(["datetime", "date"], type)) {
+        if (_contains(["datetime", "date"], type)) {
             constraints = this.setLocalDateConstraints(
                 input,
                 opts,
                 constraints
             );
         } else if (type == "number") {
-            _.each(["min", "max"], function (limit) {
+            _each(["min", "max"], function (limit) {
                 // TODO: need to figure out how to add local validation
                 // messages for numericality operators
                 if (input.getAttribute(limit)) {
@@ -230,7 +227,7 @@ export default Base.extend({
         }
 
         // Set local validation messages.
-        _.each(Object.keys(VALIDATION_TYPE_MAP), function (type) {
+        _each(Object.keys(VALIDATION_TYPE_MAP), function (type) {
             var c = constraints[name][VALIDATION_TYPE_MAP[type]];
             if (c === false) {
                 c = { message: "^" + opts.message[type] };
@@ -383,13 +380,13 @@ export default Base.extend({
         /* Handler which gets called for :checkbox and :radio elments. */
         var input = this.$el.find('[name="' + name + '"]')[0];
         var error = Validate(
-            _.pick(Validate.collectFormValues(this.$el), name),
+            _pick(Validate.collectFormValues(this.$el), name),
             this.getConstraints(input)
         );
         if (!error) {
             this.removeError(input);
         } else {
-            _.each(
+            _each(
                 error[name.replace(/\./g, "\\.")],
                 function (msg) {
                     this.showError(this.customizeMessage(msg, input), input);
@@ -415,7 +412,7 @@ export default Base.extend({
             this.removeError(input);
         } else {
             var name = input.getAttribute("name").replace(/\./g, "\\.");
-            _.each(
+            _each(
                 error[name],
                 function (msg) {
                     this.showError(this.customizeMessage(msg, input), input);
@@ -423,9 +420,9 @@ export default Base.extend({
             );
         }
         if (!no_recurse) {
-            _.each(
+            _each(
                 $(input).data("pat-validation-refs") || [],
-                _.partial(this.validateElement.bind(this), _, true)
+                _partial(this.validateElement.bind(this), _, true)
             );
         }
         return error;

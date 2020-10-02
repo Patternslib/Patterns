@@ -7,7 +7,7 @@
  */
 
 import $ from "jquery";
-import _ from "underscore";
+import { contains as _contains } from "underscore";
 import Parser from "../../core/parser";
 import Base from "../../core/base";
 import utils from "../../core/utils";
@@ -54,13 +54,13 @@ export default Base.extend({
         var $parent = this.$el.parent(),
             overflow;
         while (!$parent.is($(document.body)) && $parent.length) {
-            if (_.contains(["all", "top", "bottom"], this.options.side)) {
+            if (_contains(["all", "top", "bottom"], this.options.side)) {
                 overflow = $parent.css("overflow-y");
                 if (overflow === "auto" || overflow === "scroll") {
                     return $parent;
                 }
             }
-            if (_.contains(["all", "left", "right"], this.options.side)) {
+            if (_contains(["all", "left", "right"], this.options.side)) {
                 overflow = $parent.css("overflow-x");
                 if (overflow === "auto" || overflow === "scroll") {
                     return $parent;
