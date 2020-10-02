@@ -1,18 +1,11 @@
-/**
- * Patterns autosuggest - suggestion/completion support
- *
- * Copyright 2012-2013 Florian Friesdorf
- * Copyright 2012 JC Brand
- * Copyright 2013 Marko Durkovic
- */
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
+import Base from "../../core/base";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
-import registry from "../../core/registry";
 
-var log = logging.getLogger("autosuggest");
-var parser = new Parser("autosuggest");
+const log = logging.getLogger("autosuggest");
+const parser = new Parser("autosuggest");
 parser.addArgument("ajax-data-type", "JSON");
 parser.addArgument("ajax-search-index", "");
 parser.addArgument("ajax-url", "");
@@ -41,40 +34,36 @@ parser.addAlias("maximum-selection-size", "max-selection-size");
 parser.addAlias("data", "prefill-json");
 parser.addAlias("pre-fill", "prefill");
 
-var _ = {
+export default Base.extend({
     name: "autosuggest",
     trigger: ".pat-autosuggest,.pat-auto-suggest",
+
     async init($el, opts) {
         await import("select2");
 
-        if ($el.length > 1) {
-            return $el.each(function () {
-                _.init($(this), opts);
-            });
-        }
-        var pat_config = parser.parse($el, opts);
-        var config = {
+        this.options = parser.parse($el, opts);
+        this.select2_options = {
             tokenSeparators: [","],
             openOnEnter: false,
-            maximumSelectionSize: pat_config.maxSelectionSize,
-            minimumInputLength: pat_config.minimumInputLength,
+            maximumSelectionSize: this.options.maxSelectionSize,
+            minimumInputLength: this.options.minimumInputLength,
             allowClear:
-                pat_config.maxSelectionSize === 1 && !$el.prop("required"),
+                this.options.maxSelectionSize === 1 && !$el.prop("required"),
         };
         if ($el.attr("readonly")) {
-            config.placeholder = "";
-        } else if (pat_config.placeholder) {
-            config.placeholder = pat_config.placeholder;
+            this.select2_options.placeholder = "";
+        } else if (this.options.placeholder) {
+            this.select2_options.placeholder = this.options.placeholder;
         }
 
-        if (pat_config.selectionClasses) {
+        if (this.options.selectionClasses) {
             // We need to customize the formatting/markup of the selection
-            config.formatSelection = function (obj, container) {
-                var selectionClasses = null;
+            this.select2_options.formatSelection = (obj, container) => {
+                let selectionClasses = null;
                 try {
-                    selectionClasses = JSON.parse(pat_config.selectionClasses)[
-                        obj.text
-                    ];
+                    selectionClasses = JSON.parse(
+                        this.options.selectionClasses
+                    )[obj.text];
                 } catch (SyntaxError) {
                     log.error(
                         "SyntaxError: non-JSON data given to pat-autosuggest (selection-classes)"
@@ -90,10 +79,13 @@ var _ = {
         }
 
         if ($el[0].tagName === "INPUT") {
-            config = this.configureInput($el, pat_config, config);
+            this.select2_options = this.configureInput(
+                $el,
+                this.select2_options
+            );
         }
-        $el.select2(config);
-        $el.on("pat-update", function (e, data) {
+        $el.select2(this.select2_options);
+        $el.on("pat-update", (e, data) => {
             if (data.pattern === "depends") {
                 if (data.enabled === true) {
                     $el.select2("enable", true);
@@ -104,35 +96,26 @@ var _ = {
         });
 
         // suppress propagation for second input field
-        $el.prev().on(
-            "input-change input-defocus input-change-delayed",
-            function (e) {
-                e.stopPropagation();
-            }
+        $el.prev().on("input-change input-defocus input-change-delayed", (e) =>
+            e.stopPropagation()
         );
 
         // Clear the values when a reset button is pressed
         $el.closest("form")
             .find("button[type=reset]")
-            .on("click", function () {
-                $el.select2("val", "");
-            });
+            .on("click", () => $el.select2("val", ""));
         return $el;
     },
 
-    configureInput: function ($el, pat_config, select2_config) {
-        var d,
-            data,
-            words = [],
-            ids = [],
-            prefill;
+    configureInput($el, select2_config) {
+        let words = [];
 
-        select2_config.createSearchChoice = function (term, data) {
-            if (pat_config.allowNewWords) {
+        select2_config.createSearchChoice = (term, data) => {
+            if (this.options.allowNewWords) {
                 if (
-                    $(data).filter(function () {
-                        return this.text.localeCompare(term) === 0;
-                    }).length === 0
+                    $(data).filter(
+                        (idx, el) => el.text.localeCompare(term) === 0
+                    ).length === 0
                 ) {
                     return { id: term, text: term };
                 }
@@ -141,9 +124,9 @@ var _ = {
             }
         };
 
-        if (pat_config.wordsJson && pat_config.wordsJson.length) {
+        if (this.options.wordsJson && this.options.wordsJson.length) {
             try {
-                words = JSON.parse(pat_config.wordsJson);
+                words = JSON.parse(this.options.wordsJson);
             } catch (SyntaxError) {
                 words = [];
                 log.error(
@@ -151,14 +134,14 @@ var _ = {
                 );
             }
             if (!Array.isArray(words)) {
-                words = $.map(words, function (v, k) {
+                words = $.map(words, (v, k) => {
                     return { id: k, text: v };
                 });
             }
         }
-        if (pat_config.words) {
-            words = pat_config.words.split(/\s*,\s*/);
-            words = $.map(words, function (v) {
+        if (this.options.words) {
+            words = this.options.words.split(/\s*,\s*/);
+            words = $.map(words, (v) => {
                 return { id: v, text: v };
             });
         }
@@ -168,7 +151,7 @@ var _ = {
         // Even if words was [], we would get a tag stylee select
         // That was then properly working with ajax if configured.
 
-        if (pat_config.maxSelectionSize == 1) {
+        if (this.options.maxSelectionSize === 1) {
             select2_config.data = words;
             // We allow exactly one value, use dropdown styles. How do we feed in words?
         } else {
@@ -176,22 +159,22 @@ var _ = {
             select2_config.tags = words;
         }
 
-        if (pat_config.prefill && pat_config.prefill.length) {
-            prefill = pat_config.prefill.split(",");
-            $el.val(prefill);
-            select2_config.initSelection = function (element, callback) {
-                var i,
-                    data = [],
-                    values = element.val().split(",");
-                for (i = 0; i < values.length; i++) {
-                    data.push({ id: values[i], text: values[i] });
+        if (this.options.prefill && this.options.prefill.length) {
+            $el.val(this.options.prefill.split(","));
+            select2_config.initSelection = (element, callback) => {
+                let data = [];
+                const values = element.val().split(",");
+                for (let value of values) {
+                    data.push({ id: value, text: value });
                 }
-                if (pat_config.maxSelectionSize == 1) data = data[0];
+                if (this.options.maxSelectionSize === 1) {
+                    data = data[0];
+                }
                 callback(data);
             };
         }
 
-        if (pat_config.prefillJson.length) {
+        if (this.options.prefillJson.length) {
             /* We support two types of JSON data for prefill data:
              *   {"john-snow": "John Snow", "tywin-lannister": "Tywin Lannister"}
              * or
@@ -201,8 +184,9 @@ var _ = {
              *   ]
              */
             try {
-                data = JSON.parse(pat_config.prefillJson);
-                for (d in data) {
+                const data = JSON.parse(this.options.prefillJson);
+                let ids = [];
+                for (let d in data) {
                     if (typeof d === "object") {
                         ids.push(d.id);
                     } else {
@@ -210,17 +194,18 @@ var _ = {
                     }
                 }
                 $el.val(ids);
-                select2_config.initSelection = function (element, callback) {
-                    var d,
-                        _data = [];
-                    for (d in data) {
+                select2_config.initSelection = (element, callback) => {
+                    let _data = [];
+                    for (let d in data) {
                         if (typeof d === "object") {
                             _data.push({ id: d.id, text: d.text });
                         } else {
                             _data.push({ id: d, text: data[d] });
                         }
                     }
-                    if (pat_config.maxSelectionSize == 1) _data = _data[0];
+                    if (this.options.maxSelectionSize === 1) {
+                        _data = _data[0];
+                    }
                     callback(_data);
                 };
             } catch (SyntaxError) {
@@ -230,25 +215,25 @@ var _ = {
             }
         }
 
-        if (pat_config.ajax && pat_config.ajax.url) {
+        if (this.options.ajax && this.options.ajax.url) {
             select2_config = $.extend(
                 true,
                 {
-                    minimumInputLength: pat_config.minimumInputLength,
+                    minimumInputLength: this.options.minimumInputLength,
                     ajax: {
-                        url: pat_config.ajax.url,
-                        dataType: pat_config.ajax["data-type"],
+                        url: this.options.ajax.url,
+                        dataType: this.options.ajax["data-type"],
                         type: "GET",
                         quietMillis: 400,
-                        data: function (term, page) {
+                        data: (term, page) => {
                             return {
-                                index: pat_config.ajax["search-index"],
+                                index: this.options.ajax["search-index"],
                                 q: term, // search term
                                 page_limit: 10,
                                 page: page,
                             };
                         },
-                        results: function (data, page) {
+                        results: (data, page) => {
                             // parse the results into the format expected by Select2.
                             // data must be a list of objects with keys "id" and "text"
                             return { results: data, page: page };
@@ -261,31 +246,29 @@ var _ = {
         return select2_config;
     },
 
-    destroy: function ($el) {
+    destroy($el) {
         $el.off(".pat-autosuggest");
         $el.select2("destroy");
     },
 
-    transform: function ($content) {
+    transform($content) {
         $content
             .findInclusive("input[type=text].pat-autosuggest")
-            .each(function () {
-                var $src = $(this),
-                    $dest = $("<input type='hidden'/>").insertAfter($src);
+            .each((idx, el) => {
+                let $src = $(el);
+                let $dest = $("<input type='hidden'/>").insertAfter($src);
 
                 // measure in IE8, otherwise hidden will have width 0
                 if (document.all && !document.addEventListener) {
                     $dest.css("width", $src.outerWidth(false) + "px");
                 }
                 $src.detach();
-                $.each($src.prop("attributes"), function () {
-                    if (this.name !== "type") {
-                        $dest.attr(this.name, this.value);
+                $.each($src.prop("attributes"), (el_) => {
+                    if (el_.name !== "type") {
+                        $dest.attr(el_.name, el_.value);
                     }
                 });
                 $src.remove();
             });
     },
-};
-registry.register(_);
-export default _;
+});
