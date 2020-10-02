@@ -1,7 +1,5 @@
-dist: xenial
 language: node_js
 node_js:
     - lts/*
-before_script: travis_retry make stamp-yarn
+cache: yarn
 script: make check
-sudo: required
