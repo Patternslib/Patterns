@@ -317,36 +317,36 @@ describe("hideOrShow", function () {
 
     it("Hide without a transition", function () {
         $("#lab").append("<div/>");
-        var $slave = $("#lab div");
-        utils.hideOrShow($slave, false, {
+        var $el = $("#lab div");
+        utils.hideOrShow($el, false, {
             transition: "none",
             effect: { duration: "fast", easing: "swing" },
         });
-        expect($slave[0].style.display).toBe("none");
-        expect(Array.prototype.slice.call($slave[0].classList)).toEqual([
+        expect($el[0].style.display).toBe("none");
+        expect(Array.prototype.slice.call($el[0].classList)).toEqual([
             "hidden",
         ]);
     });
 
     it("Show without a transition", function () {
         $("#lab").append('<div style="display: none"/>');
-        var $slave = $("#lab div");
-        utils.hideOrShow($slave, true, {
+        var $el = $("#lab div");
+        utils.hideOrShow($el, true, {
             transition: "none",
             effect: { duration: "fast", easing: "swing" },
         });
-        expect($slave[0].style.display).toBe("");
-        expect(Array.prototype.slice.call($slave[0].classList)).toEqual([
+        expect($el[0].style.display).toBe("");
+        expect(Array.prototype.slice.call($el[0].classList)).toEqual([
             "visible",
         ]);
     });
 
     it("Single pat-update event without a transition", function () {
         $("#lab").append('<div style="display: none"/>');
-        var $slave = $("#lab div");
+        var $el = $("#lab div");
         spyOn($.fn, "trigger");
         utils.hideOrShow(
-            $slave,
+            $el,
             true,
             {
                 transition: "none",
@@ -363,27 +363,27 @@ describe("hideOrShow", function () {
 
     it("Fadeout with 0 duration", function () {
         $("#lab").append("<div/>");
-        var $slave = $("#lab div");
-        utils.hideOrShow($slave, false, {
+        var $el = $("#lab div");
+        utils.hideOrShow($el, false, {
             transition: "slide",
             effect: { duration: 0, easing: "swing" },
         });
-        expect($slave[0].style.display).toBe("none");
-        expect(Array.prototype.slice.call($slave[0].classList)).toEqual([
+        expect($el[0].style.display).toBe("none");
+        expect(Array.prototype.slice.call($el[0].classList)).toEqual([
             "hidden",
         ]);
     });
 
     it("Fadeout with non-zero duration", function () {
         $("#lab").append("<div/>");
-        var $slave = $("#lab div");
-        utils.hideOrShow($slave, false, {
+        var $el = $("#lab div");
+        utils.hideOrShow($el, false, {
             transition: "slide",
             effect: { duration: "fast", easing: "swing" },
         });
         setTimeout(function () {
-            expect($slave[0].style.display).toBe("none");
-            expect(Array.prototype.slice.call($slave[0].classList)).toEqual([
+            expect($el[0].style.display).toBe("none");
+            expect(Array.prototype.slice.call($el[0].classList)).toEqual([
                 "hidden",
             ]);
         }, 500);
@@ -391,10 +391,10 @@ describe("hideOrShow", function () {
 
     it("pat-update event with a transition", function () {
         $("#lab").append("<div/>");
-        var $slave = $("#lab div");
+        var $el = $("#lab div");
         spyOn($.fn, "trigger");
         utils.hideOrShow(
-            $slave,
+            $el,
             false,
             {
                 transition: "slide",
@@ -417,13 +417,13 @@ describe("hideOrShow", function () {
 
     it("CSS-only hide", function () {
         $("#lab").append("<div/>");
-        var $slave = $("#lab div");
-        utils.hideOrShow($slave, false, {
+        var $el = $("#lab div");
+        utils.hideOrShow($el, false, {
             transition: "css",
             effect: { duration: "fast", easing: "swing" },
         });
-        expect($slave[0].style.display).toBe("");
-        expect(Array.prototype.slice.call($slave[0].classList)).toEqual([
+        expect($el[0].style.display).toBe("");
+        expect(Array.prototype.slice.call($el[0].classList)).toEqual([
             "hidden",
         ]);
     });
