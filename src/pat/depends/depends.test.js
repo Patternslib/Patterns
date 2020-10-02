@@ -16,27 +16,27 @@ describe("pat-depends", function () {
             $("#lab").html(
                 [
                     '<input type="checkbox" id="control" value="yes"/>',
-                    '<div id="slave" class="pat-depends"/>',
+                    '<div id="dependent" class="pat-depends"/>',
                 ].join("\n")
             );
-            var $slave = $("#slave");
-            pattern.init($slave, { condition: "control" });
+            var $dependent = $("#dependent");
+            pattern.init($dependent, { condition: "control" });
             await utils.timeout(1); // wait a tick for async to settle.
 
-            expect($slave.css("display")).toBe("none");
+            expect($dependent.css("display")).toBe("none");
         });
 
         it("Show if condition is not met initially", async function () {
             $("#lab").html(
                 [
                     '<input type="checkbox" id="control" value="yes" checked="checked"/>',
-                    '<div id="slave" class="pat-depends" style="display: none"/>',
+                    '<div id="dependent" class="pat-depends" style="display: none"/>',
                 ].join("\n")
             );
-            var $slave = $("#slave");
-            pattern.init($slave, { condition: "control" });
+            var $dependent = $("#dependent");
+            pattern.init($dependent, { condition: "control" });
             await utils.timeout(1); // wait a tick for async to settle.
-            expect($slave.css("display")).not.toBe("none");
+            expect($dependent.css("display")).not.toBe("none");
         });
     });
 
@@ -53,17 +53,17 @@ describe("pat-depends", function () {
             $("#lab").html(
                 [
                     '<input type="checkbox" id="control" value="yes" checked="checked"/>',
-                    '<button id="slave" class="pat-depends" type="button">Click me</button>',
+                    '<button id="dependent" class="pat-depends" type="button">Click me</button>',
                 ].join("\n")
             );
             var pat = pattern.init($(".pat-depends"), {
                 condition: "control",
             });
             await utils.timeout(1); // wait a tick for async to settle.
-            var $slave = $("#slave");
+            var $dependent = $("#dependent");
             pat.disable();
-            expect($slave[0].disabled).toBeTruthy();
-            expect($slave.hasClass("disabled")).toBe(true);
+            expect($dependent[0].disabled).toBeTruthy();
+            expect($dependent.hasClass("disabled")).toBe(true);
         });
 
         it("Anchor", async function () {
@@ -75,10 +75,10 @@ describe("pat-depends", function () {
             );
             var pat = pattern.init($(".pat-depends"), { condition: "control" });
             await utils.timeout(1); // wait a tick for async to settle.
-            var $slave = $("#lab a");
+            var $dependent = $("#lab a");
             pat.disable();
-            var events = $._data($slave[0]).events;
-            expect($slave.hasClass("disabled")).toBe(true);
+            var events = $._data($dependent[0]).events;
+            expect($dependent.hasClass("disabled")).toBe(true);
             expect(events.click).toBeDefined();
             expect(events.click[0].namespace).toBe("patternDepends");
         });
@@ -104,10 +104,10 @@ describe("pat-depends", function () {
                 condition: "control",
             });
             await utils.timeout(1); // wait a tick for async to settle.
-            var $slave = $("#lab button");
+            var $dependent = $("#lab button");
             pat.enable();
-            expect($slave[0].disabled).toBeFalsy();
-            expect($slave.hasClass("disabled")).toBe(false);
+            expect($dependent[0].disabled).toBeFalsy();
+            expect($dependent.hasClass("disabled")).toBe(false);
         });
 
         it("Anchor", async function () {
@@ -121,11 +121,11 @@ describe("pat-depends", function () {
                 condition: "control",
             });
             await utils.timeout(1); // wait a tick for async to settle.
-            var $slave = $("#lab a");
-            $slave.on("click.patternDepends", false);
+            var $dependent = $("#lab a");
+            $dependent.on("click.patternDepends", false);
             pat.enable();
-            expect($slave.hasClass("disabled")).toBe(false);
-            expect($._data($slave[0]).events).toBe(undefined);
+            expect($dependent.hasClass("disabled")).toBe(false);
+            expect($._data($dependent[0]).events).toBe(undefined);
         });
     });
 });
