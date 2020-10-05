@@ -54,7 +54,10 @@ parser.addArgument("title-week", "MMM D YYYY");
 parser.addArgument("event-color", "blue");
 
 parser.addArgument("url", null);
-parser.addArgument("add-url", null);
+parser.addArgument("event-sources", [], undefined, true);
+parser.addArgument("event-sources-classes", [], undefined, true);
+parser.addArgument("event-sources-active", [], undefined, true);
+//parser.addArgument("add-url", null);
 
 parser.addAlias("default-date", "initial-date");
 parser.addAlias("default-view", "initial-view");
@@ -78,6 +81,7 @@ export default Base.extend({
         agendaDay: "timeGridDay",
     },
     dayNames: ["su", "mo", "tu", "we", "th", "fr", "sa"],
+    eventSources: [],
 
     async init(el, opts) {
         let Calendar = await import("@fullcalendar/core");
@@ -168,8 +172,20 @@ export default Base.extend({
             config.timeZone = timezone;
         }
 
+        const sources = opts.event.sources || [];
         if (opts.url) {
-            config.events = this._fetch_events.bind(this);
+            sources.push(opts.url);
+        }
+        config.eventSources = [];
+        for (const [idx, url] of sources.entries()) {
+            const src = this.create_event_source(idx, url);
+            this.eventSources.push(src); // we need to keep all srcs untouched to add/remove from fc eventSources.
+            if (
+                opts.event["sources-active"].length === 0 ||
+                opts.event["sources-active"][idx] === "on"
+            ) {
+                config.eventSources.push(src);
+            }
         }
 
         // Need to create a sub-element of ``pat-calendar`` to allow custom
@@ -195,6 +211,17 @@ export default Base.extend({
 
         this._registerCalendarControls();
         this.setActiveClasses();
+    },
+
+    create_event_source(idx, url) {
+        return {
+            id: `event-source--${idx + 1}`,
+            events: (info, success, failure) =>
+                this._fetch_events(url, info, success, failure),
+            className:
+                this.options.event["sources-classes"][idx] ||
+                `event-source--${idx + 1}`,
+        };
     },
 
     event_mapper(event) {
@@ -249,13 +276,7 @@ export default Base.extend({
         event.setExtendedProp("event_url", data.event_url);
     },
 
-    async _fetch_events(info, success, failure) {
-        let url = this.options.url;
-        if (!url) {
-            failure();
-            return;
-        }
-
+    async _fetch_events(url, info, success, failure) {
         let results = [];
         while (url) {
             url = url
