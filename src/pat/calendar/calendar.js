@@ -188,6 +188,9 @@ export default Base.extend({
             }
         }
 
+        // TODO: find a hook which is called AFTER all events are retrieved.
+        //config.eventDidMount = () => this.filter_for_categories;
+
         // Need to create a sub-element of ``pat-calendar`` to allow custom
         // controls within pat-calendar to not be overwritten.
         const cal_el = document.createElement("div");
@@ -198,6 +201,10 @@ export default Base.extend({
         this.mod_el = document.createElement("section");
         this.mod_el.setAttribute("class", "pat-calendar__modal");
         el.appendChild(this.mod_el);
+
+        // Initialize filter before calendar and filter_for_categories is called.
+        this._restoreCategoryControls();
+        this._registerCategoryControls();
 
         let calendar = (this.calendar = new Calendar(cal_el, config));
         calendar.render();
@@ -237,6 +244,7 @@ export default Base.extend({
 
             backgroundColor: event.color,
             borderColor: event.color,
+            classNames: event.class ? event.class.split(" ") : [],
 
             // non fullcalendar standard fields
             description: event.description,
@@ -304,6 +312,7 @@ export default Base.extend({
             // resolve all ``next`` batching urls
             url = result.batching?.next || null;
         }
+
         success(results);
     },
 
@@ -362,6 +371,67 @@ export default Base.extend({
             event.preventDefault();
             this.calendar.setOption("timeZone", event.target.value);
         });
+    },
+
+    get_category_controls() {
+        const ctrl_containers = this.options.categoryControls
+            ? document.querySelectorAll(this.options.categoryControls)
+            : [this.el];
+        const ctrls = [];
+        for (const it of ctrl_containers) {
+            const inp = it.querySelectorAll("input[type=checkbox]");
+            ctrls.push(...inp);
+        }
+        return [...new Set(ctrls)]; // do not return the same inputs multiple times
+    },
+
+    filter_for_categories() {
+        const active_categories = this.get_category_controls()
+            .filter((el) => el.checked)
+            .map((el) => el.id);
+        this.storage &&
+            this.storage.set("active_categories", active_categories);
+        const events = this.el.querySelectorAll(".fc-event");
+        for (const event of events) {
+            const classes = [...event.classList];
+            if (
+                // Intersection
+                active_categories.filter((it) => classes.includes(it)).length >
+                0
+            ) {
+                event.classList.remove("hidden");
+            } else {
+                event.classList.add("hidden");
+            }
+        }
+    },
+
+    _registerCategoryControls() {
+        /* The "category controls" are checkboxes that cause different
+         * types of events to be shown or hidden.
+         */
+        for (const ctrl of this.get_category_controls()) {
+            ctrl.addEventListener("change", () => this.filter_for_categories());
+        }
+    },
+
+    _restoreCategoryControls() {
+        /* Restore values of the category controls as stored in store.
+         * NOTE: run BEFORE _registerCalendarControls
+         */
+        const active_categories =
+            (this.storage && this.storage.get("active_categories")) || [];
+
+        for (const ctrl of this.get_category_controls()) {
+            if (active_categories.includes(ctrl.id)) {
+                ctrl.checked = true;
+                ctrl.setAttribute("checked", "checked");
+            } else {
+                ctrl.checked = false;
+                ctrl.removeAttribute("checked");
+            }
+            ctrl.dispatchEvent(new Event("change"));
+        }
     },
 
     setActiveClasses() {
