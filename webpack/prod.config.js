@@ -9,10 +9,7 @@ module.exports = (env) => {
             "bundle": path.resolve(__dirname, "../src/patterns.js"),
             "bundle.min": path.resolve(__dirname, "../src/patterns.js"),
             "bundle-polyfills": path.resolve(__dirname, "../src/polyfills.js"),
-            "bundle-polyfills.min": path.resolve(
-                __dirname,
-                "../src/polyfills.js"
-            ),
+            "bundle-polyfills.min": path.resolve(__dirname, "../src/polyfills.js"), // prettier-ignore
         },
     });
 };
