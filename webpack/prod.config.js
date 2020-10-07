@@ -11,5 +11,8 @@ module.exports = (env) => {
             "bundle-polyfills": path.resolve(__dirname, "../src/polyfills.js"),
             "bundle-polyfills.min": path.resolve(__dirname, "../src/polyfills.js"), // prettier-ignore
         },
+        output: {
+            chunkFilename: "chunks/[name].[contenthash].min.js",
+        },
     });
 };
