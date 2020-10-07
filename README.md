@@ -59,6 +59,19 @@ __webpack_public_path__ = "/my-other-dist-directory";
 <script>window.__patternslib_public_path__ = "/my-other-dist-directory/";</script>
 ```
 
+## Using polyfills
+
+For Internet Explorer support we have included a ``src/polyfills.js`` module.
+You can inlcude it optionally via ``src/polyfills-loader.js`` which injects the polyfills bundle only if the current browser is Internet Explorer.
+For this to work, include the following in BEFORE you load the patternslib bundle:
+
+```
+<script src="/your-dist-directory/polyfills-loader.js" type="text/javascript"></script>
+```
+
+Note: this only works, if the bundle nor the polyfills-loader are not loaded asynchronously.
+The script loading order matters here and async loading has no deterministic loading order.
+
 
 ## Layout
 

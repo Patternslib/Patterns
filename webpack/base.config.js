@@ -7,6 +7,7 @@ const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = (env) => {
     const config = {
@@ -90,6 +91,11 @@ module.exports = (env) => {
             },
         },
         plugins: [
+            new CopyPlugin({
+                patterns: [
+                    { from: path.resolve(__dirname, "../src/polyfills-loader.js"), }, // prettier-ignore
+                ],
+            }),
             new CleanWebpackPlugin(),
             new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
             new webpack.ProvidePlugin({

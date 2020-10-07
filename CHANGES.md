@@ -13,7 +13,9 @@
     -   pat-placeholder - placeholder fully supported since IE10.
     -   pat-slideshow-builder
     -   simplePlaceholder from jquery-ext.
--   IE11 is not supported by default anymore. There is a `polyfills` bundle, which adds IE11 support for the time being.
+-   IE11 is not supported by default anymore.
+    There is a `polyfills` bundle, which adds IE11 support for the time being.
+    The `polyfills` bundle can be injected on demand with the `polyfills-loader` script.
 -   pat tooltip: Remove undocumented "souce: content-html" parameter.
 -   pat tooltip: Remove undocumented "souce: auto" parameter. This parameter should not be used as it is not explicit enough and would lead to unintuitive behavior.
 -   Remove outdated pre IE9 browser compatibility polyfill `core/compat`.
