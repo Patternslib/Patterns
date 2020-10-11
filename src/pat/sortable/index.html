@@ -20,6 +20,16 @@
             <li class="sortable-item">Item 2</li>
         </ul>
 
+        <ul class="pat-sortable vertical">
+            <li class="sortable-item">Item 3</li>
+            <li class="sortable-item">Item 5</li>
+            <li class="sortable-item">Item 4</li>
+            <li class="sortable-item">Item 1</li>
+            <li class="sortable-item">Item 6</li>
+            <li class="sortable-item">Item 2</li>
+        </ul>
+
+
         <style>
             .sortable-item {
                 margin-bottom: -3px;
@@ -28,10 +38,13 @@
                 background-color: #efefef;
                 border: 3px solid silver;
                 font-weight: bold;
+                padding-right: 4em;
+                position: relative;
             }
 
             .sortable-item .sortable-handle {
-                float: right;
+                position: absolute;
+                right: 1em;
                 width: 1.65em;
                 height: 1.65em;
                 line-height: 1.75em;
@@ -42,6 +55,10 @@
                 border-radius: 50%;
                 font-weight: bold;
                 cursor: move;
+            }
+
+            .vertical .sortable-item {
+              display: inline;
             }
         </style>
     </body>
