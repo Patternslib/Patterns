@@ -26,7 +26,7 @@ define([
                 }
             });
 
-            $.merge($el, $el.find("select:not([multiple])"))
+            $el.parent().find("select:not([multiple])")
                 .each(function () {
                     var $el = $(this);
                     // create parent span if not direct child of a label
