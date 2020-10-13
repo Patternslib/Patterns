@@ -12,6 +12,7 @@ var script_source = function () {
 };
 
 (function () {
+    // https://stackoverflow.com/a/8578840/1337474
     // if IE
     if (/*@cc_on!@*/ false || !!document.documentMode) {
         var script_url = script_source();
