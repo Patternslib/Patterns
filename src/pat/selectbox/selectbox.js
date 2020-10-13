@@ -9,14 +9,14 @@
 define([
     "jquery",
     "pat-registry"
-], function($, patterns) {
+], function ($, patterns) {
     var selectbox = {
         name: "selectbox",
         trigger: ".pat-select",
 
-        init: function($el) {
+        init: function ($el) {
             var $forms = $();
-            $el.each(function() {
+            $el.each(function () {
                 if (this.form !== null) {
                     var $form = $(this.form);
                     if ($form.data("pat-selectbox.reset"))
@@ -26,8 +26,8 @@ define([
                 }
             });
 
-            $el.find("select:not([multiple])")
-                .each(function() {
+            $.merge($el, $el.find("select:not([multiple])"))
+                .each(function () {
                     var $el = $(this);
                     // create parent span if not direct child of a label
                     if ($el.parent("label").length === 0)
@@ -39,21 +39,21 @@ define([
             $forms.on("reset.pat-selectbox", selectbox.onFormReset);
         },
 
-        destroy: function($el) {
+        destroy: function ($el) {
             return $el.off(".pat-selectbox");
         },
 
-        onFormReset: function() {
+        onFormReset: function () {
             // This event is triggered before the form is reset, and we need
             // the post-reset state to update our pattern. Use a small delay
             // to fix this.
             var form = this;
-            setTimeout(function() {
+            setTimeout(function () {
                 $("select:not([multiple])", form).each(selectbox.onChangeSelect);
             }, 50);
         },
 
-        onChangeSelect: function() {
+        onChangeSelect: function () {
             var $select = $(this);
             $select.parent().attr(
                 "data-option",
