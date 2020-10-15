@@ -30,6 +30,7 @@
 -   pat calendar: Store the current date and view in query parameters.
 -   pat calendar: Fetch events from the backend.
 -   pat calendar: Allow filtering/hiding events based in comparing the checkbox id with the classes of the displayed events.
+-   pat calendar: Support injection of events when clicking on and event rather than redirecting to them.
 -   pat tooltip: Use tippy v6 based implementation.
 -   Allow overriding the public path from outside via the definition of a ``window.__patternslib_public_path__`` global variable.
 

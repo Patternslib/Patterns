@@ -3,6 +3,7 @@ import Base from "../../core/base";
 import logging from "../../core/logging";
 import Modal from "../modal/modal";
 import Parser from "../../core/parser";
+import registry from "../../core/registry";
 import store from "../../core/store";
 
 const log = logging.getLogger("calendar");
@@ -58,6 +59,9 @@ parser.addArgument("event-sources", [], undefined, true);
 parser.addArgument("event-sources-classes", [], undefined, true);
 parser.addArgument("event-sources-active", [], undefined, true);
 //parser.addArgument("add-url", null);
+
+parser.addArgument("pat-inject-source", null);
+parser.addArgument("pat-inject-target", null);
 
 parser.addAlias("default-date", "initial-date");
 parser.addAlias("default-view", "initial-view");
@@ -187,6 +191,8 @@ export default Base.extend({
                 config.eventSources.push(src);
             }
         }
+
+        config.eventDidMount = this.init_event.bind(this);
 
         // TODO: find a hook which is called AFTER all events are retrieved.
         //config.eventDidMount = () => this.filter_for_categories;
@@ -371,6 +377,21 @@ export default Base.extend({
             event.preventDefault();
             this.calendar.setOption("timeZone", event.target.value);
         });
+    },
+
+    init_event(arg) {
+        let source = this.options.pat["inject-source"];
+        let target = this.options.pat["inject-target"];
+        if (source || target) {
+            source = source || "body";
+            target = target || "body";
+            arg.el.classList.add("pat-inject");
+            arg.el.setAttribute(
+                "data-pat-inject",
+                `target: ${target}; source: ${source}`
+            );
+            registry.scan(arg.el);
+        }
     },
 
     get_category_controls() {
