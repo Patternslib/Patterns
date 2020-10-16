@@ -177,7 +177,8 @@ export default Base.extend({
         }
 
         const sources = opts.event.sources || [];
-        if (opts.url) {
+        if (opts.url && !sources.includes(opts.url)) {
+            // add, but do not re-add same source twice.
             sources.push(opts.url);
         }
         config.eventSources = [];
