@@ -4,37 +4,43 @@
       "title": "Calendar 2 Event 1",
       "start": "2020-10-08T10:00:00",
       "end": "2020-10-08T12:00:00",
-      "color": "orange"
+      "color": "orange",
+      "class": "calendar-section1-category1"
     },
     {
       "title": "Calendar 2 Event 2",
       "start": "2020-10-09T10:00:00",
       "end": "2020-10-09T12:00:00",
-      "color": "yellow"
+      "color": "yellow",
+      "class": "calendar-section1-category2"
     },
     {
       "title": "Calendar 2 Event 3",
       "start": "2020-10-10T09:00:00",
       "end": "2020-10-10T11:00:00",
-      "color": "yellow"
+      "color": "yellow",
+      "class": "calendar-section2-category1"
     },
     {
       "title": "Calendar 2 Event 4",
       "start": "2020-11-16T10:00:00",
       "end": "2020-11-16T12:00:00",
-      "color": "orange"
+      "color": "orange",
+      "class": "calendar-section2-category1"
     },
     {
       "title": "Calendar 2 Event 5",
       "start": "2020-11-20T10:00:00",
       "end": "2020-11-20T12:00:00",
-      "color": "yellow"
+      "color": "yellow",
+      "class": "calendar-section1-category1 calendar-section2-category1"
     },
     {
       "title": "Calendar 2 Event 6",
       "start": "2020-11-25T10:00:00",
       "end": "2020-11-25T12:00:00",
-      "color": "grey"
+      "color": "grey",
+      "class": "calendar-section1-category2 calendar-section2-category2"
     }
   ]
 }

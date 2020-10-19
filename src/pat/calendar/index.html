@@ -9,6 +9,21 @@
         type="text/javascript"
         charset="utf-8"
     ></script>
+    <style type="text/css" media="screen">
+      .main {
+        display: flex;
+      }
+      .sidebar {
+        width: 30%;
+        padding: 0 1em;
+      }
+      .pat-calendar {
+        flex-grow: 2;
+      }
+      .hidden {
+        display: none !important;
+      }
+    </style>
 </head>
 <body>
     <!--div id="calendar" class="pat-calendar"
@@ -18,42 +33,88 @@
         lang: de;
         store: session;"
   -->
-  <div id="calendar" class="pat-calendar"
-      data-pat-calendar="
-        event-sources: ./test_event_source.json,./test_event_source2.json;
-        event-sources-classes: internal-calendar, external-calendar;
-        add-url: ./test_add_event.html;
-        initial-date: 2020-10-10;
-        event-color: fuchsia;
-        lang: de;
-        store: session;"
-  >
-    <h1 class="cal-title">title</h1>
-    <div class="cal-toolbar">
-      <fieldset class="cal-nav">
-        <button class="jump-prev" title="Back" type="button">&lt;</button>
-        <button class="jump-today" title="Today" type="button">Today</button>
-        <button class="jump-next" title="Forward" type="button">&gt;</button>
-      </fieldset>
-      <fieldset class="cal-views">
-        <button class="view-month" type="button">Month</button>
-        <button class="view-week" type="button">Week</button>
-        <button class="view-day" type="button">Day</button>
-        <button class="view-listYear" type="button">List Year</button>
-        <button class="view-listMonth" type="button">List Month</button>
-        <button class="view-listWeek" type="button">List Week</button>
-        <button class="view-listDay" type="button">List Day</button>
-      </fieldset>
-      <fieldset class="cal-timezone">
-        <select name="timezone" class="timezone">
-          <option value="Africa/Dakar">(GMT+00:00) Dakar, Monrovia, Reykjavik</option>
-          <option value="Europe/London">(GMT+00:00) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London</option>
-          <option value="Europe/Berlin" selected="selected">(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna</option>
-          <option value="Europe/Athens">(GMT+02:00) Athens, Bucharest, Istanbul</option>
-          <option value="Europe/Moscow">(GMT+03:00) Moscow, St. Petersburg, Volgograd</option>
-        </select>
-      </fieldset>
+
+  <div class="main">
+
+    <div class="sidebar">
+
+      <div class="pat-collapsible cal-categories-container">
+        <h4 class="section-label">Category section 1</h4>
+        <fieldset class="pat-checklist cal-categories checklist">
+          <div class="toggles list-functions button-cluster">
+            <button class="small select-all">Select all</button>
+            <button class="small deselect-all">Deselect all</button>
+          </div>
+          <label>
+            <span class="calendar-name">Cateory 1</span>
+            <input id="calendar-section1-category1" type="checkbox" checked />
+          </label>
+          <label>
+            <span class="calendar-name">Category 2</span>
+            <input id="calendar-section1-category2" type="checkbox" checked />
+          </label>
+        </fieldset>
+      </div>
+
+      <div class="pat-collapsible cal-categories-container">
+        <h4 class="section-label">Category section 2</h4>
+        <fieldset class="pat-checklist cal-categories checklist">
+          <div class="toggles list-functions button-cluster">
+            <button class="small select-all">Select all</button>
+            <button class="small deselect-all">Deselect all</button>
+          </div>
+          <label>
+            <span class="calendar-name">Cateory 1</span>
+            <input id="calendar-section2-category1" type="checkbox" checked />
+          </label>
+          <label>
+            <span class="calendar-name">Category 2</span>
+            <input id="calendar-section2-category2" type="checkbox" checked />
+          </label>
+        </fieldset>
+      </div>
+
     </div>
+
+    <div id="calendar" class="pat-calendar"
+        data-pat-calendar="
+          category-controls: .cal-categories;
+          event-sources: ./test_event_source.json,./test_event_source2.json;
+          event-sources-classes: internal-calendar, external-calendar;
+          add-url: ./test_add_event.html;
+          initial-date: 2020-10-10;
+          event-color: fuchsia;
+          lang: de;
+          store: local;"
+    >
+      <h1 class="cal-title">title</h1>
+      <div class="cal-toolbar">
+        <fieldset class="cal-nav">
+          <button class="jump-prev" title="Back" type="button">&lt;</button>
+          <button class="jump-today" title="Today" type="button">Today</button>
+          <button class="jump-next" title="Forward" type="button">&gt;</button>
+        </fieldset>
+        <fieldset class="cal-views">
+          <button class="view-month" type="button">Month</button>
+          <button class="view-week" type="button">Week</button>
+          <button class="view-day" type="button">Day</button>
+          <button class="view-listYear" type="button">List Year</button>
+          <button class="view-listMonth" type="button">List Month</button>
+          <button class="view-listWeek" type="button">List Week</button>
+          <button class="view-listDay" type="button">List Day</button>
+        </fieldset>
+        <fieldset class="cal-timezone">
+          <select name="timezone" class="timezone">
+            <option value="Africa/Dakar">(GMT+00:00) Dakar, Monrovia, Reykjavik</option>
+            <option value="Europe/London">(GMT+00:00) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London</option>
+            <option value="Europe/Berlin" selected="selected">(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna</option>
+            <option value="Europe/Athens">(GMT+02:00) Athens, Bucharest, Istanbul</option>
+            <option value="Europe/Moscow">(GMT+03:00) Moscow, St. Petersburg, Volgograd</option>
+          </select>
+        </fieldset>
+      </div>
+    </div>
+
   </div>
 
 </body>
