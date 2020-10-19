@@ -321,6 +321,90 @@ export default Base.extend({
         success(results);
     },
 
+    init_event(args) {
+        this.filter_event(args.event);
+        let source = this.options.pat["inject-source"];
+        let target = this.options.pat["inject-target"];
+        if (source || target) {
+            source = source || "body";
+            target = target || "body";
+            args.el.classList.add("pat-inject");
+            args.el.setAttribute(
+                "data-pat-inject",
+                `target: ${target}; source: ${source}`
+            );
+            registry.scan(args.el);
+        }
+    },
+
+    filter_event(event) {
+        // intersection
+        const show =
+            this.active_categories.filter((it) => event.classNames.includes(it))
+                .length > 0;
+        if (show) {
+            event.setProp("display", "auto");
+        } else {
+            event.setProp("display", "none");
+        }
+    },
+
+    reset_active_categories() {
+        this.active_categories = this.get_category_controls()
+            .filter((el) => el.checked)
+            .map((el) => el.id);
+        this.storage &&
+            this.storage.set("active_categories", this.active_categories);
+    },
+
+    get_category_controls() {
+        const ctrl_containers = this.options.categoryControls
+            ? document.querySelectorAll(this.options.categoryControls)
+            : [this.el];
+        const ctrls = [];
+        for (const it of ctrl_containers) {
+            const inp = it.querySelectorAll("input[type=checkbox]");
+            ctrls.push(...inp);
+        }
+        return [...new Set(ctrls)]; // do not return the same inputs multiple times
+    },
+
+    _registerCategoryControls() {
+        /* The "category controls" are checkboxes that cause different
+         * types of events to be shown or hidden.
+         */
+        for (const ctrl of this.get_category_controls()) {
+            ctrl.addEventListener("change", () => {
+                this.reset_active_categories();
+                this.calendar.getEvents().map(this.filter_event.bind(this));
+            });
+        }
+    },
+
+    _restoreCategoryControls() {
+        /* Restore values of the category controls as stored in store.
+         * NOTE: run BEFORE _registerCalendarControls
+         */
+        const active_categories =
+            (this.storage && this.storage.get("active_categories")) || "UNSET";
+
+        if (active_categories === "UNSET") {
+            // Never set, use default un/checked status.
+            return;
+        }
+
+        for (const ctrl of this.get_category_controls()) {
+            if (active_categories.includes(ctrl.id)) {
+                ctrl.checked = true;
+                ctrl.setAttribute("checked", "checked");
+            } else {
+                ctrl.checked = false;
+                ctrl.removeAttribute("checked");
+            }
+            ctrl.dispatchEvent(new Event("change"));
+        }
+    },
+
     _registerCalendarControls() {
         this.el_jump_next?.addEventListener("click", (event) => {
             event.preventDefault();
@@ -376,90 +460,6 @@ export default Base.extend({
             event.preventDefault();
             this.calendar.setOption("timeZone", event.target.value);
         });
-    },
-
-    init_event(args) {
-        this.filter_event(args.event);
-        let source = this.options.pat["inject-source"];
-        let target = this.options.pat["inject-target"];
-        if (source || target) {
-            source = source || "body";
-            target = target || "body";
-            args.el.classList.add("pat-inject");
-            args.el.setAttribute(
-                "data-pat-inject",
-                `target: ${target}; source: ${source}`
-            );
-            registry.scan(args.el);
-        }
-    },
-
-    get_category_controls() {
-        const ctrl_containers = this.options.categoryControls
-            ? document.querySelectorAll(this.options.categoryControls)
-            : [this.el];
-        const ctrls = [];
-        for (const it of ctrl_containers) {
-            const inp = it.querySelectorAll("input[type=checkbox]");
-            ctrls.push(...inp);
-        }
-        return [...new Set(ctrls)]; // do not return the same inputs multiple times
-    },
-
-    reset_active_categories() {
-        this.active_categories = this.get_category_controls()
-            .filter((el) => el.checked)
-            .map((el) => el.id);
-        this.storage &&
-            this.storage.set("active_categories", this.active_categories);
-    },
-
-    filter_event(event) {
-        // intersection
-        const show =
-            this.active_categories.filter((it) => event.classNames.includes(it))
-                .length > 0;
-        if (show) {
-            event.setProp("display", "auto");
-        } else {
-            event.setProp("display", "none");
-        }
-    },
-
-    _registerCategoryControls() {
-        /* The "category controls" are checkboxes that cause different
-         * types of events to be shown or hidden.
-         */
-        for (const ctrl of this.get_category_controls()) {
-            ctrl.addEventListener("change", () => {
-                this.reset_active_categories();
-                this.calendar.getEvents().map(this.filter_event.bind(this));
-            });
-        }
-    },
-
-    _restoreCategoryControls() {
-        /* Restore values of the category controls as stored in store.
-         * NOTE: run BEFORE _registerCalendarControls
-         */
-        const active_categories =
-            (this.storage && this.storage.get("active_categories")) || "UNSET";
-
-        if (active_categories === "UNSET") {
-            // Never set, use default un/checked status.
-            return;
-        }
-
-        for (const ctrl of this.get_category_controls()) {
-            if (active_categories.includes(ctrl.id)) {
-                ctrl.checked = true;
-                ctrl.setAttribute("checked", "checked");
-            } else {
-                ctrl.checked = false;
-                ctrl.removeAttribute("checked");
-            }
-            ctrl.dispatchEvent(new Event("change"));
-        }
     },
 
     setActiveClasses() {
