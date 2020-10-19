@@ -86,6 +86,7 @@ export default Base.extend({
     },
     dayNames: ["su", "mo", "tu", "we", "th", "fr", "sa"],
     eventSources: [],
+    active_categories: [],
 
     async init(el, opts) {
         let Calendar = await import("@fullcalendar/core");
@@ -193,10 +194,11 @@ export default Base.extend({
             }
         }
 
-        config.eventDidMount = this.init_event.bind(this);
-
-        // TODO: find a hook which is called AFTER all events are retrieved.
-        //config.eventDidMount = () => this.filter_for_categories;
+        // Restore category controls from local storage before showing events.
+        this._restoreCategoryControls();
+        this._registerCategoryControls();
+        this.reset_active_categories();
+        config.eventDidMount = (args) => this.init_event(args);
 
         // Need to create a sub-element of ``pat-calendar`` to allow custom
         // controls within pat-calendar to not be overwritten.
@@ -208,10 +210,6 @@ export default Base.extend({
         this.mod_el = document.createElement("section");
         this.mod_el.setAttribute("class", "pat-calendar__modal");
         el.appendChild(this.mod_el);
-
-        // Initialize filter before calendar and filter_for_categories is called.
-        this._restoreCategoryControls();
-        this._registerCategoryControls();
 
         let calendar = (this.calendar = new Calendar(cal_el, config));
         calendar.render();
@@ -380,18 +378,19 @@ export default Base.extend({
         });
     },
 
-    init_event(arg) {
+    init_event(args) {
+        this.filter_event(args.event);
         let source = this.options.pat["inject-source"];
         let target = this.options.pat["inject-target"];
         if (source || target) {
             source = source || "body";
             target = target || "body";
-            arg.el.classList.add("pat-inject");
-            arg.el.setAttribute(
+            args.el.classList.add("pat-inject");
+            args.el.setAttribute(
                 "data-pat-inject",
                 `target: ${target}; source: ${source}`
             );
-            registry.scan(arg.el);
+            registry.scan(args.el);
         }
     },
 
@@ -407,24 +406,23 @@ export default Base.extend({
         return [...new Set(ctrls)]; // do not return the same inputs multiple times
     },
 
-    filter_for_categories() {
-        const active_categories = this.get_category_controls()
+    reset_active_categories() {
+        this.active_categories = this.get_category_controls()
             .filter((el) => el.checked)
             .map((el) => el.id);
         this.storage &&
-            this.storage.set("active_categories", active_categories);
-        const events = this.el.querySelectorAll(".fc-event");
-        for (const event of events) {
-            const classes = [...event.classList];
-            if (
-                // Intersection
-                active_categories.filter((it) => classes.includes(it)).length >
-                0
-            ) {
-                event.classList.remove("hidden");
-            } else {
-                event.classList.add("hidden");
-            }
+            this.storage.set("active_categories", this.active_categories);
+    },
+
+    filter_event(event) {
+        // intersection
+        const show =
+            this.active_categories.filter((it) => event.classNames.includes(it))
+                .length > 0;
+        if (show) {
+            event.setProp("display", "auto");
+        } else {
+            event.setProp("display", "none");
         }
     },
 
@@ -433,7 +431,10 @@ export default Base.extend({
          * types of events to be shown or hidden.
          */
         for (const ctrl of this.get_category_controls()) {
-            ctrl.addEventListener("change", () => this.filter_for_categories());
+            ctrl.addEventListener("change", () => {
+                this.reset_active_categories();
+                this.calendar.getEvents().map(this.filter_event.bind(this));
+            });
         }
     },
 
@@ -442,7 +443,12 @@ export default Base.extend({
          * NOTE: run BEFORE _registerCalendarControls
          */
         const active_categories =
-            (this.storage && this.storage.get("active_categories")) || [];
+            (this.storage && this.storage.get("active_categories")) || "UNSET";
+
+        if (active_categories === "UNSET") {
+            // Never set, use default un/checked status.
+            return;
+        }
 
         for (const ctrl of this.get_category_controls()) {
             if (active_categories.includes(ctrl.id)) {
