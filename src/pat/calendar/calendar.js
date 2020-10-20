@@ -86,7 +86,7 @@ export default Base.extend({
     },
     dayNames: ["su", "mo", "tu", "we", "th", "fr", "sa"],
     eventSources: [],
-    active_categories: [],
+    active_categories: null,
 
     async init(el, opts) {
         let Calendar = await import("@fullcalendar/core");
@@ -338,10 +338,14 @@ export default Base.extend({
     },
 
     filter_event(event) {
-        // intersection
-        const show =
-            this.active_categories.filter((it) => event.classNames.includes(it))
-                .length > 0;
+        let show = true;
+        if (this.active_categories !== null) {
+            // intersection
+            show =
+                this.active_categories.filter((it) =>
+                    event.classNames.includes(it)
+                ).length > 0;
+        }
         if (show) {
             event.setProp("display", "auto");
         } else {
@@ -350,9 +354,13 @@ export default Base.extend({
     },
 
     reset_active_categories() {
-        this.active_categories = this.get_category_controls()
-            .filter((el) => el.checked)
-            .map((el) => el.id);
+        const ctrls = this.get_category_controls();
+        this.active_categories = null;
+        if (ctrls.length) {
+            this.active_categories = ctrls
+                .filter((el) => el.checked)
+                .map((el) => el.id);
+        }
         this.storage &&
             this.storage.set("active_categories", this.active_categories);
     },
@@ -385,15 +393,16 @@ export default Base.extend({
         /* Restore values of the category controls as stored in store.
          * NOTE: run BEFORE _registerCalendarControls
          */
+        const ctrls = this.get_category_controls();
         const active_categories =
-            (this.storage && this.storage.get("active_categories")) || "UNSET";
+            (this.storage && this.storage.get("active_categories")) || null;
 
-        if (active_categories === "UNSET") {
-            // Never set, use default un/checked status.
+        if (!ctrls.length || active_categories === null) {
+            // No category controls or never set, use default un/checked status.
             return;
         }
 
-        for (const ctrl of this.get_category_controls()) {
+        for (const ctrl of ctrls) {
             if (active_categories.includes(ctrl.id)) {
                 ctrl.checked = true;
                 ctrl.setAttribute("checked", "checked");
