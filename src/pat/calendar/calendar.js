@@ -382,10 +382,14 @@ export default Base.extend({
         /* The "category controls" are checkboxes that cause different
          * types of events to be shown or hidden.
          */
+        let timer;
         for (const ctrl of this.get_category_controls()) {
             ctrl.addEventListener("change", () => {
-                this.reset_active_categories();
-                this.calendar.getEvents().map(this.filter_event.bind(this));
+                clearTimeout(timer); // Cancel scheduled filter runs
+                timer = setTimeout(() => {
+                    this.reset_active_categories();
+                    this.calendar.getEvents().map(this.filter_event.bind(this));
+                }, 50);
             });
         }
     },
