@@ -410,10 +410,8 @@ export default Base.extend({
             }
             if (active_categories.includes(ctrl.id)) {
                 ctrl.checked = true;
-                ctrl.setAttribute("checked", "checked");
             } else {
                 ctrl.checked = false;
-                ctrl.removeAttribute("checked");
             }
             ctrl.dispatchEvent(new Event("change"));
         }
