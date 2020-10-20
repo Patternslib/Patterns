@@ -45,7 +45,7 @@ parser.addArgument("first-day", null);
 parser.addArgument("first-hour", "6");
 parser.addArgument("height", "auto");
 parser.addArgument("ignore-url", false);
-parser.addArgument("lang", "en");
+parser.addArgument("lang", null); // If not set, use "en" (See below)
 parser.addArgument("store", "none", ["none", "session", "local"]);
 parser.addArgument("time-format", "h(:mm)t");
 parser.addArgument("timezone", null);
