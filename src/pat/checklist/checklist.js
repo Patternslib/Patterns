@@ -40,13 +40,10 @@ var _ = {
                         { trigger: $trigger },
                         _.onDeselectAll
                     );
-                $trigger.on(
-                    "change.pat-checklist",
-                    { trigger: $trigger },
-                    _.onChange
-                );
+
+                $trigger.on("change", () => _.onChange($trigger));
                 // update select/deselect button status
-                _.onChange({ data: { trigger: $trigger } });
+                _.onChange($trigger);
 
                 $trigger
                     .find("input[type=checkbox]")
@@ -94,36 +91,36 @@ var _ = {
         // a .pat-checklist parent
         return $([]);
     },
-    onChange: function (event) {
-        var $trigger = event.data.trigger,
-            options = $trigger.data("patternChecklist");
-        var siblings;
+    onChange: function (trigger) {
+        const $trigger = $(trigger);
+        const options = $trigger.data("patternChecklist");
+        let siblings;
 
-        var all_selects = $trigger.find(options.select);
+        let all_selects = $trigger.find(options.select);
         if (all_selects.length === 0) {
             all_selects = $(options.select);
         }
-        var all_deselects = $trigger.find(options.deselect);
+        let all_deselects = $trigger.find(options.deselect);
         if (all_deselects.length === 0) {
             all_deselects = $(options.deselect);
         }
-        for (let select of all_selects) {
+        for (const select of all_selects) {
             siblings = _._findSiblings(select, "input[type=checkbox]:visible");
             if (siblings && siblings.filter(":not(:checked)").length === 0) {
-                $(select).prop("disabled", true);
+                select.disabled = true;
             } else {
-                $(select).prop("disabled", false);
+                select.disabled = false;
             }
         }
-        for (let deselect of all_deselects) {
+        for (const deselect of all_deselects) {
             siblings = _._findSiblings(
                 deselect,
                 "input[type=checkbox]:visible"
             );
             if (siblings && siblings.filter(":checked").length === 0) {
-                $(deselect).prop("disabled", true);
+                deselect.disabled = true;
             } else {
-                $(deselect).prop("disabled", false);
+                deselect.disabled = false;
             }
         }
     },
