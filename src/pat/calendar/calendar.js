@@ -403,6 +403,11 @@ export default Base.extend({
         }
 
         for (const ctrl of ctrls) {
+            if (ctrl.hidden) {
+                // Do not set non-user-interactable inputs.
+                // They are programmatically set.
+                continue;
+            }
             if (active_categories.includes(ctrl.id)) {
                 ctrl.checked = true;
                 ctrl.setAttribute("checked", "checked");
