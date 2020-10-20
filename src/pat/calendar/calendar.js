@@ -123,10 +123,10 @@ export default Base.extend({
 
         const config = {};
         opts = this.options = store.updateOptions(el, parser.parse(el, opts));
+
+        const storage_prefix = `${this.name}-${window.location.pathname}`;
         const storage = (this.storage =
-            opts.store === "none"
-                ? null
-                : store[opts.store](this.name + el.id));
+            opts.store === "none" ? null : store[opts.store](storage_prefix));
 
         const query_string = new URLSearchParams(window.location.search);
 
