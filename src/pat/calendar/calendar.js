@@ -1,32 +1,38 @@
-/**
- * Patterns calendar - Calendar with different views for patterns.
- *
- * Copyright 2013-2014 Marko Durkovic
- * Copyright 2014 Florian Friesdorf
- * Copyright 2014 Syslab.com GmbH
- */
 import "regenerator-runtime/runtime"; // needed for ``await`` support
-import $ from "jquery";
+import Base from "../../core/base";
 import logging from "../../core/logging";
+import Modal from "../modal/modal";
 import Parser from "../../core/parser";
-import store from "../../core/store";
-import utils from "../../core/utils";
 import registry from "../../core/registry";
-import _ from "underscore";
+import store from "../../core/store";
 
-// Lazy loading modules.
-let MomentTZData;
-
-var log = logging.getLogger("calendar"),
-    parser = new Parser("calendar");
+const log = logging.getLogger("calendar");
+const parser = new Parser("calendar");
 
 parser.addArgument("calendar-controls", ""); // Calendar controls must have "id" attr set
 parser.addArgument("category-controls", "");
 parser.addArgument("column-day", "dddd M/d");
 parser.addArgument("column-month", "ddd");
 parser.addArgument("column-week", "ddd M/d");
-parser.addArgument("default-view", "month", [
+parser.addArgument("initial-date", null);
+parser.addArgument("initial-view", "month", [
+    // Simple names
     "month",
+    "week",
+    "day",
+    "list",
+    // FC 5 names
+    "dayGridMonth",
+    "dayGridWeek",
+    "dayGridDay",
+    "timeGridWeek",
+    "timeGridDay",
+    "listDay",
+    "listWeek",
+    "listMonth",
+    "listYear",
+    "listWeek",
+    // FC 3 names
     "basicWeek",
     "basicDay",
     "agendaWeek",
@@ -35,19 +41,32 @@ parser.addArgument("default-view", "month", [
 parser.addArgument("drag-and-drop", true, [true, false]);
 parser.addArgument("drop-external-events", true, [true, false]);
 parser.addArgument("external-event-selector", "");
-parser.addArgument("first-day", "0");
+parser.addArgument("first-day", null);
 parser.addArgument("first-hour", "6");
 parser.addArgument("height", "auto");
 parser.addArgument("ignore-url", false);
 parser.addArgument("lang", "en");
-parser.addArgument("start-date");
 parser.addArgument("store", "none", ["none", "session", "local"]);
 parser.addArgument("time-format", "h(:mm)t");
+parser.addArgument("timezone", null);
 parser.addArgument("title-day", "dddd, MMM d, YYYY");
 parser.addArgument("title-month", "MMMM YYYY");
 parser.addArgument("title-week", "MMM D YYYY");
+parser.addArgument("event-color", "blue");
 
-var calendar = {
+parser.addArgument("url", null);
+parser.addArgument("event-sources", [], undefined, true);
+parser.addArgument("event-sources-classes", [], undefined, true);
+parser.addArgument("event-sources-active", [], undefined, true);
+//parser.addArgument("add-url", null);
+
+parser.addArgument("pat-inject-source", null);
+parser.addArgument("pat-inject-target", null);
+
+parser.addAlias("default-date", "initial-date");
+parser.addAlias("default-view", "initial-view");
+
+export default Base.extend({
     name: "calendar",
     trigger: ".pat-calendar",
     classMap: {
@@ -55,623 +74,527 @@ var calendar = {
         agendaWeek: ".view-week",
         agendaDay: ".view-day",
     },
+    viewMap: {
+        month: "dayGridMonth",
+        week: "timeGridWeek",
+        day: "timeGridDay",
+        list: "listMonth",
+        basicWeek: "dayGridWeek",
+        basicDay: "dayGridDay",
+        agendaWeek: "timeGridWeek",
+        agendaDay: "timeGridDay",
+    },
     dayNames: ["su", "mo", "tu", "we", "th", "fr", "sa"],
+    eventSources: [],
+    active_categories: null,
 
-    _parseSearchString: function () {
-        var context = {};
-        window.location.search
-            .substr(1)
-            .split("&")
-            .forEach(function (str) {
-                if (str) {
-                    var keyValue = str.split("="),
-                        key = keyValue[0],
-                        value = decodeURIComponent(keyValue[1]);
-                    if (
-                        value &&
-                        (value.match(/^\[.*\]$/) || value.match(/^\{.*\}$/))
-                    ) {
-                        context[key] = JSON.parse(value);
-                    } else {
-                        context[key] = value;
-                    }
-                }
-            });
-        return context;
-    },
+    async init(el, opts) {
+        let Calendar = await import("@fullcalendar/core");
+        Calendar = Calendar.Calendar;
+        let fcDayGrid = await import("@fullcalendar/daygrid");
+        let fcInteraction = await import("@fullcalendar/interaction");
+        let fcList = await import("@fullcalendar/list");
+        let fcLuxon = await import("@fullcalendar/luxon");
+        let fcTimeGrid = await import("@fullcalendar/timegrid");
+        fcDayGrid = fcDayGrid.default;
+        fcInteraction = fcInteraction.default;
+        fcList = fcList.default;
+        fcLuxon = fcLuxon.default;
+        fcTimeGrid = fcTimeGrid.default;
 
-    async init($elem, opts) {
-        MomentTZData = await import("./moment-timezone-with-data-2010-2020");
-        await import("fullcalendar");
+        if (el.jquery) {
+            el = el[0];
+        }
+        this.el = el;
 
-        var lang = document
-            .getElementsByTagName("html")[0]
-            .getAttribute("lang");
-        if (lang) {
-            // we don't support any country-specific language variants, always use first 2 letters
-            lang = lang.substr(0, 2).toLowerCase();
-            if (lang !== "en") {
-                try {
-                    await import(`fullcalendar/dist/lang/${lang}.js`);
-                    console.log("loaded cal locale for " + lang);
-                } catch {
-                    // ignore. default is english.
-                }
+        // Save some UI elements for reuse.
+        this.el_jump_next = el.querySelector(".jump-next");
+        this.el_jump_prev = el.querySelector(".jump-prev");
+        this.el_jump_today = el.querySelector(".jump-today");
+        this.el_view_month = el.querySelector(".view-month");
+        this.el_view_week = el.querySelector(".view-week");
+        this.el_view_day = el.querySelector(".view-day");
+        this.el_view_list_year = el.querySelector(".view-listYear");
+        this.el_view_list_month = el.querySelector(".view-listMonth");
+        this.el_view_list_week = el.querySelector(".view-listWeek");
+        this.el_view_list_day = el.querySelector(".view-listDay");
+        this.el_timezone = el.querySelector("select[name='timezone']");
+        this.el_title = el.querySelector(".cal-title");
+
+        const config = {};
+        opts = this.options = store.updateOptions(el, parser.parse(el, opts));
+
+        const storage_prefix = `${this.name}-${window.location.pathname}`;
+        const storage = (this.storage =
+            opts.store === "none" ? null : store[opts.store](storage_prefix));
+
+        const query_string = new URLSearchParams(window.location.search);
+
+        config.headerToolbar = false;
+        config.initialDate =
+            query_string.get("date") ||
+            (storage && storage.get("date")) ||
+            opts.initial.date;
+        config.initialView =
+            query_string.get("view") ||
+            (storage && storage.get("view")) ||
+            opts.initial.view;
+        config.initialView =
+            this.viewMap[config.initialView] || config.initialView;
+        config.editable = opts.editable || false;
+        config.plugins = [
+            fcDayGrid,
+            fcInteraction,
+            fcList,
+            fcLuxon,
+            fcTimeGrid,
+        ];
+        config.eventColor = opts.eventColor;
+
+        config.dateClick = this.addNewEvent.bind(this);
+
+        let lang =
+            opts.lang ||
+            document.querySelector("html").getAttribute("lang") ||
+            "en";
+        // we don't support any country-specific language variants, always use first 2 letters
+        lang = lang.substr(0, 2).toLowerCase();
+        if (lang !== "en") {
+            const locale = await import(`@fullcalendar/core/locales/${lang}`);
+            config.locale = locale.default;
+            console.log("loaded cal locale for " + lang);
+        }
+        if (opts.first.day !== null) {
+            config.firstDay = opts.first.day;
+            if (this.dayNames.indexOf(opts.first.day) >= 0) {
+                // Set firstDay as string
+                config.firstDay = this.dayNames.indexOf(opts.first.day);
             }
         }
 
-        opts = opts || {};
-        var $el = $elem,
-            cfg = store.updateOptions($el[0], parser.parse($el)),
-            storage =
-                cfg.store === "none"
-                    ? null
-                    : store[cfg.store](this.name + $el[0].id);
-        this.$el = $el;
-        this.cfg = cfg;
-        this.storage = storage;
-        cfg.defaultDate = (storage && storage.get("date")) || cfg.defaultDate;
-        cfg.defaultView = (storage && storage.get("view")) || cfg.defaultView;
-        cfg.tooltipConfig = $el.data("patCalendarTooltip");
-        cfg.modalConfig = $el.data("patCalendarModal");
-        if (cfg.tooltipConfig) {
-            var match = cfg.tooltipConfig.match(/url:[ ](.*?)(;|$)/);
-            cfg.tooltipConfig = cfg.tooltipConfig.replace(match[0], "");
-            cfg.newEventURL = match[1];
+        let timezone = this.el_timezone?.value || opts.timezone || null;
+        if (timezone) {
+            config.timeZone = timezone;
         }
 
-        if (!opts.ignoreUrl) {
-            var search = calendar._parseSearchString();
-            if (search["default-date"]) {
-                cfg.defaultDate = search["default-date"];
-            }
-            if (search["default-view"]) {
-                cfg.defaultView = search["default-view"];
-            }
+        const sources = opts.event.sources || [];
+        if (opts.url && !sources.includes(opts.url)) {
+            // add, but do not re-add same source twice.
+            sources.push(opts.url);
         }
-
-        var calOpts = {
-            lang: lang,
-            axisFormat: cfg.timeFormat,
-            columnFormat: cfg.column,
-            defaultDate: cfg.defaultDate,
-            defaultView: cfg.defaultView,
-            droppable: cfg.dropExternalEvents, // Enable dropping of external elements (i.e. not events)
-            editable: cfg.dragAndDrop, // Enable drag&drop and drag2resize of events
-            dropAccept: cfg.externalEventSelector,
-            firstDay:
-                this.dayNames.indexOf(cfg.first.day) >= 0
-                    ? this.dayNames.indexOf(cfg.first.day)
-                    : 0,
-            firstHour: cfg.first.hour,
-            header: false,
-            height: cfg.height !== "auto" ? cfg.height : undefined,
-            timeFormat: cfg.timeFormat,
-            titleFormat: cfg.title,
-            viewRender: calendar.highlightButtons,
-
-            // Callback functions
-            // ------------------
-            drop: this._externalEventDropped,
-            eventDrop: this._changeEventDates,
-            eventResize: this._changeEventDates,
-            events: function (start, end, timezone, callback) {
-                var events = calendar.parseEvents($el, timezone);
-                callback(events);
-            }.bind(this),
-            eventAfterRender: function (ev, $event) {
-                var url = "";
-                if (ev.id === "pat-calendar-new-event") {
-                    url = utils.addURLQueryParameter(
-                        cfg.newEventURL,
-                        "date",
-                        ev.start.format()
-                    );
-                    registry.scan(
-                        $event
-                            .addClass("pat-tooltip")
-                            .attr({ "data-pat-tooltip": cfg.tooltipConfig })
-                            .attr({ href: url })
-                    );
-                    $event.trigger("click.tooltip");
-                    $event.on("pat-update", function (event, data) {
-                        if (
-                            data.pattern === "tooltip" &&
-                            data.hidden === true
-                        ) {
-                            event.stopPropagation();
-                            if ($(this).is(":visible")) {
-                                $el.fullCalendar("removeEvents", ev.id);
-                            }
-                        }
-                    });
-                } else {
-                    url = ev.url;
-                    registry.scan(
-                        $event
-                            .addClass("pat-tooltip")
-                            .attr({ "data-pat-tooltip": cfg.tooltipConfig })
-                            .attr({ href: url })
-                    );
-                    $event.on("pat-update", function (event, data) {
-                        if (
-                            data.pattern === "tooltip" &&
-                            data.hidden === true
-                        ) {
-                            event.stopPropagation();
-                        }
-                    });
-                }
-            },
-            dayClick: function (moment, ev, view) {
-                /* If "data-pat-calendar-tooltip" was configured, we open
-                 * a tooltip when the user clicks on an day in the
-                 * calendar.
-                 */
-                if (!(cfg.tooltipConfig && cfg.newEventURL)) {
-                    return;
-                }
-                var end;
-                if (view.name !== "month") {
-                    end = moment.clone().add(30, "minutes");
-                } else {
-                    end = undefined;
-                }
-                var id = "pat-calendar-new-event";
-                $el.fullCalendar("removeEvents", id);
-                $el.fullCalendar("renderEvent", {
-                    title: "New Event",
-                    start: moment,
-                    end: end,
-                    id: id,
-                });
-            },
-        };
-
-        $el.categories = $(
-            _.uniq(
-                $el.find(".cal-events .cal-event").map(function () {
-                    return this.className.split(" ").filter(function (cls) {
-                        return /^cal-cat/.test(cls);
-                    });
-                })
-            )
-        );
-        this._registerEventRefetchers($el);
-        this._registerCategoryControls($el);
-        var $controlRoot = cfg.calendarControls ? $(cfg.calendarControls) : $el;
-        $el.$controlRoot = $controlRoot;
-        cfg.timezone = calOpts.timezone = $controlRoot
-            .find("select.timezone")
-            .val();
-        $el.fullCalendar(calOpts);
-        $el.find(".fc-content").appendTo($el); // move to end of $el
-        this._registerRedrawHandlers();
-        $el.find(".cal-title").text($el.fullCalendar("getView").title);
-        $el.$controlRoot
-            .find(this.classMap[calOpts.defaultView])
-            .addClass("active");
-        calendar._registerCalendarControls($el);
-        $el.find(".cal-events").css("display", "none");
-        this._restoreCalendarControls();
-        setTimeout(function () {
-            $el.fullCalendar(
-                "option",
-                "height",
-                $el.find(".fc-view-container").height()
-            );
-            $el.fullCalendar("refetchEvents");
-        }, 900);
-        //            } )
-    },
-
-    _addNewEvent: function ($el, $event, data) {
-        /* Add a new event to the list of events parsed by fullcalendar.
-         * Used when dropping a foreign element.
-         */
-        // FIXME: this code is makes too much assumptions of the structure
-        // of the dropped element. Needs to be made more generic, together
-        // with parseEvents.
-        var $events = $el.find(".cal-events");
-        var $details = $event.find("ul.details");
-        $details.append(
-            $("<li>").append(
-                $("<time>")
-                    .addClass("start")
-                    .attr("datetime", data.start)
-                    .text(data.start)
-            )
-        );
-        $details.append(
-            $("<li>").append(
-                $("<time>")
-                    .addClass("end")
-                    .attr("datetime", data.end)
-                    .text(data.end)
-            )
-        );
-        if (data.allDay === true) {
-            $event.addClass("all-day");
-        }
-        $events.append($event);
-    },
-
-    _externalEventDropped: function (moment, ev, obj, view) {
-        var $event = $(this),
-            url = $event.find("a").addBack("a").attr("href"),
-            data = {
-                "start": moment.format(),
-                "pat-calendar-event-drop": true,
-            };
-        if (view.name === "month") {
-            data.end = moment.clone().format();
-            data.allDay = true;
-        } else {
-            data.end = moment.clone().add(30, "minutes").format();
-            data.allDay = false;
-        }
-        calendar._addNewEvent(calendar.$el, $event, data);
-        calendar._refetchEvents(calendar.$el);
-        $.getJSON(url, data);
-    },
-
-    _changeEventDates: function (evt) {
-        /* Called when an event's dates have changed due to a drag&drop or
-         * drag&resize action.
-         */
-        var $event = calendar.findEventByURL(calendar.$el, evt.url),
-            regex = /\+[0-9]{2}:[0-9]{2}$/,
-            match = evt.start
-                .clone()
-                .tz(calendar.cfg.timezone)
-                .format()
-                .match(regex),
-            data = {
-                "allDay": evt.allDay,
-                "pat-calendar-event-drop": true,
-                "start": evt.start.format(),
-            };
-        if (evt.allDay === true) {
-            // XXX: In fullcalendar 2 the end-date is no longer inclusive,
-            // so we substract a day here.
-            data.end = (evt.end === null
-                ? evt.start.clone()
-                : evt.end.clone().subtract("days", 1)
-            ).format();
-        } else {
-            data.end = (evt.end === null
-                ? evt.start.clone().add(30, "minutes")
-                : evt.end
-            ).format();
-        }
-        var tzstr = match && match.length > 0 ? match[0] : "";
-        var startstr = data.start + tzstr;
-        var endstr = data.end + tzstr;
-        $event.find("time.start").attr("datetime", startstr).text(startstr);
-        $event.find("time.end").attr("datetime", endstr).text(endstr);
-        $.getJSON(evt.url, data);
-    },
-
-    _refetchEvents: function ($el) {
-        $el.fullCalendar("refetchEvents");
-    },
-
-    _redrawCalendar: function () {
-        this.$el.fullCalendar(
-            "option",
-            "height",
-            this.$el.find(".fc-view-container").height()
-        );
-    },
-
-    _registerRedrawHandlers: function () {
-        if (calendar.cfg.height === "auto") {
-            calendar._redrawCalendar();
-
-            $(window).on("resize.pat-calendar", function (ev) {
-                if ($(ev.target).hasClass("fc-event")) {
-                    // Don't do anything if the element being resized is a
-                    // calendar event.
-                    // Otherwise drag2resize breaks.
-                    return;
-                }
-                calendar.$el.fullCalendar(
-                    "option",
-                    "height",
-                    calendar.$el.find(".fc-view-container").height()
-                );
-            });
-            $(document).on("pat-update.pat-calendar", function (ev) {
-                // Don't redraw if the change was in a tooltip, otherwise
-                // it will close the tooltip prematurely (assuming here
-                // it's a calendar event tooltip).
-                if ($(ev.target).parents(".tooltip-container").length === 0) {
-                    setTimeout(function () {
-                        calendar.$el.fullCalendar(
-                            "option",
-                            "height",
-                            calendar.$el.find(".fc-view-container").height()
-                        );
-                    }, 300);
-                }
-            });
-        }
-    },
-
-    _registerEventRefetchers: function ($el) {
-        /* Register handlers for those IO events that necessitate a refetching
-         * of the calendar's event objects.
-         */
-        $el.on(
-            "keyup.pat-calendar",
-            ".filter .search-text",
-            utils.debounce(calendar._refetchEvents.bind(calendar, $el), 400)
-        );
-        $el.on(
-            "click.pat-calendar",
-            ".filter .search-text[type=search]",
-            utils.debounce(calendar._refetchEvents.bind(calendar, $el), 400)
-        );
-        $el.on(
-            "change.pat-calendar",
-            ".filter select[name=state]",
-            calendar._refetchEvents.bind(calendar, $el)
-        );
-        $el.on(
-            "change.pat-calendar",
-            ".filter .check-list",
-            calendar._refetchEvents.bind(calendar, $el)
-        );
-    },
-
-    _registerCategoryControls: function ($el) {
-        /* The "category controls" are checkboxes that cause different
-         * types of events to be shown or hidden.
-         *
-         * Configured via the "category-controls" parser argument.
-         *
-         * Events will be refetched.
-         */
-        var $categoryRoot = calendar.cfg.categoryControls
-            ? $(calendar.cfg.categoryControls)
-            : $el;
-        $el.$catControls = $categoryRoot.find("input[type=checkbox]");
-        $el.$catControls.on("change.pat-calendar", function () {
-            if (this.id) {
-                calendar.storage.set(this.id, this.checked);
-            }
-            calendar._refetchEvents($el);
-        });
-    },
-
-    _registerCalendarControls: function ($el) {
-        /* Register handlers for the calendar control elements.
-         *
-         * Configured via the "calendar-controls" parser argument.
-         */
-        $el.$controlRoot.on("click.pat-calendar", ".jump-next", function () {
-            $el.fullCalendar("next");
-            calendar._viewChanged($el);
-        });
-        $el.$controlRoot.on("click.pat-calendar", ".jump-prev", function () {
-            $el.fullCalendar("prev");
-            calendar._viewChanged($el);
-        });
-        $el.$controlRoot.on("click.pat-calendar", ".jump-today", function () {
-            $el.fullCalendar("today");
-            calendar._viewChanged($el);
-        });
-        $el.$controlRoot.on("click.pat-calendar", ".view-month", function () {
-            $el.fullCalendar("changeView", "month");
-            calendar._viewChanged($el);
-        });
-        $el.$controlRoot.on("click.pat-calendar", ".view-week", function () {
-            $el.fullCalendar("changeView", "agendaWeek");
-            calendar._viewChanged($el);
-        });
-        $el.$controlRoot.on("click.pat-calendar", ".view-day", function () {
-            $el.fullCalendar("changeView", "agendaDay");
-            calendar._viewChanged($el);
-        });
-        $el.$controlRoot.on(
-            "change.pat-calendar",
-            "select.timezone",
-            function () {
-                calendar.destroy($el);
-                calendar.init($el, { ignoreUrl: true });
-            }
-        );
-    },
-
-    destroy: function ($el) {
-        $el.off(".pat-calendar");
-        $el.$catControls.off(".pat-calendar");
-        $el.$controlRoot.off(".pat-calendar");
-        $(window).off(".pat-calendar");
-        $(document).off(".pat-calendar");
-        $(".cal-events .cal-event").off(".pat-calendar");
-        $el.fullCalendar("destroy");
-    },
-
-    _viewChanged: function ($el) {
-        // update title
-        var $title = $el.find(".cal-title");
-        $title.html($el.fullCalendar("getView").title);
-        // adjust height
-        if (calendar.cfg.height === "auto") {
-            $el.fullCalendar(
-                "option",
-                "height",
-                $el.find(".fc-view-container").height()
-            );
-        }
-        // store current date and view
-        var date = $el.fullCalendar("getDate").format(),
-            view = $el.fullCalendar("getView").name;
-        calendar.storage.set("date", date);
-        calendar.storage.set("view", view);
-    },
-
-    highlightButtons: function (view, element) {
-        var $el = element.parents(".pat-calendar").first(),
-            $body = element.parents("body").first(),
-            $today = $el.find(".jump-today");
-        $today.removeClass("active");
-        if (view.name === "agendaDay") {
-            var calDate = $el.fullCalendar("getDate"),
-                today = $.fullCalendar.moment();
+        config.eventSources = [];
+        for (const [idx, url] of sources.entries()) {
+            const src = this.create_event_source(idx, url);
+            this.eventSources.push(src); // we need to keep all srcs untouched to add/remove from fc eventSources.
             if (
-                calDate.date() === today.date() &&
-                calDate.month() === today.month() &&
-                calDate.year() === today.year()
+                opts.event["sources-active"].length === 0 ||
+                opts.event["sources-active"][idx] === "on"
             ) {
-                $today.addClass("active");
+                config.eventSources.push(src);
             }
         }
-        $body.find(".view-month").removeClass("active");
-        $body.find(".view-week").removeClass("active");
-        $body.find(".view-day").removeClass("active");
-        $body.find(calendar.classMap[view.name]).addClass("active");
+
+        // Restore category controls from local storage before showing events.
+        this._restoreCategoryControls();
+        this._registerCategoryControls();
+        this.reset_active_categories();
+        config.eventDidMount = (args) => this.init_event(args);
+
+        // Need to create a sub-element of ``pat-calendar`` to allow custom
+        // controls within pat-calendar to not be overwritten.
+        const cal_el = document.createElement("div");
+        cal_el.setAttribute("class", "pat-calendar__fc");
+        el.appendChild(cal_el);
+
+        // Create a element for modals/injections
+        this.mod_el = document.createElement("section");
+        this.mod_el.setAttribute("class", "pat-calendar__modal");
+        el.appendChild(this.mod_el);
+
+        let calendar = (this.calendar = new Calendar(cal_el, config));
+        calendar.render();
+
+        calendar.on("datesSet", this._viewChanged.bind(this));
+        calendar.on("dateClick", this._viewChanged.bind(this));
+
+        if (this.el_title) {
+            this.el_title.innerHTML = calendar.view.title;
+        }
+
+        this._registerCalendarControls();
+        this.setActiveClasses();
     },
 
-    findEventByURL: function ($el, url) {
-        var regex = new RegExp("^" + url + "$");
-        return $el.find(".cal-events .cal-event").filter(function () {
-            return regex.test($(this).find("a").attr("href"));
-        });
+    create_event_source(idx, url) {
+        return {
+            id: `event-source--${idx + 1}`,
+            events: (info, success, failure) =>
+                this._fetch_events(url, info, success, failure),
+            className:
+                this.options.event["sources-classes"][idx] ||
+                `event-source--${idx + 1}`,
+        };
     },
 
-    _restoreCalendarControls: function () {
-        /* Restore values of the calendar controls as stored in
-         * localStorage.
-         */
-        var calKeys = calendar.storage._allKeys();
-        calendar.$el.$catControls.each(function () {
-            if (!this.id) {
+    event_mapper(event) {
+        // Maps backend results to the fullcalendar event schema.
+        // Default implementation confirms to plone.restapi conventions.
+        const ret = {
+            id: event.UID,
+            title: event.title,
+            start: new Date(event.start),
+            end: new Date(event.end),
+            allDay: event.whole_day,
+            url: event["@id"],
+
+            backgroundColor: event.color,
+            borderColor: event.color,
+            classNames: event.class ? event.class.split(" ") : [],
+
+            // non fullcalendar standard fields
+            description: event.description,
+            text: event.text,
+            location: event.location,
+            open_end: event.open_end,
+            recurrence: event.recurrence,
+            attendees: event.attendees,
+            contact_name: event.contact_name,
+            contact_phone: event.contact_phone,
+            contact_email: event.contact_email,
+            event_url: event.event_url,
+        };
+        return ret;
+    },
+
+    update_event(event, data) {
+        // Updated an existing event with new event properties.
+        event.setDates(data.start, data.end);
+        event.setAllDay(data.allDay);
+        event.setProp("id", data.id);
+        event.setProp("title", data.title);
+        event.setProp("url", data.url);
+
+        event.setProp("backgroundColor", data.color);
+        event.setProp("borderColor", data.color);
+
+        event.setExtendedProp("description", data.description);
+        event.setExtendedProp("text", data.text);
+        event.setExtendedProp("location", data.location);
+        event.setExtendedProp("open_end", data.open_end);
+        event.setExtendedProp("recurrence", data.recurrence);
+        event.setExtendedProp("attendees", data.attendees);
+        event.setExtendedProp("contact_name", data.contact_name);
+        event.setExtendedProp("contact_phone", data.contact_phone);
+        event.setExtendedProp("contact_email", data.contact_email);
+        event.setExtendedProp("event_url", data.event_url);
+    },
+
+    async _fetch_events(url, info, success, failure) {
+        let results = [];
+        while (url) {
+            url = url
+                .replace("${start_str}", info.startStr.split("T")[0])
+                .replace("${end_str}", info.endStr.split("T")[0]);
+
+            let response;
+            try {
+                response = await fetch(url, {
+                    method: "GET",
+                    mode: "cors",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                    },
+                });
+            } catch (e) {
+                failure(e);
                 return;
             }
-            if (
-                calKeys.indexOf(calendar.storage.prefix + ":" + this.id) !== -1
-            ) {
-                if (calendar.storage.get(this.id) === false) {
-                    $(this).prop("checked", false).trigger("change");
-                    $(this).parent().removeClass("checked");
-                    $(this).parent().addClass("unchecked");
-                } else {
-                    $(this).prop("checked", true).trigger("change");
-                    $(this).parent().removeClass("unchecked");
-                    $(this).parent().addClass("checked");
-                }
+            let result = await response.json();
+            let results_ = result.items?.map(this.event_mapper) || [];
+            results = results.concat(results_);
+
+            // resolve all ``next`` batching urls
+            url = result.batching?.next || null;
+        }
+
+        success(results);
+    },
+
+    init_event(args) {
+        this.filter_event(args.event);
+        let source = this.options.pat["inject-source"];
+        let target = this.options.pat["inject-target"];
+        if (source || target) {
+            source = source || "body";
+            target = target || "body";
+            args.el.classList.add("pat-inject");
+            args.el.setAttribute(
+                "data-pat-inject",
+                `target: ${target}; source: ${source}`
+            );
+            registry.scan(args.el);
+        }
+    },
+
+    filter_event(event) {
+        let show = true;
+        if (this.active_categories !== null) {
+            // intersection
+            show =
+                this.active_categories.filter((it) =>
+                    event.classNames.includes(it)
+                ).length > 0;
+        }
+        if (show) {
+            event.setProp("display", "auto");
+        } else {
+            event.setProp("display", "none");
+        }
+    },
+
+    reset_active_categories() {
+        const ctrls = this.get_category_controls();
+        this.active_categories = null;
+        if (ctrls.length) {
+            this.active_categories = ctrls
+                .filter((el) => el.checked)
+                .map((el) => el.id);
+        }
+        this.storage &&
+            this.storage.set("active_categories", this.active_categories);
+    },
+
+    get_category_controls() {
+        const ctrl_containers = this.options.categoryControls
+            ? document.querySelectorAll(this.options.categoryControls)
+            : [this.el];
+        const ctrls = [];
+        for (const it of ctrl_containers) {
+            const inp = it.querySelectorAll("input[type=checkbox]");
+            ctrls.push(...inp);
+        }
+        return [...new Set(ctrls)]; // do not return the same inputs multiple times
+    },
+
+    _registerCategoryControls() {
+        /* The "category controls" are checkboxes that cause different
+         * types of events to be shown or hidden.
+         */
+        for (const ctrl of this.get_category_controls()) {
+            ctrl.addEventListener("change", () => {
+                this.reset_active_categories();
+                this.calendar.getEvents().map(this.filter_event.bind(this));
+            });
+        }
+    },
+
+    _restoreCategoryControls() {
+        /* Restore values of the category controls as stored in store.
+         * NOTE: run BEFORE _registerCalendarControls
+         */
+        const ctrls = this.get_category_controls();
+        const active_categories =
+            (this.storage && this.storage.get("active_categories")) || null;
+
+        if (!ctrls.length || active_categories === null) {
+            // No category controls or never set, use default un/checked status.
+            return;
+        }
+
+        for (const ctrl of ctrls) {
+            if (ctrl.hidden) {
+                // Do not set non-user-interactable inputs.
+                // They are programmatically set.
+                continue;
+            }
+            if (active_categories.includes(ctrl.id)) {
+                ctrl.checked = true;
+            } else {
+                ctrl.checked = false;
+            }
+            ctrl.dispatchEvent(new Event("change"));
+        }
+    },
+
+    _registerCalendarControls() {
+        this.el_jump_next?.addEventListener("click", (event) => {
+            event.preventDefault();
+            this.calendar.next();
+        });
+
+        this.el_jump_prev?.addEventListener("click", (event) => {
+            event.preventDefault();
+            this.calendar.prev();
+        });
+
+        this.el_jump_today?.addEventListener("click", (event) => {
+            event.preventDefault();
+            this.calendar.today();
+        });
+
+        this.el_view_month?.addEventListener("click", (event) => {
+            event.preventDefault();
+            this.calendar.changeView("dayGridMonth");
+        });
+
+        this.el_view_week?.addEventListener("click", (event) => {
+            event.preventDefault();
+            this.calendar.changeView("timeGridWeek");
+        });
+
+        this.el_view_day?.addEventListener("click", (event) => {
+            event.preventDefault();
+            this.calendar.changeView("timeGridDay");
+        });
+
+        this.el_view_list_year?.addEventListener("click", (event) => {
+            event.preventDefault();
+            this.calendar.changeView("listYear");
+        });
+
+        this.el_view_list_month?.addEventListener("click", (event) => {
+            event.preventDefault();
+            this.calendar.changeView("listMonth");
+        });
+
+        this.el_view_list_week?.addEventListener("click", (event) => {
+            event.preventDefault();
+            this.calendar.changeView("listWeek");
+        });
+
+        this.el_view_list_day?.addEventListener("click", (event) => {
+            event.preventDefault();
+            this.calendar.changeView("listDay");
+        });
+
+        this.el_timezone?.addEventListener("change", (event) => {
+            event.preventDefault();
+            this.calendar.setOption("timeZone", event.target.value);
+        });
+    },
+
+    setActiveClasses() {
+        // Set active classes of UI elements.
+
+        this.el_jump_today?.classList.remove("active");
+        this.el_view_month?.classList.remove("active");
+        this.el_view_week?.classList.remove("active");
+        this.el_view_day?.classList.remove("active");
+        this.el_view_list_year?.classList.remove("active");
+        this.el_view_list_month?.classList.remove("active");
+        this.el_view_list_week?.classList.remove("active");
+        this.el_view_list_day?.classList.remove("active");
+
+        const cdate = this.calendar.currentData.currentDate;
+        const today = new Date();
+        if (
+            cdate.getYear() === today.getYear() &&
+            cdate.getMonth() === today.getMonth() &&
+            cdate.getDate() === today.getDate()
+        ) {
+            this.el_jump_today?.classList.add("active");
+        }
+
+        switch (this.calendar.view.type) {
+            case "dayGridMonth":
+                this.el_view_month?.classList.add("active");
+                break;
+            case "timeGridWeek":
+                this.el_view_week?.classList.add("active");
+                break;
+            case "timeGridDay":
+                this.el_view_day?.classList.add("active");
+                break;
+            case "listYear":
+                this.el_view_list_year?.classList.add("active");
+                break;
+            case "listMonth":
+                this.el_view_list_month?.classList.add("active");
+                break;
+            case "listWeek":
+                this.el_view_list_week?.classList.add("active");
+                break;
+            case "listDay":
+                this.el_view_list_day?.classList.add("active");
+                break;
+        }
+    },
+
+    _viewChanged(data) {
+        // Set title
+        if (this.el_title) {
+            this.el_title.innerHTML = data.view.title;
+        }
+        // store current date and view
+        const date = data.view.currentStart.toISOString();
+        const view = data.view.type;
+        this.storage && this.storage.set("date", date);
+        this.storage && this.storage.set("view", view);
+
+        const query = new URLSearchParams(window.location.search);
+        query.set("date", date);
+        query.set("view", view);
+        history.replaceState(null, null, "?" + query.toString());
+
+        this.setActiveClasses();
+    },
+
+    async addNewEvent(info) {
+        let addUrl = this.options.addUrl;
+        if (!addUrl) {
+            return;
+        }
+
+        let start, end, allDay;
+        if (this.calendar.view.type === "timeGridMonth") {
+            start = info.date;
+            end = info.date;
+            allDay = true;
+        } else {
+            start = info.date;
+            end = new Date(start.getTime() + 1 * 60 * 60 * 1000); // same as start, 1h offset
+            allDay = false;
+        }
+        addUrl = addUrl
+            .replace("${start_str}", start)
+            .replace("${end_str}", end)
+            .replace("${all_day}", allDay ? "1" : "0");
+
+        const event = this.calendar.addEvent(
+            {
+                title: "New Event",
+                start: start,
+                end: end,
+            },
+            true
+        );
+
+        await new Modal(this.mod_el, {
+            url: addUrl,
+            trigger: "autoload",
+        });
+
+        //const mod_el = document.querySelector("#pat-modal form");
+        //mod_el.addEventListener("submit", (e) => {
+        document.addEventListener("submit", async (e) => {
+            const form = e.target;
+            const form_data = new FormData(form);
+            try {
+                const response = await fetch(form.action, {
+                    method: form.method,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: form_data,
+                });
+                let data = await response.json();
+                data = this.event_mapper(data);
+                this.update_event(event, data);
+            } catch (error) {
+                log.error(error);
+                event.remove();
             }
         });
     },
-
-    parseEvents: function ($el, timezone) {
-        var $events = $el.find(".cal-events"),
-            $filter = $el.find(".filter"),
-            searchText,
-            regex;
-
-        // parse filters
-        if ($filter && $filter.length > 0) {
-            searchText = $(".search-text", $filter).val();
-            regex = new RegExp(searchText, "i");
-        }
-        var shownCats = $el.categories.filter(function () {
-            var cat = this;
-            return $el.$catControls.filter(function () {
-                return (
-                    this.checked && $(this).parents().addBack().hasClass(cat)
-                );
-            }).length;
-        });
-
-        var events = $events
-            .find(".cal-event")
-            .filter(function () {
-                var $event = $(this);
-                if (searchText && !regex.test($event.find(".title").text())) {
-                    log.debug(
-                        "remove due to search-text=" + searchText,
-                        $event
-                    );
-                    return false;
-                }
-                if ($el.$catControls.length === 0) {
-                    // In case we don't use filter categories, always return all events
-                    return true;
-                }
-                return shownCats.filter(function () {
-                    return $event.hasClass(this);
-                }).length;
-            })
-            .map(
-                function (idx, event) {
-                    var attr, i;
-                    // classNames: all event classes without "event" + anchor classes
-                    var classNames = $(event)
-                        .attr("class")
-                        .split(/\s+/)
-                        .filter(function (cls) {
-                            return cls !== "cal-event";
-                        })
-                        .concat($("a", event).attr("class").split(/\s+/));
-                    // attrs: all "data-" attrs from anchor
-                    var allattrs = $("a", event)[0].attributes,
-                        attrs = {};
-                    for (attr, i = 0; i < allattrs.length; i++) {
-                        attr = allattrs.item(i);
-                        if (attr.nodeName.slice(0, 5) === "data-") {
-                            attrs[attr.nodeName] = attr.nodeValue;
-                        }
-                    }
-
-                    var location = ($(".location", event).html() || "").trim();
-
-                    var startstr = $(".start", event).attr("datetime"),
-                        endstr = $(".end", event).attr("datetime"),
-                        start = MomentTZData.parseZone(startstr),
-                        end = MomentTZData.parseZone(endstr),
-                        allday = $(event).hasClass("all-day");
-                    if (allday) {
-                        // XXX: In fullcalendar 2 the end-date is no longer inclusive, but
-                        // it should be. We fix that by adding a day so that the
-                        // pat-calendar API stays the same and stays intuitive.
-                        end.add(1, "days");
-                    }
-                    if (timezone) {
-                        start = start.tz(timezone);
-                        end = end.tz(timezone);
-                    }
-                    var ev = {
-                        title:
-                            $(".title", event).text().trim() +
-                            (location ? " (" + location + ")" : ""),
-                        start: start.format(),
-                        end: end.format(),
-                        allDay: allday,
-                        url: $("a", event).attr("href"),
-                        className: classNames,
-                        attrs: attrs,
-                        editable: $(event).hasClass("editable"),
-                    };
-                    if (!ev.title) {
-                        log.error("No event title for:", event);
-                    }
-                    if (!ev.start) {
-                        log.error("No event start for:", event);
-                    }
-                    if (!ev.url) {
-                        log.error("No event url for:", event);
-                    }
-                    return ev;
-                }.bind(this)
-            )
-            .toArray();
-
-        return events;
-    },
-};
-registry.register(calendar);
-
-export default calendar;
+});

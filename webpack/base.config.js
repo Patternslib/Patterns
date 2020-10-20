@@ -83,11 +83,7 @@ module.exports = (env) => {
         },
         resolve: {
             alias: {
-                "moment": path.resolve(__dirname, "../node_modules/moment"),
-                "moment-timezone": path.resolve(
-                    __dirname,
-                    "../node_modules/moment-timezone"
-                ),
+                moment: path.resolve(__dirname, "../node_modules/moment"),
             },
         },
         plugins: [

@@ -25,7 +25,13 @@
 ### Features
 
 -   Implenent lazy loading for external libraries via dynamic imports. Leads to significantly reduced bundle sizes.
--   Upgrade pat-calendar to use lates fullcalendar version (5.3.0).
+-   Upgrade pat-calendar to use latest fullcalendar version (5.3.0).
+-   pat calendar: Add fullcalendar list views.
+-   pat calendar: Store the current date and view in query parameters.
+-   pat calendar: Fetch events from the backend.
+-   pat calendar: Allow filtering/hiding events based in comparing the checkbox id with the classes of the displayed events.
+-   pat calendar: Support injection of events when clicking on and event rather than redirecting to them.
+-   pat calendar: Store view, date and active categories per URL, allowing to individually customize the calendar per page.
 -   pat tooltip: Use tippy v6 based implementation.
 -   Allow overriding the public path from outside via the definition of a ``window.__patternslib_public_path__`` global variable.
 
@@ -54,6 +60,7 @@
 
 -   pat calendar: Fix language loading error "Error: Cannot find module './en.js'"
 -   pat depends, pat auto suggest: Fix a problem with initialization of ``pat-auto-suggest`` which occurred after the lazy loading changes.
+-   pat checklist: Also dispatch standard ``change`` event when de/selecting all items.
 
 
 ## 3.0.0-dev - unreleased

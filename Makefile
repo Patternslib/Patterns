@@ -56,7 +56,6 @@ all-css:: css
 	@$(SASS) -I . -I _sass src/pat/auto-suggest/_auto-suggest.scss src/pat/auto-suggest/auto-suggest.css
 	@$(SASS) -I . -I _sass src/pat/autofocus/_autofocus.scss src/pat/autofocus/autofocus.css
 	@$(SASS) -I . -I _sass src/pat/bumper/_bumper.scss src/pat/bumper/bumper.css
-	@$(SASS) -I . -I _sass src/pat/calendar/_calendar.scss src/pat/calendar/calendar.css
 	@$(SASS) -I . -I _sass src/pat/carousel/_carousel.scss src/pat/carousel/carousel.css
 	@$(SASS) -I . -I _sass src/pat/checklist/_checklist.scss src/pat/checklist/checklist.css
 	@$(SASS) -I . -I _sass src/pat/clone/_clone.scss src/pat/clone/clone.css
@@ -69,7 +68,6 @@ all-css:: css
 	@$(SASS) -I . -I _sass src/pat/focus/_focus.scss src/pat/focus/focus.css
 	@echo "Almost there, don't give up!"
 	@$(SASS) -I . -I _sass src/pat/forward/_forward.scss src/pat/forward/forward.css
-	@$(SASS) -I . -I _sass src/pat/fullscreen/_fullscreen.scss src/pat/fullscreen/fullscreen.css
 	@$(SASS) -I . -I _sass src/pat/gallery/_gallery.scss src/pat/gallery/gallery.css
 	@$(SASS) -I . -I _sass src/pat/grid/_grid.scss src/pat/grid/grid.css
 	@$(SASS) -I . -I _sass src/pat/image-crop/_image-crop.scss src/pat/image-crop/image-crop.css

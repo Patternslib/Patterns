@@ -129,34 +129,37 @@ var _ = {
     },
 
     onSelectAll: function (event) {
-        const button_clicked = event.currentTarget;
+        event.preventDefault();
 
         /* look up checkboxes which are related to my button by going up one parent
         at a time until I find some for the first time */
-        var checkbox_siblings = _._findSiblings(
-            button_clicked,
+        const checkbox_siblings = _._findSiblings(
+            event.currentTarget,
             "input[type=checkbox]:not(:checked)"
         );
-        checkbox_siblings.each(function () {
-            $(this).prop("checked", true).trigger("change");
-        });
 
-        event.preventDefault();
+        for (const box of checkbox_siblings) {
+            box.checked = true;
+            $(box).trigger("change");
+            box.dispatchEvent(new Event("change"));
+        }
     },
 
     onDeselectAll: function (event) {
-        const button_clicked = event.currentTarget;
+        event.preventDefault();
 
         /* look up checkboxes which are related to my button by going up one parent
         at a time until I find some for the first time */
-        var checkbox_siblings = _._findSiblings(
-            button_clicked,
+        const checkbox_siblings = _._findSiblings(
+            event.currentTarget,
             "input[type=checkbox]:checked"
         );
-        checkbox_siblings.each(function () {
-            $(this).prop("checked", false).trigger("change");
-        });
-        event.preventDefault();
+
+        for (const box of checkbox_siblings) {
+            box.checked = false;
+            $(box).trigger("change");
+            box.dispatchEvent(new Event("change"));
+        }
     },
 
     /* The following methods are moved here from pat-checked-flag, which is being deprecated */
