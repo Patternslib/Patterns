@@ -1,4 +1,5 @@
 import "regenerator-runtime/runtime"; // needed for ``await`` support
+import $ from "jquery";
 import Base from "../../core/base";
 import logging from "../../core/logging";
 import Modal from "../modal/modal";
@@ -413,7 +414,7 @@ export default Base.extend({
             } else {
                 ctrl.checked = false;
             }
-            ctrl.dispatchEvent(new Event("change"));
+            $(ctrl).trigger("change");
         }
     },
 
