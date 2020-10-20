@@ -15,13 +15,13 @@ describe("pat-checklist", function () {
             var $fieldset = $("fieldset.pat-checklist");
             // The ordering of elements here is important (due to :nth-child selector criteria being used).
             $fieldset.append(
-                $("<input type='checkbox' name='monkeys' checked='checked' />")
+                $("<input type='checkbox' name='monkeys' checked />")
             );
             $fieldset.append(
-                $("<input type='checkbox' name='apes' checked='checked' />")
+                $("<input type='checkbox' name='apes' checked />")
             );
             $fieldset.append(
-                $("<input type='checkbox' name='humans' checked='checked' />")
+                $("<input type='checkbox' name='humans' checked />")
             );
             $fieldset.append(
                 $("<button class='select-all'>Select all</button>")
@@ -40,32 +40,38 @@ describe("pat-checklist", function () {
             $("#lab").children("fieldset.pat-checklist").remove();
         },
         checkAllBoxes: function () {
-            $("fieldset.pat-checklist input[type=checkbox]").each(function () {
-                $(this).prop("checked", true).trigger("change");
-            });
+            for (const el of document.querySelectorAll(
+                "fieldset.pat-checklist input[type=checkbox]"
+            )) {
+                el.checked = true;
+                $(el).trigger("change");
+            }
         },
         uncheckAllBoxes: function () {
-            $("fieldset.pat-checklist input[type=checkbox]").each(function () {
-                $(this).prop("checked", false).trigger("change");
-            });
+            for (const el of document.querySelectorAll(
+                "fieldset.pat-checklist input[type=checkbox]"
+            )) {
+                el.checked = false;
+                $(el).trigger("change");
+            }
         },
         checkBox: function (idx) {
-            $(
+            const box = $(
                 "fieldset.pat-checklist input[type=checkbox]:nth-child(" +
                     (idx || 1) +
                     ")"
-            )
-                .prop("checked", true)
-                .trigger("change");
+            );
+            box[0].checked = true;
+            box.trigger("change");
         },
         uncheckBox: function (idx) {
-            $(
+            const box = $(
                 "fieldset.pat-checklist input[type=checkbox]:nth-child(" +
                     (idx || 1) +
                     ")"
-            )
-                .prop("checked", false)
-                .trigger("change");
+            );
+            box[0].checked = false;
+            box.trigger("change");
         },
     };
 
@@ -103,19 +109,23 @@ describe("pat-checklist", function () {
 
         it("is disabled when all checkboxes are unchecked", function () {
             utils.uncheckAllBoxes();
-            expect($(".deselect-all").prop("disabled")).toBe(true);
+            expect(document.querySelector(".deselect-all").disabled).toBe(true);
         });
 
         it("is enabled when all checkboxes are checked", function () {
             utils.checkAllBoxes();
-            expect($(".deselect-all").prop("disabled")).toBe(false);
+            expect(document.querySelector(".deselect-all").disabled).toBe(
+                false
+            );
         });
 
         it("is enabled when at least one checkbox is checked", function () {
             utils.uncheckAllBoxes();
-            expect($(".deselect-all").prop("disabled")).toBe(true);
+            expect(document.querySelector(".deselect-all").disabled).toBe(true);
             utils.checkBox();
-            expect($(".deselect-all").prop("disabled")).toBe(false);
+            expect(document.querySelector(".deselect-all").disabled).toBe(
+                false
+            );
         });
 
         it("unchecks all checkboxes if it is clicked", function () {
@@ -141,13 +151,19 @@ describe("pat-checklist", function () {
 
         it("becomes disabled when the last checked checkbox is unchecked", function () {
             utils.checkAllBoxes();
-            expect($(".deselect-all").prop("disabled")).toBe(false);
+            expect(document.querySelector(".deselect-all").disabled).toBe(
+                false
+            );
             utils.uncheckBox();
-            expect($(".deselect-all").prop("disabled")).toBe(false);
+            expect(document.querySelector(".deselect-all").disabled).toBe(
+                false
+            );
             utils.uncheckBox(2);
-            expect($(".deselect-all").prop("disabled")).toBe(false);
+            expect(document.querySelector(".deselect-all").disabled).toBe(
+                false
+            );
             utils.uncheckBox(3);
-            expect($(".deselect-all").prop("disabled")).toBe(true);
+            expect(document.querySelector(".deselect-all").disabled).toBe(true);
         });
     });
 
@@ -161,14 +177,14 @@ describe("pat-checklist", function () {
 
         it("is disabled when all boxes are checked", function () {
             utils.checkAllBoxes();
-            expect($(".select-all").prop("disabled")).toBe(true);
+            expect(document.querySelector(".select-all").disabled).toBe(true);
         });
 
         it("is enabled when at least one box is unchecked", function () {
             utils.checkAllBoxes();
-            expect($(".select-all").prop("disabled")).toBe(true);
+            expect(document.querySelector(".select-all").disabled).toBe(true);
             utils.uncheckBox();
-            expect($(".select-all").prop("disabled")).toBe(false);
+            expect(document.querySelector(".select-all").disabled).toBe(false);
         });
 
         it("checks all boxes if it is clicked", function () {
@@ -195,16 +211,16 @@ describe("pat-checklist", function () {
 
         it("becomes enabled when the first checked box is unchecked", function () {
             utils.checkAllBoxes();
-            expect($(".select-all").prop("disabled")).toBe(true);
+            expect(document.querySelector(".select-all").disabled).toBe(true);
             utils.uncheckBox();
-            expect($(".select-all").prop("disabled")).toBe(false);
+            expect(document.querySelector(".select-all").disabled).toBe(false);
         });
         it("understands injection", function () {
-            expect($(".select-all").prop("disabled")).toBe(true);
+            expect(document.querySelector(".select-all").disabled).toBe(true);
             utils.fakeInjectCheckBox();
-            expect($(".select-all").prop("disabled")).toBe(false);
+            expect(document.querySelector(".select-all").disabled).toBe(false);
             $("[name=primates]").prop("checked", true).change();
-            expect($(".select-all").prop("disabled")).toBe(true);
+            expect(document.querySelector(".select-all").disabled).toBe(true);
         });
     });
 
