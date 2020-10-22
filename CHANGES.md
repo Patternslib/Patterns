@@ -36,6 +36,7 @@
 -   Allow overriding the public path from outside via the definition of a ``window.__patternslib_public_path__`` global variable.
 -   Introduce new ``core/dom`` module for DOM manipulation and traversing.
     ``core/dom`` includes methods which help transition from jQuery to the JavaScript DOM API.
+-   core dom: Add ``jqToNode`` to return a DOM node if a jQuery node was passed.
 
 ### Technical
 
