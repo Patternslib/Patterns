@@ -67,6 +67,7 @@
 -   pat calendar: Fix language loading error "Error: Cannot find module './en.js'"
 -   pat depends, pat auto suggest: Fix a problem with initialization of ``pat-auto-suggest`` which occurred after the lazy loading changes.
 -   pat checklist: Also dispatch standard ``change`` event when de/selecting all items.
+-   pat select: Add missing ``<span>`` element around the select element itself. Fixes: https://github.com/quaive/ploneintranet.prototype/issues/1087
 
 
 ## 3.0.0-dev - unreleased
