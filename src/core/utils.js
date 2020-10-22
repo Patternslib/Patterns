@@ -1,5 +1,6 @@
 import $ from "jquery";
 import _ from "underscore";
+import dom from "./dom";
 
 $.fn.safeClone = function () {
     var $clone = this.clone();
@@ -278,45 +279,53 @@ function hasValue(el) {
     return false;
 }
 
-const transitions = {
-    none: { hide: "hide", show: "show" },
-    fade: { hide: "fadeOut", show: "fadeIn" },
-    slide: { hide: "slideUp", show: "slideDown" },
-};
+const hideOrShow = (el, visible, options, pattern_name) => {
+    const $el = $(el);
+    el = dom.jqToNode(el); // ensure dom node
 
-function hideOrShow($el, visible, options, pattern_name) {
+    const transitions = {
+        none: { hide: "hide", show: "show" },
+        fade: { hide: "fadeOut", show: "fadeIn" },
+        slide: { hide: "slideUp", show: "slideDown" },
+    };
+
     const duration =
         options.transition === "css" || options.transition === "none"
             ? null
             : options.effect.duration;
 
-    $el.removeClass("visible hidden in-progress");
-    const onComplete = function () {
-        $el.removeClass("in-progress")
-            .addClass(visible ? "visible" : "hidden")
-            .trigger("pat-update", {
-                pattern: pattern_name,
-                transition: "complete",
-            });
+    const on_complete = () => {
+        el.classList.remove("in-progress");
+        el.classList.add(visible ? "visible" : "hidden");
+        $(el).trigger("pat-update", {
+            pattern: pattern_name,
+            transition: "complete",
+        });
     };
-    if (!duration) {
-        if (options.transition !== "css") {
-            $el[visible ? "show" : "hide"]();
-        }
-        onComplete();
-    } else {
+
+    el.classList.remove("visible");
+    el.classList.remove("hidden");
+    el.classList.remove("in-progress");
+
+    if (duration) {
         const t = transitions[options.transition];
-        $el.addClass("in-progress").trigger("pat-update", {
+        el.classList.add("in-progress");
+        $el.trigger("pat-update", {
             pattern: pattern_name,
             transition: "start",
         });
         $el[visible ? t.show : t.hide]({
             duration: duration,
             easing: options.effect.easing,
-            complete: onComplete,
+            complete: on_complete,
         });
+    } else {
+        if (options.transition !== "css") {
+            $el[visible ? "show" : "hide"]();
+        }
+        on_complete();
     }
-}
+};
 
 function addURLQueryParameter(fullURL, param, value) {
     /* Using a positive lookahead (?=\=) to find the given parameter,
