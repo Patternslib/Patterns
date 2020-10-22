@@ -18,7 +18,10 @@ export default Base.extend({
             el[KEY_RESET] = true;
         }
 
-        this.all_selects = el.querySelectorAll("select:not([multiple])");
+        this.all_selects = dom.querySelectorAllAndMe(
+            el,
+            "select:not([multiple])"
+        );
         for (const sel of this.all_selects) {
             // create parent span if not direct child of a label
             if (!sel.parentNode.matches("label")) {
