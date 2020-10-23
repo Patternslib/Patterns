@@ -21,9 +21,20 @@ const querySelectorAllAndMe = (el, selector) => {
     return all;
 };
 
+const wrap = (el, wrapper) => {
+    // Wrap a element with a wrapper element.
+    // See: https://stackoverflow.com/a/13169465/1337474
+    el = jqToNode(el); // Ensure real DOM node.
+    wrapper = jqToNode(wrapper); // Ensure real DOM node.
+
+    el.parentNode.insertBefore(wrapper, el);
+    wrapper.appendChild(el);
+};
+
 const dom = {
     jqToNode: jqToNode,
     querySelectorAllAndMe: querySelectorAllAndMe,
+    wrap: wrap,
 };
 
 export default dom;
