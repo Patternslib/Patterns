@@ -38,6 +38,7 @@
     ``core/dom`` includes methods which help transition from jQuery to the JavaScript DOM API.
 -   core dom: Add ``jqToNode`` to return a DOM node if a jQuery node was passed.
 -   core dom: Add ``querySelectorAllAndMe`` to do a querySelectorAll including the starter element.
+-   core dom: Add ``wrap`` wrap an element with a wrapper element.
 
 ### Technical
 

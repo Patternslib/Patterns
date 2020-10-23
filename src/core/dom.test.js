@@ -42,4 +42,20 @@ describe("core.dom tests", () => {
             done();
         });
     });
+
+    describe("wrap tests", () => {
+        it("wraps an element within another element.", (done) => {
+            const parent = document.createElement("main");
+            const el = document.createElement("div");
+            const wrapper = document.createElement("section");
+            parent.appendChild(el);
+
+            dom.wrap(el, wrapper);
+            expect(parent.outerHTML).toBe(
+                `<main><section><div></div></section></main>`
+            );
+
+            done();
+        });
+    });
 });
