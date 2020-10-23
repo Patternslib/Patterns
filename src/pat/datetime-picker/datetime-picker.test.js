@@ -22,7 +22,7 @@ describe("pat-datetime-picker", function () {
         pattern.init($el);
         await utils.timeout(1); // wait a tick for async to settle.
 
-        $("input.date", $el.next()).click();
+        $("input.date", $el.parent()).click();
 
         var date = new Date();
         var day = date.getDate().toString();
@@ -59,7 +59,8 @@ describe("pat-datetime-picker", function () {
         ).appendTo(document.body);
         pattern.init($el);
         await utils.timeout(1); // wait a tick for async to settle.
-        $("input.date", $el.next()).click();
+
+        $("input.date", $el.parent()).click();
 
         expect(
             document.querySelector(".pika-lendar th:first-child abbr")
@@ -74,7 +75,7 @@ describe("pat-datetime-picker", function () {
         pattern.init($el);
         await utils.timeout(1); // wait a tick for async to settle.
 
-        $("input.date", $el.next()).click();
+        $("input.date", $el.parent()).click();
 
         expect(
             document.querySelector(
@@ -102,7 +103,7 @@ describe("pat-datetime-picker", function () {
         pattern.init($el);
         await utils.timeout(1); // wait a tick for async to settle.
 
-        $("input.date", $el.next()).click();
+        $("input.date", $el.parent()).click();
 
         expect(
             document.querySelectorAll(".pika-lendar .pika-week")[0].textContent
