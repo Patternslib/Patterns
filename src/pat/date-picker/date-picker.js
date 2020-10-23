@@ -1,20 +1,24 @@
 /* pat-date-picker  - Polyfill for input type=date */
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
-import Parser from "../../core/parser";
 import Base from "../../core/base";
+import Parser from "../../core/parser";
 import utils from "../../core/utils";
 
 // Lazy loading modules.
 let Pikaday;
 let Moment;
 
-var parser = new Parser("date-picker");
+const parser = new Parser("date-picker");
 parser.addArgument("behavior", "styled", ["native", "styled"]);
 parser.addArgument("format", "YYYY-MM-DD");
 parser.addArgument("week-numbers", [], ["show", "hide"]);
 parser.addArgument("i18n"); // URL pointing to JSON resource with i18n values
 parser.addArgument("first-day", 0);
+parser.addArgument("after");
+parser.addArgument("offset-days", 0);
+
+parser.addAlias("behaviour", "behavior");
 
 /* JSON format for i18n
  * { "previousMonth": "Previous Month",
@@ -23,15 +27,21 @@ parser.addArgument("first-day", 0);
  *   "weekdays"     : ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
  *   "weekdaysShort": ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
  * } */
-parser.addAlias("behaviour", "behavior");
 
 export default Base.extend({
     name: "date-picker",
     trigger: ".pat-date-picker",
+
     async init() {
-        this.options = $.extend(parser.parse(this.$el), this.options);
-        this.polyfill = this.options.behavior === "native";
-        if (this.polyfill && utils.checkInputSupport("date", "invalid date")) {
+        const el = this.el;
+        //TODO: make parser with options extend missing options.
+        //this.options = parser.parse(el, opts);
+        this.options = $.extend(parser.parse(el), this.options);
+
+        if (
+            this.options.behavior === "native" &&
+            utils.checkInputSupport("date", "invalid date")
+        ) {
             return;
         }
 
@@ -40,56 +50,50 @@ export default Base.extend({
         Moment = await import("moment");
         Moment = Moment.default;
 
-        if (this.$el.attr("type") === "date") {
-            this.$el.attr("type", "text");
+        if (el.getAttribute("type") === "date") {
+            el.setAttribute("type", "text");
         }
 
-        var config = {
-            field: this.$el[0],
+        const config = {
+            field: el,
             format: this.options.format,
             firstDay: this.options.firstDay,
             showWeekNumber: this.options.weekNumbers === "show",
-            toString: function (date, format) {
+            toString(date, format) {
                 return Moment(date).format(format);
             },
-            onSelect: function () {
+            onSelect() {
                 $(this._o.field).closest("form").trigger("input-change");
                 /* Also trigger input change on date field to support pat-autosubmit. */
                 $(this._o.field).trigger("input-change");
             },
         };
 
-        if (this.$el.attr("min")) {
-            config.minDate = Moment(this.$el.attr("min")).toDate();
+        if (el.getAttribute("min")) {
+            config.minDate = Moment(el.getAttribute("min")).toDate();
         }
-        if (this.$el.attr("max")) {
-            config.maxDate = Moment(this.$el.attr("max")).toDate();
+        if (el.getAttribute("max")) {
+            config.maxDate = Moment(el.getAttribute("max")).toDate();
         }
 
         if (this.options.i18n) {
             $.getJSON(this.options.i18n)
-                .done(function (data) {
+                .done((data) => {
                     config.i18n = data;
                 })
                 .fail(
-                    $.proxy(function () {
+                    $.proxy(() => {
                         console.error(
                             "date-picker could not load i18n: " +
                                 this.options.i18n
                         );
                     }, this)
                 )
-                .always(function () {
+                .always(() => {
                     new Pikaday(config);
                 });
         } else {
             new Pikaday(config);
         }
-        return this.$el;
-    },
-
-    isodate: function () {
-        var now = new Date();
-        return now.toISOString().substr(0, 10);
     },
 });
