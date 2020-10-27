@@ -39,6 +39,7 @@
 -   core dom: Add ``jqToNode`` to return a DOM node if a jQuery node was passed.
 -   core dom: Add ``querySelectorAllAndMe`` to do a querySelectorAll including the starter element.
 -   core dom: Add ``wrap`` wrap an element with a wrapper element.
+-   core dom: Add ``hide`` and ``show`` for DOM elements which retain the original display value.
 
 ### Technical
 

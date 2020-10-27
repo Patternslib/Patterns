@@ -58,4 +58,51 @@ describe("core.dom tests", () => {
             done();
         });
     });
+
+    describe("show/hide tests", () => {
+        it("shows or hides and does keeps the CSS display rule value.", (done) => {
+            const el = document.createElement("div");
+            el.style.borderTop = "2em";
+            el.style.marginTop = "4em";
+
+            dom.hide(el);
+
+            expect(el.style.borderTop).toBe("2em");
+            expect(el.style.marginTop).toBe("4em");
+            expect(el.style.display).toBe("none");
+            expect(
+                el.getAttribute("style").indexOf("display") >= -1
+            ).toBeTruthy();
+
+            dom.show(el);
+
+            expect(el.style.borderTop).toBe("2em");
+            expect(el.style.marginTop).toBe("4em");
+            expect(el.style.display).toBeFalsy();
+            expect(
+                el.getAttribute("style").indexOf("display") === -1
+            ).toBeTruthy();
+
+            el.style.display = "inline";
+            dom.hide(el);
+
+            expect(el.style.borderTop).toBe("2em");
+            expect(el.style.marginTop).toBe("4em");
+            expect(el.style.display).toBe("none");
+            expect(
+                el.getAttribute("style").indexOf("display") >= -1
+            ).toBeTruthy();
+
+            dom.show(el);
+
+            expect(el.style.borderTop).toBe("2em");
+            expect(el.style.marginTop).toBe("4em");
+            expect(el.style.display).toBe("inline");
+            expect(
+                el.getAttribute("style").indexOf("display") >= -1
+            ).toBeTruthy();
+
+            done();
+        });
+    });
 });

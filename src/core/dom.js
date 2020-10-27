@@ -1,5 +1,7 @@
 /* Utilities for DOM traversal or navigation */
 
+const DATA_STYLE_DISPLAY = "__patternslib__style__display";
+
 const jqToNode = (el) => {
     // Return a DOM node if a jQuery node was passed.
     if (el.jquery) {
@@ -31,10 +33,34 @@ const wrap = (el, wrapper) => {
     wrapper.appendChild(el);
 };
 
+const hide = (el) => {
+    // Hides the element with ``display: none``
+    el = jqToNode(el); // Ensure real DOM node.
+    if (el.style.display === "none") {
+        // Nothing to do.
+        return;
+    }
+    if (el.style.display) {
+        el[DATA_STYLE_DISPLAY] = el.style.display;
+    }
+    el.style.display = "none";
+};
+
+const show = (el) => {
+    // Shows element by removing ``display: none`` and restoring the display
+    // value to whatever it was before.
+    el = jqToNode(el); // Ensure real DOM node.
+    const val = el[DATA_STYLE_DISPLAY] || null;
+    el.style.display = val;
+    delete el[DATA_STYLE_DISPLAY];
+};
+
 const dom = {
     jqToNode: jqToNode,
     querySelectorAllAndMe: querySelectorAllAndMe,
     wrap: wrap,
+    hide: hide,
+    show: show,
 };
 
 export default dom;
