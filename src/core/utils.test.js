@@ -427,6 +427,43 @@ describe("hideOrShow", function () {
             "hidden",
         ]);
     });
+
+    it("transition none does not mess up styles", (done) => {
+        const el = document.createElement("div");
+        el.style.borderTop = "2em";
+        el.style.marginTop = "4em";
+
+        utils.hideOrShow(el, false, { transition: "none" }, "noname");
+
+        expect(el.style.borderTop).toBe("2em");
+        expect(el.style.marginTop).toBe("4em");
+        expect(el.style.display).toBe("none");
+        expect(el.getAttribute("style").indexOf("display") >= -1).toBeTruthy();
+
+        utils.hideOrShow(el, true, { transition: "none" }, "noname");
+
+        expect(el.style.borderTop).toBe("2em");
+        expect(el.style.marginTop).toBe("4em");
+        expect(el.style.display).toBeFalsy();
+        expect(el.getAttribute("style").indexOf("display") === -1).toBeTruthy();
+
+        el.style.display = "inline";
+        utils.hideOrShow(el, false, { transition: "none" }, "noname");
+
+        expect(el.style.borderTop).toBe("2em");
+        expect(el.style.marginTop).toBe("4em");
+        expect(el.style.display).toBe("none");
+        expect(el.getAttribute("style").indexOf("display") >= -1).toBeTruthy();
+
+        utils.hideOrShow(el, true, { transition: "none" }, "noname");
+
+        expect(el.style.borderTop).toBe("2em");
+        expect(el.style.marginTop).toBe("4em");
+        expect(el.style.display).toBe("inline");
+        expect(el.getAttribute("style").indexOf("display") >= -1).toBeTruthy();
+
+        done();
+    });
 });
 
 describe("hasValue", function () {
