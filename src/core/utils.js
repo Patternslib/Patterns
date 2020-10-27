@@ -321,7 +321,7 @@ const hideOrShow = (el, visible, options, pattern_name) => {
         });
     } else {
         if (options.transition !== "css") {
-            $el[visible ? "show" : "hide"]();
+            dom[visible ? "show" : "hide"](el);
         }
         on_complete();
     }
