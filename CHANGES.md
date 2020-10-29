@@ -52,6 +52,7 @@ Fixes
 - Fix minimum input length default so that you can display select results already on click.
 - Fix ``pat-validation`` to not skip ``pat-autosuggest`` inputs even though they're
   hidden. Fixes #683
+- pat scroll: Fix scrolling offset incorrectly applied. Fixes: #763.
 
 
 ## 3.0.0a5 - unreleased
