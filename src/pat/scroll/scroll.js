@@ -154,7 +154,7 @@ export default Base.extend({
             })
             .first();
         if (typeof scrollable[0] === "undefined") {
-            scrollable = $("html, body");
+            scrollable = $("body");
         }
         return scrollable;
     },
@@ -172,9 +172,9 @@ export default Base.extend({
                 : this.$el;
             options[scroll] = this.options.offset;
         } else if (this.options.selector === "top") {
-            // Just scroll up, period.
+            // Just scroll up or left, period.
             scrollable = this.findScrollContainer(this.$el);
-            options["scrollTop"] = 0;
+            options[scroll] = 0;
         } else {
             // Get the first element with overflow (the scroll container)
             // starting from the *target*
@@ -196,7 +196,14 @@ export default Base.extend({
 
             scrollable = this.findScrollContainer(target);
 
-            if (scroll === "scrollTop") {
+            if (scrollable[0] === document.body) {
+                // positioning context is document
+                if (scroll === "scrollTop") {
+                    options[scroll] = Math.floor(target.safeOffset().top);
+                } else {
+                    options[scroll] = Math.floor(target.safeOffset().left);
+                }
+            } else if (scroll === "scrollTop") {
                 // difference between target top and scrollable top becomes 0
                 options[scroll] = Math.floor(
                     scrollable.scrollTop() +
