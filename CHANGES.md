@@ -61,6 +61,7 @@
 -   Core: Allow plain DOM nodes for initalization in base and parser.
 -   Build infrastructure: Build into /dist and cleanup before building.
 -   utils: Add `isIE` method to detect Internet Explorer browsers.
+-   Build infrastructure: Configure babel for less transformations when in ``development`` environment for better code readability.
 
 ### Fixes
 
