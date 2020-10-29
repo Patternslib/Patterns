@@ -1,4 +1,4 @@
-import Pattern from "./selectbox";
+import Pattern from "./selectbox"; // eslint-disable-line no-unused-vars
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 
