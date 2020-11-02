@@ -62,6 +62,7 @@
 -   Build infrastructure: Build into /dist and cleanup before building.
 -   utils: Add `isIE` method to detect Internet Explorer browsers.
 -   Build infrastructure: Configure babel for less transformations when in ``development`` environment for better code readability.
+-   Core Base: Register a plain DOM nodes as ``this.el`` alongside the jQuery node.
 
 ### Fixes
 

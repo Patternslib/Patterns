@@ -46,6 +46,7 @@ var Base = function ($el, options, trigger) {
         $el = $($el);
     }
     this.$el = $el;
+    this.el = $el[0];
     this.options = $.extend(true, {}, this.defaults || {}, options || {});
     this.init($el, options, trigger);
     this.emit("init");
