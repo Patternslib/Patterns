@@ -279,9 +279,8 @@ function hasValue(el) {
     return false;
 }
 
-const hideOrShow = (el, visible, options, pattern_name) => {
-    const $el = $(el);
-    el = dom.jqToNode(el); // ensure dom node
+const hideOrShow = (nodes, visible, options, pattern_name) => {
+    nodes = dom.toNodeArray(nodes);
 
     const transitions = {
         none: { hide: "hide", show: "show" },
@@ -294,7 +293,7 @@ const hideOrShow = (el, visible, options, pattern_name) => {
             ? null
             : options.effect.duration;
 
-    const on_complete = () => {
+    const on_complete = (el) => {
         el.classList.remove("in-progress");
         el.classList.add(visible ? "visible" : "hidden");
         $(el).trigger("pat-update", {
@@ -303,27 +302,29 @@ const hideOrShow = (el, visible, options, pattern_name) => {
         });
     };
 
-    el.classList.remove("visible");
-    el.classList.remove("hidden");
-    el.classList.remove("in-progress");
+    for (const el of nodes) {
+        el.classList.remove("visible");
+        el.classList.remove("hidden");
+        el.classList.remove("in-progress");
 
-    if (duration) {
-        const t = transitions[options.transition];
-        el.classList.add("in-progress");
-        $el.trigger("pat-update", {
-            pattern: pattern_name,
-            transition: "start",
-        });
-        $el[visible ? t.show : t.hide]({
-            duration: duration,
-            easing: options.effect.easing,
-            complete: on_complete,
-        });
-    } else {
-        if (options.transition !== "css") {
-            dom[visible ? "show" : "hide"](el);
+        if (duration) {
+            const t = transitions[options.transition];
+            el.classList.add("in-progress");
+            $(el).trigger("pat-update", {
+                pattern: pattern_name,
+                transition: "start",
+            });
+            $(el)[visible ? t.show : t.hide]({
+                duration: duration,
+                easing: options.effect.easing,
+                complete: () => on_complete(el),
+            });
+        } else {
+            if (options.transition !== "css") {
+                dom[visible ? "show" : "hide"](el);
+            }
+            on_complete(el);
         }
-        on_complete();
     }
 };
 
