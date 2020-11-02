@@ -36,7 +36,7 @@
 -   Allow overriding the public path from outside via the definition of a ``window.__patternslib_public_path__`` global variable.
 -   Introduce new ``core/dom`` module for DOM manipulation and traversing.
     ``core/dom`` includes methods which help transition from jQuery to the JavaScript DOM API.
--   core dom: Add ``jqToNode`` to return a DOM node if a jQuery node was passed.
+-   core dom: Add ``toNodeArray`` to return an array of DOM nodes if a NodeList, single DOM node or a jQuery object was passed.
 -   core dom: Add ``querySelectorAllAndMe`` to do a querySelectorAll including the starter element.
 -   core dom: Add ``wrap`` wrap an element with a wrapper element.
 -   core dom: Add ``hide`` and ``show`` for DOM elements which retain the original display value.

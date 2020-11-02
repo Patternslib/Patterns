@@ -4,13 +4,54 @@ import dom from "./dom";
 describe("core.dom tests", () => {
     // Tests from the core.dom module
 
-    describe("jqToNode tests", () => {
-        it("always returns a bare DOM node no matter if a jQuery or bare DOM node was passed.", (done) => {
-            const el = document.createElement("div");
-            const $el = $(el);
+    describe("toNodeArray tests", () => {
+        it("returns an array of nodes, if a jQuery object was passed.", (done) => {
+            const html = document.createElement("div");
+            html.innerHTML = `
+                <span id="id1" />
+                <span id="id2" />
+            `;
+            const el1 = html.querySelector("#id1");
+            const el2 = html.querySelector("#id2");
+            const testee = $("span", html);
+            expect(testee.length).toBe(2);
 
-            expect(dom.jqToNode($el)).toBe(el);
-            expect(dom.jqToNode(el)).toBe(el);
+            const ret = dom.toNodeArray(testee);
+            expect(ret.jquery).toBeFalsy();
+            expect(ret.length).toBe(2);
+            expect(ret[0]).toBe(el1);
+            expect(ret[1]).toBe(el2);
+
+            done();
+        });
+
+        it("returns an array of nodes, if a NodeList was passed.", (done) => {
+            const html = document.createElement("div");
+            html.innerHTML = `
+                <span id="id1" />
+                <span id="id2" />
+            `;
+            const el1 = html.querySelector("#id1");
+            const el2 = html.querySelector("#id2");
+            const testee = html.querySelectorAll("span");
+            expect(testee.length).toBe(2);
+
+            const ret = dom.toNodeArray(testee);
+            expect(ret instanceof NodeList).toBeFalsy();
+            expect(ret.length).toBe(2);
+            expect(ret[0]).toBe(el1);
+            expect(ret[1]).toBe(el2);
+
+            done();
+        });
+
+        it("returns an array with a single node, if a single node was passed.", (done) => {
+            const html = document.createElement("div");
+
+            const ret = dom.toNodeArray(html);
+            expect(ret instanceof Array).toBeTruthy();
+            expect(ret.length).toBe(1);
+            expect(ret[0]).toBe(html);
 
             done();
         });
