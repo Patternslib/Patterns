@@ -89,7 +89,9 @@ export default Base.extend({
     eventSources: [],
     active_categories: null,
 
-    async init(el, opts) {
+    async init($el, opts) {
+        const el = this.el;
+
         let Calendar = await import("@fullcalendar/core");
         Calendar = Calendar.Calendar;
         let fcDayGrid = await import("@fullcalendar/daygrid");
@@ -102,11 +104,6 @@ export default Base.extend({
         fcList = fcList.default;
         fcLuxon = fcLuxon.default;
         fcTimeGrid = fcTimeGrid.default;
-
-        if (el.jquery) {
-            el = el[0];
-        }
-        this.el = el;
 
         // Save some UI elements for reuse.
         this.el_jump_next = el.querySelector(".jump-next");

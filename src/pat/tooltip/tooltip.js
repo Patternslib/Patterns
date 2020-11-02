@@ -47,14 +47,12 @@ export default Base.extend({
         canFetch: true,
     },
 
-    async init(el, opts) {
+    async init($el, opts) {
+        const el = this.el;
+
         Tippy = await import("tippy.js");
         Tippy = Tippy.default;
 
-        if (el.jquery) {
-            el = el[0];
-        }
-        this.el = el;
         this.options = parser.parse(el, opts);
         this.tippy_options = this.parseOptionsForTippy(this.options);
 
