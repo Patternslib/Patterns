@@ -10,8 +10,8 @@ export default Base.extend({
     trigger: ".pat-select",
     all_selects: [],
 
-    init(el) {
-        el = dom.jqToNode(el);
+    init() {
+        const el = this.el;
 
         if (el.form && !el[KEY_RESET]) {
             $(el.form).on("reset.pat-selectbox", () => this.form_reset());
