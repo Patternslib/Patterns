@@ -70,10 +70,10 @@ export default Base.extend({
         };
 
         if (el.getAttribute("min")) {
-            config.minDate = Moment(el.getAttribute("min")).toDate();
+            config.minDate = new Date(el.getAttribute("min"));
         }
         if (el.getAttribute("max")) {
-            config.maxDate = Moment(el.getAttribute("max")).toDate();
+            config.maxDate = new Date(el.getAttribute("max"));
         }
 
         if (this.options.i18n) {
