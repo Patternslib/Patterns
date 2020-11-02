@@ -38,8 +38,11 @@ describe("pat-base: The Base class for patterns", function () {
             trigger: "pat-example",
             init: () => {},
         });
-        const tmp = new Tmp($('<div class="pat-example"/>'));
+        const $el = $('<div class="pat-example"/>');
+        const tmp = new Tmp($el);
         expect(tmp instanceof Tmp).toBeTruthy();
+        expect(tmp.$el).toBe($el);
+        expect(tmp.el).toBe($el[0]);
     });
 
     it("Accepts plain DOM nodes on initialization", function () {
@@ -52,6 +55,8 @@ describe("pat-base: The Base class for patterns", function () {
         node.setAttribute("class", "pat-example");
         const tmp = new Tmp(node);
         expect(tmp instanceof Tmp).toBeTruthy();
+        expect(tmp.$el.jquery).toBeTruthy();
+        expect(tmp.el).toBe(node);
     });
 
     it("will automatically register a pattern in the registry when extended", function () {
