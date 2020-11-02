@@ -2,19 +2,20 @@
 
 const DATA_STYLE_DISPLAY = "__patternslib__style__display";
 
-const jqToNode = (el) => {
-    // Return a DOM node if a jQuery node was passed.
-    if (el.jquery) {
-        el = el[0];
+const toNodeArray = (nodes) => {
+    // Return an array of DOM nodes
+    if (nodes.jquery || nodes instanceof NodeList) {
+        // jQuery or document.querySelectorAll
+        nodes = [...nodes];
+    } else if (nodes instanceof Array === false) {
+        nodes = [nodes];
     }
-    return el;
+    return nodes;
 };
 
 const querySelectorAllAndMe = (el, selector) => {
     // Like querySelectorAll but including the element where it starts from.
     // Returns an Array, not a NodeList
-
-    el = jqToNode(el); // Ensure real DOM node.
 
     const all = [...el.querySelectorAll(selector)];
     if (el.matches(selector)) {
@@ -26,8 +27,6 @@ const querySelectorAllAndMe = (el, selector) => {
 const wrap = (el, wrapper) => {
     // Wrap a element with a wrapper element.
     // See: https://stackoverflow.com/a/13169465/1337474
-    el = jqToNode(el); // Ensure real DOM node.
-    wrapper = jqToNode(wrapper); // Ensure real DOM node.
 
     el.parentNode.insertBefore(wrapper, el);
     wrapper.appendChild(el);
@@ -35,7 +34,6 @@ const wrap = (el, wrapper) => {
 
 const hide = (el) => {
     // Hides the element with ``display: none``
-    el = jqToNode(el); // Ensure real DOM node.
     if (el.style.display === "none") {
         // Nothing to do.
         return;
@@ -49,14 +47,13 @@ const hide = (el) => {
 const show = (el) => {
     // Shows element by removing ``display: none`` and restoring the display
     // value to whatever it was before.
-    el = jqToNode(el); // Ensure real DOM node.
     const val = el[DATA_STYLE_DISPLAY] || null;
     el.style.display = val;
     delete el[DATA_STYLE_DISPLAY];
 };
 
 const dom = {
-    jqToNode: jqToNode,
+    toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
     wrap: wrap,
     hide: hide,
