@@ -36,6 +36,29 @@ export default Base.extend({
         //this.options = parser.parse(el, opts);
         this.options = $.extend(parser.parse(el), this.options);
 
+        if (this.options.after) {
+            // Set the date depending on another date which must be ``offset-days``
+            // BEFORE this date. Only set it, if the other date is AFTER this
+            // date.
+            const befores = document.querySelectorAll(this.options.after);
+            for (const b_el of befores) {
+                b_el.addEventListener("change", (e) => {
+                    let b_date = e.target.value; // the "before-date"
+                    b_date = b_date ? new Date(b_date) : null;
+                    if (!b_date) {
+                        return;
+                    }
+                    let a_date = this.el.value; // the "after-date"
+                    a_date = a_date ? new Date(a_date) : null;
+                    if (!a_date || a_date < b_date) {
+                        const offset = this.options.offsetDays || 0;
+                        b_date.setDate(b_date.getDate() + offset);
+                        this.el.value = b_date.toISOString().substring(0, 10);
+                    }
+                });
+            }
+        }
+
         if (
             this.options.behavior === "native" &&
             utils.checkInputSupport("date", "invalid date")

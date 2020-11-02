@@ -93,3 +93,5 @@ In addition, the following options can be passed to `data-pat-date-picker`:
 | **week-numbers**            | string  | hide          | show, hide       | "show" will show the weeks' numbers in a leftmost column.                                                |
 | **i18n**                    | URL     |               |                  | Provide a URL to a JSON resource which gives the i18n values.                                            |
 | **first-day**               | Integer | 0             |                  | Set the first day of the week (0 -> Sunday, 1-> Monday, ...).                                            |
+| **after**                   | string  |               |                  | CSS selector of another date input. If this date is before the other, it will be updated to the oder date plus offset-days. |
+| **offset-days**             | Integer | 0             |                  | Number of days added to the **after** reference date which will be used to update this date value.       |
