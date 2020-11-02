@@ -68,6 +68,17 @@
                         type="date"
                     />
                 </label>
+
+                <label>Start
+                    <input name="start" class="pat-date-picker" type="date"/>
+                </label>
+                <label>End after start, automatically updated.
+                    <input name="end"   class="pat-date-picker" type="date" data-pat-date-picker="after: input[name=start]; offset-days: 2;"/>
+                </label>
+
+                <br />
+
+
             </fieldset>
         </form>
     </body>

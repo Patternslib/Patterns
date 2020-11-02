@@ -43,6 +43,8 @@
 -   core dom: Add ``querySelectorAllAndMe`` to do a querySelectorAll including the starter element.
 -   core dom: Add ``wrap`` wrap an element with a wrapper element.
 -   core dom: Add ``hide`` and ``show`` for DOM elements which retain the original display value.
+-   pat date picker: Support updating a date if it is before another dependent date.
+
 
 ### Technical
 

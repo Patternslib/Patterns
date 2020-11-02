@@ -176,4 +176,150 @@ describe("pat-date-picker", function () {
             });
         });
     });
+
+    describe("Update one input depending on the other.", function () {
+        it("Updates with default offset-days", async (done) => {
+            const wrapper = document.createElement("div");
+            wrapper.innerHTML = `
+                <input name="start" type="date" class="pat-date-picker" />
+                <input name="end"   type="date" class="pat-date-picker" data-pat-date-picker="after:input[name=start]" />
+            `;
+            document.body.appendChild(wrapper);
+            const start = wrapper.querySelector("input[name=start]");
+            const end = wrapper.querySelector("input[name=end]");
+
+            pattern.init(start);
+            pattern.init(end);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            const cal1 = document.querySelectorAll(".pika-single")[0];
+            const cal2 = document.querySelectorAll(".pika-single")[1];
+
+            // Check initial values
+            expect(start.value).toBeFalsy();
+            expect(end.value).toBeFalsy();
+
+            // Set start value
+            start.click();
+
+            let btn = cal1.querySelectorAll(".pika-table button")[0];
+            btn.dispatchEvent(new Event("mousedown"));
+
+            let start1 = start.value;
+            let end1 = end.value;
+
+            expect(start.value).toBeTruthy();
+            expect(end.value).toBeTruthy();
+            expect(start.value).toBe(end.value);
+
+            // Setting it again to a date after the end date will change the end
+            // date again.
+            start.click();
+
+            btn = cal1.querySelectorAll(".pika-table button")[10];
+            btn.dispatchEvent(new Event("mousedown"));
+
+            let start2 = start.value;
+            let end2 = end.value;
+
+            expect(start.value).toBeTruthy();
+            expect(start.value).not.toBe(start1);
+            expect(end.value).toBeTruthy();
+            expect(end.value).not.toBe(end1);
+            expect(start.value).toBe(end.value);
+
+            // Setting it to an earlier value will not change the end date again.
+            start.click();
+
+            btn = cal1.querySelectorAll(".pika-table button")[5];
+            btn.dispatchEvent(new Event("mousedown"));
+
+            let start3 = start.value;
+            let end3 = end.value;
+
+            expect(start.value).toBeTruthy();
+            expect(start.value).not.toBe(start1);
+            expect(start.value).not.toBe(start2);
+            expect(end.value).toBeTruthy();
+            expect(end.value).not.toBe(end1);
+            expect(end.value).toBe(end2);
+            expect(start.value).not.toBe(end.value);
+
+            // Setting end to an earlier value than start is possible.
+            // Use pat-validation to prevent submitting it.
+            end.click();
+
+            btn = cal2.querySelectorAll(".pika-table button")[0];
+            btn.dispatchEvent(new Event("mousedown"));
+
+            expect(start.value).toBeTruthy();
+            expect(start.value).not.toBe(start1);
+            expect(start.value).not.toBe(start2);
+            expect(start.value).toBe(start3);
+            expect(end.value).toBeTruthy();
+            expect(end.value).toBe(end1);
+            expect(end.value).not.toBe(end2);
+            expect(end.value).not.toBe(end3);
+            expect(start.value).not.toBe(end.value);
+
+            done();
+        });
+
+        it("Updates with offset-days 2", async (done) => {
+            const diff_days = (val1, val2) => {
+                // diff is in milliseconds
+                const diff = new Date(val1) - new Date(val2);
+                return diff / 1000 / 60 / 60 / 24;
+            };
+
+            const wrapper = document.createElement("div");
+            wrapper.innerHTML = `
+                <input name="start" type="date" class="pat-date-picker" />
+                <input name="end"   type="date" class="pat-date-picker" data-pat-date-picker="after:input[name=start]; offset-days: 2" />
+            `;
+            document.body.appendChild(wrapper);
+            const start = wrapper.querySelector("input[name=start]");
+            const end = wrapper.querySelector("input[name=end]");
+
+            pattern.init(start);
+            pattern.init(end);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            const cal1 = document.querySelectorAll(".pika-single")[0];
+
+            // Check initial values
+            expect(start.value).toBeFalsy();
+            expect(end.value).toBeFalsy();
+
+            // Set start value
+            start.click();
+            let btn = cal1.querySelectorAll(".pika-table button")[0];
+            btn.dispatchEvent(new Event("mousedown"));
+            // end date is set +2 days in advance of start date.
+            expect(diff_days(start.value, end.value)).toBe(-2);
+
+            // Change start value +1day
+            start.click();
+            btn = cal1.querySelectorAll(".pika-table button")[1];
+            btn.dispatchEvent(new Event("mousedown"));
+            // end date doesn't change.
+            expect(diff_days(start.value, end.value)).toBe(-1);
+
+            // Change start value +1day = same day
+            start.click();
+            btn = cal1.querySelectorAll(".pika-table button")[2];
+            btn.dispatchEvent(new Event("mousedown"));
+            // end date doesn't change.
+            expect(diff_days(start.value, end.value)).toBe(0);
+
+            // Change start value +1day = 1 day after end date
+            start.click();
+            btn = cal1.querySelectorAll(".pika-table button")[3];
+            btn.dispatchEvent(new Event("mousedown"));
+            // end is set 2 days after start date
+            expect(diff_days(start.value, end.value)).toBe(-2);
+
+            done();
+        });
+    });
 });
