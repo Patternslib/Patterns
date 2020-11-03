@@ -1,87 +1,77 @@
-/**
- * Copyright 2015 Syslab.com GmbH - witekdev
- */
 import $ from "jquery";
-import _ from "underscore";
 import Base from "../../core/base";
-import Parser from "../../core/parser";
-
-const parser = new Parser("tabs");
+import utils from "../../core/utils";
 
 export default Base.extend({
     name: "tabs",
     trigger: ".pat-tabs",
     jquery_plugin: true,
+    skip_adjust: false, // do not run into an resize/adjust loop
 
-    init: function ($el, opts) {
-        this.options = parser.parse(this.$el, opts); // redundant - at the moment we have no parameter options
-        $(window).resize(_.debounce(this.adjustTabs.bind(this), 100));
-        $("body").on("pat-update", this.filterByPatternsUpdate.bind(this));
-        this.adjustTabs();
+    init() {
+        this.adjust_tabs();
+        const resize_callback = utils.debounce(() => this.adjust_tabs(), 100);
+        const resize_observer = new ResizeObserver(() => {
+            if (!this.skip_adjust) {
+                resize_callback();
+            }
+            this.skip_adjust = false;
+        });
+        resize_observer.observe(this.el);
     },
 
-    filterByPatternsUpdate: function (ev, data) {
-        // determine when to call adjustTabs depending as to which pattern triggered pat-update
-        var allowed_patterns = [
-            "stacks",
-            "switch",
-            "auto-scale",
-            "grid",
-            "equaliser",
-            "masonry",
-            "zoom",
-        ];
-        // XXX TODO add other (or remove redundant) layout modifying patterns
-        if ($.inArray(data.pattern, allowed_patterns) > -1) {
-            this.adjustTabs();
+    adjust_tabs() {
+        this.skip_adjust = true;
+        const container_width = this.$el.width() * 0.95;
+
+        // here we want to gather all tabs including those that may be in a special 'extra-tabs'
+        // span and place them all as equal children, before we recalculate which tabs are
+        // visible and which are potentially fully or partially obscured.
+        let extratabs = [];
+        let children = [...this.el.children].filter((it) => {
+            if (it.classList.contains("extra-tabs")) {
+                extratabs.push(...it.children);
+                return false;
+            }
+            return true;
+        });
+        children.push(...extratabs);
+
+        if (children.length === 0) {
+            // nothing to do.
+            return;
         }
-    },
 
-    adjustTabs: function () {
-        var container_width = this.$el.width() * 0.95,
-            $children = this.$el.children(),
-            total_width = 0,
-            idx = 0,
-            tab_width,
-            $overflowing;
+        this.el.innerHTML = "";
+        this.el.append(...children);
 
-        if ($children.length !== 0) {
-            // here we want to gather all tabs including those that may be in a special 'extra-tabs'
-            // span and place them all as equal children, before we recalculate which tabs are
-            // visible and which are potentially fully or partially obscured.
-            var $grouper = $children.filter(".extra-tabs");
-            $grouper.children().appendTo(this.$el);
-            $grouper.remove();
-            $children = this.$el.children();
+        // precalculate the collective size of all the tabs
+        let total_width = [...this.el.children].reduce((val, it) => {
+            return val + $(it).outerWidth(true);
+        }, 0);
 
-            // precalculate the collective size of all the tabs
-            total_width = _.reduce(
-                $children,
-                function (value, el) {
-                    return value + $(el).outerWidth(true);
-                },
-                0
-            );
+        if (total_width <= container_width) {
+            // allright, nothing to do
+            return;
+        }
 
-            // only execute if all tabs cannot fit comfortably in the container
-            if (total_width >= container_width) {
-                this.$el.append('<span class="extra-tabs"></span>'); // create extra-tabs span
-                var extra_tab_width = $(".extra-tabs").outerWidth(true);
-                total_width = 0;
-                tab_width = $($children[idx]).outerWidth(true);
-                // iterate through all visible tabs until we find the first obscured tab
-                while (
-                    total_width + tab_width <
-                    container_width - extra_tab_width
-                ) {
-                    total_width += tab_width;
-                    idx++;
-                    tab_width = $($children[idx]).outerWidth(true);
-                }
-                $overflowing = this.$el.children(":gt(" + (idx - 1) + ")");
-                // move obscured tabs to a special 'extra-tabs' span
-                this.$el.children().filter(".extra-tabs").append($overflowing); // move tabs into it
+        const extra_el = document.createElement("span");
+        extra_el.setAttribute("class", "extra-tabs");
+        this.el.append(extra_el);
+        const extra_width = $(extra_el).width();
+
+        extratabs = [];
+        total_width = extra_width;
+        for (const [idx, it] of [...children].entries()) {
+            total_width += $(it).outerWidth(true);
+            if (total_width > container_width) {
+                extratabs = children.splice(idx);
+                break;
             }
         }
+        this.el.innerHTML = "";
+        this.el.append(...children);
+        extra_el.append(...extratabs);
+        this.el.append(extra_el);
     },
 });
