@@ -44,7 +44,7 @@
 -   core dom: Add ``wrap`` wrap an element with a wrapper element.
 -   core dom: Add ``hide`` and ``show`` for DOM elements which retain the original display value.
 -   pat date picker: Support updating a date if it is before another dependent date.
-
+-   pat tabs: Refactor based on ``ResizeObserver`` and fix problems calculating the with with transitions.
 
 ### Technical
 
