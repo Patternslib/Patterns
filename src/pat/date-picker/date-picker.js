@@ -96,9 +96,4 @@ export default Base.extend({
             new Pikaday(config);
         }
     },
-
-    isodate() {
-        const now = new Date();
-        return now.toISOString().substr(0, 10);
-    },
 });
