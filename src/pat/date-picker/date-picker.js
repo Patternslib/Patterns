@@ -7,11 +7,9 @@ import utils from "../../core/utils";
 
 // Lazy loading modules.
 let Pikaday;
-let Moment;
 
 const parser = new Parser("date-picker");
 parser.addArgument("behavior", "styled", ["native", "styled"]);
-parser.addArgument("format", "YYYY-MM-DD");
 parser.addArgument("week-numbers", [], ["show", "hide"]);
 parser.addArgument("i18n"); // URL pointing to JSON resource with i18n values
 parser.addArgument("first-day", 0);
@@ -47,8 +45,6 @@ export default Base.extend({
 
         Pikaday = await import("pikaday");
         Pikaday = Pikaday.default;
-        Moment = await import("moment");
-        Moment = Moment.default;
 
         if (el.getAttribute("type") === "date") {
             el.setAttribute("type", "text");
@@ -56,12 +52,9 @@ export default Base.extend({
 
         const config = {
             field: el,
-            format: this.options.format,
+            format: "YYYY-MM-DD",
             firstDay: this.options.firstDay,
             showWeekNumber: this.options.weekNumbers === "show",
-            toString(date, format) {
-                return Moment(date).format(format);
-            },
             onSelect() {
                 $(this._o.field).closest("form").trigger("input-change");
                 /* Also trigger input change on date field to support pat-autosubmit. */
