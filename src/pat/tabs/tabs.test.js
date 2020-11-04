@@ -88,4 +88,30 @@ describe("pat-tabs", function () {
 
         done();
     });
+
+    it("Clicking on extra-tabs toggles the ``opened`` and ``closed`` classes.", (done) => {
+        const container = document.querySelector("#lab");
+        container.innerHTML = `
+            <nav class="navigation tabs pat-tabs" style="width:120px;">
+                <a href="" style="width:100px; display:block;">General</a>
+                <a href="" style="width:100px; display:block;">Members</a>
+            </nav>
+        `;
+        const tabs = document.querySelector(".pat-tabs");
+        pattern.init(tabs);
+        const extra_tabs = tabs.querySelector(".extra-tabs");
+        expect(extra_tabs).toBeTruthy();
+        expect(extra_tabs.classList.contains("opened")).toBeFalsy();
+        expect(extra_tabs.classList.contains("closed")).toBeTruthy();
+
+        extra_tabs.click();
+        expect(extra_tabs.classList.contains("opened")).toBeTruthy();
+        expect(extra_tabs.classList.contains("closed")).toBeFalsy();
+
+        extra_tabs.click();
+        expect(extra_tabs.classList.contains("opened")).toBeFalsy();
+        expect(extra_tabs.classList.contains("closed")).toBeTruthy();
+
+        done();
+    });
 });
