@@ -1,13 +1,14 @@
 /* pat-datetime-picker  - Polyfill for input type=datetime-local */
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
-import Parser from "../../core/parser";
+import Base from "../../core/base";
 import DatePicker from "../date-picker/date-picker";
+import Parser from "../../core/parser";
 
 // Lazy loading modules.
 let Moment;
 
-var parser = new Parser("datetime-picker");
+const parser = new Parser("datetime-picker");
 parser.addArgument("behavior", "styled", ["native", "styled"]);
 parser.addArgument("format", "YYYY-MM-DD");
 parser.addArgument("week-numbers", [], ["show", "hide"]);
@@ -16,110 +17,110 @@ parser.addArgument("today", "Today");
 parser.addArgument("clear", "Clear");
 parser.addArgument("first-day", 0);
 
-export default DatePicker.extend({
+export default Base.extend({
     name: "datetime-picker",
     trigger: ".pat-datetime-picker",
+
     async init() {
+        const el = this.el;
+        this.options = $.extend(parser.parse(el), this.options);
+
         Moment = await import("moment");
         Moment = Moment.default;
 
-        this.options = $.extend(parser.parse(this.$el), this.options);
-        var value = this.$el.val().split("T"),
-            date_value = value[0] || "",
-            time_value = value[1] || "";
+        const value = el.value.split("T");
+        const date_value = value[0] || "";
+        const time_value = value[1] || "";
 
-        this.$el.hide();
+        el.style.display = "none";
 
-        this.$wrapper = $('<div class="datetime-picker-wrapper"/>');
+        const el_wrapper = document.createElement("div");
+        el_wrapper.setAttribute("class", "datetime-picker-wrapper");
 
-        var date_options = {
+        const html_date = `<input class="date" type="date" placeholder="YYYY-MM-DD" value="${date_value}" />`;
+        const html_time = `<input class="time" type="time" placeholder="hh:mm" value="${time_value}" />`;
+
+        // let the buttons be of type button otherwise they are submit buttons
+        const html_btn_now = `
+            <button type="button" class="now" title="${this.options.today}">
+                <span class="glyphicon glyphicon-time"/>
+                ${this.options.today}
+            </button>`;
+        const html_btn_clear = `
+            <button type="button" class="clear ${this.options.classClearName}" title="${this.options.clear}">
+                <span class="glyphicon glyphicon-trash"/>
+                ${this.options.clear}
+            </button>`;
+
+        el_wrapper.innerHTML = `
+            ${html_date}
+            ${html_time}
+            ${this.options.today ? html_btn_now : ""}
+            ${this.options.clear ? html_btn_clear : ""}
+        `;
+
+        const el_time = el_wrapper.querySelector(".time");
+        el_time.addEventListener("change", () => this.update());
+        this.el_time = el_time;
+
+        const el_date = el_wrapper.querySelector(".date");
+        el_date.addEventListener("change", () => {
+            if (!this.el_time.value) {
+                // Set time on date change, if time was empty.
+                this.el_time.value = this.isotime();
+            }
+            this.update();
+        });
+        const date_options = {
             behavior: this.options.behavior,
             format: this.options.format,
             weekNumbers: this.options.weekNumbers,
             firstDay: this.options.firstDay,
         };
-
-        this.$date = $(
-            '<input class="date" type="date" placeholder="YYYY-MM-DD"/>'
-        )
-            .attr("value", date_value)
-            .patternDatePicker(date_options)
-            .on(
-                "change",
-                function () {
-                    if (!this.$time.val()) {
-                        // Set time on date change, if time was empty.
-                        this.$time.val(this.isotime());
-                    }
-                    this.update();
-                }.bind(this)
-            )
-            .appendTo(this.$wrapper);
-
-        this.$time = $('<input class="time" type="time" placeholder="hh:mm"/>')
-            .attr("value", time_value)
-            .on("change", this.update.bind(this))
-            .appendTo(this.$wrapper);
+        DatePicker.init(el_date, date_options);
+        this.el_date = el_date;
 
         if (this.options.today) {
-            // let the buttons be of type button otherwise they are submit buttons
-            this.$now = $(
-                '<button type="button" class="now" title="' +
-                    this.options.today +
-                    '"><span class="glyphicon glyphicon-time"/>' +
-                    this.options.today +
-                    "</button>"
-            )
-                .on(
-                    "click",
-                    function (e) {
-                        e.preventDefault();
-                        this.$date.val(this.isodate());
-                        this.$time.val(this.isotime());
-                        this.update();
-                    }.bind(this)
-                )
-                .appendTo(this.$wrapper);
+            const btn_now = el_wrapper.querySelector(".now");
+            btn_now.addEventListener("click", (e) => {
+                e.preventDefault();
+                this.el_date.value = this.isodate();
+                this.el_time.value = this.isotime();
+                this.update();
+            });
         }
 
         if (this.options.clear) {
-            this.$clear = $(
-                '<button type="button" class="clear" title="' +
-                    this.options.clear +
-                    '"><span class="glyphicon glyphicon-trash"/>' +
-                    this.options.clear +
-                    "</button>"
-            )
-                .addClass(this.options.classClearName)
-                .on(
-                    "click",
-                    function (e) {
-                        e.preventDefault();
-                        this.$date.val("");
-                        this.$time.val("");
-                        this.update();
-                    }.bind(this)
-                )
-                .appendTo(this.$wrapper);
+            const btn_clear = el_wrapper.querySelector(".clear");
+            btn_clear.addEventListener("click", (e) => {
+                e.preventDefault();
+                this.el_date.value = "";
+                this.el_time.value = "";
+                this.update();
+            });
         }
 
         // TODO: timezone
-
-        this.$wrapper.insertAfter(this.$el);
+        el.parentNode.insertBefore(el_wrapper, el);
     },
 
     update() {
-        if (this.$date.val() && this.$time.val()) {
-            var date = Moment(this.$date.val()).format(this.options.format);
-            this.$el.val(date + "T" + this.$time.val());
+        if (this.el_date.value && this.el_time.value) {
+            const date = Moment(this.el_date.value).format(this.options.format);
+            this.el.value = date + "T" + this.el_time.value;
         } else {
-            this.$el.val("");
+            this.el.value = "";
         }
-        this.$el.trigger("change");
+        this.el.dispatchEvent(new Event("change"));
+    },
+
+    isodate() {
+        const now = new Date();
+        return now.toISOString().substr(0, 10);
     },
 
     isotime() {
-        var now = new Date();
+        const now = new Date();
         return now.toTimeString().substr(0, 5);
     },
 });
