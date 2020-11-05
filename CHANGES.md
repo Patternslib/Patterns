@@ -37,6 +37,7 @@
 -   pat calendar: Store view, date and active categories per URL, allowing to individually customize the calendar per page.
 -   pat tooltip: Use tippy v6 based implementation.
 -   pat tooltip: Introduce new option ``arrowPadding`` to define the padding of the box arrow from the corners of the tooltip.
+-   pat tooltip: set content when mounting to avoid positioning problems.
 -   Allow overriding the public path from outside via the definition of a ``window.__patternslib_public_path__`` global variable.
 -   Introduce new ``core/dom`` module for DOM manipulation and traversing.
     ``core/dom`` includes methods which help transition from jQuery to the JavaScript DOM API.

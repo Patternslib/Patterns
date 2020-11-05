@@ -1056,7 +1056,7 @@ describe("pat-tooltip", () => {
     });
 
     describe(`if the 'source' parameter is 'ajax'`, () => {
-        it("the default click action is prevented", async (done) => {
+        it("multiple clicks only fetches once AND the default click action is prevented", async (done) => {
             global.fetch = jest.fn().mockImplementation(mockFetch());
 
             const $el = testutils.createTooltip({
@@ -1078,12 +1078,14 @@ describe("pat-tooltip", () => {
             );
 
             $el[0].dispatchEvent(click);
+            await utils.timeout(1); // wait a tick for async fetch
             $el[0].dispatchEvent(click);
+            await utils.timeout(1); // wait a tick for async fetch
             $el[0].dispatchEvent(click);
+            await utils.timeout(1); // wait a tick for async fetch
 
-            //expect(spy_ajax).toHaveBeenCalledBefore(spy_prevented);
-            expect(call_order.indexOf("_getContent")).toEqual(0);
-            expect(call_order.includes("preventDefault")).toBeTruthy();
+            expect(call_order.filter(it => it === "_getContent").length).toEqual(1); // prettier-ignore
+            expect(call_order.filter(it => it === "preventDefault").length).toEqual(3); // prettier-ignore
 
             global.fetch.mockClear();
             delete global.fetch;

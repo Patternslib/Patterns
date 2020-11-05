@@ -235,7 +235,13 @@ export default Base.extend({
         registry.scan(this.tippy.popper);
     },
 
-    _onMount() {
+    async _onMount() {
+        if (this.options.source === "ajax") {
+            await this._getContent();
+        }
+
+        this._initializeContent();
+
         // Notify parent patterns about injected content.
         // Do not call pat-inject's handler, because all necessary
         // initialization after injection is done here.
@@ -246,17 +252,13 @@ export default Base.extend({
         ]);
     },
 
-    async _onShow() {
+    _onShow() {
         if (
             this.options.closing !== "auto" &&
             this.options.trigger === "hover"
         ) {
             // no auto-close when hovering when closing mode is "sticky" or "close-button".
             this.tippy.setProps({ trigger: "click" });
-        }
-
-        if (this.options.source === "ajax") {
-            await this._getContent();
         }
 
         if (this.options.closing === "close-button") {
@@ -282,8 +284,6 @@ export default Base.extend({
 
         // Add a generic non-tippy related class to identify the tooltip container
         this.tippy.popper.classList.add("tooltip-container");
-
-        this._initializeContent();
     },
 
     _onHide() {
