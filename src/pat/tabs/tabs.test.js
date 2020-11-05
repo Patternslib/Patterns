@@ -1,4 +1,5 @@
 import pattern from "./tabs";
+import utils from "../../core/utils";
 
 describe("pat-tabs", function () {
     beforeEach(function () {
@@ -10,7 +11,7 @@ describe("pat-tabs", function () {
         document.body.innerHTML = "";
     });
 
-    it("When the size of all the tabs cannot fit in the pat-tabs div some tabs will be placed in the extra-tabs span, which is a child of the pat-tabs element", (done) => {
+    it("When the size of all the tabs cannot fit in the pat-tabs div some tabs will be placed in the extra-tabs span, which is a child of the pat-tabs element", async (done) => {
         const container = document.querySelector("#lab");
         container.innerHTML = `
             <nav class="navigation tabs pat-tabs" style="width:400px;">
@@ -22,12 +23,13 @@ describe("pat-tabs", function () {
         `;
         const tabs = document.querySelector(".pat-tabs");
         pattern.init(tabs);
+        await utils.timeout(100);
         expect(tabs.querySelectorAll(".extra-tabs").length).toBeTruthy();
 
         done();
     });
 
-    it("When the size of all the tabs (padding included) cannot fit in the pat-tabs div some tabs will be placed in the extra-tabs span, which is a child of the pat-tabs element", (done) => {
+    it("When the size of all the tabs (padding included) cannot fit in the pat-tabs div some tabs will be placed in the extra-tabs span, which is a child of the pat-tabs element", async (done) => {
         const container = document.querySelector("#lab");
         container.innerHTML = `
             <nav class="navigation tabs pat-tabs" style="width:440px;">
@@ -40,12 +42,13 @@ describe("pat-tabs", function () {
 
         const tabs = document.querySelector(".pat-tabs");
         pattern.init(tabs);
+        await utils.timeout(100);
         expect(tabs.querySelectorAll(".extra-tabs").length).toBeTruthy();
 
         done();
     });
 
-    it("When the size of all the tabs can fit in the pat-tabs div the extra-tabs span will not exist as a child of the pat-tabs element", (done) => {
+    it("When the size of all the tabs can fit in the pat-tabs div the extra-tabs span will not exist as a child of the pat-tabs element", async (done) => {
         // XXX: Somehow the browsers doesn't behave so nicely, elements
         // wrap around even though according to our calculations they
         // don't have to. So we now check for 5% less than the
@@ -62,12 +65,13 @@ describe("pat-tabs", function () {
 
         const tabs = document.querySelector(".pat-tabs");
         pattern.init(tabs);
+        await utils.timeout(100);
         expect(tabs.querySelectorAll(".extra-tabs").length).toBeFalsy();
 
         done();
     });
 
-    it("When the size of all the tabs (padding included) can fit in the pat-tabs div the extra-tabs span will not exist as a child of the pat-tabs element", (done) => {
+    it("When the size of all the tabs (padding included) can fit in the pat-tabs div the extra-tabs span will not exist as a child of the pat-tabs element", async (done) => {
         // XXX: Somehow the browsers doesn't behave so nicely, elements
         // wrap around even though according to our calculations they
         // don't have to. So we now check for 5% less than the
@@ -84,12 +88,13 @@ describe("pat-tabs", function () {
 
         const tabs = document.querySelector(".pat-tabs");
         pattern.init(tabs);
+        await utils.timeout(100);
         expect(tabs.querySelectorAll(".extra-tabs").length).toBeFalsy();
 
         done();
     });
 
-    it("Clicking on extra-tabs toggles the ``open`` and ``closed`` classes.", (done) => {
+    it("Clicking on extra-tabs toggles the ``open`` and ``closed`` classes.", async (done) => {
         const container = document.querySelector("#lab");
         container.innerHTML = `
             <nav class="navigation tabs pat-tabs" style="width:120px;">
@@ -99,6 +104,8 @@ describe("pat-tabs", function () {
         `;
         const tabs = document.querySelector(".pat-tabs");
         pattern.init(tabs);
+        await utils.timeout(100);
+
         const extra_tabs = tabs.querySelector(".extra-tabs");
 
         expect(tabs.classList.contains("open")).toBeFalsy();
@@ -115,7 +122,7 @@ describe("pat-tabs", function () {
         done();
     });
 
-    it("If there are no extra-tabs, there is no default ``closed`` class.", (done) => {
+    it("If there are no extra-tabs, there is no default ``closed`` class.", async (done) => {
         const container = document.querySelector("#lab");
         container.innerHTML = `
             <nav class="navigation tabs pat-tabs" style="width:220px;">
@@ -125,6 +132,7 @@ describe("pat-tabs", function () {
         `;
         const tabs = document.querySelector(".pat-tabs");
         pattern.init(tabs);
+        await utils.timeout(100);
 
         const extra_tabs = tabs.querySelector(".extra-tabs");
         expect(extra_tabs).toBeFalsy();
