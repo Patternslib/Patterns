@@ -36,6 +36,7 @@ parser.addArgument("delay");
 parser.addArgument("mark-inactive", true);
 parser.addArgument("class");
 parser.addArgument("target", "body");
+parser.addArgument("arrow-padding", null);
 
 export default Base.extend({
     name: "tooltip",
@@ -120,7 +121,16 @@ export default Base.extend({
             return `${primary(pos[0])}${secondary(pos[1])}`;
         };
 
-        const tippy_options = {};
+        const tippy_options = { popperOptions: { modifiers: [] } };
+
+        if (opts.arrowPadding !== null) {
+            tippy_options.popperOptions.modifiers.push({
+                name: "arrow",
+                options: {
+                    padding: parseInt(opts.arrowPadding, 10),
+                },
+            });
+        }
 
         const parsers = {
             position: () => {
@@ -129,33 +139,21 @@ export default Base.extend({
                 }
                 tippy_options.placement = placement(opts.position.list[0]); // main position
 
-                if (opts.position.policy !== "force") {
-                    tippy_options.popperOptions = {
-                        modifiers: [
-                            {
-                                name: "flip",
-                                enabled: true,
-                            },
-                        ],
-                    };
-                    if (opts.position.length > 1) {
-                        const fallbacks = opts.position.list
-                            .slice(1)
-                            .map(placement);
-                        tippy_options.popperOptions.modifiers[0].options = {
-                            fallbackPlacements: fallbacks,
-                        };
-                    }
-                } else {
-                    tippy_options.popperOptions = {
-                        modifiers: [
-                            {
-                                name: "flip",
-                                enabled: false,
-                            },
-                        ],
-                    };
+                const flip_options = {
+                    name: "flip",
+                    enabled: true,
+                };
+
+                if (opts.position.policy === "force") {
+                    flip_options.enabled = false;
+                } else if (opts.position.length > 1) {
+                    const fallbacks = opts.position.list
+                        .slice(1)
+                        .map(placement);
+                    flip_options.fallbackPlacements = fallbacks;
                 }
+
+                tippy_options.popperOptions.modifiers.push(flip_options);
             },
 
             trigger() {
@@ -341,6 +339,7 @@ export default Base.extend({
         }
         if (content) {
             this.tippy.setContent(content);
+            this.tippy.popperInstance.forceUpdate(); // re-position tippy after content is known.
         }
     },
 

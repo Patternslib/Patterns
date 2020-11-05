@@ -83,6 +83,17 @@
                     >click here</a
                 >.
             </p>
+            <h4>arrow padding</h4>
+            <p>
+                <code>arrow-padding: 60</code>. The tooltip arrow gets a padding from the edges of 60 pixel.
+                <a
+                    href="#"
+                    title="well done!"
+                    class="pat-tooltip"
+                    data-pat-tooltip="arrow-padding: 60"
+                    >element</a
+                >.
+            </p>
             <h4>delay</h4>
             <p>
                 <code>delay: 1000</code>. A tooltip is displayed with a delay of
@@ -531,5 +542,11 @@
                 </ul>
             </div>
         </div>
+
+        <script charset="utf-8">
+          for (const it of document.querySelectorAll("a")) {
+            it.addEventListener("click", e => e.preventDefault());
+          }
+        </script>
     </body>
 </html>
