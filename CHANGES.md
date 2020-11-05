@@ -47,7 +47,7 @@
 -   core dom: Add ``hide`` and ``show`` for DOM elements which retain the original display value.
 -   pat date picker: Support updating a date if it is before another dependent date.
 -   pat tabs: Refactor based on ``ResizeObserver`` and fix problems calculating the with with transitions.
--   pat tabs: When clicking on the ``extra-tabs`` element, toggle between ``opened`` and ``closed`` classes to allow opening/closing an extra-tabs menu via CSS.
+-   pat tabs: When clicking on the ``extra-tabs`` element, toggle between ``open`` and ``closed`` classes to allow opening/closing an extra-tabs menu via CSS.
 
 ### Technical
 

@@ -56,15 +56,16 @@ export default Base.extend({
         }
 
         const extra_el = document.createElement("span");
-        extra_el.setAttribute("class", "extra-tabs closed");
+        extra_el.setAttribute("class", "extra-tabs");
+        this.el.classList.add("closed");
         extra_el.addEventListener("click", () => {
             // Toggle opened/closed class on extra-tabs
-            if (extra_el.classList.contains("opened")) {
-                extra_el.classList.remove("opened");
-                extra_el.classList.add("closed");
+            if (this.el.classList.contains("open")) {
+                this.el.classList.remove("open");
+                this.el.classList.add("closed");
             } else {
-                extra_el.classList.remove("closed");
-                extra_el.classList.add("opened");
+                this.el.classList.remove("closed");
+                this.el.classList.add("open");
             }
         });
         this.el.append(extra_el);
