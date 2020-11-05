@@ -28,6 +28,12 @@ document.fullscreenerror = jest.fn();
 // See https://github.com/jsdom/jsdom/issues/1937#issuecomment-461810980
 window.HTMLFormElement.prototype.submit = () => {};
 
+// resize-observer
+window.ResizeObserver = function () {
+    // Just do nothing for now...
+    return { observe: () => {} };
+};
+
 // Do not output error messages
 import logging from "./core/logging";
 logging.setLevel(50); // level: FATAL

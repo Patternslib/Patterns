@@ -9,15 +9,15 @@ export default Base.extend({
     skip_adjust: false, // do not run into an resize/adjust loop
 
     init() {
-        this.adjust_tabs();
-        const resize_callback = utils.debounce(() => this.adjust_tabs(), 100);
+        const debounced_resize = utils.debounce(() => this.adjust_tabs(), 50);
         const resize_observer = new ResizeObserver(() => {
             if (!this.skip_adjust) {
-                resize_callback();
+                debounced_resize();
             }
             this.skip_adjust = false;
         });
         resize_observer.observe(this.el);
+        debounced_resize();
     },
 
     adjust_tabs() {
