@@ -12,10 +12,21 @@
     </head>
     <body class="home">
         <div id="demo">
+            <style type="text/css">
+                .pat-message {
+                    animation: fadeIn 0.5s;
+                }
+            </style>
+            <div id="injection-feedback">
+                <p class="pat-message">
+                    Some content will appear here if you change anything in the
+                    form below…
+                </p>
+            </div>
             <form
                 action="pattern-test-response.html"
                 method="get"
-                data-pat-inject="target: #main-content"
+                data-pat-inject="target: #injection-feedback"
                 class="concise pat-inject"
             >
                 <fieldset class="horizontal pat-autosubmit">
@@ -72,13 +83,6 @@
                     /></label>
                 </fieldset>
             </form>
-
-            <article id="main-content" class="pat-rich">
-                <p>
-                    Some content will appear here if you change anything in the
-                    form…
-                </p>
-            </article>
         </div>
     </body>
 </html>
