@@ -6,6 +6,11 @@ export default Base.extend({
     trigger: ":input.pat-autofocus,:input[autofocus]",
 
     init() {
+        if (window.self !== window.top) {
+            // Do not autofocus in iframes.
+            return;
+        }
+
         this.setFocus(this.trigger);
         $(document).on("patterns-injected pat-update", (e) => {
             this.setFocus($(e.target).find(this.trigger));
