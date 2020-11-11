@@ -5,6 +5,7 @@ import logging from "../../core/logging";
 import Parser from "../../core/parser";
 
 const log = logging.getLogger("autosuggest");
+
 const parser = new Parser("autosuggest");
 parser.addArgument("ajax-data-type", "JSON");
 parser.addArgument("ajax-search-index", "");
@@ -38,27 +39,29 @@ export default Base.extend({
     name: "autosuggest",
     trigger: ".pat-autosuggest,.pat-auto-suggest",
 
-    async init($el, opts) {
+    async init() {
         await import("select2");
 
-        this.options = parser.parse($el, opts);
-        this.select2_options = {
+        this.options = parser.parse(this.el, this.options);
+
+        let config = {
             tokenSeparators: [","],
             openOnEnter: false,
             maximumSelectionSize: this.options.maxSelectionSize,
             minimumInputLength: this.options.minimumInputLength,
             allowClear:
-                this.options.maxSelectionSize === 1 && !$el.prop("required"),
+                this.options.maxSelectionSize === 1 &&
+                !this.el.hasAttribute("required"),
         };
-        if ($el.attr("readonly")) {
-            this.select2_options.placeholder = "";
+        if (this.el.hasAttribute("readonly")) {
+            config.placeholder = "";
         } else if (this.options.placeholder) {
-            this.select2_options.placeholder = this.options.placeholder;
+            config.placeholder = this.options.placeholder;
         }
 
         if (this.options.selectionClasses) {
             // We need to customize the formatting/markup of the selection
-            this.select2_options.formatSelection = (obj, container) => {
+            config.formatSelection = (obj, container) => {
                 let selectionClasses = null;
                 try {
                     selectionClasses = JSON.parse(
@@ -78,44 +81,42 @@ export default Base.extend({
             };
         }
 
-        if ($el[0].tagName === "INPUT") {
-            this.select2_options = this.configureInput(
-                $el,
-                this.select2_options
-            );
+        if (this.el.tagName === "INPUT") {
+            config = this.create_input_config(config);
         }
-        $el.select2(this.select2_options);
-        $el.on("pat-update", (e, data) => {
+        this.$el.select2(config);
+        this.$el.on("pat-update", (e, data) => {
             if (data.pattern === "depends") {
                 if (data.enabled === true) {
-                    $el.select2("enable", true);
+                    this.$el.select2("enable", true);
                 } else if (data.enabled === false) {
-                    $el.select2("disable", true);
+                    this.$el.select2("disable", true);
                 }
             }
         });
 
         // suppress propagation for second input field
-        $el.prev().on("input-change input-defocus input-change-delayed", (e) =>
-            e.stopPropagation()
-        );
+        this.$el
+            .prev()
+            .on("input-change input-defocus input-change-delayed", (e) =>
+                e.stopPropagation()
+            );
 
         // Clear the values when a reset button is pressed
-        $el.closest("form")
+        this.$el
+            .closest("form")
             .find("button[type=reset]")
-            .on("click", () => $el.select2("val", ""));
-        return $el;
+            .on("click", () => this.$el.select2("val", ""));
     },
 
-    configureInput($el, select2_config) {
+    create_input_config(config) {
         let words = [];
 
-        select2_config.createSearchChoice = (term, data) => {
+        config.createSearchChoice = (term, data) => {
             if (this.options.allowNewWords) {
                 if (
-                    $(data).filter(
-                        (idx, el) => el.text.localeCompare(term) === 0
-                    ).length === 0
+                    data.filter((el) => el.text.localeCompare(term) === 0)
+                        .length === 0
                 ) {
                     return { id: term, text: term };
                 }
@@ -124,7 +125,7 @@ export default Base.extend({
             }
         };
 
-        if (this.options.wordsJson && this.options.wordsJson.length) {
+        if (this.options.wordsJson?.length) {
             try {
                 words = JSON.parse(this.options.wordsJson);
             } catch (SyntaxError) {
@@ -134,14 +135,14 @@ export default Base.extend({
                 );
             }
             if (!Array.isArray(words)) {
-                words = $.map(words, (v, k) => {
+                words = words.map((v, k) => {
                     return { id: k, text: v };
                 });
             }
         }
         if (this.options.words) {
             words = this.options.words.split(/\s*,\s*/);
-            words = $.map(words, (v) => {
+            words = words.map((v) => {
                 return { id: v, text: v };
             });
         }
@@ -152,19 +153,19 @@ export default Base.extend({
         // That was then properly working with ajax if configured.
 
         if (this.options.maxSelectionSize === 1) {
-            select2_config.data = words;
+            config.data = words;
             // We allow exactly one value, use dropdown styles. How do we feed in words?
         } else {
             // We allow multiple values, use the pill style - called tags in select 2 speech
-            select2_config.tags = words;
+            config.tags = words;
         }
 
-        if (this.options.prefill && this.options.prefill.length) {
-            $el.val(this.options.prefill.split(","));
-            select2_config.initSelection = (element, callback) => {
+        if (this.options.prefill?.length) {
+            this.el.value = this.options.prefill.split(",");
+            config.initSelection = (element, callback) => {
                 let data = [];
                 const values = element.val().split(",");
-                for (let value of values) {
+                for (const value of values) {
                     data.push({ id: value, text: value });
                 }
                 if (this.options.maxSelectionSize === 1) {
@@ -186,17 +187,17 @@ export default Base.extend({
             try {
                 const data = JSON.parse(this.options.prefillJson);
                 let ids = [];
-                for (let d in data) {
+                for (const d in data) {
                     if (typeof d === "object") {
                         ids.push(d.id);
                     } else {
                         ids.push(d);
                     }
                 }
-                $el.val(ids);
-                select2_config.initSelection = (element, callback) => {
+                this.el.value = ids;
+                config.initSelection = (element, callback) => {
                     let _data = [];
-                    for (let d in data) {
+                    for (const d in data) {
                         if (typeof d === "object") {
                             _data.push({ id: d.id, text: d.text });
                         } else {
@@ -215,8 +216,8 @@ export default Base.extend({
             }
         }
 
-        if (this.options.ajax && this.options.ajax.url) {
-            select2_config = $.extend(
+        if (this.options.ajax?.url) {
+            config = $.extend(
                 true,
                 {
                     minimumInputLength: this.options.minimumInputLength,
@@ -240,10 +241,10 @@ export default Base.extend({
                         },
                     },
                 },
-                select2_config
+                config
             );
         }
-        return select2_config;
+        return config;
     },
 
     destroy($el) {
@@ -254,21 +255,12 @@ export default Base.extend({
     transform($content) {
         $content
             .findInclusive("input[type=text].pat-autosuggest")
-            .each((idx, el) => {
-                let $src = $(el);
-                let $dest = $("<input type='hidden'/>").insertAfter($src);
-
-                // measure in IE8, otherwise hidden will have width 0
-                if (document.all && !document.addEventListener) {
-                    $dest.css("width", $src.outerWidth(false) + "px");
-                }
-                $src.detach();
-                $.each($src.prop("attributes"), (el_) => {
-                    if (el_.name !== "type") {
-                        $dest.attr(el_.name, el_.value);
-                    }
-                });
-                $src.remove();
+            .each(function (idx, el) {
+                // We need the original element to be hidden not only for not
+                // displaying it, but also input-change-events registering a
+                // change handler which allows e.g. for auto-submitting.
+                // ``input`` event isn't thrown when updating select2.
+                el.setAttribute("type", "hidden");
             });
     },
 });
