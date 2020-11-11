@@ -1,34 +1,21 @@
-/**
- * Patterns autofocus - enhanced autofocus form elements
- *
- * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
- */
 import $ from "jquery";
-import registry from "../../core/registry";
+import Base from "../../core/base";
 
-var autofocus = {
+export default Base.extend({
     name: "autofocus",
     trigger: ":input.pat-autofocus,:input[autofocus]",
 
-    init: function init() {
+    init() {
         this.setFocus(this.trigger);
-        $(document).on("patterns-injected", function (e) {
-            autofocus.setFocus($(e.target).find(autofocus.trigger));
-        });
-        $(document).on("pat-update", function (e) {
-            autofocus.setFocus($(e.target).find(autofocus.trigger));
+        $(document).on("patterns-injected pat-update", (e) => {
+            this.setFocus($(e.target).find(this.trigger));
         });
     },
-    setFocus: function (target) {
-        var $all = $(target);
-        var $visible = $all.filter(function () {
-            if ($(this).is(":visible")) return true;
-        });
-        setTimeout(function () {
-            $visible.get(0) && $visible.get(0).focus();
-        }, 10);
+    setFocus(target) {
+        const $all = $(target);
+        const $visible = $all.filter((idx, it) => $(it).is(":visible"));
+        if ($visible[0]) {
+            setTimeout(() => $visible[0].focus(), 10);
+        }
     },
-};
-
-registry.register(autofocus);
-export default autofocus;
+});
