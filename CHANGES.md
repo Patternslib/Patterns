@@ -82,6 +82,7 @@
 -   pat scroll: Fix scrolling offset incorrectly applied. Fixes: #763.
 -   Core registry: Fix ``transformPattern`` to also work with patterns which extend from Base.
     Fixes a problem with pat-auto-suggest not auto submitting.
+-   pat autofocus: Implement documented behavior to not focus on prefilled element, if there is another autofocus element which is empty.
 
 
 ## 3.0.0-dev - unreleased

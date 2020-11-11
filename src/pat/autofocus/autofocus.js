@@ -11,11 +11,14 @@ export default Base.extend({
             this.setFocus($(e.target).find(this.trigger));
         });
     },
+
     setFocus(target) {
         const $all = $(target);
-        const $visible = $all.filter((idx, it) => $(it).is(":visible"));
-        if ($visible[0]) {
-            setTimeout(() => $visible[0].focus(), 10);
+        const visible = [...$all].filter((it) => $(it).is(":visible"));
+        const empty = visible.filter((it) => it.value === "");
+        const el = empty[0] || visible[0];
+        if (el) {
+            setTimeout(() => el.focus(), 10);
         }
     },
 });

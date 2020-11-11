@@ -27,4 +27,20 @@ describe("pat-autofocus", function () {
 
         done();
     });
+
+    it("Focus the non-empty element, if available.", async (done) => {
+        const container = document.querySelector("#lab");
+        container.innerHTML = `
+            <input name="i1" type="text" class="pat-autofocus" value="okay"/>
+            <input name="i2" type="text" class="pat-autofocus"/>
+            <input name="i3" type="text" class="pat-autofocus"/>
+        `;
+        pattern.init(container);
+        await utils.timeout(20);
+
+        const should_be_active = document.querySelector("input[name=i2]");
+        expect(document.activeElement).toBe(should_be_active);
+
+        done();
+    });
 });
