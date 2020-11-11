@@ -84,6 +84,7 @@
 -   Core registry: Fix ``transformPattern`` to also work with patterns which extend from Base.
     Fixes a problem with pat-auto-suggest not auto submitting.
 -   pat autofocus: Implement documented behavior to not focus on prefilled element, if there is another autofocus element which is empty.
+-   pat autofocus: Instead of calling autofocus for each element call it only once.
 
 
 ## 3.0.0-dev - unreleased

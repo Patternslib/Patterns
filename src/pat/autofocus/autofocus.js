@@ -1,6 +1,8 @@
 import $ from "jquery";
 import Base from "../../core/base";
 
+let scheduled_task = null;
+
 export default Base.extend({
     name: "autofocus",
     trigger: ":input.pat-autofocus,:input[autofocus]",
@@ -18,12 +20,19 @@ export default Base.extend({
     },
 
     setFocus(target) {
+        // Exit if task is scheduled. setFocus operates on whole DOM anyways.
+        if (scheduled_task) {
+            return;
+        }
         const $all = $(target);
         const visible = [...$all].filter((it) => $(it).is(":visible"));
         const empty = visible.filter((it) => it.value === "");
         const el = empty[0] || visible[0];
         if (el) {
-            setTimeout(() => el.focus(), 10);
+            scheduled_task = setTimeout(() => {
+                el.focus();
+                scheduled_task = null;
+            }, 10);
         }
     },
 });
