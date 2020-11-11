@@ -2,6 +2,7 @@ import $ from "jquery";
 import Base from "../../core/base";
 
 let scheduled_task = null;
+let registered_event_handler = false;
 
 export default Base.extend({
     name: "autofocus",
@@ -14,9 +15,14 @@ export default Base.extend({
         }
 
         this.setFocus(this.trigger);
-        $(document).on("patterns-injected pat-update", (e) => {
-            this.setFocus($(e.target).find(this.trigger));
-        });
+
+        if (!registered_event_handler) {
+            // Register the event handler only once.
+            $(document).on("patterns-injected pat-update", (e) => {
+                this.setFocus($(e.target).find(this.trigger));
+            });
+            registered_event_handler = true;
+        }
     },
 
     setFocus(target) {
