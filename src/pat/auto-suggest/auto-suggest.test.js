@@ -1,6 +1,7 @@
 import $ from "jquery";
 import pattern from "./auto-suggest";
 import utils from "../../core/utils";
+import registry from "../../core/registry";
 
 var testutils = {
     createInputElement: function (c) {
@@ -9,6 +10,7 @@ var testutils = {
             "id": cfg.id || "select2",
             "data-pat-autosuggest": "" || cfg.data,
             "class": "pat-autosuggest",
+            "type": "text",
         }).appendTo($("div#lab"));
     },
 
@@ -52,11 +54,16 @@ describe("pat-autosuggest", function () {
 
             expect($(".select2-container").length).toBe(0);
             expect($el.hasClass("select2-offscreen")).toBeFalsy();
-            pattern.init($el);
+
+            registry.scan(document.body);
             await utils.timeout(1); // wait a tick for async to settle.
+
+            $el = $("input.pat-autosuggest"); // element was replaced - re-get it.
             expect($el.hasClass("select2-offscreen")).toBeTruthy();
             expect($(".select2-container").length).toBe(1);
             testutils.removeSelect2();
+
+            expect($el[0].getAttribute("type")).toBe("hidden");
         });
     });
 

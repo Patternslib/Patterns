@@ -73,10 +73,12 @@ var registry = {
             log.debug("Skipping disabled pattern:", name);
             return;
         }
-        var pattern = registry.patterns[name];
-        if (pattern.transform) {
+
+        const pattern = registry.patterns[name];
+        const transform = pattern.transform || pattern.prototype?.transform;
+        if (transform) {
             try {
-                pattern.transform($(content));
+                transform($(content));
             } catch (e) {
                 if (dont_catch) {
                     throw e;
