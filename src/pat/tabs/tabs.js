@@ -7,6 +7,15 @@ export default Base.extend({
     trigger: ".pat-tabs",
     jquery_plugin: true,
     skip_adjust: false, // do not run into an resize/adjust loop
+    allowed_update_patterns: [
+        "stacks",
+        "switch",
+        "auto-scale",
+        "grid",
+        "equaliser",
+        "masonry",
+        "zoom",
+    ],
 
     init() {
         const debounced_resize = utils.debounce(() => this.adjust_tabs(), 50);
@@ -17,6 +26,15 @@ export default Base.extend({
             this.skip_adjust = false;
         });
         resize_observer.observe(this.el);
+
+        // Also listen for ``pat-update`` event for cases where no resize but
+        // an immediate display of the element is done.
+        $("body").on("pat-update", (e, data) => {
+            if (this.allowed_update_patterns.includes(data.pattern)) {
+                debounced_resize();
+            }
+        });
+
         debounced_resize();
     },
 
