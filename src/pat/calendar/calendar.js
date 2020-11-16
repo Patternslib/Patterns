@@ -57,8 +57,6 @@ parser.addArgument("event-color", "blue");
 
 parser.addArgument("url", null);
 parser.addArgument("event-sources", [], undefined, true);
-parser.addArgument("event-sources-classes", [], undefined, true);
-parser.addArgument("event-sources-active", [], undefined, true);
 //parser.addArgument("add-url", null);
 
 parser.addArgument("pat-inject-source", null);
@@ -86,7 +84,6 @@ export default Base.extend({
         agendaDay: "timeGridDay",
     },
     dayNames: ["su", "mo", "tu", "we", "th", "fr", "sa"],
-    eventSources: [],
     active_categories: null,
 
     async init($el, opts) {
@@ -175,7 +172,7 @@ export default Base.extend({
             config.timeZone = timezone;
         }
 
-        const sources = opts.event.sources || [];
+        const sources = [...(opts.event.sources || [])];
         if (opts.url && !sources.includes(opts.url)) {
             // add, but do not re-add same source twice.
             sources.push(opts.url);
@@ -183,13 +180,7 @@ export default Base.extend({
         config.eventSources = [];
         for (const [idx, url] of sources.entries()) {
             const src = this.create_event_source(idx, url);
-            this.eventSources.push(src); // we need to keep all srcs untouched to add/remove from fc eventSources.
-            if (
-                opts.event["sources-active"].length === 0 ||
-                opts.event["sources-active"][idx] === "on"
-            ) {
-                config.eventSources.push(src);
-            }
+            config.eventSources.push(src);
         }
 
         // Restore category controls from local storage before showing events.
@@ -228,9 +219,7 @@ export default Base.extend({
             id: `event-source--${idx + 1}`,
             events: (info, success, failure) =>
                 this._fetch_events(url, info, success, failure),
-            className:
-                this.options.event["sources-classes"][idx] ||
-                `event-source--${idx + 1}`,
+            className: `event-source--${idx + 1}`,
         };
     },
 
