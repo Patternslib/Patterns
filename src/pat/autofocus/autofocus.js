@@ -1,34 +1,44 @@
-/**
- * Patterns autofocus - enhanced autofocus form elements
- *
- * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
- */
 import $ from "jquery";
-import registry from "../../core/registry";
+import Base from "../../core/base";
 
-var autofocus = {
+let scheduled_task = null;
+let registered_event_handler = false;
+
+export default Base.extend({
     name: "autofocus",
     trigger: ":input.pat-autofocus,:input[autofocus]",
 
-    init: function init() {
-        this.setFocus(this.trigger);
-        $(document).on("patterns-injected", function (e) {
-            autofocus.setFocus($(e.target).find(autofocus.trigger));
-        });
-        $(document).on("pat-update", function (e) {
-            autofocus.setFocus($(e.target).find(autofocus.trigger));
-        });
-    },
-    setFocus: function (target) {
-        var $all = $(target);
-        var $visible = $all.filter(function () {
-            if ($(this).is(":visible")) return true;
-        });
-        setTimeout(function () {
-            $visible.get(0) && $visible.get(0).focus();
-        }, 10);
-    },
-};
+    init() {
+        if (window.self !== window.top) {
+            // Do not autofocus in iframes.
+            return;
+        }
 
-registry.register(autofocus);
-export default autofocus;
+        this.setFocus(this.trigger);
+
+        if (!registered_event_handler) {
+            // Register the event handler only once.
+            $(document).on("patterns-injected pat-update", (e) => {
+                this.setFocus($(e.target).find(this.trigger));
+            });
+            registered_event_handler = true;
+        }
+    },
+
+    setFocus(target) {
+        // Exit if task is scheduled. setFocus operates on whole DOM anyways.
+        if (scheduled_task) {
+            return;
+        }
+        const $all = $(target);
+        const visible = [...$all].filter((it) => $(it).is(":visible"));
+        const empty = visible.filter((it) => it.value === "");
+        const el = empty[0] || visible[0];
+        if (el) {
+            scheduled_task = setTimeout(() => {
+                el.focus();
+                scheduled_task = null;
+            }, 10);
+        }
+    },
+});
