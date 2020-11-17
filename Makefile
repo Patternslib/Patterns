@@ -18,7 +18,7 @@ stamp-yarn:
 
 .PHONY: clean
 clean:
-	rm stamp-yarn
+	rm -f stamp-yarn
 	rm -Rf node_modules/
 	rm -Rf dist/
 
