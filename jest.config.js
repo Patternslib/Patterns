@@ -1,6 +1,6 @@
 module.exports = {
-    rootDir: "./src",
-    setupFilesAfterEnv: ["<rootDir>/setupTests.js"],
+    roots: ["./src", "./webpack"],
+    setupFilesAfterEnv: ["./src/setupTests.js"],
     watchPlugins: [
         "jest-watch-typeahead/filename",
         "jest-watch-typeahead/testname",

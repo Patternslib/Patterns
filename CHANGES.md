@@ -72,6 +72,9 @@
 -   utils: Add `isIE` method to detect Internet Explorer browsers.
 -   Build infrastructure: Configure babel for less transformations when in ``development`` environment for better code readability.
 -   Core Base: Register a plain DOM nodes as ``this.el`` alongside the jQuery node.
+-   Webpack: Add CSS from JS at first in HEAD.
+    Configure ``style_loader`` to insert CSS at the TOP of the html ``<head>``
+    Provide a webpack-helpers module with a ``top_head_insert`` function which can be reused in depending projects.
 
 ### Fixes
 
