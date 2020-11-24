@@ -2,7 +2,7 @@
 process.traceDeprecation = true;
 const path = require("path");
 const webpack = require("webpack");
-const webpack_helpers = require("patternslib/webpack/webpack-helpers");
+const webpack_helpers = require("./webpack-helpers");
 
 // plugins
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
