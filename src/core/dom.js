@@ -52,12 +52,27 @@ const show = (el) => {
     delete el[DATA_STYLE_DISPLAY];
 };
 
+const find_parents = (el, selector) => {
+    // Return all direct parents of ``el`` matching ``selector``.
+    // This matches against all parents but not the element itself.
+    // The order of elements is from the search starting point up to higher
+    // DOM levels.
+    let parent = el.parentNode?.closest(selector) || null;
+    const ret = [];
+    while (parent) {
+        ret.push(parent);
+        parent = parent.parentNode?.closest(selector) || null;
+    }
+    return ret;
+};
+
 const dom = {
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
     wrap: wrap,
     hide: hide,
     show: show,
+    find_parents: find_parents,
 };
 
 export default dom;

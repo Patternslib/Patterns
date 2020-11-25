@@ -45,6 +45,7 @@
 -   core dom: Add ``querySelectorAllAndMe`` to do a querySelectorAll including the starter element.
 -   core dom: Add ``wrap`` wrap an element with a wrapper element.
 -   core dom: Add ``hide`` and ``show`` for DOM elements which retain the original display value.
+-   core dom: Add ``find_parents`` to find all parents of an element matching a CSS selector.
 -   pat date picker: Support updating a date if it is before another dependent date.
 -   pat tabs: Refactor based on ``ResizeObserver`` and fix problems calculating the with with transitions.
 -   pat tabs: When clicking on the ``extra-tabs`` element, toggle between ``open`` and ``closed`` classes to allow opening/closing an extra-tabs menu via CSS.

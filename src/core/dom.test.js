@@ -4,6 +4,10 @@ import dom from "./dom";
 describe("core.dom tests", () => {
     // Tests from the core.dom module
 
+    afterEach(() => {
+        document.body.innerHTML = "";
+    });
+
     describe("toNodeArray tests", () => {
         it("returns an array of nodes, if a jQuery object was passed.", (done) => {
             const html = document.createElement("div");
@@ -142,6 +146,32 @@ describe("core.dom tests", () => {
             expect(
                 el.getAttribute("style").indexOf("display") >= -1
             ).toBeTruthy();
+
+            done();
+        });
+    });
+
+    describe("find_parents", () => {
+        it("it finds all parents matching a selector.", (done) => {
+            document.body.innerHTML = `
+                <div class="findme level1">
+                    <div class="dontfindme level2">
+                        <div class="findme level3">
+                            <div class="findme starthere level4">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const res = dom.find_parents(
+                document.querySelector(".starthere"),
+                ".findme"
+            );
+
+            // level4 is not found - it's about to find parents.
+            expect(res.length).toEqual(2);
+            expect(res[0]).toEqual(document.querySelector(".level3")); // inner dom levels first // prettier-ignore
+            expect(res[1]).toEqual(document.querySelector(".level1"));
 
             done();
         });
