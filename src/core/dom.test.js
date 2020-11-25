@@ -223,4 +223,30 @@ describe("core.dom tests", () => {
             done();
         });
     });
+
+    describe("is_visible", () => {
+        it.skip("checks, if an element is visible or not.", (done) => {
+            const div1 = document.createElement("div");
+            div1.setAttribute("id", "div1");
+
+            const div2 = document.createElement("div");
+            div2.setAttribute("id", "div2");
+
+            const div3 = document.createElement("div");
+            div3.setAttribute("id", "div3");
+
+            div2.style.display = "none";
+            div3.style.visibility = "hidden";
+
+            document.body.appendChild(div1);
+            document.body.appendChild(div2);
+            document.body.appendChild(div3);
+
+            expect(dom.is_visible(document.querySelector("#div1"))).toBeTruthy(); // prettier-ignore
+            expect(dom.is_visible(document.querySelector("#div2"))).toBeFalsy();
+            expect(dom.is_visible(document.querySelector("#div3"))).toBeFalsy();
+
+            done();
+        });
+    });
 });

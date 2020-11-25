@@ -74,6 +74,12 @@ const find_scoped = (el, selector) => {
     );
 };
 
+const is_visible = (el) => {
+    // Check, if element is visible in DOM.
+    // https://stackoverflow.com/a/19808107/1337474
+    return el.offsetWidth > 0 && el.offsetHeight > 0;
+};
+
 const dom = {
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
@@ -82,6 +88,7 @@ const dom = {
     show: show,
     find_parents: find_parents,
     find_scoped: find_scoped,
+    is_visible: is_visible,
 };
 
 export default dom;
