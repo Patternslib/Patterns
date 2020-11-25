@@ -176,4 +176,51 @@ describe("core.dom tests", () => {
             done();
         });
     });
+
+    describe("find_scoped", () => {
+        it("Find all instances within the current structure.", (done) => {
+            document.body.innerHTML = `
+                <div class="findme level1">
+                    <div class="starthere level2">
+                        <div class="findme level3">
+                            <div class="findme level4">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const res = dom.find_scoped(
+                document.querySelector(".starthere"),
+                ".findme"
+            );
+
+            expect(res.length).toEqual(2);
+            expect(res[0]).toEqual(document.querySelector(".level3")); // outer dom levels first // prettier-ignore
+            expect(res[1]).toEqual(document.querySelector(".level4"));
+
+            done();
+        });
+
+        it("Find all instances within the current structure.", (done) => {
+            document.body.innerHTML = `
+                <div id="findme" class="level1">
+                    <div class="starthere level2">
+                        <div class="level3">
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const res = dom.find_scoped(
+                document.querySelector(".starthere"),
+                "#findme"
+            );
+
+            expect(res.length).toEqual(1);
+            expect(res[0]).toEqual(document.querySelector(".level1"));
+
+            done();
+        });
+    });
 });

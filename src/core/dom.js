@@ -66,6 +66,14 @@ const find_parents = (el, selector) => {
     return ret;
 };
 
+const find_scoped = (el, selector) => {
+    // If the selector starts with an object id do a global search,
+    // otherwise do a local search.
+    return (selector.indexOf("#") === 0 ? document : el).querySelectorAll(
+        selector
+    );
+};
+
 const dom = {
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
@@ -73,6 +81,7 @@ const dom = {
     hide: hide,
     show: show,
     find_parents: find_parents,
+    find_scoped: find_scoped,
 };
 
 export default dom;
