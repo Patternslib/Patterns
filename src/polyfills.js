@@ -18,3 +18,5 @@ import { ResizeObserver as ResizeObserverPolyfill } from "@juggle/resize-observe
 if ("ResizeObserver" in window === false) {
     window.ResizeObserver = ResizeObserverPolyfill;
 }
+
+// input.labels polyfill
