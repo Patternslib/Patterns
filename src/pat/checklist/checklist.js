@@ -74,17 +74,26 @@ export default Base.extend({
         }
     },
 
+    find_checkboxes(ref_el, sel) {
+        let chkbxs = [];
+        if (this.options.select.indexOf("#") === 0) {
+            chkbxs = this.el.querySelectorAll(sel);
+        } else {
+            chkbxs = this.find_siblings(ref_el, sel);
+        }
+        return chkbxs;
+    },
+
     change_buttons() {
-        console.log("change buttons");
         let chkbxs;
         for (const btn of this.all_selects) {
-            chkbxs = this.find_siblings(btn, "input[type=checkbox]");
+            chkbxs = this.find_checkboxes(btn, "input[type=checkbox]");
             btn.disabled = [...chkbxs]
                 .map((el) => el.matches(":checked"))
                 .every((it) => it === true);
         }
         for (const btn of this.all_deselects) {
-            chkbxs = this.find_siblings(btn, "input[type=checkbox]");
+            chkbxs = this.find_checkboxes(btn, "input[type=checkbox]");
             btn.disabled = [...chkbxs]
                 .map((el) => el.matches(":checked"))
                 .every((it) => it === false);
@@ -92,31 +101,28 @@ export default Base.extend({
     },
 
     select_all(e) {
-        const chbxs = this.find_siblings(
+        const chkbxs = this.find_checkboxes(
             e.target,
             "input[type=checkbox]:not(:checked)"
         );
-
-        for (const box of chbxs) {
+        for (const box of chkbxs) {
             box.checked = true;
             box.dispatchEvent(new Event("change", { bubbles: true }));
         }
     },
 
     deselect_all(e) {
-        const chbxs = this.find_siblings(
+        const chkbxs = this.find_checkboxes(
             e.target,
             "input[type=checkbox]:checked"
         );
-
-        for (const box of chbxs) {
+        for (const box of chkbxs) {
             box.checked = false;
             box.dispatchEvent(new Event("change", { bubbles: true }));
         }
     },
 
     change_checked() {
-        console.log("change checked");
         for (const it of [...this.all_checkboxes].concat([
             ...this.all_radios,
         ])) {
