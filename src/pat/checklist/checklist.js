@@ -95,7 +95,7 @@ define([
                 all_deselects = $(options.deselect);
             }
             for (var i=0; i<all_selects.length; i++) {
-                siblings = _._findSiblings(all_selects[i], "input[type=checkbox]:visible");
+                siblings = _.find_checkboxes(all_selects[i], "input[type=checkbox]:visible", $trigger, options);
                 if (siblings && siblings.filter(":not(:checked)").length === 0) {
                     $(all_selects[i]).prop("disabled", true);
                 } else {
@@ -103,7 +103,7 @@ define([
                 }
             }
             for (var i=0; i< all_deselects.length; i++) {
-                siblings = _._findSiblings(all_deselects[i], "input[type=checkbox]:visible");
+                siblings = _.find_checkboxes(all_deselects[i], "input[type=checkbox]:visible", $trigger, options);
                 if (siblings && siblings.filter(":checked").length === 0) {
                     $(all_deselects[i]).prop("disabled", true);
                 } else {
@@ -113,6 +113,16 @@ define([
 
         },
 
+        find_checkboxes: function (ref_el, sel, $el, opts) {
+            var chkbxs = [];
+            if (opts.select.indexOf("#") === 0) {
+                chkbxs = $(sel, $el); // find checkboxes within pat-checklist in case of global de/select buttons
+            } else {
+                chkbxs = _._findSiblings(ref_el, sel); // find checkboxes as siblings of the current button
+            }
+            return chkbxs;
+        },
+
         onSelectAll: function(event) {
             var $trigger = event.data.trigger,
                 options = $trigger.data("patternChecklist"),
@@ -120,7 +130,7 @@ define([
 
             /* look up checkboxes which are related to my button by going up one parent
             at a time until I find some for the first time */
-            var checkbox_siblings = _._findSiblings(button_clicked, "input[type=checkbox]:not(:checked)");
+            var checkbox_siblings = _.find_checkboxes(button_clicked, "input[type=checkbox]:not(:checked)", $trigger, options);
             checkbox_siblings.each(function () {
                 $(this).prop("checked", true).trigger("change");
             });
@@ -135,7 +145,7 @@ define([
 
             /* look up checkboxes which are related to my button by going up one parent
             at a time until I find some for the first time */
-            var checkbox_siblings = _._findSiblings(button_clicked, "input[type=checkbox]:checked");
+            var checkbox_siblings = _.find_checkboxes(button_clicked, "input[type=checkbox]:checked", $trigger, options);
             checkbox_siblings.each(function () {
                 $(this).prop("checked", false).trigger("change");
             });
