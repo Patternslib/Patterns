@@ -7,9 +7,16 @@
         <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
+
+  <div class="functions" id="ElemOutsidePatChecklist">
+    <h3>Select / Deselect all for exmaple 2</h3>
+    <button class="small pat-button select-all">Select all</button>
+    <button class="small pat-button deselect-all">Deselect all</button>
+  </div>
+
 	<form class="vertical row">
 		<div class="six columns">
-			<h3>Checkboxes</h3>
+			<h3>Example 1: Checkboxes</h3>
 			  <fieldset class="pat-checklist checklist">
 			    <div class="functions">
 			      <button class="small pat-button select-all">Select all</button>
@@ -30,16 +37,12 @@
 			  </fieldset>
 		</div>
 	  	<div class="six columns">
-	  		 <h3>Buttons outside of .pat-checklist element</h3>
+	  		 <h3>Example 2: Buttons outside of .pat-checklist element</h3>
 			  <p>The buttons to select or deselect the checklist may lie outside
 			  of the .pat-checklist element. However, to avoid mismatches,
 			  the selectors then need to be disambiguated by starting with an object id.
 			  In other words, the selector needs to start with <em>#elementId</em>.
 			  </p>
-			  <div class="functions" id="ElemOutsidePatChecklist">
-			        <button class="small pat-button select-all">Select all</button>
-			        <button class="small pat-button deselect-all">Deselect all</button>
-			  </div>
 			  <fieldset class="pat-checklist checklist" data-pat-checklist="select: #ElemOutsidePatChecklist .select-all; deselect: #ElemOutsidePatChecklist .deselect-all" >
 				<label><input type="checkbox" checked="checked"/> Option one</label>
 				<label><input type="checkbox"/> Option two</label>
@@ -50,7 +53,7 @@
 	</form>
 	<form class="vertical row">
 		<div class="six columns">
-			<h3>Hierarchy of Checkboxes</h3>
+			<h3>Example 3: Hierarchy of Checkboxes</h3>
 			<p> Clicking select all / deselect all only affects parent of buttons and its children.</p>
 			<fieldset class="pat-checklist unchecked">
 				<div class="toggles functions button-cluster">
@@ -129,6 +132,6 @@
 		</div>
 	  	<div class="six columns">
 	  	</div>
-	</form>	
+	</form>
 </body>
 </html>
