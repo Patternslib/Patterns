@@ -71,6 +71,10 @@
 -   pat forward: Add `self` as possible value for the `selector` option to trigger the event on itself.
 -   pat-scroll: Implement `selector:bottom` attribute value to scroll to the bottom of the scroll container.
 -   pat-scroll: Do handle click events also when trigger is set to `auto`.
+-   Allow importing styles from external libraries in Patternslib JavaScript via the global variable ``window.__patternslib_import_styles`` set to ``true``.
+    This allows loading these styles automatically via Webpack.
+
+
 
 ### Technical
 
