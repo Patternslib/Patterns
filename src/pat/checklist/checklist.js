@@ -29,34 +29,34 @@ export default Base.extend({
 
         this.all_selects = dom.find_scoped(this.el, this.options.select);
         for (const btn of this.all_selects) {
-            btn.addEventListener("click", (e) => {
-                e.preventDefault();
-                this.select_all(e);
-            });
+            btn.addEventListener("click", this.select_all.bind(this));
         }
 
         this.all_deselects = dom.find_scoped(this.el, this.options.deselect);
         for (const btn of this.all_deselects) {
-            btn.addEventListener("click", (e) => {
-                e.preventDefault();
-                this.deselect_all(e);
-            });
+            btn.addEventListener("click", this.deselect_all.bind(this));
         }
 
         // update select/deselect button status
-        this.el.addEventListener("change", () => {
-            utils.debounce(() => this.change_buttons(), 50)();
-            utils.debounce(() => this.change_checked(), 50)();
-        });
+        this.el.addEventListener("change", this._handler_change.bind(this));
         this.change_buttons();
         this.change_checked();
     },
 
-    destroy($el) {
-        // TODO, destroy also on patterns-injected.
-        this.$el.scopedFind(this.options.select).off(".pat-checklist");
-        this.$el.scopedFind(this.options.deselect).off(".pat-checklist");
-        this.$el.off(".pat-checklist", "input[type=checkbox]");
+    _handler_change() {
+        utils.debounce(() => this.change_buttons(), 50)();
+        utils.debounce(() => this.change_checked(), 50)();
+    },
+
+    destroy() {
+        for (const it of this.all_selects) {
+            it.removeEventListener("click", this.select_all);
+        }
+        for (const it of this.all_deselects) {
+            it.removeEventListener("click", this.deselect_all);
+        }
+        this.el.removeEventListener("change", this._handler_change);
+        this.$el.off("patterns_injected");
     },
 
     find_siblings(el, sel) {
@@ -101,6 +101,7 @@ export default Base.extend({
     },
 
     select_all(e) {
+        e.preventDefault();
         const chkbxs = this.find_checkboxes(
             e.target,
             "input[type=checkbox]:not(:checked)"
@@ -112,6 +113,7 @@ export default Base.extend({
     },
 
     deselect_all(e) {
+        e.preventDefault();
         const chkbxs = this.find_checkboxes(
             e.target,
             "input[type=checkbox]:checked"
