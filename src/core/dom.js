@@ -52,12 +52,43 @@ const show = (el) => {
     delete el[DATA_STYLE_DISPLAY];
 };
 
+const find_parents = (el, selector) => {
+    // Return all direct parents of ``el`` matching ``selector``.
+    // This matches against all parents but not the element itself.
+    // The order of elements is from the search starting point up to higher
+    // DOM levels.
+    let parent = el.parentNode?.closest(selector) || null;
+    const ret = [];
+    while (parent) {
+        ret.push(parent);
+        parent = parent.parentNode?.closest(selector) || null;
+    }
+    return ret;
+};
+
+const find_scoped = (el, selector) => {
+    // If the selector starts with an object id do a global search,
+    // otherwise do a local search.
+    return (selector.indexOf("#") === 0 ? document : el).querySelectorAll(
+        selector
+    );
+};
+
+const is_visible = (el) => {
+    // Check, if element is visible in DOM.
+    // https://stackoverflow.com/a/19808107/1337474
+    return el.offsetWidth > 0 && el.offsetHeight > 0;
+};
+
 const dom = {
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
     wrap: wrap,
     hide: hide,
     show: show,
+    find_parents: find_parents,
+    find_scoped: find_scoped,
+    is_visible: is_visible,
 };
 
 export default dom;

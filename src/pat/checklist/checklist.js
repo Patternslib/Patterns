@@ -1,246 +1,152 @@
-/**
- * Patterns checklist - Easily (un)check all checkboxes
- *
- * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
- * Copyright 2012-2013 Florian Friesdorf
- */
-import $ from "jquery";
+import Base from "../../core/base";
 import Parser from "../../core/parser";
-import registry from "../../core/registry";
+import dom from "../../core/dom";
 import utils from "../../core/utils";
 import "../../core/jquery-ext";
 
-var parser = new Parser("checklist");
+const parser = new Parser("checklist");
 parser.addArgument("select", ".select-all");
 parser.addArgument("deselect", ".deselect-all");
 
-var _ = {
+export default Base.extend({
     name: "checklist",
     trigger: ".pat-checklist",
     jquery_plugin: true,
+    all_selects: [],
+    all_deselects: [],
+    all_checkboxes: [],
+    all_radios: [],
 
-    init: function ($el, opts) {
-        function _init() {
-            return $el.each(function () {
-                var $trigger = $(this),
-                    options = parser.parse($trigger, opts, false);
-
-                $trigger.data("patternChecklist", options);
-                $trigger
-                    .scopedFind(options.select)
-                    .on(
-                        "click.pat-checklist",
-                        { trigger: $trigger },
-                        _.onSelectAll
-                    );
-                $trigger
-                    .scopedFind(options.deselect)
-                    .on(
-                        "click.pat-checklist",
-                        { trigger: $trigger },
-                        _.onDeselectAll
-                    );
-
-                $trigger.on("change", () => _.onChange($trigger));
-                // update select/deselect button status
-                _.onChange($trigger);
-
-                $trigger
-                    .find("input[type=checkbox]")
-                    .each(_._onChangeCheckbox)
-                    .on("change.pat-checklist", _._onChangeCheckbox);
-
-                $trigger
-                    .find("input[type=radio]")
-                    .each(_._initRadio)
-                    .on("change.pat-checklist", _._onChangeRadio);
-            });
-        }
-        $el.on("patterns-injected", _init);
-        return _init();
+    init() {
+        this.options = parser.parse(this.el, this.options, false);
+        this.$el.on("patterns-injected", this._init.bind(this));
+        this._init();
     },
 
-    destroy: function ($el) {
-        return $el.each(function () {
-            var $trigger = $(this),
-                options = $trigger.data("patternChecklist");
-            $trigger.scopedFind(options.select).off(".pat-checklist");
-            $trigger.scopedFind(options.deselect).off(".pat-checklist");
-            $trigger.off(".pat-checklist", "input[type=checkbox]");
-            $trigger.data("patternChecklist", null);
-        });
+    _init() {
+        this.all_checkboxes = this.el.querySelectorAll("input[type=checkbox]");
+        this.all_radios = this.el.querySelectorAll("input[type=radio]");
+
+        this.all_selects = dom.find_scoped(this.el, this.options.select);
+        for (const btn of this.all_selects) {
+            btn.addEventListener("click", this.select_all.bind(this));
+        }
+
+        this.all_deselects = dom.find_scoped(this.el, this.options.deselect);
+        for (const btn of this.all_deselects) {
+            btn.addEventListener("click", this.deselect_all.bind(this));
+        }
+
+        // update select/deselect button status
+        this.el.addEventListener("change", this._handler_change.bind(this));
+        this.change_buttons();
+        this.change_checked();
     },
 
-    _findSiblings: function (elem, sel) {
-        // Looks for the closest elements that match the `sel` selector
-        var checkbox_children, $parent;
-        var parents = $(elem).parents();
-        for (var i = 0; i < parents.length; i++) {
-            $parent = $(parents[i]);
-            checkbox_children = $parent.find(sel);
-            if (checkbox_children.length != 0) {
-                return checkbox_children;
-            }
-            if ($parent.hasClass("pat-checklist")) {
-                // we reached the top node and did not find any match,
-                // return an empty match
-                return $([]);
-            }
-        }
-        // This should not happen because because we expect `elem` to have
-        // a .pat-checklist parent
-        return $([]);
+    _handler_change() {
+        utils.debounce(() => this.change_buttons(), 50)();
+        utils.debounce(() => this.change_checked(), 50)();
     },
-    onChange: function (trigger) {
-        const $trigger = $(trigger);
-        const options = $trigger.data("patternChecklist");
-        let siblings;
 
-        let all_selects = $trigger.find(options.select);
-        if (all_selects.length === 0) {
-            all_selects = $(options.select);
+    destroy() {
+        for (const it of this.all_selects) {
+            it.removeEventListener("click", this.select_all);
         }
-        let all_deselects = $trigger.find(options.deselect);
-        if (all_deselects.length === 0) {
-            all_deselects = $(options.deselect);
+        for (const it of this.all_deselects) {
+            it.removeEventListener("click", this.deselect_all);
         }
-        for (const select of all_selects) {
-            siblings = _._findSiblings(select, "input[type=checkbox]:visible");
-            if (siblings && siblings.filter(":not(:checked)").length === 0) {
-                select.disabled = true;
-            } else {
-                select.disabled = false;
+        this.el.removeEventListener("change", this._handler_change);
+        this.$el.off("patterns_injected");
+    },
+
+    find_siblings(el, sel) {
+        // Looks for the closest elements within the `el` tree that match the
+        // `sel` selector
+        let res;
+        let parent = el.parentNode;
+        while (parent) {
+            res = parent.querySelectorAll(sel);
+            if (res.length || parent === this.el) {
+                // return if results were found or we reached the pattern top
+                return res;
             }
-        }
-        for (const deselect of all_deselects) {
-            siblings = _._findSiblings(
-                deselect,
-                "input[type=checkbox]:visible"
-            );
-            if (siblings && siblings.filter(":checked").length === 0) {
-                deselect.disabled = true;
-            } else {
-                deselect.disabled = false;
-            }
+            parent = parent.parentNode;
         }
     },
 
-    onSelectAll: function (event) {
-        event.preventDefault();
+    find_checkboxes(ref_el, sel) {
+        let chkbxs = [];
+        if (this.options.select.indexOf("#") === 0) {
+            chkbxs = this.el.querySelectorAll(sel);
+        } else {
+            chkbxs = this.find_siblings(ref_el, sel);
+        }
+        return chkbxs;
+    },
 
-        /* look up checkboxes which are related to my button by going up one parent
-        at a time until I find some for the first time */
-        const checkbox_siblings = _._findSiblings(
-            event.currentTarget,
+    change_buttons() {
+        let chkbxs;
+        for (const btn of this.all_selects) {
+            chkbxs = this.find_checkboxes(btn, "input[type=checkbox]");
+            btn.disabled = [...chkbxs]
+                .map((el) => el.matches(":checked"))
+                .every((it) => it === true);
+        }
+        for (const btn of this.all_deselects) {
+            chkbxs = this.find_checkboxes(btn, "input[type=checkbox]");
+            btn.disabled = [...chkbxs]
+                .map((el) => el.matches(":checked"))
+                .every((it) => it === false);
+        }
+    },
+
+    select_all(e) {
+        e.preventDefault();
+        const chkbxs = this.find_checkboxes(
+            e.target,
             "input[type=checkbox]:not(:checked)"
         );
-
-        for (const box of checkbox_siblings) {
+        for (const box of chkbxs) {
             box.checked = true;
-            $(box).trigger("change");
-            box.dispatchEvent(new Event("change"));
+            box.dispatchEvent(new Event("change", { bubbles: true }));
         }
     },
 
-    onDeselectAll: function (event) {
-        event.preventDefault();
-
-        /* look up checkboxes which are related to my button by going up one parent
-        at a time until I find some for the first time */
-        const checkbox_siblings = _._findSiblings(
-            event.currentTarget,
+    deselect_all(e) {
+        e.preventDefault();
+        const chkbxs = this.find_checkboxes(
+            e.target,
             "input[type=checkbox]:checked"
         );
-
-        for (const box of checkbox_siblings) {
+        for (const box of chkbxs) {
             box.checked = false;
-            $(box).trigger("change");
-            box.dispatchEvent(new Event("change"));
+            box.dispatchEvent(new Event("change", { bubbles: true }));
         }
     },
 
-    /* The following methods are moved here from pat-checked-flag, which is being deprecated */
-    _getLabelAndFieldset: function (el) {
-        var result = new Set();
-        result.add($(utils.findLabel(el)));
-        result.add($(el).closest("fieldset"));
-        return result;
-    },
-
-    _getSiblingsWithLabelsAndFieldsets: function (el) {
-        var selector = 'input[name="' + el.name + '"]',
-            $related = el.form === null ? $(selector) : $(selector, el.form);
-        var result = new Set();
-        var label_and_fieldset;
-        $related = $related.not(el);
-        $related.each(function (idx, item) {
-            result.add(item);
-            label_and_fieldset = _._getLabelAndFieldset(item);
-            label_and_fieldset.forEach(function (item) {
-                result.add(item);
-            });
-        });
-        return result;
-    },
-
-    _onChangeCheckbox: function () {
-        var $el = $(this),
-            $label = $(utils.findLabel(this)),
-            $fieldset = $el.closest("fieldset");
-
-        if ($el.closest("ul.radioList").length) {
-            $label = $label.add($el.closest("li"));
+    change_checked() {
+        for (const it of [...this.all_checkboxes].concat([
+            ...this.all_radios,
+        ])) {
+            for (const label of it.labels) {
+                label.classList.remove("unchecked");
+                label.classList.remove("checked");
+                label.classList.add(it.checked ? "checked" : "unchecked");
+            }
         }
 
-        if (this.checked) {
-            $label.add($fieldset).removeClass("unchecked").addClass("checked");
-        } else {
-            $label.addClass("unchecked").removeClass("checked");
-            if ($fieldset.find("input:checked").length) {
-                $fieldset.removeClass("unchecked").addClass("checked");
-            } else $fieldset.addClass("unchecked").removeClass("checked");
-        }
-    },
-
-    _initRadio: function () {
-        _._updateRadio(this, false);
-    },
-
-    _onChangeRadio: function () {
-        _._updateRadio(this, true);
-    },
-
-    _updateRadio: function (input, update_siblings) {
-        var $el = $(input),
-            $label = $(utils.findLabel(input)),
-            $fieldset = $el.closest("fieldset"),
-            siblings = _._getSiblingsWithLabelsAndFieldsets(input);
-        if ($el.closest("ul.radioList").length) {
-            $label = $label.add($el.closest("li"));
-            var newset = new Set();
-            siblings.forEach(function (sibling) {
-                newset.add($(sibling).closest("li"));
-            });
-            siblings = newset;
-        }
-
-        if (update_siblings) {
-            siblings.forEach(function (sibling) {
-                $(sibling).removeClass("checked").addClass("unchecked");
-            });
-        }
-        if (input.checked) {
-            $label.add($fieldset).removeClass("unchecked").addClass("checked");
-        } else {
-            $label.addClass("unchecked").removeClass("checked");
-            if ($fieldset.find("input:checked").length) {
-                $fieldset.removeClass("unchecked").addClass("checked");
+        for (const fieldset of dom.querySelectorAllAndMe(this.el, "fieldset")) {
+            if (
+                fieldset.querySelectorAll(
+                    "input[type=checkbox]:checked, input[type=radio]:checked"
+                ).length
+            ) {
+                fieldset.classList.remove("unchecked");
+                fieldset.classList.add("checked");
             } else {
-                $fieldset.addClass("unchecked").removeClass("checked");
+                fieldset.classList.remove("checked");
+                fieldset.classList.add("unchecked");
             }
         }
     },
-};
-registry.register(_);
-
-export default _;
+});

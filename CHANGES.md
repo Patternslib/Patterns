@@ -45,6 +45,10 @@
 -   core dom: Add ``querySelectorAllAndMe`` to do a querySelectorAll including the starter element.
 -   core dom: Add ``wrap`` wrap an element with a wrapper element.
 -   core dom: Add ``hide`` and ``show`` for DOM elements which retain the original display value.
+-   core dom: Add ``find_parents`` to find all parents of an element matching a CSS selector.
+-   core dom: Add ``find_scoped`` to search for elements matching the given selector within the current scope of the given element
+-   core dom: Add ``is_visible`` to check if an element is visible or not.
+    unless an ``id`` selector is given - in that case the search is done globally.
 -   pat date picker: Support updating a date if it is before another dependent date.
 -   pat tabs: Refactor based on ``ResizeObserver`` and fix problems calculating the with with transitions.
 -   pat tabs: When clicking on the ``extra-tabs`` element, toggle between ``open`` and ``closed`` classes to allow opening/closing an extra-tabs menu via CSS.
@@ -89,6 +93,7 @@
 -   pat autofocus: Implement documented behavior to not focus on prefilled element, if there is another autofocus element which is empty.
 -   pat autofocus: Instead of calling autofocus for each element call it only once.
 -   pat autofocus: Register event handler only once.
+-   pat-checklist: For global de/select buttons, do not change any other checkboxes than the ones the de/select button belongs to.
 
 
 ## 3.0.0-dev - unreleased

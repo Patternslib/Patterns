@@ -1,246 +1,564 @@
-import "./checklist";
-import $ from "jquery";
+import Pattern from "./checklist";
+import registry from "../../core/registry";
+import utils from "../../core/utils";
 
-describe("pat-checklist", function () {
-    beforeEach(function () {
-        $("<div/>", { id: "lab" }).appendTo(document.body);
-    });
-    afterEach(function () {
-        $("#lab").remove();
+describe("pat-checklist", () => {
+    afterEach(() => {
+        document.body.innerHTML = "";
     });
 
-    var utils = {
-        createCheckList: function () {
-            $("#lab").html("<fieldset class='pat-checklist'>");
-            var $fieldset = $("fieldset.pat-checklist");
-            // The ordering of elements here is important (due to :nth-child selector criteria being used).
-            $fieldset.append(
-                $("<input type='checkbox' name='monkeys' checked />")
-            );
-            $fieldset.append(
-                $("<input type='checkbox' name='apes' checked />")
-            );
-            $fieldset.append(
-                $("<input type='checkbox' name='humans' checked />")
-            );
-            $fieldset.append(
-                $("<button class='select-all'>Select all</button>")
-            );
-            $fieldset.append(
-                $("<button class='deselect-all'>Deselect all</button>")
-            );
-            $("#lab fieldset.pat-checklist").patternChecklist();
-        },
-        fakeInjectCheckBox: function () {
-            var $fieldset = $("fieldset.pat-checklist");
-            $fieldset.append($("<input type='checkbox' name='primates' />"));
-            $fieldset.trigger("patterns-injected");
-        },
-        removeCheckList: function () {
-            $("#lab").children("fieldset.pat-checklist").remove();
-        },
-        checkAllBoxes: function () {
-            for (const el of document.querySelectorAll(
-                "fieldset.pat-checklist input[type=checkbox]"
-            )) {
-                el.checked = true;
-                $(el).trigger("change");
-            }
-        },
-        uncheckAllBoxes: function () {
-            for (const el of document.querySelectorAll(
-                "fieldset.pat-checklist input[type=checkbox]"
-            )) {
-                el.checked = false;
-                $(el).trigger("change");
-            }
-        },
-        checkBox: function (idx) {
-            const box = $(
-                "fieldset.pat-checklist input[type=checkbox]:nth-child(" +
-                    (idx || 1) +
-                    ")"
-            );
-            box[0].checked = true;
-            box.trigger("change");
-        },
-        uncheckBox: function (idx) {
-            const box = $(
-                "fieldset.pat-checklist input[type=checkbox]:nth-child(" +
-                    (idx || 1) +
-                    ")"
-            );
-            box[0].checked = false;
-            box.trigger("change");
-        },
-    };
+    it("Initializes on checkboxes with default options", async (done) => {
+        document.body.innerHTML = `
+            <fieldset class="pat-checklist">
+                <button id="b1" class="select-all">Select all</button>
+                <button id="b2" class="deselect-all">Deselect all</button>
 
-    describe("Initialization via jQuery", function () {
-        it("can be configured by passing in arguments to the jQuery plugin method", function () {
-            $("#lab").html("<div></div>");
-            $("#lab div").patternChecklist({
-                select: ".one",
-                deselect: ".two",
-            });
-            var $trigger = $("#lab div");
-            expect($trigger.data("patternChecklist")).toEqual({
-                select: ".one",
-                deselect: ".two",
-            });
-        });
-        it("can be configured via DOM element data- attributes", function () {
-            $("#lab").html("<div data-pat-checklist='.one .two'></div>");
-            $("#lab div").patternChecklist();
-            var $trigger = $("#lab div");
-            expect($trigger.data("patternChecklist")).toEqual({
-                select: ".one",
-                deselect: ".two",
-            });
-        });
+                <label><input type="checkbox" checked>Option 1</label>
+                <label><input type="checkbox">Option 2</label>
+                <label><input type="checkbox">Option 3</label>
+            </fieldset>
+        `;
+        Pattern.init(document.querySelector(".pat-checklist"));
+
+        const [f1] = document.querySelectorAll("fieldset");
+        const [b1, b2] = document.querySelectorAll("button");
+        const [l1, l2, l3] = document.querySelectorAll("label");
+
+        expect(f1.classList.contains("checked")).toEqual(true);
+        expect(l1.classList.contains("checked")).toEqual(true);
+        expect(l2.classList.contains("unchecked")).toEqual(true);
+        expect(l3.classList.contains("unchecked")).toEqual(true);
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(false);
+
+        b1.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("checked")).toEqual(true);
+        expect(l1.classList.contains("checked")).toEqual(true);
+        expect(l2.classList.contains("checked")).toEqual(true);
+        expect(l3.classList.contains("checked")).toEqual(true);
+        expect(b1.hasAttribute("disabled")).toEqual(true);
+        expect(b2.hasAttribute("disabled")).toEqual(false);
+
+        b2.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("unchecked")).toEqual(true);
+        expect(l1.classList.contains("unchecked")).toEqual(true);
+        expect(l2.classList.contains("unchecked")).toEqual(true);
+        expect(l3.classList.contains("unchecked")).toEqual(true);
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(true);
+
+        l2.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("checked")).toEqual(true);
+        expect(l1.classList.contains("unchecked")).toEqual(true);
+        expect(l2.classList.contains("checked")).toEqual(true);
+        expect(l3.classList.contains("unchecked")).toEqual(true);
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(false);
+
+        done();
     });
 
-    describe("Deselect All Button", function () {
-        beforeEach(function () {
-            utils.createCheckList();
-        });
-        afterEach(function () {
-            utils.removeCheckList();
-        });
+    it("Global de/select buttons only change the associated pat-checklist instance.", async (done) => {
+        document.body.innerHTML = `
+            <button id="b1">Select all</button>
+            <button id="b2">Deselect all</button>
 
-        it("is disabled when all checkboxes are unchecked", function () {
-            utils.uncheckAllBoxes();
-            expect(document.querySelector(".deselect-all").disabled).toBe(true);
-        });
+            <fieldset class="pat-checklist f1" data-pat-checklist="select: #b1; deselect: #b2">
+                <label><input type="checkbox" checked>Option 1</label>
+                <label><input type="checkbox">Option 2</label>
+                <label><input type="checkbox">Option 3</label>
+            </fieldset>
 
-        it("is enabled when all checkboxes are checked", function () {
-            utils.checkAllBoxes();
-            expect(document.querySelector(".deselect-all").disabled).toBe(
-                false
-            );
-        });
+            <fieldset class="pat-checklist f2">
+                <label><input type="checkbox">Option 1</label>
+                <label><input type="checkbox">Option 2</label>
+                <label><input type="checkbox">Option 3</label>
+            </fieldset>
+        `;
+        registry.scan(document.body);
 
-        it("is enabled when at least one checkbox is checked", function () {
-            utils.uncheckAllBoxes();
-            expect(document.querySelector(".deselect-all").disabled).toBe(true);
-            utils.checkBox();
-            expect(document.querySelector(".deselect-all").disabled).toBe(
-                false
-            );
-        });
+        const [f1, f2] = document.querySelectorAll("fieldset");
+        const [b1, b2] = document.querySelectorAll("button");
+        const [l1, l2, l3] = document.querySelectorAll(".f1 label");
+        const [l4, l5, l6] = document.querySelectorAll(".f2 label");
 
-        it("unchecks all checkboxes if it is clicked", function () {
-            // Test with all boxes ticked
-            utils.checkAllBoxes();
-            expect(
-                $("fieldset.pat-checklist input[type=checkbox]:checked").length
-            ).toBe(3);
-            $(".deselect-all").click();
-            expect(
-                $("fieldset.pat-checklist input[type=checkbox]:checked").length
-            ).toBe(0);
-            // Test with one box ticked
-            utils.checkBox();
-            expect(
-                $("fieldset.pat-checklist input[type=checkbox]:checked").length
-            ).toBe(1);
-            $(".deselect-all").click();
-            expect(
-                $("fieldset.pat-checklist input[type=checkbox]:checked").length
-            ).toBe(0);
-        });
+        expect(f1.classList.contains("checked")).toEqual(true);
+        expect(l1.classList.contains("checked")).toEqual(true);
+        expect(l2.classList.contains("unchecked")).toEqual(true);
+        expect(l3.classList.contains("unchecked")).toEqual(true);
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(false);
 
-        it("becomes disabled when the last checked checkbox is unchecked", function () {
-            utils.checkAllBoxes();
-            expect(document.querySelector(".deselect-all").disabled).toBe(
-                false
-            );
-            utils.uncheckBox();
-            expect(document.querySelector(".deselect-all").disabled).toBe(
-                false
-            );
-            utils.uncheckBox(2);
-            expect(document.querySelector(".deselect-all").disabled).toBe(
-                false
-            );
-            utils.uncheckBox(3);
-            expect(document.querySelector(".deselect-all").disabled).toBe(true);
-        });
+        expect(f2.classList.contains("unchecked")).toEqual(true);
+        expect(l4.classList.contains("unchecked")).toEqual(true);
+        expect(l5.classList.contains("unchecked")).toEqual(true);
+        expect(l6.classList.contains("unchecked")).toEqual(true);
+
+        b1.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("checked")).toEqual(true);
+        expect(l1.classList.contains("checked")).toEqual(true);
+        expect(l2.classList.contains("checked")).toEqual(true);
+        expect(l3.classList.contains("checked")).toEqual(true);
+        expect(b1.hasAttribute("disabled")).toEqual(true);
+        expect(b2.hasAttribute("disabled")).toEqual(false);
+
+        expect(f2.classList.contains("unchecked")).toEqual(true);
+        expect(l4.classList.contains("unchecked")).toEqual(true);
+        expect(l5.classList.contains("unchecked")).toEqual(true);
+        expect(l6.classList.contains("unchecked")).toEqual(true);
+
+        b2.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("unchecked")).toEqual(true);
+        expect(l1.classList.contains("unchecked")).toEqual(true);
+        expect(l2.classList.contains("unchecked")).toEqual(true);
+        expect(l3.classList.contains("unchecked")).toEqual(true);
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(true);
+
+        expect(f2.classList.contains("unchecked")).toEqual(true);
+        expect(l4.classList.contains("unchecked")).toEqual(true);
+        expect(l5.classList.contains("unchecked")).toEqual(true);
+        expect(l6.classList.contains("unchecked")).toEqual(true);
+
+        l2.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("checked")).toEqual(true);
+        expect(l1.classList.contains("unchecked")).toEqual(true);
+        expect(l2.classList.contains("checked")).toEqual(true);
+        expect(l3.classList.contains("unchecked")).toEqual(true);
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(false);
+
+        expect(f2.classList.contains("unchecked")).toEqual(true);
+        expect(l4.classList.contains("unchecked")).toEqual(true);
+        expect(l5.classList.contains("unchecked")).toEqual(true);
+        expect(l6.classList.contains("unchecked")).toEqual(true);
+
+        done();
     });
 
-    describe("Select All Button", function () {
-        beforeEach(function () {
-            utils.createCheckList();
-        });
-        afterEach(function () {
-            utils.removeCheckList();
-        });
+    it("Nested checklist.", async (done) => {
+        document.body.innerHTML = `
+            <fieldset class="pat-checklist f1">
+                <button type="button" class="select-all">b1</button>
+                <button type="button" class="deselect-all">b2</button>
+                <fieldset class="f2">
+                    <button type="button" class="select-all">b3</button>
+                    <button type="button" class="deselect-all">b4</button>
+                    <fieldset class="f3">
+                        <button type="button" class="select-all">b5</button>
+                        <button type="button" class="deselect-all">b6</button>
+                        <label class="l1"><input type="checkbox">1</label>
+                        <label class="l2"><input type="checkbox">2</label>
+                    </fieldset>
+                    <fieldset class="f4">
+                        <button type="button" class="select-all">b7</button>
+                        <button type="button" class="deselect-all">b8</button>
+                        <label class="l3"><input type="checkbox">3</label>
+                        <label class="l4"><input type="checkbox">4</label>
+                    </fieldset>
+                </fieldset>
+                <fieldset class="f5">
+                    <fieldset class="f6">
+                        <button type="button" class="select-all">b9</button>
+                        <button type="button" class="deselect-all">b10</button>
+                        <label class="l5"><input type="checkbox">5</label>
+                        <label class="l6"><input type="checkbox">6</label>
+                    </fieldset>
+                </fieldset>
+            </fieldset>
+        `;
+        registry.scan(document.body);
 
-        it("is disabled when all boxes are checked", function () {
-            utils.checkAllBoxes();
-            expect(document.querySelector(".select-all").disabled).toBe(true);
-        });
+        const [f1, f2, f3, f4, f5, f6] = document.querySelectorAll("fieldset");
+        const [b1, b2, b3, b4, b5, b6, b7, b8, b9, b10] = document.querySelectorAll("button"); // prettier-ignore
+        const [l1, l2, l3, l4, l5, l6] = document.querySelectorAll("label");
 
-        it("is enabled when at least one box is unchecked", function () {
-            utils.checkAllBoxes();
-            expect(document.querySelector(".select-all").disabled).toBe(true);
-            utils.uncheckBox();
-            expect(document.querySelector(".select-all").disabled).toBe(false);
-        });
+        //
+        expect(f1.classList.contains("unchecked")).toEqual(true);
+        expect(f2.classList.contains("unchecked")).toEqual(true);
+        expect(f3.classList.contains("unchecked")).toEqual(true);
+        expect(f4.classList.contains("unchecked")).toEqual(true);
+        expect(f5.classList.contains("unchecked")).toEqual(true);
+        expect(f6.classList.contains("unchecked")).toEqual(true);
 
-        it("checks all boxes if it is clicked", function () {
-            // Test with zero boxes ticked
-            utils.uncheckAllBoxes();
-            expect(
-                $("fieldset.pat-checklist input[type=checkbox]:checked").length
-            ).toBe(0);
-            $(".select-all").click();
-            expect(
-                $("fieldset.pat-checklist input[type=checkbox]:checked").length
-            ).toBe(3);
-            // Test with one box ticked
-            utils.uncheckAllBoxes();
-            utils.checkBox();
-            expect(
-                $("fieldset.pat-checklist input[type=checkbox]:checked").length
-            ).toBe(1);
-            $(".select-all").click();
-            expect(
-                $("fieldset.pat-checklist input[type=checkbox]:checked").length
-            ).toBe(3);
-        });
+        expect(l1.classList.contains("unchecked")).toEqual(true);
+        expect(l2.classList.contains("unchecked")).toEqual(true);
+        expect(l3.classList.contains("unchecked")).toEqual(true);
+        expect(l4.classList.contains("unchecked")).toEqual(true);
+        expect(l5.classList.contains("unchecked")).toEqual(true);
+        expect(l6.classList.contains("unchecked")).toEqual(true);
 
-        it("becomes enabled when the first checked box is unchecked", function () {
-            utils.checkAllBoxes();
-            expect(document.querySelector(".select-all").disabled).toBe(true);
-            utils.uncheckBox();
-            expect(document.querySelector(".select-all").disabled).toBe(false);
-        });
-        it("understands injection", function () {
-            expect(document.querySelector(".select-all").disabled).toBe(true);
-            utils.fakeInjectCheckBox();
-            expect(document.querySelector(".select-all").disabled).toBe(false);
-            $("[name=primates]").prop("checked", true).change();
-            expect(document.querySelector(".select-all").disabled).toBe(true);
-        });
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(true);
+        expect(b3.hasAttribute("disabled")).toEqual(false);
+        expect(b4.hasAttribute("disabled")).toEqual(true);
+        expect(b5.hasAttribute("disabled")).toEqual(false);
+        expect(b6.hasAttribute("disabled")).toEqual(true);
+        expect(b7.hasAttribute("disabled")).toEqual(false);
+        expect(b8.hasAttribute("disabled")).toEqual(true);
+        expect(b9.hasAttribute("disabled")).toEqual(false);
+        expect(b10.hasAttribute("disabled")).toEqual(true);
+
+        //
+        b1.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("checked")).toEqual(true);
+        expect(f2.classList.contains("checked")).toEqual(true);
+        expect(f3.classList.contains("checked")).toEqual(true);
+        expect(f4.classList.contains("checked")).toEqual(true);
+        expect(f5.classList.contains("checked")).toEqual(true);
+        expect(f6.classList.contains("checked")).toEqual(true);
+
+        expect(l1.classList.contains("checked")).toEqual(true);
+        expect(l2.classList.contains("checked")).toEqual(true);
+        expect(l3.classList.contains("checked")).toEqual(true);
+        expect(l4.classList.contains("checked")).toEqual(true);
+        expect(l5.classList.contains("checked")).toEqual(true);
+        expect(l6.classList.contains("checked")).toEqual(true);
+
+        expect(b1.hasAttribute("disabled")).toEqual(true);
+        expect(b2.hasAttribute("disabled")).toEqual(false);
+        expect(b3.hasAttribute("disabled")).toEqual(true);
+        expect(b4.hasAttribute("disabled")).toEqual(false);
+        expect(b5.hasAttribute("disabled")).toEqual(true);
+        expect(b6.hasAttribute("disabled")).toEqual(false);
+        expect(b7.hasAttribute("disabled")).toEqual(true);
+        expect(b8.hasAttribute("disabled")).toEqual(false);
+        expect(b9.hasAttribute("disabled")).toEqual(true);
+        expect(b10.hasAttribute("disabled")).toEqual(false);
+
+        //
+        b2.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("unchecked")).toEqual(true);
+        expect(f2.classList.contains("unchecked")).toEqual(true);
+        expect(f3.classList.contains("unchecked")).toEqual(true);
+        expect(f4.classList.contains("unchecked")).toEqual(true);
+        expect(f5.classList.contains("unchecked")).toEqual(true);
+        expect(f6.classList.contains("unchecked")).toEqual(true);
+
+        expect(l1.classList.contains("unchecked")).toEqual(true);
+        expect(l2.classList.contains("unchecked")).toEqual(true);
+        expect(l3.classList.contains("unchecked")).toEqual(true);
+        expect(l4.classList.contains("unchecked")).toEqual(true);
+        expect(l5.classList.contains("unchecked")).toEqual(true);
+        expect(l6.classList.contains("unchecked")).toEqual(true);
+
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(true);
+        expect(b3.hasAttribute("disabled")).toEqual(false);
+        expect(b4.hasAttribute("disabled")).toEqual(true);
+        expect(b5.hasAttribute("disabled")).toEqual(false);
+        expect(b6.hasAttribute("disabled")).toEqual(true);
+        expect(b7.hasAttribute("disabled")).toEqual(false);
+        expect(b8.hasAttribute("disabled")).toEqual(true);
+        expect(b9.hasAttribute("disabled")).toEqual(false);
+        expect(b10.hasAttribute("disabled")).toEqual(true);
+
+        //
+        b3.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("checked")).toEqual(true);
+        expect(f2.classList.contains("checked")).toEqual(true);
+        expect(f3.classList.contains("checked")).toEqual(true);
+        expect(f4.classList.contains("checked")).toEqual(true);
+        expect(f5.classList.contains("unchecked")).toEqual(true);
+        expect(f6.classList.contains("unchecked")).toEqual(true);
+
+        expect(l1.classList.contains("checked")).toEqual(true);
+        expect(l2.classList.contains("checked")).toEqual(true);
+        expect(l3.classList.contains("checked")).toEqual(true);
+        expect(l4.classList.contains("checked")).toEqual(true);
+        expect(l5.classList.contains("unchecked")).toEqual(true);
+        expect(l6.classList.contains("unchecked")).toEqual(true);
+
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(false);
+        expect(b3.hasAttribute("disabled")).toEqual(true);
+        expect(b4.hasAttribute("disabled")).toEqual(false);
+        expect(b5.hasAttribute("disabled")).toEqual(true);
+        expect(b6.hasAttribute("disabled")).toEqual(false);
+        expect(b7.hasAttribute("disabled")).toEqual(true);
+        expect(b8.hasAttribute("disabled")).toEqual(false);
+        expect(b9.hasAttribute("disabled")).toEqual(false);
+        expect(b10.hasAttribute("disabled")).toEqual(true);
+
+        //
+        b4.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("unchecked")).toEqual(true);
+        expect(f2.classList.contains("unchecked")).toEqual(true);
+        expect(f3.classList.contains("unchecked")).toEqual(true);
+        expect(f4.classList.contains("unchecked")).toEqual(true);
+        expect(f5.classList.contains("unchecked")).toEqual(true);
+        expect(f6.classList.contains("unchecked")).toEqual(true);
+
+        expect(l1.classList.contains("unchecked")).toEqual(true);
+        expect(l2.classList.contains("unchecked")).toEqual(true);
+        expect(l3.classList.contains("unchecked")).toEqual(true);
+        expect(l4.classList.contains("unchecked")).toEqual(true);
+        expect(l5.classList.contains("unchecked")).toEqual(true);
+        expect(l6.classList.contains("unchecked")).toEqual(true);
+
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(true);
+        expect(b3.hasAttribute("disabled")).toEqual(false);
+        expect(b4.hasAttribute("disabled")).toEqual(true);
+        expect(b5.hasAttribute("disabled")).toEqual(false);
+        expect(b6.hasAttribute("disabled")).toEqual(true);
+        expect(b7.hasAttribute("disabled")).toEqual(false);
+        expect(b8.hasAttribute("disabled")).toEqual(true);
+        expect(b9.hasAttribute("disabled")).toEqual(false);
+        expect(b10.hasAttribute("disabled")).toEqual(true);
+
+        //
+        b5.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("checked")).toEqual(true);
+        expect(f2.classList.contains("checked")).toEqual(true);
+        expect(f3.classList.contains("checked")).toEqual(true);
+        expect(f4.classList.contains("unchecked")).toEqual(true);
+        expect(f5.classList.contains("unchecked")).toEqual(true);
+        expect(f6.classList.contains("unchecked")).toEqual(true);
+
+        expect(l1.classList.contains("checked")).toEqual(true);
+        expect(l2.classList.contains("checked")).toEqual(true);
+        expect(l3.classList.contains("unchecked")).toEqual(true);
+        expect(l4.classList.contains("unchecked")).toEqual(true);
+        expect(l5.classList.contains("unchecked")).toEqual(true);
+        expect(l6.classList.contains("unchecked")).toEqual(true);
+
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(false);
+        expect(b3.hasAttribute("disabled")).toEqual(false);
+        expect(b4.hasAttribute("disabled")).toEqual(false);
+        expect(b5.hasAttribute("disabled")).toEqual(true);
+        expect(b6.hasAttribute("disabled")).toEqual(false);
+        expect(b7.hasAttribute("disabled")).toEqual(false);
+        expect(b8.hasAttribute("disabled")).toEqual(true);
+        expect(b9.hasAttribute("disabled")).toEqual(false);
+        expect(b10.hasAttribute("disabled")).toEqual(true);
+
+        //
+        b6.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("unchecked")).toEqual(true);
+        expect(f2.classList.contains("unchecked")).toEqual(true);
+        expect(f3.classList.contains("unchecked")).toEqual(true);
+        expect(f4.classList.contains("unchecked")).toEqual(true);
+        expect(f5.classList.contains("unchecked")).toEqual(true);
+        expect(f6.classList.contains("unchecked")).toEqual(true);
+
+        expect(l1.classList.contains("unchecked")).toEqual(true);
+        expect(l2.classList.contains("unchecked")).toEqual(true);
+        expect(l3.classList.contains("unchecked")).toEqual(true);
+        expect(l4.classList.contains("unchecked")).toEqual(true);
+        expect(l5.classList.contains("unchecked")).toEqual(true);
+        expect(l6.classList.contains("unchecked")).toEqual(true);
+
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(true);
+        expect(b3.hasAttribute("disabled")).toEqual(false);
+        expect(b4.hasAttribute("disabled")).toEqual(true);
+        expect(b5.hasAttribute("disabled")).toEqual(false);
+        expect(b6.hasAttribute("disabled")).toEqual(true);
+        expect(b7.hasAttribute("disabled")).toEqual(false);
+        expect(b8.hasAttribute("disabled")).toEqual(true);
+        expect(b9.hasAttribute("disabled")).toEqual(false);
+        expect(b10.hasAttribute("disabled")).toEqual(true);
+
+        //
+        b7.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("checked")).toEqual(true);
+        expect(f2.classList.contains("checked")).toEqual(true);
+        expect(f3.classList.contains("unchecked")).toEqual(true);
+        expect(f4.classList.contains("checked")).toEqual(true);
+        expect(f5.classList.contains("unchecked")).toEqual(true);
+        expect(f6.classList.contains("unchecked")).toEqual(true);
+
+        expect(l1.classList.contains("unchecked")).toEqual(true);
+        expect(l2.classList.contains("unchecked")).toEqual(true);
+        expect(l3.classList.contains("checked")).toEqual(true);
+        expect(l4.classList.contains("checked")).toEqual(true);
+        expect(l5.classList.contains("unchecked")).toEqual(true);
+        expect(l6.classList.contains("unchecked")).toEqual(true);
+
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(false);
+        expect(b3.hasAttribute("disabled")).toEqual(false);
+        expect(b4.hasAttribute("disabled")).toEqual(false);
+        expect(b5.hasAttribute("disabled")).toEqual(false);
+        expect(b6.hasAttribute("disabled")).toEqual(true);
+        expect(b7.hasAttribute("disabled")).toEqual(true);
+        expect(b8.hasAttribute("disabled")).toEqual(false);
+        expect(b9.hasAttribute("disabled")).toEqual(false);
+        expect(b10.hasAttribute("disabled")).toEqual(true);
+
+        //
+        b8.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("unchecked")).toEqual(true);
+        expect(f2.classList.contains("unchecked")).toEqual(true);
+        expect(f3.classList.contains("unchecked")).toEqual(true);
+        expect(f4.classList.contains("unchecked")).toEqual(true);
+        expect(f5.classList.contains("unchecked")).toEqual(true);
+        expect(f6.classList.contains("unchecked")).toEqual(true);
+
+        expect(l1.classList.contains("unchecked")).toEqual(true);
+        expect(l2.classList.contains("unchecked")).toEqual(true);
+        expect(l3.classList.contains("unchecked")).toEqual(true);
+        expect(l4.classList.contains("unchecked")).toEqual(true);
+        expect(l5.classList.contains("unchecked")).toEqual(true);
+        expect(l6.classList.contains("unchecked")).toEqual(true);
+
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(true);
+        expect(b3.hasAttribute("disabled")).toEqual(false);
+        expect(b4.hasAttribute("disabled")).toEqual(true);
+        expect(b5.hasAttribute("disabled")).toEqual(false);
+        expect(b6.hasAttribute("disabled")).toEqual(true);
+        expect(b7.hasAttribute("disabled")).toEqual(false);
+        expect(b8.hasAttribute("disabled")).toEqual(true);
+        expect(b9.hasAttribute("disabled")).toEqual(false);
+        expect(b10.hasAttribute("disabled")).toEqual(true);
+
+        //
+        b9.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("checked")).toEqual(true);
+        expect(f2.classList.contains("unchecked")).toEqual(true);
+        expect(f3.classList.contains("unchecked")).toEqual(true);
+        expect(f4.classList.contains("unchecked")).toEqual(true);
+        expect(f5.classList.contains("checked")).toEqual(true);
+        expect(f6.classList.contains("checked")).toEqual(true);
+
+        expect(l1.classList.contains("unchecked")).toEqual(true);
+        expect(l2.classList.contains("unchecked")).toEqual(true);
+        expect(l3.classList.contains("unchecked")).toEqual(true);
+        expect(l4.classList.contains("unchecked")).toEqual(true);
+        expect(l5.classList.contains("checked")).toEqual(true);
+        expect(l6.classList.contains("checked")).toEqual(true);
+
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(false);
+        expect(b3.hasAttribute("disabled")).toEqual(false);
+        expect(b4.hasAttribute("disabled")).toEqual(true);
+        expect(b5.hasAttribute("disabled")).toEqual(false);
+        expect(b6.hasAttribute("disabled")).toEqual(true);
+        expect(b7.hasAttribute("disabled")).toEqual(false);
+        expect(b8.hasAttribute("disabled")).toEqual(true);
+        expect(b9.hasAttribute("disabled")).toEqual(true);
+        expect(b10.hasAttribute("disabled")).toEqual(false);
+
+        //
+        b10.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("unchecked")).toEqual(true);
+        expect(f2.classList.contains("unchecked")).toEqual(true);
+        expect(f3.classList.contains("unchecked")).toEqual(true);
+        expect(f4.classList.contains("unchecked")).toEqual(true);
+        expect(f5.classList.contains("unchecked")).toEqual(true);
+        expect(f6.classList.contains("unchecked")).toEqual(true);
+
+        expect(l1.classList.contains("unchecked")).toEqual(true);
+        expect(l2.classList.contains("unchecked")).toEqual(true);
+        expect(l3.classList.contains("unchecked")).toEqual(true);
+        expect(l4.classList.contains("unchecked")).toEqual(true);
+        expect(l5.classList.contains("unchecked")).toEqual(true);
+        expect(l6.classList.contains("unchecked")).toEqual(true);
+
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(true);
+        expect(b3.hasAttribute("disabled")).toEqual(false);
+        expect(b4.hasAttribute("disabled")).toEqual(true);
+        expect(b5.hasAttribute("disabled")).toEqual(false);
+        expect(b6.hasAttribute("disabled")).toEqual(true);
+        expect(b7.hasAttribute("disabled")).toEqual(false);
+        expect(b8.hasAttribute("disabled")).toEqual(true);
+        expect(b9.hasAttribute("disabled")).toEqual(false);
+        expect(b10.hasAttribute("disabled")).toEqual(true);
+
+        //
+        l4.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("checked")).toEqual(true);
+        expect(f2.classList.contains("checked")).toEqual(true);
+        expect(f3.classList.contains("unchecked")).toEqual(true);
+        expect(f4.classList.contains("checked")).toEqual(true);
+        expect(f5.classList.contains("unchecked")).toEqual(true);
+        expect(f6.classList.contains("unchecked")).toEqual(true);
+
+        expect(l1.classList.contains("unchecked")).toEqual(true);
+        expect(l2.classList.contains("unchecked")).toEqual(true);
+        expect(l3.classList.contains("unchecked")).toEqual(true);
+        expect(l4.classList.contains("checked")).toEqual(true);
+        expect(l5.classList.contains("unchecked")).toEqual(true);
+        expect(l6.classList.contains("unchecked")).toEqual(true);
+
+        expect(b1.hasAttribute("disabled")).toEqual(false);
+        expect(b2.hasAttribute("disabled")).toEqual(false);
+        expect(b3.hasAttribute("disabled")).toEqual(false);
+        expect(b4.hasAttribute("disabled")).toEqual(false);
+        expect(b5.hasAttribute("disabled")).toEqual(false);
+        expect(b6.hasAttribute("disabled")).toEqual(true);
+        expect(b7.hasAttribute("disabled")).toEqual(false);
+        expect(b8.hasAttribute("disabled")).toEqual(false);
+        expect(b9.hasAttribute("disabled")).toEqual(false);
+        expect(b10.hasAttribute("disabled")).toEqual(true);
+
+        done();
     });
 
-    describe("The function _findSiblings", function () {
-        it("has a scope limited to the current form", function () {
-            utils.createCheckList();
-            // Duplicate the check list with all the items checked
-            $("#lab").append($("#lab").find(".pat-checklist").clone());
-            $(".pat-checklist").last().patternChecklist();
-            expect($(".pat-checklist").first().find(":checked").length).toBe(3);
-            expect($(".pat-checklist").last().find(":checked").length).toBe(3);
+    it("Initializes on radio buttons", async (done) => {
+        document.body.innerHTML = `
+            <fieldset class="pat-checklist">
+                <label><input type="radio" name="radio" />1</label>
+                <label><input type="radio" name="radio" checked />2</label>
+                <label><input type="radio" name="radio" />3</label>
+            </fieldset>
+        `;
+        Pattern.init(document.querySelector(".pat-checklist"));
 
-            // Click the last form deselect all button
-            $(".pat-checklist").last().find(".deselect-all").click();
-            expect($(".pat-checklist").first().find(":checked").length).toBe(3);
-            expect($(".pat-checklist").last().find(":checked").length).toBe(0);
-            // Clicking again does not touch the selected checkboxes in the other fieldset
-            $(".pat-checklist").last().find(".deselect-all").click();
-            expect($(".pat-checklist").first().find(":checked").length).toBe(3);
-            expect($(".pat-checklist").last().find(":checked").length).toBe(0);
-        });
+        const [f1] = document.querySelectorAll("fieldset");
+        const [l1, l2, l3] = document.querySelectorAll("label");
+
+        expect(f1.classList.contains("checked")).toEqual(true);
+        expect(l1.classList.contains("unchecked")).toEqual(true);
+        expect(l2.classList.contains("checked")).toEqual(true);
+        expect(l3.classList.contains("unchecked")).toEqual(true);
+
+        l3.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("checked")).toEqual(true);
+        expect(l1.classList.contains("unchecked")).toEqual(true);
+        expect(l2.classList.contains("unchecked")).toEqual(true);
+        expect(l3.classList.contains("checked")).toEqual(true);
+
+        done();
     });
 });

@@ -4,6 +4,10 @@ import dom from "./dom";
 describe("core.dom tests", () => {
     // Tests from the core.dom module
 
+    afterEach(() => {
+        document.body.innerHTML = "";
+    });
+
     describe("toNodeArray tests", () => {
         it("returns an array of nodes, if a jQuery object was passed.", (done) => {
             const html = document.createElement("div");
@@ -142,6 +146,105 @@ describe("core.dom tests", () => {
             expect(
                 el.getAttribute("style").indexOf("display") >= -1
             ).toBeTruthy();
+
+            done();
+        });
+    });
+
+    describe("find_parents", () => {
+        it("it finds all parents matching a selector.", (done) => {
+            document.body.innerHTML = `
+                <div class="findme level1">
+                    <div class="dontfindme level2">
+                        <div class="findme level3">
+                            <div class="findme starthere level4">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const res = dom.find_parents(
+                document.querySelector(".starthere"),
+                ".findme"
+            );
+
+            // level4 is not found - it's about to find parents.
+            expect(res.length).toEqual(2);
+            expect(res[0]).toEqual(document.querySelector(".level3")); // inner dom levels first // prettier-ignore
+            expect(res[1]).toEqual(document.querySelector(".level1"));
+
+            done();
+        });
+    });
+
+    describe("find_scoped", () => {
+        it("Find all instances within the current structure.", (done) => {
+            document.body.innerHTML = `
+                <div class="findme level1">
+                    <div class="starthere level2">
+                        <div class="findme level3">
+                            <div class="findme level4">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const res = dom.find_scoped(
+                document.querySelector(".starthere"),
+                ".findme"
+            );
+
+            expect(res.length).toEqual(2);
+            expect(res[0]).toEqual(document.querySelector(".level3")); // outer dom levels first // prettier-ignore
+            expect(res[1]).toEqual(document.querySelector(".level4"));
+
+            done();
+        });
+
+        it("Find all instances within the current structure.", (done) => {
+            document.body.innerHTML = `
+                <div id="findme" class="level1">
+                    <div class="starthere level2">
+                        <div class="level3">
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const res = dom.find_scoped(
+                document.querySelector(".starthere"),
+                "#findme"
+            );
+
+            expect(res.length).toEqual(1);
+            expect(res[0]).toEqual(document.querySelector(".level1"));
+
+            done();
+        });
+    });
+
+    describe("is_visible", () => {
+        it.skip("checks, if an element is visible or not.", (done) => {
+            const div1 = document.createElement("div");
+            div1.setAttribute("id", "div1");
+
+            const div2 = document.createElement("div");
+            div2.setAttribute("id", "div2");
+
+            const div3 = document.createElement("div");
+            div3.setAttribute("id", "div3");
+
+            div2.style.display = "none";
+            div3.style.visibility = "hidden";
+
+            document.body.appendChild(div1);
+            document.body.appendChild(div2);
+            document.body.appendChild(div3);
+
+            expect(dom.is_visible(document.querySelector("#div1"))).toBeTruthy(); // prettier-ignore
+            expect(dom.is_visible(document.querySelector("#div2"))).toBeFalsy();
+            expect(dom.is_visible(document.querySelector("#div3"))).toBeFalsy();
 
             done();
         });
