@@ -79,6 +79,8 @@
 -   Webpack: Add CSS from JS at first in HEAD.
     Configure ``style_loader`` to insert CSS at the TOP of the html ``<head>``
     Provide a webpack-helpers module with a ``top_head_insert`` function which can be reused in depending projects.
+-   Build infra: Switch the CI system to GitHub Actions and drop Travis CI.
+
 
 ### Fixes
 
