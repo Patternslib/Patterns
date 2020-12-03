@@ -101,6 +101,7 @@
 -   pat-clone demo: Remove unstyled tooltip/clone demo
 -   pat date picker demo: Use current date for min/max example.
 -   pat depends demo: Remove unused sections.
+-   pat expandable tree demo: Extend the demo with more levels and folders.
 
 
 ## 3.0.0-dev - unreleased
