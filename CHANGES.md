@@ -99,6 +99,7 @@
 -   pat-inject: Fix documentation about special target ``self`` and demo that behavior.
 -   pat-autosubmit: Fix demo to show configuration on individual inputs.
 -   pat-clone demo: Remove unstyled tooltip/clone demo
+-   pat date picker demo: Use current date for min/max example.
 
 
 ## 3.0.0-dev - unreleased
