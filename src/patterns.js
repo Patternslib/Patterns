@@ -9,8 +9,6 @@ import jquery from "jquery";
 
 // Import all used patterns for the bundle to be generated
 import "./core/push_kit";
-import "./core/url";
-import "./lib/input-change-events";
 import "./pat/ajax/ajax";
 import "./pat/auto-scale/auto-scale";
 import "./pat/auto-submit/auto-submit";
