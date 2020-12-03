@@ -123,7 +123,7 @@ Sometimes it is useful to use the triggering element itself as a target.
 
 This can be done by using the special _self_ target:
 
-    <a class="pat-inject" href="sources.html" data-pat-inject="target: #self">
+    <a class="pat-inject" href="sources.html" data-pat-inject="target: self">
       Replace me with sources.html.
     </a>
 

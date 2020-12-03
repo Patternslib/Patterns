@@ -96,6 +96,7 @@
 -   pat autofocus: Instead of calling autofocus for each element call it only once.
 -   pat autofocus: Register event handler only once.
 -   pat-checklist: For global de/select buttons, do not change any other checkboxes than the ones the de/select button belongs to.
+-   pat-inject: Fix documentation about special target ``self`` and demo that behavior.
 
 
 ## 3.0.0-dev - unreleased

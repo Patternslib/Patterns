@@ -400,6 +400,38 @@
             </ul>
         </section>
 
+        <div id="inject-demo__content-wrapper" style="display: none">
+          <section id="inject-demo__content">Liked</section>
+        </div>
+
+        <section>
+          <h3>Can replace itself</h3>
+          <a
+              type="button"
+              class="pat-inject"
+              href="./#inject-demo__content"
+              data-pat-inject="target: self::element"
+          >
+            Like
+          </a>
+        </section>
+
+        <section>
+          <h3>Can replace itself when a button in a form</h3>
+          <!-- define different pat-inject behavior on form to demo that
+          form and submit button are not interfering each other. -->
+          <form
+              action="./#pos-1"
+              class="pat-inject"
+              data-pat-inject="target: inject-demo__content-wrapper::element">
+            <button
+                type="submit"
+                formaction="./#inject-demo__content"
+                class="pat-inject"
+                data-pat-inject="target: self::element">Like</button>
+          </form>
+        </section>
+
         <section id="demo-history">
             <h3>Inject history example</h3>
             <p>
