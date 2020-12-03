@@ -100,6 +100,7 @@
 -   pat-autosubmit: Fix demo to show configuration on individual inputs.
 -   pat-clone demo: Remove unstyled tooltip/clone demo
 -   pat date picker demo: Use current date for min/max example.
+-   pat depends demo: Remove unused sections.
 
 
 ## 3.0.0-dev - unreleased
