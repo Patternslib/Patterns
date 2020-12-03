@@ -9,27 +9,30 @@
             type="text/javascript"
             charset="utf-8"
         ></script>
+        <style type="text/css">
+            .pat-message {
+                animation: fadeIn 0.5s;
+            }
+        </style>
     </head>
     <body class="home">
+        <h1>pat-autosubmit demo</h1>
         <div id="demo">
-            <style type="text/css">
-                .pat-message {
-                    animation: fadeIn 0.5s;
-                }
-            </style>
             <div id="injection-feedback">
                 <p class="pat-message">
                     Some content will appear here if you change anything in the
                     form below…
                 </p>
             </div>
+
+            <h2>pat-autosubmit on form with default options</h2>
             <form
                 action="pattern-test-response.html"
                 method="get"
                 data-pat-inject="target: #injection-feedback"
-                class="concise pat-inject"
+                class="concise pat-inject pat-autosubmit"
             >
-                <fieldset class="horizontal pat-autosubmit">
+                <fieldset class="horizontal">
                     <label>
                         Take your pick
                         <select name="mySelect">
@@ -67,21 +70,6 @@
                         >Free text field triggers with default delay
                         <input type="text" name="keyup" /></label
                     ><br />
-                    <label
-                        >Free text field triggers with 3000 ms delay
-                        <input
-                            type="search"
-                            name="keyup"
-                            data-pat-autosubmit="delay: 3000ms" /></label
-                    ><br />
-                    <label
-                        >Free text field triggers when field loses focus
-                        <input
-                            type="text"
-                            name="defocus"
-                            data-pat-autosubmit="delay: defocus"
-                    /></label>
-
                     <label>Select a item
                       <input
                           name="a1"
@@ -93,6 +81,39 @@
                     </label>
                 </fieldset>
             </form>
-        </div>
+
+            <h2>pat-autosubmit on individual inputs with options</h2>
+            <form
+                action="pattern-test-response.html"
+                method="get"
+                data-pat-inject="target: #injection-feedback"
+                class="concise pat-inject"
+            >
+              <fieldset class="horizontal">
+                <label>Text field triggers when field loses focus
+                  <input
+                      type="text"
+                      name="defocus"
+                      class="pat-autosubmit"
+                      data-pat-autosubmit="delay: defocus" />
+                </label>
+                <label>Text field triggers with 3000 ms delay
+                  <input
+                      type="search"
+                      name="keyup"
+                      class="pat-autosubmit"
+                      data-pat-autosubmit="delay: 3000ms" />
+                </label>
+                <label>Text area triggers with 3000 ms delay
+                  <textarea
+                      name="text"
+                      class="pat-autosubmit"
+                      data-pat-autosubmit="delay: 3000ms">
+                  </textarea>
+                </label>
+              </fieldset>
+            </form>
+
+          </div>
     </body>
 </html>
