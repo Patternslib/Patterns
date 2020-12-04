@@ -102,6 +102,7 @@
 -   pat date picker demo: Use current date for min/max example.
 -   pat depends demo: Remove unused sections.
 -   pat expandable tree demo: Extend the demo with more levels and folders.
+-   pat scroll demo: Remove debug page.
 
 
 ## 3.0.0-dev - unreleased
