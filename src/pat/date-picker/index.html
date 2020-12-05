@@ -44,14 +44,26 @@
                     /> </label
                 ><br />
                 <label
-                    >Specifying the "min" and "max" attributes.
+                    >Specifying the "min" and "max" attributes. <small>+/- 2 months from today</small>
                     <input
-                        class="pat-date-picker"
+                        class="pat-date-picker demo-minmax"
                         min="2015-01-01"
                         max="2015-12-31"
                         type="date"
                     /> </label
                 ><br />
+                <script charset="utf-8">
+                  var date_arithmetics = function (addsub) {
+                    return new Date(
+                      new Date().setMonth(
+                        new Date().getMonth() + addsub
+                      )
+                    ).toISOString().split("T")[0];
+                  }
+                  var input_minmax = document.querySelector(".demo-minmax");
+                  input_minmax.setAttribute("min", date_arithmetics(-2));
+                  input_minmax.setAttribute("max", date_arithmetics(+2));
+                </script>
                 <label
                     >Show the week number.
                     <input
