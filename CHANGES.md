@@ -96,13 +96,14 @@
 -   pat autofocus: Instead of calling autofocus for each element call it only once.
 -   pat autofocus: Register event handler only once.
 -   pat-checklist: For global de/select buttons, do not change any other checkboxes than the ones the de/select button belongs to.
--   pat-inject: Fix documentation about special target ``self`` and demo that behavior.
--   pat-autosubmit: Fix demo to show configuration on individual inputs.
--   pat-clone demo: Remove unstyled tooltip/clone demo
--   pat date picker demo: Use current date for min/max example.
--   pat depends demo: Remove unused sections.
--   pat expandable tree demo: Extend the demo with more levels and folders.
--   pat scroll demo: Remove debug page.
+-   Documentation fixes:
+    -   pat-inject: Fix documentation about special target ``self`` and demo that behavior.
+    -   pat-autosubmit: Fix demo to show configuration on individual inputs.
+    -   pat-clone demo: Remove unstyled tooltip/clone demo
+    -   pat date picker demo: Use current date for min/max example.
+    -   pat depends demo: Remove unused sections.
+    -   pat expandable tree demo: Extend the demo with more levels and folders.
+    -   pat scroll demo: Remove debug page.
 
 
 ## 3.0.0-dev - unreleased
