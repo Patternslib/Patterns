@@ -1,65 +1,55 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="Content-Type" 
+              content="text/html; charset=UTF-8" />
         <title>Masonry Pattern demo</title>
-        <link rel="stylesheet" href="/style/common.css" type="text/css" />
+        <link rel="stylesheet" 
+              href="/style/common.css" 
+              type="text/css" />
         <script
             src="/dist/bundle.js"
             type="text/javascript"
             charset="utf-8"
         ></script>
     </head>
-    <body class="sidebar-closed">
-        <p>
-            <button
-                class="pat-button pat-toggle"
-                data-pat-toggle="selector: body; value: sidebar-open sidebar-closed; store: session"
-            >
-                Expand sidebar
-            </button>
-        </p>
+    <body>
+        <div id="masonry-demo"
+             class="sidebar-closed">
+            <p>
+                <button class="pat-button pat-toggle"
+                        data-pat-toggle="selector: #masonry-demo; value: sidebar-open sidebar-closed; store: session">
+                    Expand sidebar
+                </button>
+            </p>
 
-        <div id="sidebar">
-            This is a sidebar pushing the masonry aside. It should detect this
-            and rerender.
-        </div>
-        <div
-            class="pat-masonry row"
-            data-pat-masonry="column-width: .sizer; gutter: 0; item-selector: .item;"
-        >
-            <div class="four columns sizer"></div>
-            <div class="four columns item">
-                <a
-                    href="http://erikjohanssonphoto.com/work/imagecats/personal/"
-                >
-                    <img src="http://i.imgur.com/6Lo8oun.jpg" />
-                    <p class="example-title">Erik Johansson</p>
-                </a>
+            <div id="sidebar">
+                This is a sidebar pushing the masonry aside. It should detect this
+                and rerender.
             </div>
-            <div class="four columns item">
-                <a href="http://iam.beyonce.com/">
-                    <img src="http://i.imgur.com/HDSAMFl.jpg" />
-                    <p class="example-title">Beyoncé | I Am</p>
-                </a>
-            </div>
-            <div class="four columns item">
-                <a href="http://www.voxmedia.com">
-                    <img src="http://i.imgur.com/xSiTFij.jpg" />
-                    <p class="example-title">Vox Media</p>
-                </a>
-            </div>
-            <div class="four columns item w2">
-                <a href="http://halcyon-theme.tumblr.com/">
-                    <img src="http://i.imgur.com/A1RSOhg.jpg" />
-                    <p class="example-title">Halcyon theme</p>
-                </a>
-            </div>
-            <div class="four columns item">
-                <a href="http://resize.thatsh.it/">
-                    <img src="http://i.imgur.com/00xWxLG.png" />
-                    <p class="example-title">RESIZE.THATSH.IT</p>
-                </a>
+            <div class="pat-masonry row"
+                 data-pat-masonry="column-width: .sizer; gutter: 0; item-selector: .item;">
+                <div class="four columns sizer"></div>
+                <div class="four columns item">
+                    <img src="images/bouquet.jpg" />
+                    <p class="example-title">Bouqet</p>
+                </div>
+                <div class="four columns item">
+                    <img src="images/flower-of-happiness.jpg" />
+                    <p class="example-title">Flower of happiness</p>
+                </div>
+                <div class="four columns item">
+                    <img src="images/lillies.jpg" />
+                    <p class="example-title">Lillies</p>
+                </div>
+                <div class="four columns item w2">
+                    <img src="images/petunia.jpg" />
+                    <p class="example-title">Petunia</p>
+                </div>
+                <div class="four columns item">
+                    <img src="images/woolflowers.jpg" />
+                    <p class="example-title">Woolflowers</p>
+                </div>
             </div>
         </div>
         <style>
@@ -70,11 +60,11 @@
                 width: 0;
                 padding: 1em;
             }
-            body.sidebar-closed #sidebar {
+            #masonry-demo.sidebar-closed #sidebar {
                 width: 0;
                 display: none;
             }
-            body.sidebar-open #sidebar {
+            #masonry-demo.sidebar-open #sidebar {
                 width: 32%;
                 margin-right: 1%;
             }
@@ -82,7 +72,7 @@
                 float: left;
                 width: 100%;
             }
-            body.sidebar-open .pat-masonry {
+            #masonry-demo.sidebar-open .pat-masonry {
                 width: 66%;
             }
             .item {
