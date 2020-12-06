@@ -15,11 +15,14 @@ The calendar pattern automatically replaces them with the start and end date of 
 
 For connecting to a plone.restapi backend you can provide a url like this one:
 
-`http://localhost:8080/Plone/@search?portal_type=Event&start.query=${end_str}&start.range=max&end.query=${start_str}&end.range=min&metadata_fields=start&metadata_fields=end&metadata_fields=whole_day&metadata_fields=location;`
+```
+http://localhost:8080/Plone/@search?portal_type=Event&start.query=${end_str}&start.range=max&end.query=${start_str}&end.range=min&metadata_fields=start&metadata_fields=end&metadata_fields=whole_day&metadata_fields=location;
+```
 
 It searches for events starting as early as the given ``end_str`` and latest as the given ``start_str``.
 
 This is the full initialization tag:
+
 ```
   <div id="calendar" class="pat-calendar"
       data-pat-calendar="
