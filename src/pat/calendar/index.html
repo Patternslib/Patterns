@@ -9,21 +9,6 @@
         type="text/javascript"
         charset="utf-8"
     ></script>
-    <style type="text/css" media="screen">
-      .main {
-        display: flex;
-      }
-      .sidebar {
-        width: 30%;
-        padding: 0 1em;
-      }
-      .pat-calendar {
-        flex-grow: 2;
-      }
-      .hidden {
-        display: none !important;
-      }
-    </style>
 </head>
 <body>
     <!--div id="calendar" class="pat-calendar"
@@ -34,16 +19,16 @@
         store: session;"
   -->
 
-  <div class="main">
+  <div class="calendar-main">
 
-    <div class="sidebar">
+    <div class="calendar-sidebar">
 
       <div class="pat-collapsible cal-categories-container">
         <h4 class="section-label">Category section 1</h4>
         <fieldset class="pat-checklist cal-categories checklist">
           <div class="toggles list-functions button-cluster">
-            <button class="small select-all">Select all</button>
-            <button class="small deselect-all">Deselect all</button>
+            <button class="small pat-button select-all">Select all</button>
+            <button class="small pat-button deselect-all">Deselect all</button>
           </div>
           <label>
             <span class="calendar-name">Cateory 1</span>
@@ -60,8 +45,8 @@
         <h4 class="section-label">Category section 2</h4>
         <fieldset class="pat-checklist cal-categories checklist">
           <div class="toggles list-functions button-cluster">
-            <button class="small select-all">Select all</button>
-            <button class="small deselect-all">Deselect all</button>
+            <button class="small pat-button select-all">Select all</button>
+            <button class="small pat-button deselect-all">Deselect all</button>
           </div>
           <label>
             <span class="calendar-name">Cateory 1</span>
@@ -77,7 +62,7 @@
     </div>
 
     <div id="calendar" class="pat-calendar"
-        data-pat-calendar="
+         data-pat-calendar="
           category-controls: .cal-categories;
           event-sources: ./test_event_source.json,./test_event_source2.json;
           event-sources-classes: internal-calendar, external-calendar;
@@ -85,23 +70,22 @@
           initial-date: 2020-10-10;
           event-color: fuchsia;
           lang: de;
-          store: local;"
-    >
+          store: local;">
       <h1 class="cal-title">title</h1>
       <div class="cal-toolbar">
         <fieldset class="cal-nav">
-          <button class="jump-prev" title="Back" type="button">&lt;</button>
-          <button class="jump-today" title="Today" type="button">Today</button>
-          <button class="jump-next" title="Forward" type="button">&gt;</button>
+          <button class="small pat-button jump-prev" title="Back" type="button">&lt;</button>
+          <button class="small pat-button jump-today" title="Today" type="button">Today</button>
+          <button class="small pat-button jump-next" title="Forward" type="button">&gt;</button>
         </fieldset>
         <fieldset class="cal-views">
-          <button class="view-month" type="button">Month</button>
-          <button class="view-week" type="button">Week</button>
-          <button class="view-day" type="button">Day</button>
-          <button class="view-listYear" type="button">List Year</button>
-          <button class="view-listMonth" type="button">List Month</button>
-          <button class="view-listWeek" type="button">List Week</button>
-          <button class="view-listDay" type="button">List Day</button>
+          <button class="small pat-button view-month" type="button">Month</button>
+          <button class="small pat-button view-week" type="button">Week</button>
+          <button class="small pat-button view-day" type="button">Day</button>
+          <button class="small pat-button view-listYear" type="button">List Year</button>
+          <button class="small pat-button view-listMonth" type="button">List Month</button>
+          <button class="small pat-button view-listWeek" type="button">List Week</button>
+          <button class="small pat-button view-listDay" type="button">List Day</button>
         </fieldset>
         <fieldset class="cal-timezone">
           <select name="timezone" class="timezone">
@@ -116,6 +100,22 @@
     </div>
 
   </div>
+
+  <style type="text/css" media="screen">
+    .calendar-main {
+      display: flex;
+    }
+    .calendar-sidebar {
+      width: 30%;
+      padding: 0 1em;
+    }
+    .pat-calendar {
+      flex-grow: 2;
+    }
+    .calendar-hidden {
+      display: none !important;
+    }
+  </style>
 
 </body>
 </html>
