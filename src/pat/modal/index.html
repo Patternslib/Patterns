@@ -11,54 +11,50 @@
         ></script>
     </head>
     <body>
-        <form action="#modal-source" method="get" class="pat-modal">
+        <form action="#modal-source" 
+              method="get" 
+              class="pat-modal">
             <fieldset class="button-bar">
-                <button type="submit" class="pat-button">
+                <button type="submit" 
+                        class="pat-button">
                     Open a Modal panel via a form submit
                 </button>
             </fieldset>
         </form>
         <p>
             Open a
-            <a href="#modal-source" class="pat-modal"> Modal panel via AJAX</a>.
+            <a href="#modal-source" 
+               class="pat-modal"> Modal panel via AJAX</a>.
         </p>
         <p>
             Open a
-            <a
-                href="#modal-source"
-                class="pat-modal"
-                data-pat-modal="class: large"
-            >
-                Modal panel with an extra class 'large' on it</a
+            <a href="#modal-source-panel"
+               class="pat-modal"
+               data-pat-modal="class: panel">
+               Modal panel with an extra class 'panel' on it</a
             >.
         </p>
         <p>
             Open a
-            <a
-                href="#modal-source-headerless"
-                class="pat-modal"
-                data-pat-modal="panel-header-content: none"
-            >
-                Modal with no header</a
-            >.
+            <a href="#modal-source-headerless"
+               class="pat-modal"
+               data-pat-modal="class: panel; panel-header-content: none">
+               Modal without header</a>.
         </p>
 
         <p>
             Open a
-            <a
-                href="#modal-source-customheader"
-                class="pat-modal"
-                data-pat-modal="panel-header-content: .custom-header"
-            >
-                Modal with a custom header</a
-            >.
+            <a href="#modal-source-custom-header"
+               class="pat-modal"
+               data-pat-modal="class: panel; panel-header-content: .custom-header">
+               Modal with a custom header</a>.
         </p>
 
-        <p class="modal_open_button">
+<!--         <p class="modal_open_button">
             Open a modal via a Button which redirects the click to a hidden
             anchor element.
             <button
-                class="pat-forward"
+                class="small pat-buttom pat-forward"
                 data-pat-forward="selector: .modal_open_button--opener"
             >
                 Open Modal
@@ -66,74 +62,130 @@
             <a
                 id="callbackbutton_modal_opener"
                 class="pat-modal modal_open_button--opener"
-                href="#modal-source"
+                href="modal-sources.html#document-content"
                 style="display: none"
             >
                 really open modal
             </a>
-        </p>
+        </p> -->
+        
+        <div id="examples"
+             hidden>
+            <div id="modal-source">
+                <h1>Example modal</h1>
+                <div class="container">
+                    <p>
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                        accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+                        quae ab illo inventore veritatis et quasi architecto beatae
+                        vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia
+                        voluptas sit aspernatur aut odit aut fugit, sed quia
+                        consequuntur magni dolores eos qui ratione voluptatem sequi
+                        nesciunt.
+                    </p>
+                </div>
+            </div>
 
-        <div id="modal-source" hidden>
-            <h3>Modal example</h3>
-            <p>
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                quae ab illo inventore veritatis et quasi architecto beatae
-                vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia
-                voluptas sit aspernatur aut odit aut fugit, sed quia
-                consequuntur magni dolores eos qui ratione voluptatem sequi
-                nesciunt.
-            </p>
-        </div>
+            <div id="modal-source-panel" hidden>
+                <h1>Example modal</h1>
+                <div class="panel-body">
+                    <div class="container">
+                        <p>
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                            accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+                            quae ab illo inventore veritatis.
+                        </p>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="container">
+                        <button type="button"
+                                class="close-panel pat-button">Close</button>
+                    </div>
+                </div>
+            </div>
 
-        <div id="modal-source-headerless" hidden>
-            <h3>Header goes into panel</h3>
-            <p>
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                quae ab illo inventore veritatis et quasi architecto beatae
-                vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia
-                voluptas sit aspernatur aut odit aut fugit, sed quia
-                consequuntur magni dolores eos qui ratione voluptatem sequi
-                nesciunt.
-            </p>
-        </div>
+            <div id="modal-source-headerless" hidden>
+                <h1>Header goes into panel</h1>
+                <div class="panel-body">
+                    <div class="container">
+                        <p>
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                            accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+                            quae ab illo inventore veritatis.
+                        </p>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="container">
+                        <button type="button"
+                                class="close-panel pat-button">Close</button>
+                    </div>
+                </div>
 
-        <div id="modal-source-customheader" hidden>
-            <h3>Use the custom one instead of me</h3>
-            <h3 class="custom-header">Custom header</h3>
-            <p>
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                quae ab illo inventore veritatis et quasi architecto beatae
-                vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia
-                voluptas sit aspernatur aut odit aut fugit, sed quia
-                consequuntur magni dolores eos qui ratione voluptatem sequi
-                nesciunt.
-            </p>
-        </div>
+                <style type="text/css">
+                    .pat-modal .panel-content h1 {
+                        margin: 0 0 40px;
+                        padding: 0;
+                        text-align: center;
+                        font-size: 30px;
+                    }
+                </style>
+            </div>
 
-        <div id="modal-on-load" class="pat-modal">
-            <h3>Modal example with auto load</h3>
-            <article class="pat-rich">
-                <p>Frequent uses of modal windows include:</p>
-                <ul>
-                    <li>
-                        Drawing attention to vital pieces of information. This
-                        use has been criticised as ineffective because users are
-                        bombarded with too many dialog boxes, and habituate to
-                        simply clicking "Close", "Cancel", or "OK" without
-                        reading or understanding the message.[3][4][5]
-                    </li>
-                    <li>
-                        Blocking the application flow until information required
-                        to continue is entered, as for example a password in a
-                        login process. Another example are file dialogs to open
-                        and save files in an application.
-                    </li>
-                </ul>
-                <p>*Source: Wikipedia</p>
-            </article>
+            <div id="modal-source-custom-header" hidden>
+                <h1>Use the custom one instead of me</h1>
+                <h1 class="custom-header">Custom header</h1>
+                <div class="panel-body">
+                    <div class="container">
+                        <p>
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                            accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+                            quae ab illo inventore veritatis.
+                        </p>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="container">
+                        <button type="button"
+                                class="close-panel pat-button">Close</button>
+                    </div>
+                </div>
+
+                <style type="text/css">
+                    .pat-modal .panel-content h1 {
+                        margin: 0 0 40px;
+                        padding: 0;
+                        text-align: center;
+                        font-size: 30px;
+                    }
+                </style>
+            </div>
+
+            <div id="modal-on-load" 
+                 class="pat-modal">
+                <h1>Modal example with auto load</h1>
+                <article class="pat-rich">
+                    <p>Frequent uses of modal windows include:</p>
+                    <ul>
+                        <li>
+                            Drawing attention to vital pieces of information. This
+                            use has been criticised as ineffective because users are
+                            bombarded with too many dialog boxes, and habituate to
+                            simply clicking "Close", "Cancel", or "OK" without
+                            reading or understanding the message.
+                        </li>
+                        <li>
+                            Blocking the application flow until information required
+                            to continue is entered, as for example a password in a
+                            login process. Another example are file dialogs to open
+                            and save files in an application.
+                        </li>
+                    </ul>
+                    <p>*Source: Wikipedia</p>
+                </article>
+            </div>            
         </div>
+        
     </body>
 </html>
