@@ -17,12 +17,22 @@
         </style>
     </head>
     <body>
-        <h3>The stacks pattern can be used to make tabs</h3>
-        <nav class="tabs">
-            <a href="#sheet-1" class="current">Tab one</a>
-            <a href="#sheet-2">Tab two</a> <a href="#sheet-3">Tab three</a>
-        </nav>
-        <article class="pat-stacks">
+        <article class="pat-rich">
+            <p>The stacks pattern can for instance be used to make tabs. Use your own styling to create various manifestations of this interaction pattern.</p>
+        </article>
+
+        <div class="canvas-toolbar">
+            <nav class="tabs">
+                <a href="#sheet-1" 
+                   class="small pat-button current">Tab one</a>
+                <a href="#sheet-2"
+                   class="small pat-button">Tab two</a> 
+                <a href="#sheet-3"
+                   class="small pat-button">Tab three</a>
+            </nav>
+        </div>
+
+        <article class="pat-stacks pat-rich">
             <section id="sheet-1">
                 <h4>Sheet one</h4>
                 <p>
@@ -51,15 +61,25 @@
             </section>
         </article>
 
-        <p>
-            Same pattern, but starting with another default tab by setting the
-            class current on the third tab in the source markup
-        </p>
-        <nav class="tabs">
-            <a href="#sheet-a">Tab one</a> <a href="#sheet-b">Tab two</a>
-            <a href="#sheet-c" class="current">Tab three</a>
-        </nav>
-        <article class="pat-stacks">
+        <article class="pat-rich">
+            <p>
+                Same pattern, but starting with another default tab by setting the
+                class current on the third tab in the source markup
+            </p>
+        </article>
+
+        <div class="canvas-toolbar">
+            <nav class="tabs">
+                <a href="#sheet-a"
+                   class="small pat-button">Tab one</a> 
+                <a href="#sheet-b"
+                   class="small pat-button">Tab two</a>
+                <a href="#sheet-c" 
+                   class="small pat-button current">Tab three</a>
+            </nav>
+        </div>
+
+        <article class="pat-stacks pat-rich">
             <section id="sheet-a">
                 <h4>Sheet one</h4>
                 <p>
