@@ -310,7 +310,7 @@ export default Base.extend({
         if (this.ajax_state.isFetching || !this.ajax_state.canFetch) {
             return undefined;
         }
-        const { url, selector, modifier } = this.get_url_parts(
+        const { url, selector } = this.get_url_parts(
             this.el.getAttribute("href")
         );
         let content;
@@ -327,7 +327,7 @@ export default Base.extend({
                 // TODO: use pat-inject, once it supports async
                 const response = await fetch(url);
                 const text = await response.text();
-                content = await handler(text, url, selector, modifier);
+                content = await handler(text, url, selector);
             } catch (e) {
                 log.error(`Error on ajax request ${e}`);
             }
@@ -335,7 +335,7 @@ export default Base.extend({
         } else if (selector) {
             // Tooltip content from current DOM tree.
             content = document.querySelector(selector);
-            content = content ? content[modifier] : undefined;
+            content = content?.innerHTML || undefined;
         }
         if (content) {
             this.tippy.setContent(content);
@@ -344,34 +344,28 @@ export default Base.extend({
     },
 
     get_url_parts(href) {
-        // Return the URL, a CSS ID selector and a DOM query modifier.
-        // The modifier is a as defined in pat-inject:
-        // ::element selects the element itself and not it's children.
-        let url, selector, modifier;
+        // Return the URL and a CSS ID selector.
+        let url, selector;
         if (!href) {
-            return { url, selector, modifier };
+            return { url, selector };
         }
-        url = (href.split("#")[0] || "").split("::")[0] || undefined;
-        selector = (href.split("#")[1] || "").split("::")[0] || undefined;
+        url = href.split("#")[0] || undefined;
+        selector = href.split("#")[1] || undefined;
         selector = selector ? `#${selector}` : undefined;
-        modifier = (href.split("#")[1] || "").split("::")[1] || undefined;
-        modifier = modifier === "element" ? "outerHTML" : "innerHTML";
-        return { url, selector, modifier };
+        return { url, selector };
     },
 
     _ajaxDataTypeHandlers: {
-        html(text, url, selector, modifier) {
-            const tmp = document.createElement("div");
+        html(text, url, selector) {
+            let tmp = document.createElement("div");
             tmp.innerHTML = text;
             if (selector) {
-                const el = tmp.querySelector(selector);
-                return el ? el[modifier] : "";
+                tmp = tmp.querySelector(selector);
             }
-            return tmp.innerHTML;
+            return tmp?.innerHTML || "";
         },
 
-        // eslint-disable-next-line no-unused-vars
-        async markdown(text, url, selector, modifier) {
+        async markdown(text, url, selector) {
             const pat_markdown = await import("../markdown/markdown");
             const pat = pat_markdown.default.init($("<div/>"));
             const cfg = { url };
