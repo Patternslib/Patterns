@@ -1409,150 +1409,23 @@ this will be extracted.
         });
     });
 
-    describe("::element modifier support", () => {
-        it("ajax mode: it fetches the outerHTML with the ::element modifier", async (done) => {
-            global.fetch = jest
-                .fn()
-                .mockImplementation(
-                    mockFetch('<div id="outer">External content</div>')
-                );
-
-            const $el = testutils.createTooltip({
-                data: "source: ajax; trigger: click",
-                href: "http://test.com/#outer::element",
-            });
-            new pattern($el);
-            await utils.timeout(1);
-
-            testutils.click($el);
-            await utils.timeout(1); // wait a tick for async fetch
-
-            expect(
-                document.querySelector(".tippy-box .tippy-content").innerHTML
-            ).toBe('<div id="outer">External content</div>');
-
-            global.fetch.mockClear();
-            delete global.fetch;
-
-            done();
-        });
-
-        it("ajax mode: it fetches the innerHTML without the ::element modifier", async (done) => {
-            global.fetch = jest
-                .fn()
-                .mockImplementation(
-                    mockFetch('<div id="outer">External content</div>')
-                );
-
-            const $el = testutils.createTooltip({
-                data: "source: ajax; trigger: click",
-                href: "http://test.com/#outer",
-            });
-            new pattern($el);
-            await utils.timeout(1);
-
-            testutils.click($el);
-            await utils.timeout(1); // wait a tick for async fetch
-
-            expect(
-                document.querySelector(".tippy-box .tippy-content").innerHTML
-            ).toBe("External content");
-
-            global.fetch.mockClear();
-            delete global.fetch;
-
-            done();
-        });
-
-        it("local content: it uses the outerHTML with the ::element modifier", async (done) => {
-            const content = document.createElement("div");
-            content.setAttribute("id", "local-content");
-            content.innerHTML = '<strong class="testinner">okay</strong>';
-            document.body.appendChild(content);
-
-            const $el = testutils.createTooltip({
-                data: "source: ajax; trigger: click",
-                href: "#local-content::element",
-            });
-            new pattern($el);
-            await utils.timeout(1);
-
-            testutils.click($el);
-            await utils.timeout(1); // wait a tick for async fetch
-
-            expect(
-                document.querySelector(
-                    ".tippy-box .tippy-content #local-content"
-                )
-            ).toBeTruthy();
-
-            done();
-        });
-
-        it("local content: it uses the innerHTML without the ::element modifier", async (done) => {
-            const content = document.createElement("div");
-            content.setAttribute("id", "local-content");
-            content.innerHTML = '<strong class="testinner">okay</strong>';
-            document.body.appendChild(content);
-
-            const $el = testutils.createTooltip({
-                data: "source: ajax; trigger: click",
-                href: "#local-content",
-            });
-            new pattern($el);
-            await utils.timeout(1);
-
-            testutils.click($el);
-            await utils.timeout(1); // wait a tick for async fetch
-
-            expect(
-                document.querySelector(
-                    ".tippy-box .tippy-content #local-content"
-                )
-            ).toBeFalsy();
-
-            expect(
-                document.querySelector(".tippy-box .tippy-content .testinner")
-            ).toBeTruthy();
-
-            done();
-        });
-    });
-
     describe("URL splitting", () => {
         it("it extracts the correct parts from any url", async (done) => {
             const $el = testutils.createTooltip({});
             const instance = new pattern($el);
             await utils.timeout(1);
 
-            let parts = instance.get_url_parts(
-                "https://text.com/#selector::modifier"
-            );
+            let parts = instance.get_url_parts("https://text.com/#selector");
             expect(parts.url === "https://text.com/").toBeTruthy();
             expect(parts.selector === "#selector").toBeTruthy();
-            expect(parts.modifier === "innerHTML").toBeTruthy();
-
-            parts = instance.get_url_parts(
-                "https://text.com/#selector::element"
-            );
-            expect(parts.url === "https://text.com/").toBeTruthy();
-            expect(parts.selector === "#selector").toBeTruthy();
-            expect(parts.modifier === "outerHTML").toBeTruthy();
-
-            parts = instance.get_url_parts("#selector::element");
-            expect(typeof parts.url === "undefined").toBeTruthy();
-            expect(parts.selector === "#selector").toBeTruthy();
-            expect(parts.modifier === "outerHTML").toBeTruthy();
 
             parts = instance.get_url_parts("#selector");
             expect(typeof parts.url === "undefined").toBeTruthy();
             expect(parts.selector === "#selector").toBeTruthy();
-            expect(parts.modifier === "innerHTML").toBeTruthy();
 
             parts = instance.get_url_parts("https://text.com/");
             expect(parts.url === "https://text.com/").toBeTruthy();
             expect(typeof parts.selector === "undefined").toBeTruthy();
-            expect(parts.modifier === "innerHTML").toBeTruthy();
 
             done();
         });

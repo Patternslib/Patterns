@@ -449,73 +449,11 @@
                     Like
                 </button>
             </form>
-
-            <h4>works with other patterns / pt2</h4>
-            This opens a
-            <a
-                href="#tooltip-source-form::element"
-                class="pat-tooltip"
-                data-pat-tooltip="trigger: click; closing: close-button; source: content"
-                >Tooltip form with other patterns</a
-            >.
         </div>
 
         <div style="display: none">
             <!-- Tooltip content elements -->
             <section id="test-tooltip-w-submit--content">Liked</section>
-            <form id="tooltip-source-form">
-                <fieldset
-                    class="vertical"
-                    data-pat-inject="source: #listing; target: #listing;"
-                >
-                    <fieldset
-                        class="pat-checklist checked has-value"
-                        data-value="on"
-                    >
-                        <label class="checked has-value" data-value="on">
-                            <input
-                                type="checkbox"
-                                name="display-previews"
-                                checked=""
-                                class="has-value"
-                                data-value="on"
-                            />
-                            Display previews
-                        </label>
-                    </fieldset>
-                    <fieldset
-                        class="pat-checklist radio has-value checked"
-                        data-value="relevancy"
-                    >
-                        <label class="has-value checked" data-value="relevancy">
-                            <input
-                                type="radio"
-                                name="results-sorting"
-                                checked=""
-                                value="relevancy"
-                                class="has-value"
-                                data-value="relevancy"
-                            />
-                            Sort by relevancy
-                        </label>
-                        <label class="unchecked">
-                            <input
-                                type="radio"
-                                name="results-sorting"
-                                value="date"
-                            />
-                            Sort by date
-                        </label>
-                    </fieldset>
-                </fieldset>
-                <li>
-                    <a
-                        class="close-panel pat-modal"
-                        href="./pattern-test-response.html#message"
-                        >Open a modal.</a
-                    >
-                </li>
-            </form>
             <div id="tooltip-source" class="sources">
                 <strong>Hello there</strong>
             </div>
