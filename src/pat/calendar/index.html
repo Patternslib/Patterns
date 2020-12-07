@@ -11,107 +11,117 @@
     ></script>
 </head>
 <body>
-    <!--div id="calendar" class="pat-calendar"
-      data-pat-calendar="
-        url: http://localhost:8080/Plone/@search?portal_type=Event&start.query=${end_str}&start.range=max&end.query=${start_str}&end.range=min&metadata_fields=start&metadata_fields=end&metadata_fields=whole_day&metadata_fields=location;
-        initial-date: 2020-10-10;
-        lang: de;
-        store: session;"
-  -->
+    <div class="calendar-main">
 
-  <div class="calendar-main">
+        <div class="pat-calendar"
+             data-pat-calendar="category-controls: .cal-nav;
+                                event-sources: ./test_event_source.json,./test_event_source2.json;
+                                event-sources-classes: internal-calendar, external-calendar;
+                                add-url: ./test_add_event.html;
+                                initial-date: 2020-10-10;
+                                event-color: fuchsia;
+                                lang: de;
+                                store: local;">
+            <form class="pat-toolbar cal-toolbar pat-form"
+                  id="calendar-toolbar">
+                <div class="pat-toolbar-section">
+                    <fieldset class="pat-button-cluster cal-nav">
+                        <button class="pat-button jump-prev" 
+                                title="Back" 
+                                type="button">&lt;</button>
+                        <button class="pat-button jump-today" 
+                                title="Today" 
+                                type="button">Today</button>
+                        <button class="pat-button jump-next" 
+                                title="Forward" 
+                                type="button">&gt;</button>
+                    </fieldset>
+                </div>
+                <div class="pat-toolbar-section cal-timezone">
+                    <label class="pat-select">
+                        <select name="timezone" 
+                                class="timezone">
+                            <option value="Europe/London">GMT</option>
+                            <option value="Europe/Berlin" selected="selected">CET</option>
+                            <option value="Europe/Moscow">MSK</option>
+                        </select>
+                    </label>
+                </div>
+            </form>
 
-    <div class="calendar-sidebar">
+            <form class="pat-toolbar cal-toolbar pat-form"
+                  id="calendar-toolbar">
+                <div class="pat-toolbar-section">
+                    <fieldset class="pat-button-cluster cal-views">
+                        <button class="pat-button view-month" 
+                                type="button">Month</button>
+                        <button class="pat-button view-week" 
+                                type="button">Week</button>
+                        <button class="pat-button view-day" 
+                                type="button">Day</button>
+                        <button class="pat-button view-listYear" 
+                                type="button">List Year</button>
+                        <button class="pat-button view-listMonth" 
+                                type="button">List Month</button>
+                        <button class="pat-button view-listWeek" 
+                                type="button">List Week</button>
+                        <button class="pat-button view-listDay" 
+                                type="button">List Day</button>
+                    </fieldset>
+                </div>
+            </form>
 
-      <div class="pat-collapsible cal-categories-container">
-        <h4 class="section-label">Category section 1</h4>
-        <fieldset class="pat-checklist cal-categories checklist">
-          <div class="toggles list-functions button-cluster">
-            <button class="small pat-button select-all">Select all</button>
-            <button class="small pat-button deselect-all">Deselect all</button>
-          </div>
-          <label>
-            <span class="calendar-name">Cateory 1</span>
-            <input id="calendar-section1-category1" type="checkbox" checked />
-          </label>
-          <label>
-            <span class="calendar-name">Category 2</span>
-            <input id="calendar-section1-category2" type="checkbox" checked />
-          </label>
-        </fieldset>
-      </div>
+            <form class="row">
+                <div class="vertical six columns cal-categories-container">
+                    <fieldset class="pat-checklist cal-categories checklist">
+                        <div class="pat-toolbar">
+                            <div class="toggles list-functions pat-button-cluster">
+                                <button class="pat-button select-all">Select all</button>
+                                <button class="pat-button deselect-all">Deselect all</button>
+                            </div>
+                        </div>
+                        <label>
+                            Cateory 1
+                            <input id="calendar-section1-category1" type="checkbox" checked />
+                        </label>
+                        <label>
+                            Category 2
+                            <input id="calendar-section1-category2" type="checkbox" checked />
+                        </label>
+                    </fieldset>
+                </div>
+                <div class="vertical six columns cal-categories-container">
+                    <fieldset class="pat-checklist cal-categories checklist">
+                        <div class="pat-toolbar">
+                            <div class="toggles list-functions pat-button-cluster">
+                                <button class="pat-button select-all">Select all</button>
+                                <button class="pat-button deselect-all">Deselect all</button>
+                            </div>
+                        </div>
+                        <label>
+                            Cateory 1
+                            <input id="calendar-section2-category1" type="checkbox" checked />
+                        </label>
+                        <label>
+                            Category 2
+                            <input id="calendar-section2-category2" type="checkbox" checked />
+                        </label>
+                    </fieldset>
+                </div>
+            </form>
 
-      <div class="pat-collapsible cal-categories-container">
-        <h4 class="section-label">Category section 2</h4>
-        <fieldset class="pat-checklist cal-categories checklist">
-          <div class="toggles list-functions button-cluster">
-            <button class="small pat-button select-all">Select all</button>
-            <button class="small pat-button deselect-all">Deselect all</button>
-          </div>
-          <label>
-            <span class="calendar-name">Cateory 1</span>
-            <input id="calendar-section2-category1" type="checkbox" checked />
-          </label>
-          <label>
-            <span class="calendar-name">Category 2</span>
-            <input id="calendar-section2-category2" type="checkbox" checked />
-          </label>
-        </fieldset>
-      </div>
-
+            <article class="pat-rich">
+                <p>
+                    <strong class="cal-title">Calendar</strong>
+                </p>
+            </article>
     </div>
-
-    <div id="calendar" class="pat-calendar"
-         data-pat-calendar="
-          category-controls: .cal-categories;
-          event-sources: ./test_event_source.json,./test_event_source2.json;
-          event-sources-classes: internal-calendar, external-calendar;
-          add-url: ./test_add_event.html;
-          initial-date: 2020-10-10;
-          event-color: fuchsia;
-          lang: de;
-          store: local;">
-      <h1 class="cal-title">title</h1>
-      <div class="cal-toolbar">
-        <fieldset class="cal-nav">
-          <button class="small pat-button jump-prev" title="Back" type="button">&lt;</button>
-          <button class="small pat-button jump-today" title="Today" type="button">Today</button>
-          <button class="small pat-button jump-next" title="Forward" type="button">&gt;</button>
-        </fieldset>
-        <fieldset class="cal-views">
-          <button class="small pat-button view-month" type="button">Month</button>
-          <button class="small pat-button view-week" type="button">Week</button>
-          <button class="small pat-button view-day" type="button">Day</button>
-          <button class="small pat-button view-listYear" type="button">List Year</button>
-          <button class="small pat-button view-listMonth" type="button">List Month</button>
-          <button class="small pat-button view-listWeek" type="button">List Week</button>
-          <button class="small pat-button view-listDay" type="button">List Day</button>
-        </fieldset>
-        <fieldset class="cal-timezone">
-          <select name="timezone" class="timezone">
-            <option value="Africa/Dakar">(GMT+00:00) Dakar, Monrovia, Reykjavik</option>
-            <option value="Europe/London">(GMT+00:00) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London</option>
-            <option value="Europe/Berlin" selected="selected">(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna</option>
-            <option value="Europe/Athens">(GMT+02:00) Athens, Bucharest, Istanbul</option>
-            <option value="Europe/Moscow">(GMT+03:00) Moscow, St. Petersburg, Volgograd</option>
-          </select>
-        </fieldset>
-      </div>
-    </div>
-
-  </div>
 
   <style type="text/css" media="screen">
-    .calendar-main {
-      display: flex;
-    }
     .calendar-sidebar {
-      width: 30%;
       padding: 0 1em;
     }
-    .pat-calendar {
-      flex-grow: 2;
-    }
+
     .calendar-hidden {
       display: none !important;
     }
