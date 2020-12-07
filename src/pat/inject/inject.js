@@ -907,6 +907,14 @@ const inject = {
         VIDEO: "data-pat-inject-rebase-src",
     },
 
+    _rebaseOptions: {
+        ".pat-inject": "url",
+        ".pat-calendar": "url",
+        ".pat-date-picker": "i18n",
+        ".pat-datetime-picker": "i18n",
+        ".pat-collapsible": "load-content",
+    },
+
     _rebaseHTML: function inject_rebaseHTML(base, html) {
         if (html === "") {
             // Special case, source is none
@@ -941,6 +949,18 @@ const inject = {
                     $this.attr(attrName, value);
                 }
             });
+
+        const rebase_options = $page[0].querySelectorAll(
+            Object.keys(inject._rebaseOptions).join(",")
+        );
+        for (const el of rebase_options) {
+            for (const attr of Object.values(inject._rebaseOptions)) {
+                const opt = el.getAttribute(attr, null);
+                if (opt) {
+                }
+            }
+        }
+
         // XXX: IE8 changes the order of attributes in html. The following
         // lines move data-pat-inject-rebase-src to src.
         $page.find("[data-pat-inject-rebase-src]").each(function () {
