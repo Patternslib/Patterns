@@ -52,12 +52,10 @@ const inject = {
     name: "inject",
     trigger:
         ".raptor-ui .ui-button.pat-inject, a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
-    init: function inject_init($el, opts) {
+    init($el, opts) {
         var cfgs = inject.extractConfig($el, opts);
         if (
-            cfgs.some(function (e) {
-                return e.history === "record";
-            }) &&
+            cfgs.some((e) => e.history === "record") &&
             !("pushState" in history)
         ) {
             // if the injection shall add a history entry and HTML5 pushState
@@ -88,7 +86,7 @@ const inject = {
             }
         }
         if (cfgs[0].pushMarker) {
-            $("body").on("push", function (event, data) {
+            $("body").on("push", (event, data) => {
                 console.log("received push message: " + data);
                 if (data == cfgs[0].pushMarker) {
                     console.log("re-injecting " + data);
@@ -107,15 +105,15 @@ const inject = {
                 clearTimeout(timer);
             };
 
-            var onInteraction = utils.debounce(function onInteraction() {
+            var onInteraction = utils.debounce(() => {
                 clearTimeout(timer);
                 timer = setTimeout(onTimeout, cfgs[0].trigger);
             }, timeout);
 
             const unsub = () => {
-                ["scroll", "resize"].forEach(function (e) {
-                    window.removeEventListener(e, onInteraction);
-                });
+                ["scroll", "resize"].forEach((e) =>
+                    window.removeEventListener(e, onInteraction)
+                );
                 [
                     "click",
                     "keypress",
@@ -123,16 +121,16 @@ const inject = {
                     "mousemove",
                     "touchstart",
                     "touchend",
-                ].forEach(function (e) {
-                    document.removeEventListener(e, onInteraction);
-                });
+                ].forEach((e) =>
+                    document.removeEventListener(e, onInteraction)
+                );
             };
 
             onInteraction();
 
-            ["scroll", "resize"].forEach(function (e) {
-                window.addEventListener(e, onInteraction);
-            });
+            ["scroll", "resize"].forEach((e) =>
+                window.addEventListener(e, onInteraction)
+            );
             [
                 "click",
                 "keypress",
@@ -140,13 +138,11 @@ const inject = {
                 "mousemove",
                 "touchstart",
                 "touchend",
-            ].forEach(function (e) {
-                document.addEventListener(e, onInteraction);
-            });
+            ].forEach((e) => document.addEventListener(e, onInteraction));
         } else {
             switch (cfgs[0].trigger) {
                 case "default":
-                    cfgs.forEach(function (cfg) {
+                    cfgs.forEach((cfg) => {
                         if (cfg.delay) {
                             cfg.processDelay = cfg.delay;
                         }
@@ -209,20 +205,20 @@ const inject = {
         return $el;
     },
 
-    destroy: function inject_destroy($el) {
+    destroy($el) {
         $el.off(".pat-inject");
         $el.data("pat-inject", null);
         return $el;
     },
 
-    onTrigger: function inject_onTrigger(ev) {
+    onTrigger(ev) {
         /* Injection has been triggered, either via form submission or a
          * link has been clicked.
          */
         var cfgs = $(this).data("pat-inject"),
             $el = $(this);
         if ($el.is("form")) {
-            $(cfgs).each(function (i, v) {
+            $(cfgs).each((i, v) => {
                 v.params = $.param($el.serializeArray());
             });
         }
@@ -231,7 +227,7 @@ const inject = {
         inject.execute(cfgs, $el);
     },
 
-    onFormActionSubmit: function inject_onFormActionSubmit(ev) {
+    onFormActionSubmit(ev) {
         ajax.onClickSubmit(ev); // make sure the submitting button is sent with the form
 
         var $button = $(ev.target),
@@ -241,7 +237,7 @@ const inject = {
             $cfg_node = $button.closest("[data-pat-inject]"),
             cfgs = inject.extractConfig($cfg_node, opts);
 
-        $(cfgs).each(function (i, v) {
+        $(cfgs).each((i, v) => {
             v.params = $.param($form.serializeArray());
         });
 
@@ -250,14 +246,14 @@ const inject = {
         inject.execute(cfgs, $form);
     },
 
-    submitSubform: function inject_submitSubform($sub) {
+    submitSubform($sub) {
         /* This method is called from pat-subform
          */
         var $el = $sub.parents("form"),
             cfgs = $sub.data("pat-inject");
 
         // store the params of the subform in the config, to be used by history
-        $(cfgs).each(function (i, v) {
+        $(cfgs).each((i, v) => {
             v.params = $.param($sub.serializeArray());
         });
 
@@ -269,11 +265,11 @@ const inject = {
         inject.execute(cfgs, $el);
     },
 
-    extractConfig: function inject_extractConfig($el, opts) {
+    extractConfig($el, opts) {
         opts = $.extend({}, opts);
 
         var cfgs = parser.parse($el, opts, true);
-        cfgs.forEach(function inject_extractConfig_each(cfg) {
+        cfgs.forEach((cfg) => {
             // opts and cfg have priority, fallback to href/action
             cfg.url =
                 opts.url ||
@@ -308,24 +304,24 @@ const inject = {
         return cfgs;
     },
 
-    elementIsDirty: function (m) {
+    elementIsDirty(m) {
         /* Check whether the passed in form element contains a value.
          */
-        var data = $.map(m.find(":input:not(select)"), function (i) {
+        var data = $.map(m.find(":input:not(select)"), (i) => {
             var val = $(i).val();
             return Boolean(val) && val !== $(i).attr("placeholder");
         });
         return $.inArray(true, data) !== -1;
     },
 
-    askForConfirmation: function inject_askForConfirmation(cfgs) {
+    askForConfirmation(cfgs) {
         /* If configured to do so, show a confirmation dialog to the user.
          * This is done before attempting to perform injection.
          */
         var should_confirm = false,
             message;
 
-        _.each(cfgs, function (cfg) {
+        _.each(cfgs, (cfg) => {
             var _confirm = false;
             if (cfg.confirm == "always") {
                 _confirm = true;
@@ -349,7 +345,7 @@ const inject = {
         return true;
     },
 
-    ensureTarget: function inject_ensureTarget(cfg, $el) {
+    ensureTarget(cfg, $el) {
         /* Make sure that a target element exists and that it's assigned to
          * cfg.$target.
          */
@@ -370,7 +366,7 @@ const inject = {
         return true;
     },
 
-    verifySingleConfig: function inject_verifySingleonfig($el, url, cfg) {
+    verifySingleConfig($el, url, cfg) {
         /* Verify one of potentially multiple configs (i.e. argument lists).
          *
          * Extract modifiers such as ::element or ::after.
@@ -396,7 +392,7 @@ const inject = {
         return true;
     },
 
-    verifyConfig: function inject_verifyConfig(cfgs, $el) {
+    verifyConfig(cfgs, $el) {
         /* Verify and post-process all the configurations.
          * Each "config" is an arguments list separated by the &&
          * combination operator.
@@ -411,7 +407,7 @@ const inject = {
         );
     },
 
-    listenForFormReset: function (cfg) {
+    listenForFormReset(cfg) {
         /* if pat-inject is used to populate target in some form and when
          * Cancel button is pressed (this triggers reset event on the
          * form) you would expect to populate with initial placeholder
@@ -425,13 +421,13 @@ const inject = {
             cfg.$target.data("initial-value") === undefined
         ) {
             cfg.$target.data("initial-value", cfg.$target.html());
-            $form.on("reset", function () {
+            $form.on("reset", () => {
                 cfg.$target.html(cfg.$target.data("initial-value"));
             });
         }
     },
 
-    extractModifiers: function inject_extractModifiers(cfg) {
+    extractModifiers(cfg) {
         /* The user can add modifiers to the source and target arguments.
          * Modifiers such as ::element, ::before and ::after.
          * We identifiy and extract these modifiers here.
@@ -462,7 +458,7 @@ const inject = {
         return true;
     },
 
-    createTarget: function inject_createTarget(selector) {
+    createTarget(selector) {
         /* create a target that matches the selector
          *
          * XXX: so far we only support #target and create a div with
@@ -478,7 +474,7 @@ const inject = {
         return $target;
     },
 
-    stopBubblingFromRemovedElement: function ($el, cfgs, ev) {
+    stopBubblingFromRemovedElement($el, cfgs, ev) {
         /* IE8 fix. Stop event from propagating IF $el will be removed
          * from the DOM. With pat-inject, often $el is the target that
          * will itself be replaced with injected content.
@@ -498,7 +494,7 @@ const inject = {
         }
     },
 
-    _performInjection: function ($el, $source, cfg, trigger, title) {
+    _performInjection($el, $source, cfg, trigger, title) {
         /* Called after the XHR has succeeded and we have a new $source
          * element to inject.
          */
@@ -549,7 +545,7 @@ const inject = {
         }
     },
 
-    _afterInjection: function ($el, $injected, cfg) {
+    _afterInjection($el, $injected, cfg) {
         /* Set a class on the injected elements and fire the
          * patterns-injected event.
          */
@@ -666,9 +662,9 @@ const inject = {
             // Special case, we want to call something, but we don't want to inject anything
             data = "";
         }
-        $.each(cfgs[0].hooks || [], function (idx, hook) {
-            $el.trigger("pat-inject-hook-" + hook);
-        });
+        $.each(cfgs[0].hooks || [], (idx, hook) =>
+            $el.trigger("pat-inject-hook-" + hook)
+        );
         inject.stopBubblingFromRemovedElement($el, cfgs, ev);
         sources$ = await inject.callTypeHandler(
             cfgs[0].dataType,
@@ -687,7 +683,7 @@ const inject = {
         ) {
             title = sources$[sources$.length - 1];
         }
-        cfgs.forEach(function (cfg, idx) {
+        cfgs.forEach((cfg, idx) => {
             function perform_inject() {
                 if (cfg.target != "none")
                     cfg.$target.each(function () {
@@ -701,9 +697,7 @@ const inject = {
                     });
             }
             if (cfg.processDelay) {
-                setTimeout(function () {
-                    perform_inject();
-                }, cfg.processDelay);
+                setTimeout(() => perform_inject(), cfg.processDelay);
             } else {
                 perform_inject();
             }
@@ -718,7 +712,7 @@ const inject = {
         $el.off("pat-ajax-error.pat-inject");
     },
 
-    _onInjectError: function ($el, cfgs, event) {
+    _onInjectError($el, cfgs, event) {
         var explanation = "";
         var timestamp = new Date();
         if (event.jqxhr.status % 100 == 4) {
@@ -741,27 +735,25 @@ const inject = {
             timestamp +
             ". You can click to close this.";
         $("body").attr("data-error-message", msg_attr);
-        $("body").on("click", function () {
+        $("body").on("click", () => {
             $("body").removeAttr("data-error-message");
             window.location.href = window.location.href;
         });
-        cfgs.forEach(function (cfg) {
+        cfgs.forEach((cfg) => {
             if ("$injected" in cfg) cfg.$injected.remove();
         });
         $el.off("pat-ajax-success.pat-inject");
         $el.off("pat-ajax-error.pat-inject");
     },
 
-    execute: function inject_execute(cfgs, $el) {
+    execute(cfgs, $el) {
         /* Actually execute the injection.
          *
          * Either by making an ajax request or by spoofing an ajax
          * request when the content is readily available in the current page.
          */
         // get a kinda deep copy, we scribble on it
-        cfgs = cfgs.map(function (cfg) {
-            return $.extend({}, cfg);
-        });
+        cfgs = cfgs.map((cfg) => $.extend({}, cfg));
         if (!inject.verifyConfig(cfgs, $el)) {
             return;
         }
@@ -776,16 +768,14 @@ const inject = {
         // possibility for spinners on targets
         _.chain(cfgs)
             .filter(_.property("loadingClass"))
-            .each(function (cfg) {
+            .each((cfg) => {
                 if (cfg.target != "none")
                     cfg.$target.addClass(cfg.loadingClass);
             });
         // Put the execute class on the elem that has pat inject on it
         _.chain(cfgs)
             .filter(_.property("loadingClass"))
-            .each(function (cfg) {
-                $el.addClass(cfg.executingClass);
-            });
+            .each((cfg) => $el.addClass(cfg.executingClass));
 
         $el.on(
             "pat-ajax-success.pat-inject",
@@ -795,11 +785,8 @@ const inject = {
             "pat-ajax-error.pat-inject",
             this._onInjectError.bind(this, $el, cfgs)
         );
-        $el.on(
-            "pat-ajax-success.pat-inject pat-ajax-error.pat-inject",
-            function () {
-                $el.removeData("pat-inject-triggered");
-            }
+        $el.on("pat-ajax-success.pat-inject pat-ajax-error.pat-inject", () =>
+            $el.removeData("pat-inject-triggered")
         );
 
         if (cfgs[0].url.length) {
@@ -818,7 +805,7 @@ const inject = {
         }
     },
 
-    _inject: function inject_inject(trigger, $source, $target, cfg) {
+    _inject(trigger, $source, $target, cfg) {
         // action to jquery method mapping, except for "content"
         // and "element"
         var method = {
@@ -860,9 +847,9 @@ const inject = {
         return true;
     },
 
-    _sourcesFromHtml: function inject_sourcesFromHtml(html, url, sources) {
+    _sourcesFromHtml(html, url, sources) {
         var $html = inject._parseRawHtml(html, url);
-        return sources.map(function inject_sourcesFromHtml_map(source) {
+        return sources.map((source) => {
             if (source === "body") {
                 source = "#__original_body";
             }
@@ -907,7 +894,7 @@ const inject = {
         VIDEO: "data-pat-inject-rebase-src",
     },
 
-    _rebaseHTML: function inject_rebaseHTML(base, html) {
+    _rebaseHTML(base, html) {
         if (html === "") {
             // Special case, source is none
             return "";
@@ -956,7 +943,7 @@ const inject = {
             .trim();
     },
 
-    _parseRawHtml: function inject_parseRawHtml(html, url) {
+    _parseRawHtml(html, url) {
         url = url || "";
 
         // remove script tags and head and replace body by a div
@@ -985,7 +972,7 @@ const inject = {
     },
 
     // XXX: hack
-    _initAutoloadVisible: function inject_initAutoloadVisible($el, cfgs) {
+    _initAutoloadVisible($el, cfgs) {
         if ($el.data("pat-inject-autoloaded")) {
             // ignore executed autoloads
             return false;
@@ -1088,9 +1075,7 @@ const inject = {
             // https://github.com/w3c/IntersectionObserver/tree/master/polyfill
             if (IntersectionObserver) {
                 var observer = new IntersectionObserver(checkVisibility);
-                $el.each(function (idx, el) {
-                    observer.observe(el);
-                });
+                $el.each((idx, el) => observer.observe(el));
             } else {
                 $(window).on(
                     "resize.pat-autoload scroll.pat-autoload",
@@ -1101,7 +1086,7 @@ const inject = {
         return false;
     },
 
-    _initIdleTrigger: function inject_initIdleTrigger($el, delay) {
+    _initIdleTrigger($el, delay) {
         // XXX TODO: handle item removed from DOM
         var timeout = parseInt(delay, 10);
         var timer;
@@ -1112,7 +1097,7 @@ const inject = {
             clearTimeout(timer);
         }
 
-        var onInteraction = utils.debounce(function onInteraction() {
+        var onInteraction = utils.debounce(() => {
             if (!document.body.contains($el[0])) {
                 unsub();
                 return;
@@ -1122,9 +1107,9 @@ const inject = {
         }, timeout);
 
         function unsub() {
-            ["scroll", "resize"].forEach(function (e) {
-                window.removeEventListener(e, onInteraction);
-            });
+            ["scroll", "resize"].forEach((e) =>
+                window.removeEventListener(e, onInteraction)
+            );
             [
                 "click",
                 "keypress",
@@ -1132,16 +1117,14 @@ const inject = {
                 "mousemove",
                 "touchstart",
                 "touchend",
-            ].forEach(function (e) {
-                document.removeEventListener(e, onInteraction);
-            });
+            ].forEach((e) => document.removeEventListener(e, onInteraction));
         }
 
         onInteraction();
 
-        ["scroll", "resize"].forEach(function (e) {
-            window.addEventListener(e, onInteraction);
-        });
+        ["scroll", "resize"].forEach((e) =>
+            window.addEventListener(e, onInteraction)
+        );
         [
             "click",
             "keypress",
@@ -1149,13 +1132,11 @@ const inject = {
             "mousemove",
             "touchstart",
             "touchend",
-        ].forEach(function (e) {
-            document.addEventListener(e, onInteraction);
-        });
+        ].forEach((e) => document.addEventListener(e, onInteraction));
     },
 
     // XXX: simple so far to see what the team thinks of the idea
-    registerTypeHandler: function inject_registerTypeHandler(type, handler) {
+    registerTypeHandler(type, handler) {
         inject.handlers[type] = handler;
     },
 
@@ -1170,10 +1151,8 @@ const inject = {
 
     handlers: {
         html: {
-            sources: function (cfgs, data) {
-                var sources = cfgs.map(function (cfg) {
-                    return cfg.source;
-                });
+            sources(cfgs, data) {
+                var sources = cfgs.map((cfg) => cfg.source);
                 sources.push("title");
                 return inject._sourcesFromHtml(data, cfgs[0].url, sources);
             },
@@ -1181,12 +1160,7 @@ const inject = {
     },
 };
 
-$(document).on("patterns-injected.inject", function onInjected(
-    ev,
-    cfg,
-    trigger,
-    injected
-) {
+$(document).on("patterns-injected.inject", (ev, cfg, trigger, injected) => {
     /* Listen for the patterns-injected event.
      *
      * Remove the "loading-class" classes from all injection targets and
@@ -1208,7 +1182,7 @@ $(document).on("patterns-injected.inject", function onInjected(
     }
 });
 
-$(window).on("popstate", function (event) {
+$(window).on("popstate", (event) => {
     // popstate also triggers on traditional anchors
     if (!event.originalEvent.state && "replaceState" in history) {
         try {
