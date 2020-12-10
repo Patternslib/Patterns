@@ -494,7 +494,7 @@ const inject = {
         }
     },
 
-    _performInjection($el, $source, cfg, trigger, title) {
+    _performInjection(target, $el, $source, cfg, trigger, title) {
         /* Called after the XHR has succeeded and we have a new $source
          * element to inject.
          */
@@ -508,20 +508,18 @@ const inject = {
             document.querySelector &&
             !document.addEventListener
         ) {
-            $src = $source.map(function () {
-                return $(this.outerHTML)[0];
-            });
+            $src = $source.map((idx, el) => $(el.outerHTML)[0]);
         } else {
             $src = $source.safeClone();
         }
-        var $target = $(this),
-            $injected = cfg.$injected || $src;
 
-        $src.findInclusive("img").on("load", function () {
-            $(this).trigger("pat-inject-content-loaded");
+        $src.findInclusive("img").on("load", (e) => {
+            $(e.target).trigger("pat-inject-content-loaded");
         });
+
+        const $injected = cfg.$injected || $src;
         // Now the injection actually happens.
-        if (inject._inject(trigger, $src, $target, cfg)) {
+        if (inject._inject(trigger, $src, $(target), cfg)) {
             inject._afterInjection($el, $injected, cfg);
         }
         // History support. if subform is submitted, append form params
@@ -550,9 +548,9 @@ const inject = {
          * patterns-injected event.
          */
         $injected
-            .filter(function () {
+            .filter((idx, el_) => {
                 // setting data on textnode fails in IE8
-                return this.nodeType !== TEXT_NODE;
+                return el_.nodeType !== TEXT_NODE;
             })
             .data("pat-injected", { origin: cfg.url });
 
@@ -566,12 +564,12 @@ const inject = {
                 .parent()
                 .trigger("patterns-injected", [cfg, $el[0], $injected[0]]);
         } else {
-            $injected.each(function () {
+            $injected.each((idx, el_) => {
                 // patterns-injected event will be triggered for each injected (non-text) element.
-                if (this.nodeType !== TEXT_NODE) {
-                    $(this)
+                if (el_.nodeType !== TEXT_NODE) {
+                    $(el_)
                         .addClass(cfg["class"])
-                        .trigger("patterns-injected", [cfg, $el[0], this]);
+                        .trigger("patterns-injected", [cfg, $el[0], el_]);
                 }
             });
         }
@@ -683,17 +681,18 @@ const inject = {
         ) {
             title = sources$[sources$.length - 1];
         }
-        cfgs.forEach((cfg, idx) => {
+        cfgs.forEach((cfg, idx1) => {
             function perform_inject() {
                 if (cfg.target != "none")
-                    cfg.$target.each(function () {
-                        inject._performInjection.apply(this, [
+                    cfg.$target.each((idx2, target) => {
+                        inject._performInjection(
+                            target,
                             $el,
-                            sources$[idx],
+                            sources$[idx1],
                             cfg,
                             ev.target,
-                            title,
-                        ]);
+                            title
+                        );
                     });
             }
             if (cfg.processDelay) {
@@ -864,8 +863,8 @@ const inject = {
                 }
             }
 
-            $source.find('a[href^="#"]').each(function () {
-                var href = this.getAttribute("href");
+            $source.find('a[href^="#"]').each((idx, el_) => {
+                var href = el_.getAttribute("href");
                 if (href.indexOf("#{1}") !== -1) {
                     // We ignore hrefs containing #{1} because they're not
                     // valid and only applicable in the context of
@@ -876,9 +875,9 @@ const inject = {
                 // this fragment.
                 if (href.length === 1) {
                     // Special case for top-of-page links
-                    this.href = url;
+                    el_.href = url;
                 } else if (!$source.find(href).length) {
-                    this.href = url + href;
+                    el_.href = url + href;
                 }
             });
             return $source;
@@ -912,10 +911,10 @@ const inject = {
 
         $page
             .find(Object.keys(inject._rebaseAttrs).join(","))
-            .each(function () {
-                var $this = $(this),
-                    attrName = inject._rebaseAttrs[this.tagName],
-                    value = $this.attr(attrName);
+            .each((idx, el_) => {
+                var $el_ = $(el_),
+                    attrName = inject._rebaseAttrs[el_.tagName],
+                    value = $el_.attr(attrName);
 
                 if (
                     value &&
@@ -925,13 +924,13 @@ const inject = {
                     value.slice(0, 11) !== "javascript:"
                 ) {
                     value = utils.rebaseURL(base, value);
-                    $this.attr(attrName, value);
+                    $el_.attr(attrName, value);
                 }
             });
         // XXX: IE8 changes the order of attributes in html. The following
         // lines move data-pat-inject-rebase-src to src.
-        $page.find("[data-pat-inject-rebase-src]").each(function () {
-            var $el = $(this);
+        $page.find("[data-pat-inject-rebase-src]").each((id, el_) => {
+            var $el = $(el_);
             $el.attr("src", $el.attr("data-pat-inject-rebase-src")).removeAttr(
                 "data-pat-inject-rebase-src"
             );
@@ -996,41 +995,38 @@ const inject = {
         if ($scrollable.length) {
             // if scrollable parent and visible -> trigger it
             // we only look at the closest scrollable parent, no nesting
-            checkVisibility = utils.debounce(
-                function inject_checkVisibility_scrollable() {
-                    if (
-                        $el.data("patterns.autoload") ||
-                        !$.contains(document, $el[0])
-                    ) {
-                        return false;
-                    }
-                    if (!$el.is(":visible")) {
-                        return false;
-                    }
-                    // check if the target element still exists. Otherwise halt and catch fire
-                    var target = (
-                        $el.data("pat-inject")[0].target ||
-                        cfgs[0].defaultSelector
-                    ).replace(/::element/, "");
-                    if (target && target !== "self" && $(target).length === 0) {
-                        return false;
-                    }
-                    var reltop =
-                            $el.safeOffset().top -
-                            $scrollable.safeOffset().top -
-                            1000,
-                        doTrigger = reltop <= $scrollable.innerHeight();
-                    if (doTrigger) {
-                        // checkVisibility was possibly installed as a scroll
-                        // handler and has now served its purpose -> remove
-                        $($scrollable[0]).off("scroll", checkVisibility);
-                        $(window).off("resize.pat-autoload", checkVisibility);
-                        return trigger();
-                    }
+            // Check visibility for scrollable
+            checkVisibility = utils.debounce(() => {
+                if (
+                    $el.data("patterns.autoload") ||
+                    !$.contains(document, $el[0])
+                ) {
                     return false;
-                },
-                100
-            );
+                }
+                if (!$el.is(":visible")) {
+                    return false;
+                }
+                // check if the target element still exists. Otherwise halt and catch fire
+                var target = (
+                    $el.data("pat-inject")[0].target || cfgs[0].defaultSelector
+                ).replace(/::element/, "");
+                if (target && target !== "self" && $(target).length === 0) {
+                    return false;
+                }
+                var reltop =
+                        $el.safeOffset().top -
+                        $scrollable.safeOffset().top -
+                        1000,
+                    doTrigger = reltop <= $scrollable.innerHeight();
+                if (doTrigger) {
+                    // checkVisibility was possibly installed as a scroll
+                    // handler and has now served its purpose -> remove
+                    $($scrollable[0]).off("scroll", checkVisibility);
+                    $(window).off("resize.pat-autoload", checkVisibility);
+                    return trigger();
+                }
+                return false;
+            }, 100);
             if (checkVisibility()) {
                 return true;
             }
@@ -1039,36 +1035,33 @@ const inject = {
             $(window).on("resize.pat-autoload", checkVisibility);
         } else {
             // Use case 2: scrolling the entire page
-            checkVisibility = utils.debounce(
-                function inject_checkVisibility_not_scrollable() {
-                    if ($el.parents(":scrollable").length) {
-                        // Because of a resize the element has now a scrollable parent
-                        // and we should reset the correct event
-                        $(window).off(".pat-autoload", checkVisibility);
-                        return inject._initAutoloadVisible($el);
-                    }
-                    if ($el.data("patterns.autoload")) {
-                        return false;
-                    }
-                    if (!$el.is(":visible")) {
-                        return false;
-                    }
-                    if (!utils.elementInViewport($el[0])) {
-                        return false;
-                    }
-                    // check if the target element still exists. Otherwise halt and catch fire
-                    var target = (
-                        $el.data("pat-inject")[0].target ||
-                        cfgs[0].defaultSelector
-                    ).replace(/::element/, "");
-                    if (target && target !== "self" && $(target).length === 0) {
-                        return false;
-                    }
+            // Check visibility for non-scrollable
+            checkVisibility = utils.debounce(() => {
+                if ($el.parents(":scrollable").length) {
+                    // Because of a resize the element has now a scrollable parent
+                    // and we should reset the correct event
                     $(window).off(".pat-autoload", checkVisibility);
-                    return trigger();
-                },
-                100
-            );
+                    return inject._initAutoloadVisible($el);
+                }
+                if ($el.data("patterns.autoload")) {
+                    return false;
+                }
+                if (!$el.is(":visible")) {
+                    return false;
+                }
+                if (!utils.elementInViewport($el[0])) {
+                    return false;
+                }
+                // check if the target element still exists. Otherwise halt and catch fire
+                var target = (
+                    $el.data("pat-inject")[0].target || cfgs[0].defaultSelector
+                ).replace(/::element/, "");
+                if (target && target !== "self" && $(target).length === 0) {
+                    return false;
+                }
+                $(window).off(".pat-autoload", checkVisibility);
+                return trigger();
+            }, 100);
             if (checkVisibility()) {
                 return true;
             }
