@@ -1,12 +1,12 @@
+import "../../core/jquery-ext"; // for :scrollable for autoLoading-visible
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import _ from "underscore";
 import ajax from "../ajax/ajax";
-import Parser from "../../core/parser";
 import logging from "../../core/logging";
+import Parser from "../../core/parser";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
-import "../../core/jquery-ext"; // for :scrollable for autoLoading-visible
 
 const log = logging.getLogger("pat.inject");
 const parser = new Parser("inject");
@@ -53,7 +53,7 @@ const inject = {
     trigger:
         ".raptor-ui .ui-button.pat-inject, a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
     init($el, opts) {
-        const cfgs = inject.extractConfig($el, opts);
+        const cfgs = this.extractConfig($el, opts);
         if (
             cfgs.some((e) => e.history === "record") &&
             !("pushState" in history)
@@ -90,7 +90,7 @@ const inject = {
                 console.log("received push message: " + data);
                 if (data == cfgs[0].pushMarker) {
                     console.log("re-injecting " + data);
-                    inject.onTrigger({ target: $el[0] });
+                    this.onTrigger({ target: $el[0] });
                 }
             });
         }
@@ -100,7 +100,7 @@ const inject = {
             let timer;
 
             const onTimeout = () => {
-                inject.onTrigger({ target: $el[0] });
+                this.onTrigger({ target: $el[0] });
                 unsub();
                 clearTimeout(timer);
             };
@@ -149,7 +149,7 @@ const inject = {
                     });
                     // setup event handlers
                     if ($el.is("form")) {
-                        $el.on("submit.pat-inject", inject.onTrigger)
+                        $el.on("submit.pat-inject", this.onTrigger.bind(this))
                             .on(
                                 "click.pat-inject",
                                 "[type=submit]",
@@ -158,17 +158,17 @@ const inject = {
                             .on(
                                 "click.pat-inject",
                                 "[type=submit][formaction], [type=image][formaction]",
-                                inject.onFormActionSubmit
+                                this.onFormActionSubmit.bind(this)
                             );
                     } else if ($el.is(".pat-subform")) {
                         log.debug("Initializing subform with injection");
                     } else {
-                        $el.on("click.pat-inject", inject.onTrigger);
+                        $el.on("click.pat-inject", this.onTrigger.bind(this));
                     }
                     break;
                 case "autoload":
                     if (!cfgs[0].delay) {
-                        inject.onTrigger({ target: $el[0] });
+                        this.onTrigger({ target: $el[0] });
                     } else {
                         // generate UID
                         const uid = Math.random().toString(36);
@@ -183,7 +183,7 @@ const inject = {
                             if (still_there.length == 0) return false;
 
                             $el.data("pat-inject-autoloaded", true);
-                            inject.onTrigger({ target: $el[0] });
+                            this.onTrigger({ target: $el[0] });
                             return true;
                         };
                         window.setTimeout(
@@ -193,10 +193,10 @@ const inject = {
                     }
                     break;
                 case "autoload-visible":
-                    inject._initAutoloadVisible($el, cfgs);
+                    this._initAutoloadVisible($el, cfgs);
                     break;
                 case "idle":
-                    inject._initIdleTrigger($el, cfgs[0].delay);
+                    this._initIdleTrigger($el, cfgs[0].delay);
                     break;
             }
         }
@@ -224,7 +224,7 @@ const inject = {
         }
         e.preventDefault && e.preventDefault();
         $el.trigger("patterns-inject-triggered");
-        inject.execute(cfgs, $el);
+        this.execute(cfgs, $el);
     },
 
     onFormActionSubmit(e) {
@@ -235,7 +235,7 @@ const inject = {
         const $form = $button.parents(".pat-inject").first();
         const opts = { url: formaction };
         const $cfg_node = $button.closest("[data-pat-inject]");
-        const cfgs = inject.extractConfig($cfg_node, opts);
+        const cfgs = this.extractConfig($cfg_node, opts);
 
         $(cfgs).each((i, v) => {
             v.params = $.param($form.serializeArray());
@@ -243,7 +243,7 @@ const inject = {
 
         e.preventDefault();
         $form.trigger("patterns-inject-triggered");
-        inject.execute(cfgs, $form);
+        this.execute(cfgs, $form);
     },
 
     submitSubform($sub) {
@@ -262,7 +262,7 @@ const inject = {
         } catch (e) {
             log.error("patterns-inject-triggered", e);
         }
-        inject.execute(cfgs, $el);
+        this.execute(cfgs, $el);
     },
 
     extractConfig($el, opts) {
@@ -328,7 +328,7 @@ const inject = {
                 _confirm = true;
             } else if (cfg.confirm === "form-data") {
                 if (cfg.target != "none")
-                    _confirm = inject.elementIsDirty(cfg.$target);
+                    _confirm = this.elementIsDirty(cfg.$target);
             } else if (cfg.confirm === "class") {
                 if (cfg.target != "none")
                     _confirm = cfg.$target.hasClass("is-dirty");
@@ -361,7 +361,7 @@ const inject = {
                 log.error("Need target selector", cfg);
                 return false;
             }
-            cfg.$target = inject.createTarget(cfg.target);
+            cfg.$target = this.createTarget(cfg.target);
             cfg.$injected = cfg.$target;
         }
         return true;
@@ -383,13 +383,13 @@ const inject = {
         cfg.source = cfg.source || cfg.defaultSelector;
         cfg.target = cfg.target || cfg.defaultSelector;
 
-        if (!inject.extractModifiers(cfg)) {
+        if (!this.extractModifiers(cfg)) {
             return false;
         }
-        if (!inject.ensureTarget(cfg, $el)) {
+        if (!this.ensureTarget(cfg, $el)) {
             return false;
         }
-        inject.listenForFormReset(cfg);
+        this.listenForFormReset(cfg);
         return true;
     },
 
@@ -404,7 +404,7 @@ const inject = {
          * Verification for each cfg in the array needs to succeed.
          */
         return cfgs.every(
-            _.partial(inject.verifySingleConfig, $el, cfgs[0].url)
+            _.partial(this.verifySingleConfig.bind(this), $el, cfgs[0].url)
         );
     },
 
@@ -516,8 +516,8 @@ const inject = {
 
         const $injected = cfg.$injected || $src;
         // Now the injection actually happens.
-        if (inject._inject(trigger, $src, $(target), cfg)) {
-            inject._afterInjection($el, $injected, cfg);
+        if (this._inject(trigger, $src, $(target), cfg)) {
+            this._afterInjection($el, $injected, cfg);
         }
         // History support. if subform is submitted, append form params
         const glue = cfg.url.indexOf("?") > -1 ? "&" : "?";
@@ -533,7 +533,7 @@ const inject = {
             }
             // Also inject title element if we have one
             if (title)
-                inject._inject(trigger, title, $("title"), {
+                this._inject(trigger, title, $("title"), {
                     action: "element",
                 });
         }
@@ -571,7 +571,7 @@ const inject = {
         }
 
         if (cfg.scroll && cfg.scroll !== "none") {
-            const scroll_container = cfg.$target
+            let scroll_container = cfg.$target
                 .parents()
                 .addBack()
                 .filter(":scrollable");
@@ -656,8 +656,8 @@ const inject = {
         $.each(cfgs[0].hooks || [], (idx, hook) =>
             $el.trigger("pat-inject-hook-" + hook)
         );
-        inject.stopBubblingFromRemovedElement($el, cfgs, ev);
-        const sources$ = await inject.callTypeHandler(
+        this.stopBubblingFromRemovedElement($el, cfgs, ev);
+        const sources$ = await this.callTypeHandler(
             cfgs[0].dataType,
             "sources",
             $el,
@@ -678,7 +678,7 @@ const inject = {
             function perform_inject() {
                 if (cfg.target != "none")
                     cfg.$target.each((idx2, target) => {
-                        inject._performInjection(
+                        this._performInjection(
                             target,
                             $el,
                             sources$[idx1],
@@ -689,16 +689,16 @@ const inject = {
                     });
             }
             if (cfg.processDelay) {
-                setTimeout(() => perform_inject(), cfg.processDelay);
+                setTimeout(() => perform_inject.bind(this)(), cfg.processDelay);
             } else {
-                perform_inject();
+                perform_inject.bind(this)();
             }
         });
         if (cfgs[0].nextHref && $el.is("a")) {
             // In case next-href is specified the anchor's href will
             // be set to it after the injection is triggered.
             $el.attr({ href: cfgs[0].nextHref.replace(/&amp;/g, "&") });
-            inject.destroy($el);
+            this.destroy($el);
         }
         $el.off("pat-ajax-success.pat-inject");
         $el.off("pat-ajax-error.pat-inject");
@@ -738,10 +738,10 @@ const inject = {
          */
         // get a kinda deep copy, we scribble on it
         cfgs = cfgs.map((cfg) => $.extend({}, cfg));
-        if (!inject.verifyConfig(cfgs, $el)) {
+        if (!this.verifyConfig(cfgs, $el)) {
             return;
         }
-        if (!inject.askForConfirmation(cfgs)) {
+        if (!this.askForConfirmation(cfgs)) {
             return;
         }
         if ($el.data("pat-inject-triggered")) {
@@ -832,7 +832,7 @@ const inject = {
     },
 
     _sourcesFromHtml(html, url, sources) {
-        const $html = inject._parseRawHtml(html, url);
+        const $html = this._parseRawHtml(html, url);
         return sources.map((source) => {
             if (source === "body") {
                 source = "#__original_body";
@@ -895,10 +895,10 @@ const inject = {
             .parent();
 
         $page
-            .find(Object.keys(inject._rebaseAttrs).join(","))
+            .find(Object.keys(this._rebaseAttrs).join(","))
             .each((idx, el_) => {
                 const $el_ = $(el_);
-                const attrName = inject._rebaseAttrs[el_.tagName];
+                const attrName = this._rebaseAttrs[el_.tagName];
                 let value = $el_.attr(attrName);
 
                 if (
@@ -941,7 +941,7 @@ const inject = {
             clean_html = title[0] + clean_html;
         }
         try {
-            clean_html = inject._rebaseHTML(url, clean_html);
+            clean_html = this._rebaseHTML(url, clean_html);
         } catch (e) {
             log.error("Error rebasing urls", e);
         }
@@ -969,7 +969,7 @@ const inject = {
                 return false;
             }
             $el.data("pat-inject-autoloaded", true);
-            inject.onTrigger({ target: $el[0] });
+            this.onTrigger({ target: $el[0] });
             event && event.preventDefault();
             return true;
         }
@@ -1025,7 +1025,7 @@ const inject = {
                     // Because of a resize the element has now a scrollable parent
                     // and we should reset the correct event
                     $(window).off(".pat-autoload", checkVisibility);
-                    return inject._initAutoloadVisible($el);
+                    return this._initAutoloadVisible($el);
                 }
                 if ($el.data("patterns.autoload")) {
                     return false;
@@ -1069,7 +1069,7 @@ const inject = {
         let timer;
 
         function onTimeout() {
-            inject.onTrigger({ target: $el[0] });
+            this.onTrigger({ target: $el[0] });
             unsub();
             clearTimeout(timer);
         }
@@ -1114,13 +1114,13 @@ const inject = {
 
     // XXX: simple so far to see what the team thinks of the idea
     registerTypeHandler(type, handler) {
-        inject.handlers[type] = handler;
+        this.handlers[type] = handler;
     },
 
     async callTypeHandler(type, fn, context, params) {
         type = type || "html";
-        if (inject.handlers[type] && $.isFunction(inject.handlers[type][fn])) {
-            return await inject.handlers[type][fn].apply(context, params);
+        if (this.handlers[type] && $.isFunction(this.handlers[type][fn])) {
+            return await this.handlers[type][fn].bind(this)(...params);
         } else {
             return null;
         }
@@ -1131,7 +1131,7 @@ const inject = {
             sources(cfgs, data) {
                 const sources = cfgs.map((cfg) => cfg.source);
                 sources.push("title");
-                return inject._sourcesFromHtml(data, cfgs[0].url, sources);
+                return this._sourcesFromHtml(data, cfgs[0].url, sources);
             },
         },
     },
