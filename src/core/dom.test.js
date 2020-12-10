@@ -249,4 +249,33 @@ describe("core.dom tests", () => {
             done();
         });
     });
+
+    describe("create_from_string", () => {
+        it("Creates a DOM element from a string", (done) => {
+            let res = dom.create_from_string(`
+                <section id="section1">
+                    <span class='yo'>does work.</span>
+                </section>`);
+
+            expect(res.getAttribute("id")).toEqual("section1");
+            expect(res.querySelector("span.yo").textContent).toEqual(
+                "does work."
+            );
+
+            res = dom.create_from_string(`
+                <section id="section1"></section>
+                <section id="section2"></section>
+            `);
+            // Section 2 is not returned.
+            expect(res.getAttribute("id")).toEqual("section1");
+
+            // TD elements or others which can not be direct children of a
+            // <div> are not yet supported.
+            // Also see: https://stackoverflow.com/a/494348/1337474
+            res = dom.create_from_string(`<td></td>`);
+            expect(res).toBeFalsy();
+
+            done();
+        });
+    });
 });

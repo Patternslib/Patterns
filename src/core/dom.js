@@ -80,6 +80,13 @@ const is_visible = (el) => {
     return el.offsetWidth > 0 && el.offsetHeight > 0;
 };
 
+const create_from_string = (string) => {
+    // Create a DOM element from a string.
+    const div = document.createElement("div");
+    div.innerHTML = string.trim();
+    return div.firstChild;
+};
+
 const dom = {
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
@@ -89,6 +96,7 @@ const dom = {
     find_parents: find_parents,
     find_scoped: find_scoped,
     is_visible: is_visible,
+    create_from_string: create_from_string,
 };
 
 export default dom;
