@@ -675,7 +675,7 @@ const inject = {
             title = sources$[sources$.length - 1];
         }
         cfgs.forEach((cfg, idx1) => {
-            function perform_inject() {
+            const perform_inject = () => {
                 if (cfg.target != "none")
                     cfg.$target.each((idx2, target) => {
                         this._performInjection(
@@ -687,11 +687,11 @@ const inject = {
                             title
                         );
                     });
-            }
+            };
             if (cfg.processDelay) {
-                setTimeout(() => perform_inject.bind(this)(), cfg.processDelay);
+                setTimeout(() => perform_inject(), cfg.processDelay);
             } else {
-                perform_inject.bind(this)();
+                perform_inject();
             }
         });
         if (cfgs[0].nextHref && $el.is("a")) {
@@ -964,7 +964,7 @@ const inject = {
         const $scrollable = $el.parents(":scrollable");
 
         // function to trigger the autoload and mark as triggered
-        function trigger(event) {
+        const trigger = (event) => {
             if ($el.data("pat-inject-autoloaded")) {
                 return false;
             }
@@ -972,7 +972,7 @@ const inject = {
             this.onTrigger({ target: $el[0] });
             event && event.preventDefault();
             return true;
-        }
+        };
         $el.click(trigger);
 
         // Use case 1: a (heigh-constrained) scrollable parent
@@ -1068,11 +1068,11 @@ const inject = {
         const timeout = parseInt(delay, 10);
         let timer;
 
-        function onTimeout() {
+        const onTimeout = () => {
             this.onTrigger({ target: $el[0] });
             unsub();
             clearTimeout(timer);
-        }
+        };
 
         const onInteraction = utils.debounce(() => {
             if (!document.body.contains($el[0])) {
@@ -1083,7 +1083,7 @@ const inject = {
             timer = setTimeout(onTimeout, timeout);
         }, timeout);
 
-        function unsub() {
+        const unsub = () => {
             ["scroll", "resize"].forEach((e) =>
                 window.removeEventListener(e, onInteraction)
             );
@@ -1095,7 +1095,7 @@ const inject = {
                 "touchstart",
                 "touchend",
             ].forEach((e) => document.removeEventListener(e, onInteraction));
-        }
+        };
 
         onInteraction();
 
