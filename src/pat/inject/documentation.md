@@ -335,6 +335,9 @@ The code looks for a meta tag with the name ``pat-inject-`` plus the HTTP status
 
 Another example: You can present the user with a login page in case the session has expired (``401`` error).
 
+You can disable this behavior for debugging by adding the following parameter to the query string:
+``pat-inject-errorhandler.off``.
+
 ### Options reference
 
 You can customise the behaviour of injection through options in the `data-pat-inject` attribute.

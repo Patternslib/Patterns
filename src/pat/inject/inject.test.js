@@ -973,5 +973,50 @@ describe("pat-inject", function () {
 
             done();
         });
+
+        it("Doesnt get error page from meta tags if query string present", async (done) => {
+            delete global.window.location;
+            global.window.location = {
+                search: "?something=nothing&pat-inject-errorhandler.off",
+            };
+
+            global.fetch = jest.fn().mockImplementation(
+                mockFetch(`
+                        <!DOCTYPE html>
+                        <html>
+                          <head>
+                            <title>404</title>
+                          </head>
+                          <body>
+                            <h1>oh-nose!</h1>
+                          </body>
+                        </html>
+                    `)
+            );
+
+            // apparently <head> is empty if we do not set it.
+            document.head.innerHTML = `
+                <meta name="pat-inject-404" content="/404.html" />
+            `;
+
+            pattern.init($a);
+
+            // Invoke error case
+            pattern._onInjectError($a, [], {
+                jqxhr: { status: 404 },
+            });
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.body.querySelector("#lab")).toBeTruthy();
+            // In this case, the normal error reporting is used
+            expect(
+                document.body.hasAttribute("data-error-message")
+            ).toBeTruthy();
+
+            global.fetch.mockClear();
+            delete global.fetch;
+
+            done();
+        });
     });
 });

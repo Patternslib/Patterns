@@ -54,7 +54,7 @@
 -   pat tabs: Refactor based on ``ResizeObserver`` and fix problems calculating the with with transitions.
 -   pat tabs: When clicking on the ``extra-tabs`` element, toggle between ``open`` and ``closed`` classes to allow opening/closing an extra-tabs menu via CSS.
 -   pat autofocus: Do not autofocus in iframes. Fixes: #761.
--   pat inject: Allow configurable error pages.
+-   pat inject: Allow configurable error pages. Can be disabled by adding ``pat-inject-errorhandler.off`` to the URL's query string.
 
 ### Technical
 

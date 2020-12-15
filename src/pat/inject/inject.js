@@ -677,10 +677,15 @@ const inject = {
                 "It seems, the server is down. Please make a screenshot and contact support. Thank you!";
         }
 
+        const url_params = new URLSearchParams(window.location.search);
+
         const fallback_url = document
             .querySelector(`meta[name=pat-inject-${status}]`)
             ?.getAttribute("content", false);
-        if (fallback_url) {
+        if (
+            fallback_url &&
+            url_params.get("pat-inject-errorhandler.off") === null
+        ) {
             try {
                 const fallback_response = await fetch(fallback_url, {
                     method: "GET",
