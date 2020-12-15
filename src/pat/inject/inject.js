@@ -95,50 +95,7 @@ const inject = {
             });
         }
         if (cfgs[0].idleTrigger) {
-            // XXX TODO: handle item removed from DOM
-            const timeout = parseInt(cfgs[0].idleTrigger, 10);
-            let timer;
-
-            const onTimeout = () => {
-                this.onTrigger({ target: $el[0] });
-                unsub();
-                clearTimeout(timer);
-            };
-
-            const onInteraction = utils.debounce(() => {
-                clearTimeout(timer);
-                timer = setTimeout(onTimeout, cfgs[0].trigger);
-            }, timeout);
-
-            const unsub = () => {
-                ["scroll", "resize"].forEach((e) =>
-                    window.removeEventListener(e, onInteraction)
-                );
-                [
-                    "click",
-                    "keypress",
-                    "keyup",
-                    "mousemove",
-                    "touchstart",
-                    "touchend",
-                ].forEach((e) =>
-                    document.removeEventListener(e, onInteraction)
-                );
-            };
-
-            onInteraction();
-
-            ["scroll", "resize"].forEach((e) =>
-                window.addEventListener(e, onInteraction)
-            );
-            [
-                "click",
-                "keypress",
-                "keyup",
-                "mousemove",
-                "touchstart",
-                "touchend",
-            ].forEach((e) => document.addEventListener(e, onInteraction));
+            this._initIdleTrigger($el, cfgs[0].idleTrigger);
         } else {
             switch (cfgs[0].trigger) {
                 case "default":
