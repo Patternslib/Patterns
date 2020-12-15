@@ -323,6 +323,18 @@ After injection was triggered:
 
     <a class="pat-inject" href="modal-source.html" data-pat-inject="type: modal">
 
+### Configurable error pages.
+
+In cases of AJAX errors, you can provide custom error pages by providing custom meta tags.
+For example, if you add this meta tag to the html ``<head>``:
+
+    <meta name="pat-inject-404" content="/test_404.html" />
+
+Then, in case of a ``404`` error, it will try to retrieve the error page and replace the document body contents with the body contents of the error page.
+The code looks for a meta tag with the name ``pat-inject-`` plus the HTTP status code.
+
+Another example: You can present the user with a login page in case the session has expired (``401`` error).
+
 ### Options reference
 
 You can customise the behaviour of injection through options in the `data-pat-inject` attribute.
