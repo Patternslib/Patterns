@@ -90,7 +90,7 @@ const inject = {
                 log.debug("received push message: " + data);
                 if (data == cfgs[0].pushMarker) {
                     log.debug("re-injecting " + data);
-                    this.onTrigger({ target: $el[0] });
+                    this.onTrigger({ currentTarget: $el[0] });
                 }
             });
         }
@@ -125,7 +125,7 @@ const inject = {
                     break;
                 case "autoload":
                     if (!cfgs[0].delay) {
-                        this.onTrigger({ target: $el[0] });
+                        this.onTrigger({ currentTarget: $el[0] });
                     } else {
                         // generate UID
                         const uid = Math.random().toString(36);
@@ -140,7 +140,7 @@ const inject = {
                             if (still_there.length == 0) return false;
 
                             $el.data("pat-inject-autoloaded", true);
-                            this.onTrigger({ target: $el[0] });
+                            this.onTrigger({ currentTarget: $el[0] });
                             return true;
                         };
                         window.setTimeout(
@@ -172,7 +172,7 @@ const inject = {
         /* Injection has been triggered, either via form submission or a
          * link has been clicked.
          */
-        const $el = $(e.target);
+        const $el = $(e.currentTarget);
         const cfgs = $el.data("pat-inject");
         if ($el.is("form")) {
             $(cfgs).each((i, v) => {
@@ -468,7 +468,7 @@ const inject = {
         }
 
         $src.findInclusive("img").on("load", (e) => {
-            $(e.target).trigger("pat-inject-content-loaded");
+            $(e.currentTarget).trigger("pat-inject-content-loaded");
         });
 
         const $injected = cfg.$injected || $src;
@@ -958,7 +958,7 @@ const inject = {
                 return false;
             }
             $el.data("pat-inject-autoloaded", true);
-            this.onTrigger({ target: $el[0] });
+            this.onTrigger({ currentTarget: $el[0] });
             event && event.preventDefault();
             return true;
         };
@@ -1058,7 +1058,7 @@ const inject = {
         let timer;
 
         const onTimeout = () => {
-            this.onTrigger({ target: $el[0] });
+            this.onTrigger({ currentTarget: $el[0] });
             unsub();
             clearTimeout(timer);
         };
