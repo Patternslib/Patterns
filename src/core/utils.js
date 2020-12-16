@@ -536,9 +536,8 @@ const debounce = (func, ms) => {
     return function () {
         clearTimeout(timer);
         const args = arguments;
-        const context = this;
         timer = setTimeout(() => {
-            func.apply(context, args);
+            func.apply(this, args);
         }, ms);
     };
 };

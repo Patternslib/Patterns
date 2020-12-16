@@ -48,11 +48,13 @@
 -   core dom: Add ``find_parents`` to find all parents of an element matching a CSS selector.
 -   core dom: Add ``find_scoped`` to search for elements matching the given selector within the current scope of the given element
 -   core dom: Add ``is_visible`` to check if an element is visible or not.
+-   core dom: Add ``create_from_string`` to create a DOM Element from a string.
     unless an ``id`` selector is given - in that case the search is done globally.
 -   pat date picker: Support updating a date if it is before another dependent date.
 -   pat tabs: Refactor based on ``ResizeObserver`` and fix problems calculating the with with transitions.
 -   pat tabs: When clicking on the ``extra-tabs`` element, toggle between ``open`` and ``closed`` classes to allow opening/closing an extra-tabs menu via CSS.
 -   pat autofocus: Do not autofocus in iframes. Fixes: #761.
+-   pat inject: Allow configurable error pages. Can be disabled by adding ``pat-inject-errorhandler.off`` to the URL's query string.
 
 ### Technical
 

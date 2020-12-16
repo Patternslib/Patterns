@@ -8,6 +8,7 @@
         <meta name="patterns-push-login" content="guest" />
         <meta name="patterns-push-password" content="guest" />
         <meta name="patterns-push-user-id" content="allan_neece" />
+        <meta name="pat-inject-404" content="./test_404.html" />
         <title>Injection pattern</title>
         <link rel="stylesheet" href="/style/common.css" type="text/css" />
         <script
@@ -398,6 +399,18 @@
                     >
                 </li>
             </ul>
+        </section>
+
+        <section>
+          <h3>Shows a fallback message on error</h3>
+          <a
+              type="button"
+              class="pat-inject"
+              href="./i-do-not-exist.html"
+              data-pat-inject="target: self::element"
+          >
+            Show me some error!
+          </a>
         </section>
 
         <div id="inject-demo__content-wrapper" style="display: none">

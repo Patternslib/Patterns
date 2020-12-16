@@ -2,6 +2,11 @@ import pattern from "./inject";
 import $ from "jquery";
 import utils from "../../core/utils";
 
+const mockFetch = (text = "") => () =>
+    Promise.resolve({
+        text: () => Promise.resolve(text),
+    });
+
 describe("pat-inject", function () {
     var deferred;
 
@@ -896,6 +901,122 @@ describe("pat-inject", function () {
                     expect($target2.html()).toBe("other");
                 });
             });
+        });
+    });
+
+    describe("Error handling", () => {
+        let $a;
+        let $div;
+
+        beforeEach(() => {
+            spyOn($, "ajax").and.returnValue(deferred);
+            $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
+            $div = $('<div id="someid" />');
+            $("#lab").append($a).append($div);
+        });
+
+        afterEach(() => {
+            document.head.innerHTML = "";
+            document.body.innerHTML = "";
+        });
+
+        it("Adds on error a data-error-message to body in standard case.", async (done) => {
+            pattern.init($a);
+
+            // Invoke error case
+            pattern._onInjectError($a, [], {
+                jqxhr: { status: 404 },
+            });
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.body.querySelector("#lab")).toBeTruthy();
+            // In this case, the normal error reporting is used
+            expect(
+                document.body.hasAttribute("data-error-message")
+            ).toBeTruthy();
+
+            done();
+        });
+
+        it("Gets error page from meta tags", async (done) => {
+            global.fetch = jest.fn().mockImplementation(
+                mockFetch(`
+                        <!DOCTYPE html>
+                        <html>
+                          <head>
+                            <title>404</title>
+                          </head>
+                          <body>
+                            <h1>oh-nose!</h1>
+                          </body>
+                        </html>
+                    `)
+            );
+
+            // apparently <head> is empty if we do not set it.
+            document.head.innerHTML = `
+                <meta name="pat-inject-404" content="/404.html" />
+            `;
+
+            pattern.init($a);
+
+            // Invoke error case
+            pattern._onInjectError($a, [], {
+                jqxhr: { status: 404 },
+            });
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.body.innerHTML.trim()).toEqual("<h1>oh-nose!</h1>");
+
+            global.fetch.mockClear();
+            delete global.fetch;
+
+            done();
+        });
+
+        it("Doesnt get error page from meta tags if query string present", async (done) => {
+            delete global.window.location;
+            global.window.location = {
+                search: "?something=nothing&pat-inject-errorhandler.off",
+            };
+
+            global.fetch = jest.fn().mockImplementation(
+                mockFetch(`
+                        <!DOCTYPE html>
+                        <html>
+                          <head>
+                            <title>404</title>
+                          </head>
+                          <body>
+                            <h1>oh-nose!</h1>
+                          </body>
+                        </html>
+                    `)
+            );
+
+            // apparently <head> is empty if we do not set it.
+            document.head.innerHTML = `
+                <meta name="pat-inject-404" content="/404.html" />
+            `;
+
+            pattern.init($a);
+
+            // Invoke error case
+            pattern._onInjectError($a, [], {
+                jqxhr: { status: 404 },
+            });
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.body.querySelector("#lab")).toBeTruthy();
+            // In this case, the normal error reporting is used
+            expect(
+                document.body.hasAttribute("data-error-message")
+            ).toBeTruthy();
+
+            global.fetch.mockClear();
+            delete global.fetch;
+
+            done();
         });
     });
 });
