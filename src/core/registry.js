@@ -24,12 +24,12 @@ import utils from "./utils";
 // below here modules that are only loaded
 import "./jquery-ext";
 
-var log = logging.getLogger("registry"),
-    disable_re = /patterns-disable=([^&]+)/g,
-    dont_catch_re = /patterns-dont-catch/g,
-    dont_catch = false,
-    disabled = {},
-    match;
+const log = logging.getLogger("registry");
+const disable_re = /patterns-disable=([^&]+)/g;
+const dont_catch_re = /patterns-dont-catch/g;
+const disabled = {};
+let dont_catch = false;
+let match;
 
 while ((match = disable_re.exec(window.location.search)) !== null) {
     disabled[match[1]] = true;
@@ -41,14 +41,14 @@ while ((match = dont_catch_re.exec(window.location.search)) !== null) {
     log.info("I will not catch init exceptions");
 }
 
-var registry = {
+const registry = {
     patterns: {},
     // as long as the registry is not initialized, pattern
     // registration just registers a pattern. Once init is called,
     // the DOM is scanned. After that registering a new pattern
     // results in rescanning the DOM only for this pattern.
     initialized: false,
-    init: function registry_init() {
+    init() {
         $(document).ready(function () {
             log.info(
                 "loaded: " + Object.keys(registry.patterns).sort().join(", ")
@@ -59,13 +59,13 @@ var registry = {
         });
     },
 
-    clear: function clearRegistry() {
+    clear() {
         // Removes all patterns from the registry. Currently only being
         // used in tests.
         this.patterns = {};
     },
 
-    transformPattern: function (name, content) {
+    transformPattern(name, content) {
         /* Call the transform method on the pattern with the given name, if
          * it exists.
          */
@@ -88,14 +88,14 @@ var registry = {
         }
     },
 
-    initPattern: function (name, el, trigger) {
+    initPattern(name, el, trigger) {
         /* Initialize the pattern with the provided name and in the context
          * of the passed in DOM element.
          */
-        var $el = $(el);
-        var pattern = registry.patterns[name];
+        const $el = $(el);
+        const pattern = registry.patterns[name];
         if (pattern.init) {
-            var plog = logging.getLogger("pat." + name);
+            const plog = logging.getLogger("pat." + name);
             if ($el.is(pattern.trigger)) {
                 plog.debug("Initialising:", $el);
                 try {
@@ -111,7 +111,7 @@ var registry = {
         }
     },
 
-    orderPatterns: function (patterns) {
+    orderPatterns(patterns) {
         // XXX: Bit of a hack. We need the validation pattern to be
         // parsed and initiated before the inject pattern. So we make
         // sure here, that it appears first. Not sure what would be
@@ -127,15 +127,15 @@ var registry = {
         return patterns;
     },
 
-    scan: function registryScan(content, patterns, trigger) {
-        var selectors = [],
-            $match;
+    scan(content, patterns, trigger) {
+        const selectors = [];
+        let $match;
         patterns = this.orderPatterns(
             patterns || Object.keys(registry.patterns)
         );
         patterns.forEach(_.partial(this.transformPattern, _, content));
-        patterns = _.each(patterns, function (name) {
-            var pattern = registry.patterns[name];
+        patterns = _.each(patterns, (name) => {
+            const pattern = registry.patterns[name];
             if (pattern.trigger) {
                 selectors.unshift(pattern.trigger);
             }
@@ -157,8 +157,7 @@ var registry = {
         $("body").addClass("patterns-loaded");
     },
 
-    register: function registry_register(pattern, name) {
-        var plugin_name;
+    register(pattern, name) {
         name = name || pattern.name;
         if (!name) {
             log.error("Pattern lacks a name:", pattern);
@@ -174,12 +173,12 @@ var registry = {
 
         // register pattern as jquery plugin
         if (pattern.jquery_plugin) {
-            plugin_name = ("pat-" + name).replace(/-([a-zA-Z])/g, function (
-                match,
-                p1
-            ) {
-                return p1.toUpperCase();
-            });
+            const plugin_name = ("pat-" + name).replace(
+                /-([a-zA-Z])/g,
+                function (match, p1) {
+                    return p1.toUpperCase();
+                }
+            );
             $.fn[plugin_name] = utils.jqueryPlugin(pattern);
             // BBB 2012-12-10 and also for Mockup patterns.
             $.fn[plugin_name.replace(/^pat/, "pattern")] = $.fn[plugin_name];
