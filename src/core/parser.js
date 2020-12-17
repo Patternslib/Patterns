@@ -22,9 +22,7 @@ ArgumentParser.prototype = {
     token_pattern: /((["']).*?(?!\\)\2)|\s*(\S+)\s*/g,
 
     _camelCase(str) {
-        return str.replace(/\-([a-z])/g, function (_, p1) {
-            return p1.toUpperCase();
-        });
+        return str.replace(/\-([a-z])/g, (__, p1) => p1.toUpperCase());
     },
 
     addAlias(alias, original) {
@@ -248,9 +246,12 @@ ArgumentParser.prototype = {
 
     _split(text) {
         var tokens = [];
-        text.replace(this.token_pattern, function (match, quoted, _, simple) {
-            if (quoted) tokens.push(quoted);
-            else if (simple) tokens.push(simple);
+        text.replace(this.token_pattern, (match, quoted, __, simple) => {
+            if (quoted) {
+                tokens.push(quoted);
+            } else if (simple) {
+                tokens.push(simple);
+            }
         });
         return tokens;
     },
@@ -261,46 +262,35 @@ ArgumentParser.prototype = {
             .replace(/;;/g, "\0x1f")
             .replace(/&amp;/g, "&amp\0x1f")
             .split(/;/)
-            .map(function (el) {
-                return el.replace(new RegExp("\0x1f", "g"), ";");
-            });
-        _.each(
-            parts,
-            function (part) {
-                if (!part) {
-                    return;
-                }
-                var matches = part.match(this.named_param_pattern);
-                if (!matches) {
-                    this.log.warn(
-                        "Invalid parameter: " + part + ": " + argstring
-                    );
-                    return;
-                }
-                var name = matches[1],
-                    value = matches[2].trim(),
-                    arg = _.chain(this.parameters)
-                        .where({ alias: name })
-                        .value(),
-                    is_alias = arg.length === 1;
+            .map((el) => el.replace(new RegExp("\0x1f", "g"), ";"));
+        _.each(parts, (part) => {
+            if (!part) {
+                return;
+            }
+            var matches = part.match(this.named_param_pattern);
+            if (!matches) {
+                this.log.warn("Invalid parameter: " + part + ": " + argstring);
+                return;
+            }
+            var name = matches[1],
+                value = matches[2].trim(),
+                arg = _.chain(this.parameters).where({ alias: name }).value(),
+                is_alias = arg.length === 1;
 
-                if (is_alias) {
-                    this._set(opts, arg[0].name, value);
-                } else if (name in this.parameters) {
-                    this._set(opts, name, value);
-                } else if (name in this.groups) {
-                    var subopt = this.groups[name]._parseShorthandNotation(
-                        value
-                    );
-                    for (var field in subopt) {
-                        this._set(opts, name + "-" + field, subopt[field]);
-                    }
-                } else {
-                    this.log.warn("Unknown named parameter " + matches[1]);
-                    return;
+            if (is_alias) {
+                this._set(opts, arg[0].name, value);
+            } else if (name in this.parameters) {
+                this._set(opts, name, value);
+            } else if (name in this.groups) {
+                var subopt = this.groups[name]._parseShorthandNotation(value);
+                for (var field in subopt) {
+                    this._set(opts, name + "-" + field, subopt[field]);
                 }
-            }.bind(this)
-        );
+            } else {
+                this.log.warn("Unknown named parameter " + matches[1]);
+                return;
+            }
+        });
         return opts;
     },
 
@@ -463,22 +453,21 @@ ArgumentParser.prototype = {
                 .addBack();
         }
 
-        _.each(
-            $possible_config_providers,
-            function (provider) {
-                var data, frame, _parse;
-                data = $(provider).attr(this.attribute);
-                if (!data) {
-                    return;
-                }
-                _parse = this._parse.bind(this);
-                if (data.match(/&&/))
-                    frame = data.split(/\s*&&\s*/).map(_parse);
-                else frame = [_parse(data)];
-                final_length = Math.max(frame.length, final_length);
-                stack.push(frame);
-            }.bind(this)
-        );
+        _.each($possible_config_providers, (provider) => {
+            var data, frame, _parse;
+            data = $(provider).attr(this.attribute);
+            if (!data) {
+                return;
+            }
+            _parse = this._parse.bind(this);
+            if (data.match(/&&/)) {
+                frame = data.split(/\s*&&\s*/).map(_parse);
+            } else {
+                frame = [_parse(data)];
+            }
+            final_length = Math.max(frame.length, final_length);
+            stack.push(frame);
+        });
 
         if (typeof options === "object") {
             if (Array.isArray(options)) {
