@@ -1,10 +1,4 @@
-/**
- * Patterns parser - Argument parser
- *
- * Copyright 2012-2013 Florian Friesdorf
- * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
- */
-
+// Patterns argument parser
 import $ from "jquery";
 import _ from "underscore";
 import utils from "./utils.js";
@@ -27,13 +21,13 @@ ArgumentParser.prototype = {
     named_param_pattern: /^\s*([a-z][a-z0-9\-]*)\s*:(.*)/i,
     token_pattern: /((["']).*?(?!\\)\2)|\s*(\S+)\s*/g,
 
-    _camelCase: function (str) {
+    _camelCase(str) {
         return str.replace(/\-([a-z])/g, function (_, p1) {
             return p1.toUpperCase();
         });
     },
 
-    addAlias: function argParserAddAlias(alias, original) {
+    addAlias(alias, original) {
         /* Add an alias for a previously added parser argument.
          *
          * Useful when you want to support both US and UK english argument
@@ -52,7 +46,7 @@ ArgumentParser.prototype = {
         }
     },
 
-    addGroupToSpec: function argParserAddGroupToSpec(spec) {
+    addGroupToSpec(spec) {
         /* Determine wether an argument being parsed can be grouped and
          * update its specifications object accordingly.
          *
@@ -93,7 +87,7 @@ ArgumentParser.prototype = {
         return spec;
     },
 
-    addJSONArgument: function argParserAddJSONArgument(name, default_value) {
+    addJSONArgument(name, default_value) {
         /* Add an argument where the value is provided in JSON format.
          *
          * This is a different usecase than specifying all arguments to
@@ -111,12 +105,7 @@ ArgumentParser.prototype = {
         });
     },
 
-    addArgument: function ArgParserAddArgument(
-        name,
-        default_value,
-        choices,
-        multiple
-    ) {
+    addArgument(name, default_value, choices, multiple) {
         var spec = {
             name: name,
             value:
@@ -153,13 +142,13 @@ ArgumentParser.prototype = {
         this.parameters[name] = this.addGroupToSpec(spec);
     },
 
-    _typeof: function argParserTypeof(obj) {
+    _typeof(obj) {
         var type = typeof obj;
         if (obj === null) return "null";
         return type;
     },
 
-    _coerce: function argParserCoerce(name, value) {
+    _coerce(name, value) {
         var spec = this.parameters[name];
         if (typeof value !== spec.type)
             try {
@@ -230,7 +219,7 @@ ArgumentParser.prototype = {
         return value;
     },
 
-    _set: function argParserSet(opts, name, value) {
+    _set(opts, name, value) {
         if (!(name in this.parameters)) {
             this.log.debug("Ignoring value for unknown argument " + name);
             return;
@@ -257,7 +246,7 @@ ArgumentParser.prototype = {
         opts[name] = value;
     },
 
-    _split: function argParserSplit(text) {
+    _split(text) {
         var tokens = [];
         text.replace(this.token_pattern, function (match, quoted, _, simple) {
             if (quoted) tokens.push(quoted);
@@ -266,7 +255,7 @@ ArgumentParser.prototype = {
         return tokens;
     },
 
-    _parseExtendedNotation: function argParserParseExtendedNotation(argstring) {
+    _parseExtendedNotation(argstring) {
         var opts = {};
         var parts = argstring
             .replace(/;;/g, "\0x1f")
@@ -315,9 +304,7 @@ ArgumentParser.prototype = {
         return opts;
     },
 
-    _parseShorthandNotation: function argParserParseShorthandNotation(
-        parameter
-    ) {
+    _parseShorthandNotation(parameter) {
         var parts = this._split(parameter),
             opts = {},
             positional = true,
@@ -359,7 +346,7 @@ ArgumentParser.prototype = {
         return opts;
     },
 
-    _parse: function argParser_parse(parameter) {
+    _parse(parameter) {
         var opts, extended, sep;
         if (!parameter) {
             return {};
@@ -384,7 +371,7 @@ ArgumentParser.prototype = {
         return opts;
     },
 
-    _defaults: function argParserDefaults($el) {
+    _defaults($el) {
         var result = {};
         for (var name in this.parameters)
             if (typeof this.parameters[name].value === "function")
@@ -398,7 +385,7 @@ ArgumentParser.prototype = {
         return result;
     },
 
-    _cleanupOptions: function argParserCleanupOptions(options) {
+    _cleanupOptions(options) {
         var keys = Object.keys(options),
             i,
             spec,
@@ -441,11 +428,12 @@ ArgumentParser.prototype = {
         return options;
     },
 
-    parse: function argParserParse($el, options, multiple, inherit) {
+    parse($el, options, multiple, inherit) {
         if (!$el.jquery) {
             $el = $($el);
         }
         if (typeof options === "boolean" && multiple === undefined) {
+            // Fix argument order: ``multiple`` passed instead of ``options``.
             multiple = options;
             options = {};
         }
