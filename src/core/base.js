@@ -17,15 +17,15 @@ import Registry from "./registry";
 import logging from "./logging";
 import mockupParser from "./mockup-parser";
 
-var log = logging.getLogger("Patternslib Base");
+const log = logging.getLogger("Patternslib Base");
 
-var initBasePattern = function ($el, options, trigger) {
+const initBasePattern = function ($el, options, trigger) {
     if (!$el.jquery) {
         $el = $($el);
     }
-    var name = this.prototype.name;
-    var log = logging.getLogger("pat." + name);
-    var pattern = $el.data("pattern-" + name);
+    const name = this.prototype.name;
+    const plog = logging.getLogger(`pat.${name}`);
+    let pattern = $el.data(`pattern-${name}`);
     if (pattern === undefined && Registry.patterns[name]) {
         try {
             options =
@@ -34,14 +34,14 @@ var initBasePattern = function ($el, options, trigger) {
                     : options;
             pattern = new Registry.patterns[name]($el, options, trigger);
         } catch (e) {
-            log.error("Failed while initializing '" + name + "' pattern.", e);
+            plog.error(`Failed while initializing ${name} pattern.`, e);
         }
-        $el.data("pattern-" + name, pattern);
+        $el.data(`pattern-${name}`, pattern);
     }
     return pattern;
 };
 
-var Base = function ($el, options, trigger) {
+const Base = function ($el, options, trigger) {
     if (!$el.jquery) {
         $el = $($el);
     }
@@ -54,23 +54,23 @@ var Base = function ($el, options, trigger) {
 
 Base.prototype = {
     constructor: Base,
-    on: function (eventName, eventCallback) {
-        this.$el.on(eventName + "." + this.name + ".patterns", eventCallback);
+    on(eventName, eventCallback) {
+        this.$el.on(`${eventName}.${this.name}.patterns`, eventCallback);
     },
-    emit: function (eventName, args) {
+    emit(eventName, args) {
         // args should be a list
         if (args === undefined) {
             args = [];
         }
-        this.$el.trigger(eventName + "." + this.name + ".patterns", args);
+        this.$el.trigger(`${eventName}.${this.name}.patterns`, args);
     },
 };
 
 Base.extend = function (patternProps) {
     /* Helper function to correctly set up the prototype chain for new patterns.
      */
-    var parent = this;
-    var child;
+    const parent = this;
+    let child;
 
     // Check that the required configuration properties are given.
     if (!patternProps) {
@@ -120,10 +120,7 @@ Base.extend = function (patternProps) {
         );
     } else if (!patternProps.trigger) {
         log.warn(
-            "The pattern '" +
-                patternProps.name +
-                "' does not " +
-                "have a trigger attribute, it will not be registered."
+            `The pattern ${patternProps.name} does not have a trigger attribute, it will not be registered.`
         );
     } else {
         Registry.register(child, patternProps.name);
