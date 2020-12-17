@@ -4,26 +4,26 @@ import _ from "underscore";
 import utils from "./utils.js";
 import logging from "./logging";
 
-function ArgumentParser(name) {
-    this.order = [];
-    this.parameters = {};
-    this.attribute = "data-pat-" + name;
-    this.enum_values = {};
-    this.enum_conflicts = [];
-    this.groups = {};
-    this.possible_groups = {};
-    this.log = logging.getLogger(name + ".parser");
-}
+class ArgumentParser {
+    constructor(name) {
+        this.order = [];
+        this.parameters = {};
+        this.attribute = "data-pat-" + name;
+        this.enum_values = {};
+        this.enum_conflicts = [];
+        this.groups = {};
+        this.possible_groups = {};
+        this.log = logging.getLogger(name + ".parser");
 
-ArgumentParser.prototype = {
-    group_pattern: /([a-z][a-z0-9]*)-([A-Z][a-z0-0\-]*)/i,
-    json_param_pattern: /^\s*{/i,
-    named_param_pattern: /^\s*([a-z][a-z0-9\-]*)\s*:(.*)/i,
-    token_pattern: /((["']).*?(?!\\)\2)|\s*(\S+)\s*/g,
+        this.group_pattern = /([a-z][a-z0-9]*)-([A-Z][a-z0-0\-]*)/i;
+        this.json_param_pattern = /^\s*{/i;
+        this.named_param_pattern = /^\s*([a-z][a-z0-9\-]*)\s*:(.*)/i;
+        this.token_pattern = /((["']).*?(?!\\)\2)|\s*(\S+)\s*/g;
+    }
 
     _camelCase(str) {
         return str.replace(/\-([a-z])/g, (__, p1) => p1.toUpperCase());
-    },
+    }
 
     addAlias(alias, original) {
         /* Add an alias for a previously added parser argument.
@@ -42,7 +42,7 @@ ArgumentParser.prototype = {
                 '".'
             );
         }
-    },
+    }
 
     addGroupToSpec(spec) {
         /* Determine wether an argument being parsed can be grouped and
@@ -83,7 +83,7 @@ ArgumentParser.prototype = {
             }
         }
         return spec;
-    },
+    }
 
     addJSONArgument(name, default_value) {
         /* Add an argument where the value is provided in JSON format.
@@ -101,7 +101,7 @@ ArgumentParser.prototype = {
             group: null,
             type: "json",
         });
-    },
+    }
 
     addArgument(name, default_value, choices, multiple) {
         const spec = {
@@ -138,14 +138,14 @@ ArgumentParser.prototype = {
         }
         this.order.push(name);
         this.parameters[name] = this.addGroupToSpec(spec);
-    },
+    }
 
     _typeof(obj) {
         if (obj === null) {
             return "null";
         }
         return typeof obj;
-    },
+    }
 
     _coerce(name, value) {
         const spec = this.parameters[name];
@@ -220,7 +220,7 @@ ArgumentParser.prototype = {
             return null;
         }
         return value;
-    },
+    }
 
     _set(opts, name, value) {
         if (!(name in this.parameters)) {
@@ -249,7 +249,7 @@ ArgumentParser.prototype = {
             }
         }
         opts[name] = value;
-    },
+    }
 
     _split(text) {
         const tokens = [];
@@ -261,7 +261,7 @@ ArgumentParser.prototype = {
             }
         });
         return tokens;
-    },
+    }
 
     _parseExtendedNotation(argstring) {
         const opts = {};
@@ -299,7 +299,7 @@ ArgumentParser.prototype = {
             }
         });
         return opts;
-    },
+    }
 
     _parseShorthandNotation(parameter) {
         const parts = this._split(parameter);
@@ -340,7 +340,7 @@ ArgumentParser.prototype = {
         if (parts.length)
             this.log.warn("Ignore extra arguments: " + parts.join(" "));
         return opts;
-    },
+    }
 
     _parse(parameter) {
         if (!parameter) {
@@ -366,7 +366,7 @@ ArgumentParser.prototype = {
             opts[name] = extended[name];
         }
         return opts;
-    },
+    }
 
     _defaults($el) {
         const result = {};
@@ -380,7 +380,7 @@ ArgumentParser.prototype = {
                 }
             else result[name] = this.parameters[name].value;
         return result;
-    },
+    }
 
     _cleanupOptions(options) {
         // Resolve references
@@ -415,7 +415,7 @@ ArgumentParser.prototype = {
             }
         }
         return options;
-    },
+    }
 
     parse($el, options, multiple, inherit) {
         if (!$el.jquery) {
@@ -485,8 +485,8 @@ ArgumentParser.prototype = {
             this._cleanupOptions.bind(this)
         );
         return multiple ? results : results[0];
-    },
-};
+    }
+}
 
 // BBB
 ArgumentParser.prototype.add_argument = ArgumentParser.prototype.addArgument;
