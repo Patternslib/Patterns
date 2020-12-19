@@ -17,12 +17,9 @@
  * - set pattern.jquery_plugin if you want it
  */
 import $ from "jquery";
-import _ from "underscore";
+import dom from "./dom";
 import logging from "./logging";
 import utils from "./utils";
-
-// below here modules that are only loaded
-import "./jquery-ext";
 
 const log = logging.getLogger("registry");
 const disable_re = /patterns-disable=([^&]+)/g;
@@ -117,10 +114,7 @@ const registry = {
         // sure here, that it appears first. Not sure what would be
         // the best solution. Perhaps some kind of way to register
         // patterns "before" or "after" other patterns.
-        if (
-            _.contains(patterns, "validation") &&
-            _.contains(patterns, "inject")
-        ) {
+        if (patterns.includes("validation") && patterns.includes("inject")) {
             patterns.splice(patterns.indexOf("validation"), 1);
             patterns.unshift("validation");
         }
@@ -128,33 +122,41 @@ const registry = {
     },
 
     scan(content, patterns, trigger) {
+        if (typeof content === "string") {
+            content = document.querySelector(content);
+        } else if (content.jquery) {
+            content = content[0];
+        }
+
         const selectors = [];
-        let $match;
         patterns = this.orderPatterns(
             patterns || Object.keys(registry.patterns)
         );
-        patterns.forEach(_.partial(this.transformPattern, _, content));
-        patterns = _.each(patterns, (name) => {
+        for (const name of patterns) {
+            this.transformPattern(name, content);
             const pattern = registry.patterns[name];
             if (pattern.trigger) {
                 selectors.unshift(pattern.trigger);
             }
-        });
-        $match = $(content).findInclusive(selectors.join(",")); // Find all DOM elements belonging to a pattern
-        $match = $match.filter(function () {
+        }
+
+        let matches = dom.querySelectorAllAndMe(content, selectors.join(","));
+        matches = matches.filter((el) => {
             // Filter out code examples wrapped in <pre> elements.
-            return $(this).parents("pre").length === 0;
+            // Also filter special class ``.cant-touch-this``
+            return (
+                dom.find_parents(el, "pre").length === 0 &&
+                !el.matches(".cant-touch-this")
+            );
         });
-        $match = $match.filter(":not(.cant-touch-this)");
 
         // walk list backwards and initialize patterns inside-out.
-        $match.toArray().reduceRight(
-            function registryInitPattern(acc, el) {
-                patterns.forEach(_.partial(this.initPattern, _, el, trigger));
-            }.bind(this),
-            null
-        );
-        $("body").addClass("patterns-loaded");
+        for (const el of matches.reverse()) {
+            for (const name of patterns) {
+                this.initPattern(name, el, trigger);
+            }
+        }
+        document.body.classList.add("patterns-loaded");
     },
 
     register(pattern, name) {
