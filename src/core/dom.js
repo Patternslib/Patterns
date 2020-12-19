@@ -57,7 +57,8 @@ const find_parents = (el, selector) => {
     // This matches against all parents but not the element itself.
     // The order of elements is from the search starting point up to higher
     // DOM levels.
-    let parent = el.parentNode?.closest(selector) || null;
+    let parent =
+        (el?.parentNode?.closest && el.parentNode.closest(selector)) || null;
     const ret = [];
     while (parent) {
         ret.push(parent);
