@@ -1,6 +1,5 @@
 // Patterns argument parser
 import $ from "jquery";
-import _ from "underscore";
 import utils from "./utils.js";
 import logging from "./logging";
 
@@ -270,18 +269,21 @@ class ArgumentParser {
             .replace(/&amp;/g, "&amp\0x1f")
             .split(/;/)
             .map((el) => el.replace(new RegExp("\0x1f", "g"), ";"));
-        _.each(parts, (part) => {
+        for (const part of parts) {
             if (!part) {
-                return;
+                continue;
             }
             const matches = part.match(this.named_param_pattern);
             if (!matches) {
                 this.log.warn("Invalid parameter: " + part + ": " + argstring);
-                return;
+                continue;
             }
             const name = matches[1];
             const value = matches[2].trim();
-            const arg = _.chain(this.parameters).where({ alias: name }).value();
+            const arg = Object.values(this.parameters).filter(
+                (it) => it.alias === name
+            );
+
             const is_alias = arg.length === 1;
 
             if (is_alias) {
@@ -295,9 +297,9 @@ class ArgumentParser {
                 }
             } else {
                 this.log.warn("Unknown named parameter " + matches[1]);
-                return;
+                continue;
             }
-        });
+        }
         return opts;
     }
 
@@ -452,11 +454,11 @@ class ArgumentParser {
                 .addBack();
         }
 
-        _.each($possible_config_providers, (provider) => {
+        for (const provider of $possible_config_providers) {
             let frame;
             const data = $(provider).attr(this.attribute);
             if (!data) {
-                return;
+                continue;
             }
             const _parse = this._parse.bind(this);
             if (data.match(/&&/)) {
@@ -466,7 +468,7 @@ class ArgumentParser {
             }
             final_length = Math.max(frame.length, final_length);
             stack.push(frame);
-        });
+        }
 
         if (typeof options === "object") {
             if (Array.isArray(options)) {
@@ -477,13 +479,9 @@ class ArgumentParser {
         if (!multiple) {
             final_length = 1;
         }
-        const results = _.map(
-            _.compose(
-                utils.removeDuplicateObjects,
-                _.partial(utils.mergeStack, _, final_length)
-            )(stack),
-            this._cleanupOptions.bind(this)
-        );
+        const results = utils
+            .removeDuplicateObjects(utils.mergeStack(stack, final_length))
+            .map(this._cleanupOptions.bind(this));
         return multiple ? results : results[0];
     }
 }
