@@ -6,10 +6,11 @@
  * Copyright 2013-2014 Simplon B.V. - Wichert Akkerman
  */
 
+import "../../core/jquery-ext";
 import $ from "jquery";
 import _ from "underscore";
-import Parser from "../../core/parser";
 import Base from "../../core/base";
+import Parser from "../../core/parser";
 import utils from "../../core/utils";
 
 const parser = new Parser("bumper");
