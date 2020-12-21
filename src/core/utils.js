@@ -548,6 +548,14 @@ const isIE = () => {
     return /*@cc_on!@*/ false || !!document.documentMode;
 };
 
+const jqToNode = (el) => {
+    // Return a DOM node if a jQuery node was passed.
+    if (el.jquery) {
+        el = el[0];
+    }
+    return el;
+};
+
 var utils = {
     // pattern pimping - own module?
     jqueryPlugin: jqueryPlugin,
@@ -572,6 +580,7 @@ var utils = {
     timeout: timeout,
     debounce: debounce,
     isIE: isIE,
+    jqToNode: jqToNode,
 };
 
 export default utils;

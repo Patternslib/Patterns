@@ -601,3 +601,17 @@ describe("getCSSValue", function () {
         expect(utils.getCSSValue(el2, "margin-bottom", true)).toBe(24.0);
     });
 });
+
+describe("core.utils tests", () => {
+    describe("jqToNode tests", () => {
+        it("always returns a bare DOM node no matter if a jQuery or bare DOM node was passed.", (done) => {
+            const el = document.createElement("div");
+            const $el = $(el);
+
+            expect(utils.jqToNode($el)).toBe(el);
+            expect(utils.jqToNode(el)).toBe(el);
+
+            done();
+        });
+    });
+});
