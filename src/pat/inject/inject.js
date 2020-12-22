@@ -3,6 +3,7 @@ import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import _ from "underscore";
 import ajax from "../ajax/ajax";
+import dom from "../../core/dom";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
@@ -867,6 +868,14 @@ const inject = {
         VIDEO: "data-pat-inject-rebase-src",
     },
 
+    _rebaseOptions: {
+        "data-pat-inject": ["url"],
+        "data-pat-calendar": ["url"],
+        "data-pat-date-picker": ["i18n"],
+        "data-pat-datetime-picker": ["i18n"],
+        "data-pat-collapsible": ["load-content"],
+    },
+
     _rebaseHTML(base, html) {
         if (html === "") {
             // Special case, source is none
@@ -901,6 +910,29 @@ const inject = {
                     $el_.attr(attrName, value);
                 }
             });
+
+        for (const [attr, opts] of Object.entries(this._rebaseOptions)) {
+            for (const el_ of dom.querySelectorAllAndMe(
+                $page[0],
+                `[${attr}]`
+            )) {
+                const val = el_.getAttribute(attr, false);
+                if (val) {
+                    let options = parser._parse(val);
+                    let changed = false;
+                    for (const opt of opts) {
+                        if (options[opt]) {
+                            options[opt] = utils.rebaseURL(base, options[opt]);
+                            changed = true;
+                        }
+                    }
+                    if (changed) {
+                        el_.setAttribute(attr, JSON.stringify(options));
+                    }
+                }
+            }
+        }
+
         // XXX: IE8 changes the order of attributes in html. The following
         // lines move data-pat-inject-rebase-src to src.
         $page.find("[data-pat-inject-rebase-src]").each((id, el_) => {

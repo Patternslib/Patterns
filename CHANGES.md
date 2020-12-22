@@ -56,6 +56,7 @@
 -   pat autofocus: Do not autofocus in iframes. Fixes: #761.
 -   pat inject: Allow configurable error pages. Can be disabled by adding ``pat-inject-errorhandler.off`` to the URL's query string.
 -   core utils: Add ``jqToNode`` to return a DOM node if a jQuery node was passed.
+-   pat inject: Rebase URLs in pattern configuration attributes. This avoids URLs in pattern configuration to point to unreachable paths in the context where the result is injected into.
 
 ### Technical
 
