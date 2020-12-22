@@ -140,7 +140,10 @@ const registry = {
             }
         }
 
-        let matches = dom.querySelectorAllAndMe(content, selectors.join(","));
+        let matches = dom.querySelectorAllAndMe(
+            content,
+            selectors.map((it) => it.trim().replace(/,$/, "")).join(",")
+        );
         matches = matches.filter((el) => {
             // Filter out code examples wrapped in <pre> elements.
             // Also filter special class ``.cant-touch-this``
