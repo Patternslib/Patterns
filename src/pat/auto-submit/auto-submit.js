@@ -1,8 +1,9 @@
+import "../../core/jquery-ext";
 import $ from "jquery";
-import logging from "../../core/logging";
 import Base from "../../core/base";
-import Parser from "../../core/parser";
 import input_change_events from "../../lib/input-change-events";
+import logging from "../../core/logging";
+import Parser from "../../core/parser";
 import utils from "../../core/utils";
 
 const log = logging.getLogger("autosubmit");

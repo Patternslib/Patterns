@@ -20,6 +20,7 @@ parser.addArgument("first-day", 0);
 export default Base.extend({
     name: "datetime-picker",
     trigger: ".pat-datetime-picker",
+    parser: parser,
 
     async init() {
         const el = this.el;

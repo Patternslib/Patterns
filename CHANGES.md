@@ -55,6 +55,8 @@
 -   pat tabs: When clicking on the ``extra-tabs`` element, toggle between ``open`` and ``closed`` classes to allow opening/closing an extra-tabs menu via CSS.
 -   pat autofocus: Do not autofocus in iframes. Fixes: #761.
 -   pat inject: Allow configurable error pages. Can be disabled by adding ``pat-inject-errorhandler.off`` to the URL's query string.
+-   core utils: Add ``jqToNode`` to return a DOM node if a jQuery node was passed.
+-   pat inject: Rebase URLs in pattern configuration attributes. This avoids URLs in pattern configuration to point to unreachable paths in the context where the result is injected into.
 
 ### Technical
 
@@ -82,7 +84,8 @@
     Configure ``style_loader`` to insert CSS at the TOP of the html ``<head>``
     Provide a webpack-helpers module with a ``top_head_insert`` function which can be reused in depending projects.
 -   Build infra: Switch the CI system to GitHub Actions and drop Travis CI.
-
+-   core base: Add the parser instance to pattern attributes if available.
+    We can then reuse the parser from registered patterns. This is used in the ``_rebaseHTML`` method of pat-inject to URL-rebase the pattern configuration.
 
 ### Fixes
 

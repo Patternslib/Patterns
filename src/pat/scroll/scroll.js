@@ -1,9 +1,10 @@
 import "regenerator-runtime/runtime"; // needed for ``await`` support
+import "../../core/jquery-ext";
 import $ from "jquery";
-import Base from "../../core/base";
-import utils from "../../core/utils";
-import Parser from "../../core/parser";
 import _ from "underscore";
+import Base from "../../core/base";
+import Parser from "../../core/parser";
+import utils from "../../core/utils";
 
 // Lazy loading modules.
 let ImagesLoaded;

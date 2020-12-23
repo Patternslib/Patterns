@@ -3,6 +3,7 @@ import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import _ from "underscore";
 import ajax from "../ajax/ajax";
+import dom from "../../core/dom";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
@@ -52,6 +53,8 @@ const inject = {
     name: "inject",
     trigger:
         ".raptor-ui .ui-button.pat-inject, a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
+    parser: parser,
+
     init($el, opts) {
         const cfgs = this.extractConfig($el, opts);
         if (
@@ -867,6 +870,14 @@ const inject = {
         VIDEO: "data-pat-inject-rebase-src",
     },
 
+    _rebaseOptions: {
+        "calendar": ["url", "event-sources"],
+        "collapsible": ["load-content"],
+        "date-picker": ["i18n"],
+        "datetime-picker": ["i18n"],
+        "inject": ["url"],
+    },
+
     _rebaseHTML(base, html) {
         if (html === "") {
             // Special case, source is none
@@ -901,6 +912,47 @@ const inject = {
                     $el_.attr(attrName, value);
                 }
             });
+
+        for (const [pattern_name, opts] of Object.entries(
+            this._rebaseOptions
+        )) {
+            for (const el_ of dom.querySelectorAllAndMe(
+                $page[0],
+                `[data-pat-${pattern_name}]`
+            )) {
+                const val = el_.getAttribute(`data-pat-${pattern_name}`, false);
+                if (val) {
+                    const pattern = registry.patterns[pattern_name];
+                    const pattern_parser = pattern?.parser;
+                    if (!pattern_parser) {
+                        continue;
+                    }
+                    let options = pattern_parser._parse(val);
+                    let changed = false;
+                    for (const opt of opts) {
+                        const val = options[opt];
+                        if (typeof val === "undefined") {
+                            continue;
+                        }
+                        changed = true;
+                        if (Array.isArray(val)) {
+                            options[opt] = val.map((it) =>
+                                utils.rebaseURL(base, it)
+                            );
+                        } else {
+                            options[opt] = utils.rebaseURL(base, val);
+                        }
+                    }
+                    if (changed) {
+                        el_.setAttribute(
+                            `data-pat-${pattern_name}`,
+                            JSON.stringify(options)
+                        );
+                    }
+                }
+            }
+        }
+
         // XXX: IE8 changes the order of attributes in html. The following
         // lines move data-pat-inject-rebase-src to src.
         $page.find("[data-pat-inject-rebase-src]").each((id, el_) => {

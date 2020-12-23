@@ -413,6 +413,18 @@
           </a>
         </section>
 
+        <section id="rebase-url-demo">
+          <div>
+            <h3>Inject and fix URLs of options</h3>
+            <a
+                class="pat-inject"
+                data-pat-inject="url:./index.html#rebase-url-demo; target: self::element"
+            >
+              injection happens here!
+            </button>
+          </div>
+        </section>
+
         <div id="inject-demo__content-wrapper" style="display: none">
           <section id="inject-demo__content">Liked</section>
         </div>
@@ -666,6 +678,14 @@
                 100% {
                     transform: scale(1);
                 }
+            }
+
+            #rebase-url-demo a {
+                cursor: pointer;
+            }
+            #rebase-url-demo div div {
+              margin-left: 2em;
+              border: 1px solid black;
             }
         </style>
     </body>

@@ -1,39 +1,30 @@
-/**
- * Patterns parser - Argument parser
- *
- * Copyright 2012-2013 Florian Friesdorf
- * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
- */
-
+// Patterns argument parser
 import $ from "jquery";
-import _ from "underscore";
 import utils from "./utils.js";
 import logging from "./logging";
 
-function ArgumentParser(name) {
-    this.order = [];
-    this.parameters = {};
-    this.attribute = "data-pat-" + name;
-    this.enum_values = {};
-    this.enum_conflicts = [];
-    this.groups = {};
-    this.possible_groups = {};
-    this.log = logging.getLogger(name + ".parser");
-}
+class ArgumentParser {
+    constructor(name) {
+        this.order = [];
+        this.parameters = {};
+        this.attribute = "data-pat-" + name;
+        this.enum_values = {};
+        this.enum_conflicts = [];
+        this.groups = {};
+        this.possible_groups = {};
+        this.log = logging.getLogger(name + ".parser");
 
-ArgumentParser.prototype = {
-    group_pattern: /([a-z][a-z0-9]*)-([A-Z][a-z0-0\-]*)/i,
-    json_param_pattern: /^\s*{/i,
-    named_param_pattern: /^\s*([a-z][a-z0-9\-]*)\s*:(.*)/i,
-    token_pattern: /((["']).*?(?!\\)\2)|\s*(\S+)\s*/g,
+        this.group_pattern = /([a-z][a-z0-9]*)-([A-Z][a-z0-0\-]*)/i;
+        this.json_param_pattern = /^\s*{/i;
+        this.named_param_pattern = /^\s*([a-z][a-z0-9\-]*)\s*:(.*)/i;
+        this.token_pattern = /((["']).*?(?!\\)\2)|\s*(\S+)\s*/g;
+    }
 
-    _camelCase: function (str) {
-        return str.replace(/\-([a-z])/g, function (_, p1) {
-            return p1.toUpperCase();
-        });
-    },
+    _camelCase(str) {
+        return str.replace(/\-([a-z])/g, (__, p1) => p1.toUpperCase());
+    }
 
-    addAlias: function argParserAddAlias(alias, original) {
+    addAlias(alias, original) {
         /* Add an alias for a previously added parser argument.
          *
          * Useful when you want to support both US and UK english argument
@@ -50,21 +41,21 @@ ArgumentParser.prototype = {
                 '".'
             );
         }
-    },
+    }
 
-    addGroupToSpec: function argParserAddGroupToSpec(spec) {
+    addGroupToSpec(spec) {
         /* Determine wether an argument being parsed can be grouped and
          * update its specifications object accordingly.
          *
          * Internal method used by addArgument and addJSONArgument
          */
-        var m = spec.name.match(this.group_pattern);
+        const m = spec.name.match(this.group_pattern);
         if (m) {
-            var group = m[1],
-                field = m[2];
+            const group = m[1];
+            const field = m[2];
             if (group in this.possible_groups) {
-                var first_spec = this.possible_groups[group],
-                    first_name = first_spec.name.match(this.group_pattern)[2];
+                const first_spec = this.possible_groups[group];
+                const first_name = first_spec.name.match(this.group_pattern)[2];
                 first_spec.group = group;
                 first_spec.dest = first_name;
                 this.groups[group] = new ArgumentParser();
@@ -91,9 +82,9 @@ ArgumentParser.prototype = {
             }
         }
         return spec;
-    },
+    }
 
-    addJSONArgument: function argParserAddJSONArgument(name, default_value) {
+    addJSONArgument(name, default_value) {
         /* Add an argument where the value is provided in JSON format.
          *
          * This is a different usecase than specifying all arguments to
@@ -109,15 +100,10 @@ ArgumentParser.prototype = {
             group: null,
             type: "json",
         });
-    },
+    }
 
-    addArgument: function ArgParserAddArgument(
-        name,
-        default_value,
-        choices,
-        multiple
-    ) {
-        var spec = {
+    addArgument(name, default_value, choices, multiple) {
+        const spec = {
             name: name,
             value:
                 multiple && !Array.isArray(default_value)
@@ -130,14 +116,14 @@ ArgumentParser.prototype = {
         if (choices && Array.isArray(choices) && choices.length) {
             spec.choices = choices;
             spec.type = this._typeof(choices[0]);
-            for (var i = 0; i < choices.length; i++) {
-                if (this.enum_conflicts.indexOf(choices[i]) !== -1) {
+            for (const choice of choices) {
+                if (this.enum_conflicts.indexOf(choice) !== -1) {
                     continue;
-                } else if (choices[i] in this.enum_values) {
-                    this.enum_conflicts.push(choices[i]);
-                    delete this.enum_values[choices[i]];
+                } else if (choice in this.enum_values) {
+                    this.enum_conflicts.push(choice);
+                    delete this.enum_values[choice];
                 } else {
-                    this.enum_values[choices[i]] = name;
+                    this.enum_values[choice] = name;
                 }
             }
         } else if (
@@ -151,16 +137,17 @@ ArgumentParser.prototype = {
         }
         this.order.push(name);
         this.parameters[name] = this.addGroupToSpec(spec);
-    },
+    }
 
-    _typeof: function argParserTypeof(obj) {
-        var type = typeof obj;
-        if (obj === null) return "null";
-        return type;
-    },
+    _typeof(obj) {
+        if (obj === null) {
+            return "null";
+        }
+        return typeof obj;
+    }
 
-    _coerce: function argParserCoerce(name, value) {
-        var spec = this.parameters[name];
+    _coerce(name, value) {
+        const spec = this.parameters[name];
         if (typeof value !== spec.type)
             try {
                 switch (spec.type) {
@@ -170,7 +157,7 @@ ArgumentParser.prototype = {
                     case "boolean":
                         if (typeof value === "string") {
                             value = value.toLowerCase();
-                            var num = parseInt(value, 10);
+                            const num = parseInt(value, 10);
                             if (!isNaN(num)) value = !!num;
                             else
                                 value =
@@ -178,31 +165,35 @@ ArgumentParser.prototype = {
                                     value === "y" ||
                                     value === "yes" ||
                                     value === "y";
-                        } else if (typeof value === "number") value = !!value;
-                        else
+                        } else if (typeof value === "number") {
+                            value = !!value;
+                        } else {
                             throw (
                                 "Cannot convert value for " +
                                 name +
                                 " to boolean"
                             );
+                        }
                         break;
                     case "number":
                         if (typeof value === "string") {
                             value = parseInt(value, 10);
-                            if (isNaN(value))
+                            if (isNaN(value)) {
                                 throw (
                                     "Cannot convert value for " +
                                     name +
                                     " to number"
                                 );
-                        } else if (typeof value === "boolean")
+                            }
+                        } else if (typeof value === "boolean") {
                             value = value + 0;
-                        else
+                        } else {
                             throw (
                                 "Cannot convert value for " +
                                 name +
                                 " to number"
                             );
+                        }
                         break;
                     case "string":
                         value = value.toString();
@@ -228,17 +219,15 @@ ArgumentParser.prototype = {
             return null;
         }
         return value;
-    },
+    }
 
-    _set: function argParserSet(opts, name, value) {
+    _set(opts, name, value) {
         if (!(name in this.parameters)) {
             this.log.debug("Ignoring value for unknown argument " + name);
             return;
         }
-        var spec = this.parameters[name],
-            parts,
-            i,
-            v;
+        const spec = this.parameters[name];
+        let parts;
         if (spec.multiple) {
             if (typeof value === "string") {
                 parts = value.split(/,+/);
@@ -246,88 +235,84 @@ ArgumentParser.prototype = {
                 parts = value;
             }
             value = [];
-            for (i = 0; i < parts.length; i++) {
-                v = this._coerce(name, parts[i].trim());
-                if (v !== null) value.push(v);
+            for (const part of parts) {
+                const v = this._coerce(name, part.trim());
+                if (v !== null) {
+                    value.push(v);
+                }
             }
         } else {
             value = this._coerce(name, value);
-            if (value === null) return;
+            if (value === null) {
+                return;
+            }
         }
         opts[name] = value;
-    },
+    }
 
-    _split: function argParserSplit(text) {
-        var tokens = [];
-        text.replace(this.token_pattern, function (match, quoted, _, simple) {
-            if (quoted) tokens.push(quoted);
-            else if (simple) tokens.push(simple);
+    _split(text) {
+        const tokens = [];
+        text.replace(this.token_pattern, (match, quoted, __, simple) => {
+            if (quoted) {
+                tokens.push(quoted);
+            } else if (simple) {
+                tokens.push(simple);
+            }
         });
         return tokens;
-    },
+    }
 
-    _parseExtendedNotation: function argParserParseExtendedNotation(argstring) {
-        var opts = {};
-        var parts = argstring
+    _parseExtendedNotation(argstring) {
+        const opts = {};
+        const parts = argstring
             .replace(/;;/g, "\0x1f")
             .replace(/&amp;/g, "&amp\0x1f")
             .split(/;/)
-            .map(function (el) {
-                return el.replace(new RegExp("\0x1f", "g"), ";");
-            });
-        _.each(
-            parts,
-            function (part) {
-                if (!part) {
-                    return;
-                }
-                var matches = part.match(this.named_param_pattern);
-                if (!matches) {
-                    this.log.warn(
-                        "Invalid parameter: " + part + ": " + argstring
-                    );
-                    return;
-                }
-                var name = matches[1],
-                    value = matches[2].trim(),
-                    arg = _.chain(this.parameters)
-                        .where({ alias: name })
-                        .value(),
-                    is_alias = arg.length === 1;
+            .map((el) => el.replace(new RegExp("\0x1f", "g"), ";"));
+        for (const part of parts) {
+            if (!part) {
+                continue;
+            }
+            const matches = part.match(this.named_param_pattern);
+            if (!matches) {
+                this.log.warn("Invalid parameter: " + part + ": " + argstring);
+                continue;
+            }
+            const name = matches[1];
+            const value = matches[2].trim();
+            const arg = Object.values(this.parameters).filter(
+                (it) => it.alias === name
+            );
 
-                if (is_alias) {
-                    this._set(opts, arg[0].name, value);
-                } else if (name in this.parameters) {
-                    this._set(opts, name, value);
-                } else if (name in this.groups) {
-                    var subopt = this.groups[name]._parseShorthandNotation(
-                        value
-                    );
-                    for (var field in subopt) {
-                        this._set(opts, name + "-" + field, subopt[field]);
-                    }
-                } else {
-                    this.log.warn("Unknown named parameter " + matches[1]);
-                    return;
+            const is_alias = arg.length === 1;
+
+            if (is_alias) {
+                this._set(opts, arg[0].name, value);
+            } else if (name in this.parameters) {
+                this._set(opts, name, value);
+            } else if (name in this.groups) {
+                const subopt = this.groups[name]._parseShorthandNotation(value);
+                for (const field in subopt) {
+                    this._set(opts, name + "-" + field, subopt[field]);
                 }
-            }.bind(this)
-        );
+            } else {
+                this.log.warn("Unknown named parameter " + matches[1]);
+                continue;
+            }
+        }
         return opts;
-    },
+    }
 
-    _parseShorthandNotation: function argParserParseShorthandNotation(
-        parameter
-    ) {
-        var parts = this._split(parameter),
-            opts = {},
-            positional = true,
-            i = 0,
-            part,
-            flag,
-            sense;
+    _parseShorthandNotation(parameter) {
+        const parts = this._split(parameter);
+        const opts = {};
+        let i = 0;
 
         while (parts.length) {
-            part = parts.shift().trim();
+            const part = parts.shift().trim();
+            let sense;
+            let flag;
+            let positional = true;
             if (part.slice(0, 3) === "no-") {
                 sense = false;
                 flag = part.slice(3);
@@ -357,10 +342,9 @@ ArgumentParser.prototype = {
         if (parts.length)
             this.log.warn("Ignore extra arguments: " + parts.join(" "));
         return opts;
-    },
+    }
 
-    _parse: function argParser_parse(parameter) {
-        var opts, extended, sep;
+    _parse(parameter) {
         if (!parameter) {
             return {};
         }
@@ -374,19 +358,21 @@ ArgumentParser.prototype = {
         if (parameter.match(this.named_param_pattern)) {
             return this._parseExtendedNotation(parameter);
         }
-        sep = parameter.indexOf(";");
+        const sep = parameter.indexOf(";");
         if (sep === -1) {
             return this._parseShorthandNotation(parameter);
         }
-        opts = this._parseShorthandNotation(parameter.slice(0, sep));
-        extended = this._parseExtendedNotation(parameter.slice(sep + 1));
-        for (var name in extended) opts[name] = extended[name];
+        const opts = this._parseShorthandNotation(parameter.slice(0, sep));
+        const extended = this._parseExtendedNotation(parameter.slice(sep + 1));
+        for (const name in extended) {
+            opts[name] = extended[name];
+        }
         return opts;
-    },
+    }
 
-    _defaults: function argParserDefaults($el) {
-        var result = {};
-        for (var name in this.parameters)
+    _defaults($el) {
+        const result = {};
+        for (const name in this.parameters)
             if (typeof this.parameters[name].value === "function")
                 try {
                     result[name] = this.parameters[name].value($el, name);
@@ -396,19 +382,12 @@ ArgumentParser.prototype = {
                 }
             else result[name] = this.parameters[name].value;
         return result;
-    },
+    }
 
-    _cleanupOptions: function argParserCleanupOptions(options) {
-        var keys = Object.keys(options),
-            i,
-            spec,
-            name,
-            target;
-
+    _cleanupOptions(options) {
         // Resolve references
-        for (i = 0; i < keys.length; i++) {
-            name = keys[i];
-            spec = this.parameters[name];
+        for (const name of Object.keys(options)) {
+            const spec = this.parameters[name];
             if (spec === undefined) continue;
 
             if (
@@ -419,10 +398,9 @@ ArgumentParser.prototype = {
                 options[name] = options[spec.value.slice(1)];
         }
         // Move options into groups and do renames
-        keys = Object.keys(options);
-        for (i = 0; i < keys.length; i++) {
-            name = keys[i];
-            spec = this.parameters[name];
+        for (const name of Object.keys(options)) {
+            const spec = this.parameters[name];
+            let target;
             if (spec === undefined) continue;
 
             if (spec.group) {
@@ -439,20 +417,21 @@ ArgumentParser.prototype = {
             }
         }
         return options;
-    },
+    }
 
-    parse: function argParserParse($el, options, multiple, inherit) {
+    parse($el, options, multiple, inherit) {
         if (!$el.jquery) {
             $el = $($el);
         }
         if (typeof options === "boolean" && multiple === undefined) {
+            // Fix argument order: ``multiple`` passed instead of ``options``.
             multiple = options;
             options = {};
         }
         inherit = inherit !== false;
-        var stack = inherit ? [[this._defaults($el)]] : [[{}]];
-        var $possible_config_providers;
-        var final_length = 1;
+        const stack = inherit ? [[this._defaults($el)]] : [[{}]];
+        let $possible_config_providers;
+        let final_length = 1;
         /*
          * XXX this is a workaround for:
          * - https://github.com/Patternslib/Patterns/issues/393
@@ -475,22 +454,21 @@ ArgumentParser.prototype = {
                 .addBack();
         }
 
-        _.each(
-            $possible_config_providers,
-            function (provider) {
-                var data, frame, _parse;
-                data = $(provider).attr(this.attribute);
-                if (!data) {
-                    return;
-                }
-                _parse = this._parse.bind(this);
-                if (data.match(/&&/))
-                    frame = data.split(/\s*&&\s*/).map(_parse);
-                else frame = [_parse(data)];
-                final_length = Math.max(frame.length, final_length);
-                stack.push(frame);
-            }.bind(this)
-        );
+        for (const provider of $possible_config_providers) {
+            let frame;
+            const data = $(provider).attr(this.attribute);
+            if (!data) {
+                continue;
+            }
+            const _parse = this._parse.bind(this);
+            if (data.match(/&&/)) {
+                frame = data.split(/\s*&&\s*/).map(_parse);
+            } else {
+                frame = [_parse(data)];
+            }
+            final_length = Math.max(frame.length, final_length);
+            stack.push(frame);
+        }
 
         if (typeof options === "object") {
             if (Array.isArray(options)) {
@@ -501,16 +479,12 @@ ArgumentParser.prototype = {
         if (!multiple) {
             final_length = 1;
         }
-        var results = _.map(
-            _.compose(
-                utils.removeDuplicateObjects,
-                _.partial(utils.mergeStack, _, final_length)
-            )(stack),
-            this._cleanupOptions.bind(this)
-        );
+        const results = utils
+            .removeDuplicateObjects(utils.mergeStack(stack, final_length))
+            .map(this._cleanupOptions.bind(this));
         return multiple ? results : results[0];
-    },
-};
+    }
+}
 
 // BBB
 ArgumentParser.prototype.add_argument = ArgumentParser.prototype.addArgument;

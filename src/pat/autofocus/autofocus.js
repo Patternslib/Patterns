@@ -6,7 +6,16 @@ let registered_event_handler = false;
 
 export default Base.extend({
     name: "autofocus",
-    trigger: ":input.pat-autofocus,:input[autofocus]",
+    trigger: `
+        input.pat-autofocus,
+        input[autofocus],
+        select.pat-autofocus,
+        select[autofocus],
+        textarea.pat-autofocus,
+        textarea[autofocus],
+        button.pat-autofocus,
+        button[autofocus]
+    `,
 
     init() {
         if (window.self !== window.top) {

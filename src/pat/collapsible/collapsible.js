@@ -39,6 +39,7 @@ export default Base.extend({
     name: "collapsible",
     trigger: ".pat-collapsible",
     jquery_plugin: true,
+    parser: parser,
 
     transitions: {
         "none": { closed: "hide", open: "show" },

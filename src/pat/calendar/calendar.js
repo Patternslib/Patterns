@@ -85,6 +85,7 @@ export default Base.extend({
     },
     dayNames: ["su", "mo", "tu", "we", "th", "fr", "sa"],
     active_categories: null,
+    parser: parser,
 
     async init($el, opts) {
         const el = this.el;

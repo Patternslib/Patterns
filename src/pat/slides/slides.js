@@ -12,13 +12,17 @@ import "../../core/remove";
 
 var slides = {
     name: "slides",
-    trigger: ".pat-slides:has(.slide)",
+    trigger: ".pat-slides",
 
     setup: function () {
         $(document).on("patterns-injected", utils.debounce(slides._reset, 100));
     },
 
     async init($el) {
+        if (!this.el.querySelector(".slide")) {
+            // no slides, nothing to do.
+            return;
+        }
         await import("slides/src/slides"); // loads ``Presentation`` globally.
 
         var parameters = url.parameters();

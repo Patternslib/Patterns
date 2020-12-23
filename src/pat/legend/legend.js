@@ -1,5 +1,7 @@
 import $ from "jquery";
 import registry from "../../core/registry";
+import utils from "../../core/utils";
+import dom from "../../core/dom";
 
 var legend = {
     name: "legend",
@@ -21,9 +23,14 @@ var legend = {
     },
 
     transform: function ($root) {
-        $root.findInclusive("legend:not(.cant-touch-this)").each(function () {
-            $(this).replaceWith("<p class='legend'>" + $(this).html() + "</p>");
-        });
+        const root = utils.jqToNode($root);
+        const all = dom.querySelectorAllAndMe(
+            root,
+            "legend:not(.cant-touch-this)"
+        );
+        for (const el of all) {
+            $(el).replaceWith("<p class='legend'>" + $(el).html() + "</p>");
+        }
     },
 };
 registry.register(legend);
