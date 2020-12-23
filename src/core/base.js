@@ -97,6 +97,7 @@ Base.extend = function (patternProps) {
     child.init = initBasePattern;
     child.jquery_plugin = true;
     child.trigger = patternProps.trigger;
+    child.parser = patternProps?.parser || null;
 
     // Set the prototype chain to inherit from `parent`, without calling
     // `parent`'s constructor function.

@@ -84,7 +84,8 @@
     Configure ``style_loader`` to insert CSS at the TOP of the html ``<head>``
     Provide a webpack-helpers module with a ``top_head_insert`` function which can be reused in depending projects.
 -   Build infra: Switch the CI system to GitHub Actions and drop Travis CI.
-
+-   core base: Add the parser instance to pattern attributes if available.
+    We can then reuse the parser from registered patterns. This is used in the ``_rebaseHTML`` method of pat-inject to URL-rebase the pattern configuration.
 
 ### Fixes
 
