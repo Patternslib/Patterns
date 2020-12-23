@@ -29,6 +29,7 @@ parser.addAlias("behaviour", "behavior");
 export default Base.extend({
     name: "date-picker",
     trigger: ".pat-date-picker",
+    parser: parser,
 
     async init() {
         const el = this.el;
