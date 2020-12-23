@@ -308,6 +308,45 @@ describe("pat-inject", function () {
                 "<p>This string has    src = \"foo\" , src= bar , and SrC='foo'</p>"
             );
         });
+
+        it("rebase pattern configuration", async (done) => {
+            await import("../calendar/calendar");
+            await import("../collapsible/collapsible");
+            await import("../date-picker/date-picker");
+            await import("../datetime-picker/datetime-picker");
+
+            const res = pattern._rebaseHTML(
+                "https://example.com/test/",
+                `<div class="test1" data-pat-inject="loading-class:yeah;url:./index.html;class:hoy"/>
+                 <div class="test2" data-pat-calendar="url: ./calendar.html; event-sources: ../calendar2.json, ./test/calendar3.json"/>
+                 <div class="test3"
+                     data-pat-date-picker="i18n:./i18n"
+                     data-pat-datetime-picker="i18n:./path/to/i18n"
+                     data-pat-collapsible="load-content:../load/content/from/here"
+                 />`
+            );
+            console.log(res);
+
+            const el = document.createElement("div");
+            el.innerHTML = res;
+
+            const test1_config = JSON.parse(el.querySelector(".test1").getAttribute("data-pat-inject")); // prettier-ignore
+            expect(test1_config.url).toEqual("https://example.com/test/./index.html"); // prettier-ignore
+
+            const test2_config = JSON.parse(el.querySelector(".test2").getAttribute("data-pat-calendar")); // prettier-ignore
+            expect(test2_config.url).toEqual("https://example.com/test/./calendar.html"); // prettier-ignore
+            expect(test2_config["event-sources"][0]).toEqual("https://example.com/test/../calendar2.json"); // prettier-ignore
+            expect(test2_config["event-sources"][1]).toEqual("https://example.com/test/./test/calendar3.json"); // prettier-ignore
+
+            const test3a_config = JSON.parse(el.querySelector(".test3").getAttribute("data-pat-date-picker")); // prettier-ignore
+            expect(test3a_config.i18n).toEqual("https://example.com/test/./i18n"); // prettier-ignore
+            const test3b_config = JSON.parse(el.querySelector(".test3").getAttribute("data-pat-datetime-picker")); // prettier-ignore
+            expect(test3b_config.i18n).toEqual("https://example.com/test/./path/to/i18n"); // prettier-ignore
+            const test3c_config = JSON.parse(el.querySelector(".test3").getAttribute("data-pat-collapsible")); // prettier-ignore
+            expect(test3c_config["load-content"]).toEqual("https://example.com/test/../load/content/from/here"); // prettier-ignore
+
+            done();
+        });
     });
 
     describe("parseRawHtml", function () {

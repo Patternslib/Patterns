@@ -53,6 +53,8 @@ const inject = {
     name: "inject",
     trigger:
         ".raptor-ui .ui-button.pat-inject, a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
+    parser: parser,
+
     init($el, opts) {
         const cfgs = this.extractConfig($el, opts);
         if (
@@ -869,11 +871,11 @@ const inject = {
     },
 
     _rebaseOptions: {
-        "data-pat-inject": ["url"],
-        "data-pat-calendar": ["url"],
-        "data-pat-date-picker": ["i18n"],
-        "data-pat-datetime-picker": ["i18n"],
-        "data-pat-collapsible": ["load-content"],
+        "calendar": ["url", "event-sources"],
+        "collapsible": ["load-content"],
+        "date-picker": ["i18n"],
+        "datetime-picker": ["i18n"],
+        "inject": ["url"],
     },
 
     _rebaseHTML(base, html) {
@@ -911,23 +913,41 @@ const inject = {
                 }
             });
 
-        for (const [attr, opts] of Object.entries(this._rebaseOptions)) {
+        for (const [pattern_name, opts] of Object.entries(
+            this._rebaseOptions
+        )) {
             for (const el_ of dom.querySelectorAllAndMe(
                 $page[0],
-                `[${attr}]`
+                `[data-pat-${pattern_name}]`
             )) {
-                const val = el_.getAttribute(attr, false);
+                const val = el_.getAttribute(`data-pat-${pattern_name}`, false);
                 if (val) {
-                    let options = parser._parse(val);
+                    const pattern = registry.patterns[pattern_name];
+                    const pattern_parser = pattern?.parser;
+                    if (!pattern_parser) {
+                        continue;
+                    }
+                    let options = pattern_parser._parse(val);
                     let changed = false;
                     for (const opt of opts) {
-                        if (options[opt]) {
-                            options[opt] = utils.rebaseURL(base, options[opt]);
-                            changed = true;
+                        const val = options[opt];
+                        if (typeof val === "undefined") {
+                            continue;
+                        }
+                        changed = true;
+                        if (Array.isArray(val)) {
+                            options[opt] = val.map((it) =>
+                                utils.rebaseURL(base, it)
+                            );
+                        } else {
+                            options[opt] = utils.rebaseURL(base, val);
                         }
                     }
                     if (changed) {
-                        el_.setAttribute(attr, JSON.stringify(options));
+                        el_.setAttribute(
+                            `data-pat-${pattern_name}`,
+                            JSON.stringify(options)
+                        );
                     }
                 }
             }
