@@ -22,7 +22,7 @@ export default Base.extend({
     // links, forms and subforms inject modals
     trigger:
         "div.pat-modal, a.pat-modal, form.pat-modal, .pat-modal.pat-subform",
-    init: function ($el, opts, trigger) {
+    init($el, opts, trigger) {
         this.options = parser.parse(this.$el, opts);
         if (trigger && trigger.type === "injection") {
             $.extend(
@@ -37,8 +37,8 @@ export default Base.extend({
         }
     },
 
-    _init_inject1: function () {
-        var opts = {
+    _init_inject1() {
+        const opts = {
             target: "#pat-modal",
             class:
                 "pat-modal" +
@@ -55,17 +55,14 @@ export default Base.extend({
         if (!this.$el.closest("#pat-modal")) {
             $("#pat-modal").detach();
         }
-        this.$el.on(
-            "pat-inject-missingSource pat-inject-missingTarget",
-            function () {
-                $("#pat-modal").detach();
-            }
-        );
+        this.$el.on("pat-inject-missingSource pat-inject-missingTarget", () => {
+            $("#pat-modal").detach();
+        });
         inject.init(this.$el, opts);
     },
 
-    _init_div1: function () {
-        var $header = $("<div class='header' />");
+    _init_div1() {
+        const $header = $("<div class='header' />");
         if (this.options.closing.indexOf("close-button") !== -1) {
             $(
                 "<button type='button' class='close-panel'>" +
@@ -104,7 +101,7 @@ export default Base.extend({
         $("body").addClass("modal-active");
     },
 
-    _init_handlers: function () {
+    _init_handlers() {
         $(document).on(
             "click.pat-modal",
             "#pat-modal .close-panel[type!=submit]",
@@ -153,22 +150,22 @@ export default Base.extend({
         );
     },
 
-    _onPossibleOutsideClick: function (ev) {
+    _onPossibleOutsideClick(ev) {
         if (this.$el.has(ev.target)) {
             this.destroy();
         }
     },
 
-    _onKeyUp: function (ev) {
+    _onKeyUp(ev) {
         if (ev.which === 27) {
             this.destroy();
         }
     },
 
-    getTallestChild: function () {
-        var $tallest_child;
-        $("*", this.$el).each(function () {
-            var $child = $(this);
+    getTallestChild() {
+        let $tallest_child;
+        for (const child of $("*", this.$el)) {
+            const $child = $(child);
             if (typeof $tallest_child === "undefined") {
                 $tallest_child = $child;
             } else if (
@@ -176,22 +173,21 @@ export default Base.extend({
             ) {
                 $tallest_child = $child;
             }
-        });
+        }
         return $tallest_child;
     },
 
-    setPosition: function () {
+    setPosition() {
         this.$el.css("top", ($(window).innerHeight() - this.$el.height()) / 2);
     },
 
-    resize: function () {
+    resize() {
         // reset the height before setting a new one
         this.$el.removeClass("max-height").css("height", "");
 
-        var panel_content_elem = this.$el.find(".panel-content");
-        var header_elem = this.$el.find(".header");
-
-        var modal_height =
+        const panel_content_elem = this.$el.find(".panel-content");
+        const header_elem = this.$el.find(".header");
+        const modal_height =
             panel_content_elem.outerHeight(true) +
             header_elem.outerHeight(true);
         if (this.$el.height() < modal_height) {
@@ -210,22 +206,20 @@ export default Base.extend({
             utils.redraw(this.$el.find(".panel-body"));
         }
     },
-    destroy: function () {
-        var $el = this.$el;
+    destroy() {
         // if working without injection, destroy right away.
         $(document).off(".pat-modal");
-        $el.remove();
+        this.$el.remove();
         $("body").removeClass("modal-active");
         $("body").removeClass("modal-panel");
     },
-    destroy_inject: function () {
-        var $el = this.$el;
-        if ($el.find("form").hasClass("pat-inject")) {
+    destroy_inject() {
+        if (this.$el.find("form").hasClass("pat-inject")) {
             // if pat-inject in modal form, listen to patterns-inject-triggered and destroy first
             // once that has been triggered
             let destroy_handler = () => {
                 $(document).off(".pat-modal");
-                $el.remove();
+                this.$el.remove();
                 $("body").removeClass("modal-active");
                 $("body").removeClass("modal-panel");
                 $("body").off("patterns-inject-triggered", destroy_handler);
@@ -234,7 +228,7 @@ export default Base.extend({
         } else {
             // if working without injection, destroy right away.
             $(document).off(".pat-modal");
-            $el.remove();
+            this.$el.remove();
             $("body").removeClass("modal-active");
             $("body").removeClass("modal-panel");
         }
