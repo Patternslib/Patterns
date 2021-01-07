@@ -1,7 +1,7 @@
-ESLINT 		?= node_modules/.bin/eslint
-PEGJS		?= node_modules/.bin/pegjs
-SASS		?= node_modules/.bin/sass
-YARN 		?= yarn
+ESLINT		?= npx eslint
+PEGJS		?= npx pegjs
+SASS		?= npx sass
+YARN		?= npx yarn
 
 SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/lib/*.js)
 GENERATED	= src/lib/depends_parse.js
