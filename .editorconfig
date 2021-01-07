@@ -10,3 +10,6 @@ indent_size = 4
 
 [{*.css,*.scss,*.xml,*.html}]
 indent_size = 2
+
+[Makefile]
+indent_style = tab
