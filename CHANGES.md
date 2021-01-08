@@ -35,6 +35,7 @@
 
 ### Features
 
+-   pat-modal: Import styles.
 -   pat datetime picker: Import styles.
 -   pat date picker: Import styles for pikaday.
 -   Styles: Import styles by setting ``__patternslib_import_styles``
