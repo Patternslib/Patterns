@@ -22,7 +22,12 @@ export default Base.extend({
     // links, forms and subforms inject modals
     trigger:
         "div.pat-modal, a.pat-modal, form.pat-modal, .pat-modal.pat-subform",
-    init($el, opts, trigger) {
+
+    async init($el, opts, trigger) {
+        if (window.__patternslib_import_styles) {
+            await import("./_modal.scss");
+        }
+
         this.options = parser.parse(this.$el, opts);
         if (trigger && trigger.type === "injection") {
             $.extend(
