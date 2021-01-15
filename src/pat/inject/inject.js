@@ -683,7 +683,7 @@ const inject = {
         const url_params = new URLSearchParams(window.location.search);
 
         const fallback_url = document
-            .querySelector(`meta[name=pat-inject-${status}]`)
+            .querySelector(`meta[name=pat-inject-status-${status}]`)
             ?.getAttribute("content", false);
         if (
             fallback_url &&

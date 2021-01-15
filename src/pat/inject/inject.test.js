@@ -994,7 +994,7 @@ describe("pat-inject", function () {
 
             // apparently <head> is empty if we do not set it.
             document.head.innerHTML = `
-                <meta name="pat-inject-404" content="/404.html" />
+                <meta name="pat-inject-status-404" content="/404.html" />
             `;
 
             pattern.init($a);
@@ -1035,7 +1035,7 @@ describe("pat-inject", function () {
 
             // apparently <head> is empty if we do not set it.
             document.head.innerHTML = `
-                <meta name="pat-inject-404" content="/404.html" />
+                <meta name="pat-inject-status-404" content="/404.html" />
             `;
 
             pattern.init($a);
