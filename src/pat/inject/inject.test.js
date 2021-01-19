@@ -347,6 +347,29 @@ describe("pat-inject", function () {
 
             done();
         });
+
+        it("doesn't rebase invalid pattern configuration options", async (done) => {
+            await import("../calendar/calendar");
+
+            const res = pattern._rebaseHTML(
+                "https://example.com/test/",
+                '<div id="test" data-pat-calendar="url: ; event-sources: ../calendar2.json"/>'
+            );
+            console.log(res);
+
+            const el = document.createElement("div");
+            el.innerHTML = res;
+
+            const test_config = JSON.parse(
+                el.querySelector("#test").getAttribute("data-pat-calendar")
+            );
+            expect(test_config.url).toEqual("");
+            expect(test_config["event-sources"]).toEqual([
+                "https://example.com/test/../calendar2.json",
+            ]);
+
+            done();
+        });
     });
 
     describe("parseRawHtml", function () {

@@ -931,7 +931,7 @@ const inject = {
                     let changed = false;
                     for (const opt of opts) {
                         const val = options[opt];
-                        if (typeof val === "undefined") {
+                        if (!val) {
                             continue;
                         }
                         changed = true;
