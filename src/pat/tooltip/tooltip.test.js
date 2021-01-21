@@ -699,8 +699,10 @@ describe("pat-tooltip", () => {
 
                 let containers;
 
-                expect(el.classList.contains("active")).toBeFalsy();
-                expect(el.classList.contains("inactive")).toBeTruthy();
+                expect(
+                    el.classList.contains("tooltip-active-click")
+                ).toBeFalsy();
+                expect(el.classList.contains("tooltip-inactive")).toBeTruthy();
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -708,8 +710,10 @@ describe("pat-tooltip", () => {
                 expect(spy_show).toHaveBeenCalled();
                 containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
-                expect(el.classList.contains("active")).toBeTruthy();
-                expect(el.classList.contains("inactive")).toBeFalsy();
+                expect(
+                    el.classList.contains("tooltip-active-click")
+                ).toBeTruthy();
+                expect(el.classList.contains("tooltip-inactive")).toBeFalsy();
 
                 testutils.click($el);
 
@@ -721,8 +725,10 @@ describe("pat-tooltip", () => {
                 // TODO: inspect, why container are not removed.
                 //containers = document.querySelectorAll(".tippy-box");
                 //expect(containers.length).toEqual(0);
-                expect(el.classList.contains("active")).toBeFalsy();
-                expect(el.classList.contains("inactive")).toBeTruthy();
+                expect(
+                    el.classList.contains("tooltip-active-click")
+                ).toBeFalsy();
+                expect(el.classList.contains("tooltip-inactive")).toBeTruthy();
 
                 done();
             });
@@ -745,8 +751,10 @@ describe("pat-tooltip", () => {
 
                 let containers;
 
-                expect(el.classList.contains("active")).toBeFalsy();
-                expect(el.classList.contains("inactive")).toBeFalsy();
+                expect(
+                    el.classList.contains("tooltip-active-click")
+                ).toBeFalsy();
+                expect(el.classList.contains("tooltip-inactive")).toBeFalsy();
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -754,8 +762,10 @@ describe("pat-tooltip", () => {
                 expect(spy_show).toHaveBeenCalled();
                 containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
-                expect(el.classList.contains("active")).toBeFalsy();
-                expect(el.classList.contains("inactive")).toBeFalsy();
+                expect(
+                    el.classList.contains("tooltip-active-click")
+                ).toBeFalsy();
+                expect(el.classList.contains("tooltip-inactive")).toBeFalsy();
 
                 testutils.click($el);
 
@@ -767,8 +777,43 @@ describe("pat-tooltip", () => {
                 // TODO: inspect, why container are not removed.
                 //containers = document.querySelectorAll(".tippy-box");
                 //expect(containers.length).toEqual(0);
-                expect(el.classList.contains("active")).toBeFalsy();
-                expect(el.classList.contains("inactive")).toBeFalsy();
+                expect(
+                    el.classList.contains("tooltip-active-click")
+                ).toBeFalsy();
+                expect(el.classList.contains("tooltip-inactive")).toBeFalsy();
+
+                done();
+            });
+            it("when true and trigger is hover, toggles a different active class on the trigger", async (done) => {
+                const $el = testutils.createTooltip({
+                    data: "mark-inactive: true; trigger: hover",
+                });
+                const el = $el[0];
+                const instance = new pattern($el);
+                await utils.timeout(1);
+
+                const spy_show = spyOn(
+                    instance.tippy.props,
+                    "onShow"
+                ).and.callThrough();
+
+                let containers;
+
+                expect(
+                    el.classList.contains("tooltip-active-hover")
+                ).toBeFalsy();
+                expect(el.classList.contains("tooltip-inactive")).toBeTruthy();
+
+                testutils.mouseenter($el);
+                await utils.timeout(1);
+
+                expect(spy_show).toHaveBeenCalled();
+                containers = document.querySelectorAll(".tippy-box");
+                expect(containers.length).toEqual(1);
+                expect(
+                    el.classList.contains("tooltip-active-hover")
+                ).toBeTruthy();
+                expect(el.classList.contains("tooltip-inactive")).toBeFalsy();
 
                 done();
             });

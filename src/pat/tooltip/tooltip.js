@@ -48,6 +48,9 @@ export default Base.extend({
         canFetch: true,
     },
 
+    active_class: "tooltip-active-hover",
+    inactive_class: "tooltip-inactive",
+
     async init($el, opts) {
         const el = this.el;
 
@@ -79,11 +82,6 @@ export default Base.extend({
             el.removeAttribute("title");
         }
 
-        if (this.options.markInactive) {
-            // Initially mark "inactive"
-            el.classList.add("inactive");
-        }
-
         if (
             this.options.trigger === "click" &&
             this.options.source === "ajax"
@@ -93,6 +91,14 @@ export default Base.extend({
                 event.preventDefault();
                 event.stopPropagation();
             });
+        }
+
+        if (this.options.trigger === "click") {
+            this.active_class = "tooltip-active-click";
+        }
+        if (this.options.markInactive) {
+            // Initially mark as inactive
+            el.classList.add(this.inactive_class);
         }
     },
 
@@ -272,8 +278,8 @@ export default Base.extend({
         }
 
         if (this.options.markInactive) {
-            this.el.classList.remove("inactive");
-            this.el.classList.add("active");
+            this.el.classList.remove(this.inactive_class);
+            this.el.classList.add(this.active_class);
         }
 
         if (this.options.class) {
@@ -288,8 +294,8 @@ export default Base.extend({
 
     _onHide() {
         if (this.options.markInactive) {
-            this.el.classList.remove("active");
-            this.el.classList.add("inactive");
+            this.el.classList.remove(this.active_class);
+            this.el.classList.add(this.inactive_class);
         }
 
         if (
