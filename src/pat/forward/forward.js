@@ -1,41 +1,32 @@
-/**
- * Patterns forward - Forward click events
- *
- * Copyright 2013 Simplon B.V. - Wichert Akkerman
- */
-
+// Patterns forward - Forward click events
 import $ from "jquery";
+import Base from "../../core/base";
 import Parser from "../../core/parser";
-import registry from "../../core/registry";
 
-var parser = new Parser("forward");
+const parser = new Parser("forward");
 
 parser.addArgument("selector");
 parser.addArgument("trigger", "click", ["click", "auto"]);
 
-var _ = {
+export default Base.extend({
     name: "forward",
     trigger: ".pat-forward",
 
-    init: function ($el, opts) {
-        return $el.each(function () {
-            var $el = $(this),
-                options = parser.parse($el, opts);
+    init() {
+        this.options = parser.parse(this.el, this.options);
+        if (!this.options.selector) {
+            return;
+        }
 
-            if (!options.selector) return;
-
-            $el.on("click", null, options.selector, _._onClick);
-            if (options.trigger === "auto") {
-                $el.trigger("click");
-            }
-        });
+        this.$el.on("click", this._onClick.bind(this));
+        if (this.options.trigger === "auto") {
+            this.$el.trigger("click");
+        }
     },
 
-    _onClick: function (event) {
-        $(event.data).click();
+    _onClick(event) {
         event.preventDefault();
         event.stopPropagation();
+        $(this.options.selector).click();
     },
-};
-registry.register(_);
-export default _;
+});
