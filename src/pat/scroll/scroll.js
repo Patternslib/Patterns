@@ -28,9 +28,8 @@ export default Base.extend({
             ImagesLoaded = ImagesLoaded.default;
             // Only calculate the offset when all images are loaded
             ImagesLoaded($("body"), () => this.smoothScroll());
-        } else if (this.options.trigger == "click") {
-            this.$el.click(this.onClick.bind(this));
         }
+        this.el.addEventListener("click", this.onClick.bind(this));
         this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
         this.markBasedOnFragment();
         this.on("hashchange", this.clearIfHidden.bind(this));

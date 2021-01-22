@@ -63,6 +63,7 @@
 -   pat forward: Add `delay` option for delaying the click action forwarding for a given number of milliseconds.
 -   pat forward: Add `self` as possible value for the `selector` option to trigger the event on itself.
 -   pat-scroll: Implement `selector:bottom` attribute value to scroll to the bottom of the scroll container.
+-   pat-scroll: Do handle click events also when trigger is set to `auto`.
 
 ### Technical
 

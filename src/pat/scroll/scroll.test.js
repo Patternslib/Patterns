@@ -11,37 +11,46 @@ describe("pat-scroll", function () {
         jest.restoreAllMocks();
     });
 
-    describe("If the trigger is set to 'auto", function () {
-        it("will automatically scroll to an anchor if the trigger is set to 'auto'", async function (done) {
+    describe("pat-scroll ...", function () {
+        it("will automatically scroll to an anchor if the trigger is set to 'auto' and will also handle 'click' events", async function (done) {
             $("#lab").html(
                 [
                     '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>',
                     '<p id="p1"></p>',
                 ].join("\n")
             );
+            const el = document.querySelector(".pat-scroll");
             const spy_animate = jest.spyOn($.fn, "animate");
-            pattern.init($(".pat-scroll"));
+
+            pattern.init(el);
             await utils.timeout(10); // wait some ticks for async to settle.
-            expect(spy_animate).toHaveBeenCalled();
+
+            expect(spy_animate).toHaveBeenCalledTimes(1);
+
+            el.click();
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(spy_animate).toHaveBeenCalledTimes(2);
+
             done();
         });
-    });
 
-    describe("If the trigger is set to 'click'", function () {
-        it("will scroll to an anchor on click", async function (done) {
+        it("will scroll to an anchor on click if the trigger is set to 'click'", async function (done) {
             $("#lab").html(
                 [
                     '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click">p1</a>',
                     '<p id="p1"></p>',
                 ].join("\n")
             );
-            const $el = $(".pat-scroll");
+            const el = document.querySelector(".pat-scroll");
             const spy_animate = spyOn($.fn, "animate");
-            pattern.init($el);
+
+            pattern.init(el);
             await utils.timeout(1); // wait a tick for async to settle.
-            $el.click();
+
+            el.click();
             await utils.timeout(1); // wait a tick for async to settle.
-            // wait for scrolling via click to be done.
+
             expect(spy_animate).toHaveBeenCalled();
             done();
         });
