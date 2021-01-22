@@ -14,12 +14,25 @@
         .current {
             background-color: beige;
         }
+        #scrollable {
+          overflow: scroll;
+          max-height: 80vh;
+          height: 40em;
+          border: 2px solid blue;
+        }
     </style>
     <body>
         <article style="height: 100px">
             <p>Some filler</p>
         </article>
         <article class="pat-rich" id="scrollable">
+            <p>
+                <button
+                    class="pat-scroll"
+                    data-pat-scroll="selector: bottom"
+                    >Scroll to bottom</button
+                >
+            </p>
             <ol class="mainnav" id="demo-main-nav">
                 <li>
                     <a href="#p1" class="pat-scroll"
