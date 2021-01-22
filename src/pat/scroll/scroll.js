@@ -27,12 +27,7 @@ export default Base.extend({
             ImagesLoaded = await import("imagesloaded");
             ImagesLoaded = ImagesLoaded.default;
             // Only calculate the offset when all images are loaded
-            ImagesLoaded(
-                $("body"),
-                function () {
-                    this.smoothScroll();
-                }.bind(this)
-            );
+            ImagesLoaded($("body"), () => this.smoothScroll());
         } else if (this.options.trigger == "click") {
             this.$el.click(this.onClick.bind(this));
         }
@@ -42,7 +37,7 @@ export default Base.extend({
         $(window).scroll(_.debounce(this.markIfVisible.bind(this), 50));
     },
 
-    onClick: function () {
+    onClick() {
         //ev.preventDefault();
         history.pushState({}, null, this.$el.attr("href"));
         this.smoothScroll();
@@ -51,44 +46,43 @@ export default Base.extend({
         $("a.pat-scroll").trigger("hashchange");
     },
 
-    markBasedOnFragment: function () {
+    markBasedOnFragment() {
         // Get the fragment from the URL and set the corresponding this.$el as current
         const fragment = window.location.hash.substr(1);
         if (fragment) {
-            var $target = $("#" + fragment);
+            const $target = $("#" + fragment);
             this.$el.addClass("current"); // the element that was clicked on
             $target.addClass("current");
         }
     },
 
-    clearIfHidden: function () {
-        var active_target = "#" + window.location.hash.substr(1),
-            $active_target = $(active_target),
-            target = "#" + this.$el[0].href.split("#").pop();
+    clearIfHidden() {
+        const active_target = "#" + window.location.hash.substr(1);
+        const $active_target = $(active_target);
+        const target = "#" + this.$el[0].href.split("#").pop();
         if ($active_target.length > 0) {
             if (active_target != target) {
                 // if the element does not match the one listed in the url #,
                 // clear the current class from it.
-                var $target = $("#" + this.$el[0].href.split("#").pop());
+                const $target = $("#" + this.$el[0].href.split("#").pop());
                 $target.removeClass("current");
                 this.$el.removeClass("current");
             }
         }
     },
 
-    markIfVisible: function () {
-        var fragment, $target, href;
+    markIfVisible() {
         if (this.$el.hasClass("pat-scroll-animated")) {
             // this section is triggered when the scrolling is a result of the animate function
             // ie. automatic scrolling as opposed to the user manually scrolling
             this.$el.removeClass("pat-scroll-animated");
         } else if (this.$el[0].nodeName === "A") {
-            href = this.$el[0].href;
-            fragment =
+            const href = this.$el[0].href;
+            const fragment =
                 (href.indexOf("#") !== -1 && href.split("#").pop()) ||
                 undefined;
             if (fragment) {
-                $target = $("#" + fragment);
+                const $target = $("#" + fragment);
                 if ($target.length) {
                     if (
                         utils.isElementInViewport(
@@ -108,19 +102,18 @@ export default Base.extend({
         }
     },
 
-    onPatternsUpdate: function (ev, data) {
-        var fragment, $target, href;
+    onPatternsUpdate(ev, data) {
         if (data.pattern === "stacks") {
             if (data.originalEvent && data.originalEvent.type === "click") {
                 this.smoothScroll();
             }
         } else if (data.pattern === "scroll") {
-            href = this.$el[0].href;
-            fragment =
+            const href = this.$el[0].href;
+            const fragment =
                 (href.indexOf("#") !== -1 && href.split("#").pop()) ||
                 undefined;
             if (fragment) {
-                $target = $("#" + fragment);
+                const $target = $("#" + fragment);
                 if ($target.length) {
                     if (
                         utils.isElementInViewport(
@@ -138,18 +131,18 @@ export default Base.extend({
         }
     },
 
-    findScrollContainer: function (el) {
-        var direction = this.options.direction;
-        var scrollable = $(el)
+    findScrollContainer(el) {
+        const direction = this.options.direction;
+        let scrollable = $(el)
             .parents()
-            .filter(function () {
+            .filter((idx, el) => {
                 return (
-                    ["auto", "scroll"].indexOf($(this).css("overflow")) > -1 ||
+                    ["auto", "scroll"].indexOf($(el).css("overflow")) > -1 ||
                     (direction === "top" &&
-                        ["auto", "scroll"].indexOf($(this).css("overflow-y")) >
+                        ["auto", "scroll"].indexOf($(el).css("overflow-y")) >
                             -1) ||
                     (direction === "left" &&
-                        ["auto", "scroll"].indexOf($(this).css("overflow-x")) >
+                        ["auto", "scroll"].indexOf($(el).css("overflow-x")) >
                             -1)
                 );
             })
@@ -160,12 +153,11 @@ export default Base.extend({
         return scrollable;
     },
 
-    smoothScroll: function () {
-        var href, fragment;
-        var scroll =
-                this.options.direction == "top" ? "scrollTop" : "scrollLeft",
-            scrollable,
-            options = {};
+    smoothScroll() {
+        const scroll =
+            this.options.direction == "top" ? "scrollTop" : "scrollLeft";
+        const options = {};
+        let scrollable;
         if (typeof this.options.offset != "undefined") {
             // apply scroll options directly
             scrollable = this.options.selector
@@ -181,16 +173,17 @@ export default Base.extend({
             // starting from the *target*
             // The intent is to move target into view within scrollable
             // if the scrollable has no scrollbar, do not scroll body
+            let fragment;
             if (this.options.selector) {
                 fragment = this.options.selector;
             } else {
-                href = this.$el.attr("href");
+                const href = this.$el.attr("href");
                 fragment =
                     href.indexOf("#") !== -1
                         ? "#" + href.split("#").pop()
                         : undefined;
             }
-            var target = $(fragment);
+            const target = $(fragment);
             if (target.length === 0) {
                 return;
             }
@@ -223,9 +216,7 @@ export default Base.extend({
         // execute the scroll
         scrollable.animate(options, {
             duration: 500,
-            start: function () {
-                $(".pat-scroll").addClass("pat-scroll-animated");
-            },
+            start: () => $(".pat-scroll").addClass("pat-scroll-animated"),
         });
     },
 });
