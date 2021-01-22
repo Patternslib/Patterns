@@ -66,5 +66,39 @@ describe("pat-scroll", function () {
             expect(spy_animate).toHaveBeenCalled();
             done();
         });
+
+        // Skipping - passes only in isolation.
+        it.skip("will scroll to bottom with selector:bottom", async function (done) {
+            const outer = document.createElement("div");
+            outer.innerHTML = `
+                <div id="scroll-container" style="overflow: scroll">
+                  <button class="pat-scroll" data-pat-scroll="selector: bottom">to bottom</button>
+                </div>
+            `;
+
+            const container = outer.querySelector("#scroll-container");
+            const trigger = outer.querySelector(".pat-scroll");
+
+            // mocking stuff jsDOM doesn't implement
+            jest.spyOn(container, "scrollHeight", "get").mockImplementation(
+                () => 100000
+            );
+
+            expect(container.scrollTop).toBe(0);
+
+            pattern.init(trigger);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(container.scrollTop).toBe(0);
+
+            trigger.click();
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(container.scrollTop > 0).toBe(true);
+
+            jest.restoreAllMocks();
+
+            done();
+        });
     });
 });

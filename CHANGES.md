@@ -62,6 +62,7 @@
 -   pat inject: Rebase URLs in pattern configuration attributes. This avoids URLs in pattern configuration to point to unreachable paths in the context where the result is injected into.
 -   pat forward: Add `delay` option for delaying the click action forwarding for a given number of milliseconds.
 -   pat forward: Add `self` as possible value for the `selector` option to trigger the event on itself.
+-   pat-scroll: Implement `selector:bottom` attribute value to scroll to the bottom of the scroll container.
 
 ### Technical
 

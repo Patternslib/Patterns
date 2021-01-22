@@ -168,6 +168,14 @@ export default Base.extend({
             // Just scroll up or left, period.
             scrollable = this.findScrollContainer(this.$el);
             options[scroll] = 0;
+        } else if (this.options.selector === "bottom") {
+            // Just scroll down or right, period.
+            scrollable = this.findScrollContainer(this.$el);
+            if (scroll === "scrollTop") {
+                options.scrollTop = scrollable[0].scrollHeight;
+            } else {
+                options.scrollLeft = scrollable[0].scrollWidth;
+            }
         } else {
             // Get the first element with overflow (the scroll container)
             // starting from the *target*
