@@ -39,7 +39,6 @@ export default Base.extend({
         let targets;
         if (this.options.selector === "self") {
             this.skip = true;
-            this.el.removeEventListener("click", this.on_click);
             targets = [this.el];
         } else {
             targets = document.querySelectorAll(this.options.selector);
@@ -52,12 +51,8 @@ export default Base.extend({
 
 // Notes:
 //
-// 1) We're using `ELEMENT.click()` instead of
-//    `ELEMENT.dispatchEvent(new Event("click"))`.
-//    The latter doesn't get recognized by jQuery and does not invoke the default
-//    action on an <a href> element.
-//
-// 2) `selector: self` case: We're keeping the the `skip` logic as jsDOM tests
-//    fail without them. Although this shouldn't be necessary as the click event
-//    hander was removed before.
+// We're using `ELEMENT.click()` instead of
+// `ELEMENT.dispatchEvent(new Event("click"))`.
+// The latter doesn't get recognized by jQuery and does not invoke the default
+// action on an <a href> element.
 //
