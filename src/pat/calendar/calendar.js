@@ -59,8 +59,14 @@ parser.addArgument("url", null);
 parser.addArgument("event-sources", [], undefined, true);
 //parser.addArgument("add-url", null);
 
+// pat-inject support for individual events
 parser.addArgument("pat-inject-source", null);
 parser.addArgument("pat-inject-target", null);
+
+// pat-switch support for individual events
+parser.addArgument("pat-switch-selector", null);
+parser.addArgument("pat-switch-remove", null);
+parser.addArgument("pat-switch-add", null);
 
 parser.addAlias("default-date", "initial-date");
 parser.addAlias("default-view", "initial-view");
@@ -147,8 +153,6 @@ export default Base.extend({
         ];
         config.eventColor = opts.eventColor;
 
-        config.dateClick = this.addNewEvent.bind(this);
-
         let lang =
             opts.lang ||
             document.querySelector("html").getAttribute("lang") ||
@@ -196,10 +200,13 @@ export default Base.extend({
         cal_el.setAttribute("class", "pat-calendar__fc");
         el.appendChild(cal_el);
 
-        // Create a element for modals/injections
-        this.mod_el = document.createElement("section");
-        this.mod_el.setAttribute("class", "pat-calendar__modal");
-        el.appendChild(this.mod_el);
+        if (opts.addUrl) {
+            config.dateClick = this.addNewEvent.bind(this);
+            // Create a element for modals/injections
+            this.mod_el = document.createElement("section");
+            this.mod_el.setAttribute("class", "pat-calendar__modal");
+            el.appendChild(this.mod_el);
+        }
 
         let calendar = (this.calendar = new Calendar(cal_el, config));
         calendar.render();
@@ -251,6 +258,11 @@ export default Base.extend({
             contact_email: event.contact_email,
             event_url: event.event_url,
         };
+        for (const prop in ret) {
+            if (!ret[prop]) {
+                delete ret[prop];
+            }
+        }
         return ret;
     },
 
@@ -311,16 +323,38 @@ export default Base.extend({
 
     init_event(args) {
         this.filter_event(args.event);
-        let source = this.options.pat["inject-source"];
-        let target = this.options.pat["inject-target"];
+
+        let do_scan = false;
+
+        // pat-inject support
+        const source = this.options.pat["inject-source"];
+        const target = this.options.pat["inject-target"];
         if (source || target) {
-            source = source || "body";
-            target = target || "body";
             args.el.classList.add("pat-inject");
             args.el.setAttribute(
                 "data-pat-inject",
-                `target: ${target}; source: ${source}`
+                `target: ${target || "body"}; source: ${source || "body"}`
             );
+            do_scan = true;
+        }
+
+        // pat-switch support
+        const switch_sel = this.options.pat["switch-selector"];
+        if (switch_sel) {
+            const switch_add = this.options.pat["switch-add"];
+            const switch_rm = this.options.pat["switch-remove"];
+
+            args.el.classList.add("pat-switch");
+            args.el.setAttribute(
+                "data-pat-switch",
+                `selector: ${switch_sel}${
+                    switch_add ? "; add: " + switch_add : ""
+                }${switch_rm ? "; remove: " + switch_rm : ""}`
+            );
+            do_scan = true;
+        }
+
+        if (do_scan) {
             registry.scan(args.el);
         }
     },

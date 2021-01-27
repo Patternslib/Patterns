@@ -36,6 +36,8 @@
 -   pat calendar: Fetch events from the backend.
 -   pat calendar: Allow filtering/hiding events based in comparing the checkbox id with the classes of the displayed events.
 -   pat calendar: Support injection of events when clicking on and event rather than redirecting to them.
+    Done by adding `pat-inject` to rendered events via some configuration options.
+-   pat calendar: Support `pat-switch` for rendered events via some configuration options.
 -   pat calendar: Store view, date and active categories per URL, allowing to individually customize the calendar per page.
 -   pat tooltip: Use tippy v6 based implementation.
 -   pat tooltip: Introduce new option ``arrowPadding`` to define the padding of the box arrow from the corners of the tooltip.
