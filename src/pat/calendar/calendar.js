@@ -252,6 +252,11 @@ export default Base.extend({
             contact_email: event.contact_email,
             event_url: event.event_url,
         };
+        for (const prop in ret) {
+            if (!ret[prop]) {
+                delete ret[prop];
+            }
+        }
         return ret;
     },
 

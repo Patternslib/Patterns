@@ -13,9 +13,10 @@ const mockFetch = () =>
                         end: "2020-10-10T12:00:00Z",
                     },
                     {
-                        title: "Event 2",
-                        start: "2020-10-12",
-                        end: "2020-10-12",
+                        "title": "Event 2",
+                        "start": "2020-10-12",
+                        "end": "2020-10-12",
+                        "@id": "./test_event.html",
                     },
                     {
                         title: "Event 3",
@@ -222,6 +223,33 @@ describe("Calendar tests", () => {
         expect(titles.includes("Event 1")).toBeTruthy();
         expect(titles.includes("Event 2")).toBeTruthy();
         expect(titles.includes("Event 3")).toBeTruthy();
+
+        global.fetch.mockClear();
+        delete global.fetch;
+        done();
+    });
+
+    it("Loads events and does not set the href if not present", async (done) => {
+        const el = document.querySelector(".pat-calendar");
+        el.setAttribute(
+            "data-pat-calendar",
+            "initial-date: 2020-10-10; url: ./test.json;"
+        );
+
+        global.fetch = jest.fn().mockImplementation(mockFetch);
+
+        registry.scan(document.body);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        const events = [...document.querySelectorAll(".fc-event-title")];
+
+        const event1 = events.filter((it) => it.textContent === "Event 1")[0].closest(".fc-event"); // prettier-ignore
+        const event2 = events.filter((it) => it.textContent === "Event 2")[0].closest(".fc-event"); // prettier-ignore
+        const event3 = events.filter((it) => it.textContent === "Event 3")[0].closest(".fc-event"); // prettier-ignore
+
+        expect(event1.href).toBeFalsy();
+        expect(event2.href).toBe("http://localhost/test_event.html");
+        expect(event3.href).toBeFalsy();
 
         global.fetch.mockClear();
         delete global.fetch;
