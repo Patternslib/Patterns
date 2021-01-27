@@ -256,6 +256,52 @@ describe("Calendar tests", () => {
         done();
     });
 
+    it("Loads events and initializes them with pat-inject and pat-switch", async (done) => {
+        const el = document.querySelector(".pat-calendar");
+        el.setAttribute(
+            "data-pat-calendar",
+            `initial-date: 2020-10-10;
+            url: ./test.json;
+            pat-inject-target: #event-info;
+            pat-inject-source: #document-body;
+            pat-switch-selector: #event-info;
+            pat-switch-remove: event-info--inactive;
+            pat-switch-add: event-info--active`
+        );
+
+        global.fetch = jest.fn().mockImplementation(mockFetch);
+
+        registry.scan(document.body);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        const events = [...document.querySelectorAll(".fc-event-title")];
+
+        const event1 = events.filter((it) => it.textContent === "Event 1")[0].closest(".fc-event"); // prettier-ignore
+        const event2 = events.filter((it) => it.textContent === "Event 2")[0].closest(".fc-event"); // prettier-ignore
+        const event3 = events.filter((it) => it.textContent === "Event 3")[0].closest(".fc-event"); // prettier-ignore
+
+        console.log(event3.outerHTML);
+
+        expect(event1.classList.contains("pat-inject")).toBe(true);
+        expect(event1.classList.contains("pat-switch")).toBe(true);
+        expect(event1.getAttribute("data-pat-inject")).toBe("target: #event-info; source: #document-body"); // prettier-ignore
+        expect(event1.getAttribute("data-pat-switch")).toBe("selector: #event-info; add: event-info--active; remove: event-info--inactive"); // prettier-ignore
+
+        expect(event2.classList.contains("pat-inject")).toBe(true);
+        expect(event2.classList.contains("pat-switch")).toBe(true);
+        expect(event2.getAttribute("data-pat-inject")).toBe("target: #event-info; source: #document-body"); // prettier-ignore
+        expect(event2.getAttribute("data-pat-switch")).toBe("selector: #event-info; add: event-info--active; remove: event-info--inactive"); // prettier-ignore
+
+        expect(event3.classList.contains("pat-inject")).toBe(true);
+        expect(event3.classList.contains("pat-switch")).toBe(true);
+        expect(event3.getAttribute("data-pat-inject")).toBe("target: #event-info; source: #document-body"); // prettier-ignore
+        expect(event3.getAttribute("data-pat-switch")).toBe("selector: #event-info; add: event-info--active; remove: event-info--inactive"); // prettier-ignore
+
+        global.fetch.mockClear();
+        delete global.fetch;
+        done();
+    });
+
     it("Loads correct date if set in query string", async (done) => {
         const el = document.querySelector(".pat-calendar");
         el.setAttribute("data-pat-calendar", "timezone: Europe/Berlin");

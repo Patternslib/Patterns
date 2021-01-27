@@ -61,5 +61,9 @@ The calendar can be configured through a `data-pat-calendar` attribute. The avai
 | `title-week`              | MMM D YYYY        |                                                   |
 | `url`                     |                   |                                                   | URL to an event source as JSON feed.
 | `event-color`             | blue              | Any CSS color value                               | Default color of events.
-| `pat-inject-source`       |                   | CSS selector                                      | If clicking on an event this selector identifies which section of the loaded event to inject.
-| `pat-inject-target`       |                   | CSS selector                                      | If clicking on an event this selector identifies where to inject the loaded content.
+| `pat-inject-source`       |                   | CSS selector                                      | If clicking on an event this selector identifies which section of the loaded event to inject.                 | string                 |
+| `pat-inject-target`       |                   | CSS selector                                      | If clicking on an event this selector identifies where to inject the loaded content.                          | string                 |
+| `pat-switch-selector`     |                   | CSS selector                                      | Defines the element on which pat-select should operate on.                                                    | string                 |
+| `pat-switch-add`          |                   | CSS class name                                    | Defines the class name to be added.                                                                           | string                 |
+| `pat-switch-remove`       |                   | CSS class name                                    | Defines the class name to be removed.                                                                         | string                 |
+

@@ -12,14 +12,19 @@
 </head>
 <body>
     <div class="calendar-main">
+        <div id="event-info" class="event-info--inactive">event info here!</div>
 
         <div class="pat-calendar"
              data-pat-calendar="category-controls: .cal-categories;
                                 event-sources: ./test_event_source.json,./test_event_source2.json;
-                                event-sources-classes: internal-calendar, external-calendar;
                                 add-url: ./test_add_event.html;
                                 initial-date: 2020-10-10;
                                 event-color: fuchsia;
+                                pat-inject-target: #event-info;
+                                pat-inject-source: #document-body;
+                                pat-switch-selector: #event-info;
+                                pat-switch-remove: event-info--inactive;
+                                pat-switch-add: event-info--active;
                                 lang: en;
                                 store: local;">
             <form class="pat-toolbar cal-toolbar pat-form"
@@ -120,6 +125,12 @@
     <style type="text/css" media="screen">
         .calendar-hidden {
             display: none !important;
+        }
+        .event-info--inactive {
+          color: grey;
+        }
+        .event-info--active {
+          background: lightblue;
         }
     </style>
 
