@@ -147,8 +147,6 @@ export default Base.extend({
         ];
         config.eventColor = opts.eventColor;
 
-        config.dateClick = this.addNewEvent.bind(this);
-
         let lang =
             opts.lang ||
             document.querySelector("html").getAttribute("lang") ||
@@ -196,10 +194,13 @@ export default Base.extend({
         cal_el.setAttribute("class", "pat-calendar__fc");
         el.appendChild(cal_el);
 
-        // Create a element for modals/injections
-        this.mod_el = document.createElement("section");
-        this.mod_el.setAttribute("class", "pat-calendar__modal");
-        el.appendChild(this.mod_el);
+        if (opts.addUrl) {
+            config.dateClick = this.addNewEvent.bind(this);
+            // Create a element for modals/injections
+            this.mod_el = document.createElement("section");
+            this.mod_el.setAttribute("class", "pat-calendar__modal");
+            el.appendChild(this.mod_el);
+        }
 
         let calendar = (this.calendar = new Calendar(cal_el, config));
         calendar.render();
