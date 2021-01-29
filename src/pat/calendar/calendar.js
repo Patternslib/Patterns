@@ -90,7 +90,7 @@ export default Base.extend({
         agendaDay: "timeGridDay",
     },
     dayNames: ["su", "mo", "tu", "we", "th", "fr", "sa"],
-    active_categories: null,
+    active_categories: [],
     parser: parser,
 
     async init($el, opts) {
@@ -361,7 +361,7 @@ export default Base.extend({
 
     filter_event(event) {
         let show = true;
-        if (this.active_categories !== null) {
+        if (this.active_categories.length) {
             // intersection
             show =
                 this.active_categories.filter((it) =>
@@ -377,11 +377,12 @@ export default Base.extend({
 
     reset_active_categories() {
         const ctrls = this.get_category_controls();
-        this.active_categories = null;
+        this.active_categories = [];
         if (ctrls.length) {
             this.active_categories = ctrls
                 .filter((el) => el.checked)
-                .map((el) => el.id);
+                .map((el) => el.id)
+                .filter((it) => it); // no empties
         }
         this.storage &&
             this.storage.set("active_categories", this.active_categories);
@@ -421,7 +422,7 @@ export default Base.extend({
          */
         const ctrls = this.get_category_controls();
         const active_categories =
-            (this.storage && this.storage.get("active_categories")) || null;
+            (this.storage && this.storage.get("active_categories")) || [];
 
         if (!ctrls.length || active_categories === null) {
             // No category controls or never set, use default un/checked status.
