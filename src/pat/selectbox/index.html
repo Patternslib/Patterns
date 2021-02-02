@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Selectbox demo</title>
+        <link rel="stylesheet" href="/style/patterns.css" type="text/css" />
         <script
             src="/dist/bundle.js"
             type="text/javascript"
@@ -12,7 +13,7 @@
     <body>
 
       <form>
-        <select class="pat-select">
+        <select class="pat-select" autocomplete="off">
           <option value="true" selected>Bevat</option>
           <option value="false">Bevat niet</option>
         </select>
@@ -20,18 +21,18 @@
         <br />
 
         <label>
-        <select class="pat-select">
-          <option value="okay" selected>okay</option>
-          <option value="nicht okay">nicht okay</option>
+        <select class="pat-select" autocomplete="off">
+          <option value="okay">okay</option>
+          <option value="nicht okay" selected>nicht okay</option>
         </select>
         </label>
 
         <br />
 
         <label class="pat-select">
-          <select>
-            <option value="ja" selected>ja.</option>
-            <option value="nein">nein.</option>
+          <select autocomplete="off">
+            <option value="ja">ja.</option>
+            <option value="nein" selected>nein.</option>
           </select>
         </label>
 
