@@ -257,6 +257,7 @@ describe("Calendar tests", () => {
     });
 
     it("Loads events and initializes them with pat-inject and pat-switch", async (done) => {
+        // pat-inject is only set if event has a url.
         const el = document.querySelector(".pat-calendar");
         el.setAttribute(
             "data-pat-calendar",
@@ -282,9 +283,9 @@ describe("Calendar tests", () => {
 
         console.log(event3.outerHTML);
 
-        expect(event1.classList.contains("pat-inject")).toBe(true);
+        expect(event1.classList.contains("pat-inject")).toBe(false);
         expect(event1.classList.contains("pat-switch")).toBe(true);
-        expect(event1.getAttribute("data-pat-inject")).toBe("target: #event-info; source: #document-body"); // prettier-ignore
+        expect(event1.hasAttribute("data-pat-inject")).toBe(false);
         expect(event1.getAttribute("data-pat-switch")).toBe("selector: #event-info; add: event-info--active; remove: event-info--inactive"); // prettier-ignore
 
         expect(event2.classList.contains("pat-inject")).toBe(true);
@@ -292,9 +293,9 @@ describe("Calendar tests", () => {
         expect(event2.getAttribute("data-pat-inject")).toBe("target: #event-info; source: #document-body"); // prettier-ignore
         expect(event2.getAttribute("data-pat-switch")).toBe("selector: #event-info; add: event-info--active; remove: event-info--inactive"); // prettier-ignore
 
-        expect(event3.classList.contains("pat-inject")).toBe(true);
+        expect(event3.classList.contains("pat-inject")).toBe(false);
         expect(event3.classList.contains("pat-switch")).toBe(true);
-        expect(event3.getAttribute("data-pat-inject")).toBe("target: #event-info; source: #document-body"); // prettier-ignore
+        expect(event3.hasAttribute("data-pat-inject")).toBe(false);
         expect(event3.getAttribute("data-pat-switch")).toBe("selector: #event-info; add: event-info--active; remove: event-info--inactive"); // prettier-ignore
 
         global.fetch.mockClear();
