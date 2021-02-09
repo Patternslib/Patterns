@@ -329,7 +329,8 @@ export default Base.extend({
         // pat-inject support
         const source = this.options.pat["inject-source"];
         const target = this.options.pat["inject-target"];
-        if (source || target) {
+        if (args.event.url && (source || target)) {
+            // Only set pat-inject if event has a url
             args.el.classList.add("pat-inject");
             args.el.setAttribute(
                 "data-pat-inject",
