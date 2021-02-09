@@ -962,6 +962,43 @@ describe("pat-inject", function () {
                     expect($target1.html()).toBe("some");
                     expect($target2.html()).toBe("other");
                 });
+
+                it("formaction which replaces itself", async (done) => {
+                    answer(`
+                        <html>
+                            <body>
+                                <div id="someid">some</div>
+                                <div id="otherid">other</div>
+                            </body>
+                        </html>
+                    `);
+
+                    document.body.innerHTML = `
+                        <div id="oha">form inject target</div>
+                        <form
+                            class="pat-inject"
+                            data-pat-inject="target:#oha;source:#id1">
+                          <button
+                              type="submit"
+                              formaction="test.cgi"
+                              class="pat-inject"
+                              data-pat-inject="target:self::element;source:#otherid"
+                              />
+                        </form>
+                    `;
+
+                    pattern.init($("form"));
+                    await utils.timeout(1); // wait a tick for async to settle.
+
+                    document.querySelector("form button").click();
+                    await utils.timeout(1); // wait a tick for async to settle.
+
+                    expect(
+                        document.querySelector("form").innerHTML.trim()
+                    ).toBe("other");
+
+                    done();
+                });
             });
         });
     });
