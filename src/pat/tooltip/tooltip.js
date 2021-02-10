@@ -51,6 +51,9 @@ export default Base.extend({
     async init($el, opts) {
         const el = this.el;
 
+        if (window.__patternslib_import_styles) {
+            import("tippy.js/dist/tippy.css");
+        }
         const Tippy = (await import("tippy.js")).default;
 
         this.options = parser.parse(el, opts);
