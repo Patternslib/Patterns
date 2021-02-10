@@ -4,8 +4,8 @@ import Parser from "../../core/parser";
 import logging from "../../core/logging";
 
 const log = logging.getLogger("navigation");
-const parser = new Parser("navigation");
 
+export const parser = new Parser("navigation");
 parser.addArgument("item-wrapper", "li");
 parser.addArgument("in-path-class", "navigation-in-path");
 parser.addArgument("current-class", "current");

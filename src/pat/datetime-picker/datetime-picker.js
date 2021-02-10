@@ -6,7 +6,7 @@ import Parser from "../../core/parser";
 import utils from "../../core/utils";
 import dom from "../../core/dom";
 
-const parser = new Parser("datetime-picker");
+export const parser = new Parser("datetime-picker");
 parser.addArgument("behavior", "styled", ["native", "styled"]);
 
 parser.addArgument("format", "YYYY-MM-DD");

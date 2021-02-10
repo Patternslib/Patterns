@@ -8,7 +8,7 @@ import utils from "../../core/utils";
 // Lazy loading modules.
 let Stickyfill;
 
-var parser = new Parser("sticky");
+export const parser = new Parser("sticky");
 parser.addArgument("selector", "");
 
 export default Base.extend({

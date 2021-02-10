@@ -82,6 +82,7 @@
 
 ### Technical
 
+-   Export all parsers in all patterns to be able to modify default values or add aliases.
 -   core polyfills: Add polyfill for Node.closest method.
 -   Core Base: ``await`` for initalization in the base class constructor, so that the ``init`` event is really thrown after initialization is done.
 -   pat calendar: Explicitly import JavaScript language files to avoid missing Webpack TypeScript loader errors.
@@ -111,6 +112,7 @@
 -   Build infra: Switch the CI system to GitHub Actions and drop Travis CI.
 -   core base: Add the parser instance to pattern attributes if available.
     We can then reuse the parser from registered patterns. This is used in the ``_rebaseHTML`` method of pat-inject to URL-rebase the pattern configuration.
+
 
 ### Fixes
 

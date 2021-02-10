@@ -11,7 +11,7 @@ let Tippy;
 
 const log = logging.getLogger("pat-tooltip");
 
-const parser = new Parser("tooltip");
+export const parser = new Parser("tooltip");
 const all_positions = [
     "tl",
     "tm",

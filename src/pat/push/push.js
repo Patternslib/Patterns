@@ -4,7 +4,8 @@ import logging from "../../core/logging";
 import Parser from "../../core/parser";
 
 const logger = logging.getLogger("push");
-const parser = new Parser("push");
+
+export const parser = new Parser("push");
 parser.addArgument("url", null);
 parser.addArgument("push-id", null);
 

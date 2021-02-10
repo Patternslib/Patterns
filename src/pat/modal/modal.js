@@ -4,7 +4,7 @@ import Base from "../../core/base";
 import utils from "../../core/utils";
 import inject from "../inject/inject";
 
-const parser = new Parser("modal");
+export const parser = new Parser("modal");
 parser.addArgument("class");
 parser.addArgument(
     "closing",
