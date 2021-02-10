@@ -9,7 +9,7 @@ import Base from "../../core/base";
 import inject from "../inject/inject";
 import logging from "../../core/logging";
 
-var log = logging.getLogger("subform");
+const log = logging.getLogger("subform");
 
 export default Base.extend({
     name: "subform",

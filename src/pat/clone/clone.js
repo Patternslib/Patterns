@@ -5,8 +5,9 @@ import registry from "../../core/registry";
 import Base from "../../core/base";
 import logging from "../../core/logging";
 
-var log = logging.getLogger("pat-clone");
-var parser = new Parser("clone");
+const log = logging.getLogger("pat-clone");
+
+export const parser = new Parser("clone");
 parser.addArgument("max");
 parser.addArgument("template", ":first");
 parser.addArgument("trigger-element", ".add-clone");

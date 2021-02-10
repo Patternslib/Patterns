@@ -13,7 +13,7 @@ import Base from "../../core/base";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";
 
-const parser = new Parser("bumper");
+export const parser = new Parser("bumper");
 parser.addArgument("margin", 0);
 parser.addArgument("selector");
 parser.addArgument("bump-add", "bumped");

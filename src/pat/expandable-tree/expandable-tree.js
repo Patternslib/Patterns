@@ -3,8 +3,7 @@ import inject from "../inject/inject";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
 
-var parser = new Parser("expandable");
-
+export const parser = new Parser("expandable");
 parser.addArgument("load-content");
 
 var _ = {

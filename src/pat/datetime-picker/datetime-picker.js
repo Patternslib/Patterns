@@ -5,9 +5,8 @@ import Parser from "../../core/parser";
 import utils from "../../core/utils";
 import dom from "../../core/dom";
 
-const parser = new Parser("datetime-picker");
+export const parser = new Parser("datetime-picker");
 parser.addArgument("behavior", "styled", ["native", "styled"]);
-
 parser.addArgument("format", "YYYY-MM-DD");
 parser.addArgument("week-numbers", [], ["show", "hide"]);
 parser.addArgument("i18n"); // URL pointing to JSON resource with i18n values
