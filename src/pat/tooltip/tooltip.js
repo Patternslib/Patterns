@@ -57,6 +57,10 @@ export default Base.extend({
         Tippy = await import("tippy.js");
         Tippy = Tippy.default;
 
+        if (window.__patternslib_import_styles) {
+            await import("tippy.js/dist/tippy.css");
+        }
+
         this.options = parser.parse(el, opts);
         this.tippy_options = this.parseOptionsForTippy(this.options);
 
