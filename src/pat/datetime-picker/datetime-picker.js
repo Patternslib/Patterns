@@ -8,7 +8,7 @@ import Parser from "../../core/parser";
 // Lazy loading modules.
 let Moment;
 
-const parser = new Parser("datetime-picker");
+export const parser = new Parser("datetime-picker");
 parser.addArgument("behavior", "styled", ["native", "styled"]);
 parser.addArgument("format", "YYYY-MM-DD");
 parser.addArgument("week-numbers", [], ["show", "hide"]);

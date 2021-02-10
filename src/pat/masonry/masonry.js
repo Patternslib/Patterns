@@ -13,9 +13,9 @@ import utils from "../../core/utils";
 let ImagesLoaded;
 let Masonry;
 
-var log = logging.getLogger("pat.masonry");
-var parser = new Parser("masonry");
+const log = logging.getLogger("pat.masonry");
 
+export const parser = new Parser("masonry");
 // parser.addArgument("stagger", "");
 parser.addArgument("column-width");
 parser.addArgument("container-style", '{ "position": "relative" }');

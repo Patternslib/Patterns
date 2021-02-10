@@ -15,7 +15,7 @@ import utils from "../../core/utils";
 let Validate;
 let Moment;
 
-const parser = new Parser("validation");
+export const parser = new Parser("validation");
 parser.addArgument("disable-selector"); // Elements which must be disabled if there are errors
 parser.addArgument("message-date", "This value must be a valid date");
 parser.addArgument(

@@ -7,7 +7,7 @@ import Parser from "../../core/parser";
 
 const log = logging.getLogger("autosuggest");
 
-const parser = new Parser("autosuggest");
+export const parser = new Parser("autosuggest");
 parser.addArgument("ajax-data-type", "JSON");
 parser.addArgument("ajax-search-index", "");
 parser.addArgument("ajax-url", "");

@@ -11,7 +11,7 @@ import Parser from "../../core/parser";
 import _ from "underscore";
 import utils from "../../core/utils";
 
-const parser = new Parser("auto-scale");
+export const parser = new Parser("auto-scale");
 parser.addArgument("method", "scale", ["scale", "zoom"]);
 parser.addArgument("size", "width", ["width", "height", "contain", "cover"]);
 parser.addArgument("min-width", 0);

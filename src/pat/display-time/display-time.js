@@ -7,7 +7,8 @@ import logging from "../../core/logging";
 let Moment;
 
 const log = logging.getLogger("pat-display-time");
-const parser = new Parser("display-time");
+
+export const parser = new Parser("display-time");
 // input datetime options
 parser.add_argument("format", "");
 parser.add_argument("locale", "");
