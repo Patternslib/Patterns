@@ -39,6 +39,8 @@
 -   pat calendar: Support `pat-switch` for rendered events via some configuration options.
 -   pat calendar: Support `pat-tooltip` on events with a URL via `pat-tooltip-source` set to `ajax`.
 -   pat calendar: Store view, date and active categories per URL, allowing to individually customize the calendar per page.
+-   pat calendar: Support `url` in the event JSON model additionally to `@id`.
+    The unique identifier is often not semantically correct for a URL to the item, especially when we want to call a specific view.
 -   pat tooltip: Use tippy v6 based implementation.
 -   pat tooltip: Introduce new option ``arrowPadding`` to define the padding of the box arrow from the corners of the tooltip.
 -   pat tooltip: set content when mounting to avoid positioning problems.

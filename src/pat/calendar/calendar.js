@@ -243,7 +243,7 @@ export default Base.extend({
             start: new Date(event.start),
             end: new Date(event.end),
             allDay: event.whole_day,
-            url: event["@id"],
+            url: event.url || event["@id"],
 
             backgroundColor: event.color,
             borderColor: event.color,

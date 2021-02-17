@@ -19,9 +19,11 @@ const mockFetch = () =>
                         "@id": "./test_event.html",
                     },
                     {
-                        title: "Event 3",
-                        start: "2020-10-14",
-                        end: "2020-10-16",
+                        "title": "Event 3",
+                        "start": "2020-10-14",
+                        "end": "2020-10-16",
+                        "@id": "./test_event.html",
+                        "url": "./@@test-event",
                     },
                 ],
             }),
@@ -249,7 +251,7 @@ describe("Calendar tests", () => {
 
         expect(event1.href).toBeFalsy();
         expect(event2.href).toBe("http://localhost/test_event.html");
-        expect(event3.href).toBeFalsy();
+        expect(event3.href).toBe("http://localhost/@@test-event");
 
         global.fetch.mockClear();
         delete global.fetch;
@@ -293,9 +295,9 @@ describe("Calendar tests", () => {
         expect(event2.getAttribute("data-pat-inject")).toBe("target: #event-info; source: #document-body"); // prettier-ignore
         expect(event2.getAttribute("data-pat-switch")).toBe("selector: #event-info; add: event-info--active; remove: event-info--inactive"); // prettier-ignore
 
-        expect(event3.classList.contains("pat-inject")).toBe(false);
+        expect(event3.classList.contains("pat-inject")).toBe(true);
         expect(event3.classList.contains("pat-switch")).toBe(true);
-        expect(event3.hasAttribute("data-pat-inject")).toBe(false);
+        expect(event3.getAttribute("data-pat-inject")).toBe("target: #event-info; source: #document-body"); // prettier-ignore
         expect(event3.getAttribute("data-pat-switch")).toBe("selector: #event-info; add: event-info--active; remove: event-info--inactive"); // prettier-ignore
 
         global.fetch.mockClear();
@@ -333,8 +335,8 @@ describe("Calendar tests", () => {
         expect(event2.classList.contains("pat-tooltip")).toBe(true);
         expect(event2.getAttribute("data-pat-tooltip")).toBe("source: ajax"); // prettier-ignore
 
-        expect(event3.classList.contains("pat-tooltip")).toBe(false);
-        expect(event3.hasAttribute("data-pat-tooltip")).toBe(false);
+        expect(event3.classList.contains("pat-tooltip")).toBe(true);
+        expect(event3.getAttribute("data-pat-tooltip")).toBe("source: ajax"); // prettier-ignore
 
         global.fetch.mockClear();
         delete global.fetch;
