@@ -63,6 +63,9 @@ parser.addArgument("event-sources", [], undefined, true);
 parser.addArgument("pat-inject-source", null);
 parser.addArgument("pat-inject-target", null);
 
+// pat-tooltip support for individual events
+parser.addArgument("pat-tooltip-source", null, ["ajax", null]);
+
 // pat-switch support for individual events
 parser.addArgument("pat-switch-selector", null);
 parser.addArgument("pat-switch-remove", null);
@@ -336,6 +339,14 @@ export default Base.extend({
                 "data-pat-inject",
                 `target: ${target || "body"}; source: ${source || "body"}`
             );
+            do_scan = true;
+        }
+
+        // pat-tooltip support
+        if (args.event.url && this.options.pat["tooltip-source"] === "ajax") {
+            // Only set pat-tooltip if event has a url
+            args.el.classList.add("pat-tooltip");
+            args.el.setAttribute("data-pat-tooltip", "source: ajax");
             do_scan = true;
         }
 

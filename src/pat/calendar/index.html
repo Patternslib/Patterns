@@ -4,6 +4,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Demo page</title>
     <link rel="stylesheet" href="/style/common.css" type="text/css">
+    <link
+        rel="stylesheet"
+        href="../../../node_modules/tippy.js/dist/tippy.css"
+        type="text/css"
+    />
     <script
         src="/dist/bundle.js"
         type="text/javascript"
@@ -22,6 +27,7 @@
                                 event-color: fuchsia;
                                 pat-inject-target: #event-info;
                                 pat-inject-source: #document-body;
+                                pat-tooltip-source: ajax;
                                 pat-switch-selector: #event-info;
                                 pat-switch-remove: event-info--inactive;
                                 pat-switch-add: event-info--active;

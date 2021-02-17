@@ -303,6 +303,44 @@ describe("Calendar tests", () => {
         done();
     });
 
+    it("Loads events and initializes them with pat-tooltip", async (done) => {
+        // pat-inject is only set if event has a url.
+        const el = document.querySelector(".pat-calendar");
+        el.setAttribute(
+            "data-pat-calendar",
+            `initial-date: 2020-10-10;
+              url: ./test.json;
+              pat-tooltip-source: ajax;
+            `
+        );
+
+        global.fetch = jest.fn().mockImplementation(mockFetch);
+
+        registry.scan(document.body);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        const events = [...document.querySelectorAll(".fc-event-title")];
+
+        const event1 = events.filter((it) => it.textContent === "Event 1")[0].closest(".fc-event"); // prettier-ignore
+        const event2 = events.filter((it) => it.textContent === "Event 2")[0].closest(".fc-event"); // prettier-ignore
+        const event3 = events.filter((it) => it.textContent === "Event 3")[0].closest(".fc-event"); // prettier-ignore
+
+        console.log(event3.outerHTML);
+
+        expect(event1.classList.contains("pat-tooltip")).toBe(false);
+        expect(event1.hasAttribute("data-pat-tooltip")).toBe(false);
+
+        expect(event2.classList.contains("pat-tooltip")).toBe(true);
+        expect(event2.getAttribute("data-pat-tooltip")).toBe("source: ajax"); // prettier-ignore
+
+        expect(event3.classList.contains("pat-tooltip")).toBe(false);
+        expect(event3.hasAttribute("data-pat-tooltip")).toBe(false);
+
+        global.fetch.mockClear();
+        delete global.fetch;
+        done();
+    });
+
     it("Loads correct date if set in query string", async (done) => {
         const el = document.querySelector(".pat-calendar");
         el.setAttribute("data-pat-calendar", "timezone: Europe/Berlin");
