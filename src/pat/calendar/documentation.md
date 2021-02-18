@@ -66,4 +66,5 @@ The calendar can be configured through a `data-pat-calendar` attribute. The avai
 | `pat-switch-selector`     |                   | CSS selector                                      | Defines the element on which pat-select should operate on.                                                    | string                 |
 | `pat-switch-add`          |                   | CSS class name                                    | Defines the class name to be added.                                                                           | string                 |
 | `pat-switch-remove`       |                   | CSS class name                                    | Defines the class name to be removed.                                                                         | string                 |
+| `pat-tooltip-source`      | null              | null, "ajax"                                      | If set to "ajax" and a URL is configured for an displayed event, it will open the url in a tooltip.           | string                 |
 
