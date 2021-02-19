@@ -38,6 +38,7 @@
 -   pat calendar: Support `pat-inject` on events with a URL via `pat-inject-source` and `pat-inject-target` configuration options.
 -   pat calendar: Support `pat-switch` for rendered events via some configuration options.
 -   pat calendar: Support `pat-tooltip` on events with a URL via `pat-tooltip-source` set to `ajax`.
+-   pat calendar: Support `pat-modal` on events with a URL via `pat-modal-class` set to some CSS class names.
 -   pat calendar: Store view, date and active categories per URL, allowing to individually customize the calendar per page.
 -   pat calendar: Support `url` in the event JSON model additionally to `@id`.
     The unique identifier is often not semantically correct for a URL to the item, especially when we want to call a specific view.
