@@ -999,6 +999,37 @@ describe("pat-inject", function () {
 
                     done();
                 });
+
+                it("nested injects keep correct configuration context", async (done) => {
+                    answer(`
+                        <html>
+                            <body>
+                                <div id="someid">some</div>
+                                <div id="otherid">other</div>
+                            </body>
+                        </html>
+                    `);
+
+                    document.body.innerHTML = `
+                        <form class="pat-inject">
+                            <span class="pat-inject" data-pat-inject="target:self; source:#otherid">
+                                <button type="submit" formaction="test.cgi"/>
+                            </span>
+                        </form>
+                    `;
+
+                    pattern.init($("form"));
+                    await utils.timeout(1); // wait a tick for async to settle.
+
+                    document.querySelector("form button").click();
+                    await utils.timeout(1); // wait a tick for async to settle.
+
+                    expect(
+                        document.querySelector("form span").innerHTML.trim()
+                    ).toBe("other");
+
+                    done();
+                });
             });
         });
     });

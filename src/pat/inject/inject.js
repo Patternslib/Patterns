@@ -195,7 +195,6 @@ const inject = {
         const $form = $button.parents(".pat-inject").first();
         const opts = {
             url: formaction,
-            $formaction_button: $button,
         };
         const $cfg_node = $button.closest("[data-pat-inject]");
         const cfgs = this.extractConfig($cfg_node, opts);
@@ -233,6 +232,7 @@ const inject = {
 
         const cfgs = parser.parse($el, opts, true);
         cfgs.forEach((cfg) => {
+            cfg.$context = $el;
             // opts and cfg have priority, fallback to href/action
             cfg.url =
                 opts.url ||
@@ -241,15 +241,6 @@ const inject = {
                 $el.attr("action") ||
                 $el.parents("form").attr("action") ||
                 "";
-
-            if (
-                opts.$formaction_button &&
-                (cfg.target || "").startsWith("self")
-            ) {
-                // In case of button formaction submit with target ``self``,
-                // set it. Otherwise the ``form`` will be used as target.
-                cfg.$target = opts.$formaction_button;
-            }
 
             // separate selector from url
             const urlparts = cfg.url.split("#");
@@ -328,7 +319,8 @@ const inject = {
             return true;
         }
         cfg.$target =
-            cfg.$target || (cfg.target === "self" ? $el : $(cfg.target));
+            cfg.$target ||
+            (cfg.target === "self" ? cfg.$context : $(cfg.target));
         if (cfg.$target.length === 0) {
             if (!cfg.target) {
                 log.error("Need target selector", cfg);
