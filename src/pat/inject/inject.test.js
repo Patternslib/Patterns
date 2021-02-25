@@ -38,7 +38,7 @@ describe("pat-inject", function () {
                 },
             };
             var cfgs = pattern.extractConfig($a, {});
-            pattern.verifyConfig(cfgs, $a);
+            pattern.verifyConfig(cfgs);
             pattern._onInjectSuccess($a, cfgs, dummy_event);
             await utils.timeout(1); // wait a tick for async to settle.
 
@@ -441,7 +441,7 @@ describe("pat-inject", function () {
             it("Use trigger as target", function () {
                 $a.attr("data-pat-inject", "target: self::after");
                 var cfgs = pattern.extractConfig($a);
-                expect(pattern.verifyConfig(cfgs, $a)).toBeTruthy();
+                expect(pattern.verifyConfig(cfgs)).toBeTruthy();
                 expect(cfgs[0].target).toBe("self");
                 expect(cfgs[0].$target[0]).toBe($a[0]);
             });
