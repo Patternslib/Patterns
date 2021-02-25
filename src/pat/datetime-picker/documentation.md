@@ -83,9 +83,9 @@ The HTML5 attributes `min` and `max` will be honoured.
 
 In addition, the following options can be passed to `data-pat-date-picker`:
 
-| Property                    | Type    | Default Value | Available values | Description                                                                                              |
-| --------------------------- | ------- | ------------- | ---------------- | -------------------------------------------------------------------------------------------------------- |
-| **behavior** (or behaviour) | string  | styled        | native, styled   | "native" to defer to the browser's HTML5 date support, or "styled" to universally use the custom picker. |
-| **week-numbers**            | string  | hide          | show, hide       | "show" will show the weeks' numbers in a leftmost column.                                                |
-| **i18n**                    | URL     |               |                  | Provide a URL to a JSON resource which gives the i18n values.                                            |
-| **first-day**               | Integer | 0             |                  | Set the first day of the week (0 -> Sunday, 1-> Monday, ...).                                            |
+| Property                    | Type    | Default Value | Available values | Description                                                  |
+| --------------------------- | ------- | ------------- | ---------------- | ------------------------------------------------------------ |
+| **behavior** (or behaviour) | string  | styled        | native, styled   | Styled will always show the styled date picker. Native will use the system native date picker, provided the browser supports this. |
+| **week-numbers**            | string  | hide          | show, hide       | "show" will show the weeks' numbers in a leftmost column.    |
+| **i18n**                    | URL     |               |                  | Provide a URL to a JSON resource which gives the i18n values. |
+| **first-day**               | Integer | 0             |                  | Set the first day of the week (0 -> Sunday, 1-> Monday, ...). |
