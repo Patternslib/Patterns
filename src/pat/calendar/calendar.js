@@ -63,6 +63,12 @@ parser.addArgument("event-sources", [], undefined, true);
 parser.addArgument("pat-inject-source", null);
 parser.addArgument("pat-inject-target", null);
 
+// pat-modal support for individual events
+parser.addArgument("pat-modal-class", null);
+
+// pat-tooltip support for individual events
+parser.addArgument("pat-tooltip-source", null, ["ajax", null]);
+
 // pat-switch support for individual events
 parser.addArgument("pat-switch-selector", null);
 parser.addArgument("pat-switch-remove", null);
@@ -240,7 +246,7 @@ export default Base.extend({
             start: new Date(event.start),
             end: new Date(event.end),
             allDay: event.whole_day,
-            url: event["@id"],
+            url: event.url || event["@id"],
 
             backgroundColor: event.color,
             borderColor: event.color,
@@ -336,6 +342,25 @@ export default Base.extend({
                 "data-pat-inject",
                 `target: ${target || "body"}; source: ${source || "body"}`
             );
+            do_scan = true;
+        }
+
+        // pat-modal support
+        if (args.event.url && this.options.pat["modal-class"]) {
+            // Only set pat-modal if event has a url
+            args.el.classList.add("pat-modal");
+            args.el.setAttribute(
+                "data-pat-modal",
+                `class: ${this.options.pat["modal-class"]}`
+            );
+            do_scan = true;
+        }
+
+        // pat-tooltip support
+        if (args.event.url && this.options.pat["tooltip-source"] === "ajax") {
+            // Only set pat-tooltip if event has a url
+            args.el.classList.add("pat-tooltip");
+            args.el.setAttribute("data-pat-tooltip", "source: ajax");
             do_scan = true;
         }
 

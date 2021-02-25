@@ -4,6 +4,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Demo page</title>
     <link rel="stylesheet" href="/style/common.css" type="text/css">
+    <link
+        rel="stylesheet"
+        href="../../../node_modules/tippy.js/dist/tippy.css"
+        type="text/css"
+    />
     <script
         src="/dist/bundle.js"
         type="text/javascript"
@@ -22,9 +27,11 @@
                                 event-color: fuchsia;
                                 pat-inject-target: #event-info;
                                 pat-inject-source: #document-body;
+                                pat-modal-class: large panel;
                                 pat-switch-selector: #event-info;
                                 pat-switch-remove: event-info--inactive;
                                 pat-switch-add: event-info--active;
+                                timezone: Europe/Berlin;
                                 lang: en;
                                 store: local;">
             <form class="pat-toolbar cal-toolbar pat-form"
@@ -43,14 +50,12 @@
                     </fieldset>
                 </div>
                 <div class="pat-toolbar-section cal-timezone">
-                    <label class="pat-select">
-                        <select name="timezone"
-                                class="timezone">
-                            <option value="Europe/London">GMT</option>
-                            <option value="Europe/Berlin" selected="selected">CET</option>
-                            <option value="Europe/Moscow">MSK</option>
-                        </select>
-                    </label>
+                    <select name="timezone"
+                            class="timezone">
+                        <option value="Europe/London">GMT</option>
+                        <option value="Europe/Berlin" selected="selected">CET</option>
+                        <option value="Europe/Moscow">MSK</option>
+                    </select>
                 </div>
             </form>
 
@@ -86,12 +91,12 @@
                             </div>
                         </div>
                         <label>
-                            Cateory 1
-                            <input id="calendar-section1-category1" type="checkbox" checked />
+                            Section 1 Cateory 1
+                            <input id="calendar-section1-category1" type="checkbox" autocomplete="off" checked />
                         </label>
                         <label>
-                            Category 2
-                            <input id="calendar-section1-category2" type="checkbox" checked />
+                            Section 1 Category 2
+                            <input id="calendar-section1-category2" type="checkbox" autocomplete="off" checked />
                         </label>
                     </fieldset>
                 </div>
@@ -104,12 +109,12 @@
                             </div>
                         </div>
                         <label>
-                            Cateory 1
-                            <input id="calendar-section2-category1" type="checkbox" checked />
+                            Section 2 Cateory 1
+                            <input id="calendar-section2-category1" type="checkbox" autocomplete="off" checked />
                         </label>
                         <label>
-                            Category 2
-                            <input id="calendar-section2-category2" type="checkbox" checked />
+                            Section 2 Category 2
+                            <input id="calendar-section2-category2" type="checkbox" autocomplete="off" checked />
                         </label>
                     </fieldset>
                 </div>
