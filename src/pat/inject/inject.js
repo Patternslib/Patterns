@@ -309,7 +309,7 @@ const inject = {
         return true;
     },
 
-    ensureTarget(cfg, $el) {
+    ensureTarget(cfg) {
         /* Make sure that a target element exists and that it's assigned to
          * cfg.$target.
          */
@@ -332,7 +332,7 @@ const inject = {
         return true;
     },
 
-    verifySingleConfig($el, url, cfg) {
+    verifySingleConfig(url, cfg) {
         /* Verify one of potentially multiple configs (i.e. argument lists).
          *
          * Extract modifiers such as ::element or ::after.
@@ -351,14 +351,14 @@ const inject = {
         if (!this.extractModifiers(cfg)) {
             return false;
         }
-        if (!this.ensureTarget(cfg, $el)) {
+        if (!this.ensureTarget(cfg)) {
             return false;
         }
         this.listenForFormReset(cfg);
         return true;
     },
 
-    verifyConfig(cfgs, $el) {
+    verifyConfig(cfgs) {
         /* Verify and post-process all the configurations.
          * Each "config" is an arguments list separated by the &&
          * combination operator.
@@ -369,7 +369,7 @@ const inject = {
          * Verification for each cfg in the array needs to succeed.
          */
         return cfgs.every(
-            _.partial(this.verifySingleConfig.bind(this), $el, cfgs[0].url)
+            _.partial(this.verifySingleConfig.bind(this), cfgs[0].url)
         );
     },
 
@@ -735,7 +735,7 @@ const inject = {
          */
         // get a kinda deep copy, we scribble on it
         cfgs = cfgs.map((cfg) => $.extend({}, cfg));
-        if (!this.verifyConfig(cfgs, $el)) {
+        if (!this.verifyConfig(cfgs)) {
             return;
         }
         if (!this.askForConfirmation(cfgs)) {
