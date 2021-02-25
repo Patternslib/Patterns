@@ -101,7 +101,7 @@
 
 ### Fixes
 
--   pat inject: Fix formaction button injections with target ``self``. Fixes: https://github.com/quaive/ploneintranet.prototype/issues/1164
+-   pat inject: Make sure that nested pat-inject element have the correct context for target ``self``. Fixes: https://github.com/quaive/ploneintranet.prototype/issues/1164
 -   pat calendar: Fix language loading error "Error: Cannot find module './en.js'"
 -   pat depends, pat auto suggest: Fix a problem with initialization of ``pat-auto-suggest`` which occurred after the lazy loading changes.
 -   pat checklist: Also dispatch standard ``change`` event when de/selecting all items.
