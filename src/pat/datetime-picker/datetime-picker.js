@@ -112,7 +112,9 @@ export default Base.extend({
         } else {
             this.el.value = "";
         }
-        this.el.dispatchEvent(new Event("change"));
+        this.el.dispatchEvent(
+            new Event("change", { bubbles: true, cancelable: true })
+        );
     },
 
     isodate() {
