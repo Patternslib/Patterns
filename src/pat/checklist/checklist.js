@@ -108,7 +108,9 @@ export default Base.extend({
         );
         for (const box of chkbxs) {
             box.checked = true;
-            box.dispatchEvent(new Event("change", { bubbles: true }));
+            box.dispatchEvent(
+                new Event("change", { bubbles: true, cancelable: true })
+            );
         }
     },
 
@@ -120,7 +122,9 @@ export default Base.extend({
         );
         for (const box of chkbxs) {
             box.checked = false;
-            box.dispatchEvent(new Event("change", { bubbles: true }));
+            box.dispatchEvent(
+                new Event("change", { bubbles: true, cancelable: true })
+            );
         }
     },
 
