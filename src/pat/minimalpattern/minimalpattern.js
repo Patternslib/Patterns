@@ -11,12 +11,8 @@ export default Base.extend({
     name: "minimalpattern",
     trigger: ".pat-minimalpattern",
 
-    init(el, opts) {
-        if (el.jquery) {
-            el = el[0];
-        }
-        this.el = el;
-        this.options = parser.parse(el, opts);
+    init() {
+        this.options = parser.parse(this.el, this.options);
         this.el.addEventListener("click", this.change_color.bind(this));
         log.info("pattern initialized");
     },
