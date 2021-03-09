@@ -26,6 +26,7 @@
 -   pat date picker: Remove ``format`` argument and just use the ISO 8601 standard "YYYY-MM-DD", like the specification of date inputs defines it.
     Format would have submitted a formatted value where the ISO standard is expected.
     This also allows for removing the dependency of ``pat-date-picker`` on MomentJS.
+-   pat date picker: Change ``styled`` behavior so that it can be formatted and localized while still submitting iso values.
 
 ### Features
 

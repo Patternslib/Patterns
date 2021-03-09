@@ -10,12 +10,12 @@ const log = logging.getLogger("pat-display-time");
 const parser = new Parser("display-time");
 // input datetime options
 parser.add_argument("format", "");
-parser.add_argument("locale", "");
+parser.add_argument("locale", null);
 parser.add_argument("strict", false);
 // output options
 parser.add_argument("from-now", false);
 parser.add_argument("no-suffix", false);
-parser.add_argument("output-format", "");
+parser.add_argument("output-format", null);
 
 export default Base.extend({
     name: "display-time",
@@ -25,7 +25,7 @@ export default Base.extend({
         Moment = await import("moment");
         Moment = Moment.default;
 
-        this.options = parser.parse(this.$el);
+        this.options = parser.parse(this.el, this.options);
 
         let lang =
             this.options.locale || document.querySelector("html").lang || "en";
@@ -38,15 +38,19 @@ export default Base.extend({
             Moment.locale("en");
         }
         log.info("Moment.js language used: " + lang);
+        this.format();
+    },
 
-        const date_str = this.$el.attr("datetime");
-        const date = Moment(date_str, this.options.format, this.options.strict);
-        let out;
-        if (this.options.fromNow === true) {
-            out = date.fromNow(this.options.noSuffix);
-        } else if (this.options.outputFormat.length) {
-            out = date.format(this.options.outputFormat);
+    format() {
+        let out = this.el.getAttribute("datetime");
+        if (out && this.options.outputFormat) {
+            const date = Moment(out, this.options.format, this.options.strict);
+            if (this.options.fromNow === true) {
+                out = date.fromNow(this.options.noSuffix);
+            } else {
+                out = date.format(this.options.outputFormat || undefined);
+            }
         }
-        this.$el.text(out);
+        this.el.textContent = out;
     },
 });

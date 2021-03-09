@@ -3,6 +3,7 @@ import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
+import PatDisplayTime from "../display-time/display-time";
 import utils from "../../core/utils";
 
 // Lazy loading modules.
@@ -15,6 +16,9 @@ parser.addArgument("i18n"); // URL pointing to JSON resource with i18n values
 parser.addArgument("first-day", 0);
 parser.addArgument("after");
 parser.addArgument("offset-days", 0);
+
+parser.add_argument("output-format", null);
+parser.add_argument("locale", null);
 
 parser.addAlias("behaviour", "behavior");
 
@@ -30,6 +34,7 @@ export default Base.extend({
     name: "date-picker",
     trigger: ".pat-date-picker",
     parser: parser,
+    format: "YYYY-MM-DD",
 
     async init() {
         const el = this.el;
@@ -43,7 +48,7 @@ export default Base.extend({
             // date.
             const befores = document.querySelectorAll(this.options.after);
             for (const b_el of befores) {
-                b_el.addEventListener("change", (e) => {
+                b_el.addEventListener("input", (e) => {
                     let b_date = e.target.value; // the "before-date"
                     b_date = b_date ? new Date(b_date) : null;
                     if (!b_date) {
@@ -55,34 +60,69 @@ export default Base.extend({
                         const offset = this.options.offsetDays || 0;
                         b_date.setDate(b_date.getDate() + offset);
                         this.el.value = b_date.toISOString().substring(0, 10);
+                        this.el.dispatchEvent(
+                            new Event("input", {
+                                bubbles: true,
+                                cancelable: true,
+                            })
+                        );
                     }
                 });
             }
         }
 
-        if (
-            this.options.behavior === "native" &&
-            utils.checkInputSupport("date", "invalid date")
-        ) {
+        let display_el;
+        if (this.options.behavior === "styled") {
+            el.setAttribute("type", "hidden");
+
+            display_el = document.createElement("time");
+            display_el.setAttribute("class", "output-field");
+            display_el.setAttribute("datetime", el.value);
+
+            const display_time_config = { format: this.format };
+            if (this.options.outputFormat) {
+                display_time_config[
+                    "output-format"
+                ] = this.options.outputFormat;
+            }
+            if (this.options.locale) {
+                display_time_config.locale = this.options.locale;
+            }
+            el.insertAdjacentElement("afterend", display_el);
+            const display_el_pat = new PatDisplayTime(
+                display_el,
+                display_time_config
+            );
+
+            this.el.addEventListener("input", () => {
+                display_el.setAttribute("datetime", this.el.value);
+                display_el_pat.format();
+            });
+        } else if (utils.checkInputSupport("date", "invalid date")) {
+            // behavior native with native support.
             return;
+        } else if (el.getAttribute("type") === "date") {
+            // behavior native but no native support.
+            // Fallback JS date picker with a text input field.
+            el.setAttribute("type", "text");
         }
 
         Pikaday = await import("pikaday");
         Pikaday = Pikaday.default;
 
-        if (el.getAttribute("type") === "date") {
-            el.setAttribute("type", "text");
-        }
-
         const config = {
             field: el,
-            format: "YYYY-MM-DD",
+            trigger: display_el || el,
+            format: this.format,
             firstDay: this.options.firstDay,
             showWeekNumber: this.options.weekNumbers === "show",
             onSelect() {
                 $(this._o.field).closest("form").trigger("input-change");
                 /* Also trigger input change on date field to support pat-autosubmit. */
                 $(this._o.field).trigger("input-change");
+                this._o.field.dispatchEvent(
+                    new Event("input", { bubbles: true, cancelable: true })
+                );
             },
         };
 
