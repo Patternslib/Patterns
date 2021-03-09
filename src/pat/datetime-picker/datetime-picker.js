@@ -6,8 +6,6 @@ import utils from "../../core/utils";
 import dom from "../../core/dom";
 
 export const parser = new Parser("datetime-picker");
-parser.addArgument("behavior", "styled", ["native", "styled"]);
-
 parser.addArgument("format", "YYYY-MM-DD");
 parser.addArgument("week-numbers", [], ["show", "hide"]);
 parser.addArgument("i18n"); // URL pointing to JSON resource with i18n values
@@ -26,10 +24,7 @@ export default Base.extend({
         const el = this.el;
         this.options = parser.parse(this.el, this.options);
 
-        if (
-            this.options.behavior === "native" &&
-            utils.checkInputSupport("datetime-local", "invalid date")
-        ) {
+        if (utils.checkInputSupport("datetime-local", "invalid date")) {
             return;
         }
 
@@ -79,7 +74,8 @@ export default Base.extend({
         });
 
         const date_options = {
-            behavior: this.options.behavior,
+            behavior: "native",
+            format: this.options.format,
             weekNumbers: this.options.weekNumbers,
             firstDay: this.options.firstDay,
         };
