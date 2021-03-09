@@ -16,6 +16,9 @@ describe("pat-datetime-picker", function () {
     });
 
     it("Default datetime picker.", async function () {
+        // We mocking as if we're not supporting input type date.
+        jest.spyOn(utils, "checkInputSupport").mockImplementation(() => false);
+
         document.body.innerHTML = `
             <input
                 type="datetime-local"
@@ -55,6 +58,9 @@ describe("pat-datetime-picker", function () {
     });
 
     it("Date/Time picker starts at Monday.", async function () {
+        // We mocking as if we're not supporting input type date.
+        jest.spyOn(utils, "checkInputSupport").mockImplementation(() => false);
+
         document.body.innerHTML = `
             <input
                 type="datetime-local"
@@ -72,6 +78,9 @@ describe("pat-datetime-picker", function () {
     });
 
     it("Date/Time picker with pre-set value.", async function () {
+        // We mocking as if we're not supporting input type date.
+        jest.spyOn(utils, "checkInputSupport").mockImplementation(() => false);
+
         document.body.innerHTML = `
             <input
                 type="datetime-local"
@@ -102,6 +111,9 @@ describe("pat-datetime-picker", function () {
     });
 
     it("Date/Time picker with week numbers.", async function () {
+        // We mocking as if we're not supporting input type date.
+        jest.spyOn(utils, "checkInputSupport").mockImplementation(() => false);
+
         document.body.innerHTML = `
             <input
                 type="datetime-local"
@@ -118,6 +130,9 @@ describe("pat-datetime-picker", function () {
     });
 
     it("Test today and clear buttons.", async function () {
+        // We mocking as if we're not supporting input type date.
+        jest.spyOn(utils, "checkInputSupport").mockImplementation(() => false);
+
         Date.prototype.toISOString = jest.fn(() => "2021-05-01T10:10:10");
         Date.prototype.toTimeString = jest.fn(() => "10:10:10 GMT+0200");
 
