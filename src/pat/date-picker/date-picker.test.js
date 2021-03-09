@@ -4,118 +4,102 @@ import pattern from "./date-picker";
 import utils from "../../core/utils";
 
 describe("pat-date-picker", function () {
-    beforeEach(function () {
-        $(
-            '<link href="src/pat/date-picker/date-picker.css" rel="stylesheet"/>'
-        ).appendTo(document.head);
-    });
     afterEach(function () {
-        //$('head link[href$="date-picker.css"').remove();
-        $("input.pat-date-picker").remove();
-        $(".pika-single, .pika-lendar").remove();
+        document.body.innerHTML = "";
         jest.restoreAllMocks();
     });
 
     it("Default date picker.", async function () {
-        var $pika = $('<input type="date" class="pat-date-picker"/>').appendTo(
-            document.body
-        );
-        pattern.init($pika);
+        document.body.innerHTML =
+            '<input type="date" class="pat-date-picker"/>';
+        const el = document.querySelector("input[type=date]");
+
+        pattern.init(el);
         await utils.timeout(1); // wait a tick for async to settle.
-        $pika.click();
 
-        var date = new Date();
-        var day = date.getDate().toString();
-        var month = date.getMonth().toString(); // remember, month-count starts from 0
-        var year = date.getFullYear().toString();
+        const display_el = document.querySelector("time");
+        expect(display_el).toBeTruthy();
+        expect(display_el.textContent).toBeFalsy();
 
-        // TODO: I'd love to set the date via the UI but I  can't get day.click() to have any effect...
+        display_el.click();
 
-        expect(
-            document.querySelector(
-                '.pika-lendar .pika-select-year option[selected="selected"]'
-            ).textContent
-        ).toBe(year);
+        const date = new Date();
+        const day = date.getDate().toString();
+        const month = date.getMonth().toString(); // remember, month-count starts from 0
+        const year = date.getFullYear().toString();
+        const isodate = date.toISOString().split("T")[0];
 
-        expect(
-            document.querySelector(
-                '.pika-lendar .pika-select-month option[selected="selected"]'
-            ).value
-        ).toBe(month);
+        const cur_year = document.querySelector('.pika-lendar .pika-select-year option[selected="selected"]'); // prettier-ignore
+        expect(cur_year.textContent).toBe(year);
 
-        expect(
-            document
-                .querySelector(".pika-lendar td.is-today button")
-                .getAttribute("data-pika-day")
-        ).toBe(day);
+        const cur_month = document.querySelector('.pika-lendar .pika-select-month option[selected="selected"]'); // prettier-ignore
+        expect(cur_month.value).toBe(month);
 
-        expect(
-            document.querySelector(".pika-lendar th:first-child abbr")
-                .textContent
-        ).toBe("Sun");
+        const cur_day = document.querySelector(".pika-lendar td.is-today button"); // prettier-ignore
+        expect(cur_day.getAttribute("data-pika-day")).toBe(day);
+
+        const cur_wkday = document.querySelector(".pika-lendar th:first-child abbr"); // prettier-ignore
+        expect(cur_wkday.textContent).toBe("Sun");
+
+        // select current day.
+        cur_day.dispatchEvent(new Event("mousedown"));
+        // <time> element should contains the current date in iso format
+        expect(display_el.textContent).toBe(isodate);
+        // input element contains iso date
+        expect(el.value).toBe(isodate);
     });
 
     it("Date picker starts at Monday.", async function () {
-        var $pika = $(
-            '<input type="date" class="pat-date-picker" data-pat-date-picker="first-day: 1" />'
-        ).appendTo(document.body);
-        pattern.init($pika);
+        document.body.innerHTML =
+            '<input type="date" class="pat-date-picker" data-pat-date-picker="first-day: 1" />';
+        const el = document.querySelector("input[type=date]");
+        pattern.init(el);
         await utils.timeout(1); // wait a tick for async to settle.
-        $pika.click();
+        const display_el = document.querySelector("time");
+        display_el.click();
 
-        expect(
-            document.querySelector(".pika-lendar th:first-child abbr")
-                .textContent
-        ).toBe("Mon");
+        const first_day = document.querySelector(".pika-lendar th:first-child abbr"); // prettier-ignore
+        expect(first_day.textContent).toBe("Mon");
     });
 
     it("Date picker with pre-set value.", async function () {
-        var $pika = $(
-            '<input type="date" class="pat-date-picker" value="1900-01-01"/>'
-        ).appendTo(document.body);
-        pattern.init($pika);
+        document.body.innerHTML =
+            '<input type="date" class="pat-date-picker" value="1900-01-01"/>';
+        const el = document.querySelector("input[type=date]");
+        pattern.init(el);
         await utils.timeout(1); // wait a tick for async to settle.
-        $pika.click();
+        const display_el = document.querySelector("time");
+        display_el.click();
 
-        expect(
-            document.querySelector(
-                '.pika-lendar .pika-select-year option[selected="selected"]'
-            ).textContent
-        ).toBe("1900");
+        const cur_year = document.querySelector('.pika-lendar .pika-select-year option[selected="selected"]'); // prettier-ignore
+        expect(cur_year.textContent).toBe("1900");
 
-        expect(
-            document.querySelector(
-                '.pika-lendar .pika-select-month option[selected="selected"]'
-            ).value
-        ).toBe("0");
+        const cur_month = document.querySelector('.pika-lendar .pika-select-month option[selected="selected"]'); // prettier-ignore
+        expect(cur_month.value).toBe("0");
 
-        expect(
-            document
-                .querySelector(".pika-lendar td.is-selected button")
-                .getAttribute("data-pika-day")
-        ).toBe("1");
+        const cur_day = document.querySelector(".pika-lendar td.is-selected button"); // prettier-ignore
+        expect(cur_day.getAttribute("data-pika-day")).toBe("1");
+
+        // <time> element should contains the pre-set date in iso format
+        expect(display_el.textContent).toBe("1900-01-01");
     });
 
     it("Date picker with week numbers.", async function () {
-        var $pika = $(
-            '<input type="date" class="pat-date-picker" data-pat-date-picker="week-numbers: show;" value="2017-09-18"/>'
-        ).appendTo(document.body);
-        pattern.init($pika);
+        document.body.innerHTML =
+            '<input type="date" class="pat-date-picker" data-pat-date-picker="week-numbers: show" value="2017-09-18"/>';
+        const el = document.querySelector("input[type=date]");
+        pattern.init(el);
         await utils.timeout(1); // wait a tick for async to settle.
-        $pika.click();
+        const display_el = document.querySelector("time");
+        display_el.click();
 
-        expect(
-            document.querySelectorAll(".pika-lendar .pika-week")[0].textContent
-        ).toBe("35");
+        const week_num = document.querySelectorAll(".pika-lendar .pika-week")[0]; // prettier-ignore
+        expect(week_num.textContent).toBe("35");
     });
 
     describe("Date picker with i18n", function () {
         describe("with proper json URL", function () {
             it("properly localizes the months and weekdays", async function () {
-                var $pika = $(
-                    '<input type="date" class="pat-date-picker" value="2018-10-21" data-pat-date-picker="i18n:/path/to/i18njson" />'
-                ).appendTo(document.body);
-                // Simulate successful getJSON call
                 jest.spyOn($, "getJSON").mockImplementation(() => {
                     return {
                         done: function (cb) {
@@ -131,24 +115,22 @@ describe("pat-date-picker", function () {
                         },
                     };
                 });
-                pattern.init($pika);
-                await utils.timeout(1); // wait a tick for async to settle.
-                $pika.click();
 
-                expect(
-                    document.querySelector(
-                        '.pika-lendar .pika-select-month option[selected="selected"]'
-                    ).textContent
-                ).toBe("Oktober");
+                document.body.innerHTML =
+                    '<input type="date" class="pat-date-picker" value="2018-10-21" data-pat-date-picker="i18n:/path/to/i18njson" />';
+                const el = document.querySelector("input[type=date]");
+                pattern.init(el);
+                await utils.timeout(1); // wait a tick for async to settle.
+                const display_el = document.querySelector("time");
+                display_el.click();
+
+                const month = document.querySelector('.pika-lendar .pika-select-month option[selected="selected"]'); // prettier-ignore
+                expect(month.textContent).toBe("Oktober");
             });
         });
 
         describe("with bogus json URL", function () {
             it("falls back to default (english) month and weekday labels ", async function () {
-                var $pika = $(
-                    '<input type="date" class="pat-date-picker" value="2018-10-21" data-pat-date-picker="i18n:/path/to/i18njson" />'
-                ).appendTo(document.body);
-                console.error = jest.fn(); // do not output error messages
                 // Simulate failing getJSON call
                 jest.spyOn($, "getJSON").mockImplementation(() => {
                     return {
@@ -165,14 +147,17 @@ describe("pat-date-picker", function () {
                         },
                     };
                 });
-                pattern.init($pika);
+
+                document.body.innerHTML =
+                    '<input type="date" class="pat-date-picker" value="2018-10-21" data-pat-date-picker="i18n:/path/to/i18njson" />';
+                const el = document.querySelector("input[type=date]");
+                pattern.init(el);
                 await utils.timeout(1); // wait a tick for async to settle.
-                $pika.click();
-                expect(
-                    document.querySelector(
-                        '.pika-lendar .pika-select-month option[selected="selected"]'
-                    ).textContent
-                ).toBe("October");
+                const display_el = document.querySelector("time");
+                display_el.click();
+
+                const month = document.querySelector('.pika-lendar .pika-select-month option[selected="selected"]'); // prettier-ignore
+                expect(month.textContent).toBe("October");
             });
         });
     });
@@ -192,6 +177,9 @@ describe("pat-date-picker", function () {
             pattern.init(end);
             await utils.timeout(1); // wait a tick for async to settle.
 
+            const start_display = document.querySelectorAll("time")[0];
+            const end_display = document.querySelectorAll("time")[1];
+
             const cal1 = document.querySelectorAll(".pika-single")[0];
             const cal2 = document.querySelectorAll(".pika-single")[1];
 
@@ -200,7 +188,7 @@ describe("pat-date-picker", function () {
             expect(end.value).toBeFalsy();
 
             // Set start value
-            start.click();
+            start_display.click();
 
             let btn = cal1.querySelectorAll(".pika-table button")[0];
             btn.dispatchEvent(new Event("mousedown"));
@@ -214,7 +202,7 @@ describe("pat-date-picker", function () {
 
             // Setting it again to a date after the end date will change the end
             // date again.
-            start.click();
+            start_display.click();
 
             btn = cal1.querySelectorAll(".pika-table button")[10];
             btn.dispatchEvent(new Event("mousedown"));
@@ -229,7 +217,7 @@ describe("pat-date-picker", function () {
             expect(start.value).toBe(end.value);
 
             // Setting it to an earlier value will not change the end date again.
-            start.click();
+            start_display.click();
 
             btn = cal1.querySelectorAll(".pika-table button")[5];
             btn.dispatchEvent(new Event("mousedown"));
@@ -247,7 +235,7 @@ describe("pat-date-picker", function () {
 
             // Setting end to an earlier value than start is possible.
             // Use pat-validation to prevent submitting it.
-            end.click();
+            end_display.click();
 
             btn = cal2.querySelectorAll(".pika-table button")[0];
             btn.dispatchEvent(new Event("mousedown"));
@@ -285,6 +273,8 @@ describe("pat-date-picker", function () {
             pattern.init(end);
             await utils.timeout(1); // wait a tick for async to settle.
 
+            const start_display = document.querySelectorAll("time")[0];
+
             const cal1 = document.querySelectorAll(".pika-single")[0];
 
             // Check initial values
@@ -292,28 +282,28 @@ describe("pat-date-picker", function () {
             expect(end.value).toBeFalsy();
 
             // Set start value
-            start.click();
+            start_display.click();
             let btn = cal1.querySelectorAll(".pika-table button")[0];
             btn.dispatchEvent(new Event("mousedown"));
             // end date is set +2 days in advance of start date.
             expect(diff_days(start.value, end.value)).toBe(-2);
 
             // Change start value +1day
-            start.click();
+            start_display.click();
             btn = cal1.querySelectorAll(".pika-table button")[1];
             btn.dispatchEvent(new Event("mousedown"));
             // end date doesn't change.
             expect(diff_days(start.value, end.value)).toBe(-1);
 
             // Change start value +1day = same day
-            start.click();
+            start_display.click();
             btn = cal1.querySelectorAll(".pika-table button")[2];
             btn.dispatchEvent(new Event("mousedown"));
             // end date doesn't change.
             expect(diff_days(start.value, end.value)).toBe(0);
 
             // Change start value +1day = 1 day after end date
-            start.click();
+            start_display.click();
             btn = cal1.querySelectorAll(".pika-table button")[3];
             btn.dispatchEvent(new Event("mousedown"));
             // end is set 2 days after start date
@@ -321,5 +311,66 @@ describe("pat-date-picker", function () {
 
             done();
         });
+    });
+
+    it("Formatted date.", async function () {
+        document.body.innerHTML =
+            '<input type="date" class="pat-date-picker" value="2021-03-09" data-pat-date-picker="output-format: Do MMMM YYYY; locale: de"/>';
+        const el = document.querySelector("input[type=date]");
+        pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+        const display_el = document.querySelector("time");
+        display_el.click();
+
+        // <time> element should contains the pre-set date in iso format
+        expect(display_el.textContent).toBe("9. März 2021");
+
+        const day = document.querySelector(".pika-lendar td[data-day='12'] button"); // prettier-ignore
+        day.dispatchEvent(new Event("mousedown"));
+
+        expect(display_el.textContent).toBe("12. März 2021");
+        expect(el.value).toBe("2021-03-12");
+    });
+
+    it("Native behavior with fallback to pika", async function () {
+        // We mocking as if we're not supporting input type date.
+        jest.spyOn(utils, "checkInputSupport").mockImplementation(() => false);
+
+        document.body.innerHTML =
+            '<input type="date" class="pat-date-picker" data-pat-date-picker="behavior: native"/>';
+        const el = document.querySelector("input[type=date]");
+
+        pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        const display_el = document.querySelector("time");
+        // In native move with styled fallback we do not use the <time> element.
+        // We display the input and let it be editable.
+        expect(display_el).toBeFalsy();
+
+        el.click();
+
+        const date = new Date();
+        const day = date.getDate().toString();
+        const month = date.getMonth().toString(); // remember, month-count starts from 0
+        const year = date.getFullYear().toString();
+        const isodate = date.toISOString().split("T")[0];
+
+        const cur_year = document.querySelector('.pika-lendar .pika-select-year option[selected="selected"]'); // prettier-ignore
+        expect(cur_year.textContent).toBe(year);
+
+        const cur_month = document.querySelector('.pika-lendar .pika-select-month option[selected="selected"]'); // prettier-ignore
+        expect(cur_month.value).toBe(month);
+
+        const cur_day = document.querySelector(".pika-lendar td.is-today button"); // prettier-ignore
+        expect(cur_day.getAttribute("data-pika-day")).toBe(day);
+
+        const cur_wkday = document.querySelector(".pika-lendar th:first-child abbr"); // prettier-ignore
+        expect(cur_wkday.textContent).toBe("Sun");
+
+        // select current day.
+        cur_day.dispatchEvent(new Event("mousedown"));
+        // input element contains iso date
+        expect(el.value).toBe(isodate);
     });
 });
