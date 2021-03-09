@@ -19,6 +19,7 @@ describe("pat-date-picker", function () {
 
         const display_el = document.querySelector("time");
         expect(display_el).toBeTruthy();
+        expect(display_el.textContent).toBeFalsy();
 
         display_el.click();
 
@@ -26,6 +27,7 @@ describe("pat-date-picker", function () {
         const day = date.getDate().toString();
         const month = date.getMonth().toString(); // remember, month-count starts from 0
         const year = date.getFullYear().toString();
+        const isodate = date.toISOString().split("T")[0];
 
         const cur_year = document.querySelector('.pika-lendar .pika-select-year option[selected="selected"]'); // prettier-ignore
         expect(cur_year.textContent).toBe(year);
@@ -38,6 +40,13 @@ describe("pat-date-picker", function () {
 
         const cur_wkday = document.querySelector(".pika-lendar th:first-child abbr"); // prettier-ignore
         expect(cur_wkday.textContent).toBe("Sun");
+
+        // select current day.
+        cur_day.dispatchEvent(new Event("mousedown"));
+        // <time> element should contains the current date in iso format
+        expect(display_el.textContent).toBe(isodate);
+        // input element contains iso date
+        expect(el.value).toBe(isodate);
     });
 
     it("Date picker starts at Monday.", async function () {
@@ -70,6 +79,9 @@ describe("pat-date-picker", function () {
 
         const cur_day = document.querySelector(".pika-lendar td.is-selected button"); // prettier-ignore
         expect(cur_day.getAttribute("data-pika-day")).toBe("1");
+
+        // <time> element should contains the pre-set date in iso format
+        expect(display_el.textContent).toBe("1900-01-01");
     });
 
     it("Date picker with week numbers.", async function () {
@@ -299,5 +311,66 @@ describe("pat-date-picker", function () {
 
             done();
         });
+    });
+
+    it("Formatted date.", async function () {
+        document.body.innerHTML =
+            '<input type="date" class="pat-date-picker" value="2021-03-09" data-pat-date-picker="output-format: Do MMMM YYYY; locale: de"/>';
+        const el = document.querySelector("input[type=date]");
+        pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+        const display_el = document.querySelector("time");
+        display_el.click();
+
+        // <time> element should contains the pre-set date in iso format
+        expect(display_el.textContent).toBe("9. März 2021");
+
+        const day = document.querySelector(".pika-lendar td[data-day='12'] button"); // prettier-ignore
+        day.dispatchEvent(new Event("mousedown"));
+
+        expect(display_el.textContent).toBe("12. März 2021");
+        expect(el.value).toBe("2021-03-12");
+    });
+
+    it("Native behavior with fallback to pika", async function () {
+        // We mocking as if we're not supporting input type date.
+        jest.spyOn(utils, "checkInputSupport").mockImplementation(() => false);
+
+        document.body.innerHTML =
+            '<input type="date" class="pat-date-picker" data-pat-date-picker="behavior: native"/>';
+        const el = document.querySelector("input[type=date]");
+
+        pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        const display_el = document.querySelector("time");
+        // In native move with styled fallback we do not use the <time> element.
+        // We display the input and let it be editable.
+        expect(display_el).toBeFalsy();
+
+        el.click();
+
+        const date = new Date();
+        const day = date.getDate().toString();
+        const month = date.getMonth().toString(); // remember, month-count starts from 0
+        const year = date.getFullYear().toString();
+        const isodate = date.toISOString().split("T")[0];
+
+        const cur_year = document.querySelector('.pika-lendar .pika-select-year option[selected="selected"]'); // prettier-ignore
+        expect(cur_year.textContent).toBe(year);
+
+        const cur_month = document.querySelector('.pika-lendar .pika-select-month option[selected="selected"]'); // prettier-ignore
+        expect(cur_month.value).toBe(month);
+
+        const cur_day = document.querySelector(".pika-lendar td.is-today button"); // prettier-ignore
+        expect(cur_day.getAttribute("data-pika-day")).toBe(day);
+
+        const cur_wkday = document.querySelector(".pika-lendar th:first-child abbr"); // prettier-ignore
+        expect(cur_wkday.textContent).toBe("Sun");
+
+        // select current day.
+        cur_day.dispatchEvent(new Event("mousedown"));
+        // input element contains iso date
+        expect(el.value).toBe(isodate);
     });
 });
