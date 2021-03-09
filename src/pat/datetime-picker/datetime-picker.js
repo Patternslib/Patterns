@@ -9,7 +9,6 @@ import Parser from "../../core/parser";
 let Moment;
 
 const parser = new Parser("datetime-picker");
-parser.addArgument("behavior", "styled", ["native", "styled"]);
 parser.addArgument("format", "YYYY-MM-DD");
 parser.addArgument("week-numbers", [], ["show", "hide"]);
 parser.addArgument("i18n"); // URL pointing to JSON resource with i18n values
@@ -73,7 +72,7 @@ export default Base.extend({
             this.update();
         });
         const date_options = {
-            behavior: this.options.behavior,
+            behavior: "native",
             format: this.options.format,
             weekNumbers: this.options.weekNumbers,
             firstDay: this.options.firstDay,

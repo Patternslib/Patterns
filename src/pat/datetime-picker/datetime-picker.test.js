@@ -16,6 +16,9 @@ describe("pat-datetime-picker", function () {
     });
 
     it("Default datetime picker.", async function () {
+        // We mocking as if we're not supporting input type date.
+        jest.spyOn(utils, "checkInputSupport").mockImplementation(() => false);
+
         var $el = $(
             '<input type="datetime-local" class="pat-datetime-picker"/>'
         ).appendTo(document.body);
@@ -54,6 +57,9 @@ describe("pat-datetime-picker", function () {
     });
 
     it("Date/Time picker starts at Monday.", async function () {
+        // We mocking as if we're not supporting input type date.
+        jest.spyOn(utils, "checkInputSupport").mockImplementation(() => false);
+
         var $el = $(
             '<input type="date" class="pat-datetime-picker" data-pat-datetime-picker="first-day: 1" />'
         ).appendTo(document.body);
@@ -69,6 +75,9 @@ describe("pat-datetime-picker", function () {
     });
 
     it("Date/Time picker with pre-set value.", async function () {
+        // We mocking as if we're not supporting input type date.
+        jest.spyOn(utils, "checkInputSupport").mockImplementation(() => false);
+
         var $el = $(
             '<input type="datetime-local" class="pat-datetime-picker" value="1900-01-01T00:00"/>'
         ).appendTo(document.body);
@@ -97,6 +106,9 @@ describe("pat-datetime-picker", function () {
     });
 
     it("Date/Time picker with week numbers.", async function () {
+        // We mocking as if we're not supporting input type date.
+        jest.spyOn(utils, "checkInputSupport").mockImplementation(() => false);
+
         var $el = $(
             '<input type="datetime-local" class="pat-datetime-picker" data-pat-datetime-picker="week-numbers: show;" value="2017-09-18T23:42"/>'
         ).appendTo(document.body);
@@ -112,6 +124,8 @@ describe("pat-datetime-picker", function () {
 
     /* TODO: fix and properly mock with jasmine.Clock().mockTime in jasmine 2.x
     it('Set Date/Time to today.', async function () {
+        // We mocking as if we're not supporting input type date.
+        jest.spyOn(utils, "checkInputSupport").mockImplementation(() => false);
 
         var baseDate = new Date('2010-10-10T12:34:00.000Z');
 

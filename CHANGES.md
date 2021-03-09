@@ -27,6 +27,9 @@
     Format would have submitted a formatted value where the ISO standard is expected.
     This also allows for removing the dependency of ``pat-date-picker`` on MomentJS.
 -   pat date picker: Change ``styled`` behavior so that it can be formatted and localized while still submitting iso values.
+-   pat datetime picker: Change date component behavior to ``native`` and remove the possibility to set the behavior.
+    The concept of formatted dates for the date picker doesn't mix well with unformatted time component in the datetime picker.
+    If the ``styled`` behavior is needed somewhere it can be brought back later.
 
 ### Features
 
