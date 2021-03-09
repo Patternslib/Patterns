@@ -55,6 +55,15 @@ Here are all the i18n values in JSON format:
        "weekdaysShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
      }
 
+####Automatically update one date when changing another
+
+You can define one date input to be after another date with the ``after`` option.
+The the other date is changed after the first, it will be automatically updated to be offset days after the first.
+
+    <input name="start" class="pat-date-picker" type="date"/>
+    <input name="end"   class="pat-date-picker" type="date" data-pat-date-picker="after: input[name=start]; offset-days: 2;"/>
+
+
 ### Why did we base this library on Pikaday?
 
 When looking for the underlying library to use for this pattern, we compared
