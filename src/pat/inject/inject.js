@@ -911,6 +911,11 @@ const inject = {
                     value.slice(0, 2) !== "@@" &&
                     value[0] !== "#" &&
                     value.slice(0, 7) !== "mailto:" &&
+                    value.slice(0, 4) !== "tel:" &&
+                    value.slice(0, 4) !== "fax:" &&
+                    value.slice(0, 7) !== "callto:" &&
+                    value.slice(0, 10) !== "ts3server:" &&
+                    value.slice(0, 6) !== "teams:" &&
                     value.slice(0, 11) !== "javascript:"
                 ) {
                     value = utils.rebaseURL(base, value);
