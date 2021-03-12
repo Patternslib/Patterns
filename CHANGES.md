@@ -130,6 +130,7 @@
 
 ### Features
 
+-   pat-inject:  Don't rebase for some additional known prefixes to avoid that the links break when contained in an injected page snippet.
 -   pat-gallery: Allow adding images directly to the gallery.
 -   pat-validation: Allow for HTML5 style `required` attributes without a value.
 -   pat-validation: Added the possibility to check for fields equality
