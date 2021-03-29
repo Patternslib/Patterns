@@ -1,6 +1,7 @@
 import registry from "./registry";
 import $ from "jquery";
 import Base from "./base";
+import utils from "./utils";
 import _ from "underscore";
 
 describe("pat-base: The Base class for patterns", function () {
@@ -156,5 +157,32 @@ describe("pat-base: The Base class for patterns", function () {
                 $(this).trigger("something.tmp.patterns", [arg1]);
             })
         );
+    });
+
+    it("triggers the init event after init has finished.", async function (done) {
+        const Tmp = Base.extend({
+            name: "example",
+            trigger: "pat-example",
+            init: async function () {
+                // await to actually give the Base constructor a chance to
+                // throw it's event before we throw it here.
+                await utils.timeout(1);
+                this.el.dispatchEvent(new Event("init_done"));
+            },
+        });
+        const node = document.createElement("div");
+        node.setAttribute("class", "pat-example");
+        const event_list = [];
+        node.addEventListener("init_done", () => event_list.push("pat init"));
+        $(node).on("init.example.patterns", () => event_list.push("base init"));
+        new Tmp(node);
+
+        // await until all asyncs are settled. 1 event loop should be enough.
+        await utils.timeout(1);
+
+        expect(event_list[0]).toBe("pat init");
+        expect(event_list[1]).toBe("base init");
+
+        done();
     });
 });

@@ -11,7 +11,7 @@
  * Older Patternslib patterns on the other hand have a single global scope for
  * all DOM elements.
  */
-
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Registry from "./registry";
 import logging from "./logging";
@@ -41,14 +41,14 @@ const initBasePattern = function ($el, options, trigger) {
     return pattern;
 };
 
-const Base = function ($el, options, trigger) {
+const Base = async function ($el, options, trigger) {
     if (!$el.jquery) {
         $el = $($el);
     }
     this.$el = $el;
     this.el = $el[0];
     this.options = $.extend(true, {}, this.defaults || {}, options || {});
-    this.init($el, options, trigger);
+    await this.init($el, options, trigger);
     this.emit("init");
 };
 
