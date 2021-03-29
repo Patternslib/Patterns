@@ -21,6 +21,13 @@
             box-sizing: border-box;
             display: inline-block;
           }
+          .cancel-button {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            margin-left: 0.2em;
+            background-color: red;
+          }
         </style>
     </head>
     <body>
@@ -47,6 +54,7 @@
                         class="pat-date-picker"
                         type="date"
                         value="2015-01-01"
+                        required
                     /> </label
                 ><br />
 
@@ -57,8 +65,19 @@
                         type="date"
                         value="2015-01-01"
                         data-pat-date-picker="first-day: 1"
+                        required
                     /> </label
                 ><br />
+
+                <label>Not required, allows for deletion of value.
+                    <input
+                        class="pat-date-picker"
+                        type="date"
+                        value="2021-03-29"
+                    />
+                </label>
+                <br />
+
 
                 <label
                     >Show the week number.
@@ -135,19 +154,12 @@
                         />
                 </label>
                 <br />
+                <hr />
                 <div
                     class="pat-clone"
                     data-pat-clone="template: #clone-template; trigger-element: .clone-trigger; max: 5">
                     <fieldset id="clone-template" hidden>
-                        <legend>Measure #{1}</legend>
-                        <input
-                            name="name-#{1}"
-                            size="20"
-                            type="text"
-                            placeholder="Name"
-                            required="required"
-                        />
-                        <label>To be implemented by
+                        <label>Copied field #{1}
                             <input
                                 name="date-#{1}"
                                 type="date"
@@ -156,21 +168,14 @@
                                 placeholder="Completion date"
                             />
                         </label>
-                        <button
-                            type="button"
-                            class="small pat-button remove-clone icon-trash"
-                        >
+                        <button type="button" class="remove-clone">
                             Remove
                         </button>
                     </fieldset>
                 </div>
-                <div class="button-bar">
-                    <!-- Clone trigger -->
-                    <button type="button" class="pat-button clone-trigger">
-                        Add an extra measure
-                    </button>
-
-                </div>
+                <button type="button" class="clone-trigger">
+                    Add an extra measure
+                </button>
 
             </fieldset>
         </form>
