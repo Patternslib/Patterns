@@ -76,6 +76,7 @@
 
 ### Technical
 
+-   Core Base: ``await`` for initalization in the base class constructor, so that the ``init`` event is really thrown after initialization is done.
 -   pat calendar: Explicitly import JavaScript language files to avoid missing Webpack TypeScript loader errors.
 -   Use Babel for all files, allowing latest JavaScript features everywhere.
 -   Add example `minimalpattern`.
