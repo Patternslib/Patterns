@@ -17,6 +17,13 @@
             background: lightgrey;
             cursor: pointer;
           }
+          .cancel-button {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            margin-left: 0.2em;
+            background-color: red;
+          }
         </style>
     </head>
     <body>
@@ -43,6 +50,7 @@
                         class="pat-date-picker"
                         type="date"
                         value="2015-01-01"
+                        required
                     /> </label
                 ><br />
 
@@ -53,8 +61,19 @@
                         type="date"
                         value="2015-01-01"
                         data-pat-date-picker="first-day: 1"
+                        required
                     /> </label
                 ><br />
+
+                <label>Not required, allows for deletion of value.
+                    <input
+                        class="pat-date-picker"
+                        type="date"
+                        value="2021-03-29"
+                    />
+                </label>
+                <br />
+
 
                 <label
                     >Show the week number.

@@ -89,6 +89,10 @@ export default Base.extend({
                 display_time_config.locale = this.options.locale;
             }
             el.insertAdjacentElement("afterend", display_el);
+
+            $(display_el).on("init.display-time.patterns", () =>
+                this.add_clear_button(display_el)
+            );
             const display_el_pat = new PatDisplayTime(
                 display_el,
                 display_time_config
@@ -97,6 +101,7 @@ export default Base.extend({
             this.el.addEventListener("input", () => {
                 display_el.setAttribute("datetime", this.el.value);
                 display_el_pat.format();
+                this.add_clear_button(display_el);
             });
         } else if (utils.checkInputSupport("date", "invalid date")) {
             // behavior native with native support.
@@ -151,6 +156,28 @@ export default Base.extend({
                 });
         } else {
             new Pikaday(config);
+        }
+    },
+
+    add_clear_button(el_append_to) {
+        if (!this.el.required && this.el.value) {
+            // Add clear button
+            const clear_button = document.createElement("span");
+            clear_button.setAttribute("class", "cancel-button");
+            clear_button.addEventListener("click", () => {
+                this.el.value = null;
+                this.el.dispatchEvent(
+                    new Event("input", {
+                        bubbles: true,
+                        cancelable: true,
+                    })
+                );
+
+                //// Also trigger input change on date field to support pat-autosubmit.
+                //$(this.el.form).dispatchEvent("input-change
+                //$(this.el).dispatchEvent("input-change
+            });
+            el_append_to.appendChild(clear_button);
         }
     },
 });

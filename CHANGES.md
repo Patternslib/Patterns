@@ -33,6 +33,7 @@
 
 ### Features
 
+-   pat date picker: Add "clear" button for "styled" behavior to clear non-required input fields.
 -   Implenent lazy loading for external libraries via dynamic imports. Leads to significantly reduced bundle sizes.
 -   Upgrade pat-calendar to use latest fullcalendar version (5.3.0).
 -   pat calendar: Add fullcalendar list views.
