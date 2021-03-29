@@ -72,6 +72,7 @@
 
 ### Technical
 
+-   pat calendar: Explicitly import JavaScript language files to avoid missing Webpack TypeScript loader errors.
 -   Use Babel for all files, allowing latest JavaScript features everywhere.
 -   Add example `minimalpattern`.
 -   Replace `slave` terminology with `dependent`.

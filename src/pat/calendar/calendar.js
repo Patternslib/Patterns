@@ -165,7 +165,9 @@ export default Base.extend({
         // we don't support any country-specific language variants, always use first 2 letters
         lang = lang.substr(0, 2).toLowerCase();
         if (lang !== "en") {
-            const locale = await import(`@fullcalendar/core/locales/${lang}`);
+            const locale = await import(
+                `@fullcalendar/core/locales/${lang}.js`
+            );
             config.locale = locale.default;
             console.log("loaded cal locale for " + lang);
         }
