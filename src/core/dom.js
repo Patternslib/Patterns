@@ -75,6 +75,19 @@ const find_scoped = (el, selector) => {
     );
 };
 
+const get_parents = (el) => {
+    // Return all HTMLElement parents of el, starting from the direct parent of el.
+    // The document itself is excluded because it's not a real DOM node.
+    const parents = [];
+    let parent = el?.parentNode;
+    while (parent) {
+        parents.push(parent);
+        parent = parent?.parentNode;
+        parent = parent instanceof HTMLElement ? parent : null;
+    }
+    return parents;
+};
+
 const is_visible = (el) => {
     // Check, if element is visible in DOM.
     // https://stackoverflow.com/a/19808107/1337474
@@ -96,6 +109,7 @@ const dom = {
     show: show,
     find_parents: find_parents,
     find_scoped: find_scoped,
+    get_parents: get_parents,
     is_visible: is_visible,
     create_from_string: create_from_string,
 };
