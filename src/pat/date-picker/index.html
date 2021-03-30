@@ -150,19 +150,12 @@
                         />
                 </label>
                 <br />
+                <hr />
                 <div
                     class="pat-clone"
                     data-pat-clone="template: #clone-template; trigger-element: .clone-trigger; max: 5">
                     <fieldset id="clone-template" hidden>
-                        <legend>Measure #{1}</legend>
-                        <input
-                            name="name-#{1}"
-                            size="20"
-                            type="text"
-                            placeholder="Name"
-                            required="required"
-                        />
-                        <label>To be implemented by
+                        <label>Copied field #{1}
                             <input
                                 name="date-#{1}"
                                 type="date"
@@ -171,21 +164,14 @@
                                 placeholder="Completion date"
                             />
                         </label>
-                        <button
-                            type="button"
-                            class="small pat-button remove-clone icon-trash"
-                        >
+                        <button type="button" class="remove-clone">
                             Remove
                         </button>
                     </fieldset>
                 </div>
-                <div class="button-bar">
-                    <!-- Clone trigger -->
-                    <button type="button" class="pat-button clone-trigger">
-                        Add an extra measure
-                    </button>
-
-                </div>
+                <button type="button" class="clone-trigger">
+                    Add an extra measure
+                </button>
 
             </fieldset>
         </form>

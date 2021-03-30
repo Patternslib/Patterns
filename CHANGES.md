@@ -109,6 +109,7 @@
 
 ### Fixes
 
+-   pat date picker: Do not initialize when input field is hidden or within a hidden tree. Avoids initializing the date picker twice when it's cloned with pat-clone.
 -   pat dom is_visible: Mock in tests to check only for hidden to avoid unavailable offsetWidth/offsetHeight in Jest.
 -   pat calendar, pat checklist, pat datetime-picker: Dispatch DOM events with bubbling and canceling features enabled, as real DOM events do.
     Fixes a problem where calendar categories did not show their initial state correctly.

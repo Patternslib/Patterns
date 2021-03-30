@@ -424,6 +424,25 @@ describe("pat-date-picker", function () {
         done();
     });
 
+    it("is not initialized when hidden.", async function (done) {
+        document.body.innerHTML = `
+            <form>
+                <fieldset hidden>
+                    <label>maybe i'm pat-cloned.
+                        <input type="date" class="pat-date-picker" />
+                    </label>
+                </fieldset>
+            </form>
+        `;
+        const el = document.querySelector("input[type=date]");
+        pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+        const display_el = document.querySelector("time");
+        expect(display_el).toBeFalsy();
+
+        done();
+    });
+
     it("Native behavior with fallback to pika", async function () {
         // We mocking as if we're not supporting input type date.
         jest.spyOn(utils, "checkInputSupport").mockImplementation(() => false);
