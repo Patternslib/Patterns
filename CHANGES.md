@@ -104,6 +104,7 @@
 
 ### Fixes
 
+-   core dom is_visible: Mock in tests to check only for hidden to avoid unavailable offsetWidth/offsetHeight in Jest.
 -   pat calendar, pat checklist, pat datetime-picker: Dispatch DOM events with bubbling and canceling features enabled, as real DOM events do.
     Fixes a problem where calendar categories did not show their initial state correctly.
 -   pat inject: Make sure that nested pat-inject element have the correct context for target ``self``. Fixes: https://github.com/quaive/ploneintranet.prototype/issues/1164
