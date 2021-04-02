@@ -9,6 +9,7 @@
 import "core-js/stable";
 
 // Web APIs
+import "@webcomponents/template";
 import "intersection-observer";
 import "promise-polyfill/src/polyfill";
 import "url-polyfill";
