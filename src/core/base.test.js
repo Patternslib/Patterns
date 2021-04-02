@@ -18,7 +18,6 @@ describe("pat-base: The Base class for patterns", function () {
     it("can be extended and used in similar way as classes", function () {
         var Tmp = Base.extend({
             name: "example",
-            trigger: "pat-example",
             some: "thing",
             init: function () {
                 expect(this.$el.hasClass("pat-example")).toEqual(true);
@@ -36,7 +35,6 @@ describe("pat-base: The Base class for patterns", function () {
     it("Accepts jQuery objects on initialization", function () {
         const Tmp = Base.extend({
             name: "example",
-            trigger: "pat-example",
             init: () => {},
         });
         const $el = $('<div class="pat-example"/>');
@@ -49,7 +47,6 @@ describe("pat-base: The Base class for patterns", function () {
     it("Accepts plain DOM nodes on initialization", function () {
         const Tmp = Base.extend({
             name: "example",
-            trigger: "pat-example",
             init: () => {},
         });
         const node = document.createElement("div");
@@ -109,7 +106,6 @@ describe("pat-base: The Base class for patterns", function () {
     it("can be extended multiple times", function () {
         var Tmp1 = Base.extend({
             name: "thing",
-            trigger: "pat-thing",
             something: "else",
             init: function () {
                 expect(this.some).toEqual("thing3");
@@ -118,7 +114,6 @@ describe("pat-base: The Base class for patterns", function () {
         });
         var Tmp2 = Tmp1.extend({
             name: "thing",
-            trigger: "pat-thing",
             some: "thing2",
             init: function () {
                 expect(this.some).toEqual("thing3");
@@ -130,7 +125,6 @@ describe("pat-base: The Base class for patterns", function () {
         });
         var Tmp3 = Tmp2.extend({
             name: "thing",
-            trigger: "pat-thing",
             some: "thing3",
             init: function () {
                 expect(this.some).toEqual("thing3");
@@ -162,7 +156,6 @@ describe("pat-base: The Base class for patterns", function () {
     it("triggers the init event after init has finished.", async function (done) {
         const Tmp = Base.extend({
             name: "example",
-            trigger: "pat-example",
             init: async function () {
                 // await to actually give the Base constructor a chance to
                 // throw it's event before we throw it here.
