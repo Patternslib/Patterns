@@ -1,5 +1,6 @@
+import Base from "../../core/base";
 import registry from "../../core/registry";
-import "./clone";
+import Clone from "./clone";
 import $ from "jquery";
 
 describe("pat-clone", function () {
@@ -243,5 +244,87 @@ describe("pat-clone", function () {
         $lab.find(".remove-clone:last").click();
         expect(window.confirm.calls.count()).toBe(1);
         expect($("div.item").length).toBe(1);
+    });
+
+    describe("pat clone and pattern initialization", function () {
+        const patterns = registry.patterns;
+
+        beforeEach(function () {
+            registry.clear();
+            registry.register(Clone, "clone");
+        });
+
+        afterEach(function () {
+            registry.patterns = patterns;
+        });
+
+        it("will initialize patterns when cloned.", function () {
+            Base.extend({
+                name: "example",
+                trigger: ".pat-example",
+                init: function () {
+                    this.el.innerHTML += "initialized";
+                },
+            });
+
+            document.body.innerHTML = `
+                <div id="template" hidden>
+                    <div class="pat-example"></div>
+                </div>
+                <div class="pat-clone" data-pat-clone="template: #template">
+                  <button type="button" class="add-clone">clone</button>
+                </div>
+            `;
+            registry.scan(document.body);
+
+            // Without further action patterns in templates are initialized.
+            // Not what we want, normally.
+            expect(
+                document.body.querySelector("#template .pat-example")
+                    .textContent
+            ).toBe("initialized");
+
+            document.body.querySelector("button").click();
+
+            // The cloned pattern is double-initialized.
+            expect(
+                document.body.querySelector(".pat-clone .pat-example")
+                    .textContent
+            ).toBe("initializedinitialized");
+        });
+
+        it("will not initialize patterns in the template with class cant-touch-this.", function () {
+            Base.extend({
+                name: "example",
+                trigger: ".pat-example",
+                init: function () {
+                    this.el.innerHTML += "initialized";
+                },
+            });
+
+            document.body.innerHTML = `
+                <div id="template" class="cant-touch-this" hidden>
+                    <div class="pat-example"></div>
+                </div>
+                <div class="pat-clone" data-pat-clone="template: #template">
+                  <button type="button" class="add-clone">clone</button>
+                </div>
+            `;
+            registry.scan(document.body);
+
+            // This time the template-pattern isn't initialized.
+            expect(
+                document.body.querySelector("#template .pat-example")
+                    .textContent
+            ).toBe("");
+
+            document.body.querySelector("button").click();
+
+            // The cloned pattern is only initialized once.
+            expect(
+                document.body.querySelector(".pat-clone .pat-example")
+                    .textContent
+            ).toBe("initialized");
+        });
     });
 });
