@@ -29,6 +29,7 @@
 
 ### Features
 
+-   core registry: Do not scan patterns within trees with attribute ``hidden`` or class ``cant-touch-this``.
 -   Implenent lazy loading for external libraries via dynamic imports. Leads to significantly reduced bundle sizes.
 -   Upgrade pat-calendar to use latest fullcalendar version (5.3.0).
 -   pat calendar: Add fullcalendar list views.

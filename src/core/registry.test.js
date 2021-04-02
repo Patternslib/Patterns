@@ -72,17 +72,28 @@ describe("pat-registry: The registry for patterns", function () {
         tree.innerHTML = `
             <div class="e1 pat-example"></div>
             <div class="e2 cant-touch-this pat-example"></div>
+            <div class="cant-touch-this">
+                <div class="e3 pat-example"></div>
+            </div>
+            <div hidden>
+                <div class="e4 pat-example"></div>
+            </div>
+            <div hidden="hidden">
+                <div class="e5 pat-example"></div>
+            </div>
             <pre>
                 <div>
-                    <div class="e3 pat-example"></div>
+                    <div class="e6 pat-example"></div>
                 </div>
             </pre>
         `;
         registry.scan(tree);
 
-        console.log(tree.innerHTML);
         expect(tree.querySelector(".e1").textContent).toBe("initialized");
         expect(tree.querySelector(".e2").textContent).toBe("");
         expect(tree.querySelector(".e3").textContent).toBe("");
+        expect(tree.querySelector(".e4").textContent).toBe("");
+        expect(tree.querySelector(".e5").textContent).toBe("");
+        expect(tree.querySelector(".e6").textContent).toBe("");
     });
 });

@@ -146,10 +146,14 @@ const registry = {
         );
         matches = matches.filter((el) => {
             // Filter out patterns:
-            // - with class ``.cant-touch-this``.
+            // - with class ``.cant-touch-this``
+            // - wrapped in ``.cant-touch-this`` elements
+            // - wrapped in ``hidden`` elements
             // - wrapped in ``<pre>`` elements
             return (
                 !el.matches(".cant-touch-this") &&
+                !el?.parentNode?.closest?.(".cant-touch-this") &&
+                !el?.parentNode?.closest?.("[hidden]") &&
                 !el?.parentNode?.closest?.("pre")
             );
         });
