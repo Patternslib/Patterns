@@ -5,8 +5,10 @@ import registry from "../../core/registry";
 import Base from "../../core/base";
 import logging from "../../core/logging";
 
-var log = logging.getLogger("pat-clone");
-var parser = new Parser("clone");
+const log = logging.getLogger("pat-clone");
+const TEXT_NODE = 3;
+
+const parser = new Parser("clone");
 parser.addArgument("max");
 parser.addArgument("template", ":first");
 parser.addArgument("trigger-element", ".add-clone");
@@ -18,13 +20,12 @@ parser.addArgument(
 );
 parser.addArgument("clone-element", ".clone");
 parser.addAlias("remove-behavior", "remove-behaviour");
-var TEXT_NODE = 3;
 
 export default Base.extend({
     name: "clone",
     trigger: ".pat-clone",
 
-    init: function patCloneInit($el, opts) {
+    init($el, opts) {
         this.options = parser.parse(this.$el, opts);
         if (this.options.template.lastIndexOf(":", 0) === 0) {
             this.$template = this.$el.find(this.options.template);
@@ -37,11 +38,11 @@ export default Base.extend({
             this.clone.bind(this)
         );
 
-        var $clones = this.$el.find(this.options.cloneElement);
+        const $clones = this.$el.find(this.options.cloneElement);
         this.num_clones = $clones.length;
         $clones.each(
             function (idx, clone) {
-                var $clone = $(clone);
+                const $clone = $(clone);
                 $clone
                     .find(this.options.remove.element)
                     .on("click", this.confirmRemoval.bind(this, $clone));
@@ -49,14 +50,14 @@ export default Base.extend({
         );
     },
 
-    clone: function clone() {
+    clone() {
         if (this.num_clones >= this.options.max) {
             alert("Sorry, only " + this.options.max + " elements allowed.");
             return;
         }
         this.num_clones += 1;
-        var $clone = this.$template.safeClone();
-        var ids = ($clone.attr("id") || "").split(" ");
+        const $clone = this.$template.safeClone();
+        const ids = ($clone.attr("id") || "").split(" ");
         $clone.removeAttr("id").removeClass("cant-touch-this");
         $.each(
             ids,
@@ -98,13 +99,13 @@ export default Base.extend({
         }
     },
 
-    incrementValues: function incrementValues(idx, el) {
-        var $el = $(el);
+    incrementValues(idx, el) {
+        const $el = $(el);
         $el.children()
             .addBack()
             .contents()
             .filter(this.incrementValues.bind(this));
-        var callback = function (idx, attr) {
+        const callback = function (idx, attr) {
             if (attr.name === "type" || !$el.attr(attr.name)) {
                 return;
             }
@@ -124,7 +125,7 @@ export default Base.extend({
         }
     },
 
-    confirmRemoval: function confirmRemoval($el) {
+    confirmRemoval($el) {
         if (this.options.remove.behaviour === "confirm") {
             if (window.confirm(this.options.remove.confirmation) === true) {
                 this.remove($el);
@@ -134,7 +135,7 @@ export default Base.extend({
         }
     },
 
-    remove: function remove($el) {
+    remove($el) {
         $el.remove();
         this.num_clones -= 1;
         if (this.num_clones < this.options.max) {
