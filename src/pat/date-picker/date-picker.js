@@ -4,7 +4,6 @@ import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 import PatDisplayTime from "../display-time/display-time";
-import dom from "../../core/dom";
 import utils from "../../core/utils";
 
 // Lazy loading modules.
@@ -39,17 +38,6 @@ export default Base.extend({
 
     async init() {
         const el = this.el;
-
-        if (
-            dom
-                .get_parents(el)
-                .map((it) => !dom.is_visible(it))
-                .filter((it) => it).length > 0
-        ) {
-            // Only initialize for visible elements.
-            // It might be a pat-clone template? then:
-            return;
-        }
 
         //TODO: make parser with options extend missing options.
         //this.options = parser.parse(el, opts);
