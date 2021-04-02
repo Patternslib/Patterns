@@ -392,16 +392,16 @@ describe("pat-date-picker", function () {
 
     it("Required formatted date - no clear button available.", async function (done) {
         document.body.innerHTML =
-            '<input type="date" class="pat-date-picker" required/>';
+            '<input type="date" class="pat-date-picker" value="2021-03-01" required/>';
         const el = document.querySelector("input[type=date]");
         pattern.init(el);
         await utils.timeout(1); // wait a tick for async to settle.
         const display_el = document.querySelector("time");
 
         // Initial values on input field and time element
-        expect(display_el.getAttribute("datetime")).toBe("");
-        expect(display_el.textContent).toBe("");
-        expect(el.value).toBe("");
+        expect(display_el.getAttribute("datetime")).toBe("2021-03-01");
+        expect(display_el.textContent).toBe("2021-03-01");
+        expect(el.value).toBe("2021-03-01");
 
         // Clear button is not available when field is required
         let clear_button = display_el.querySelector(".cancel-button");
