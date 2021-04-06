@@ -74,6 +74,7 @@
 
 ### Technical
 
+-   Webpack: Backport changes from Mockup - add loaders for images, svg, sass and xml.
 -   core polyfills: Add polyfill for Node.closest method.
 -   Core Base: ``await`` for initalization in the base class constructor, so that the ``init`` event is really thrown after initialization is done.
 -   pat calendar: Explicitly import JavaScript language files to avoid missing Webpack TypeScript loader errors.
