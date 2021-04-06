@@ -83,6 +83,23 @@ The markup below would have exactly the same effect as the first example, but us
       <button type="button" class="add-clone">Add an extra family member</button>
     </div>
 
+### Example with a hidden template which includes a pattern
+
+Patterns in templates are initialized after cloning.
+However, the patterns in the template itself are not initialized if the template has the attribute ``hidden`` or the class ``cant-touch-this``.
+This is to prevent double-initialization within the template and after being cloned.
+
+    <div id="template" class="cant-touch-this" hidden>
+      <input name="date-1" type="date" class="pat-date-picker" />
+    </fieldset>
+
+    <div class="pat-clone" data-pat-clone="template: #template">
+      <button type="button" class="add-clone">Add a date</button>
+    </div>
+
+
+
+
 ### Option reference
 
 | Property                            | Description                                                                                                                                                                | Default       | Allowed Values    | Type                              |

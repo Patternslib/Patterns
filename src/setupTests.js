@@ -37,3 +37,10 @@ window.ResizeObserver = function () {
 // Do not output error messages
 import logging from "./core/logging";
 logging.setLevel(50); // level: FATAL
+
+// patch dom.is_visible to not rely on jest-unavailable offsetWidth/Height but
+// simply on el.hidden.
+import dom from "./core/dom";
+dom.is_visible = (el) => {
+    return !el.hidden;
+};

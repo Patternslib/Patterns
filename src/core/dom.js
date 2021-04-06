@@ -57,12 +57,11 @@ const find_parents = (el, selector) => {
     // This matches against all parents but not the element itself.
     // The order of elements is from the search starting point up to higher
     // DOM levels.
-    let parent =
-        (el?.parentNode?.closest && el.parentNode.closest(selector)) || null;
     const ret = [];
+    let parent = el?.parentNode?.closest?.(selector);
     while (parent) {
         ret.push(parent);
-        parent = parent.parentNode?.closest(selector) || null;
+        parent = parent.parentNode?.closest?.(selector);
     }
     return ret;
 };
@@ -73,6 +72,19 @@ const find_scoped = (el, selector) => {
     return (selector.indexOf("#") === 0 ? document : el).querySelectorAll(
         selector
     );
+};
+
+const get_parents = (el) => {
+    // Return all HTMLElement parents of el, starting from the direct parent of el.
+    // The document itself is excluded because it's not a real DOM node.
+    const parents = [];
+    let parent = el?.parentNode;
+    while (parent) {
+        parents.push(parent);
+        parent = parent?.parentNode;
+        parent = parent instanceof HTMLElement ? parent : null;
+    }
+    return parents;
 };
 
 const is_visible = (el) => {
@@ -96,6 +108,7 @@ const dom = {
     show: show,
     find_parents: find_parents,
     find_scoped: find_scoped,
+    get_parents: get_parents,
     is_visible: is_visible,
     create_from_string: create_from_string,
 };

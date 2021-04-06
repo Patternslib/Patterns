@@ -184,7 +184,6 @@ describe("core.dom tests", () => {
         it("don't break with DocumentFragment without a parent.", (done) => {
             const el = new DocumentFragment();
             el.innerHTML = `<div class="starthere"></div>`;
-            console.log(el.parentNode);
             const res = dom.find_parents(
                 el.querySelector(".starthere"),
                 ".findme"
@@ -237,6 +236,46 @@ describe("core.dom tests", () => {
 
             expect(res.length).toEqual(1);
             expect(res[0]).toEqual(document.querySelector(".level1"));
+
+            done();
+        });
+    });
+
+    describe("get_parents", () => {
+        it("it finds all parents of an element except document itself.", (done) => {
+            document.body.innerHTML = `
+                <div class="level1">
+                    <div class="level2">
+                        <div class="level3">
+                            <div class="level4">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const res = dom.get_parents(document.querySelector(".level4"));
+
+            expect(res.length).toEqual(5);
+            expect(res[0]).toEqual(document.querySelector(".level3"));
+            expect(res[1]).toEqual(document.querySelector(".level2"));
+            expect(res[2]).toEqual(document.querySelector(".level1"));
+            expect(res[3]).toEqual(document.body);
+            expect(res[4]).toEqual(document.body.parentNode); // html
+
+            done();
+        });
+        it("don't break with no element.", (done) => {
+            const res = dom.get_parents(null);
+            expect(res.length).toEqual(0);
+
+            done();
+        });
+        it("don't break with DocumentFragment without a parent.", (done) => {
+            const el = new DocumentFragment();
+            el.innerHTML = `<div class="starthere"></div>`;
+            console.log(el.parentNode);
+            const res = dom.get_parents(el.querySelector(".starthere"));
+            expect(res.length).toEqual(0);
 
             done();
         });

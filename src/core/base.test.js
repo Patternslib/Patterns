@@ -1,6 +1,7 @@
 import registry from "./registry";
 import $ from "jquery";
 import Base from "./base";
+import utils from "./utils";
 import _ from "underscore";
 
 describe("pat-base: The Base class for patterns", function () {
@@ -17,7 +18,6 @@ describe("pat-base: The Base class for patterns", function () {
     it("can be extended and used in similar way as classes", function () {
         var Tmp = Base.extend({
             name: "example",
-            trigger: "pat-example",
             some: "thing",
             init: function () {
                 expect(this.$el.hasClass("pat-example")).toEqual(true);
@@ -35,7 +35,6 @@ describe("pat-base: The Base class for patterns", function () {
     it("Accepts jQuery objects on initialization", function () {
         const Tmp = Base.extend({
             name: "example",
-            trigger: "pat-example",
             init: () => {},
         });
         const $el = $('<div class="pat-example"/>');
@@ -48,7 +47,6 @@ describe("pat-base: The Base class for patterns", function () {
     it("Accepts plain DOM nodes on initialization", function () {
         const Tmp = Base.extend({
             name: "example",
-            trigger: "pat-example",
             init: () => {},
         });
         const node = document.createElement("div");
@@ -108,7 +106,6 @@ describe("pat-base: The Base class for patterns", function () {
     it("can be extended multiple times", function () {
         var Tmp1 = Base.extend({
             name: "thing",
-            trigger: "pat-thing",
             something: "else",
             init: function () {
                 expect(this.some).toEqual("thing3");
@@ -117,7 +114,6 @@ describe("pat-base: The Base class for patterns", function () {
         });
         var Tmp2 = Tmp1.extend({
             name: "thing",
-            trigger: "pat-thing",
             some: "thing2",
             init: function () {
                 expect(this.some).toEqual("thing3");
@@ -129,7 +125,6 @@ describe("pat-base: The Base class for patterns", function () {
         });
         var Tmp3 = Tmp2.extend({
             name: "thing",
-            trigger: "pat-thing",
             some: "thing3",
             init: function () {
                 expect(this.some).toEqual("thing3");
@@ -156,5 +151,31 @@ describe("pat-base: The Base class for patterns", function () {
                 $(this).trigger("something.tmp.patterns", [arg1]);
             })
         );
+    });
+
+    it("triggers the init event after init has finished.", async function (done) {
+        const Tmp = Base.extend({
+            name: "example",
+            init: async function () {
+                // await to actually give the Base constructor a chance to
+                // throw it's event before we throw it here.
+                await utils.timeout(1);
+                this.el.dispatchEvent(new Event("init_done"));
+            },
+        });
+        const node = document.createElement("div");
+        node.setAttribute("class", "pat-example");
+        const event_list = [];
+        node.addEventListener("init_done", () => event_list.push("pat init"));
+        $(node).on("init.example.patterns", () => event_list.push("base init"));
+        new Tmp(node);
+
+        // await until all asyncs are settled. 1 event loop should be enough.
+        await utils.timeout(1);
+
+        expect(event_list[0]).toBe("pat init");
+        expect(event_list[1]).toBe("base init");
+
+        done();
     });
 });

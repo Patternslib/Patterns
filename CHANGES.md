@@ -29,6 +29,7 @@
 
 ### Features
 
+-   core registry: Do not scan patterns within trees with attribute ``hidden`` or class ``cant-touch-this``.
 -   Implenent lazy loading for external libraries via dynamic imports. Leads to significantly reduced bundle sizes.
 -   Upgrade pat-calendar to use latest fullcalendar version (5.3.0).
 -   pat calendar: Add fullcalendar list views.
@@ -48,6 +49,7 @@
 -   Allow overriding the public path from outside via the definition of a ``window.__patternslib_public_path__`` global variable.
 -   Introduce new ``core/dom`` module for DOM manipulation and traversing.
     ``core/dom`` includes methods which help transition from jQuery to the JavaScript DOM API.
+-   core dom: Add ``get_parents`` to return all parent elements from a given DOM node.
 -   core dom: Add ``toNodeArray`` to return an array of DOM nodes if a NodeList, single DOM node or a jQuery object was passed.
 -   core dom: Add ``querySelectorAllAndMe`` to do a querySelectorAll including the starter element.
 -   core dom: Add ``wrap`` wrap an element with a wrapper element.
@@ -72,6 +74,9 @@
 
 ### Technical
 
+-   core polyfills: Add polyfill for Node.closest method.
+-   Core Base: ``await`` for initalization in the base class constructor, so that the ``init`` event is really thrown after initialization is done.
+-   pat calendar: Explicitly import JavaScript language files to avoid missing Webpack TypeScript loader errors.
 -   Use Babel for all files, allowing latest JavaScript features everywhere.
 -   Add example `minimalpattern`.
 -   Replace `slave` terminology with `dependent`.
@@ -101,6 +106,7 @@
 
 ### Fixes
 
+-   core dom is_visible: Mock in tests to check only for hidden to avoid unavailable offsetWidth/offsetHeight in Jest.
 -   pat calendar, pat checklist, pat datetime-picker: Dispatch DOM events with bubbling and canceling features enabled, as real DOM events do.
     Fixes a problem where calendar categories did not show their initial state correctly.
 -   pat inject: Make sure that nested pat-inject element have the correct context for target ``self``. Fixes: https://github.com/quaive/ploneintranet.prototype/issues/1164

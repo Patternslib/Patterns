@@ -145,11 +145,16 @@ const registry = {
             selectors.map((it) => it.trim().replace(/,$/, "")).join(",")
         );
         matches = matches.filter((el) => {
-            // Filter out code examples wrapped in <pre> elements.
-            // Also filter special class ``.cant-touch-this``
+            // Filter out patterns:
+            // - with class ``.cant-touch-this``
+            // - wrapped in ``.cant-touch-this`` elements
+            // - wrapped in ``hidden`` elements
+            // - wrapped in ``<pre>`` elements
             return (
-                dom.find_parents(el, "pre").length === 0 &&
-                !el.matches(".cant-touch-this")
+                !el.matches(".cant-touch-this") &&
+                !el?.parentNode?.closest?.(".cant-touch-this") &&
+                !el?.parentNode?.closest?.("[hidden]") &&
+                !el?.parentNode?.closest?.("pre")
             );
         });
 
