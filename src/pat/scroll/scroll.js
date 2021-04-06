@@ -9,8 +9,7 @@ import utils from "../../core/utils";
 // Lazy loading modules.
 let ImagesLoaded;
 
-const parser = new Parser("scroll");
-
+export const parser = new Parser("scroll");
 parser.addArgument("trigger", "click", ["click", "auto"]);
 parser.addArgument("direction", "top", ["top", "left"]);
 parser.addArgument("selector");

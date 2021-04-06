@@ -9,8 +9,9 @@ import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
 
-var log = logging.getLogger("pat.ajax"),
-    parser = new Parser("ajax");
+const log = logging.getLogger("pat.ajax");
+
+export const parser = new Parser("ajax");
 parser.addArgument("url", function ($el) {
     return ($el.is("a")
         ? $el.attr("href")

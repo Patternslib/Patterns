@@ -8,8 +8,8 @@ import Parser from "../../core/parser";
 let DependsHandler;
 
 const log = logging.getLogger("depends");
-const parser = new Parser("depends");
 
+export const parser = new Parser("depends");
 parser.addArgument("condition");
 parser.addArgument("action", "show", ["show", "enable", "both"]);
 parser.addArgument("transition", "none", ["none", "css", "fade", "slide"]);

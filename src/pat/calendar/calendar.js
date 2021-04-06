@@ -7,7 +7,7 @@ import registry from "../../core/registry";
 import store from "../../core/store";
 
 const log = logging.getLogger("calendar");
-const parser = new Parser("calendar");
+export const parser = new Parser("calendar");
 
 parser.addArgument("calendar-controls", ""); // Calendar controls must have "id" attr set
 parser.addArgument("category-controls", "");

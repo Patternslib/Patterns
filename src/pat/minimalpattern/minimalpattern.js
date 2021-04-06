@@ -3,8 +3,8 @@ import Parser from "../../core/parser";
 import logging from "../../core/logging";
 
 const log = logging.getLogger("minimalpattern");
-const parser = new Parser("minimalpattern");
 
+export const parser = new Parser("minimalpattern");
 parser.addArgument("background-color", "green");
 
 export default Base.extend({

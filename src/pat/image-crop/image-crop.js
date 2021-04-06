@@ -4,9 +4,9 @@ import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
 
-var log = logging.getLogger("pat.image-crop"),
-    parser = new Parser("image-crop");
+const log = logging.getLogger("pat.image-crop");
 
+export const parser = new Parser("image-crop");
 parser.addArgument("preview-id", "");
 parser.addArgument("preview-height", 0);
 parser.addArgument("preview-width", 0);

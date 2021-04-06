@@ -12,9 +12,9 @@ import Parser from "../../core/parser";
 import store from "../../core/store";
 import utils from "../../core/utils";
 
-var log = logging.getLogger("pat.switch"),
-    parser = new Parser("switch");
+const log = logging.getLogger("pat.switch");
 
+export const parser = new Parser("switch");
 parser.addArgument("selector");
 parser.addArgument("remove");
 parser.addArgument("add");

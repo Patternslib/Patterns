@@ -8,7 +8,7 @@ import utils from "../../core/utils";
 // Lazy loading modules.
 let Pikaday;
 
-const parser = new Parser("date-picker");
+export const parser = new Parser("date-picker");
 parser.addArgument("behavior", "styled", ["native", "styled"]);
 parser.addArgument("week-numbers", [], ["show", "hide"]);
 parser.addArgument("i18n"); // URL pointing to JSON resource with i18n values
@@ -69,6 +69,9 @@ export default Base.extend({
 
         Pikaday = await import("pikaday");
         Pikaday = Pikaday.default;
+        if (window.__patternslib_import_styles) {
+            await import("pikaday/scss/pikaday.scss");
+        }
 
         if (el.getAttribute("type") === "date") {
             el.setAttribute("type", "text");

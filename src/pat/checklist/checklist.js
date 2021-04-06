@@ -4,7 +4,7 @@ import dom from "../../core/dom";
 import utils from "../../core/utils";
 import "../../core/jquery-ext";
 
-const parser = new Parser("checklist");
+export const parser = new Parser("checklist");
 parser.addArgument("select", ".select-all");
 parser.addArgument("deselect", ".deselect-all");
 

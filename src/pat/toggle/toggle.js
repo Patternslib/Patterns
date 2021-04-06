@@ -9,9 +9,9 @@ import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import store from "../../core/store";
 
-var log = logging.getLogger("pat.toggle"),
-    parser = new Parser("toggle");
+const log = logging.getLogger("pat.toggle");
 
+export const parser = new Parser("toggle");
 parser.addArgument("selector");
 parser.addArgument("event");
 parser.addArgument("attr", "class");

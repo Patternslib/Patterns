@@ -1,20 +1,17 @@
-@charset "UTF-8";
-@import "../date-picker/_date-picker.scss";
-
-.datetime-picker-wrapper {
-    .date,
-    .time {
+.pat-datetime-picker__wrapper {
+    input[type="date"],
+    input[type="time"] {
         position: relative;
         display: inline-block;
         margin-right: 0.5em;
     }
-    .date {
+    input[type="date"] {
         width: auto;
     }
-    .time {
+    input[type="time"] {
         width: 10em;
     }
-    button.now {
+    button._now {
         margin-right: 0.2em;
     }
 }

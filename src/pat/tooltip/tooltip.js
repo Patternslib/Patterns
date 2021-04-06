@@ -11,7 +11,7 @@ let Tippy;
 
 const log = logging.getLogger("pat-tooltip");
 
-const parser = new Parser("tooltip");
+export const parser = new Parser("tooltip");
 const all_positions = [
     "tl",
     "tm",
@@ -56,6 +56,10 @@ export default Base.extend({
 
         Tippy = await import("tippy.js");
         Tippy = Tippy.default;
+
+        if (window.__patternslib_import_styles) {
+            await import("tippy.js/dist/tippy.css");
+        }
 
         this.options = parser.parse(el, opts);
         this.tippy_options = this.parseOptionsForTippy(this.options);

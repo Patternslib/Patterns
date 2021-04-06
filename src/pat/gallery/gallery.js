@@ -14,7 +14,7 @@ let Template;
 let PhotoSwipe;
 let PhotoSwipeUI;
 
-var parser = new Parser("gallery");
+export const parser = new Parser("gallery");
 parser.addArgument("item-selector", "a"); // selector for anchor element, which is added to the gallery.
 parser.addArgument("loop", true);
 parser.addArgument("scale-method", "fit", ["fit", "fitNoUpscale", "zoom"]);
