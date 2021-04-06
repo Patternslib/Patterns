@@ -48,7 +48,7 @@ export default Base.extend({
     },
 
     change_select(el) {
-        el.parentNode.setAttribute("data-option", el.querySelector("option:checked").text); // prettier-ignore
+        el.parentNode.setAttribute("data-option", el.querySelector("option:checked")?.text || ''); // prettier-ignore
         el.parentNode.setAttribute("data-option-value", el.value);
     },
 });
