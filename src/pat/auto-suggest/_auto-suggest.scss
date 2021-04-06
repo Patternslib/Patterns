@@ -3,11 +3,6 @@
 
 /* @group Auto suggest */
 
-.lt-ie9 .pat-autosuggest {
-    min-width: 175px;
-    /* Trying to resolve the 1px wide issue in IE8 */
-}
-
 /*
 Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
 */
@@ -21,11 +16,6 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
     *display: inline;
     vertical-align: middle;
     width: 100%;
-}
-
-.lt-ie10 .select2-container {
-    width: 100% !important;
-    height: auto !important;
 }
 
 .select2-container,
