@@ -26,7 +26,6 @@ if (!Element.prototype.matches) {
         Element.prototype.msMatchesSelector ||
         Element.prototype.webkitMatchesSelector;
 }
-
 if (!Element.prototype.closest) {
     Element.prototype.closest = function (s) {
         var el = this;
@@ -38,5 +37,10 @@ if (!Element.prototype.closest) {
     };
 }
 // END Node.closest polyfill
+
+if (!document.currentScript) {
+    var scripts = document.getElementsByTagName("script");
+    document.currentScript = scripts.length && scripts[scripts.length - 1];
+}
 
 // input.labels polyfill
