@@ -12,7 +12,7 @@ import utils from "../../core/utils";
 // Lazy loading modules.
 let ImagesLoaded;
 
-var parser = new Parser("equaliser");
+export const parser = new Parser("equaliser");
 parser.addArgument("transition", "none", ["none", "grow"]);
 parser.addArgument("effect-duration", "fast");
 parser.addArgument("effect-easing", "swing");

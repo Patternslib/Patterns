@@ -9,8 +9,9 @@ import Base from "../../core/base";
 import logging from "../../core/logging";
 import utils from "../../core/utils";
 
-var log = logging.getLogger("stacks"),
-    parser = new Parser("stacks");
+const log = logging.getLogger("stacks");
+
+export const parser = new Parser("stacks");
 parser.addArgument("selector", "> *[id]");
 parser.addArgument("transition", "none", ["none", "css", "fade", "slide"]);
 parser.addArgument("effect-duration", "fast");

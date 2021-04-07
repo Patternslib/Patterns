@@ -10,9 +10,9 @@ import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";
 
-var log = logging.getLogger("pat.carousel"),
-    parser = new Parser("carousel");
+const log = logging.getLogger("pat.carousel");
 
+export const parser = new Parser("carousel");
 parser.addArgument("auto-play", false);
 parser.addArgument("auto-play-speed", 1000);
 parser.addArgument("speed", 500);

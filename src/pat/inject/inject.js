@@ -10,10 +10,10 @@ import registry from "../../core/registry";
 import utils from "../../core/utils";
 
 const log = logging.getLogger("pat.inject");
-const parser = new Parser("inject");
 const TEXT_NODE = 3;
 const COMMENT_NODE = 8;
 
+export const parser = new Parser("inject");
 parser.addArgument("default-selector");
 parser.addArgument("target");
 parser.addArgument("data-type", "html");

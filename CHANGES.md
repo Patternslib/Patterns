@@ -26,6 +26,12 @@
 -   pat date picker: Remove ``format`` argument and just use the ISO 8601 standard "YYYY-MM-DD", like the specification of date inputs defines it.
     Format would have submitted a formatted value where the ISO standard is expected.
     This also allows for removing the dependency of ``pat-date-picker`` on MomentJS.
+-   pat datetime picker:
+        - Change CSS selectors for better namespacing and remove implicit dependency on glyphicons.
+        - Remove dependency on MomentJS.
+        - After updating the original input, let the ``change`` event bubble up.
+        - Support ``native`` behavior.
+
 
 ### Features
 
@@ -71,9 +77,13 @@
 -   pat forward: Add `self` as possible value for the `selector` option to trigger the event on itself.
 -   pat-scroll: Implement `selector:bottom` attribute value to scroll to the bottom of the scroll container.
 -   pat-scroll: Do handle click events also when trigger is set to `auto`.
+-   Allow importing styles from external libraries in Patternslib JavaScript via the global variable ``window.__patternslib_import_styles`` set to ``true``.
+    This allows loading these styles automatically via Webpack.
+
 
 ### Technical
 
+-   Webpack: Backport changes from Mockup - add loaders for images, svg, sass and xml.
 -   core polyfills: Add polyfill for Node.closest method.
 -   Core Base: ``await`` for initalization in the base class constructor, so that the ``init`` event is really thrown after initialization is done.
 -   pat calendar: Explicitly import JavaScript language files to avoid missing Webpack TypeScript loader errors.
@@ -103,6 +113,8 @@
 -   Build infra: Switch the CI system to GitHub Actions and drop Travis CI.
 -   core base: Add the parser instance to pattern attributes if available.
     We can then reuse the parser from registered patterns. This is used in the ``_rebaseHTML`` method of pat-inject to URL-rebase the pattern configuration.
+-   Export all parsers in all patterns to be able to modify default values or add aliases.
+
 
 ### Fixes
 

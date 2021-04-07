@@ -8,7 +8,7 @@ import utils from "../../core/utils";
 
 const log = logging.getLogger("autosubmit");
 
-const parser = new Parser("autosubmit");
+export const parser = new Parser("autosubmit");
 // - 400ms -> 400
 // - 400 -> 400
 // - defocus

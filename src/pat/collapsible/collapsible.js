@@ -16,9 +16,9 @@ import store from "../../core/store";
 import Base from "../../core/base";
 import "../../core/jquery-ext";
 
-var log = logging.getLogger("pat.collapsible"),
-    parser = new Parser("collapsible");
+const log = logging.getLogger("pat.collapsible");
 
+export const parser = new Parser("collapsible");
 parser.addArgument("load-content");
 parser.addArgument("store", "none", ["none", "session", "local"]);
 parser.addArgument("transition", "slide", [

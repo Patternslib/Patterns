@@ -9,9 +9,9 @@ import inject from "../inject/inject";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 
-var log = logging.getLogger("notification"),
-    parser = new Parser("notification");
+const log = logging.getLogger("notification");
 
+export const parser = new Parser("notification");
 parser.addArgument("type", "static", ["static", "banner"]);
 parser.addArgument("healing", "5s");
 parser.addArgument("controls", "icons", ["icons", "buttons", "none"]);
