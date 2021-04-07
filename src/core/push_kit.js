@@ -31,9 +31,6 @@
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 
-// Lazy loading modules.
-let StompJS;
-
 const push_kit = {
     async init() {
         const push_url = $("meta[name=patterns-push-server-url]").attr("content"); // prettier-ignore
@@ -47,7 +44,7 @@ const push_kit = {
         const push_login = $("meta[name=patterns-push-login]").attr("content"); // prettier-ignore
         const push_pass = $("meta[name=patterns-push-password]").attr("content"); // prettier-ignore
 
-        StompJS = await import("@stomp/stompjs");
+        const StompJS = await import("@stomp/stompjs");
         const client = new StompJS.Client({
             brokerURL: push_url,
             connectHeaders: {

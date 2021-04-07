@@ -9,9 +9,6 @@ import registry from "../../core/registry";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";
 
-// Lazy loading modules.
-let ImagesLoaded;
-
 export const parser = new Parser("equaliser");
 parser.addArgument("transition", "none", ["none", "grow"]);
 parser.addArgument("effect-duration", "fast");
@@ -22,8 +19,7 @@ var equaliser = {
     trigger: ".pat-equaliser, .pat-equalizer",
 
     async init($el, opts) {
-        ImagesLoaded = await import("imagesloaded");
-        ImagesLoaded = ImagesLoaded.default;
+        const ImagesLoaded = (await import("imagesloaded")).default;
 
         return $el.each(function () {
             var $container = $(this),

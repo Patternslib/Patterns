@@ -23,8 +23,7 @@ export default Base.extend({
     trigger: ".pat-fullscreen",
 
     async init($el, opts) {
-        Screenfull = await import("screenfull");
-        Screenfull = Screenfull.default;
+        Screenfull = (await import("screenfull")).default;
 
         this.options = parser.parse(this.$el, opts);
         //const el = this.$el[0];

@@ -15,8 +15,7 @@ export default Base.extend({
     name: "sticky",
     trigger: ".pat-sticky",
     async init() {
-        Stickyfill = await import("stickyfilljs");
-        Stickyfill = Stickyfill.default;
+        Stickyfill = (await import("stickyfilljs")).default;
         this.options = parser.parse(this.$el);
         this.makeSticky();
         $("body").on(

@@ -5,9 +5,6 @@ import utils from "../../core/utils";
 import Base from "../../core/base";
 import inject from "../inject/inject";
 
-// Lazy loading modules.
-let Showdown;
-
 var log = logging.getLogger("pat.markdown");
 var is_markdown_resource = /\.md$/;
 
@@ -30,8 +27,7 @@ var Markdown = Base.extend({
     },
 
     async render(text) {
-        Showdown = await import("showdown");
-        Showdown = Showdown.default;
+        const Showdown = (await import("showdown")).default;
 
         // Add support for syntax highlighting via pat-syntax-highlight
         Showdown.extensions.prettify = function () {

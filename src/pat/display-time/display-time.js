@@ -23,8 +23,7 @@ export default Base.extend({
     trigger: ".pat-display-time",
 
     async init() {
-        Moment = await import("moment");
-        Moment = Moment.default;
+        Moment = (await import("moment")).default;
 
         this.options = parser.parse(this.$el);
 

@@ -53,10 +53,8 @@ export default Base.extend({
     trigger: "form.pat-validation",
 
     async init($el, opts) {
-        Validate = await import("validate.js");
-        Validate = Validate.default;
-        Moment = await import("moment");
-        Moment = Moment.default;
+        Validate = (await import("validate.js")).default;
+        Moment = (await import("moment")).default;
 
         this.extend_validate();
 

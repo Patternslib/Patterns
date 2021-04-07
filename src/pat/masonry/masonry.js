@@ -10,7 +10,6 @@ import Base from "../../core/base";
 import utils from "../../core/utils";
 
 // Lazy loading modules.
-let ImagesLoaded;
 let Masonry;
 
 const log = logging.getLogger("pat.masonry");
@@ -44,10 +43,8 @@ export default Base.extend({
     trigger: ".pat-masonry",
 
     async init($el, opts) {
-        Masonry = await import("masonry-layout");
-        Masonry = Masonry.default;
-        ImagesLoaded = await import("imagesloaded");
-        ImagesLoaded = ImagesLoaded.default;
+        Masonry = (await import("masonry-layout")).default;
+        const ImagesLoaded = (await import("imagesloaded")).default;
 
         this.options = parser.parse(this.$el, opts);
         // Initialize

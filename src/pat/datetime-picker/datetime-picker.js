@@ -1,7 +1,6 @@
 /* pat-datetime-picker  - Polyfill for input type=datetime-local */
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import Base from "../../core/base";
-import DatePicker from "../date-picker/date-picker";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";
 import dom from "../../core/dom";
@@ -34,7 +33,9 @@ export default Base.extend({
             return;
         }
 
-        const value = el.value.split("T");
+        const DatePicker = (await import("../date-picker/date-picker")).default;
+
+        const value = this.el.value.split("T");
         const date_value = value[0] || "";
         const time_value = value[1] || "";
 

@@ -4,9 +4,6 @@ import utils from "../../core/utils";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 
-// Lazy loading modules.
-let DependsHandler;
-
 const log = logging.getLogger("depends");
 
 export const parser = new Parser("depends");
@@ -22,8 +19,7 @@ export default Base.extend({
     jquery_plugin: true,
 
     async init($el, opts) {
-        DependsHandler = await import("../../lib/dependshandler");
-        DependsHandler = DependsHandler.default;
+        const DependsHandler = (await import("../../lib/dependshandler")).default; // prettier-ignore
 
         const dependent = this.$el[0];
         const options = parser.parse(this.$el, opts);

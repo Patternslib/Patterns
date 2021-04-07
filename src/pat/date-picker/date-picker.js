@@ -5,9 +5,6 @@ import Base from "../../core/base";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";
 
-// Lazy loading modules.
-let Pikaday;
-
 export const parser = new Parser("date-picker");
 parser.addArgument("behavior", "styled", ["native", "styled"]);
 parser.addArgument("week-numbers", [], ["show", "hide"]);
@@ -67,8 +64,7 @@ export default Base.extend({
             return;
         }
 
-        Pikaday = await import("pikaday");
-        Pikaday = Pikaday.default;
+        const Pikaday = (await import("pikaday")).default;
 
         if (el.getAttribute("type") === "date") {
             el.setAttribute("type", "text");

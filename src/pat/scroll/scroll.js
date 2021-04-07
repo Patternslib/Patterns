@@ -6,9 +6,6 @@ import Base from "../../core/base";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";
 
-// Lazy loading modules.
-let ImagesLoaded;
-
 export const parser = new Parser("scroll");
 parser.addArgument("trigger", "click", ["click", "auto"]);
 parser.addArgument("direction", "top", ["top", "left"]);
@@ -23,10 +20,9 @@ export default Base.extend({
     async init($el, opts) {
         this.options = parser.parse(this.$el, opts);
         if (this.options.trigger == "auto") {
-            ImagesLoaded = await import("imagesloaded");
-            ImagesLoaded = ImagesLoaded.default;
+            const ImagesLoaded = (await import("imagesloaded")).default;
             // Only calculate the offset when all images are loaded
-            ImagesLoaded($("body"), () => this.smoothScroll());
+            ImagesLoaded(document.body, () => this.smoothScroll());
         }
         this.el.addEventListener("click", this.onClick.bind(this));
         this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
