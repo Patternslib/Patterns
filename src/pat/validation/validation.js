@@ -6,7 +6,6 @@
  */
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
-import _ from "underscore";
 import Parser from "../../core/parser";
 import Base from "../../core/base";
 import utils from "../../core/utils";
@@ -15,7 +14,7 @@ import utils from "../../core/utils";
 let Validate;
 let Moment;
 
-export const parser = new Parser("validation");
+const parser = new Parser("validation");
 parser.addArgument("disable-selector"); // Elements which must be disabled if there are errors
 parser.addArgument("message-date", "This value must be a valid date");
 parser.addArgument(
@@ -67,12 +66,7 @@ export default Base.extend({
         );
         this.$el.find("input[type=number]").on(
             "keyup mouseup",
-            _.debounce(
-                function (ev) {
-                    this.validateElement(ev.target);
-                }.bind(this),
-                500
-            )
+            utils.debounce((e) => this.validateElement(e.target), 500)
         );
         this.$inputs.on(
             "change.pat-validation",
@@ -124,7 +118,7 @@ export default Base.extend({
     getFieldType: function (input) {
         var opts = parser.parse($(input));
         var type = input.getAttribute("type");
-        if (_.contains(["datetime", "date"], opts.type)) {
+        if (["datetime", "date"].includes(opts.type)) {
             type = opts.type;
         }
         if (type === "datetime-local") {
@@ -136,21 +130,21 @@ export default Base.extend({
     setLocalDateConstraints: function (input, opts, constraints) {
         /* Set the relative date constraints, i.e. not-after and not-before, as well as custom messages.
          */
-        var name = input.getAttribute("name").replace(/\./g, "\\.");
-        var type = this.getFieldType(input);
-        var c = constraints[name][type];
+        const name = input.getAttribute("name").replace(/\./g, "\\.");
+        const type = this.getFieldType(input);
+        const c = constraints[name][type];
 
         if (!c || typeof opts == "undefined") {
             return constraints;
         }
 
-        _.each(["before", "after"], function (relation) {
-            var relative = opts.not ? opts.not[relation] : undefined;
-            var $ref;
+        for (const relation of ["before", "after"]) {
+            const relative = opts.not ? opts.not[relation] : undefined;
+            let $ref;
             if (typeof relative === "undefined") {
                 return;
             }
-            var relative_constraint =
+            const relative_constraint =
                 relation === "before" ? "earliest" : "latest";
             if (Validate.moment.isDate(relative)) {
                 c[relative_constraint] = relative;
@@ -161,7 +155,7 @@ export default Base.extend({
                     console.log(e);
                 }
                 var arr = $ref.data("pat-validation-refs") || [];
-                if (!_.contains(arr, input)) {
+                if (!arr.includes(input)) {
                     arr.unshift(input);
                     $ref.data("pat-validation-refs", arr);
                 }
@@ -170,7 +164,7 @@ export default Base.extend({
                     c[relative_constraint] = $ref.val();
                 }
             }
-        });
+        }
         return constraints;
     },
 
@@ -184,14 +178,14 @@ export default Base.extend({
             type = this.getFieldType(input),
             opts = parser.parse($(input)),
             constraint = constraints[name];
-        if (_.contains(["datetime", "date"], type)) {
+        if (["datetime", "date"].includes(type)) {
             constraints = this.setLocalDateConstraints(
                 input,
                 opts,
                 constraints
             );
         } else if (type == "number") {
-            _.each(["min", "max"], function (limit) {
+            for (const limit of ["min", "max"]) {
                 // TODO: need to figure out how to add local validation
                 // messages for numericality operators
                 if (input.getAttribute(limit)) {
@@ -206,7 +200,7 @@ export default Base.extend({
                     }
                     constraint.numericality[key] = value;
                 }
-            });
+            }
             if (opts.type == "integer") {
                 if (typeof constraint.numericality === "boolean") {
                     constraint.numericality = {};
@@ -230,14 +224,14 @@ export default Base.extend({
         }
 
         // Set local validation messages.
-        _.each(Object.keys(VALIDATION_TYPE_MAP), function (type) {
+        for (const type of Object.keys(VALIDATION_TYPE_MAP)) {
             var c = constraints[name][VALIDATION_TYPE_MAP[type]];
             if (c === false) {
                 c = { message: "^" + opts.message[type] };
             } else {
                 c.message = "^" + opts.message[type];
             }
-        });
+        }
         return constraints;
     },
 
@@ -332,9 +326,7 @@ export default Base.extend({
         );
         var group_names = this.$inputs
             .filter(":enabled:checkbox, :enabled:radio")
-            .map(function () {
-                return this.getAttribute("name");
-            });
+            .map(() => this.getAttribute("name"));
         var handleError = function (error) {
             if (typeof error != "undefined") {
                 if (!has_errors && ev) {
@@ -380,21 +372,18 @@ export default Base.extend({
     },
 
     validateGroupedElement: function (name) {
-        /* Handler which gets called for :checkbox and :radio elments. */
-        var input = this.$el.find('[name="' + name + '"]')[0];
-        var error = Validate(
-            _.pick(Validate.collectFormValues(this.$el), name),
+        // Handler which gets called for :checkbox and :radio elments.
+        const input = this.$el.find('[name="' + name + '"]')[0];
+        const error = Validate(
+            Validate.collectFormValues(this.$el)[name],
             this.getConstraints(input)
         );
         if (!error) {
             this.removeError(input);
         } else {
-            _.each(
-                error[name.replace(/\./g, "\\.")],
-                function (msg) {
-                    this.showError(this.customizeMessage(msg, input), input);
-                }.bind(this)
-            );
+            for (const msg of error[name.replace(/\./g, "\\.")]) {
+                this.showError(this.customizeMessage(msg, input), input);
+            }
         }
         return error;
     },
@@ -415,18 +404,14 @@ export default Base.extend({
             this.removeError(input);
         } else {
             var name = input.getAttribute("name").replace(/\./g, "\\.");
-            _.each(
-                error[name],
-                function (msg) {
-                    this.showError(this.customizeMessage(msg, input), input);
-                }.bind(this)
-            );
+            for (const msg of error[name]) {
+                this.showError(this.customizeMessage(msg, input), input);
+            }
         }
         if (!no_recurse) {
-            _.each(
-                $(input).data("pat-validation-refs") || [],
-                _.partial(this.validateElement.bind(this), _, true)
-            );
+            for (const it of $(input).data("pat-validation-refs") || []) {
+                this.validateElement(it, true);
+            }
         }
         return error;
     },
