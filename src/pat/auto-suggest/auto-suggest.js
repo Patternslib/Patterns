@@ -42,7 +42,7 @@ export default Base.extend({
 
     async init() {
         if (window.__patternslib_import_styles) {
-            import("select2/select2.css");
+            import("patterns-sass/components/_auto-suggest.scss");
         }
         await import("select2");
 
