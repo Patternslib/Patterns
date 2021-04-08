@@ -3,14 +3,26 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Demo page</title>
-        <link rel="stylesheet" href="/style/common.css" type="text/css" />
         <script
             src="/dist/bundle.js"
             type="text/javascript"
             charset="utf-8"
         ></script>
+        <style type="text/css" media="screen">
+          .pat-bumper {
+              z-index: 99;
+          }
+          .pat-bumper.success {
+              background-color: green;
+              color: white;
+          }
+          .pat-bumper.warning {
+              background-color: red;
+              color: black;
+          }
+        </style>
     </head>
-    <body>
+    <body style="height: 200vh">
         <div style="height: 82px">
             <div
                 class="pat-bumper pat-message success"
