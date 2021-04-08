@@ -28,34 +28,31 @@ export default Base.extend({
     name: "carousel",
     trigger: ".pat-carousel",
 
-    async init(el, opts) {
+    async init() {
         await import("slick-carousel");
 
-        if (el.jquery) {
-            el = el[0];
+        this.options = parser.parse(this.el, this.options);
+        this.settings = {
+            autoplay: this.options.auto.play,
+            autoplaySpeed: this.options.auto["play-speed"],
+            speed: this.options.speed,
+            adaptiveHeight: this.options.height === "adaptive",
+            arrows: this.options.arrows === "show",
+            slidesToShow: this.options.slides["to-show"],
+            slidesToScroll: this.options.slides["to-scroll"],
+            dots: this.options.dots === "show",
+            infinite: this.options.infinite,
+        };
+        if (this.options.appendDots) {
+            this.settings.appendDots = this.options.appendDots;
         }
-        const options = parser.parse(el, opts);
-        const settings = {};
 
-        settings.autoplay = options.auto.play;
-        settings.autoplaySpeed = options.auto["play-speed"];
-        settings.speed = options.speed;
-        settings.adaptiveHeight = options.height === "adaptive";
-        settings.arrows = options.arrows === "show";
-        settings.slidesToShow = options.slides["to-show"];
-        settings.slidesToScroll = options.slides["to-scroll"];
-        settings.dots = options.dots === "show";
-        if (options.appendDots) {
-            settings.appendDots = options.appendDots;
-        }
-        settings.infinite = options.infinite;
-
-        this.setup(el, settings);
+        this.setup();
     },
 
-    async setup(el, settings) {
+    async setup() {
         let loaded = true;
-        const images = el.querySelectorAll("img");
+        const images = this.el.querySelectorAll("img");
         for (let img of images) {
             if (!img.complete || img.naturalWidth === 0) {
                 loaded = false;
@@ -64,10 +61,10 @@ export default Base.extend({
         if (!loaded) {
             log.debug("Delaying carousel setup until images have loaded.");
             await utils.timeout(50);
-            this.setup(el, settings);
+            this.setup();
             return;
         }
-        const $carousel = $(el).slick(settings);
+        const $carousel = $(this.el).slick(this.settings);
         let $panel_links = $();
 
         $carousel
