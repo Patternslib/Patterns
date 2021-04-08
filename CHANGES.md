@@ -82,6 +82,7 @@
 
 ### Technical
 
+-   Infrastructure: Upgrade jQuery to 3.6.0.
 -   Webpack: Backport changes from Mockup - add loaders for images, svg, sass and xml.
 -   Webpack: Automatically detect the chunk path or "__webpack_public_path__" while still allowing for overriding via "__patternslib_public_path__".
 -   Export all parsers in all patterns to be able to modify default values or add aliases.

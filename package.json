@@ -27,7 +27,7 @@
     "google-code-prettify": "^1.0.5",
     "imagesloaded": "^4.1.4",
     "intersection-observer": "^0.7.0",
-    "jquery": "^3.5.1",
+    "jquery": "^3.6.0",
     "jquery-jcrop": "^0.9.13",
     "luxon": "^1.24.1",
     "masonry-layout": "^4.2.2",
@@ -87,7 +87,7 @@
   },
   "resolutions": {
     "clean-css": "4.2.3",
-    "jquery": "3.5.1",
+    "jquery": "3.6.0",
     "lodash": "4.17.20",
     "moment": "2.29.0",
     "serialize-javascript": "4.0.0",
