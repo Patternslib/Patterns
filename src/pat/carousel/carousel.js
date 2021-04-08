@@ -8,7 +8,6 @@ import $ from "jquery";
 import Base from "../../core/base";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
-import utils from "../../core/utils";
 
 var log = logging.getLogger("pat.carousel"),
     parser = new Parser("carousel");
@@ -30,6 +29,7 @@ export default Base.extend({
 
     async init() {
         await import("slick-carousel");
+        const ImagesLoaded = (await import("imagesloaded")).default;
 
         this.options = parser.parse(this.el, this.options);
         this.settings = {
@@ -47,23 +47,10 @@ export default Base.extend({
             this.settings.appendDots = this.options.appendDots;
         }
 
-        this.setup();
+        ImagesLoaded(this.el, () => this.setup());
     },
 
-    async setup() {
-        let loaded = true;
-        const images = this.el.querySelectorAll("img");
-        for (let img of images) {
-            if (!img.complete || img.naturalWidth === 0) {
-                loaded = false;
-            }
-        }
-        if (!loaded) {
-            log.debug("Delaying carousel setup until images have loaded.");
-            await utils.timeout(50);
-            this.setup();
-            return;
-        }
+    setup() {
         const $carousel = $(this.el).slick(this.settings);
         let $panel_links = $();
 
