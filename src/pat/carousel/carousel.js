@@ -29,7 +29,7 @@ export default Base.extend({
 
     async init() {
         if (window.__patternslib_import_styles) {
-            import("slick-carousel/slick/slick.scss");
+            import("patterns-sass/components/_carousel.scss");
         }
         await import("slick-carousel");
         const ImagesLoaded = (await import("imagesloaded")).default;
