@@ -18,6 +18,10 @@ export default Base.extend({
     all_radios: [],
 
     init() {
+        if (window.__patternslib_import_styles) {
+            import("patterns-sass/components/_checklist.scss");
+        }
+
         this.options = parser.parse(this.el, this.options, false);
         this.$el.on("patterns-injected", this._init.bind(this));
         this._init();
