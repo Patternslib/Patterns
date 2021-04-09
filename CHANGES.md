@@ -35,6 +35,7 @@
 
 ### Features
 
+-   pat date picker: Import styles for pikaday.
 -   Styles: Import styles by setting ``__patternslib_import_styles``
     Allow importing styles from external libraries in Patternslib JavaScript via the global variable ``window.__patternslib_import_styles`` set to ``true``.
     This allows loading these styles automatically via Webpack.

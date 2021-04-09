@@ -64,6 +64,9 @@ export default Base.extend({
             return;
         }
 
+        if (window.__patternslib_import_styles) {
+            import("pikaday/scss/pikaday.scss");
+        }
         const Pikaday = (await import("pikaday")).default;
 
         if (el.getAttribute("type") === "date") {
