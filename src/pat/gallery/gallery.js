@@ -22,6 +22,10 @@ export default Base.extend({
     origBodyOverflow: "auto",
 
     async init($el, opts) {
+        if (window.__patternslib_import_styles) {
+            import("photoswipe/dist/photoswipe.css");
+            import("photoswipe/dist/default-skin/default-skin.css");
+        }
         const PhotoSwipe = (await import("photoswipe")).default;
         const PhotoSwipeUI = (await import("photoswipe/dist/photoswipe-ui-default")).default; // prettier-ignore
 

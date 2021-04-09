@@ -35,6 +35,7 @@
 
 ### Features
 
+-   pat gallery: Import styles for photoswipe.
 -   pat carousel: Import styles for slick carousel.
 -   pat auto suggest: Import styles for select2.
 -   pat-tooltip: Import styles for tippy.
