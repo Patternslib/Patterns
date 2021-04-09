@@ -1,15 +1,14 @@
 /* pat-datetime-picker  - Polyfill for input type=datetime-local */
 import "regenerator-runtime/runtime"; // needed for ``await`` support
-import $ from "jquery";
 import Base from "../../core/base";
 import DatePicker from "../date-picker/date-picker";
 import Parser from "../../core/parser";
-
-// Lazy loading modules.
-let Moment;
+import utils from "../../core/utils";
+import dom from "../../core/dom";
 
 const parser = new Parser("datetime-picker");
 parser.addArgument("behavior", "styled", ["native", "styled"]);
+
 parser.addArgument("format", "YYYY-MM-DD");
 parser.addArgument("week-numbers", [], ["show", "hide"]);
 parser.addArgument("i18n"); // URL pointing to JSON resource with i18n values
@@ -21,68 +20,69 @@ export default Base.extend({
     name: "datetime-picker",
     trigger: ".pat-datetime-picker",
     parser: parser,
+    el_date: null,
+    el_time: null,
 
     async init() {
         const el = this.el;
-        this.options = $.extend(parser.parse(el), this.options);
+        this.options = parser.parse(this.el, this.options);
 
-        Moment = await import("moment");
-        Moment = Moment.default;
+        if (
+            this.options.behavior === "native" &&
+            utils.checkInputSupport("datetime-local", "invalid date")
+        ) {
+            return;
+        }
 
         const value = el.value.split("T");
         const date_value = value[0] || "";
         const time_value = value[1] || "";
 
-        el.style.display = "none";
-
         const el_wrapper = document.createElement("div");
-        el_wrapper.setAttribute("class", "datetime-picker-wrapper");
+        el_wrapper.setAttribute("class", "pat-datetime-picker__wrapper");
 
-        const html_date = `<input class="date" type="date" placeholder="YYYY-MM-DD" value="${date_value}" />`;
-        const html_time = `<input class="time" type="time" placeholder="hh:mm" value="${time_value}" />`;
+        dom.hide(el);
 
         // let the buttons be of type button otherwise they are submit buttons
         const html_btn_now = `
-            <button type="button" class="now" title="${this.options.today}">
-                <span class="glyphicon glyphicon-time"/>
-                ${this.options.today}
+            <button type="button" class="_btn _now" title="${this.options.today}">
+                <span class="_icon"/>
+                <span class="_text">${this.options.today}</span>
             </button>`;
         const html_btn_clear = `
-            <button type="button" class="clear ${this.options.classClearName}" title="${this.options.clear}">
-                <span class="glyphicon glyphicon-trash"/>
-                ${this.options.clear}
+            <button type="button" class="_btn _clear" title="${this.options.clear}">
+                <span class="_icon"/>
+                <span class="_text">${this.options.clear}</span>
             </button>`;
 
         el_wrapper.innerHTML = `
-            ${html_date}
-            ${html_time}
+            <input type="date" placeholder="YYYY-MM-DD" value="${date_value}" />
+            <input type="time" placeholder="hh:mm" value="${time_value}" />
             ${this.options.today ? html_btn_now : ""}
             ${this.options.clear ? html_btn_clear : ""}
         `;
 
-        const el_time = el_wrapper.querySelector(".time");
-        el_time.addEventListener("change", () => this.update());
-        this.el_time = el_time;
+        this.el_time = el_wrapper.querySelector("input[type=time]");
+        this.el_time.addEventListener("change", () => this.update());
 
-        const el_date = el_wrapper.querySelector(".date");
-        el_date.addEventListener("change", () => {
+        this.el_date = el_wrapper.querySelector("input[type=date]");
+        this.el_date.addEventListener("change", () => {
             if (!this.el_time.value) {
                 // Set time on date change, if time was empty.
                 this.el_time.value = this.isotime();
             }
             this.update();
         });
+
         const date_options = {
             behavior: this.options.behavior,
-            format: this.options.format,
             weekNumbers: this.options.weekNumbers,
             firstDay: this.options.firstDay,
         };
-        DatePicker.init(el_date, date_options);
-        this.el_date = el_date;
+        await DatePicker.init(this.el_date, date_options);
 
         if (this.options.today) {
-            const btn_now = el_wrapper.querySelector(".now");
+            const btn_now = el_wrapper.querySelector("._btn._now");
             btn_now.addEventListener("click", (e) => {
                 e.preventDefault();
                 this.el_date.value = this.isodate();
@@ -92,7 +92,7 @@ export default Base.extend({
         }
 
         if (this.options.clear) {
-            const btn_clear = el_wrapper.querySelector(".clear");
+            const btn_clear = el_wrapper.querySelector("._btn._clear");
             btn_clear.addEventListener("click", (e) => {
                 e.preventDefault();
                 this.el_date.value = "";
@@ -107,8 +107,7 @@ export default Base.extend({
 
     update() {
         if (this.el_date.value && this.el_time.value) {
-            const date = Moment(this.el_date.value).format(this.options.format);
-            this.el.value = date + "T" + this.el_time.value;
+            this.el.value = `${this.el_date.value}T${this.el_time.value}`;
         } else {
             this.el.value = "";
         }

@@ -26,6 +26,12 @@
 -   pat date picker: Remove ``format`` argument and just use the ISO 8601 standard "YYYY-MM-DD", like the specification of date inputs defines it.
     Format would have submitted a formatted value where the ISO standard is expected.
     This also allows for removing the dependency of ``pat-date-picker`` on MomentJS.
+-   pat datetime picker:
+        - Change CSS selectors for better namespacing and remove implicit dependency on glyphicons.
+        - Remove dependency on MomentJS.
+        - After updating the original input, let the ``change`` event bubble up.
+        - Support ``native`` behavior.
+
 
 ### Features
 
@@ -72,6 +78,7 @@
 -   pat forward: Add `self` as possible value for the `selector` option to trigger the event on itself.
 -   pat-scroll: Implement `selector:bottom` attribute value to scroll to the bottom of the scroll container.
 -   pat-scroll: Do handle click events also when trigger is set to `auto`.
+
 
 ### Technical
 
