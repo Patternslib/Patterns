@@ -35,6 +35,10 @@
 
 ### Features
 
+-   Styles: Import styles by setting ``__patternslib_import_styles``
+    Allow importing styles from external libraries in Patternslib JavaScript via the global variable ``window.__patternslib_import_styles`` set to ``true``.
+    This allows loading these styles automatically via Webpack.
+    Disable setting style import per default.
 -   pat carousel: Use ``imagesloaded`` instead of timeout to wait for images to have been loaded.
 -   core registry: Do not scan patterns within trees with attribute ``hidden`` or class ``cant-touch-this``.
 -   Implenent lazy loading for external libraries via dynamic imports. Leads to significantly reduced bundle sizes.

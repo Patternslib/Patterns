@@ -63,5 +63,9 @@ import "./pat/zoom/zoom";
 // example pattern
 import "./pat/minimalpattern/minimalpattern";
 
+// Importing pattern styles in JavaScript
+// Set to ``true`` to include core styles via JavaScript
+window.__patternslib_import_styles = false;
+
 window.jQuery = jquery;
 registry.init();
