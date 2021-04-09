@@ -41,6 +41,9 @@ export default Base.extend({
     trigger: ".pat-autosuggest,.pat-auto-suggest",
 
     async init() {
+        if (window.__patternslib_import_styles) {
+            import("select2/select2.css");
+        }
         await import("select2");
 
         this.options = parser.parse(this.el, this.options);

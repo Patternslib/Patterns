@@ -35,6 +35,7 @@
 
 ### Features
 
+-   pat auto suggest: Import styles for select2.
 -   pat-tooltip: Import styles for tippy.
 -   pat-modal: Import styles.
 -   pat datetime picker: Import styles.
