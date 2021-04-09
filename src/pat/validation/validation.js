@@ -15,7 +15,7 @@ import utils from "../../core/utils";
 let Validate;
 let Moment;
 
-const parser = new Parser("validation");
+export const parser = new Parser("validation");
 parser.addArgument("disable-selector"); // Elements which must be disabled if there are errors
 parser.addArgument("message-date", "This value must be a valid date");
 parser.addArgument(
@@ -53,10 +53,8 @@ export default Base.extend({
     trigger: "form.pat-validation",
 
     async init($el, opts) {
-        Validate = await import("validate.js");
-        Validate = Validate.default;
-        Moment = await import("moment");
-        Moment = Moment.default;
+        Validate = (await import("validate.js")).default;
+        Moment = (await import("moment")).default;
 
         this.extend_validate();
 

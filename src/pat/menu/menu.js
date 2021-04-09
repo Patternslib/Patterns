@@ -2,8 +2,7 @@ import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 
-const parser = new Parser("fullscreen");
-
+export const parser = new Parser("fullscreen");
 parser.addArgument("nav-item-selector", "li"); // CSS Selector for navigation items.
 
 export default Base.extend({

@@ -26,9 +26,27 @@
 -   pat date picker: Remove ``format`` argument and just use the ISO 8601 standard "YYYY-MM-DD", like the specification of date inputs defines it.
     Format would have submitted a formatted value where the ISO standard is expected.
     This also allows for removing the dependency of ``pat-date-picker`` on MomentJS.
+-   pat datetime picker:
+        - Change CSS selectors for better namespacing and remove implicit dependency on glyphicons.
+        - Remove dependency on MomentJS.
+        - After updating the original input, let the ``change`` event bubble up.
+        - Support ``native`` behavior.
+
 
 ### Features
 
+-   pat gallery: Import styles for photoswipe.
+-   pat carousel: Import styles for slick carousel.
+-   pat auto suggest: Import styles for select2.
+-   pat-tooltip: Import styles for tippy.
+-   pat-modal: Import styles.
+-   pat datetime picker: Import styles.
+-   pat date picker: Import styles for pikaday.
+-   Styles: Import styles by setting ``__patternslib_import_styles``
+    Allow importing styles from external libraries in Patternslib JavaScript via the global variable ``window.__patternslib_import_styles`` set to ``true``.
+    This allows loading these styles automatically via Webpack.
+    Disable setting style import per default.
+-   pat carousel: Use ``imagesloaded`` instead of timeout to wait for images to have been loaded.
 -   core registry: Do not scan patterns within trees with attribute ``hidden`` or class ``cant-touch-this``.
 -   Implenent lazy loading for external libraries via dynamic imports. Leads to significantly reduced bundle sizes.
 -   Upgrade pat-calendar to use latest fullcalendar version (5.3.0).
@@ -72,8 +90,13 @@
 -   pat-scroll: Implement `selector:bottom` attribute value to scroll to the bottom of the scroll container.
 -   pat-scroll: Do handle click events also when trigger is set to `auto`.
 
+
 ### Technical
 
+-   Infrastructure: Upgrade jQuery to 3.6.0.
+-   Webpack: Backport changes from Mockup - add loaders for images, svg, sass and xml.
+-   Webpack: Automatically detect the chunk path or "__webpack_public_path__" while still allowing for overriding via "__patternslib_public_path__".
+-   Export all parsers in all patterns to be able to modify default values or add aliases.
 -   core polyfills: Add polyfill for Node.closest method.
 -   Core Base: ``await`` for initalization in the base class constructor, so that the ``init`` event is really thrown after initialization is done.
 -   pat calendar: Explicitly import JavaScript language files to avoid missing Webpack TypeScript loader errors.
@@ -103,6 +126,7 @@
 -   Build infra: Switch the CI system to GitHub Actions and drop Travis CI.
 -   core base: Add the parser instance to pattern attributes if available.
     We can then reuse the parser from registered patterns. This is used in the ``_rebaseHTML`` method of pat-inject to URL-rebase the pattern configuration.
+
 
 ### Fixes
 

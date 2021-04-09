@@ -6,12 +6,9 @@ import Parser from "../../core/parser";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 
-// Lazy loading modules.
-let Tippy;
-
 const log = logging.getLogger("pat-tooltip");
 
-const parser = new Parser("tooltip");
+export const parser = new Parser("tooltip");
 const all_positions = [
     "tl",
     "tm",
@@ -54,8 +51,10 @@ export default Base.extend({
     async init($el, opts) {
         const el = this.el;
 
-        Tippy = await import("tippy.js");
-        Tippy = Tippy.default;
+        if (window.__patternslib_import_styles) {
+            import("tippy.js/dist/tippy.css");
+        }
+        const Tippy = (await import("tippy.js")).default;
 
         this.options = parser.parse(el, opts);
         this.tippy_options = this.parseOptionsForTippy(this.options);

@@ -1,4 +1,3 @@
-// Organised as described in https://simonsmith.io/organising-webpack-config-environments/
 process.traceDeprecation = true;
 const path = require("path");
 const webpack = require("webpack");
@@ -47,11 +46,13 @@ module.exports = (env) => {
             rules: [
                 {
                     test: /\.js$/,
-                    exclude: /node_modules/,
+                    // Exclude node modules except patternslib and pat-* packgages.
+                    // Allows for extending this file without needing to override for a successful webpack build.
+                    exclude: /node_modules\/(?!(patternslib)\/)(?!(pat-.*)\/).*/,
                     loader: "babel-loader",
                 },
                 {
-                    test: /\.html$/i,
+                    test: /\.*(?:html|xml)$/i,
                     use: "raw-loader",
                 },
                 {
@@ -77,7 +78,7 @@ module.exports = (env) => {
                     ],
                 },
                 {
-                    test: /\.css$/,
+                    test: /\.(?:sass|scss|css)$/i,
                     use: [
                         {
                             loader: "style-loader",
@@ -86,7 +87,16 @@ module.exports = (env) => {
                             },
                         },
                         "css-loader",
+                        "sass-loader",
                     ],
+                },
+                {
+                    test: /\.(png|jpe?g|gif)$/i,
+                    use: "file-loader",
+                },
+                {
+                    test: /\.svg$/,
+                    loader: "svg-inline-loader",
                 },
             ],
         },

@@ -13,7 +13,7 @@ describe("carousel-plugin", function () {
     });
 
     describe("init", function () {
-        it("Default options", async () => {
+        it("Default options 1", async () => {
             $("#lab").html(
                 "<ul class='pat-carousel'>" +
                     "  <li>Panel 1</li>" +
@@ -22,13 +22,13 @@ describe("carousel-plugin", function () {
             );
 
             pattern.init(document.createElement("div")); // Just to async-load slick before initializing the spy.
-            await utils.timeout(1); // wait a tick for async to settle.
+            await utils.timeout(10); // wait a bit for all to settle.
 
             var $carousel = $("#lab ul");
             var spy_slick = jest.spyOn($.fn, "slick");
 
             pattern.init($carousel);
-            await utils.timeout(1); // wait a tick for async to settle.
+            await utils.timeout(20); // wait a bit for all to settle.
 
             expect(spy_slick).toHaveBeenCalled();
 
@@ -44,7 +44,7 @@ describe("carousel-plugin", function () {
             expect(options.appendDots).toBe(undefined);
         });
 
-        it("Default options (DOM test)", async () => {
+        it("Default options 2 (DOM test)", async () => {
             $("#lab").html(
                 "<ul class='pat-carousel'>" +
                     "  <li>Panel 1</li>" +
@@ -53,7 +53,7 @@ describe("carousel-plugin", function () {
             );
             var $carousel = $("#lab ul");
             pattern.init($carousel);
-            await utils.timeout(1); // wait a tick for async to settle.
+            await utils.timeout(20); // wait a bit for all to settle.
 
             // has been initialized
             expect($carousel.hasClass("slick-initialized")).toBe(true);
@@ -75,7 +75,7 @@ describe("carousel-plugin", function () {
             var $carousel = $("#lab ul");
             var spy_slick = jest.spyOn($.fn, "slick");
             pattern.init($carousel);
-            await utils.timeout(1); // wait a tick for async to settle.
+            await utils.timeout(20); // wait a bit for all to settle.
 
             expect(spy_slick).toHaveBeenCalled();
             var options = spy_slick.mock.calls[0][0];

@@ -8,11 +8,10 @@ import $ from "jquery";
 import Base from "../../core/base";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
-import utils from "../../core/utils";
 
-var log = logging.getLogger("pat.carousel"),
-    parser = new Parser("carousel");
+const log = logging.getLogger("pat.carousel");
 
+export const parser = new Parser("carousel");
 parser.addArgument("auto-play", false);
 parser.addArgument("auto-play-speed", 1000);
 parser.addArgument("speed", 500);
@@ -28,46 +27,34 @@ export default Base.extend({
     name: "carousel",
     trigger: ".pat-carousel",
 
-    async init(el, opts) {
+    async init() {
+        if (window.__patternslib_import_styles) {
+            import("slick-carousel/slick/slick.scss");
+        }
         await import("slick-carousel");
+        const ImagesLoaded = (await import("imagesloaded")).default;
 
-        if (el.jquery) {
-            el = el[0];
+        this.options = parser.parse(this.el, this.options);
+        this.settings = {
+            autoplay: this.options.auto.play,
+            autoplaySpeed: this.options.auto["play-speed"],
+            speed: this.options.speed,
+            adaptiveHeight: this.options.height === "adaptive",
+            arrows: this.options.arrows === "show",
+            slidesToShow: this.options.slides["to-show"],
+            slidesToScroll: this.options.slides["to-scroll"],
+            dots: this.options.dots === "show",
+            infinite: this.options.infinite,
+        };
+        if (this.options.appendDots) {
+            this.settings.appendDots = this.options.appendDots;
         }
-        const options = parser.parse(el, opts);
-        const settings = {};
 
-        settings.autoplay = options.auto.play;
-        settings.autoplaySpeed = options.auto["play-speed"];
-        settings.speed = options.speed;
-        settings.adaptiveHeight = options.height === "adaptive";
-        settings.arrows = options.arrows === "show";
-        settings.slidesToShow = options.slides["to-show"];
-        settings.slidesToScroll = options.slides["to-scroll"];
-        settings.dots = options.dots === "show";
-        if (options.appendDots) {
-            settings.appendDots = options.appendDots;
-        }
-        settings.infinite = options.infinite;
-
-        this.setup(el, settings);
+        ImagesLoaded(this.el, () => this.setup());
     },
 
-    async setup(el, settings) {
-        let loaded = true;
-        const images = el.querySelectorAll("img");
-        for (let img of images) {
-            if (!img.complete || img.naturalWidth === 0) {
-                loaded = false;
-            }
-        }
-        if (!loaded) {
-            log.debug("Delaying carousel setup until images have loaded.");
-            await utils.timeout(50);
-            this.setup(el, settings);
-            return;
-        }
-        const $carousel = $(el).slick(settings);
+    setup() {
+        const $carousel = $(this.el).slick(this.settings);
         let $panel_links = $();
 
         $carousel

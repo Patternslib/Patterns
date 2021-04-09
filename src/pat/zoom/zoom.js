@@ -2,8 +2,7 @@ import $ from "jquery";
 import registry from "../../core/registry";
 import Parser from "../../core/parser";
 
-var parser = new Parser("zoom");
-
+export const parser = new Parser("zoom");
 parser.addArgument("min", 0);
 parser.addArgument("max", 2);
 

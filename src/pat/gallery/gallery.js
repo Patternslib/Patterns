@@ -9,12 +9,7 @@ import _ from "underscore";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 
-// Lazy loading modules.
-let Template;
-let PhotoSwipe;
-let PhotoSwipeUI;
-
-var parser = new Parser("gallery");
+export const parser = new Parser("gallery");
 parser.addArgument("item-selector", "a"); // selector for anchor element, which is added to the gallery.
 parser.addArgument("loop", true);
 parser.addArgument("scale-method", "fit", ["fit", "fitNoUpscale", "zoom"]);
@@ -27,15 +22,16 @@ export default Base.extend({
     origBodyOverflow: "auto",
 
     async init($el, opts) {
-        PhotoSwipe = await import("photoswipe");
-        PhotoSwipe = PhotoSwipe.default;
-        PhotoSwipeUI = await import("photoswipe/dist/photoswipe-ui-default");
-        PhotoSwipeUI = PhotoSwipeUI.default;
+        if (window.__patternslib_import_styles) {
+            import("photoswipe/dist/photoswipe.css");
+            import("photoswipe/dist/default-skin/default-skin.css");
+        }
+        const PhotoSwipe = (await import("photoswipe")).default;
+        const PhotoSwipeUI = (await import("photoswipe/dist/photoswipe-ui-default")).default; // prettier-ignore
 
         this.options = parser.parse(this.$el, opts);
         if ($("#photoswipe-template").length === 0) {
-            Template = await import("./template.html");
-            Template = Template.default;
+            const Template = (await import("./template.html")).default;
             $("body").append(_.template(Template)());
         }
 

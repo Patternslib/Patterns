@@ -7,7 +7,8 @@ import logging from "../../core/logging";
 let Moment;
 
 const log = logging.getLogger("pat-display-time");
-const parser = new Parser("display-time");
+
+export const parser = new Parser("display-time");
 // input datetime options
 parser.add_argument("format", "");
 parser.add_argument("locale", "");
@@ -22,8 +23,7 @@ export default Base.extend({
     trigger: ".pat-display-time",
 
     async init() {
-        Moment = await import("moment");
-        Moment = Moment.default;
+        Moment = (await import("moment")).default;
 
         this.options = parser.parse(this.$el);
 

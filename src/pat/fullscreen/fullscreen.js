@@ -7,8 +7,8 @@ import logging from "../../core/logging";
 let Screenfull;
 
 const log = logging.getLogger("fullscreen");
-const parser = new Parser("fullscreen");
 
+export const parser = new Parser("fullscreen");
 parser.addArgument("selector", null); // Selector for the fullscreen element.
 parser.addArgument("close-button", "none", ["none", "show"]); // Inject a fullscreen button.
 
@@ -23,8 +23,7 @@ export default Base.extend({
     trigger: ".pat-fullscreen",
 
     async init($el, opts) {
-        Screenfull = await import("screenfull");
-        Screenfull = Screenfull.default;
+        Screenfull = (await import("screenfull")).default;
 
         this.options = parser.parse(this.$el, opts);
         //const el = this.$el[0];

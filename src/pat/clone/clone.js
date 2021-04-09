@@ -8,7 +8,7 @@ import logging from "../../core/logging";
 const log = logging.getLogger("pat-clone");
 const TEXT_NODE = 3;
 
-const parser = new Parser("clone");
+export const parser = new Parser("clone");
 parser.addArgument("max");
 parser.addArgument("template", ":first");
 parser.addArgument("trigger-element", ".add-clone");

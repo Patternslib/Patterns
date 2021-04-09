@@ -2,7 +2,7 @@ import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 
-var parser = new Parser("sortable");
+export const parser = new Parser("sortable");
 parser.addArgument("selector", "li");
 parser.addArgument("drag-class", "dragged"); // Class to apply to item that is being dragged.
 parser.addArgument("drop"); // Callback function for when item is dropped (null)

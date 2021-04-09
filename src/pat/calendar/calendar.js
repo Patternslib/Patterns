@@ -7,7 +7,7 @@ import registry from "../../core/registry";
 import store from "../../core/store";
 
 const log = logging.getLogger("calendar");
-const parser = new Parser("calendar");
+export const parser = new Parser("calendar");
 
 parser.addArgument("calendar-controls", ""); // Calendar controls must have "id" attr set
 parser.addArgument("category-controls", "");
@@ -101,18 +101,12 @@ export default Base.extend({
     async init($el, opts) {
         const el = this.el;
 
-        let Calendar = await import("@fullcalendar/core");
-        Calendar = Calendar.Calendar;
-        let fcDayGrid = await import("@fullcalendar/daygrid");
-        let fcInteraction = await import("@fullcalendar/interaction");
-        let fcList = await import("@fullcalendar/list");
-        let fcLuxon = await import("@fullcalendar/luxon");
-        let fcTimeGrid = await import("@fullcalendar/timegrid");
-        fcDayGrid = fcDayGrid.default;
-        fcInteraction = fcInteraction.default;
-        fcList = fcList.default;
-        fcLuxon = fcLuxon.default;
-        fcTimeGrid = fcTimeGrid.default;
+        const Calendar = (await import("@fullcalendar/core")).Calendar;
+        const fcDayGrid = (await import("@fullcalendar/daygrid")).default;
+        const fcInteraction = (await import("@fullcalendar/interaction")).default; // prettier-ignore
+        const fcList = (await import("@fullcalendar/list")).default;
+        const fcLuxon = (await import("@fullcalendar/luxon")).default;
+        const fcTimeGrid = (await import("@fullcalendar/timegrid")).default;
 
         // Save some UI elements for reuse.
         this.el_jump_next = el.querySelector(".jump-next");

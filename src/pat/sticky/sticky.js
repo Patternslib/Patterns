@@ -8,15 +8,14 @@ import utils from "../../core/utils";
 // Lazy loading modules.
 let Stickyfill;
 
-var parser = new Parser("sticky");
+export const parser = new Parser("sticky");
 parser.addArgument("selector", "");
 
 export default Base.extend({
     name: "sticky",
     trigger: ".pat-sticky",
     async init() {
-        Stickyfill = await import("stickyfilljs");
-        Stickyfill = Stickyfill.default;
+        Stickyfill = (await import("stickyfilljs")).default;
         this.options = parser.parse(this.$el);
         this.makeSticky();
         $("body").on(
