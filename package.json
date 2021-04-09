@@ -72,6 +72,7 @@
     "prettier": "^2.1.2",
     "raw-loader": "^4.0.1",
     "regenerator-runtime": "^0.13.5",
+    "release-it": "^14.6.0",
     "sass": "^1.32.8",
     "sass-loader": "^10.1.1",
     "style-loader": "^1.2.1",
@@ -98,7 +99,16 @@
     "build": "webpack --config webpack/prod.config.js --env.NODE_ENV=production",
     "build:stats": "webpack --config webpack/prod.config.js --env.NODE_ENV=production --json > stats.json",
     "test": "jest --watch",
-    "testonce": "jest"
+    "testonce": "jest",
+    "release-test": "release-it --dry-run",
+    "release": "release-it"
+  },
+  "release-it": {
+    "git": {},
+    "github": {
+      "release": true,
+      "releaseName": "${version}"
+    }
   },
   "browserslist": [
     ">0.2%",
