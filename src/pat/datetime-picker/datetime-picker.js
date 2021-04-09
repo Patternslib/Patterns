@@ -33,6 +33,9 @@ export default Base.extend({
             return;
         }
 
+        if (window.__patternslib_import_styles) {
+            import("./_datetime-picker.scss");
+        }
         const DatePicker = (await import("../date-picker/date-picker")).default;
 
         const value = this.el.value.split("T");
