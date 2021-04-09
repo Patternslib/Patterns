@@ -28,6 +28,9 @@ export default Base.extend({
     trigger: ".pat-carousel",
 
     async init() {
+        if (window.__patternslib_import_styles) {
+            import("slick-carousel/slick/slick.scss");
+        }
         await import("slick-carousel");
         const ImagesLoaded = (await import("imagesloaded")).default;
 
