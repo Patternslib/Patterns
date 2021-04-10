@@ -27,6 +27,10 @@ export default Base.extend({
     trigger: ".pat-bumper",
 
     init: function initBumper($el, opts) {
+        if (window.__patternslib_import_styles) {
+            import("patterns-sass/components/_bumper.scss");
+        }
+
         this.options = parser.parse(this.$el, opts);
         this.$container = this._findScrollContainer();
 

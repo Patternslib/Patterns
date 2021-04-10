@@ -86,7 +86,12 @@ module.exports = (env) => {
                                 insert: webpack_helpers.top_head_insert,
                             },
                         },
-                        "css-loader",
+                        {
+                            loader: "css-loader",
+                            options: {
+                                url: false,
+                            },
+                        },
                         "sass-loader",
                     ],
                 },

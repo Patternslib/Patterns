@@ -4,7 +4,6 @@
  * Copyright 2012 Humberto Sermeno
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
-
 import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
@@ -25,6 +24,10 @@ export default Base.extend({
     force_method: null,
 
     init: function ($el, opts) {
+        if (window.__patternslib_import_styles) {
+            import("patterns-sass/components/_auto-scale.scss");
+        }
+
         this.options = parser.parse(this.$el, opts);
         if (this.force_method !== null) {
             this.options.method = this.force_method;

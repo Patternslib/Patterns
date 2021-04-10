@@ -33,6 +33,7 @@
     "masonry-layout": "^4.2.2",
     "moment": "^2.29.0",
     "moment-timezone": "^0.5.31",
+    "patterns-sass": "git+https://github.com/Patternslib/patterns-sass.git#scr-984",
     "photoswipe": "^4.1.3",
     "pikaday": "^1.8.0",
     "promise-polyfill": "^8.1.0",
