@@ -9,6 +9,24 @@
             type="text/javascript"
             charset="utf-8"
         ></script>
+        <style type="text/css" media="screen">
+          time.output-field {
+            min-width: 6em;
+            height: 2em;
+            padding: 0 0.5em;
+            background: lightgrey;
+            cursor: pointer;
+            box-sizing: border-box;
+            display: inline-block;
+          }
+          .cancel-button {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            margin-left: 0.2em;
+            background-color: red;
+          }
+        </style>
     </head>
     <body>
         <form
@@ -79,7 +97,6 @@
                         type="date"
                         class="pat-date-picker"
                         name="measure.planning_start:records"
-                        data-pat-date-picker="behavior: native"
                         data-pat-validation="type: date; not-after: #planning-end; message-date: This date must be on or before the end date."
                         id="planning-start"
                         value="2015-10-10"
@@ -92,7 +109,7 @@
                         type="date"
                         class="pat-date-picker"
                         name="measure.planning_end:records"
-                        data-pat-date-picker="behavior: native; after: #planning-start"
+                        data-pat-date-picker="after: #planning-start"
                         data-pat-validation="type: date; not-before: #planning-start; message-date: This date must be on or after the start date."
                         id="planning-end"
                         value="2015-09-10"
