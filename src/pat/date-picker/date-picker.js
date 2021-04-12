@@ -46,7 +46,7 @@ export default Base.extend({
             // date.
             const befores = document.querySelectorAll(this.options.after);
             for (const b_el of befores) {
-                b_el.addEventListener("input", (e) => {
+                b_el.addEventListener("change", (e) => {
                     let b_date = e.target.value; // the "before-date"
                     b_date = b_date ? new Date(b_date) : null;
                     if (!b_date) {
@@ -58,12 +58,7 @@ export default Base.extend({
                         const offset = this.options.offsetDays || 0;
                         b_date.setDate(b_date.getDate() + offset);
                         this.el.value = b_date.toISOString().substring(0, 10);
-                        this.el.dispatchEvent(
-                            new Event("input", {
-                                bubbles: true,
-                                cancelable: true,
-                            })
-                        );
+                        this.dispatch_change_event();
                     }
                 });
             }
@@ -96,7 +91,7 @@ export default Base.extend({
                 display_time_config
             );
 
-            this.el.addEventListener("input", () => {
+            this.el.addEventListener("change", () => {
                 display_el.setAttribute("datetime", this.el.value);
                 display_el_pat.format();
                 this.add_clear_button(display_el);
@@ -125,9 +120,7 @@ export default Base.extend({
                 $(this.pikaday._o.field.form).trigger("input-change");
                 /* Also trigger input change on date field to support pat-autosubmit. */
                 $(this.pikaday._o.field).trigger("input-change");
-                this.pikaday._o.field.dispatchEvent(
-                    new Event("input", { bubbles: true, cancelable: true })
-                );
+                this.dispatch_change_event();
             },
         };
 
@@ -156,14 +149,10 @@ export default Base.extend({
             // Add clear button
             const clear_button = document.createElement("span");
             clear_button.setAttribute("class", "cancel-button");
-            clear_button.addEventListener("click", () => {
+            clear_button.addEventListener("click", (e) => {
+                e.stopPropagation();
                 this.el.value = null;
-                this.el.dispatchEvent(
-                    new Event("input", {
-                        bubbles: true,
-                        cancelable: true,
-                    })
-                );
+                this.dispatch_change_event();
 
                 //// Also trigger input change on date field to support pat-autosubmit.
                 //$(this.el.form).dispatchEvent("input-change
@@ -171,5 +160,16 @@ export default Base.extend({
             });
             el_append_to.appendChild(clear_button);
         }
+    },
+
+    dispatch_change_event() {
+        const event = new Event("change", {
+            bubbles: true,
+            cancelable: true,
+        });
+        // Set ``firedBy` to prevent pikaday to call it's own handler and land
+        // in an infinite loop.
+        event.firedBy = this.pikaday;
+        this.el.dispatchEvent(event);
     },
 });
