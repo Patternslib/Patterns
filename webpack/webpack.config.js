@@ -130,6 +130,19 @@ module.exports = (env, argv) => {
         ],
     };
     if (argv.mode === "development") {
+        // Add a dev server.
+        config.devServer = {
+            inline: true,
+            contentBase: "./",
+            port: "3001",
+            host: "0.0.0.0",
+        };
+    }
+    if (argv.mode === "production") {
+        // Also create minified bundles along with the non-minified ones.
+        config.entry["bundle.min"] = path.resolve(__dirname, "../src/patterns.js"); // prettier-ignore
+        config.entry["bundle-polyfills.min"] = path.resolve(__dirname, "../src/polyfills.js"); // prettier-ignore
+        config.output.chunkFilename = "chunks/[name].[contenthash].min.js";
     }
     return config;
 };
