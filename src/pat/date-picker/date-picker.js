@@ -121,11 +121,11 @@ export default Base.extend({
             format: this.format,
             firstDay: this.options.firstDay,
             showWeekNumber: this.options.weekNumbers === "show",
-            onSelect() {
-                $(this._o.field).closest("form").trigger("input-change");
+            onSelect: () => {
+                $(this.pikaday._o.field.form).trigger("input-change");
                 /* Also trigger input change on date field to support pat-autosubmit. */
-                $(this._o.field).trigger("input-change");
-                this._o.field.dispatchEvent(
+                $(this.pikaday._o.field).trigger("input-change");
+                this.pikaday._o.field.dispatchEvent(
                     new Event("input", { bubbles: true, cancelable: true })
                 );
             },
@@ -139,24 +139,16 @@ export default Base.extend({
         }
 
         if (this.options.i18n) {
-            $.getJSON(this.options.i18n)
-                .done((data) => {
-                    config.i18n = data;
-                })
-                .fail(
-                    $.proxy(() => {
-                        console.error(
-                            "date-picker could not load i18n: " +
-                                this.options.i18n
-                        );
-                    }, this)
-                )
-                .always(() => {
-                    new Pikaday(config);
-                });
-        } else {
-            new Pikaday(config);
+            try {
+                const response = await fetch(this.options.i18n);
+                config.i18n = await response.json();
+            } catch {
+                console.error(
+                    `date-picker could not load i18n for ${this.options.i18n}`
+                );
+            }
         }
+        this.pikaday = new Pikaday(config);
     },
 
     add_clear_button(el_append_to) {
