@@ -130,9 +130,6 @@ module.exports = (env, argv) => {
         ],
     };
     if (argv.mode === "development") {
-        // Set public path to override __webpack_public_path__
-        // for webpack-dev-server
-        config.output.publicPath = "/dist/";
     }
     return config;
 };
