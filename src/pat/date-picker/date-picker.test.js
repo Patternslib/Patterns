@@ -1,7 +1,39 @@
 import $ from "jquery";
-import i18ndata from "./i18n.json";
 import pattern from "./date-picker";
 import utils from "../../core/utils";
+
+const mock_fetch_i18n = () =>
+    Promise.resolve({
+        json: () =>
+            Promise.resolve({
+                previousMonth: "Letzer Monat",
+                nextMonth: "Nächster Monat",
+                months: [
+                    "Januar",
+                    "Februar",
+                    "März",
+                    "April",
+                    "Mai",
+                    "Juni",
+                    "Juli",
+                    "August",
+                    "September",
+                    "Oktober",
+                    "November",
+                    "Dezember",
+                ],
+                weekdays: [
+                    "Sonntag",
+                    "Montag",
+                    "Dienstag",
+                    "Mittwoch",
+                    "Donnerstag",
+                    "Freitag",
+                    "Samstag",
+                ],
+                weekdaysShort: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+            }),
+    });
 
 describe("pat-date-picker", function () {
     afterEach(function () {
@@ -99,23 +131,8 @@ describe("pat-date-picker", function () {
 
     describe("Date picker with i18n", function () {
         describe("with proper json URL", function () {
-            it("properly localizes the months and weekdays", async function () {
-                jest.spyOn($, "getJSON").mockImplementation(() => {
-                    return {
-                        done: function (cb) {
-                            cb(i18ndata);
-                            return this;
-                        },
-                        fail: function () {
-                            return this;
-                        },
-                        always: function (cb) {
-                            cb();
-                            return this;
-                        },
-                    };
-                });
-
+            it("properly localizes the months and weekdays", async function (done) {
+                global.fetch = jest.fn().mockImplementation(mock_fetch_i18n);
                 document.body.innerHTML =
                     '<input type="date" class="pat-date-picker" value="2018-10-21" data-pat-date-picker="i18n:/path/to/i18njson" />';
                 const el = document.querySelector("input[type=date]");
@@ -126,26 +143,18 @@ describe("pat-date-picker", function () {
 
                 const month = document.querySelector('.pika-lendar .pika-select-month option[selected="selected"]'); // prettier-ignore
                 expect(month.textContent).toBe("Oktober");
+
+                global.fetch.mockClear();
+                delete global.fetch;
+                done();
             });
         });
 
         describe("with bogus json URL", function () {
-            it("falls back to default (english) month and weekday labels ", async function () {
+            it("falls back to default (english) month and weekday labels ", async function (done) {
                 // Simulate failing getJSON call
-                jest.spyOn($, "getJSON").mockImplementation(() => {
-                    return {
-                        done: function () {
-                            return this;
-                        },
-                        fail: function (cb) {
-                            cb();
-                            return this;
-                        },
-                        always: function (cb) {
-                            cb();
-                            return this;
-                        },
-                    };
+                global.fetch = jest.fn().mockImplementation(() => {
+                    throw "error";
                 });
 
                 document.body.innerHTML =
@@ -158,6 +167,10 @@ describe("pat-date-picker", function () {
 
                 const month = document.querySelector('.pika-lendar .pika-select-month option[selected="selected"]'); // prettier-ignore
                 expect(month.textContent).toBe("October");
+
+                global.fetch.mockClear();
+                delete global.fetch;
+                done();
             });
         });
     });
