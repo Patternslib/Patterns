@@ -29,7 +29,6 @@ module.exports = (env, argv) => {
             // publicPath: "/dist/",
         },
         optimization: {
-            minimize: true,
             minimizer: [
                 new TerserPlugin({
                     include: /(\.min\.js$)/,
