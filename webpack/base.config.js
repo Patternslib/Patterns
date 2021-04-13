@@ -98,10 +98,15 @@ module.exports = (env) => {
                     test: /\.svg$/,
                     loader: "svg-inline-loader",
                 },
+                {
+                    test: /\.modernizrrc\.js$/,
+                    loader: "webpack-modernizr-loader",
+                },
             ],
         },
         resolve: {
             alias: {
+                modernizr$: path.resolve(__dirname, "../.modernizrrc.js"),
                 moment: path.resolve(__dirname, "../node_modules/moment"),
             },
         },
