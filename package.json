@@ -100,9 +100,9 @@
         "underscore": "1.11.0"
     },
     "scripts": {
-        "start": "webpack-dev-server --config webpack/dev.config.js --env.NODE_ENV=development",
-        "build": "webpack --config webpack/prod.config.js --env.NODE_ENV=production",
-        "build:stats": "webpack --config webpack/prod.config.js --env.NODE_ENV=production --json > stats.json",
+        "start": "webpack-dev-server --config webpack/webpack.config.js --mode=development",
+        "build": "webpack --config webpack/webpack.config.js --mode=production",
+        "build:stats": "webpack --config webpack/webpack.config.js --mode=production --json > stats.json",
         "test": "jest --watch",
         "testonce": "jest",
         "release": "release-it",

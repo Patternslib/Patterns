@@ -9,7 +9,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
-module.exports = (env) => {
+module.exports = (env, argv) => {
     const config = {
         entry: {
             "bundle": path.resolve(__dirname, "../src/patterns.js"),
@@ -129,7 +129,7 @@ module.exports = (env) => {
             }),
         ],
     };
-    if (env.NODE_ENV === "development") {
+    if (argv.mode === "development") {
         // Set public path to override __webpack_public_path__
         // for webpack-dev-server
         config.output.publicPath = "/dist/";
