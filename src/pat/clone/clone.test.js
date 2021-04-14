@@ -292,5 +292,39 @@ describe("pat-clone", function () {
                     .textContent
             ).toBe("initializedinitialized");
         });
+
+        it("will not initialize patterns in the template wrapped in cant-touch-this.", function () {
+            Base.extend({
+                name: "example",
+                trigger: ".pat-example",
+                init: function () {
+                    this.el.innerHTML += "initialized";
+                },
+            });
+
+            document.body.innerHTML = `
+                <div id="template" class="cant-touch-this">
+                    <div class="pat-example"></div>
+                </div>
+                <div class="pat-clone" data-pat-clone="template: #template">
+                  <button type="button" class="add-clone">clone</button>
+                </div>
+            `;
+            registry.scan(document.body);
+
+            // The template-pattern isn't initialized.
+            expect(
+                document.body.querySelector("#template .pat-example")
+                    .textContent
+            ).toBe("");
+
+            document.body.querySelector("button").click();
+
+            // The cloned pattern is only initialized once.
+            expect(
+                document.body.querySelector(".pat-clone .pat-example")
+                    .textContent
+            ).toBe("initialized");
+        });
     });
 });
