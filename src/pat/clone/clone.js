@@ -4,6 +4,8 @@ import Parser from "../../core/parser";
 import registry from "../../core/registry";
 import Base from "../../core/base";
 import logging from "../../core/logging";
+import dom from "../../core/dom";
+import utils from "../../core/utils";
 
 const log = logging.getLogger("pat-clone");
 const TEXT_NODE = 3;
@@ -25,29 +27,21 @@ export default Base.extend({
     name: "clone",
     trigger: ".pat-clone",
 
-    init($el, opts) {
-        this.options = parser.parse(this.$el, opts);
+    init() {
+        this.options = parser.parse(this.el, this.options);
         if (this.options.template.lastIndexOf(":", 0) === 0) {
-            this.$template = this.$el.find(this.options.template);
+            this.template = $(this.options.template, this.el)[0];
         } else {
-            this.$template = $(this.options.template);
+            this.template = document.querySelector(this.options.template);
         }
-        $(document).on(
-            "click",
-            this.options.triggerElement,
-            this.clone.bind(this)
-        );
 
-        const $clones = this.$el.find(this.options.cloneElement);
-        this.num_clones = $clones.length;
-        $clones.each(
-            function (idx, clone) {
-                const $clone = $(clone);
-                $clone
-                    .find(this.options.remove.element)
-                    .on("click", this.confirmRemoval.bind(this, $clone));
-            }.bind(this)
-        );
+        this.bind_trigger(document.body);
+
+        const clones = this.el.querySelectorAll(this.options.cloneElement);
+        this.num_clones = clones.length;
+        for (const clone of clones) {
+            this.bind_remove(clone);
+        }
     },
 
     clone() {
@@ -56,8 +50,13 @@ export default Base.extend({
             return;
         }
         this.num_clones += 1;
-        const $clone = this.$template.safeClone();
-        const ids = ($clone.attr("id") || "").split(" ");
+
+        let $clone =
+            this.template.nodeName === "TEMPLATE"
+                ? $([...this.template.content.children]).clone()
+                : $(this.template).safeClone();
+
+        const ids = ($clone.attr("id") || "").split(" ").filter((it) => it);
         $clone.removeAttr("id").removeClass("cant-touch-this");
         $.each(
             ids,
@@ -82,9 +81,9 @@ export default Base.extend({
             .contents()
             .addBack()
             .filter(this.incrementValues.bind(this));
-        $clone
-            .find(this.options.remove.element)
-            .on("click", this.confirmRemoval.bind(this, $clone));
+
+        this.bind_trigger($clone);
+        this.bind_remove($clone);
 
         $clone.prop("hidden", false);
         registry.scan($clone);
@@ -95,7 +94,9 @@ export default Base.extend({
             $el: $clone,
         });
         if (this.num_clones >= this.options.max) {
-            $(this.options.triggerElement).hide();
+            for (const el_ of this.clone_triggers) {
+                dom.hide(el_);
+            }
         }
     },
 
@@ -125,26 +126,54 @@ export default Base.extend({
         }
     },
 
-    confirmRemoval($el) {
-        if (this.options.remove.behaviour === "confirm") {
-            if (window.confirm(this.options.remove.confirmation) === true) {
-                this.remove($el);
+    bind_trigger(triggers) {
+        // Bind clone trigger
+        for (const node of utils.ensureArray(triggers)) {
+            for (const trigger of dom.querySelectorAllAndMe(
+                node,
+                this.options.triggerElement
+            )) {
+                trigger.addEventListener("click", () => this.clone());
             }
-        } else {
-            this.remove($el);
         }
     },
 
-    remove($el) {
-        $el.remove();
+    bind_remove(clone) {
+        for (const node of utils.ensureArray(clone)) {
+            for (const remove_button of dom.querySelectorAllAndMe(
+                node,
+                this.options.remove.element
+            )) {
+                remove_button.addEventListener("click", () => {
+                    if (this.options.remove.behaviour === "confirm") {
+                        if (
+                            window.confirm(this.options.remove.confirmation) ===
+                            true
+                        ) {
+                            this.remove(clone);
+                        }
+                    } else {
+                        this.remove(clone);
+                    }
+                });
+            }
+        }
+    },
+
+    remove(clone) {
+        for (const node of utils.ensureArray(clone)) {
+            node.remove();
+            this.$el.trigger("pat-update", {
+                pattern: "clone",
+                action: "remove",
+                $el: $(node), // used by pat-sortable only.
+            });
+        }
         this.num_clones -= 1;
         if (this.num_clones < this.options.max) {
-            $(this.options.triggerElement).show();
+            for (const el_ of this.clone_triggers) {
+                dom.show(el_);
+            }
         }
-        this.$el.trigger("pat-update", {
-            pattern: "clone",
-            action: "remove",
-            $el: $el,
-        });
     },
 });

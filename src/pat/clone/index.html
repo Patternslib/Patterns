@@ -11,6 +11,8 @@
         ></script>
     </head>
     <body>
+
+        <h1>Example 1 with hidden template</h1>
         <form action=""
               class="pat-form"
               novalidate>
@@ -62,7 +64,6 @@
                         </button>
                     </fieldset>
                 </div>
-
                 <div class="button-bar">
                     <!-- Clone trigger -->
                     <button type="button" class="pat-button clone-trigger">
@@ -74,6 +75,34 @@
                 </div>
             </fieldset>
         </form>
+
+        <h1>Example 2 with template tag</h1>
+
+        <template id="clone-template-2">
+            <br/>
+            <label>Manufactor #{1}
+                <input type="text" name="manufactor-#{1}" />
+            </label>
+            <label>Model #{1}
+                <input type="text" name="model-#{1}" />
+            </label>
+            <button type="button" class="remove-clone">Remove</button>
+        </template>
+
+        <form
+            class="pat-clone"
+            data-pat-clone="template: #clone-template-2; trigger-element: .clone-trigger-2">
+          <button type="button" class="clone-trigger-2">Add new row</button>
+        </form>
+
+        <h1>Example 3</h1>
+
+        <div class="pat-clone">
+            <div class="item">
+                okay!
+                <button class="add-clone">Clone!</button>
+            </div>
+         </div>
 
     </body>
 </html>
