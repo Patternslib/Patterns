@@ -136,6 +136,8 @@ module.exports = (env, argv) => {
             port: "3001",
             host: "0.0.0.0",
         };
+        // Output public path for dev-server
+        config.output.publicPath = "/dist/";
     }
     if (argv.mode === "production") {
         // Also create minified bundles along with the non-minified ones.
