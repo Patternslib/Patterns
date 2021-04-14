@@ -1,5 +1,6 @@
 import $ from "jquery";
 import pattern from "./date-picker";
+import pattern_auto_submit from "../auto-submit/auto-submit";
 import utils from "../../core/utils";
 
 const mock_fetch_i18n = () =>
@@ -477,5 +478,30 @@ describe("pat-date-picker", function () {
         cur_day.dispatchEvent(new Event("mousedown"));
         // input element contains iso date
         expect(el.value).toBe(isodate);
+    });
+
+    it("works with pat-autosubmit", async function (done) {
+        document.body.innerHTML = `
+            <form class="pat-autosubmit">
+                <input name="date" type="date" class="pat-date-picker"/>
+            </form>
+        `;
+
+        pattern_auto_submit.init(document.querySelector("form"));
+        pattern.init(document.querySelector("input"));
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        const handle_submit = jest.fn();
+        $(document.querySelector("form")).on("submit", handle_submit);
+
+        document.querySelector("time").click();
+
+        let btn = document.querySelector(".pika-single .pika-table button");
+        btn.dispatchEvent(new Event("mousedown"));
+
+        await utils.timeout(500); // wait for delay
+        expect(handle_submit).toHaveBeenCalled();
+
+        done();
     });
 });
