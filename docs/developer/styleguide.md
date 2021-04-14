@@ -1,57 +1,94 @@
 # The Patternslib coding style guide
 
-Many of the style guide recommendations here come from Douglas Crockford's
-seminal book [Javascript, the good parts](http://shop.oreilly.com/product/9780596517748.do).
+We are using [Prettier](https://prettier.io/) and [ESLint](https://eslint.org/) to automatically fix style and syntactic issues in code.
+Look at the configuration files in the Patternslib project root.
+There is also configuration for [EditorConfig](https://editorconfig.org/) to automatically do some basic project configuration regarding indentation in your editor. Make sure your editor supports EditorConfig.
+The code is written in modern JavaScript (ES6+) and transformed via BabelJS.
 
-Please stick to these guidelines when contributing to Patternslib code.:
 
-## Please run the style checks before making a commit or pull request.
+## Pull requests
 
-Before making a pull request, please make sure to run the tests.
+Always submit a pull request.
+Keep your changes logically grouped in as few commits as it makes sense.
 
-The simplest way to do this is use the `check` make target.
 
-```
-    $ make check
+## Commits messages
 
-    Finished
-    -----------------
-    470 specs, 0 failures in 2.355s.
+For automatic changelog generation we are sticking to the [Conventional Commits](https://www.conventionalcommits.org/) specification.
 
-    ConsoleReporter finished
-```
+Commit messages follow this structure:
 
-This will run [JSHint](http://jshint.com/) to make sure your
-code matches our style guide, additionally it runs the
-[Jasmine](http://jasmine.github.io/) tests.
+    <type>[optional scope]: <description>
+
+    [optional body]
+
+    [optional footer(s)]
+
+
+The scope must be in parentheses.
+
+We are using these types:
+
+- feat (Feature)
+- fix (Bugfix)
+- maint (Maintainance)
+- breaking (Breaking changes)
+
+For the optional scope, we roughly use these categories:
+
+- "Docs" for documentation
+- "Release workflow"
+- "Webpack"
+- "Cleanup"
+- "pat PATTERNNAME" for the pattern which is changed
+- "core MODULENAME" for the core module which is changed
+- "lib MODULENAME" for the library module wich is changed
+
+
+An example for a valid commit message:
+
+    git commit -m"maint(Docs): Improving developer documentation."
+
+    git commit -m"feat(pat date picker): Support formatted date display."
+
+
+## Run checks
+
+Make sure, ``make check`` passes or fix any errors.
+
 
 ## Indentation
 
 We indent 4 spaces. Proper indentation is very important for readability.
-Please don't use tabs.
+
 
 ## Naming of variables, classes and functions
 
 ### Underscores or camelCase?
 
-We use `camelCase` for function names and `underscores_names` for variables names.
+We use `underscores_names` for function and variables.
+
+Different styles may appear throughout the code for historic reasons.
 
 For example:
 
-    function thisIsAFunction () {
-        var this_is_a_variable;
+    function this_is_a_function () {
+        const this_is_a_variable;
         ...
     }
 
 ### jQuery objects are prefixed with \$
+
+Note: Try to avoid using jQuery. But often it's the faster path to finish a task.
 
 We prefix jQuery objects with the \$ sign, to distinguish them from normal DOM
 elements.
 
 For example:
 
-    var divs = document.getElementsByTagName('div'); // List of DOM elements
-    var $divs = $('div'); // jQuery object
+    const divs = document.getElementsByTagName('div'); // List of DOM elements
+    const $divs = $('div'); // jQuery object
+
 
 ## Spaces around operators
 
@@ -65,11 +102,12 @@ For example:
 
 An exception is when they appear inside for-loop expressions, for example:
 
-    for (i=0; i<msgs_length; i++) {
+    for (const i=0; i<msgs_length; i++) {
         // do something
     }
 
 Generally though, rather err on the side of adding spaces, since they make the code much more readable.
+
 
 ## Constants are written in ALL_CAPS
 
@@ -77,8 +115,9 @@ Identifiers that denote constant values should be written in all capital letters
 
 For example:
 
-    var SECONDS_IN_HOUR = 3600; // constant
-    var seconds_since_click = 0; // variable
+    const SECONDS_IN_HOUR = 3600; // constant
+    const seconds_since_click = 0; // variable
+
 
 ## Function declaration and invocation
 
@@ -96,11 +135,13 @@ This practice however doesn't appear to be very common and is also not used
 consistently throughout the Patternslib codebase. It might be useful sometimes however,
 to reduce confusion.
 
+
 ## Checking for equality
 
 Javascript has a strict `===` and less strict `==` equality operator. The
 stricter operator also does type checking. To avoid subtle bugs when doing comparisons,
 always use the strict equality check.
+
 
 ## Curly brackets
 
@@ -117,6 +158,7 @@ For example:
             return locales[sublocale];
         }
     }
+
 
 ## Always enclose blocks in curly brackets
 
@@ -140,6 +182,7 @@ and **NOT** like this:
 This is to aid in readability and to avoid subtle bugs where certain lines are
 wrongly assumed to be executed within a block.
 
+
 ## Bind the "this" variable instead of assigning to "self"
 
 One of the deficiencies in Javascript is that callback functions are not bound
@@ -157,6 +200,7 @@ For example:
         // Without using .bind, "this" will refer to the window object.
         this.$el.hide();
     }.bind(this), 1000);
+
 
 ### What about assigning the outer "this" to "self"?
 
@@ -189,6 +233,7 @@ For example:
         that.$el.hide();
     }, 1000);
 
+
 ## Use private functions in patterns
 
 A Pattern can expose an API, either as a jQuery plugin or directly. In order
@@ -200,13 +245,13 @@ var mypattern = {
     name: "mypattern",
 
     // Standard pattern API function
-    init: function init($el) { },
+    init($el) { },
 
     // Standard pattern API function
-    destroy: function() { },
+    destroy() { },
 
     // Internal method to handle click events
-    _onClick: function mypattern_onClick(e) { }
+    _onClick(e) { }
 };
 ```
 
@@ -219,15 +264,16 @@ Javascript has both named functions and unnamed functions.
 function foo() { }
 
 // This is an unnamed function
-var foo = function() { };
+const foo = function() { };
 ```
 
 Unnamed functions are convenient, but result in unreadable call stacks and
 profiles. This makes debugging and profiling code unnecessarily hard. To fix
 this always use named functions for non-trivial functions.
 
+
 ```
-$el.on("click", function buttonClick(event) {
+$el.on("click", function button_click(event) {
     ...
 });
 ```
@@ -245,7 +291,10 @@ with the pattern name to make them easy to recognize.
         _onClick: function mypatternOnClick(e) { }
     };
 
+
 ## Custom events
+
+Note: Try to use JavaScript events, event handlers and event listeners.
 
 A pattern can send custom events for either internal purposes, or as a hook for
 third party javascript. Since IE8 is still supported
@@ -271,7 +320,10 @@ the event handler.
     }
     $(".myclass").on("pat-toggle-toggled", onToggled);
 
+
 ## Event listeners
+
+Note: Try to use JavaScript events, event handlers and event listeners.
 
 All event listeners registered using [jQuery.fn.on](http://api.jquery.com/on/)
 must be namespaced with `pat-<pattern name>`.
@@ -289,3 +341,5 @@ conflicts with other code.
 
     // Store parsed options
     $(el).data("pat-mypattern", options);
+
+
