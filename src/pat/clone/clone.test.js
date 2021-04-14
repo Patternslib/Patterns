@@ -293,7 +293,7 @@ describe("pat-clone", function () {
             ).toBe("initializedinitialized");
         });
 
-        it("will not initialize patterns in the template when hidden.", function () {
+        it("will not initialize patterns in the template wrapped in cant-touch-this.", function () {
             Base.extend({
                 name: "example",
                 trigger: ".pat-example",
@@ -303,7 +303,7 @@ describe("pat-clone", function () {
             });
 
             document.body.innerHTML = `
-                <div id="template" hidden>
+                <div id="template" class="cant-touch-this">
                     <div class="pat-example"></div>
                 </div>
                 <div class="pat-clone" data-pat-clone="template: #template">
@@ -312,7 +312,7 @@ describe("pat-clone", function () {
             `;
             registry.scan(document.body);
 
-            // This time the template-pattern isn't initialized.
+            // The template-pattern isn't initialized.
             expect(
                 document.body.querySelector("#template .pat-example")
                     .textContent
