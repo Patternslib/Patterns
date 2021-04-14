@@ -18,7 +18,7 @@ If you find a bug in Patterns please report to it us. Doing so is very simple:
 All code contributions are extremely welcome. In order to contribute please make
 sure you have do the following:
 
--   Read our [code style guide](docs/styleguide.md).
+-   Read our [code style guide](docs/developer/styleguide.md).
 -   Make sure you have a [GitHub account](https://github.com/signup/free).
 -   Create a topic branch from where you want to base your work.
 -   Make sure _all_ tests are passing before you commit your changes. Use the `make check` command to do this.

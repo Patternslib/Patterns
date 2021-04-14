@@ -6,6 +6,10 @@ YARN		?= npx yarn
 SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/lib/*.js)
 GENERATED	= src/lib/depends_parse.js
 
+define get_package_var
+$(shell node -p "require('./package.json').$(1)")
+endef
+PATTERNSLIB_VERSION := $(call get_package_var,version)
 
 all:: bundle css
 
@@ -43,6 +47,11 @@ build:: bundle all-css
 .PHONY: bundle
 bundle: stamp-yarn
 	$(YARN) run build
+
+.PHONY: release-web
+release-web: bundle
+	@echo version is $(PATTERNSLIB_VERSION)
+	tar -czf patternslib-$(PATTERNSLIB_VERSION).tar.gz dist --transform s/dist/patternslib-$(PATTERNSLIB_VERSION)/
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-yarn
 	$(PEGJS) $<

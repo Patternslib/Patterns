@@ -1,131 +1,128 @@
 {
-  "name": "patternslib",
-  "version": "4.0.0-dev.0",
-  "title": "Markup patterns to drive behaviour.",
-  "description": "Patternslib is a JavaScript library that enables designers to build rich interactive prototypes without the need for writing any Javascript. All events are triggered by classes and other attributes in the HTML, without abusing the HTML as a programming language. Accessibility, SEO and well structured HTML are core values of Patterns.",
-  "author": {
-    "name": "Patterns developers"
-  },
-  "license": "BSD-3-Clause",
-  "bugs": {
-    "url": "https://github.com/patternslib/patterns/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Patternslib/patterns.git"
-  },
-  "dependencies": {
-    "@fullcalendar/adaptive": "^5.3.1",
-    "@fullcalendar/core": "^5.3.1",
-    "@fullcalendar/daygrid": "^5.3.2",
-    "@fullcalendar/interaction": "^5.3.1",
-    "@fullcalendar/list": "^5.3.1",
-    "@fullcalendar/luxon": "^5.3.1",
-    "@fullcalendar/timegrid": "^5.3.1",
-    "@juggle/resize-observer": "^3.2.0",
-    "@stomp/stompjs": "^5.4.4",
-    "google-code-prettify": "^1.0.5",
-    "imagesloaded": "^4.1.4",
-    "intersection-observer": "^0.7.0",
-    "jquery": "^3.6.0",
-    "jquery-jcrop": "^0.9.13",
-    "luxon": "^1.24.1",
-    "masonry-layout": "^4.2.2",
-    "moment": "^2.29.0",
-    "moment-timezone": "^0.5.31",
-    "photoswipe": "^4.1.3",
-    "pikaday": "^1.8.0",
-    "promise-polyfill": "^8.1.0",
-    "screenfull": "^5.0.0",
-    "select2": "^3.5.1",
-    "showdown": "^1.9.1",
-    "showdown-prettify": "^1.3.0",
-    "slick-carousel": "^1.8.1",
-    "slides": "git+https://github.com/Patternslib/slides.git",
-    "spectrum-colorpicker": "^1.8.0",
-    "stickyfilljs": "git+https://github.com/syslabcom/stickyfill.git",
-    "tippy.js": "^6.2.7",
-    "underscore": "^1.12.0",
-    "url-polyfill": "^1.1.9",
-    "validate.js": "^0.13.1",
-    "whatwg-fetch": "^3.4.0"
-  },
-  "devDependencies": {
-    "@babel/plugin-proposal-optional-chaining": "^7.11.0",
-    "@babel/preset-env": "^7.9.6",
-    "@testing-library/jest-dom": "^5.5.0",
-    "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.1.0",
-    "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^6.2.0",
-    "core-js": "3",
-    "css-loader": "^3.5.3",
-    "duplicate-package-checker-webpack-plugin": "^3.0.0",
-    "eslint": "^7.0.0",
-    "eslint-config-prettier": "^6.11.0",
-    "expose-loader": "^0.7.5",
-    "file-loader": "^6.2.0",
-    "identity-obj-proxy": "^3.0.0",
-    "imports-loader": "^0.8.0",
-    "jest": "^26.0.1",
-    "jest-watch-typeahead": "^0.6.0",
-    "prettier": "^2.1.2",
-    "raw-loader": "^4.0.1",
-    "regenerator-runtime": "^0.13.5",
-    "release-it": "^14.6.0",
-    "sass": "^1.32.8",
-    "sass-loader": "^10.1.1",
-    "style-loader": "^1.2.1",
-    "svg-inline-loader": "^0.8.2",
-    "terser-webpack-plugin": "^2.3.6",
-    "webpack": "^4.43.0",
-    "webpack-bundle-analyzer": "^3.8.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3",
-    "webpack-merge": "^4.2.2",
-    "whybundled": "^1.4.3",
-    "yarn": "^1.22.4"
-  },
-  "resolutions": {
-    "clean-css": "4.2.3",
-    "jquery": "3.6.0",
-    "lodash": "4.17.20",
-    "moment": "2.29.0",
-    "serialize-javascript": "4.0.0",
-    "underscore": "1.11.0"
-  },
-  "scripts": {
-    "start": "webpack-dev-server --config webpack/dev.config.js --env.NODE_ENV=development",
-    "build": "webpack --config webpack/prod.config.js --env.NODE_ENV=production",
-    "build:stats": "webpack --config webpack/prod.config.js --env.NODE_ENV=production --json > stats.json",
-    "test": "jest --watch",
-    "testonce": "jest",
-    "release-test": "release-it --dry-run",
-    "release": "release-it"
-  },
-  "release-it": {
-    "git": {},
-    "github": {
-      "release": true,
-      "releaseName": "${version}"
-    }
-  },
-  "browserslist": [
-    ">0.2%",
-    "ie >= 11",
-    "not dead"
-  ],
-  "homepage": "https://gitub.com/Patternslib/Patterns",
-  "docs": "http://patternslib.com/",
-  "maintainers": [
-    {
-      "name": "Syslab.com GmbH",
-      "email": "info@syslab.com",
-      "url": "http://www.syslab.com"
+    "name": "patternslib",
+    "version": "4.0.0-dev.0",
+    "title": "Markup patterns to drive behaviour.",
+    "description": "Patternslib is a JavaScript library that enables designers to build rich interactive prototypes without the need for writing any Javascript. All events are triggered by classes and other attributes in the HTML, without abusing the HTML as a programming language. Accessibility, SEO and well structured HTML are core values of Patterns.",
+    "author": {
+        "name": "Patterns developers"
     },
-    {
-      "name": "Cornelis Kolbach",
-      "url": "http://cornae.com"
-    }
-  ]
+    "license": "BSD-3-Clause",
+    "bugs": {
+        "url": "https://github.com/patternslib/patterns/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Patternslib/patterns.git"
+    },
+    "dependencies": {
+        "@fullcalendar/adaptive": "^5.3.1",
+        "@fullcalendar/core": "^5.3.1",
+        "@fullcalendar/daygrid": "^5.3.2",
+        "@fullcalendar/interaction": "^5.3.1",
+        "@fullcalendar/list": "^5.3.1",
+        "@fullcalendar/luxon": "^5.3.1",
+        "@fullcalendar/timegrid": "^5.3.1",
+        "@juggle/resize-observer": "^3.2.0",
+        "@stomp/stompjs": "^5.4.4",
+        "google-code-prettify": "^1.0.5",
+        "imagesloaded": "^4.1.4",
+        "intersection-observer": "^0.7.0",
+        "jquery": "^3.6.0",
+        "jquery-jcrop": "^0.9.13",
+        "luxon": "^1.24.1",
+        "masonry-layout": "^4.2.2",
+        "moment": "^2.29.0",
+        "moment-timezone": "^0.5.31",
+        "photoswipe": "^4.1.3",
+        "pikaday": "^1.8.0",
+        "promise-polyfill": "^8.1.0",
+        "screenfull": "^5.0.0",
+        "select2": "^3.5.1",
+        "showdown": "^1.9.1",
+        "showdown-prettify": "^1.3.0",
+        "slick-carousel": "^1.8.1",
+        "slides": "git+https://github.com/Patternslib/slides.git",
+        "spectrum-colorpicker": "^1.8.0",
+        "stickyfilljs": "git+https://github.com/syslabcom/stickyfill.git",
+        "tippy.js": "^6.2.7",
+        "underscore": "^1.12.0",
+        "url-polyfill": "^1.1.9",
+        "validate.js": "^0.13.1",
+        "whatwg-fetch": "^3.4.0"
+    },
+    "devDependencies": {
+        "@babel/plugin-proposal-optional-chaining": "^7.11.0",
+        "@babel/preset-env": "^7.9.6",
+        "@commitlint/cli": "^12.1.1",
+        "@commitlint/config-conventional": "^12.1.1",
+        "@release-it/conventional-changelog": "^2.0.1",
+        "@testing-library/jest-dom": "^5.5.0",
+        "babel-eslint": "^10.1.0",
+        "babel-loader": "^8.1.0",
+        "clean-webpack-plugin": "^3.0.0",
+        "copy-webpack-plugin": "^6.2.0",
+        "core-js": "3",
+        "css-loader": "^3.5.3",
+        "duplicate-package-checker-webpack-plugin": "^3.0.0",
+        "eslint": "^7.0.0",
+        "eslint-config-prettier": "^6.11.0",
+        "expose-loader": "^0.7.5",
+        "file-loader": "^6.2.0",
+        "husky": "^6.0.0",
+        "identity-obj-proxy": "^3.0.0",
+        "imports-loader": "^0.8.0",
+        "jest": "^26.0.1",
+        "jest-watch-typeahead": "^0.6.0",
+        "prettier": "^2.1.2",
+        "raw-loader": "^4.0.1",
+        "regenerator-runtime": "^0.13.5",
+        "release-it": "^14.6.0",
+        "sass": "^1.32.8",
+        "sass-loader": "^10.1.1",
+        "style-loader": "^1.2.1",
+        "svg-inline-loader": "^0.8.2",
+        "terser-webpack-plugin": "^2.3.6",
+        "webpack": "^4.43.0",
+        "webpack-bundle-analyzer": "^3.8.0",
+        "webpack-cli": "^3.3.11",
+        "webpack-dev-server": "^3.10.3",
+        "webpack-modernizr-loader": "^5.0.0",
+        "whybundled": "^1.4.3",
+        "yarn": "^1.22.4"
+    },
+    "resolutions": {
+        "clean-css": "4.2.3",
+        "jquery": "3.6.0",
+        "lodash": "4.17.20",
+        "moment": "2.29.0",
+        "serialize-javascript": "4.0.0",
+        "underscore": "1.11.0"
+    },
+    "scripts": {
+        "start": "webpack-dev-server --config webpack/webpack.config.js --mode=development",
+        "build": "webpack --config webpack/webpack.config.js --mode=production",
+        "build:stats": "webpack --config webpack/webpack.config.js --mode=production --json > stats.json",
+        "test": "jest --watch",
+        "testonce": "jest",
+        "release": "release-it",
+        "release-test": "release-it --dry-run"
+    },
+    "browserslist": [
+        ">0.2%",
+        "ie >= 11",
+        "not dead"
+    ],
+    "homepage": "https://gitub.com/Patternslib/Patterns",
+    "docs": "http://patternslib.com/",
+    "maintainers": [
+        {
+            "name": "Syslab.com GmbH",
+            "email": "info@syslab.com",
+            "url": "http://www.syslab.com"
+        },
+        {
+            "name": "Cornelis Kolbach",
+            "url": "http://cornae.com"
+        }
+    ]
 }

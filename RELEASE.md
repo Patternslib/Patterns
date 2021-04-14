@@ -1,69 +1,15 @@
 # Making a release
 
-## Update numbers
+We are using release-it together with the convention-changelog plugin for automatic changelog generation.
+Automatic changelog generation needs consistent commit messages wich follow th econventional commits format.
+A pre-commit hook checks for each commit message to conform to the specs.
 
-First, update the version number in
+## Release process
 
--   package.json
--   VERSION.txt (remove the -dev from the version number in VERSION.txt)
--   and add the date to CHANGES.md
--   Do a
+- Run ``npm login`` to be able to push to the npm registry.
+- Run ``make check``. If any errors occur, fix them first.
+- Run ``npx release-it --dry-run`` to see if the release process would be successful.
+- Run ``npx release-it`` for a patch level release or ``npx release-it minor`` or ``npx release-it major``.
+  This updates the changelog, adds git tags and makes a npm and Github release.
+- Run ``make release-web`` to create a tarball.
 
-    git commit -m "Prepare release"
-
-## Merge master into the "release" branch
-
-    git checkout --track origin/release
-    git merge --no-commit --no-ff master
-
-## Make sure all tests are passing
-
-    make check
-
-## If tests pass, commit the merge
-
-    git commit -am "Merge master into release branch"
-
-## Create a new bundle and commit that
-
-    make bundle
-    git add -f bundle.js
-    git commit bundle.js -m "Add bundle for next release 2.0.0"
-
-## Tag the release and set it free
-
-    git tag 2.0.0
-    git push && git push --tags
-
-## checkout master, update VERSION.txt to the next logical version number and append '-dev' to it.
-
-## Create the release in github
-
--   Go to https://github.com/Patternslib/Patterns/releases/
--   Click the new tag
--   Click "Edit tag"
--   Add a Title, e.g. "2.0.14 - Aug 15, 2016"
--   Copy the corresponding changelog part into the body field
--   Finally click "Publish release"
-
-## Release to npmjs.org
-
-Run:
-
--   npm login
--   npm version <update_type>
-    where update_type is patch, minor or major. See https://docs.npmjs.com/getting-started/publishing-npm-packages.
--   npm publish
-
-## Now contact support@syslab.com and request an update of the patternslib.com site as well.
-
-This is done as follows:
-
--   Log into patternslib.syslab.com
-
-    sudo -iu patternslib
-    cd Patterns-site
-    cd patternslib
-    git pull
-    make clean && make bundle
-    cd .. && bundle exec jekyll serve

@@ -9,7 +9,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
-module.exports = (env) => {
+module.exports = (env, argv) => {
     const config = {
         entry: {
             "bundle": path.resolve(__dirname, "../src/patterns.js"),
@@ -29,7 +29,6 @@ module.exports = (env) => {
             // publicPath: "/dist/",
         },
         optimization: {
-            minimize: true,
             minimizer: [
                 new TerserPlugin({
                     include: /(\.min\.js$)/,
@@ -98,10 +97,15 @@ module.exports = (env) => {
                     test: /\.svg$/,
                     loader: "svg-inline-loader",
                 },
+                {
+                    test: /\.modernizrrc\.js$/,
+                    loader: "webpack-modernizr-loader",
+                },
             ],
         },
         resolve: {
             alias: {
+                modernizr$: path.resolve(__dirname, "../.modernizrrc.js"),
                 moment: path.resolve(__dirname, "../node_modules/moment"),
             },
         },
@@ -124,10 +128,20 @@ module.exports = (env) => {
             }),
         ],
     };
-    if (env.NODE_ENV === "development") {
-        // Set public path to override __webpack_public_path__
-        // for webpack-dev-server
-        config.output.publicPath = "/dist/";
+    if (argv.mode === "development") {
+        // Add a dev server.
+        config.devServer = {
+            inline: true,
+            contentBase: "./",
+            port: "3001",
+            host: "0.0.0.0",
+        };
+    }
+    if (argv.mode === "production") {
+        // Also create minified bundles along with the non-minified ones.
+        config.entry["bundle.min"] = path.resolve(__dirname, "../src/patterns.js"); // prettier-ignore
+        config.entry["bundle-polyfills.min"] = path.resolve(__dirname, "../src/polyfills.js"); // prettier-ignore
+        config.output.chunkFilename = "chunks/[name].[contenthash].min.js";
     }
     return config;
 };

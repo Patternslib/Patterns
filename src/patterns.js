@@ -6,6 +6,7 @@
 import "./public_path"; // first import
 import registry from "./core/registry";
 import jquery from "jquery";
+import "modernizr";
 
 // Import all used patterns for the bundle to be generated
 import "./core/push_kit";
