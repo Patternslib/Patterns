@@ -75,15 +75,9 @@ describe("pat-registry: The registry for patterns", function () {
             <div class="cant-touch-this">
                 <div class="e3 pat-example"></div>
             </div>
-            <div hidden>
-                <div class="e4 pat-example"></div>
-            </div>
-            <div hidden="hidden">
-                <div class="e5 pat-example"></div>
-            </div>
             <pre>
                 <div>
-                    <div class="e6 pat-example"></div>
+                    <div class="e4 pat-example"></div>
                 </div>
             </pre>
         `;
@@ -93,7 +87,5 @@ describe("pat-registry: The registry for patterns", function () {
         expect(tree.querySelector(".e2").textContent).toBe("");
         expect(tree.querySelector(".e3").textContent).toBe("");
         expect(tree.querySelector(".e4").textContent).toBe("");
-        expect(tree.querySelector(".e5").textContent).toBe("");
-        expect(tree.querySelector(".e6").textContent).toBe("");
     });
 });
