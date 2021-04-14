@@ -116,12 +116,7 @@ export default Base.extend({
             format: this.format,
             firstDay: this.options.firstDay,
             showWeekNumber: this.options.weekNumbers === "show",
-            onSelect: () => {
-                $(this.pikaday._o.field.form).trigger("input-change");
-                /* Also trigger input change on date field to support pat-autosubmit. */
-                $(this.pikaday._o.field).trigger("input-change");
-                this.dispatch_change_event();
-            },
+            onSelect: () => this.dispatch_change_event(),
         };
 
         if (el.getAttribute("min")) {
@@ -153,10 +148,6 @@ export default Base.extend({
                 e.stopPropagation();
                 this.el.value = null;
                 this.dispatch_change_event();
-
-                //// Also trigger input change on date field to support pat-autosubmit.
-                //$(this.el.form).dispatchEvent("input-change
-                //$(this.el).dispatchEvent("input-change
             });
             el_append_to.appendChild(clear_button);
         }
@@ -171,5 +162,9 @@ export default Base.extend({
         // in an infinite loop.
         event.firedBy = this.pikaday;
         this.el.dispatchEvent(event);
+
+        // Also trigger input-change
+        $(this.el).trigger("input-change");
+        $(this.el.form).trigger("input-change");
     },
 });
