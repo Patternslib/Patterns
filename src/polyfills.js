@@ -1,6 +1,6 @@
 // Polyfills for older browsers, most notably IE11.
 // Usage: Import this module
-//      import "patternslib/src/polyfills";
+//      import "@patternslib/patternslib/src/polyfills";
 
 // Core JS features
 // You can also import individual core-js features:

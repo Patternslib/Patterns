@@ -47,7 +47,7 @@ module.exports = (env, argv) => {
                     test: /\.js$/,
                     // Exclude node modules except patternslib and pat-* packgages.
                     // Allows for extending this file without needing to override for a successful webpack build.
-                    exclude: /node_modules\/(?!(patternslib)\/)(?!(pat-.*)\/).*/,
+                    exclude: /node_modules\/(?!(.*patternslib)\/)(?!(pat-.*)\/).*/,
                     loader: "babel-loader",
                 },
                 {
