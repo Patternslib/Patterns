@@ -53,14 +53,14 @@ bundle: stamp-yarn
 
 .PHONY: release-web
 release-web: clean-dist bundle
-	PATTERNSLIB_VERSION := $(call get_package_var,version)
+	PATTERNSLIB_VERSION=$(call get_package_var,version)
 	@echo version is $(PATTERNSLIB_VERSION)
 	tar -czf ./patternslib-$(PATTERNSLIB_VERSION).tar.gz dist --transform s/dist/patternslib-$(PATTERNSLIB_VERSION)/
 	git clone -n git@github.com:Patternslib/Patterns-releases.git --depth 1 ./dist/Patterns-releases
 	mkdir ./dist/Patterns-releases/releases
 	mv ./patternslib-$(PATTERNSLIB_VERSION).tar.gz ./dist/Patterns-releases/releases/
 	cd ./dist/Patterns-releases && \
-		git reset HEAD
+		git reset HEAD && \
 		git add ./releases/patternslib-$(PATTERNSLIB_VERSION).tar.gz && \
 		git commit -m"Add release patternslib-$(PATTERNSLIB_VERSION).tar.gz" && \
 		git push
