@@ -37,7 +37,7 @@ import "./pat/fullscreen/fullscreen";
 import "./pat/gallery/gallery";
 import "./pat/image-crop/image-crop";
 import "./pat/inject/inject";
-import "./pat/legend/legend";
+import "./pat/legend/legend"; // NOTE: Transforms <legend> tags to <p class="legend"> for styling reasons.
 import "./pat/markdown/markdown";
 import "./pat/masonry/masonry";
 import "./pat/menu/menu";
