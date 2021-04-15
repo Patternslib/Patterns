@@ -69,19 +69,19 @@ release-web: clean-dist bundle
 release-major: check
 	npx release-it --dry-run --ci && \
 		npx release-it major --ci  && \
-		release-web
+		make release-web
 
 .PHONY: release-minor
 release-minor: check
 	npx release-it minor --dry-run --ci && \
 		npx release-it minor --ci  && \
-		release-web
+		make release-web
 
 .PHONY: release-patch
 release-patch: check
 	npx release-it --dry-run --ci && \
 		npx release-it --ci  && \
-		release-web
+		make release-web
 
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-yarn
