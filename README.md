@@ -20,25 +20,6 @@ Currently that means:
 
 Other browser version may work too, but are not actively tested against.
 
-## Installation requirements
-
-Make sure, you have these requirements installed:
-
-    - Node.js ( https://nodejs.org/en/ )
-    - yarn ( https://yarnpkg.com/ )
-
-
-## Installation
-
-The following commands will generate a `bundle.js` file in the `dist` directory
-which contains Patterns and all its dependencies:
-
-    git clone git://github.com/Patternslib/Patterns.git
-    cd Patterns
-    make
-
-Alternatively, you can [download a bundle at patternslib.com](http://patternslib.com/download.html).
-
 
 ## Using polyfills
 
@@ -52,6 +33,31 @@ For this to work, include the following in BEFORE you load the patternslib bundl
 
 Note: this only works, if the bundle nor the polyfills-loader are not loaded asynchronously.
 The script loading order matters here and async loading has no deterministic loading order.
+
+
+## Development installation requirements
+
+Make sure, you have these requirements installed:
+
+    - Node.js ( https://nodejs.org/en/ )
+    - yarn ( https://yarnpkg.com/ )
+    - make
+    - git
+
+On OSX you need ``gnu-tar`` instead of tar (GNU tar supports the ``--transform`` option).
+Please install it with e.g. ``brew install gnu-tar``.
+
+
+## Development installation
+
+The following commands will generate a `bundle.js` file in the `dist` directory
+which contains Patterns and all its dependencies:
+
+    git clone git://github.com/Patternslib/Patterns.git
+    cd Patterns
+    make
+
+Alternatively, you can [download a bundle at patternslib.com](http://patternslib.com/download.html).
 
 
 ## Layout
@@ -70,6 +76,7 @@ and the css files will be generated in the same location as the Sass files.
 
 You'll need to have a Sass compiler installed.
 
+
 ## How to demo patterns
 
 To demo the patterns, simply type `make serve` to install the necessary
@@ -80,6 +87,7 @@ You can then visit http://localhost:4001 to see a site with demos.
 Alternatively, patterns can also be demoed through the
 [Patternslib.com](http://patternslib.com) website, which is open-source. The
 code and setup instructions are [here](https://github.com/patternslib/Patterns-site).
+
 
 ## Contributing fixes
 
@@ -94,6 +102,9 @@ Create a branch for the feature/bug you are working on:
 For inclusion use either a GitHub pull request or create a ticket with
 a url to your external repository.
 
+Please read our [contribution notes](CONTRIBUTING.md) and read our [code style guide](docs/developer/styleguide.md).
+
+
 ### Running tests
 
 The simplest way to run the tests are to use make:
@@ -101,6 +112,7 @@ The simplest way to run the tests are to use make:
     make check
 
 This will install all required npm and bower packages and run the tests.
+
 
 ### Debugging tests
 
@@ -121,6 +133,7 @@ You can pass Jest any parameter it accepts, like `-t TESTPATTERN`::
 
     node --inspect-brk node_modules/.bin/jest --runInBand ./src/pat/tooltip/tooltip.test.js -t will.be.closed.when
 
+
 ### Bundle build analyzation
 
 https://survivejs.com/webpack/optimizing/build-analysis/
@@ -140,12 +153,14 @@ https://www.npmjs.com/package/webpack-bundle-analyzer
 
     webpack-bundle-analyzer stats.json
 
+
 ### Organisations and projects which use Patternslib
 
 -   [Overstroom ik?](http://www.overstroomik.nl), a website which informs Dutch citizens of their risk of flooding. It was introduced and highly praised by the Dutch minister of infrastructure and environment, Melanie Schultz.
 -   [OiRA](https://client.oiraproject.eu/), an online risk assessment tool, created for the Occupational Health and Safety Agency (OSHA) of the European Union.
 -   [Staralliance](http://www.staralliance.com) uses Patternslib in their intranet.
 -   [Plone](http://plone.com) CMS and [Plone Intranet project](http://ploneintranet.com) both use Patternslib.
+
 
 ### Interactive HTML/CSS prototypes made with Patternslib
 
