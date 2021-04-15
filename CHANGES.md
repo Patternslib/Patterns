@@ -1,3 +1,37 @@
+## [4.0.0](https://github.com/Patternslib/patterns/compare/4.0.0-dev.0...4.0.0) (2021-04-15)
+
+
+### Bug Fixes
+
+* **core registry:** Re-add scanning of hidden patterns ([3cefe1b](https://github.com/Patternslib/patterns/commit/3cefe1b19570ff937c68bbf570c5a5e195832c67))
+* **Webpack:** Need to set publicPath for dev server. ([bc4506a](https://github.com/Patternslib/patterns/commit/bc4506a613edf98dfea57f1cf2a439905659eb0b))
+
+
+### Maintainance
+
+* **Cleanup:** Configure editorconfig to use 4 spaces for .json files. ([7a54d4c](https://github.com/Patternslib/patterns/commit/7a54d4c81acb0b10a80a3f67bcae8aaab92ac4e5))
+* **Cleanup:** Reformat package.json using 4 spaces instead of 2. ([c445219](https://github.com/Patternslib/patterns/commit/c445219b452f783c939e275b2867fd0a9b173225))
+* **Docs:** Remove section about customizing ``__webpack_public_path__`` - this is now set automatically. ([4c7cedc](https://github.com/Patternslib/patterns/commit/4c7cedc847878dd4048b7b6472a1c711de73dd0e))
+* **Docs:** Update developer documentation. ([ebb06d3](https://github.com/Patternslib/patterns/commit/ebb06d39b0bd84b247993c58e02c3a0736f5b065))
+* **Docs:** Update release process documentation. ([c66a8b1](https://github.com/Patternslib/patterns/commit/c66a8b1c9ae9de8b17a018090bf3bc795a6c6f84))
+* **pat clone:** Test for not initializing patterns wrapped within .cant-touch-this classes. ([698044f](https://github.com/Patternslib/patterns/commit/698044f07acffe0e37cc0c4d29060133f9d6cda2))
+* **release:** Add make targets for releasing Patternslib. ([7853726](https://github.com/Patternslib/patterns/commit/78537261471fcd7ceae4de6b06ac42a7f51e2ec4))
+* **release:** Do not auto-create github releases ([bebd0ce](https://github.com/Patternslib/patterns/commit/bebd0cedebfa2989204d5fc902b84b408c9b3d5f))
+* **release:** git tag is done by release-it, no need to do it manually ([d1a1a92](https://github.com/Patternslib/patterns/commit/d1a1a925fab78e7ce7b66cf89f88518c89f7eca6))
+* **release:** Load the version just changed by the release-it script anew and add major/minor/patch targets ([fbfbe64](https://github.com/Patternslib/patterns/commit/fbfbe64e81df9a0af3b1058721e512611fbe3345))
+* **release:** Tag the release in Github ([54952e8](https://github.com/Patternslib/patterns/commit/54952e8ecee05bab100aa94733595777cbdd1b83))
+* **Release workflow:** Add 'release-web' target to Makefile for creating a bundle tarball to download. ([2d7bc5e](https://github.com/Patternslib/patterns/commit/2d7bc5e82c20e748ff65a3950ac7e02264fe01db))
+* **Release workflow:** Add commitlint for consistent commits allowing for automatic changelog generation. ([6a14bb6](https://github.com/Patternslib/patterns/commit/6a14bb6d894e18e46da9c173eb492d0437448e1e))
+* **Release workflow:** Configure release-it with changelog generation using conventional changelog. ([be3b1aa](https://github.com/Patternslib/patterns/commit/be3b1aa30517738c6c722e351c4baebc70f2cf5d))
+* **Release workflow:** Install husky for commitlint pre-commit hook. ([ce41cbe](https://github.com/Patternslib/patterns/commit/ce41cbef2aea2d2c4d9c96e36d67bd799ffcdc44))
+* **Webpack:** Add Modernizr to default bundle. ([23a691c](https://github.com/Patternslib/patterns/commit/23a691c08a5ce808751a7a13238bd11e8c71cd6d))
+* **Webpack:** Change package scope to @patternslib/patternslib for the version 4 main release. ([991246d](https://github.com/Patternslib/patterns/commit/991246d31bb14000ad28518fc342187ad87732ed))
+* yarn install. ([ac6d163](https://github.com/Patternslib/patterns/commit/ac6d163136f84579c6d43cbcbcb66c8f0f3c1cbb))
+* **Webpack:** Do not hardcode-set the ``__webpack_public_path__`` in development mode. It's automatically set since recently. ([87c7878](https://github.com/Patternslib/patterns/commit/87c78781ac7b56be13b30f15e350774de870431e))
+* **Webpack:** Move production and development configurations into main config. ([d94655f](https://github.com/Patternslib/patterns/commit/d94655fdae91538f08ce0916860f39aebd4391ee))
+* **Webpack:** Remove the optimization.minimize config option and let it be set by dev/prod modes. ([3812d19](https://github.com/Patternslib/patterns/commit/3812d194e033c80405998ea586aa05a8c1c2ab78))
+* **Webpack:** Use argv.mode insted of env.NODE_ENV following recommendations. ([632c294](https://github.com/Patternslib/patterns/commit/632c29490906d5563738260d63a9d9574df01d96))
+
 # Changelog
 
 ## 4.0.0-dev - unreleased
