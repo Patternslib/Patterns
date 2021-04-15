@@ -64,12 +64,30 @@ release-web: clean-dist bundle
 		git commit -m"Add release patternslib-$(PATTERNSLIB_VERSION).tar.gz" && \
 		git push
 
-.PHONY: release
-release: check
-	$(YARN) release-test && \
+.PHONY: release-major
+release-major: check
+	npx release-it --dry-run --ci && \
+		npx release-it major --ci  && \
+		PATTERNSLIB_VERSION := $(call get_package_var,version)
 		git tag -a $(PATTERNSLIB_VERSION) && git push --tags && \
-		$(YARN) release && \
 		release-web
+
+.PHONY: release-minor
+release-minor: check
+	npx release-it minor --dry-run --ci && \
+		npx release-it minor --ci  && \
+		PATTERNSLIB_VERSION := $(call get_package_var,version)
+		git tag -a $(PATTERNSLIB_VERSION) && git push --tags && \
+		release-web
+
+.PHONY: release-patch
+release-patch: check
+	npx release-it --dry-run --ci && \
+		npx release-it --ci  && \
+		PATTERNSLIB_VERSION := $(call get_package_var,version)
+		git tag -a $(PATTERNSLIB_VERSION) && git push --tags && \
+		release-web
+
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-yarn
 	$(PEGJS) $<
