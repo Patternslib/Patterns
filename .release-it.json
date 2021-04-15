@@ -2,10 +2,6 @@
     "npm": {
         "publish": true
     },
-    "github": {
-        "release": true,
-        "releaseName": "${version}"
-    },
     "plugins": {
         "@release-it/conventional-changelog": {
             "infile": "CHANGES.md",
