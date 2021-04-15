@@ -20,8 +20,11 @@ stamp-yarn:
 	$(YARN) install
 	touch stamp-yarn
 
+clean-dist:
+	rm -Rf dist/
+
 .PHONY: clean
-clean:
+clean: clean-dist
 	rm -f stamp-yarn
 	rm -Rf node_modules/
 	rm -Rf dist/
@@ -49,9 +52,23 @@ bundle: stamp-yarn
 	$(YARN) run build
 
 .PHONY: release-web
-release-web: bundle
+release-web: clean-dist bundle
 	@echo version is $(PATTERNSLIB_VERSION)
-	tar -czf patternslib-$(PATTERNSLIB_VERSION).tar.gz dist --transform s/dist/patternslib-$(PATTERNSLIB_VERSION)/
+	tar -czf ./patternslib-$(PATTERNSLIB_VERSION).tar.gz dist --transform s/dist/patternslib-$(PATTERNSLIB_VERSION)/
+	git clone -n git@github.com:Patternslib/Patterns-releases.git --depth 1 ./dist/Patterns-releases
+	mkdir ./dist/Patterns-releases/releases
+	mv ./patternslib-$(PATTERNSLIB_VERSION).tar.gz ./dist/Patterns-releases/releases/
+	cd ./dist/Patterns-releases && \
+		git reset HEAD
+		git add ./releases/patternslib-$(PATTERNSLIB_VERSION).tar.gz && \
+		git commit -m"Add release patternslib-$(PATTERNSLIB_VERSION).tar.gz" && \
+		git push
+
+.PHONY: release
+release: check
+	$(YARN) release-test && \
+		$(YARN) release && \
+		release-web
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-yarn
 	$(PEGJS) $<
