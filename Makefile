@@ -53,6 +53,7 @@ bundle: stamp-yarn
 
 .PHONY: release-web
 release-web: clean-dist bundle
+	PATTERNSLIB_VERSION := $(call get_package_var,version)
 	@echo version is $(PATTERNSLIB_VERSION)
 	tar -czf ./patternslib-$(PATTERNSLIB_VERSION).tar.gz dist --transform s/dist/patternslib-$(PATTERNSLIB_VERSION)/
 	git clone -n git@github.com:Patternslib/Patterns-releases.git --depth 1 ./dist/Patterns-releases
@@ -68,24 +69,18 @@ release-web: clean-dist bundle
 release-major: check
 	npx release-it --dry-run --ci && \
 		npx release-it major --ci  && \
-		PATTERNSLIB_VERSION := $(call get_package_var,version)
-		git tag -a $(PATTERNSLIB_VERSION) && git push --tags && \
 		release-web
 
 .PHONY: release-minor
 release-minor: check
 	npx release-it minor --dry-run --ci && \
 		npx release-it minor --ci  && \
-		PATTERNSLIB_VERSION := $(call get_package_var,version)
-		git tag -a $(PATTERNSLIB_VERSION) && git push --tags && \
 		release-web
 
 .PHONY: release-patch
 release-patch: check
 	npx release-it --dry-run --ci && \
 		npx release-it --ci  && \
-		PATTERNSLIB_VERSION := $(call get_package_var,version)
-		git tag -a $(PATTERNSLIB_VERSION) && git push --tags && \
 		release-web
 
 
