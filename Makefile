@@ -67,6 +67,7 @@ release-web: clean-dist bundle
 .PHONY: release
 release: check
 	$(YARN) release-test && \
+		git tag -a $(PATTERNSLIB_VERSION) && git push --tags && \
 		$(YARN) release && \
 		release-web
 
