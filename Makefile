@@ -18,6 +18,9 @@ all:: bundle css
 
 stamp-yarn:
 	$(YARN) install
+	# Install pre commit hook
+	$(YARN) husky install
+	$(YARN) husky add .husky/commit-msg "yarn commitlint --edit $1"
 	touch stamp-yarn
 
 clean-dist:
