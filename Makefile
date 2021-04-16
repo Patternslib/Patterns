@@ -9,7 +9,9 @@ GENERATED	= src/lib/depends_parse.js
 define get_package_var
 $(shell node -p "require('./package.json').$(1)")
 endef
-PATTERNSLIB_VERSION := $(call get_package_var,version)
+PACKAGE_NAME := $(shell node -p "'$(call get_package_var,name)'.replace('@patternslib/', '')")
+PACKAGE_VERSION := $(call get_package_var,version)
+
 
 all:: bundle css
 
@@ -30,7 +32,6 @@ clean-dist:
 clean: clean-dist
 	rm -f stamp-yarn
 	rm -Rf node_modules/
-	rm -Rf dist/
 
 ########################################################################
 ## Tests
@@ -54,23 +55,22 @@ build:: bundle all-css
 bundle: stamp-yarn
 	$(YARN) run build
 
-.PHONY: release-web
 release-web: clean-dist bundle
-	PATTERNSLIB_VERSION=$(call get_package_var,version)
-	@echo version is $(PATTERNSLIB_VERSION)
-	tar -czf ./patternslib-$(PATTERNSLIB_VERSION).tar.gz dist --transform s/dist/patternslib-$(PATTERNSLIB_VERSION)/
+	@echo name is $(PACKAGE_NAME)
+	@echo version is $(PACKAGE_VERSION)
+	tar -czf ./$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.gz dist --transform s/dist/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/
 	git clone -n git@github.com:Patternslib/Patterns-releases.git --depth 1 ./dist/Patterns-releases
 	mkdir ./dist/Patterns-releases/releases
-	mv ./patternslib-$(PATTERNSLIB_VERSION).tar.gz ./dist/Patterns-releases/releases/
+	mv ./$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.gz ./dist/Patterns-releases/releases/
 	cd ./dist/Patterns-releases && \
 		git reset HEAD && \
-		git add ./releases/patternslib-$(PATTERNSLIB_VERSION).tar.gz && \
-		git commit -m"Add release patternslib-$(PATTERNSLIB_VERSION).tar.gz" && \
+		git add ./releases/$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.gz && \
+		git commit -m"Add release $(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.gz" && \
 		git push
 
 .PHONY: release-major
 release-major: check
-	npx release-it --dry-run --ci && \
+	npx release-it major --dry-run --ci && \
 		npx release-it major --ci  && \
 		make release-web
 

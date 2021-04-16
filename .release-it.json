@@ -2,6 +2,10 @@
     "npm": {
         "publish": true
     },
+    "git": {
+        "requireBranch": "master",
+        "commitMessage": "maint(Release): Release new version."
+    },
     "plugins": {
         "@release-it/conventional-changelog": {
             "infile": "CHANGES.md",

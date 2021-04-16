@@ -51,13 +51,14 @@
         "whatwg-fetch": "^3.4.0"
     },
     "devDependencies": {
+        "@babel/core": "^7.13.15",
+        "@babel/eslint-parser": "^7.13.14",
         "@babel/plugin-proposal-optional-chaining": "^7.11.0",
         "@babel/preset-env": "^7.9.6",
         "@commitlint/cli": "^12.1.1",
         "@commitlint/config-conventional": "^12.1.1",
         "@release-it/conventional-changelog": "^2.0.1",
-        "@testing-library/jest-dom": "^5.5.0",
-        "babel-eslint": "^10.1.0",
+        "@testing-library/jest-dom": "^5.11.10",
         "babel-loader": "^8.1.0",
         "clean-webpack-plugin": "^3.0.0",
         "copy-webpack-plugin": "^6.2.0",
@@ -71,8 +72,8 @@
         "husky": "^6.0.0",
         "identity-obj-proxy": "^3.0.0",
         "imports-loader": "^0.8.0",
-        "jest": "^26.0.1",
-        "jest-watch-typeahead": "^0.6.0",
+        "jest": "^26.6.3",
+        "jest-watch-typeahead": "^0.6.2",
         "prettier": "^2.1.2",
         "raw-loader": "^4.0.1",
         "regenerator-runtime": "^0.13.5",
@@ -83,12 +84,12 @@
         "svg-inline-loader": "^0.8.2",
         "terser-webpack-plugin": "^2.3.6",
         "webpack": "^4.43.0",
-        "webpack-bundle-analyzer": "^3.8.0",
-        "webpack-cli": "^3.3.11",
-        "webpack-dev-server": "^3.10.3",
+        "webpack-bundle-analyzer": "^3.9.0",
+        "webpack-cli": "^3.3.12",
+        "webpack-dev-server": "^3.11.2",
         "webpack-modernizr-loader": "^5.0.0",
-        "whybundled": "^1.4.3",
-        "yarn": "^1.22.4"
+        "whybundled": "^2.0.0",
+        "yarn": "^1.22.10"
     },
     "resolutions": {
         "clean-css": "4.2.3",
@@ -124,5 +125,8 @@
             "name": "Cornelis Kolbach",
             "url": "http://cornae.com"
         }
-    ]
+    ],
+    "publishConfig": {
+        "access": "public"
+    }
 }

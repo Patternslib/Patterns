@@ -7,7 +7,7 @@ module.exports = {
         node: true,
         jest: true,
     },
-    parser: "babel-eslint",
+    parser: "@babel/eslint-parser",
     ignorePatterns: [
         "src/lib/depends_parse.js",
         "src/pat/calendar/moment-timezone-with-data-2010-2020.js",
