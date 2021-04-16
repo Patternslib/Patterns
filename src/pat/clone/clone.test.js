@@ -34,6 +34,7 @@ describe("pat-clone", function () {
                 "    </div>" +
                 "</div>"
         );
+
         registry.scan($lab);
         expect($("div.item").length).toBe(1);
         $lab.find(".add-clone").click();
@@ -325,6 +326,73 @@ describe("pat-clone", function () {
                 document.body.querySelector(".pat-clone .pat-example")
                     .textContent
             ).toBe("initialized");
+        });
+
+        it("will not initialize patterns wrapped in <template> tags.", function () {
+            Base.extend({
+                name: "example",
+                trigger: ".pat-example",
+                init: function () {
+                    this.el.innerHTML += "initialized";
+                },
+            });
+
+            document.body.innerHTML = `
+                <template id="template">
+                    <div class="pat-example"></div>
+                </template>
+                <div class="pat-clone" data-pat-clone="template: #template">
+                  <button type="button" class="add-clone">clone</button>
+                </div>
+            `;
+            registry.scan(document.body);
+
+            // The template-pattern isn't initialized.
+            expect(
+                document.querySelector("#template").content.firstElementChild
+                    .textContent
+            ).toBe("");
+
+            document.querySelector("button").click();
+
+            // The cloned pattern is only initialized once.
+            expect(
+                document.querySelector(".pat-clone .pat-example").textContent
+            ).toBe("initialized");
+        });
+
+        it("can clone <template> with multiple first-level childs.", function () {
+            document.body.innerHTML = `
+                <template id="template">
+                    <label>first
+                        <input type="text" name="first" />
+                    </label>
+                    <label>second
+                        <input type="text" name="second" />
+                    </label>
+                    <button type="button" class="remove-clone" />
+                </template>
+                <div class="pat-clone" data-pat-clone="template: #template; remove-behavior: none">
+                  <button type="button" class="add-clone">clone</button>
+                </div>
+            `;
+            registry.scan(document.body);
+
+            document.querySelector(".add-clone").click();
+
+            expect(document.querySelectorAll(".pat-clone label").length).toBe(2); // prettier-ignore
+
+            document.querySelector(".add-clone").click();
+
+            expect(document.querySelectorAll(".pat-clone label").length).toBe(4); // prettier-ignore
+
+            document.querySelector(".remove-clone").click();
+
+            expect(document.querySelectorAll(".pat-clone label").length).toBe(2); // prettier-ignore
+
+            document.querySelector(".remove-clone").click();
+
+            expect(document.querySelectorAll(".pat-clone label").length).toBe(0); // prettier-ignore
         });
     });
 });

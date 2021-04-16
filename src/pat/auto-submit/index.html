@@ -9,6 +9,28 @@
             type="text/javascript"
             charset="utf-8"
         ></script>
+        <style type="text/css" media="screen">
+          label {
+            display: block;
+          }
+          time.output-field {
+            min-width: 6em;
+            height: 2em;
+            margin: 0 0.5em;
+            padding: 0 0.5em;
+            background: lightgrey;
+            cursor: pointer;
+            box-sizing: border-box;
+            display: inline-block;
+          }
+          .cancel-button {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            margin-left: 0.2em;
+            background-color: red;
+          }
+        </style>
     </head>
     <body class="home">
         <h1>pat-autosubmit demo</h1>
@@ -79,6 +101,19 @@
                           type="text"
                       />
                     </label>
+
+                    <fieldset class="group">
+                        <legend>date picker with depending input</legend>
+                        <label>
+                            <input name="start" class="pat-date-picker" type="date"/>
+                            Start
+                        </label>
+                        <label>
+                            <input name="end"   class="pat-date-picker" type="date" data-pat-date-picker="after: input[name=start]; offset-days: 2;"/>
+                            End after start, automatically updated.
+                        </label>
+                    </fieldset>
+
                 </fieldset>
             </form>
 

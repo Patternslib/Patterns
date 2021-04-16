@@ -3,6 +3,7 @@ import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
+import PatDisplayTime from "../display-time/display-time";
 import utils from "../../core/utils";
 
 export const parser = new Parser("date-picker");
@@ -12,6 +13,9 @@ parser.addArgument("i18n"); // URL pointing to JSON resource with i18n values
 parser.addArgument("first-day", 0);
 parser.addArgument("after");
 parser.addArgument("offset-days", 0);
+
+parser.add_argument("output-format", null);
+parser.add_argument("locale", null);
 
 parser.addAlias("behaviour", "behavior");
 
@@ -27,9 +31,11 @@ export default Base.extend({
     name: "date-picker",
     trigger: ".pat-date-picker",
     parser: parser,
+    format: "YYYY-MM-DD",
 
     async init() {
         const el = this.el;
+
         //TODO: make parser with options extend missing options.
         //this.options = parser.parse(el, opts);
         this.options = $.extend(parser.parse(el), this.options);
@@ -52,16 +58,51 @@ export default Base.extend({
                         const offset = this.options.offsetDays || 0;
                         b_date.setDate(b_date.getDate() + offset);
                         this.el.value = b_date.toISOString().substring(0, 10);
+                        this.dispatch_change_event();
                     }
                 });
             }
         }
 
-        if (
-            this.options.behavior === "native" &&
-            utils.checkInputSupport("date", "invalid date")
-        ) {
+        let display_el;
+        if (this.options.behavior === "styled") {
+            el.setAttribute("type", "hidden");
+
+            display_el = document.createElement("time");
+            display_el.setAttribute("class", "output-field");
+            display_el.setAttribute("datetime", el.value);
+
+            const display_time_config = { format: this.format };
+            if (this.options.outputFormat) {
+                display_time_config[
+                    "output-format"
+                ] = this.options.outputFormat;
+            }
+            if (this.options.locale) {
+                display_time_config.locale = this.options.locale;
+            }
+            el.insertAdjacentElement("beforebegin", display_el);
+
+            $(display_el).on("init.display-time.patterns", () =>
+                this.add_clear_button(display_el)
+            );
+            const display_el_pat = new PatDisplayTime(
+                display_el,
+                display_time_config
+            );
+
+            this.el.addEventListener("change", () => {
+                display_el.setAttribute("datetime", this.el.value);
+                display_el_pat.format();
+                this.add_clear_button(display_el);
+            });
+        } else if (utils.checkInputSupport("date", "invalid date")) {
+            // behavior native with native support.
             return;
+        } else if (el.getAttribute("type") === "date") {
+            // behavior native but no native support.
+            // Fallback JS date picker with a text input field.
+            el.setAttribute("type", "text");
         }
 
         if (window.__patternslib_import_styles) {
@@ -69,20 +110,13 @@ export default Base.extend({
         }
         const Pikaday = (await import("pikaday")).default;
 
-        if (el.getAttribute("type") === "date") {
-            el.setAttribute("type", "text");
-        }
-
         const config = {
             field: el,
-            format: "YYYY-MM-DD",
+            trigger: display_el || el,
+            format: this.format,
             firstDay: this.options.firstDay,
             showWeekNumber: this.options.weekNumbers === "show",
-            onSelect() {
-                $(this._o.field).closest("form").trigger("input-change");
-                /* Also trigger input change on date field to support pat-autosubmit. */
-                $(this._o.field).trigger("input-change");
-            },
+            onSelect: () => this.dispatch_change_event(),
         };
 
         if (el.getAttribute("min")) {
@@ -93,23 +127,44 @@ export default Base.extend({
         }
 
         if (this.options.i18n) {
-            $.getJSON(this.options.i18n)
-                .done((data) => {
-                    config.i18n = data;
-                })
-                .fail(
-                    $.proxy(() => {
-                        console.error(
-                            "date-picker could not load i18n: " +
-                                this.options.i18n
-                        );
-                    }, this)
-                )
-                .always(() => {
-                    new Pikaday(config);
-                });
-        } else {
-            new Pikaday(config);
+            try {
+                const response = await fetch(this.options.i18n);
+                config.i18n = await response.json();
+            } catch {
+                console.error(
+                    `date-picker could not load i18n for ${this.options.i18n}`
+                );
+            }
         }
+        this.pikaday = new Pikaday(config);
+    },
+
+    add_clear_button(el_append_to) {
+        if (!this.el.required && this.el.value) {
+            // Add clear button
+            const clear_button = document.createElement("span");
+            clear_button.setAttribute("class", "cancel-button");
+            clear_button.addEventListener("click", (e) => {
+                e.stopPropagation();
+                this.el.value = null;
+                this.dispatch_change_event();
+            });
+            el_append_to.appendChild(clear_button);
+        }
+    },
+
+    dispatch_change_event() {
+        const event = new Event("change", {
+            bubbles: true,
+            cancelable: true,
+        });
+        // Set ``firedBy` to prevent pikaday to call it's own handler and land
+        // in an infinite loop.
+        event.firedBy = this.pikaday;
+        this.el.dispatchEvent(event);
+
+        // Also trigger input-change
+        $(this.el).trigger("input-change");
+        $(this.el.form).trigger("input-change");
     },
 });

@@ -556,6 +556,11 @@ const jqToNode = (el) => {
     return el;
 };
 
+const ensureArray = (it) => {
+    // Ensure to return always an array
+    return Array.isArray(it) || it.jquery ? it : [it];
+};
+
 var utils = {
     // pattern pimping - own module?
     jqueryPlugin: jqueryPlugin,
@@ -581,6 +586,7 @@ var utils = {
     debounce: debounce,
     isIE: isIE,
     jqToNode: jqToNode,
+    ensureArray: ensureArray,
 };
 
 export default utils;

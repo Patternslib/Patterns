@@ -55,6 +55,24 @@ Here are all the i18n values in JSON format:
        "weekdaysShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
      }
 
+####Automatically update one date when changing another
+
+You can define one date input to be after another date with the ``after`` option.
+The the other date is changed after the first, it will be automatically updated to be offset days after the first.
+
+    <input name="start" class="pat-date-picker" type="date"/>
+    <input name="end"   class="pat-date-picker" type="date" data-pat-date-picker="after: input[name=start]; offset-days: 2;"/>
+
+####Format the displayed date
+
+In the default ``styled`` behavior mode, you can format the displayed date.
+The date input will be hidden and updated with an ISO8601 date to submit values which are machine-readable.
+The formating options are those from MomentJS: https://momentjs.com/docs/#/displaying/format/
+The locale option allows you to define the language in which the formatted date is displayed.
+
+    <input class="pat-date-picker" data-pat-date-picker="output-format: Do MMMM YYYY; locale: de" type="date" />
+
+
 ### Why did we base this library on Pikaday?
 
 When looking for the underlying library to use for this pattern, we compared
@@ -95,3 +113,5 @@ In addition, the following options can be passed to `data-pat-date-picker`:
 | **first-day**               | Integer | 0             |                  | Set the first day of the week (0 -> Sunday, 1-> Monday, ...). |
 | **after**                   | string  |               |                  | CSS selector of another date input. If this date is before the other, it will be updated to the oder date plus offset-days. |
 | **offset-days**             | Integer | 0             |                  | Number of days added to the **after** reference date which will be used to update this date value. |
+| **output-format**           | String  | null          |                  | MomentJS compatible formatting option. If not given, the date will be displayed in ISO 8601 format. |
+| **locale**                  | String  | null          |                  | Define the language in which the formatted date should be displayed. |

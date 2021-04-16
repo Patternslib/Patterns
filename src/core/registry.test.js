@@ -80,6 +80,11 @@ describe("pat-registry: The registry for patterns", function () {
                     <div class="e4 pat-example"></div>
                 </div>
             </pre>
+            <template class="e5">
+                <div>
+                    <div class="pat-example"></div>
+                </div>
+            </template>
         `;
         registry.scan(tree);
 
@@ -87,5 +92,11 @@ describe("pat-registry: The registry for patterns", function () {
         expect(tree.querySelector(".e2").textContent).toBe("");
         expect(tree.querySelector(".e3").textContent).toBe("");
         expect(tree.querySelector(".e4").textContent).toBe("");
+        expect(
+            tree
+                .querySelector(".e5")
+                .content.firstElementChild.querySelector(".pat-example")
+                .textContent
+        ).toBe("");
     });
 });

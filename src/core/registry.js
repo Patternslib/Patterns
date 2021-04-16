@@ -149,10 +149,12 @@ const registry = {
             // - with class ``.cant-touch-this``
             // - wrapped in ``.cant-touch-this`` elements
             // - wrapped in ``<pre>`` elements
+            // - wrapped in ``<template>`` elements
             return (
                 !el.matches(".cant-touch-this") &&
                 !el?.parentNode?.closest?.(".cant-touch-this") &&
-                !el?.parentNode?.closest?.("pre")
+                !el?.parentNode?.closest?.("pre") &&
+                !el?.parentNode?.closest?.("template") // NOTE: not strictly necessary. Template is a DocumentFragment and not reachable except for IE.
             );
         });
 

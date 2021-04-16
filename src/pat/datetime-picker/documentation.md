@@ -9,13 +9,6 @@ for browsers which don't yet support the HTML5 date input.
 
 ### Examples
 
-####Falling back to the browser's HTML5 picker if available.
-
-Set the `behavior` option to `native` to use the browser's HTML5 date input
-rendering when available.
-
-    <input class="pat-date-picker" type="date" data-pat-date-picker="behavior: native">
-
 ####Enforcing the styled non-HTML5 picker universally.
 
 By default this pattern will NOT defer to the browser's HTML5 picker.
@@ -85,7 +78,6 @@ In addition, the following options can be passed to `data-pat-date-picker`:
 
 | Property                    | Type    | Default Value | Available values | Description                                                  |
 | --------------------------- | ------- | ------------- | ---------------- | ------------------------------------------------------------ |
-| **behavior** (or behaviour) | string  | styled        | native, styled   | Styled will always show the styled date picker. Native will use the system native date picker, provided the browser supports this. |
 | **week-numbers**            | string  | hide          | show, hide       | "show" will show the weeks' numbers in a leftmost column.    |
 | **i18n**                    | URL     |               |                  | Provide a URL to a JSON resource which gives the i18n values. |
 | **first-day**               | Integer | 0             |                  | Set the first day of the week (0 -> Sunday, 1-> Monday, ...). |

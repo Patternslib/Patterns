@@ -614,4 +614,27 @@ describe("core.utils tests", () => {
             done();
         });
     });
+
+    describe("ensureArray tests", () => {
+        it("returns the passed value as is if it is an array.", (done) => {
+            const val = [1, 2, 3];
+            expect(utils.ensureArray(val)).toBe(val);
+
+            done();
+        });
+
+        it("returns jQuery object as is, as it is array-like.", (done) => {
+            const val = $();
+            expect(utils.ensureArray(val)).toBe(val);
+
+            done();
+        });
+
+        it("returns an array, if the passed value is not an array.", (done) => {
+            const val = "1, 2, 3";
+            expect(utils.ensureArray(val)[0]).toBe(val);
+
+            done();
+        });
+    });
 });
