@@ -60,6 +60,15 @@ export default Base.extend({
 
         this.errors = 0;
         this.options = parser.parse(this.$el, opts);
+
+        //this.input_els = document.querySelectorAll(
+        //    "input[name], select[name], textarea[name]"
+        //);
+
+        //for (const inp of this.input_els) {
+        //    inp.addEventListener("change", (e) => this.debounced_validate(e));
+        //}
+
         this.$inputs = this.$el.find(
             "input[name], select[name], textarea[name]"
         );
@@ -97,6 +106,11 @@ export default Base.extend({
                 }
             }.bind(this)
         );
+    },
+
+    debounced_validate(e) {
+        const target = e.target;
+        utils.debounce(() => this.validate_element(target), 50);
     },
 
     extend_validate() {
