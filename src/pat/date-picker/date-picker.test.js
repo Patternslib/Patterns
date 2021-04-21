@@ -59,7 +59,7 @@ describe("pat-date-picker", function () {
         const day = date.getDate().toString();
         const month = date.getMonth().toString(); // remember, month-count starts from 0
         const year = date.getFullYear().toString();
-        const isodate = date.toISOString().split("T")[0];
+        const isodate = utils.localized_isodate(date);
 
         const cur_year = document.querySelector('.pika-lendar .pika-select-year option[selected="selected"]'); // prettier-ignore
         expect(cur_year.textContent).toBe(year);
@@ -460,7 +460,7 @@ describe("pat-date-picker", function () {
         const day = date.getDate().toString();
         const month = date.getMonth().toString(); // remember, month-count starts from 0
         const year = date.getFullYear().toString();
-        const isodate = date.toISOString().split("T")[0];
+        const isodate = utils.localized_isodate(date);
 
         const cur_year = document.querySelector('.pika-lendar .pika-select-year option[selected="selected"]'); // prettier-ignore
         expect(cur_year.textContent).toBe(year);
