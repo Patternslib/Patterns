@@ -45,9 +45,9 @@ module.exports = (env, argv) => {
             rules: [
                 {
                     test: /\.js$/,
-                    // Exclude node modules except patternslib and pat-* packgages.
+                    // Exclude node modules except patternslib, pat-* and mockup packgages.
                     // Allows for extending this file without needing to override for a successful webpack build.
-                    exclude: /node_modules\/(?!(.*patternslib)\/)(?!(pat-.*)\/).*/,
+                    exclude: /node_modules\/(?!(.*patternslib)\/)(?!(pat-.*)\/)(?!(mockup)\/).*/,
                     loader: "babel-loader",
                 },
                 {
@@ -71,8 +71,7 @@ module.exports = (env, argv) => {
                     test: /showdown-prettify/,
                     use: [
                         {
-                            loader:
-                                "imports-loader?showdown,google-code-prettify",
+                            loader: "imports-loader?showdown,google-code-prettify",
                         },
                     ],
                 },
