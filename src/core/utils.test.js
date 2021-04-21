@@ -8,39 +8,29 @@ describe("basic tests", function () {
     describe("rebaseURL", function () {
         it("Keep URL with scheme", function () {
             expect(
-                utils.rebaseURL(
-                    "http://example.com/foo/",
-                    "http://other.com/me"
-                )
+                utils.rebaseURL("http://example.com/foo/", "http://other.com/me")
             ).toBe("http://other.com/me");
         });
 
         it("Keep URL with absolute path", function () {
-            expect(utils.rebaseURL("http://example.com/foo/", "/me")).toBe(
-                "/me"
-            );
+            expect(utils.rebaseURL("http://example.com/foo/", "/me")).toBe("/me");
         });
 
         it("Rebase to base with filename", function () {
             expect(
-                utils.rebaseURL(
-                    "http://example.com/foo/index.html",
-                    "me/page.html"
-                )
+                utils.rebaseURL("http://example.com/foo/index.html", "me/page.html")
             ).toBe("http://example.com/foo/me/page.html");
         });
 
         it("Rebase to base with directory path", function () {
-            expect(
-                utils.rebaseURL("http://example.com/foo/", "me/page.html")
-            ).toBe("http://example.com/foo/me/page.html");
+            expect(utils.rebaseURL("http://example.com/foo/", "me/page.html")).toBe(
+                "http://example.com/foo/me/page.html"
+            );
         });
 
         it("Rebase with absolute base url", function () {
             expect(
-                utils
-                    .rebaseURL("/foo/", "me/page.html")
-                    .indexOf("/foo/me/page.html") > 0
+                utils.rebaseURL("/foo/", "me/page.html").indexOf("/foo/me/page.html") > 0
             ).toBe(true);
         });
 
@@ -54,10 +44,7 @@ describe("basic tests", function () {
 
         it("Doesn't rebase data: urls", function () {
             expect(
-                utils.rebaseURL(
-                    "http://example.com/foo/",
-                    "data:image-base64gibberish"
-                )
+                utils.rebaseURL("http://example.com/foo/", "data:image-base64gibberish")
             ).toBe("data:image-base64gibberish");
         });
     });
@@ -81,51 +68,29 @@ describe("basic tests", function () {
                 ],
                 function (objs) {
                     expect(utils.removeDuplicateObjects(objs).length).toBe(1);
-                    expect(
-                        _.keys(utils.removeDuplicateObjects(objs)[0]).length
-                    ).toBe(1);
-                    expect(
-                        _.keys(utils.removeDuplicateObjects(objs)[0])[0]
-                    ).toBe("a");
-                    expect(
-                        _.values(utils.removeDuplicateObjects(objs)[0])[0]
-                    ).toBe("1");
+                    expect(_.keys(utils.removeDuplicateObjects(objs)[0]).length).toBe(1);
+                    expect(_.keys(utils.removeDuplicateObjects(objs)[0])[0]).toBe("a");
+                    expect(_.values(utils.removeDuplicateObjects(objs)[0])[0]).toBe("1");
                 }
             );
 
             objs = [{ a: "1" }, { a: "2" }];
             expect(utils.removeDuplicateObjects(objs).length).toBe(2);
-            expect(_.keys(utils.removeDuplicateObjects(objs)[0]).length).toBe(
-                1
-            );
+            expect(_.keys(utils.removeDuplicateObjects(objs)[0]).length).toBe(1);
             expect(_.keys(utils.removeDuplicateObjects(objs)[0])[0]).toBe("a");
-            expect(_.values(utils.removeDuplicateObjects(objs)[0])[0]).toBe(
-                "1"
-            );
-            expect(_.keys(utils.removeDuplicateObjects(objs)[1]).length).toBe(
-                1
-            );
+            expect(_.values(utils.removeDuplicateObjects(objs)[0])[0]).toBe("1");
+            expect(_.keys(utils.removeDuplicateObjects(objs)[1]).length).toBe(1);
             expect(_.keys(utils.removeDuplicateObjects(objs)[1])[0]).toBe("a");
-            expect(_.values(utils.removeDuplicateObjects(objs)[1])[0]).toBe(
-                "2"
-            );
+            expect(_.values(utils.removeDuplicateObjects(objs)[1])[0]).toBe("2");
 
             objs = [{ a: "1" }, { b: "1" }];
             expect(utils.removeDuplicateObjects(objs).length).toBe(2);
-            expect(_.keys(utils.removeDuplicateObjects(objs)[0]).length).toBe(
-                1
-            );
+            expect(_.keys(utils.removeDuplicateObjects(objs)[0]).length).toBe(1);
             expect(_.keys(utils.removeDuplicateObjects(objs)[0])[0]).toBe("a");
-            expect(_.values(utils.removeDuplicateObjects(objs)[0])[0]).toBe(
-                "1"
-            );
-            expect(_.keys(utils.removeDuplicateObjects(objs)[1]).length).toBe(
-                1
-            );
+            expect(_.values(utils.removeDuplicateObjects(objs)[0])[0]).toBe("1");
+            expect(_.keys(utils.removeDuplicateObjects(objs)[1]).length).toBe(1);
             expect(_.keys(utils.removeDuplicateObjects(objs)[1])[0]).toBe("b");
-            expect(_.values(utils.removeDuplicateObjects(objs)[1])[0]).toBe(
-                "1"
-            );
+            expect(_.values(utils.removeDuplicateObjects(objs)[1])[0]).toBe("1");
 
             _.each(
                 [
@@ -134,30 +99,14 @@ describe("basic tests", function () {
                 ],
                 function (objs) {
                     expect(utils.removeDuplicateObjects(objs).length).toBe(2);
-                    expect(
-                        _.keys(utils.removeDuplicateObjects(objs)[0]).length
-                    ).toBe(1);
-                    expect(
-                        _.keys(utils.removeDuplicateObjects(objs)[1]).length
-                    ).toBe(2);
-                    expect(
-                        _.keys(utils.removeDuplicateObjects(objs)[0])[0]
-                    ).toBe("a");
-                    expect(
-                        _.values(utils.removeDuplicateObjects(objs)[0])[0]
-                    ).toBe("1");
-                    expect(
-                        _.keys(utils.removeDuplicateObjects(objs)[1])[0]
-                    ).toBe("a");
-                    expect(
-                        _.values(utils.removeDuplicateObjects(objs)[1])[0]
-                    ).toBe("1");
-                    expect(
-                        _.keys(utils.removeDuplicateObjects(objs)[1])[1]
-                    ).toBe("b");
-                    expect(
-                        _.values(utils.removeDuplicateObjects(objs)[1])[1]
-                    ).toBe("1");
+                    expect(_.keys(utils.removeDuplicateObjects(objs)[0]).length).toBe(1);
+                    expect(_.keys(utils.removeDuplicateObjects(objs)[1]).length).toBe(2);
+                    expect(_.keys(utils.removeDuplicateObjects(objs)[0])[0]).toBe("a");
+                    expect(_.values(utils.removeDuplicateObjects(objs)[0])[0]).toBe("1");
+                    expect(_.keys(utils.removeDuplicateObjects(objs)[1])[0]).toBe("a");
+                    expect(_.values(utils.removeDuplicateObjects(objs)[1])[0]).toBe("1");
+                    expect(_.keys(utils.removeDuplicateObjects(objs)[1])[1]).toBe("b");
+                    expect(_.values(utils.removeDuplicateObjects(objs)[1])[1]).toBe("1");
                 }
             );
         });
@@ -173,12 +122,8 @@ describe("basic tests", function () {
             _.each([1, 2, 3, 99], function (length) {
                 expect(_.isArray(utils.mergeStack(stack, length))).toBeTruthy();
                 expect(utils.mergeStack(stack, length).length).toBe(length);
-                expect(
-                    _.isObject(utils.mergeStack(stack, length)[0])
-                ).toBeTruthy();
-                expect(_.keys(utils.mergeStack(stack, length)[0]).length).toBe(
-                    0
-                );
+                expect(_.isObject(utils.mergeStack(stack, length)[0])).toBeTruthy();
+                expect(_.keys(utils.mergeStack(stack, length)[0]).length).toBe(0);
             });
 
             stack = [[{ a: 1 }], [{ b: 1 }, { b: 2 }]];
@@ -323,9 +268,7 @@ describe("hideOrShow", function () {
             effect: { duration: "fast", easing: "swing" },
         });
         expect($el[0].style.display).toBe("none");
-        expect(Array.prototype.slice.call($el[0].classList)).toEqual([
-            "hidden",
-        ]);
+        expect(Array.prototype.slice.call($el[0].classList)).toEqual(["hidden"]);
     });
 
     it("Show without a transition", function () {
@@ -336,9 +279,7 @@ describe("hideOrShow", function () {
             effect: { duration: "fast", easing: "swing" },
         });
         expect($el[0].style.display).toBe("");
-        expect(Array.prototype.slice.call($el[0].classList)).toEqual([
-            "visible",
-        ]);
+        expect(Array.prototype.slice.call($el[0].classList)).toEqual(["visible"]);
     });
 
     it("Single pat-update event without a transition", function () {
@@ -369,9 +310,7 @@ describe("hideOrShow", function () {
             effect: { duration: 0, easing: "swing" },
         });
         expect($el[0].style.display).toBe("none");
-        expect(Array.prototype.slice.call($el[0].classList)).toEqual([
-            "hidden",
-        ]);
+        expect(Array.prototype.slice.call($el[0].classList)).toEqual(["hidden"]);
     });
 
     it("Fadeout with non-zero duration", function () {
@@ -383,9 +322,7 @@ describe("hideOrShow", function () {
         });
         setTimeout(function () {
             expect($el[0].style.display).toBe("none");
-            expect(Array.prototype.slice.call($el[0].classList)).toEqual([
-                "hidden",
-            ]);
+            expect(Array.prototype.slice.call($el[0].classList)).toEqual(["hidden"]);
         }, 500);
     });
 
@@ -423,9 +360,7 @@ describe("hideOrShow", function () {
             effect: { duration: "fast", easing: "swing" },
         });
         expect($el[0].style.display).toBe("");
-        expect(Array.prototype.slice.call($el[0].classList)).toEqual([
-            "hidden",
-        ]);
+        expect(Array.prototype.slice.call($el[0].classList)).toEqual(["hidden"]);
     });
 
     it("transition none does not mess up styles", (done) => {
@@ -634,6 +569,13 @@ describe("core.utils tests", () => {
             const val = "1, 2, 3";
             expect(utils.ensureArray(val)[0]).toBe(val);
 
+            done();
+        });
+    });
+
+    describe("localized_isodate tests", () => {
+        it("Returns an zero-padded ISO 8602 compatible date when passed a JavaScript date", (done) => {
+            expect(utils.localized_isodate(new Date(2021, 3, 2))).toBe("2021-04-02");
             done();
         });
     });

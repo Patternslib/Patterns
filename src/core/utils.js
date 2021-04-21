@@ -79,17 +79,12 @@ var singleBoundJQueryPlugin = function (pattern, method, options) {
         if (method) {
             if (pat[method] === undefined) {
                 $.error(
-                    "Method " +
-                        method +
-                        " does not exist on jQuery." +
-                        pattern.name
+                    "Method " + method + " does not exist on jQuery." + pattern.name
                 );
                 return false;
             }
             if (method.charAt(0) === "_") {
-                $.error(
-                    "Method " + method + " is private on jQuery." + pattern.name
-                );
+                $.error("Method " + method + " is private on jQuery." + pattern.name);
                 return false;
             }
             pat[method].apply(pat, [options]);
@@ -112,9 +107,7 @@ var pluralBoundJQueryPlugin = function (pattern, method, options) {
         if (pattern[method]) {
             return pattern[method].apply($this, [$this].concat([options]));
         } else {
-            $.error(
-                "Method " + method + " does not exist on jQuery." + pattern.name
-            );
+            $.error("Method " + method + " does not exist on jQuery." + pattern.name);
         }
     } else {
         pattern.init.apply($this, [$this].concat([options]));
@@ -164,11 +157,7 @@ function extend(obj) {
 
 function rebaseURL(base, url) {
     base = new URL(base, window.location).href; // If base is relative make it absolute.
-    if (
-        url.indexOf("://") !== -1 ||
-        url[0] === "/" ||
-        url.indexOf("data:") === 0
-    ) {
+    if (url.indexOf("://") !== -1 || url[0] === "/" || url.indexOf("data:") === 0) {
         return url;
     }
     return base.slice(0, base.lastIndexOf("/") + 1) + url;
@@ -205,12 +194,7 @@ function elementInViewport(el) {
         vWidth = window.innerWidth || docEl.clientWidth,
         vHeight = window.innerHeight || docEl.clientHeight;
 
-    if (
-        rect.right < 0 ||
-        rect.bottom < 0 ||
-        rect.left > vWidth ||
-        rect.top > vHeight
-    )
+    if (rect.right < 0 || rect.bottom < 0 || rect.left > vWidth || rect.top > vHeight)
         return false;
     return true;
 }
@@ -350,8 +334,7 @@ function removeDuplicateObjects(objs) {
             _.each(list, function (obj) {
                 is_duplicate =
                     _.keys(obj).length === _.keys(next_obj).length &&
-                    !_.chain(obj).omit(comparator.bind(next_obj)).keys().value()
-                        .length;
+                    !_.chain(obj).omit(comparator.bind(next_obj)).keys().value().length;
             });
             if (!is_duplicate) {
                 list.push(next_obj);
@@ -436,12 +419,10 @@ function isElementInViewport(el, partial, offset) {
             rec.left >= 0 &&
             rec.bottom <=
                 (window.innerHeight ||
-                    document.documentElement
-                        .clientHeight) /*or $(window).height() */ &&
+                    document.documentElement.clientHeight) /*or $(window).height() */ &&
             rec.right <=
                 (window.innerWidth ||
-                    document.documentElement
-                        .clientWidth) /*or $(window).width() */
+                    document.documentElement.clientWidth) /*or $(window).width() */
         );
     }
 }
@@ -561,6 +542,17 @@ const ensureArray = (it) => {
     return Array.isArray(it) || it.jquery ? it : [it];
 };
 
+const localized_isodate = (date) => {
+    // Return a iso date (date only) in the current timezone instead of a
+    // UTC ISO 8602 date+time component which toISOString returns.
+
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear().toString();
+
+    return `${year}-${month}-${day}`;
+};
+
 var utils = {
     // pattern pimping - own module?
     jqueryPlugin: jqueryPlugin,
@@ -587,6 +579,7 @@ var utils = {
     isIE: isIE,
     jqToNode: jqToNode,
     ensureArray: ensureArray,
+    localized_isodate: localized_isodate,
 };
 
 export default utils;
