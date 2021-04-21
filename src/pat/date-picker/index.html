@@ -17,9 +17,11 @@
             margin: 0 0.5em;
             padding: 0 0.5em;
             background: lightgrey;
-            cursor: pointer;
             box-sizing: border-box;
             display: inline-block;
+          }
+          time.output-field:not(.disabled) {
+            cursor: pointer;
           }
           .cancel-button {
             display: inline-block;
@@ -154,6 +156,17 @@
                         />
                 </label>
                 <br />
+
+                <hr />
+                <label>Disabled input
+                    <input name="disabled_date" class="pat-date-picker" type="date"
+                        data-pat-date-picker="output-format: MMMM Do YYYY"
+                        value="2021-04-21"
+                        disabled
+                    />
+                </label>
+                <br />
+
                 <hr />
                 <div
                     class="pat-clone"

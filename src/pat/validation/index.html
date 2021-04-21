@@ -15,9 +15,11 @@
             height: 2em;
             padding: 0 0.5em;
             background: lightgrey;
-            cursor: pointer;
             box-sizing: border-box;
             display: inline-block;
+          }
+          time.output-field:not(.disabled) {
+            cursor: pointer;
           }
           .cancel-button {
             display: inline-block;
@@ -91,6 +93,8 @@
                     >
                 </fieldset>
 
+                <hr/>
+
                 <label
                     >Planning start
                     <input
@@ -134,6 +138,33 @@
                         id="date-optional"
                     />
                 </label>
+
+                <label
+                    >Disabled start
+                    <input
+                        type="date"
+                        class="pat-date-picker"
+                        name="disabled_start"
+                        data-pat-validation="type: date; not-after: #planning-end; message-date: This date must be on or before the end date."
+                        id="disabled_start"
+                        value="2021-04-21"
+                        disabled
+                    />
+                </label>
+
+                <label
+                    >End
+                    <input
+                        type="date"
+                        class="pat-date-picker"
+                        name="disabled_end"
+                        data-pat-validation="type: date; not-before: #disabled_start; message-date: This date must be on or after the start date."
+                        id="disabled_end"
+                        value="2021-04-22"
+                    />
+                </label>
+
+                <hr />
 
                 <label
                     >Password
