@@ -35,12 +35,13 @@ export default Base.extend({
 
     async init() {
         const el = this.el;
+        const disabled = this.el.disabled;
 
         //TODO: make parser with options extend missing options.
         //this.options = parser.parse(el, opts);
         this.options = $.extend(parser.parse(el), this.options);
 
-        if (this.options.after) {
+        if (!disabled && this.options.after) {
             // Set the date depending on another date which must be ``offset-days``
             // BEFORE this date. Only set it, if the other date is AFTER this
             // date.
@@ -71,6 +72,9 @@ export default Base.extend({
             display_el = document.createElement("time");
             display_el.setAttribute("class", "output-field");
             display_el.setAttribute("datetime", el.value);
+            if (disabled) {
+                display_el.classList.add("disabled");
+            }
 
             const display_time_config = { format: this.format };
             if (this.options.outputFormat) {
@@ -91,6 +95,13 @@ export default Base.extend({
                 display_el_pat.format();
                 this.add_clear_button(display_el);
             });
+
+            if (disabled) {
+                // nothing else to do here...
+                return;
+            }
+        } else if (disabled) {
+            return;
         } else if (utils.checkInputSupport("date", "invalid date")) {
             // behavior native with native support.
             return;
@@ -135,7 +146,7 @@ export default Base.extend({
     },
 
     add_clear_button(el_append_to) {
-        if (!this.el.required && this.el.value) {
+        if (!this.el.disabled && !this.el.required && this.el.value) {
             // Add clear button
             const clear_button = document.createElement("span");
             clear_button.setAttribute("class", "cancel-button");

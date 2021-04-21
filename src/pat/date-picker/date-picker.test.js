@@ -333,11 +333,12 @@ describe("pat-date-picker", function () {
         pattern.init(el);
         await utils.timeout(1); // wait a tick for async to settle.
         const display_el = document.querySelector("time");
-        display_el.click();
 
-        // <time> element should contains the pre-set date in iso format
+        // <time> element should contain the pre-set date in iso format
         expect(display_el.getAttribute("datetime")).toBe("2021-03-09");
         expect(display_el.textContent).toBe("9. März 2021");
+
+        display_el.click();
 
         const day = document.querySelector(".pika-lendar td[data-day='12'] button"); // prettier-ignore
         day.dispatchEvent(new Event("mousedown"));
@@ -477,6 +478,39 @@ describe("pat-date-picker", function () {
         cur_day.dispatchEvent(new Event("mousedown"));
         // input element contains iso date
         expect(el.value).toBe(isodate);
+    });
+
+    it("does not initialize the date picker in styled behavior when disabled", async function (done) {
+        document.body.innerHTML = `
+            <input
+                type="date"
+                class="pat-date-picker"
+                value="2021-03-09"
+                data-pat-date-picker="output-format: Do MMMM YYYY; locale: de"
+                disabled
+            />';
+        `;
+        const el = document.querySelector("input[type=date]");
+        pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        const display_el = document.querySelector("time");
+
+        // <time> element should contain the pre-set date in iso format
+        expect(display_el.getAttribute("datetime")).toBe("2021-03-09");
+        expect(display_el.textContent).toBe("9. März 2021");
+
+        // The <time> element should have the "disabled" class be set.
+        expect(display_el.classList.contains("disabled")).toBe(true);
+
+        // Clear button is not available in disabled state.
+        expect(display_el.querySelector(".cancel-button")).toBeFalsy();
+
+        // date picker is not opened in disabled state.
+        display_el.click();
+        expect(document.querySelector(".pika-lendar")).toBeFalsy();
+
+        done();
     });
 
     it("works with pat-autosubmit", async function (done) {
