@@ -1,3 +1,45 @@
+## [4.1.0](https://github.com/Patternslib/patterns/compare/4.0.0...4.1.0) (2021-04-21)
+
+
+### Features
+
+* **core registry:** Do not scan patterns wrapped within <template> tags. ([d9889e3](https://github.com/Patternslib/patterns/commit/d9889e31d40216f59981b1d5a9297512dc2096d0))
+* **core utils:** Add "ensureArray" which always returns an array. ([0981cb4](https://github.com/Patternslib/patterns/commit/0981cb45c2af4d93fdd58b81b834a0b4adfa6a04))
+* **pat clone:** Allow <template> tags for clone templates. ([585d8ee](https://github.com/Patternslib/patterns/commit/585d8ee681a13837537d75f4d5c4545483e6923a))
+* **pat date picker:** Add clear button for styled behavior. ([147df92](https://github.com/Patternslib/patterns/commit/147df9266c2ec97fe4397a38b0582ee4df37d709))
+* **pat date picker:** Support disabled state and do not initialize the date picker. ([cbca469](https://github.com/Patternslib/patterns/commit/cbca4694be489a5d41233eeaa1fa1199f29a881f))
+* **polyfill:** Add Node.remove polyfill. ([e6853be](https://github.com/Patternslib/patterns/commit/e6853bed5bfd6e584d2736cbd013f64bca075166))
+
+
+### Bug Fixes
+
+* **pat date picker:** Fix pat-validation compatiblity. ([61e7231](https://github.com/Patternslib/patterns/commit/61e7231799d53151ef7956b2a2210e5c87213b69))
+* **pat date picker:** Improve pat-autosubmit compatibility. ([a8dc1c8](https://github.com/Patternslib/patterns/commit/a8dc1c80e76d30e691ea2248becf87ac9a9fd71a))
+
+
+### Breaking Changes
+
+* **pat date picker:** Allow for formatted dates in "styled" behavior. ([81fea60](https://github.com/Patternslib/patterns/commit/81fea60e161a6796c19ed5aa365f550db3268b67))
+* **pat datetime picker:** Only support "native" behavior. ([b14503d](https://github.com/Patternslib/patterns/commit/b14503db9f1f25c2318c5fc1a9cff2c637bd9b92))
+
+
+### Maintenance
+
+* **Build:** Don't re-add the husky commitlint check, we have it already in the repository. ([9e3e899](https://github.com/Patternslib/patterns/commit/9e3e8994d75155f2e55a933a6e4e4182c86541a5))
+* **Build:** Fix typo Maintainance->Maintenance. ([03ab244](https://github.com/Patternslib/patterns/commit/03ab244dad4b2029ef1a305f55c698b760bcc945))
+* **Build:** Run yarn upgrade to get latest versions of dependencies within the specified range. ([1824a80](https://github.com/Patternslib/patterns/commit/1824a80010b15c9b3d8349cf3ec25115880cf160))
+* **Cleanup:** cosmetics ([ad78c14](https://github.com/Patternslib/patterns/commit/ad78c142c28d7dbf14c49e8e91b6d8a4e68daf11))
+* **Cleanup:** Increase JavaScript line length to 89 characters to make most ``// prettier-ignore`` statements obsolete. ([2e7e50f](https://github.com/Patternslib/patterns/commit/2e7e50f6747bfe1b3be928599232088758060682))
+* **docs:** Update README and RELEASE for latest changes. ([385f02e](https://github.com/Patternslib/patterns/commit/385f02efbc2f4915c86e69dd3be1564634b44d3c))
+* **Docs:** Note about use of the legend pattern. ([dd10577](https://github.com/Patternslib/patterns/commit/dd10577997c9141ce8da200ed0e570d237f57313))
+* **pat date picker:** Add demo example including pat-clone. ([73f7c34](https://github.com/Patternslib/patterns/commit/73f7c344b9bbff6272b825dd54bf09ba1a7d5558))
+* **pat date picker:** Document after/offset-days feature. ([8a209d2](https://github.com/Patternslib/patterns/commit/8a209d20f183593d130055b858539bfd2fb8ee56))
+* **pat date picker:** Use async/await fetch for i18n and cleanup code. ([1546966](https://github.com/Patternslib/patterns/commit/1546966bf55ff16f4c9a10e849a5e2eb63bff4c7))
+* **release:** call make step in release step ([223ba66](https://github.com/Patternslib/patterns/commit/223ba6629e1e66ad7e892aae3a71aa2e3c5e6507))
+* **Release workflow:** Fixes to the release workflow. ([8f8314b](https://github.com/Patternslib/patterns/commit/8f8314baedb5711f2db804b1d8ea95990196e5d9))
+* Install pre-commit hook for commit messge format. ([77d0a39](https://github.com/Patternslib/patterns/commit/77d0a39ddc5113b9103987521c1b2be3ed01ea52))
+* **release:** Fix the release-web step ([f936f4d](https://github.com/Patternslib/patterns/commit/f936f4db7604c86a01c91abdfe0caba0c6bf7096))
+
 ## [4.0.0](https://github.com/Patternslib/patterns/compare/4.0.0-dev.0...4.0.0) (2021-04-15)
 
 
