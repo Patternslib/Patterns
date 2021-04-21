@@ -7,7 +7,7 @@
 * **Webpack:** Need to set publicPath for dev server. ([bc4506a](https://github.com/Patternslib/patterns/commit/bc4506a613edf98dfea57f1cf2a439905659eb0b))
 
 
-### Maintainance
+### Maintenance
 
 * **Cleanup:** Configure editorconfig to use 4 spaces for .json files. ([7a54d4c](https://github.com/Patternslib/patterns/commit/7a54d4c81acb0b10a80a3f67bcae8aaab92ac4e5))
 * **Cleanup:** Reformat package.json using 4 spaces instead of 2. ([c445219](https://github.com/Patternslib/patterns/commit/c445219b452f783c939e275b2867fd0a9b173225))
