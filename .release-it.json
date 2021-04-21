@@ -13,6 +13,10 @@
                 "name": "conventionalcommits",
                 "types": [
                     {
+                        "type": "breaking",
+                        "section": "Breaking Changes"
+                    },
+                    {
                         "type": "feat",
                         "section": "Features"
                     },
@@ -23,10 +27,6 @@
                     {
                         "type": "maint",
                         "section": "Maintenance"
-                    },
-                    {
-                        "type": "breaking",
-                        "section": "Breaking Changes"
                     }
                 ]
             }
