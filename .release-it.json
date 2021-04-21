@@ -4,7 +4,8 @@
     },
     "git": {
         "requireBranch": "master",
-        "commitMessage": "maint(Release): Release new version."
+        "commitMessage": "Release new version.",
+        "commitArgs": ["-n"]
     },
     "plugins": {
         "@release-it/conventional-changelog": {
