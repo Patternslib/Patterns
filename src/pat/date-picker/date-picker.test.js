@@ -43,8 +43,7 @@ describe("pat-date-picker", function () {
     });
 
     it("Default date picker.", async function () {
-        document.body.innerHTML =
-            '<input type="date" class="pat-date-picker"/>';
+        document.body.innerHTML = '<input type="date" class="pat-date-picker"/>';
         const el = document.querySelector("input[type=date]");
 
         pattern.init(el);

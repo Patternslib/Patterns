@@ -74,9 +74,7 @@ export default Base.extend({
 
             const display_time_config = { format: this.format };
             if (this.options.outputFormat) {
-                display_time_config[
-                    "output-format"
-                ] = this.options.outputFormat;
+                display_time_config["output-format"] = this.options.outputFormat;
             }
             if (this.options.locale) {
                 display_time_config.locale = this.options.locale;
@@ -86,10 +84,7 @@ export default Base.extend({
             $(display_el).on("init.display-time.patterns", () =>
                 this.add_clear_button(display_el)
             );
-            const display_el_pat = new PatDisplayTime(
-                display_el,
-                display_time_config
-            );
+            const display_el_pat = new PatDisplayTime(display_el, display_time_config);
 
             this.el.addEventListener("change", () => {
                 display_el.setAttribute("datetime", this.el.value);
