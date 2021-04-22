@@ -21,9 +21,9 @@
 
 ### Features
 
-* **core registry:** Do not scan patterns wrapped within <template> tags. ([d9889e3](https://github.com/Patternslib/patterns/commit/d9889e31d40216f59981b1d5a9297512dc2096d0))
+* **core registry:** Do not scan patterns wrapped within ``<template>`` tags. ([d9889e3](https://github.com/Patternslib/patterns/commit/d9889e31d40216f59981b1d5a9297512dc2096d0))
 * **core utils:** Add "ensureArray" which always returns an array. ([0981cb4](https://github.com/Patternslib/patterns/commit/0981cb45c2af4d93fdd58b81b834a0b4adfa6a04))
-* **pat clone:** Allow <template> tags for clone templates. ([585d8ee](https://github.com/Patternslib/patterns/commit/585d8ee681a13837537d75f4d5c4545483e6923a))
+* **pat clone:** Allow ``<template>`` tags for clone templates. ([585d8ee](https://github.com/Patternslib/patterns/commit/585d8ee681a13837537d75f4d5c4545483e6923a))
 * **pat date picker:** Add clear button for styled behavior. ([147df92](https://github.com/Patternslib/patterns/commit/147df9266c2ec97fe4397a38b0582ee4df37d709))
 * **pat date picker:** Support disabled state and do not initialize the date picker. ([cbca469](https://github.com/Patternslib/patterns/commit/cbca4694be489a5d41233eeaa1fa1199f29a881f))
 * **polyfill:** Add Node.remove polyfill. ([e6853be](https://github.com/Patternslib/patterns/commit/e6853bed5bfd6e584d2736cbd013f64bca075166))
