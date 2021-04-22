@@ -97,9 +97,7 @@ export default Base.extend({
         this.$sortables.off(".pat-sortable");
         this.$el.off(".pat-sortable");
         $("#pat-scroll-up, #pat-scroll-dn").detach();
-        var change = this.submitChangedAmount(
-            $(ev.target).closest(".sortable")
-        );
+        var change = this.submitChangedAmount($(ev.target).closest(".sortable"));
         // Call the optionally passed-in callback function
         if (this.options.drop) {
             this.options.drop($dragged, change);
@@ -158,10 +156,7 @@ export default Base.extend({
                         50,
                         "linear"
                     );
-                else if (
-                    this.$el.safeOffset().top + this.$el.height() - pos <
-                    32
-                )
+                else if (this.$el.safeOffset().top + this.$el.height() - pos < 32)
                     this.$el.animate(
                         { scrollTop: this.$el.scrollTop() + 32 },
                         50,
@@ -195,9 +190,7 @@ export default Base.extend({
         this.$sortables.on(
             "dragleave.pat-sortable",
             function () {
-                this.$sortables.removeClass(
-                    "drop-target-above drop-target-below"
-                );
+                this.$sortables.removeClass("drop-target-above drop-target-below");
             }.bind(this)
         );
 

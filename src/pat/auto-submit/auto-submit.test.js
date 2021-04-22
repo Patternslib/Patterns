@@ -54,17 +54,11 @@ describe("pat-autosubmit", function () {
         it("can be done in shorthand notation", function () {
             pattern.$el = $("<form></form>");
             var pat = pattern.init(pattern.$el);
-            var options = pat.parser.parse(
-                $("<input data-pat-autosubmit='500ms'/>")
-            );
+            var options = pat.parser.parse($("<input data-pat-autosubmit='500ms'/>"));
             expect(options.delay).toBe(500);
-            options = pat.parser.parse(
-                $("<input data-pat-autosubmit='500ms'/>")
-            );
+            options = pat.parser.parse($("<input data-pat-autosubmit='500ms'/>"));
             expect(options.delay).toBe(500);
-            options = pat.parser.parse(
-                $("<input data-pat-autosubmit='defocus'/>")
-            );
+            options = pat.parser.parse($("<input data-pat-autosubmit='defocus'/>"));
             expect(options.delay).toBe("defocus");
         });
 
@@ -72,21 +66,15 @@ describe("pat-autosubmit", function () {
             pattern.$el = $("<form></form>");
             var pat = pattern.init(pattern.$el);
             var options = pat.parser.parse(
-                $(
-                    "<input class=\"pat-autosubmit\" data-pat-autosubmit='delay: 500ms'/>"
-                )
+                $("<input class=\"pat-autosubmit\" data-pat-autosubmit='delay: 500ms'/>")
             );
             expect(options.delay).toBe(500);
             options = pat.parser.parse(
-                $(
-                    "<input class=\"pat-autosubmit\" data-pat-autosubmit='delay: 500ms'/>"
-                )
+                $("<input class=\"pat-autosubmit\" data-pat-autosubmit='delay: 500ms'/>")
             );
             expect(options.delay).toBe(500);
             options = pat.parser.parse(
-                $(
-                    "<input class=\"pat-autosubmit\" data-pat-autosubmit='defocus'/>"
-                )
+                $("<input class=\"pat-autosubmit\" data-pat-autosubmit='defocus'/>")
             );
             expect(options.delay).toBe("defocus");
         });

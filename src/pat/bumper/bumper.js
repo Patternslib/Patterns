@@ -41,12 +41,9 @@ export default Base.extend({
         }
         var bumpall = this.options.side.indexOf("all") > -1;
         this.options.bumptop = bumpall || this.options.side.indexOf("top") > -1;
-        this.options.bumpright =
-            bumpall || this.options.side.indexOf("right") > -1;
-        this.options.bumpbottom =
-            bumpall || this.options.side.indexOf("bottom") > -1;
-        this.options.bumpleft =
-            bumpall || this.options.side.indexOf("left") > -1;
+        this.options.bumpright = bumpall || this.options.side.indexOf("right") > -1;
+        this.options.bumpbottom = bumpall || this.options.side.indexOf("bottom") > -1;
+        this.options.bumpleft = bumpall || this.options.side.indexOf("left") > -1;
         this._updateStatus();
         return this.$el;
     },
@@ -73,9 +70,7 @@ export default Base.extend({
     },
 
     _markBumped: function markBumper(is_bumped) {
-        var $target = this.options.selector
-                ? $(this.options.selector)
-                : this.$el,
+        var $target = this.options.selector ? $(this.options.selector) : this.$el,
             todo = is_bumped ? this.options.bump : this.options.unbump;
         if (todo.add) {
             $target.addClass(todo.add);

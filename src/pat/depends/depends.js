@@ -69,22 +69,11 @@ export default Base.extend({
                 if (!dependents) {
                     dependents = [data];
                     $form.on("reset.pat-depends", () => this.onReset);
-                } else if (dependents.indexOf(data) === -1)
-                    dependents.push(data);
+                } else if (dependents.indexOf(data) === -1) dependents.push(data);
                 $form.data("patDepends.dependents", dependents);
             }
-            $(input).on(
-                "change.pat-depends",
-                null,
-                data,
-                this.onChange.bind(this)
-            );
-            $(input).on(
-                "keyup.pat-depends",
-                null,
-                data,
-                this.onChange.bind(this)
-            );
+            $(input).on("change.pat-depends", null, data, this.onChange.bind(this));
+            $(input).on("keyup.pat-depends", null, data, this.onChange.bind(this));
         }
     },
 
@@ -111,12 +100,10 @@ export default Base.extend({
             this.$el.off("click.patternDepends");
         }
         if (this.$el.hasClass("pat-autosuggest")) {
-            this.$el
-                .findInclusive("input.pat-autosuggest")
-                .trigger("pat-update", {
-                    pattern: "depends",
-                    enabled: true,
-                });
+            this.$el.findInclusive("input.pat-autosuggest").trigger("pat-update", {
+                pattern: "depends",
+                enabled: true,
+            });
         }
         this.$el.removeClass("disabled");
     },
@@ -128,12 +115,10 @@ export default Base.extend({
             this.$el.on("click.patternDepends", (e) => e.preventDefault());
         }
         if (this.$el.hasClass("pat-autosuggest")) {
-            this.$el
-                .findInclusive("input.pat-autosuggest")
-                .trigger("pat-update", {
-                    pattern: "depends",
-                    enabled: false,
-                });
+            this.$el.findInclusive("input.pat-autosuggest").trigger("pat-update", {
+                pattern: "depends",
+                enabled: false,
+            });
         }
         this.$el.addClass("disabled");
     },

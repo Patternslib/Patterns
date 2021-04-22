@@ -18,16 +18,10 @@ let Moment;
 export const parser = new Parser("validation");
 parser.addArgument("disable-selector"); // Elements which must be disabled if there are errors
 parser.addArgument("message-date", "This value must be a valid date");
-parser.addArgument(
-    "message-datetime",
-    "This value must be a valid date and time"
-);
+parser.addArgument("message-datetime", "This value must be a valid date and time");
 parser.addArgument("message-email", "This value must be a valid email address");
 parser.addArgument("message-integer", "This value must be an integer");
-parser.addArgument(
-    "message-max",
-    "This value must be less than or equal to %{count}"
-);
+parser.addArgument("message-max", "This value must be less than or equal to %{count}");
 parser.addArgument(
     "message-min",
     "This value must be greater than or equal to %{count}"
@@ -60,9 +54,7 @@ export default Base.extend({
 
         this.errors = 0;
         this.options = parser.parse(this.$el, opts);
-        this.$inputs = this.$el.find(
-            "input[name], select[name], textarea[name]"
-        );
+        this.$inputs = this.$el.find("input[name], select[name], textarea[name]");
         this.$el.find("input[type=number]").on(
             "keyup mouseup",
             _.debounce(
@@ -84,10 +76,7 @@ export default Base.extend({
             .find("button[type=submit][formaction]")
             .on("click.pat-validation", this.validateForm.bind(this));
         this.$el.on("submit.pat-validation", this.validateForm.bind(this));
-        this.$el.on(
-            "pat-update.pat-validation",
-            this.onPatternUpdate.bind(this)
-        );
+        this.$el.on("pat-update.pat-validation", this.onPatternUpdate.bind(this));
         this.$el.on(
             "click.pat-validation",
             ".close-panel",
@@ -111,9 +100,7 @@ export default Base.extend({
             },
             // Input is a unix timestamp
             format: function (value, options) {
-                var format = options.dateOnly
-                    ? "YYYY-MM-DD"
-                    : "YYYY-MM-DD hh:mm:ss";
+                var format = options.dateOnly ? "YYYY-MM-DD" : "YYYY-MM-DD hh:mm:ss";
                 return Moment.utc(value).format(format);
             },
         });
@@ -148,8 +135,7 @@ export default Base.extend({
             if (typeof relative === "undefined") {
                 return;
             }
-            var relative_constraint =
-                relation === "before" ? "earliest" : "latest";
+            var relative_constraint = relation === "before" ? "earliest" : "latest";
             if (Validate.moment.isDate(relative)) {
                 c[relative_constraint] = relative;
             } else {
@@ -183,11 +169,7 @@ export default Base.extend({
             opts = parser.parse($(input)),
             constraint = constraints[name];
         if (_.contains(["datetime", "date"], type)) {
-            constraints = this.setLocalDateConstraints(
-                input,
-                opts,
-                constraints
-            );
+            constraints = this.setLocalDateConstraints(input, opts, constraints);
         } else if (type == "number") {
             _.each(["min", "max"], function (limit) {
                 // TODO: need to figure out how to add local validation
@@ -215,16 +197,14 @@ export default Base.extend({
 
         // Handle fields equality
         if (opts.equality) {
-            this.$el
-                .find("[name=" + opts.equality + "]")
-                .each(function (idx, el) {
-                    if (input.value !== el.value) {
-                        constraint.equality = {
-                            attribute: opts.equality,
-                            message: "^" + opts.message["equality"],
-                        };
-                    }
-                });
+            this.$el.find("[name=" + opts.equality + "]").each(function (idx, el) {
+                if (input.value !== el.value) {
+                    constraint.equality = {
+                        attribute: opts.equality,
+                        message: "^" + opts.message["equality"],
+                    };
+                }
+            });
         }
 
         // Set local validation messages.
@@ -255,9 +235,7 @@ export default Base.extend({
                   }
                 : false,
             email:
-                type === "email"
-                    ? { message: "^" + this.options.message.email }
-                    : false,
+                type === "email" ? { message: "^" + this.options.message.email } : false,
             numericality: type === "number" ? true : false,
             datetime:
                 type === "datetime" && this.doDateCheck(input)
@@ -405,10 +383,7 @@ export default Base.extend({
         if (input.disabled) {
             return;
         }
-        var error = Validate(
-            this.getValueDict(input),
-            this.getConstraints(input)
-        );
+        var error = Validate(this.getValueDict(input), this.getConstraints(input));
         if (!error) {
             this.removeError(input);
         } else {
@@ -464,10 +439,7 @@ export default Base.extend({
         var $errors = this.findErrorMessages(input);
         this.errors = this.errors - $errors.length;
         $errors.remove();
-        utils
-            .findRelatives(input)
-            .removeClass("is-invalid")
-            .addClass("is-valid");
+        utils.findRelatives(input).removeClass("is-invalid").addClass("is-valid");
         if (this.errors < 1 && this.options.disableSelector) {
             $(this.options.disableSelector)
                 .prop("disabled", false)
@@ -502,9 +474,7 @@ export default Base.extend({
         $relatives.removeClass("is-valid").addClass("is-invalid");
         this.errors += 1;
         if (this.options.disableSelector) {
-            $(this.options.disableSelector)
-                .prop("disabled", true)
-                .addClass("disabled");
+            $(this.options.disableSelector).prop("disabled", true).addClass("disabled");
         }
         $position.trigger("pat-update", { pattern: "validation" });
     },

@@ -49,9 +49,7 @@ describe("pat-markdown", function () {
         });
 
         it("uses value for input elements", function () {
-            var $el = $('<textarea class="pat-markdown"/>').val(
-                "This is markdown"
-            );
+            var $el = $('<textarea class="pat-markdown"/>').val("This is markdown");
             $el.appendTo("#lab");
             const spy_render = jest
                 .spyOn(pattern.prototype, "render")
@@ -65,16 +63,12 @@ describe("pat-markdown", function () {
 
     describe("when rendering", function () {
         it("wraps rendering in a div", async function () {
-            const $rendering = await pattern.prototype.render(
-                "*This is markdown*"
-            );
+            const $rendering = await pattern.prototype.render("*This is markdown*");
             expect($rendering[0].tagName).toBe("DIV");
         });
 
         it("converts markdown into HTML", async function () {
-            const $rendering = await pattern.prototype.render(
-                "*This is markdown*"
-            );
+            const $rendering = await pattern.prototype.render("*This is markdown*");
             expect($rendering.html()).toBe("<p><em>This is markdown</em></p>");
         });
     });
@@ -82,19 +76,13 @@ describe("pat-markdown", function () {
     describe("Session extraction", function () {
         it("Unknown section", function () {
             expect(
-                pattern.prototype.extractSection(
-                    "## My title\n\nContent",
-                    "Other title"
-                )
+                pattern.prototype.extractSection("## My title\n\nContent", "Other title")
             ).toBe(null);
         });
 
         it("Last hash-section", function () {
             expect(
-                pattern.prototype.extractSection(
-                    "## My title\n\nContent",
-                    "My title"
-                )
+                pattern.prototype.extractSection("## My title\n\nContent", "My title")
             ).toBe("## My title\n\nContent");
         });
 

@@ -54,8 +54,7 @@ export default Base.extend({
             maximumSelectionSize: this.options.maxSelectionSize,
             minimumInputLength: this.options.minimumInputLength,
             allowClear:
-                this.options.maxSelectionSize === 1 &&
-                !this.el.hasAttribute("required"),
+                this.options.maxSelectionSize === 1 && !this.el.hasAttribute("required"),
         };
         if (this.el.hasAttribute("readonly")) {
             config.placeholder = "";
@@ -68,9 +67,9 @@ export default Base.extend({
             config.formatSelection = (obj, container) => {
                 let selectionClasses = null;
                 try {
-                    selectionClasses = JSON.parse(
-                        this.options.selectionClasses
-                    )[obj.text];
+                    selectionClasses = JSON.parse(this.options.selectionClasses)[
+                        obj.text
+                    ];
                 } catch (SyntaxError) {
                     log.error(
                         "SyntaxError: non-JSON data given to pat-autosuggest (selection-classes)"
@@ -119,8 +118,7 @@ export default Base.extend({
         config.createSearchChoice = (term, data) => {
             if (this.options.allowNewWords) {
                 if (
-                    data.filter((el) => el.text.localeCompare(term) === 0)
-                        .length === 0
+                    data.filter((el) => el.text.localeCompare(term) === 0).length === 0
                 ) {
                     return { id: term, text: term };
                 }
@@ -134,9 +132,7 @@ export default Base.extend({
                 words = JSON.parse(this.options.wordsJson);
             } catch (SyntaxError) {
                 words = [];
-                log.error(
-                    "SyntaxError: non-JSON data given to pat-autosuggest"
-                );
+                log.error("SyntaxError: non-JSON data given to pat-autosuggest");
             }
             if (!Array.isArray(words)) {
                 words = words.map((v, k) => {
@@ -214,9 +210,7 @@ export default Base.extend({
                     callback(_data);
                 };
             } catch (SyntaxError) {
-                log.error(
-                    "SyntaxError: non-JSON data given to pat-autosuggest"
-                );
+                log.error("SyntaxError: non-JSON data given to pat-autosuggest");
             }
         }
 

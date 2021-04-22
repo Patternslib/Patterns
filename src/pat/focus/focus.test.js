@@ -23,9 +23,7 @@ describe("pat-focus", function () {
         });
 
         it("Element with parent label", function () {
-            $("#lab").append(
-                "<label><input type='text' name='title'/></label>"
-            );
+            $("#lab").append("<label><input type='text' name='title'/></label>");
             var $input = $("#lab input"),
                 $relatives;
             $relatives = utils.findRelatives($input[0]);
@@ -35,9 +33,7 @@ describe("pat-focus", function () {
         });
 
         it("Element with parent fieldset", function () {
-            $("#lab").append(
-                "<fieldset><input type='text' name='title'/></fieldset>"
-            );
+            $("#lab").append("<fieldset><input type='text' name='title'/></fieldset>");
             var $input = $("#lab input"),
                 $relatives;
             $relatives = utils.findRelatives($input[0]);

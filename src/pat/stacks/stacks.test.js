@@ -24,20 +24,15 @@ describe("pat-stacks", function () {
             var pattern = new Stacks($el);
             pattern.document = { URL: document.URL };
             pattern.document.URL = "http://www.example.com/folder/file.png";
-            expect(pattern._base_URL()).toBe(
-                "http://www.example.com/folder/file.png"
-            );
+            expect(pattern._base_URL()).toBe("http://www.example.com/folder/file.png");
         });
 
         it("URL with fragment", function () {
             var $el = $('<div class="pat-stacks"></div>');
             var pattern = new Stacks($el);
             pattern.document = { URL: document.URL };
-            pattern.document.URL =
-                "http://www.example.com/folder/file.png#fragment";
-            expect(pattern._base_URL()).toBe(
-                "http://www.example.com/folder/file.png"
-            );
+            pattern.document.URL = "http://www.example.com/folder/file.png#fragment";
+            expect(pattern._base_URL()).toBe("http://www.example.com/folder/file.png");
         });
     });
 
@@ -54,8 +49,7 @@ describe("pat-stacks", function () {
             var $el = $('<div class="pat-stacks"></div>');
             var pattern = new Stacks($el);
             pattern.document = { URL: document.URL };
-            pattern.document.URL =
-                "http://www.example.com/folder/file.png#fragment";
+            pattern.document.URL = "http://www.example.com/folder/file.png#fragment";
             expect(pattern._currentFragment()).toBe("fragment");
         });
     });

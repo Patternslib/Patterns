@@ -124,17 +124,13 @@ describe("pat-dependshandler", function () {
 
         describe("Comparison", function () {
             it("Positive number input below value", function () {
-                $("#lab").append(
-                    '<input type="number" name="foo" value="10"/>'
-                );
+                $("#lab").append('<input type="number" name="foo" value="10"/>');
                 var handler = new DependsHandler($("#lab"), "foo<15");
                 expect(handler.evaluate()).toBe(true);
             });
 
             it("Negative number input below value", function () {
-                $("#lab").append(
-                    '<input type="number" name="foo" value="20"/>'
-                );
+                $("#lab").append('<input type="number" name="foo" value="20"/>');
                 var handler = new DependsHandler($("#lab"), "foo<15");
                 expect(handler.evaluate()).toBe(false);
             });

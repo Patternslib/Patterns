@@ -13,10 +13,8 @@ describe("pat-equaliser", function () {
     describe("_update", function () {
         beforeEach(function () {
             var style,
-                head =
-                    document.head || document.getElementsByTagName("head")[0],
-                css =
-                    ".small { height: 50px; }\n" + ".large { height: 100px; }";
+                head = document.head || document.getElementsByTagName("head")[0],
+                css = ".small { height: 50px; }\n" + ".large { height: 100px; }";
 
             style = document.createElement("style");
             style.id = "pat-equaliser-style";
@@ -38,25 +36,17 @@ describe("pat-equaliser", function () {
             $container.data("pat-equaliser", { transition: "none" });
             pattern._update($container[0]);
             expect($container.find(".large").height()).toBe(100);
-            expect(
-                $container.find(".large").hasClass("equalised")
-            ).toBeTruthy();
+            expect($container.find(".large").hasClass("equalised")).toBeTruthy();
             expect($container.find(".small").height()).toBe(100);
-            expect(
-                $container.find(".small").hasClass("equalised")
-            ).toBeTruthy();
+            expect($container.find(".small").hasClass("equalised")).toBeTruthy();
         });
 
         it("Ignore inline styles", function () {
             // This is necessary so we do not get fooled by the height we
             // set ourselves.
             var $container = $("<div/>");
-            $("<div/>", { class: "small" })
-                .css("height", "200px")
-                .appendTo($container);
-            $("<div/>", { class: "large" })
-                .css("height", "200px")
-                .appendTo($container);
+            $("<div/>", { class: "small" }).css("height", "200px").appendTo($container);
+            $("<div/>", { class: "large" }).css("height", "200px").appendTo($container);
             $container.appendTo("#lab");
             $container.data("pat-equaliser", { transition: "none" });
             pattern._update($container[0]);

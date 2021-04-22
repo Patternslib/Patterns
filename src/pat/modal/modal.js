@@ -6,12 +6,7 @@ import inject from "../inject/inject";
 
 export const parser = new Parser("modal");
 parser.addArgument("class");
-parser.addArgument(
-    "closing",
-    ["close-button"],
-    ["close-button", "outside"],
-    true
-);
+parser.addArgument("closing", ["close-button"], ["close-button", "outside"], true);
 parser.addArgument("close-text", "Close");
 parser.addArgument("panel-header-content", ":first:not(.header)");
 
@@ -20,8 +15,7 @@ export default Base.extend({
     jquery_plugin: true,
     // div's are turned into modals
     // links, forms and subforms inject modals
-    trigger:
-        "div.pat-modal, a.pat-modal, form.pat-modal, .pat-modal.pat-subform",
+    trigger: "div.pat-modal, a.pat-modal, form.pat-modal, .pat-modal.pat-subform",
 
     init($el, opts, trigger) {
         if (window.__patternslib_import_styles) {
@@ -30,10 +24,7 @@ export default Base.extend({
 
         this.options = parser.parse(this.$el, opts);
         if (trigger && trigger.type === "injection") {
-            $.extend(
-                this.options,
-                parser.parse($(trigger.element), {}, false, false)
-            );
+            $.extend(this.options, parser.parse($(trigger.element), {}, false, false));
         }
         if (this.$el.is("div")) {
             this._init_div1();
@@ -46,8 +37,7 @@ export default Base.extend({
         const opts = {
             target: "#pat-modal",
             class:
-                "pat-modal" +
-                (this.options["class"] ? " " + this.options["class"] : ""),
+                "pat-modal" + (this.options["class"] ? " " + this.options["class"] : ""),
         };
         if (this.options.url) {
             opts.url = this.options.url;
@@ -129,10 +119,7 @@ export default Base.extend({
         );
         $(document).on("keyup.pat-modal", this._onKeyUp.bind(this));
         if (this.options.closing.indexOf("outside") !== -1) {
-            $(document).on(
-                "click.pat-modal",
-                this._onPossibleOutsideClick.bind(this)
-            );
+            $(document).on("click.pat-modal", this._onPossibleOutsideClick.bind(this));
         }
         $(window).on(
             "resize.pat-modal-position",
@@ -173,9 +160,7 @@ export default Base.extend({
             const $child = $(child);
             if (typeof $tallest_child === "undefined") {
                 $tallest_child = $child;
-            } else if (
-                $child.outerHeight(true) > $tallest_child.outerHeight(true)
-            ) {
+            } else if ($child.outerHeight(true) > $tallest_child.outerHeight(true)) {
                 $tallest_child = $child;
             }
         }
@@ -193,12 +178,9 @@ export default Base.extend({
         const panel_content_elem = this.$el.find(".panel-content");
         const header_elem = this.$el.find(".header");
         const modal_height =
-            panel_content_elem.outerHeight(true) +
-            header_elem.outerHeight(true);
+            panel_content_elem.outerHeight(true) + header_elem.outerHeight(true);
         if (this.$el.height() < modal_height) {
-            this.$el
-                .addClass("max-height")
-                .css({ height: modal_height + "px" });
+            this.$el.addClass("max-height").css({ height: modal_height + "px" });
             this.setPosition();
         }
         // XXX: This is a hack. When you have a modal inside a

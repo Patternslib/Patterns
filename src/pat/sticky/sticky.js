@@ -18,10 +18,7 @@ export default Base.extend({
         Stickyfill = (await import("stickyfilljs")).default;
         this.options = parser.parse(this.$el);
         this.makeSticky();
-        $("body").on(
-            "pat-update",
-            utils.debounce(this.onPatternUpdate.bind(this), 500)
-        );
+        $("body").on("pat-update", utils.debounce(this.onPatternUpdate.bind(this), 500));
 
         /* recalc if the DOM changes. Should fix positioning issues when parts of the page get injected */
 

@@ -81,10 +81,7 @@ export default Base.extend({
             el.removeAttribute("title");
         }
 
-        if (
-            this.options.trigger === "click" &&
-            this.options.source === "ajax"
-        ) {
+        if (this.options.trigger === "click" && this.options.source === "ajax") {
             // prevent default action for "click" and "mouseenter click"
             el.addEventListener("click", (event) => {
                 event.preventDefault();
@@ -152,9 +149,7 @@ export default Base.extend({
                 if (opts.position.policy === "force") {
                     flip_options.enabled = false;
                 } else if (opts.position.length > 1) {
-                    const fallbacks = opts.position.list
-                        .slice(1)
-                        .map(placement);
+                    const fallbacks = opts.position.list.slice(1).map(placement);
                     flip_options.fallbackPlacements = fallbacks;
                 }
 
@@ -199,9 +194,7 @@ export default Base.extend({
                 } else if (opts.target === "body") {
                     tippy_options.appendTo = document.body;
                 } else {
-                    tippy_options.appendTo = document.querySelector(
-                        opts.target
-                    );
+                    tippy_options.appendTo = document.querySelector(opts.target);
                 }
             },
         };
@@ -258,20 +251,14 @@ export default Base.extend({
     },
 
     _onShow() {
-        if (
-            this.options.closing !== "auto" &&
-            this.options.trigger === "hover"
-        ) {
+        if (this.options.closing !== "auto" && this.options.trigger === "hover") {
             // no auto-close when hovering when closing mode is "sticky" or "close-button".
             this.tippy.setProps({ trigger: "click" });
         }
 
         if (this.options.closing === "close-button") {
             const close_button = document.createElement("button");
-            close_button.setAttribute(
-                "class",
-                "close-panel pat-tooltip--close-button"
-            );
+            close_button.setAttribute("class", "close-panel pat-tooltip--close-button");
             const content = this.tippy.popper.querySelector(".tippy-content");
             content.parentNode.insertBefore(close_button, content);
         }
@@ -297,10 +284,7 @@ export default Base.extend({
             this.el.classList.add(this.inactive_class);
         }
 
-        if (
-            this.options.closing !== "auto" &&
-            this.options.trigger === "hover"
-        ) {
+        if (this.options.closing !== "auto" && this.options.trigger === "hover") {
             // re-set hover behavior
             this.tippy.setProps({ trigger: "mouseenter focus" });
         }
@@ -315,9 +299,7 @@ export default Base.extend({
         if (this.ajax_state.isFetching || !this.ajax_state.canFetch) {
             return undefined;
         }
-        const { url, selector } = this.get_url_parts(
-            this.el.getAttribute("href")
-        );
+        const { url, selector } = this.get_url_parts(this.el.getAttribute("href"));
         let content;
         if (url) {
             // Tooltip from remote page.
@@ -325,9 +307,7 @@ export default Base.extend({
                 isFetching: true,
                 canFetch: false,
             };
-            const handler = this._ajaxDataTypeHandlers[
-                this.options.ajaxDataType
-            ];
+            const handler = this._ajaxDataTypeHandlers[this.options.ajaxDataType];
             try {
                 // TODO: use pat-inject, once it supports async
                 const response = await fetch(url);

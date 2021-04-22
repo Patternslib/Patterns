@@ -281,16 +281,14 @@ describe("pat-clone", function () {
             // Without further action patterns in templates are initialized.
             // Not what we want, normally.
             expect(
-                document.body.querySelector("#template .pat-example")
-                    .textContent
+                document.body.querySelector("#template .pat-example").textContent
             ).toBe("initialized");
 
             document.body.querySelector("button").click();
 
             // The cloned pattern is double-initialized.
             expect(
-                document.body.querySelector(".pat-clone .pat-example")
-                    .textContent
+                document.body.querySelector(".pat-clone .pat-example").textContent
             ).toBe("initializedinitialized");
         });
 
@@ -315,16 +313,14 @@ describe("pat-clone", function () {
 
             // The template-pattern isn't initialized.
             expect(
-                document.body.querySelector("#template .pat-example")
-                    .textContent
+                document.body.querySelector("#template .pat-example").textContent
             ).toBe("");
 
             document.body.querySelector("button").click();
 
             // The cloned pattern is only initialized once.
             expect(
-                document.body.querySelector(".pat-clone .pat-example")
-                    .textContent
+                document.body.querySelector(".pat-clone .pat-example").textContent
             ).toBe("initialized");
         });
 
@@ -349,16 +345,15 @@ describe("pat-clone", function () {
 
             // The template-pattern isn't initialized.
             expect(
-                document.querySelector("#template").content.firstElementChild
-                    .textContent
+                document.querySelector("#template").content.firstElementChild.textContent
             ).toBe("");
 
             document.querySelector("button").click();
 
             // The cloned pattern is only initialized once.
-            expect(
-                document.querySelector(".pat-clone .pat-example").textContent
-            ).toBe("initialized");
+            expect(document.querySelector(".pat-clone .pat-example").textContent).toBe(
+                "initialized"
+            );
         });
 
         it("can clone <template> with multiple first-level childs.", function () {

@@ -20,9 +20,7 @@ describe("Minimalpattern tests", function () {
         expect(el.getAttribute("style")).toBeFalsy();
         el.click();
 
-        expect(
-            el.getAttribute("style") === "background-color: green;"
-        ).toBeTruthy();
+        expect(el.getAttribute("style") === "background-color: green;").toBeTruthy();
 
         done();
     });
@@ -38,9 +36,7 @@ describe("Minimalpattern tests", function () {
         expect(el.getAttribute("style")).toBeFalsy();
         el.click();
 
-        expect(
-            el.getAttribute("style") === "background-color: red;"
-        ).toBeTruthy();
+        expect(el.getAttribute("style") === "background-color: red;").toBeTruthy();
 
         done();
     });

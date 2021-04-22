@@ -50,10 +50,7 @@ export default Base.extend({
         $el.find(".pat-subform")
             .not(".pat-autosubmit")
             .each((idx, el) => {
-                $(el).on(
-                    "input-change-delayed.pat-autosubmit",
-                    this.onInputChange
-                );
+                $(el).on("input-change-delayed.pat-autosubmit", this.onInputChange);
             });
     },
 

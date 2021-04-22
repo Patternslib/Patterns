@@ -23,9 +23,7 @@ var zoom = {
                 max: options.max,
             });
 
-            $slider
-                .insertBefore($block)
-                .on("change input", null, $block, zoom.onZoom);
+            $slider.insertBefore($block).on("change input", null, $block, zoom.onZoom);
         });
     },
 

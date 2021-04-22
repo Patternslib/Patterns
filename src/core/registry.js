@@ -47,9 +47,7 @@ const registry = {
     initialized: false,
     init() {
         $(document).ready(function () {
-            log.info(
-                "loaded: " + Object.keys(registry.patterns).sort().join(", ")
-            );
+            log.info("loaded: " + Object.keys(registry.patterns).sort().join(", "));
             registry.scan(document.body);
             registry.initialized = true;
             log.info("finished initial scan.");
@@ -129,9 +127,7 @@ const registry = {
         }
 
         const selectors = [];
-        patterns = this.orderPatterns(
-            patterns || Object.keys(registry.patterns)
-        );
+        patterns = this.orderPatterns(patterns || Object.keys(registry.patterns));
         for (const name of patterns) {
             this.transformPattern(name, content);
             const pattern = registry.patterns[name];

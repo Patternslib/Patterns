@@ -89,10 +89,7 @@ var toggle = {
         return $el.each(function toggle_init_el() {
             var $trigger = $(this),
                 event_name,
-                options = toggle._validateOptions(
-                    this,
-                    parser.parse($trigger, true)
-                );
+                options = toggle._validateOptions(this, parser.parse($trigger, true));
 
             if (!options.length) {
                 return;
@@ -152,9 +149,7 @@ var toggle = {
                 continue;
             }
             if (option.attr !== "class" && option.value) {
-                log.warn(
-                    "Values are not supported attributes other than class."
-                );
+                log.warn("Values are not supported attributes other than class.");
                 continue;
             }
             if (option.attr === "class" && !option.value) {
@@ -167,9 +162,7 @@ var toggle = {
             }
             if (option.store !== "none") {
                 if (!trigger.id) {
-                    log.warn(
-                        "state persistance requested, but element has no id"
-                    );
+                    log.warn("state persistance requested, but element has no id");
                     option.store = "none";
                 } else if (!store.supported) {
                     log.warn(

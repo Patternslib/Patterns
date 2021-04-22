@@ -25,10 +25,7 @@ var scroll_detection = {
 
             if (scroll_pos === 0) {
                 document.body.classList.add("scroll-position-top");
-            } else if (
-                window.innerHeight + scroll_pos >=
-                document.body.offsetHeight
-            ) {
+            } else if (window.innerHeight + scroll_pos >= document.body.offsetHeight) {
                 document.body.classList.add("scroll-position-bottom");
             }
         };
@@ -54,9 +51,7 @@ var scroll_detection = {
     },
 
     get_scroll_y: () => {
-        return window.scrollY !== undefined
-            ? window.scrollY
-            : window.pageYOffset; // pageYOffset for IE
+        return window.scrollY !== undefined ? window.scrollY : window.pageYOffset; // pageYOffset for IE
     },
 };
 

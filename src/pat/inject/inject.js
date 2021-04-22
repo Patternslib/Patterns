@@ -26,16 +26,8 @@ parser.addArgument("trigger", "default", [
     "idle",
 ]);
 parser.addArgument("delay"); // only used in autoload
-parser.addArgument("confirm", "class", [
-    "never",
-    "always",
-    "form-data",
-    "class",
-]);
-parser.addArgument(
-    "confirm-message",
-    "Are you sure you want to leave this page?"
-);
+parser.addArgument("confirm", "class", ["never", "always", "form-data", "class"]);
+parser.addArgument("confirm-message", "Are you sure you want to leave this page?");
 parser.addArgument("hooks", [], ["raptor"], true); // After injection, pat-inject will trigger an event for each hook: pat-inject-hook-$(hook)
 parser.addArgument("loading-class", "injecting"); // Add a class to the target while content is still loading.
 parser.addArgument("executing-class", "executing"); // Add a class to the element while content is still loading.
@@ -57,10 +49,7 @@ const inject = {
 
     init($el, opts) {
         const cfgs = this.extractConfig($el, opts);
-        if (
-            cfgs.some((e) => e.history === "record") &&
-            !("pushState" in history)
-        ) {
+        if (cfgs.some((e) => e.history === "record") && !("pushState" in history)) {
             // if the injection shall add a history entry and HTML5 pushState
             // is missing, then don't initialize the injection.
             return $el;
@@ -82,9 +71,7 @@ const inject = {
                 );
                 // XXX: reconsider how the injection enters exhausted state
                 return $el.attr({
-                    href:
-                        (window.location.href.split("#")[0] || "") +
-                        cfgs[0].nextHref,
+                    href: (window.location.href.split("#")[0] || "") + cfgs[0].nextHref,
                 });
             }
         }
@@ -110,11 +97,7 @@ const inject = {
                     // setup event handlers
                     if ($el.is("form")) {
                         $el.on("submit.pat-inject", this.onTrigger.bind(this))
-                            .on(
-                                "click.pat-inject",
-                                "[type=submit]",
-                                ajax.onClickSubmit
-                            )
+                            .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit)
                             .on(
                                 "click.pat-inject",
                                 "[type=submit][formaction], [type=image][formaction]",
@@ -252,8 +235,7 @@ const inject = {
 
             if (!cfg.defaultSelector) {
                 // if no selector, check for selector as part of original url
-                cfg.defaultSelector =
-                    (urlparts[1] && "#" + urlparts[1]) || "body";
+                cfg.defaultSelector = (urlparts[1] && "#" + urlparts[1]) || "body";
             }
             if (cfg.delay) {
                 try {
@@ -290,11 +272,9 @@ const inject = {
             if (cfg.confirm == "always") {
                 _confirm = true;
             } else if (cfg.confirm === "form-data") {
-                if (cfg.target != "none")
-                    _confirm = this.elementIsDirty(cfg.$target);
+                if (cfg.target != "none") _confirm = this.elementIsDirty(cfg.$target);
             } else if (cfg.confirm === "class") {
-                if (cfg.target != "none")
-                    _confirm = cfg.$target.hasClass("is-dirty");
+                if (cfg.target != "none") _confirm = cfg.$target.hasClass("is-dirty");
             }
             if (_confirm) {
                 should_confirm = true;
@@ -319,8 +299,7 @@ const inject = {
             return true;
         }
         cfg.$target =
-            cfg.$target ||
-            (cfg.target === "self" ? cfg.$context : $(cfg.target));
+            cfg.$target || (cfg.target === "self" ? cfg.$context : $(cfg.target));
         if (cfg.$target.length === 0) {
             if (!cfg.target) {
                 log.error("Need target selector", cfg);
@@ -368,9 +347,7 @@ const inject = {
          *
          * Verification for each cfg in the array needs to succeed.
          */
-        return cfgs.every(
-            _.partial(this.verifySingleConfig.bind(this), cfgs[0].url)
-        );
+        return cfgs.every(_.partial(this.verifySingleConfig.bind(this), cfgs[0].url));
     },
 
     listenForFormReset(cfg) {
@@ -382,10 +359,7 @@ const inject = {
             // Special case, we don't want to display any return value.
             return;
         const $form = cfg.$target.parents("form");
-        if (
-            $form.length !== 0 &&
-            cfg.$target.data("initial-value") === undefined
-        ) {
+        if ($form.length !== 0 && cfg.$target.data("initial-value") === undefined) {
             cfg.$target.data("initial-value", cfg.$target.html());
             $form.on("reset", () => {
                 cfg.$target.html(cfg.$target.data("initial-value"));
@@ -412,8 +386,7 @@ const inject = {
         if (cfg.loadingClass) {
             cfg.loadingClass += " " + cfg.loadingClass + "-" + targetMod;
             if (targetPosition && cfg.loadingClass) {
-                cfg.loadingClass +=
-                    " " + cfg.loadingClass + "-" + targetPosition;
+                cfg.loadingClass += " " + cfg.loadingClass + "-" + targetPosition;
             }
         }
         cfg.action = targetMod + targetPosition;
@@ -465,11 +438,7 @@ const inject = {
         }
         let $src;
         // $source.clone() does not work with shived elements in IE8
-        if (
-            document.all &&
-            document.querySelector &&
-            !document.addEventListener
-        ) {
+        if (document.all && document.querySelector && !document.addEventListener) {
             $src = $source.map((idx, el) => $(el.outerHTML)[0]);
         } else {
             $src = $source.safeClone();
@@ -521,9 +490,7 @@ const inject = {
             // The event handler should check whether the
             // injected element and the triggered element are
             // the same.
-            $injected
-                .parent()
-                .trigger("patterns-injected", [cfg, $el[0], $injected[0]]);
+            $injected.parent().trigger("patterns-injected", [cfg, $el[0], $injected[0]]);
         } else {
             $injected.each((idx, el_) => {
                 // patterns-injected event will be triggered for each injected (non-text) element.
@@ -536,13 +503,8 @@ const inject = {
         }
 
         if (cfg.scroll && cfg.scroll !== "none") {
-            let scroll_container = cfg.$target
-                .parents()
-                .addBack()
-                .filter(":scrollable");
-            scroll_container = scroll_container.length
-                ? scroll_container[0]
-                : window;
+            let scroll_container = cfg.$target.parents().addBack().filter(":scrollable");
+            scroll_container = scroll_container.length ? scroll_container[0] : window;
 
             // default for scroll===top
             let top = 0;
@@ -559,9 +521,7 @@ const inject = {
                 // In case of a scroll container of window, we do not have
                 // getBoundingClientRect method, so get the body instead.
                 const scroll_container_ref =
-                    scroll_container === window
-                        ? document.body
-                        : scroll_container;
+                    scroll_container === window ? document.body : scroll_container;
 
                 // Calculate absolute [¹] position difference between
                 // scroll_container and scroll_target.
@@ -590,11 +550,7 @@ const inject = {
                     scroll_target.getBoundingClientRect().top +
                         scroll_container_ref.scrollTop -
                         scroll_container_ref.getBoundingClientRect().top -
-                        utils.getCSSValue(
-                            scroll_container_ref,
-                            "border-top-width",
-                            true
-                        )
+                        utils.getCSSValue(scroll_container_ref, "border-top-width", true)
                 );
             }
             if (scroll_container === window) {
@@ -622,12 +578,11 @@ const inject = {
             $el.trigger("pat-inject-hook-" + hook)
         );
         this.stopBubblingFromRemovedElement($el, cfgs, ev);
-        const sources$ = await this.callTypeHandler(
-            cfgs[0].dataType,
-            "sources",
-            $el,
-            [cfgs, data, ev]
-        );
+        const sources$ = await this.callTypeHandler(cfgs[0].dataType, "sources", $el, [
+            cfgs,
+            data,
+            ev,
+        ]);
         /* pick the title source for dedicated handling later
           Title - if present - is always appended at the end. */
         let title;
@@ -690,10 +645,7 @@ const inject = {
         const fallback_url = document
             .querySelector(`meta[name=pat-inject-status-${status}]`)
             ?.getAttribute("content", false);
-        if (
-            fallback_url &&
-            url_params.get("pat-inject-errorhandler.off") === null
-        ) {
+        if (fallback_url && url_params.get("pat-inject-errorhandler.off") === null) {
             try {
                 const fallback_response = await fetch(fallback_url, {
                     method: "GET",
@@ -750,8 +702,7 @@ const inject = {
         _.chain(cfgs)
             .filter(_.property("loadingClass"))
             .each((cfg) => {
-                if (cfg.target != "none")
-                    cfg.$target.addClass(cfg.loadingClass);
+                if (cfg.target != "none") cfg.$target.addClass(cfg.loadingClass);
             });
         // Put the execute class on the elem that has pat inject on it
         _.chain(cfgs)
@@ -762,10 +713,7 @@ const inject = {
             "pat-ajax-success.pat-inject",
             this._onInjectSuccess.bind(this, $el, cfgs)
         );
-        $el.on(
-            "pat-ajax-error.pat-inject",
-            this._onInjectError.bind(this, $el, cfgs)
-        );
+        $el.on("pat-ajax-error.pat-inject", this._onInjectError.bind(this, $el, cfgs));
         $el.on("pat-ajax-success.pat-inject pat-ajax-error.pat-inject", () =>
             $el.removeData("pat-inject-triggered")
         );
@@ -889,43 +837,34 @@ const inject = {
             return "";
         }
         const $page = $(
-            html
-                .replace(
-                    /(\s)(src\s*)=/gi,
-                    '$1src="" data-pat-inject-rebase-$2='
-                )
-                .trim()
+            html.replace(/(\s)(src\s*)=/gi, '$1src="" data-pat-inject-rebase-$2=').trim()
         )
             .wrapAll("<div>")
             .parent();
 
-        $page
-            .find(Object.keys(this._rebaseAttrs).join(","))
-            .each((idx, el_) => {
-                const $el_ = $(el_);
-                const attrName = this._rebaseAttrs[el_.tagName];
-                let value = $el_.attr(attrName);
+        $page.find(Object.keys(this._rebaseAttrs).join(",")).each((idx, el_) => {
+            const $el_ = $(el_);
+            const attrName = this._rebaseAttrs[el_.tagName];
+            let value = $el_.attr(attrName);
 
-                if (
-                    value &&
-                    value.slice(0, 2) !== "@@" &&
-                    value[0] !== "#" &&
-                    value.slice(0, 7) !== "mailto:" &&
-                    value.slice(0, 4) !== "tel:" &&
-                    value.slice(0, 4) !== "fax:" &&
-                    value.slice(0, 7) !== "callto:" &&
-                    value.slice(0, 10) !== "ts3server:" &&
-                    value.slice(0, 6) !== "teams:" &&
-                    value.slice(0, 11) !== "javascript:"
-                ) {
-                    value = utils.rebaseURL(base, value);
-                    $el_.attr(attrName, value);
-                }
-            });
+            if (
+                value &&
+                value.slice(0, 2) !== "@@" &&
+                value[0] !== "#" &&
+                value.slice(0, 7) !== "mailto:" &&
+                value.slice(0, 4) !== "tel:" &&
+                value.slice(0, 4) !== "fax:" &&
+                value.slice(0, 7) !== "callto:" &&
+                value.slice(0, 10) !== "ts3server:" &&
+                value.slice(0, 6) !== "teams:" &&
+                value.slice(0, 11) !== "javascript:"
+            ) {
+                value = utils.rebaseURL(base, value);
+                $el_.attr(attrName, value);
+            }
+        });
 
-        for (const [pattern_name, opts] of Object.entries(
-            this._rebaseOptions
-        )) {
+        for (const [pattern_name, opts] of Object.entries(this._rebaseOptions)) {
             for (const el_ of dom.querySelectorAllAndMe(
                 $page[0],
                 `[data-pat-${pattern_name}]`
@@ -946,9 +885,7 @@ const inject = {
                         }
                         changed = true;
                         if (Array.isArray(val)) {
-                            options[opt] = val.map((it) =>
-                                utils.rebaseURL(base, it)
-                            );
+                            options[opt] = val.map((it) => utils.rebaseURL(base, it));
                         } else {
                             options[opt] = utils.rebaseURL(base, val);
                         }
@@ -998,10 +935,7 @@ const inject = {
         }
         const $html = $("<div/>").html(clean_html);
         if ($html.children().length === 0) {
-            log.warn(
-                "Parsing html resulted in empty jquery object:",
-                clean_html
-            );
+            log.warn("Parsing html resulted in empty jquery object:", clean_html);
         }
         return $html;
     },
@@ -1032,10 +966,7 @@ const inject = {
             // we only look at the closest scrollable parent, no nesting
             // Check visibility for scrollable
             const checkVisibility = utils.debounce(() => {
-                if (
-                    $el.data("patterns.autoload") ||
-                    !$.contains(document, $el[0])
-                ) {
+                if ($el.data("patterns.autoload") || !$.contains(document, $el[0])) {
                     return false;
                 }
                 if (!$el.is(":visible")) {
@@ -1049,9 +980,7 @@ const inject = {
                     return false;
                 }
                 const reltop =
-                        $el.safeOffset().top -
-                        $scrollable.safeOffset().top -
-                        1000,
+                        $el.safeOffset().top - $scrollable.safeOffset().top - 1000,
                     doTrigger = reltop <= $scrollable.innerHeight();
                 if (doTrigger) {
                     // checkVisibility was possibly installed as a scroll
@@ -1105,10 +1034,7 @@ const inject = {
                 const observer = new IntersectionObserver(checkVisibility);
                 $el.each((idx, el) => observer.observe(el));
             } else {
-                $(window).on(
-                    "resize.pat-autoload scroll.pat-autoload",
-                    checkVisibility
-                );
+                $(window).on("resize.pat-autoload scroll.pat-autoload", checkVisibility);
             }
         }
         return false;
@@ -1150,9 +1076,7 @@ const inject = {
 
         onInteraction();
 
-        ["scroll", "resize"].forEach((e) =>
-            window.addEventListener(e, onInteraction)
-        );
+        ["scroll", "resize"].forEach((e) => window.addEventListener(e, onInteraction));
         [
             "click",
             "keypress",

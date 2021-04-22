@@ -170,9 +170,7 @@ describe("pat-switch", function () {
 
         it("Execute changes", function () {
             $("#lab")
-                .append(
-                    "<button data-pat-switch='#victim foo'>Click me</button>"
-                )
+                .append("<button data-pat-switch='#victim foo'>Click me</button>")
                 .append("<div id='victim' class='foo'/>");
             var $trigger = $("#lab button").patternSwitch();
             $trigger.patternSwitch("execute");

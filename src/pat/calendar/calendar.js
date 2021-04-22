@@ -140,28 +140,17 @@ export default Base.extend({
             query_string.get("view") ||
             (storage && storage.get("view")) ||
             opts.initial.view;
-        config.initialView =
-            this.viewMap[config.initialView] || config.initialView;
+        config.initialView = this.viewMap[config.initialView] || config.initialView;
         config.editable = opts.editable || false;
-        config.plugins = [
-            fcDayGrid,
-            fcInteraction,
-            fcList,
-            fcLuxon,
-            fcTimeGrid,
-        ];
+        config.plugins = [fcDayGrid, fcInteraction, fcList, fcLuxon, fcTimeGrid];
         config.eventColor = opts.eventColor;
 
         let lang =
-            opts.lang ||
-            document.querySelector("html").getAttribute("lang") ||
-            "en";
+            opts.lang || document.querySelector("html").getAttribute("lang") || "en";
         // we don't support any country-specific language variants, always use first 2 letters
         lang = lang.substr(0, 2).toLowerCase();
         if (lang !== "en") {
-            const locale = await import(
-                `@fullcalendar/core/locales/${lang}.js`
-            );
+            const locale = await import(`@fullcalendar/core/locales/${lang}.js`);
             config.locale = locale.default;
             console.log("loaded cal locale for " + lang);
         }
@@ -368,9 +357,9 @@ export default Base.extend({
             args.el.classList.add("pat-switch");
             args.el.setAttribute(
                 "data-pat-switch",
-                `selector: ${switch_sel}${
-                    switch_add ? "; add: " + switch_add : ""
-                }${switch_rm ? "; remove: " + switch_rm : ""}`
+                `selector: ${switch_sel}${switch_add ? "; add: " + switch_add : ""}${
+                    switch_rm ? "; remove: " + switch_rm : ""
+                }`
             );
             do_scan = true;
         }
@@ -385,9 +374,8 @@ export default Base.extend({
         if (this.active_categories !== null) {
             // intersection
             show =
-                this.active_categories.filter((it) =>
-                    event.classNames.includes(it)
-                ).length > 0;
+                this.active_categories.filter((it) => event.classNames.includes(it))
+                    .length > 0;
         }
         if (show) {
             event.setProp("display", "auto");
@@ -400,12 +388,9 @@ export default Base.extend({
         const ctrls = this.get_category_controls();
         this.active_categories = null;
         if (ctrls.length) {
-            this.active_categories = ctrls
-                .filter((el) => el.checked)
-                .map((el) => el.id);
+            this.active_categories = ctrls.filter((el) => el.checked).map((el) => el.id);
         }
-        this.storage &&
-            this.storage.set("active_categories", this.active_categories);
+        this.storage && this.storage.set("active_categories", this.active_categories);
     },
 
     get_category_controls() {
@@ -460,9 +445,7 @@ export default Base.extend({
             } else {
                 ctrl.checked = false;
             }
-            ctrl.dispatchEvent(
-                new Event("change", { bubbles: true, cancelable: true })
-            );
+            ctrl.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
         }
     },
 

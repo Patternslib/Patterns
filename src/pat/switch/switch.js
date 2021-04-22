@@ -47,11 +47,7 @@ var switcher = {
                             state.remove === option.remove &&
                             state.add === option.add
                         )
-                            switcher._update(
-                                option.selector,
-                                state.remove,
-                                state.add
-                            );
+                            switcher._update(option.selector, state.remove, state.add);
                     }
                 }
             }
@@ -83,9 +79,7 @@ var switcher = {
             option,
             i;
         if (!options) {
-            log.error(
-                "Tried to execute a switch for an uninitialised element."
-            );
+            log.error("Tried to execute a switch for an uninitialised element.");
             return;
         }
         for (i = 0; i < options.length; i++) {
@@ -105,12 +99,8 @@ var switcher = {
 
         for (var i = 0; i < options.length; i++) {
             var option = options[i];
-            if (option.selector && (option.remove || option.add))
-                correct.push(option);
-            else
-                log.error(
-                    "Switch pattern requires selector and one of add or remove."
-                );
+            if (option.selector && (option.remove || option.add)) correct.push(option);
+            else log.error("Switch pattern requires selector and one of add or remove.");
         }
         return correct;
     },

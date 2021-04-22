@@ -27,8 +27,7 @@ export default Base.extend({
 
         this.options = parser.parse(this.el, this.options);
 
-        let lang =
-            this.options.locale || document.querySelector("html").lang || "en";
+        let lang = this.options.locale || document.querySelector("html").lang || "en";
         // we don't support any country-specific language variants, always use first 2 letters
         lang = lang.substr(0, 2).toLowerCase();
         try {

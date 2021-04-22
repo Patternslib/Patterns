@@ -139,15 +139,11 @@ describe("Pattern implementation", function () {
 
     describe("When validating options", function () {
         it("make sure a selector is provided", function () {
-            expect(
-                toggle._validateOptions(null, [{ attr: "disabled" }])
-            ).toEqual([]);
+            expect(toggle._validateOptions(null, [{ attr: "disabled" }])).toEqual([]);
         });
 
         it("verify values are provided when class attribute is used", function () {
-            expect(toggle._validateOptions(null, [{ attr: "class" }])).toEqual(
-                []
-            );
+            expect(toggle._validateOptions(null, [{ attr: "class" }])).toEqual([]);
         });
 
         it("verify values are not provided when a non-class attribute is used", function () {
@@ -161,9 +157,7 @@ describe("Pattern implementation", function () {
         it("check trigger has an id when storage is requested", function () {
             var trigger = document.createElement("div");
             expect(
-                toggle._validateOptions(trigger, [
-                    { attr: "disabled", store: "local" },
-                ])
+                toggle._validateOptions(trigger, [{ attr: "disabled", store: "local" }])
             ).toEqual([]);
         });
 

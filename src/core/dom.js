@@ -69,9 +69,7 @@ const find_parents = (el, selector) => {
 const find_scoped = (el, selector) => {
     // If the selector starts with an object id do a global search,
     // otherwise do a local search.
-    return (selector.indexOf("#") === 0 ? document : el).querySelectorAll(
-        selector
-    );
+    return (selector.indexOf("#") === 0 ? document : el).querySelectorAll(selector);
 };
 
 const get_parents = (el) => {
