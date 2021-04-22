@@ -102,10 +102,7 @@ export default Base.extend({
 
     incrementValues(idx, el) {
         const $el = $(el);
-        $el.children()
-            .addBack()
-            .contents()
-            .filter(this.incrementValues.bind(this));
+        $el.children().addBack().contents().filter(this.incrementValues.bind(this));
         const callback = function (idx, attr) {
             if (attr.name === "type" || !$el.attr(attr.name)) {
                 return;
@@ -146,10 +143,7 @@ export default Base.extend({
             )) {
                 remove_button.addEventListener("click", () => {
                     if (this.options.remove.behaviour === "confirm") {
-                        if (
-                            window.confirm(this.options.remove.confirmation) ===
-                            true
-                        ) {
+                        if (window.confirm(this.options.remove.confirmation) === true) {
                             this.remove(clone);
                         }
                     } else {

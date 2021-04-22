@@ -92,9 +92,7 @@ export default Base.extend({
         // add close icon if requested
         if (options.controls.indexOf("icons") >= 0) {
             $el.append(
-                "<button type='button' class='close-panel'>" +
-                    closetext +
-                    "</button>"
+                "<button type='button' class='close-panel'>" + closetext + "</button>"
             );
         }
 
@@ -108,11 +106,7 @@ export default Base.extend({
         }
 
         if ($el.find(".close-panel").length) {
-            $el.on(
-                "click.pat-notification",
-                ".close-panel",
-                this.onClick.bind(this)
-            );
+            $el.on("click.pat-notification", ".close-panel", this.onClick.bind(this));
         } else {
             $el.on("click.pat-notification", this.onClick.bind(this));
         }
@@ -128,9 +122,7 @@ export default Base.extend({
             $container.append($el);
         }
 
-        var healing = this.parseUnitOrOption(options.healing, "s", [
-            "persistent",
-        ]);
+        var healing = this.parseUnitOrOption(options.healing, "s", ["persistent"]);
 
         log.debug("Healing value is", healing);
         $el.data("healing", healing);

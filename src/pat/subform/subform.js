@@ -17,14 +17,8 @@ export default Base.extend({
 
     init($el) {
         $el.submit(this.submit.bind(this));
-        $el.find("input").on(
-            "keyup keypress keydown",
-            this.keyboard_handler.bind(this)
-        );
-        $el.find("button[type=submit]").on(
-            "click",
-            this.submitClicked.bind(this)
-        );
+        $el.find("input").on("keyup keypress keydown", this.keyboard_handler.bind(this));
+        $el.find("button[type=submit]").on("click", this.submitClicked.bind(this));
     },
 
     destroy($el) {
@@ -98,10 +92,7 @@ export default Base.extend({
             // override the default action and restore afterwards
             if ($sub.is(".pat-inject")) {
                 var previousValue = $sub.data("pat-inject");
-                $sub.data(
-                    "pat-inject",
-                    inject.extractConfig($sub, { url: formaction })
-                );
+                $sub.data("pat-inject", inject.extractConfig($sub, { url: formaction }));
                 this.scopedSubmit($sub);
                 $sub.data("pat-inject", previousValue);
             } else if ($sub.is(".pat-modal")) {

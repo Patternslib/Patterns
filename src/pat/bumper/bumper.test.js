@@ -83,9 +83,7 @@ describe("pat-bumper", function () {
         pattern.init();
         pattern._markBumped(true);
         if (utils.checkCSSFeature("position", "sticky")) {
-            expect(pattern.$el.attr("class")).toBe(
-                "pat-bumper sticky-supported bumped"
-            );
+            expect(pattern.$el.attr("class")).toBe("pat-bumper sticky-supported bumped");
         } else {
             expect(pattern.$el.attr("class")).toBe("pat-bumper bumped");
         }
@@ -106,9 +104,7 @@ describe("pat-bumper", function () {
         pattern.init();
         pattern._markBumped(false);
         if (utils.checkCSSFeature("position", "sticky")) {
-            expect(pattern.$el.attr("class")).toBe(
-                "pat-bumper sticky-supported plain"
-            );
+            expect(pattern.$el.attr("class")).toBe("pat-bumper sticky-supported plain");
         } else {
             expect(pattern.$el.attr("class")).toBe("pat-bumper plain");
         }

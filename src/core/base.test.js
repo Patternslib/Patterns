@@ -118,9 +118,7 @@ describe("pat-base: The Base class for patterns", function () {
             init: function () {
                 expect(this.some).toEqual("thing3");
                 expect(this.something).toEqual("else");
-                this.constructor.__super__.constructor.__super__.init.call(
-                    this
-                );
+                this.constructor.__super__.constructor.__super__.init.call(this);
             },
         });
         var Tmp3 = Tmp2.extend({

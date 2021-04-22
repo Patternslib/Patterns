@@ -3,7 +3,6 @@ import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
-import PatDisplayTime from "../display-time/display-time";
 import utils from "../../core/utils";
 
 export const parser = new Parser("date-picker");
@@ -75,24 +74,34 @@ export default Base.extend({
             if (disabled) {
                 display_el.classList.add("disabled");
             }
-
-            const display_time_config = { format: this.format };
-            if (this.options.outputFormat) {
-                display_time_config["output-format"] = this.options.outputFormat;
-            }
-            if (this.options.locale) {
-                display_time_config.locale = this.options.locale;
-            }
             el.insertAdjacentElement("beforebegin", display_el);
+
+            let display_el_pat;
+            if (this.options.outputFormat) {
+                const PatDisplayTime = (await import("../display-time/display-time")).default; // prettier-ignore
+                const display_time_config = { format: this.format };
+                if (this.options.outputFormat) {
+                    display_time_config["output-format"] = this.options.outputFormat;
+                }
+                if (this.options.locale) {
+                    display_time_config.locale = this.options.locale;
+                }
+                display_el_pat = new PatDisplayTime(display_el, display_time_config);
+            } else {
+                display_el.textContent = el.value;
+            }
 
             $(display_el).on("init.display-time.patterns", () =>
                 this.add_clear_button(display_el)
             );
-            const display_el_pat = new PatDisplayTime(display_el, display_time_config);
 
             this.el.addEventListener("change", () => {
                 display_el.setAttribute("datetime", this.el.value);
-                display_el_pat.format();
+                if (display_el_pat) {
+                    display_el_pat.format();
+                } else {
+                    display_el.textContent = this.el.value;
+                }
                 this.add_clear_button(display_el);
             });
 

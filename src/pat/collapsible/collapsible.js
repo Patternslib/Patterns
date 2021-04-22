@@ -67,9 +67,7 @@ export default Base.extend({
         this.$panel = $el.children(".panel-content");
         if (this.$panel.length === 0) {
             if ($content.length) {
-                this.$panel = $content
-                    .wrapAll("<div class='panel-content' />")
-                    .parent();
+                this.$panel = $content.wrapAll("<div class='panel-content' />").parent();
             } else {
                 this.$panel = $("<div class='panel-content' />").insertAfter(
                     this.$trigger
@@ -77,27 +75,22 @@ export default Base.extend({
             }
         }
 
-        state =
-            this.options.closed || $el.hasClass("closed") ? "closed" : "open";
+        state = this.options.closed || $el.hasClass("closed") ? "closed" : "open";
         if (this.options.store !== "none") {
-            storage = (this.options.store === "local"
-                ? store.local
-                : store.session)(this.name);
+            storage = (this.options.store === "local" ? store.local : store.session)(
+                this.name
+            );
             state = storage.get($el.attr("id")) || state;
         }
 
         if (state === "closed") {
-            this.$trigger
-                .removeClass("collapsible-open")
-                .addClass("collapsible-closed");
+            this.$trigger.removeClass("collapsible-open").addClass("collapsible-closed");
             $el.removeClass("open").addClass("closed");
             this.$panel.hide();
         } else {
             if (this.options.loadContent)
                 this._loadContent($el, this.options.loadContent, this.$panel);
-            this.$trigger
-                .removeClass("collapsible-closed")
-                .addClass("collapsible-open");
+            this.$trigger.removeClass("collapsible-closed").addClass("collapsible-open");
             $el.removeClass("closed").addClass("open");
             this.$panel.show();
         }
@@ -105,26 +98,13 @@ export default Base.extend({
         this.$trigger
             .off(".pat-collapsible")
             .on("click.pat-collapsible", null, $el, this._onClick.bind(this))
-            .on(
-                "keypress.pat-collapsible",
-                null,
-                $el,
-                this._onKeyPress.bind(this)
-            );
+            .on("keypress.pat-collapsible", null, $el, this._onKeyPress.bind(this));
 
         if (this.options.closeTrigger) {
-            $(document).on(
-                "click",
-                this.options.closeTrigger,
-                this.close.bind(this)
-            );
+            $(document).on("click", this.options.closeTrigger, this.close.bind(this));
         }
         if (this.options.openTrigger) {
-            $(document).on(
-                "click",
-                this.options.openTrigger,
-                this.open.bind(this)
-            );
+            $(document).on("click", this.options.openTrigger, this.open.bind(this));
         }
 
         return $el;
@@ -169,11 +149,7 @@ export default Base.extend({
         return $el.each(
             function (idx, el) {
                 if (this.options.loadContent)
-                    this._loadContent(
-                        $(el),
-                        this.options.loadContent,
-                        this.$panel
-                    );
+                    this._loadContent($(el), this.options.loadContent, this.$panel);
             }.bind(this)
         );
     },
@@ -181,9 +157,9 @@ export default Base.extend({
     toggle: function () {
         var new_state = this.$el.hasClass("closed") ? "open" : "closed";
         if (this.options.store !== "none") {
-            var storage = (this.options.store === "local"
-                ? store.local
-                : store.session)(this.name);
+            var storage = (this.options.store === "local" ? store.local : store.session)(
+                this.name
+            );
             storage.set(this.$el.attr("id"), new_state);
         }
         if (new_state === "open") {
@@ -201,8 +177,7 @@ export default Base.extend({
             this._loadContent($el, this.options.loadContent, this.$panel);
         }
         var duration =
-            this.options.transition === "css" ||
-            this.options.transition === "none"
+            this.options.transition === "css" || this.options.transition === "none"
                 ? null
                 : this.options.effect.duration;
         if (!duration) {

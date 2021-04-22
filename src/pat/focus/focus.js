@@ -20,8 +20,7 @@ var focus = {
     transform: function ($root) {
         $root.find(":input[placeholder]").each(function (ix, el) {
             var $relatives = utils.findRelatives(el);
-            if (el.placeholder)
-                $relatives.attr("data-placeholder", el.placeholder);
+            if (el.placeholder) $relatives.attr("data-placeholder", el.placeholder);
         });
         $root.find(":input").each(focus.onChange);
     },
@@ -73,11 +72,7 @@ $(document)
     .on("blur.patterns", ":input", focus.onBlur)
     .on("newContent", focus.onNewContent)
     .on("change.pat-focus keyup.pat-focus", ":input", focus.onChange)
-    .on(
-        "input.pat-focus",
-        ":input[type=range]",
-        utils.debounce(focus.onChange, 50)
-    );
+    .on("input.pat-focus", ":input[type=range]", utils.debounce(focus.onChange, 50));
 
 registry.register(focus);
 export default focus;

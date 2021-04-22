@@ -116,9 +116,7 @@ Base.extend = function (patternProps) {
 
     // Register the pattern in the Patternslib registry.
     if (!patternProps.name) {
-        log.warn(
-            "This pattern without a name attribute will not be registered!"
-        );
+        log.warn("This pattern without a name attribute will not be registered!");
     } else if (!patternProps.trigger) {
         log.warn(
             `The pattern ${patternProps.name} does not have a trigger attribute, it will not be registered.`

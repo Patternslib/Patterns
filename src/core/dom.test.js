@@ -96,9 +96,7 @@ describe("core.dom tests", () => {
             parent.appendChild(el);
 
             dom.wrap(el, wrapper);
-            expect(parent.outerHTML).toBe(
-                `<main><section><div></div></section></main>`
-            );
+            expect(parent.outerHTML).toBe(`<main><section><div></div></section></main>`);
 
             done();
         });
@@ -115,18 +113,14 @@ describe("core.dom tests", () => {
             expect(el.style.borderTop).toBe("2em");
             expect(el.style.marginTop).toBe("4em");
             expect(el.style.display).toBe("none");
-            expect(
-                el.getAttribute("style").indexOf("display") >= -1
-            ).toBeTruthy();
+            expect(el.getAttribute("style").indexOf("display") >= -1).toBeTruthy();
 
             dom.show(el);
 
             expect(el.style.borderTop).toBe("2em");
             expect(el.style.marginTop).toBe("4em");
             expect(el.style.display).toBeFalsy();
-            expect(
-                el.getAttribute("style").indexOf("display") === -1
-            ).toBeTruthy();
+            expect(el.getAttribute("style").indexOf("display") === -1).toBeTruthy();
 
             el.style.display = "inline";
             dom.hide(el);
@@ -134,18 +128,14 @@ describe("core.dom tests", () => {
             expect(el.style.borderTop).toBe("2em");
             expect(el.style.marginTop).toBe("4em");
             expect(el.style.display).toBe("none");
-            expect(
-                el.getAttribute("style").indexOf("display") >= -1
-            ).toBeTruthy();
+            expect(el.getAttribute("style").indexOf("display") >= -1).toBeTruthy();
 
             dom.show(el);
 
             expect(el.style.borderTop).toBe("2em");
             expect(el.style.marginTop).toBe("4em");
             expect(el.style.display).toBe("inline");
-            expect(
-                el.getAttribute("style").indexOf("display") >= -1
-            ).toBeTruthy();
+            expect(el.getAttribute("style").indexOf("display") >= -1).toBeTruthy();
 
             done();
         });
@@ -184,10 +174,7 @@ describe("core.dom tests", () => {
         it("don't break with DocumentFragment without a parent.", (done) => {
             const el = new DocumentFragment();
             el.innerHTML = `<div class="starthere"></div>`;
-            const res = dom.find_parents(
-                el.querySelector(".starthere"),
-                ".findme"
-            );
+            const res = dom.find_parents(el.querySelector(".starthere"), ".findme");
             expect(res.length).toEqual(0);
 
             done();
@@ -207,10 +194,7 @@ describe("core.dom tests", () => {
                 </div>
             `;
 
-            const res = dom.find_scoped(
-                document.querySelector(".starthere"),
-                ".findme"
-            );
+            const res = dom.find_scoped(document.querySelector(".starthere"), ".findme");
 
             expect(res.length).toEqual(2);
             expect(res[0]).toEqual(document.querySelector(".level3")); // outer dom levels first // prettier-ignore
@@ -229,10 +213,7 @@ describe("core.dom tests", () => {
                 </div>
             `;
 
-            const res = dom.find_scoped(
-                document.querySelector(".starthere"),
-                "#findme"
-            );
+            const res = dom.find_scoped(document.querySelector(".starthere"), "#findme");
 
             expect(res.length).toEqual(1);
             expect(res[0]).toEqual(document.querySelector(".level1"));
@@ -315,9 +296,7 @@ describe("core.dom tests", () => {
                 </section>`);
 
             expect(res.getAttribute("id")).toEqual("section1");
-            expect(res.querySelector("span.yo").textContent).toEqual(
-                "does work."
-            );
+            expect(res.querySelector("span.yo").textContent).toEqual("does work.");
 
             res = dom.create_from_string(`
                 <section id="section1"></section>

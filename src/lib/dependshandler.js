@@ -20,10 +20,7 @@ DependsHandler.prototype = {
         var $input = this._findInputs(name);
         if (!$input.length) return null;
 
-        if (
-            $input.attr("type") === "radio" ||
-            $input.attr("type") === "checkbox"
-        )
+        if ($input.attr("type") === "radio" || $input.attr("type") === "checkbox")
             return $input.filter(":checked").val() || null;
         else return $input.val();
     },

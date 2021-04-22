@@ -126,10 +126,7 @@ class ArgumentParser {
                     this.enum_values[choice] = name;
                 }
             }
-        } else if (
-            typeof spec.value === "string" &&
-            spec.value.slice(0, 1) === "$"
-        ) {
+        } else if (typeof spec.value === "string" && spec.value.slice(0, 1) === "$") {
             spec.type = this.parameters[spec.value.slice(1)].type;
         } else {
             // Note that this will get reset by _defaults if default_value is a function.
@@ -168,31 +165,19 @@ class ArgumentParser {
                         } else if (typeof value === "number") {
                             value = !!value;
                         } else {
-                            throw (
-                                "Cannot convert value for " +
-                                name +
-                                " to boolean"
-                            );
+                            throw "Cannot convert value for " + name + " to boolean";
                         }
                         break;
                     case "number":
                         if (typeof value === "string") {
                             value = parseInt(value, 10);
                             if (isNaN(value)) {
-                                throw (
-                                    "Cannot convert value for " +
-                                    name +
-                                    " to number"
-                                );
+                                throw "Cannot convert value for " + name + " to number";
                             }
                         } else if (typeof value === "boolean") {
                             value = value + 0;
                         } else {
-                            throw (
-                                "Cannot convert value for " +
-                                name +
-                                " to number"
-                            );
+                            throw "Cannot convert value for " + name + " to number";
                         }
                         break;
                     case "string":
@@ -280,9 +265,7 @@ class ArgumentParser {
             }
             const name = matches[1];
             const value = matches[2].trim();
-            const arg = Object.values(this.parameters).filter(
-                (it) => it.alias === name
-            );
+            const arg = Object.values(this.parameters).filter((it) => it.alias === name);
 
             const is_alias = arg.length === 1;
 
@@ -320,10 +303,7 @@ class ArgumentParser {
                 sense = true;
                 flag = part;
             }
-            if (
-                flag in this.parameters &&
-                this.parameters[flag].type === "boolean"
-            ) {
+            if (flag in this.parameters && this.parameters[flag].type === "boolean") {
                 positional = false;
                 this._set(opts, flag, sense);
             } else if (flag in this.enum_values) {
@@ -339,8 +319,7 @@ class ArgumentParser {
                 break;
             }
         }
-        if (parts.length)
-            this.log.warn("Ignore extra arguments: " + parts.join(" "));
+        if (parts.length) this.log.warn("Ignore extra arguments: " + parts.join(" "));
         return opts;
     }
 
@@ -404,8 +383,7 @@ class ArgumentParser {
             if (spec === undefined) continue;
 
             if (spec.group) {
-                if (typeof options[spec.group] !== "object")
-                    options[spec.group] = {};
+                if (typeof options[spec.group] !== "object") options[spec.group] = {};
                 target = options[spec.group];
             } else {
                 target = options;

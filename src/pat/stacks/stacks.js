@@ -35,10 +35,7 @@ export default Base.extend({
             $visible = [],
             $invisible;
         if ($sheets.length < 2) {
-            log.warn(
-                "Stacks pattern: must have more than one sheet.",
-                this.$el[0]
-            );
+            log.warn("Stacks pattern: must have more than one sheet.", this.$el[0]);
             return;
         }
         if (selected) {
@@ -98,13 +95,7 @@ export default Base.extend({
             // source, but when you access the href property you always get
             // the fully qualified version.
             var $anchors = $(
-                'a[href="' +
-                    base_url +
-                    "#" +
-                    sheet.id +
-                    '"],a[href="#' +
-                    sheet.id +
-                    '"]'
+                'a[href="' + base_url + "#" + sheet.id + '"],a[href="#' + sheet.id + '"]'
             );
             if (sheet.id === selected) {
                 $anchors.addClass("current");

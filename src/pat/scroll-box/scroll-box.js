@@ -17,8 +17,7 @@ export default Base.extend({
         if (
             !scroll_listener == window &&
             (["auto", "scroll"].indexOf(getComputedStyle(el).overflow) === -1 ||
-                ["auto", "scroll"].indexOf(getComputedStyle(el).overflowY) ===
-                    -1)
+                ["auto", "scroll"].indexOf(getComputedStyle(el).overflowY) === -1)
         ) {
             return;
         }
@@ -72,9 +71,7 @@ export default Base.extend({
     get_scroll_y: (el) => {
         if (el === window) {
             // scrolling the window
-            return window.scrollY !== undefined
-                ? window.scrollY
-                : window.pageYOffset; // pageYOffset for IE
+            return window.scrollY !== undefined ? window.scrollY : window.pageYOffset; // pageYOffset for IE
         }
         // scrolling a DOM element
         return el.scrollTop;

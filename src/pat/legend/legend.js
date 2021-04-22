@@ -24,10 +24,7 @@ var legend = {
 
     transform: function ($root) {
         const root = utils.jqToNode($root);
-        const all = dom.querySelectorAllAndMe(
-            root,
-            "legend:not(.cant-touch-this)"
-        );
+        const all = dom.querySelectorAllAndMe(root, "legend:not(.cant-touch-this)");
         for (const el of all) {
             $(el).replaceWith("<p class='legend'>" + $(el).html() + "</p>");
         }

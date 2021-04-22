@@ -95,8 +95,7 @@ describe("pat-registry: The registry for patterns", function () {
         expect(
             tree
                 .querySelector(".e5")
-                .content.firstElementChild.querySelector(".pat-example")
-                .textContent
+                .content.firstElementChild.querySelector(".pat-example").textContent
         ).toBe("");
     });
 });

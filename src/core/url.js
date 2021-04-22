@@ -6,8 +6,7 @@
 
 function UrlArgumentParser() {
     this._cache = null;
-    if (window.addEventListener)
-        window.addEventListener("popstate", this._reset);
+    if (window.addEventListener) window.addEventListener("popstate", this._reset);
 }
 
 UrlArgumentParser.prototype = {
@@ -51,8 +50,7 @@ UrlArgumentParser.prototype = {
     },
 
     get: function UrlArgumentParser_get() {
-        if (this._cache === null)
-            this._cache = this._parse(window.location.search);
+        if (this._cache === null) this._cache = this._parse(window.location.search);
         return this._cache;
     },
 };

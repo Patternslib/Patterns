@@ -27,8 +27,7 @@ export default Base.extend({
 
         this.options = parser.parse(this.el, this.options);
 
-        let lang =
-            this.options.locale || document.querySelector("html").lang || "en";
+        let lang = this.options.locale || document.querySelector("html").lang || "en";
         // we don't support any country-specific language variants, always use first 2 letters
         lang = lang.substr(0, 2).toLowerCase();
         try {
@@ -42,15 +41,16 @@ export default Base.extend({
     },
 
     format() {
-        let out = this.el.getAttribute("datetime");
-        if (out && this.options.outputFormat) {
-            const date = Moment(out, this.options.format, this.options.strict);
+        const datetime = this.el.getAttribute("datetime");
+        if (datetime) {
+            const date = Moment(datetime, this.options.format, this.options.strict);
+            let out;
             if (this.options.fromNow === true) {
                 out = date.fromNow(this.options.noSuffix);
             } else {
                 out = date.format(this.options.outputFormat || undefined);
             }
+            this.el.textContent = out;
         }
-        this.el.textContent = out;
     },
 });

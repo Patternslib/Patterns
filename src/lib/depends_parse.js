@@ -278,13 +278,7 @@ var result = {
                                 }
                             }
                             if (result4 !== null) {
-                                result0 = [
-                                    result0,
-                                    result1,
-                                    result2,
-                                    result3,
-                                    result4,
-                                ];
+                                result0 = [result0, result1, result2, result3, result4];
                             } else {
                                 result0 = null;
                                 pos = pos1;
@@ -804,9 +798,7 @@ var result = {
                                         result0 = parse_Pc();
                                         if (result0 === null) {
                                             pos0 = pos;
-                                            if (
-                                                input.charCodeAt(pos) === 8204
-                                            ) {
+                                            if (input.charCodeAt(pos) === 8204) {
                                                 result0 = "\u200C";
                                                 pos++;
                                             } else {
@@ -825,24 +817,17 @@ var result = {
                                             }
                                             if (result0 === null) {
                                                 pos0 = pos;
-                                                if (
-                                                    input.charCodeAt(pos) ===
-                                                    8205
-                                                ) {
+                                                if (input.charCodeAt(pos) === 8205) {
                                                     result0 = "\u200D";
                                                     pos++;
                                                 } else {
                                                     result0 = null;
                                                     if (reportFailures === 0) {
-                                                        matchFailed(
-                                                            '"\\u200D"'
-                                                        );
+                                                        matchFailed('"\\u200D"');
                                                     }
                                                 }
                                                 if (result0 !== null) {
-                                                    result0 = (function (
-                                                        offset
-                                                    ) {
+                                                    result0 = (function (offset) {
                                                         return "\u200D";
                                                     })(pos0);
                                                 }
@@ -1885,13 +1870,7 @@ result.SyntaxError = function (expected, found, offset, line, column) {
 
         foundHumanized = found ? quote(found) : "end of input";
 
-        return (
-            "Expected " +
-            expectedHumanized +
-            " but " +
-            foundHumanized +
-            " found."
-        );
+        return "Expected " + expectedHumanized + " but " + foundHumanized + " found.";
     }
 
     this.name = "SyntaxError";

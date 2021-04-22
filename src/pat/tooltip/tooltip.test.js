@@ -111,17 +111,12 @@ describe("pat-tooltip", () => {
                 // NOTE 2:
                 // spu on "onShow" because "onShown" isn't reached due to CSS
                 // animations won't work in jsDOM.
-                const spy_show = spyOn(
-                    instance.tippy.props,
-                    "onShow"
-                ).and.callThrough();
+                const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
 
                 testutils.mouseenter($el);
                 await utils.timeout(1);
                 expect(spy_show).toHaveBeenCalled();
-                const container = document.querySelectorAll(
-                    ".tooltip-container"
-                );
+                const container = document.querySelectorAll(".tooltip-container");
                 expect(container.length).toEqual(1);
                 expect(container[0].classList.contains("wasabi")).toBeTruthy();
                 const expected = container[0].querySelector(".tippy-content")
@@ -168,8 +163,7 @@ describe("pat-tooltip", () => {
 
             it("with multiple values, all will be applied.", async (done) => {
                 const $el = testutils.createTooltip({
-                    data:
-                        "source: title; trigger: click; class: wasabi kohlrabi",
+                    data: "source: title; trigger: click; class: wasabi kohlrabi",
                 });
                 new pattern($el);
                 await utils.timeout(1);
@@ -180,9 +174,7 @@ describe("pat-tooltip", () => {
                 const container = document.querySelector(".tooltip-container");
                 expect(container.classList.contains("wasabi")).toBeTruthy();
                 expect(container.classList.contains("kohlrabi")).toBeTruthy();
-                expect(
-                    container.classList.contains("tooltip-container")
-                ).toBeTruthy();
+                expect(container.classList.contains("tooltip-container")).toBeTruthy();
 
                 done();
             });
@@ -206,9 +198,7 @@ describe("pat-tooltip", () => {
                     testutils.stopwatch(spy_trigger, "onTrigger", timer)
                 );
                 const spy_show = spyOn(instance.tippy.props, "onShow");
-                spy_show.and.callFake(
-                    testutils.stopwatch(spy_show, "onShow", timer)
-                );
+                spy_show.and.callFake(testutils.stopwatch(spy_show, "onShow", timer));
 
                 testutils.mouseenter($el);
                 await utils.timeout(1000);
@@ -443,14 +433,8 @@ describe("pat-tooltip", () => {
             const instance2 = new pattern($el2);
             await utils.timeout(1);
 
-            const spy_show1 = spyOn(
-                instance1.tippy.props,
-                "onShow"
-            ).and.callThrough();
-            const spy_show2 = spyOn(
-                instance2.tippy.props,
-                "onShow"
-            ).and.callThrough();
+            const spy_show1 = spyOn(instance1.tippy.props, "onShow").and.callThrough();
+            const spy_show2 = spyOn(instance2.tippy.props, "onShow").and.callThrough();
 
             let container;
 
@@ -461,9 +445,9 @@ describe("pat-tooltip", () => {
             expect(spy_show2).not.toHaveBeenCalled();
             container = document.querySelectorAll(".tippy-box");
             expect(container.length).toEqual(1);
-            expect(
-                container[0].querySelector(".tippy-content").textContent
-            ).toBe(title1);
+            expect(container[0].querySelector(".tippy-content").textContent).toBe(
+                title1
+            );
 
             spy_show1.calls.reset();
             spy_show2.calls.reset();
@@ -475,9 +459,9 @@ describe("pat-tooltip", () => {
             expect(spy_show2).toHaveBeenCalled();
             container = document.querySelectorAll(".tippy-box");
             expect(container.length).toEqual(2);
-            expect(
-                container[1].querySelector(".tippy-content").textContent
-            ).toBe(title2);
+            expect(container[1].querySelector(".tippy-content").textContent).toBe(
+                title2
+            );
 
             done();
         });
@@ -495,9 +479,7 @@ describe("pat-tooltip", () => {
             await utils.timeout(1);
 
             const container = document.querySelector(".tippy-box");
-            expect(container.getAttribute("data-placement")).toBe(
-                "right-start"
-            );
+            expect(container.getAttribute("data-placement")).toBe("right-start");
 
             done();
         });
@@ -588,9 +570,7 @@ describe("pat-tooltip", () => {
                 await utils.timeout(1);
 
                 const container = document.querySelector(".tippy-box");
-                expect(container.getAttribute("data-placement")).toBe(
-                    "bottom-start"
-                );
+                expect(container.getAttribute("data-placement")).toBe("bottom-start");
 
                 done();
             });
@@ -605,9 +585,7 @@ describe("pat-tooltip", () => {
                 await utils.timeout(1);
 
                 const container = document.querySelector(".tippy-box");
-                expect(container.getAttribute("data-placement")).toBe(
-                    "bottom-end"
-                );
+                expect(container.getAttribute("data-placement")).toBe("bottom-end");
 
                 done();
             });
@@ -637,9 +615,7 @@ describe("pat-tooltip", () => {
                 await utils.timeout(1);
 
                 const container = document.querySelector(".tippy-box");
-                expect(container.getAttribute("data-placement")).toBe(
-                    "left-start"
-                );
+                expect(container.getAttribute("data-placement")).toBe("left-start");
 
                 done();
             });
@@ -654,9 +630,7 @@ describe("pat-tooltip", () => {
                 await utils.timeout(1);
 
                 const container = document.querySelector(".tippy-box");
-                expect(container.getAttribute("data-placement")).toBe(
-                    "left-end"
-                );
+                expect(container.getAttribute("data-placement")).toBe("left-end");
 
                 done();
             });
@@ -688,20 +662,12 @@ describe("pat-tooltip", () => {
                 const instance = new pattern($el);
                 await utils.timeout(1);
 
-                const spy_show = spyOn(
-                    instance.tippy.props,
-                    "onShow"
-                ).and.callThrough();
-                const spy_hide = spyOn(
-                    instance.tippy.props,
-                    "onHide"
-                ).and.callThrough();
+                const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
+                const spy_hide = spyOn(instance.tippy.props, "onHide").and.callThrough();
 
                 let containers;
 
-                expect(
-                    el.classList.contains("tooltip-active-click")
-                ).toBeFalsy();
+                expect(el.classList.contains("tooltip-active-click")).toBeFalsy();
                 expect(el.classList.contains("tooltip-inactive")).toBeTruthy();
 
                 testutils.click($el);
@@ -710,9 +676,7 @@ describe("pat-tooltip", () => {
                 expect(spy_show).toHaveBeenCalled();
                 containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
-                expect(
-                    el.classList.contains("tooltip-active-click")
-                ).toBeTruthy();
+                expect(el.classList.contains("tooltip-active-click")).toBeTruthy();
                 expect(el.classList.contains("tooltip-inactive")).toBeFalsy();
 
                 testutils.click($el);
@@ -725,9 +689,7 @@ describe("pat-tooltip", () => {
                 // TODO: inspect, why container are not removed.
                 //containers = document.querySelectorAll(".tippy-box");
                 //expect(containers.length).toEqual(0);
-                expect(
-                    el.classList.contains("tooltip-active-click")
-                ).toBeFalsy();
+                expect(el.classList.contains("tooltip-active-click")).toBeFalsy();
                 expect(el.classList.contains("tooltip-inactive")).toBeTruthy();
 
                 done();
@@ -740,20 +702,12 @@ describe("pat-tooltip", () => {
                 const instance = new pattern($el);
                 await utils.timeout(1);
 
-                const spy_show = spyOn(
-                    instance.tippy.props,
-                    "onShow"
-                ).and.callThrough();
-                const spy_hide = spyOn(
-                    instance.tippy.props,
-                    "onHide"
-                ).and.callThrough();
+                const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
+                const spy_hide = spyOn(instance.tippy.props, "onHide").and.callThrough();
 
                 let containers;
 
-                expect(
-                    el.classList.contains("tooltip-active-click")
-                ).toBeFalsy();
+                expect(el.classList.contains("tooltip-active-click")).toBeFalsy();
                 expect(el.classList.contains("tooltip-inactive")).toBeFalsy();
 
                 testutils.click($el);
@@ -762,9 +716,7 @@ describe("pat-tooltip", () => {
                 expect(spy_show).toHaveBeenCalled();
                 containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
-                expect(
-                    el.classList.contains("tooltip-active-click")
-                ).toBeFalsy();
+                expect(el.classList.contains("tooltip-active-click")).toBeFalsy();
                 expect(el.classList.contains("tooltip-inactive")).toBeFalsy();
 
                 testutils.click($el);
@@ -777,9 +729,7 @@ describe("pat-tooltip", () => {
                 // TODO: inspect, why container are not removed.
                 //containers = document.querySelectorAll(".tippy-box");
                 //expect(containers.length).toEqual(0);
-                expect(
-                    el.classList.contains("tooltip-active-click")
-                ).toBeFalsy();
+                expect(el.classList.contains("tooltip-active-click")).toBeFalsy();
                 expect(el.classList.contains("tooltip-inactive")).toBeFalsy();
 
                 done();
@@ -792,16 +742,11 @@ describe("pat-tooltip", () => {
                 const instance = new pattern($el);
                 await utils.timeout(1);
 
-                const spy_show = spyOn(
-                    instance.tippy.props,
-                    "onShow"
-                ).and.callThrough();
+                const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
 
                 let containers;
 
-                expect(
-                    el.classList.contains("tooltip-active-hover")
-                ).toBeFalsy();
+                expect(el.classList.contains("tooltip-active-hover")).toBeFalsy();
                 expect(el.classList.contains("tooltip-inactive")).toBeTruthy();
 
                 testutils.mouseenter($el);
@@ -810,9 +755,7 @@ describe("pat-tooltip", () => {
                 expect(spy_show).toHaveBeenCalled();
                 containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
-                expect(
-                    el.classList.contains("tooltip-active-hover")
-                ).toBeTruthy();
+                expect(el.classList.contains("tooltip-active-hover")).toBeTruthy();
                 expect(el.classList.contains("tooltip-inactive")).toBeFalsy();
 
                 done();
@@ -867,16 +810,12 @@ describe("pat-tooltip", () => {
                     testutils.mouseenter($el);
                     await utils.timeout(1);
                     expect(spy_hide).not.toHaveBeenCalled();
-                    expect(
-                        document.querySelectorAll(".tippy-box").length
-                    ).toEqual(1);
+                    expect(document.querySelectorAll(".tippy-box").length).toEqual(1);
 
                     testutils.mouseleave($el);
                     await utils.timeout(1);
                     expect(spy_hide).toHaveBeenCalled();
-                    expect(
-                        document.querySelectorAll(".tippy-box").length
-                    ).toEqual(0);
+                    expect(document.querySelectorAll(".tippy-box").length).toEqual(0);
 
                     done();
                 });
@@ -901,9 +840,9 @@ describe("pat-tooltip", () => {
                     await utils.timeout(1);
 
                     expect(spy_show).toHaveBeenCalled();
-                    expect(
-                        document.querySelector(".tippy-box").textContent
-                    ).toBe(content);
+                    expect(document.querySelector(".tippy-box").textContent).toBe(
+                        content
+                    );
 
                     done();
                 });
@@ -971,8 +910,7 @@ describe("pat-tooltip", () => {
                 await utils.timeout(1);
 
                 expect(
-                    document.querySelectorAll("#child3 > [data-tippy-root]")
-                        .length
+                    document.querySelectorAll("#child3 > [data-tippy-root]").length
                 ).toEqual(1);
 
                 done();
@@ -994,9 +932,8 @@ describe("pat-tooltip", () => {
             testutils.click($el);
             await utils.timeout(1);
 
-            const expected = document.querySelector(
-                ".tooltip-container .tippy-content"
-            ).textContent;
+            const expected = document.querySelector(".tooltip-container .tippy-content")
+                .textContent;
             expect(expected).toBe(title);
 
             done();
@@ -1014,9 +951,7 @@ describe("pat-tooltip", () => {
             testutils.click($el);
             await utils.timeout(1);
 
-            expect(document.querySelector(".tippy-box").textContent).toBe(
-                content
-            );
+            expect(document.querySelector(".tippy-box").textContent).toBe(content);
 
             done();
         });
@@ -1035,14 +970,8 @@ describe("pat-tooltip", () => {
             const instance = new pattern($el);
             await utils.timeout(1);
 
-            const spy_content = spyOn(
-                instance,
-                "_getContent"
-            ).and.callThrough();
-            const spy_show = spyOn(
-                instance.tippy.props,
-                "onShow"
-            ).and.callThrough();
+            const spy_content = spyOn(instance, "_getContent").and.callThrough();
+            const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1050,9 +979,9 @@ describe("pat-tooltip", () => {
             expect(global.fetch).toHaveBeenCalled();
             expect(spy_content).toHaveBeenCalled();
             expect(spy_show).toHaveBeenCalled();
-            expect(
-                document.querySelector(".tippy-box .tippy-content").textContent
-            ).toBe("External content fetched via an HTTP request.");
+            expect(document.querySelector(".tippy-box .tippy-content").textContent).toBe(
+                "External content fetched via an HTTP request."
+            );
 
             global.fetch.mockClear();
             delete global.fetch;
@@ -1074,14 +1003,8 @@ describe("pat-tooltip", () => {
             const instance = new pattern($el);
             await utils.timeout(1);
 
-            const spy_content = spyOn(
-                instance,
-                "_getContent"
-            ).and.callThrough();
-            const spy_show = spyOn(
-                instance.tippy.props,
-                "onShow"
-            ).and.callThrough();
+            const spy_content = spyOn(instance, "_getContent").and.callThrough();
+            const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1154,19 +1077,16 @@ describe("pat-tooltip", () => {
             await utils.timeout(1);
 
             const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
-            const spy_show = spyOn(
-                instance.tippy.props,
-                "onShow"
-            ).and.callThrough();
+            const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
 
             expect(spy_ajax).toHaveBeenCalled();
             expect(spy_show).toHaveBeenCalled();
-            expect(
-                document.querySelector(".tippy-box .tippy-content").textContent
-            ).toBe("this will be extracted");
+            expect(document.querySelector(".tippy-box .tippy-content").textContent).toBe(
+                "this will be extracted"
+            );
 
             global.fetch.mockClear();
             delete global.fetch;
@@ -1192,9 +1112,7 @@ describe("pat-tooltip", () => {
 
             expect(spy_ajax).toHaveBeenCalled();
             expect(spy_show).toHaveBeenCalled();
-            const content = document.querySelector(
-                ".tippy-box .tippy-content h2"
-            );
+            const content = document.querySelector(".tippy-box .tippy-content h2");
             expect(content).toBeTruthy();
             expect(content.textContent).toBe("hello.");
 
@@ -1225,10 +1143,7 @@ this will be extracted.
             await utils.timeout(1);
 
             const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
-            const spy_show = spyOn(
-                instance.tippy.props,
-                "onShow"
-            ).and.callThrough();
+            const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1254,9 +1169,7 @@ this will be extracted.
                 global.fetch = jest
                     .fn()
                     .mockImplementation(
-                        mockFetch(
-                            "External content fetched via an HTTP request."
-                        )
+                        mockFetch("External content fetched via an HTTP request.")
                     );
 
                 const $el = testutils.createTooltip({
@@ -1266,15 +1179,9 @@ this will be extracted.
                 const instance = new pattern($el);
                 await utils.timeout(1);
 
-                const spy_ajax = spyOn(
-                    instance,
-                    "_getContent"
-                ).and.callThrough();
+                const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
                 const spy_fetch = spyOn(window, "fetch").and.callThrough();
-                const spy_show = spyOn(
-                    instance.tippy.props,
-                    "onShow"
-                ).and.callThrough();
+                const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
 
                 // 1
                 testutils.click($el);
@@ -1293,8 +1200,7 @@ this will be extracted.
                 expect(spy_fetch).toHaveBeenCalledTimes(1);
 
                 expect(
-                    document.querySelector(".tippy-box .tippy-content")
-                        .textContent
+                    document.querySelector(".tippy-box .tippy-content").textContent
                 ).toBe("External content fetched via an HTTP request.");
 
                 global.fetch.mockClear();
@@ -1307,9 +1213,7 @@ this will be extracted.
                 global.fetch = jest
                     .fn()
                     .mockImplementation(
-                        mockFetch(
-                            "External content fetched via an HTTP request."
-                        )
+                        mockFetch("External content fetched via an HTTP request.")
                     );
 
                 const $el = testutils.createTooltip({
@@ -1319,15 +1223,9 @@ this will be extracted.
                 const instance = new pattern($el);
                 await utils.timeout(1);
 
-                const spy_ajax = spyOn(
-                    instance,
-                    "_getContent"
-                ).and.callThrough();
+                const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
                 const spy_fetch = spyOn(window, "fetch").and.callThrough();
-                const spy_show = spyOn(
-                    instance.tippy.props,
-                    "onShow"
-                ).and.callThrough();
+                const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
 
                 // 1
                 testutils.mouseenter($el);
@@ -1346,8 +1244,7 @@ this will be extracted.
                 expect(spy_fetch).toHaveBeenCalledTimes(1);
 
                 expect(
-                    document.querySelector(".tippy-box .tippy-content")
-                        .textContent
+                    document.querySelector(".tippy-box .tippy-content").textContent
                 ).toBe("External content fetched via an HTTP request.");
 
                 global.fetch.mockClear();
@@ -1360,9 +1257,7 @@ this will be extracted.
 
     describe("patterns-injected events", () => {
         it("it throws the ``patterns-injected`` event", async (done) => {
-            global.fetch = jest
-                .fn()
-                .mockImplementation(mockFetch("External content"));
+            global.fetch = jest.fn().mockImplementation(mockFetch("External content"));
 
             let called = false;
             $(document.body).on("patterns-injected", () => {
@@ -1391,9 +1286,7 @@ this will be extracted.
             // TODO: fix tests
             global.fetch = jest
                 .fn()
-                .mockImplementation(
-                    mockFetch(`<input type="checkbox" name="test"/>`)
-                );
+                .mockImplementation(mockFetch(`<input type="checkbox" name="test"/>`));
 
             const form = document.createElement("form");
             form.setAttribute("action", "test.html");
@@ -1408,14 +1301,8 @@ this will be extracted.
             await utils.timeout(1);
 
             const instance2 = new autosubmit($(form));
-            const spy_handler1 = spyOn(
-                instance2,
-                "refreshListeners"
-            ).and.callThrough();
-            const spy_handler2 = spyOn(
-                instance2,
-                "onInputChange"
-            ).and.callThrough();
+            const spy_handler1 = spyOn(instance2, "refreshListeners").and.callThrough();
+            const spy_handler2 = spyOn(instance2, "onInputChange").and.callThrough();
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch

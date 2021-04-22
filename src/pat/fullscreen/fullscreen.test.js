@@ -41,10 +41,7 @@ describe("Open in fullscreen", function () {
         var fs_el = document.querySelector("#fs");
         var pat_el = document.createElement("button");
         pat_el.setAttribute("class", "pat-fullscreen");
-        pat_el.setAttribute(
-            "data-pat-fullscreen",
-            "selector:.fs;close-button:show"
-        );
+        pat_el.setAttribute("data-pat-fullscreen", "selector:.fs;close-button:show");
         pat_el.appendChild(document.createTextNode("Open in fullscreen"));
         fs_el.appendChild(pat_el);
 

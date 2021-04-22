@@ -1,0 +1,137 @@
+import Pattern from "./display-time";
+import utils from "../../core/utils";
+import tzmock from "timezone-mock";
+
+describe("pat-display-time tests", () => {
+    beforeEach(function () {
+        tzmock.register("US/Pacific");
+    });
+
+    afterEach(function () {
+        tzmock.unregister();
+        document.body.innerHTML = "";
+    });
+
+    it("default", async (done) => {
+        document.body.innerHTML = `
+          <time
+              class="pat-display-time"
+              datetime="2021-04-22T10:00Z">
+          </time>
+        `;
+        const el = document.querySelector(".pat-display-time");
+
+        Pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.textContent).toBe("2021-04-22T03:00:00-07:00");
+
+        done();
+    });
+
+    it("Example setting the output format explicitly", async (done) => {
+        document.body.innerHTML = `
+          <time
+              class="pat-display-time"
+              datetime="2021-04-22T10:00Z"
+              data-pat-display-time="output-format: MMMM dddd Do YYYY, h:mm:ss a">
+          </time>
+        `;
+        const el = document.querySelector(".pat-display-time");
+
+        Pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.textContent).toBe("April Thursday 22nd 2021, 3:00:00 am");
+
+        done();
+    });
+
+    it("Example setting the output format explicitly in German", async (done) => {
+        document.body.innerHTML = `
+          <time
+              class="pat-display-time"
+              datetime="2021-04-22T23:00Z"
+              data-pat-display-time="output-format: MMMM dddd Do YYYY, h:mm:ss; locale: de">
+          </time>
+        `;
+        const el = document.querySelector(".pat-display-time");
+
+        Pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.textContent).toBe("April Donnerstag 22. 2021, 4:00:00");
+
+        done();
+    });
+
+    it("Output formatted as local", async (done) => {
+        document.body.innerHTML = `
+          <time
+              class="pat-display-time"
+              datetime="2021-04-22T10:00Z"
+              data-pat-display-time="output-format: L">
+          </time>
+        `;
+        const el = document.querySelector(".pat-display-time");
+
+        Pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.textContent).toBe("04/22/2021");
+
+        done();
+    });
+    it("Output formatted as 'from now'", async (done) => {
+        document.body.innerHTML = `
+          <time
+              class="pat-display-time"
+              datetime="2000-04-22T10:00Z"
+              data-pat-display-time="from-now: true">
+          </time>
+        `;
+        const el = document.querySelector(".pat-display-time");
+
+        Pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.textContent.indexOf("years ago") >= 0).toBe(true);
+
+        done();
+    });
+    it("Output formatted as 'from now' with no suffix", async (done) => {
+        document.body.innerHTML = `
+          <time
+              class="pat-display-time"
+              datetime="2000-04-22T10:00Z"
+              data-pat-display-time="from-now: true; no-suffix: true">
+          </time>
+        `;
+        const el = document.querySelector(".pat-display-time");
+
+        Pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.textContent.indexOf("years") >= 0).toBe(true);
+        expect(el.textContent.indexOf("years ago") === -1).toBe(true);
+
+        done();
+    });
+    it("Output formatted as 'from now' with no suffix in german", async (done) => {
+        document.body.innerHTML = `
+          <time
+              class="pat-display-time"
+              datetime="2000-04-22T10:00Z"
+              data-pat-display-time="from-now: true; no-suffix: true; locale: de">
+          </time>
+        `;
+        const el = document.querySelector(".pat-display-time");
+
+        Pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.textContent.indexOf("Jahre") >= 0).toBe(true);
+
+        done();
+    });
+});

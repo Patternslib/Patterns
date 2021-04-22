@@ -47,10 +47,7 @@ IEConsoleWriter.prototype = {
     output: function (log_name, level, messages) {
         // console.log will magically appear in IE8 when the user opens the
         // F12 Developer Tools, so we have to test for it every time.
-        if (
-            typeof window.console === "undefined" ||
-            typeof console.log === "undefined"
-        )
+        if (typeof window.console === "undefined" || typeof console.log === "undefined")
             return;
         if (log_name) messages.unshift(log_name + ":");
         var message = messages.join(" ");

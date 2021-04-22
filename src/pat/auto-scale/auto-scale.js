@@ -67,14 +67,8 @@ export default Base.extend({
             height: parseInt(style.height, 10),
         };
 
-        available_space.width = Math.min(
-            available_space.width,
-            this.options.max.width
-        );
-        available_space.width = Math.max(
-            available_space.width,
-            this.options.min.width
-        );
+        available_space.width = Math.min(available_space.width, this.options.max.width);
+        available_space.width = Math.max(available_space.width, this.options.min.width);
         available_space.height = Math.min(
             available_space.height,
             this.options.max.height

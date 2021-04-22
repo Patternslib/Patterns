@@ -177,9 +177,7 @@ describe("pat-validation", function () {
         await utils.timeout(1); // wait a tick for async to settle.
         $input.trigger("change");
         expect($el.find("em.warning").length).toBe(1);
-        expect($el.find("em.warning").text()).toBe(
-            "This value must be an integer"
-        );
+        expect($el.find("em.warning").text()).toBe("This value must be an integer");
 
         $el = $(
             '<form class="pat-validation">' +
@@ -214,9 +212,7 @@ describe("pat-validation", function () {
         await utils.timeout(1); // wait a tick for async to settle.
         $input.trigger("change");
         expect($el.find("em.warning").length).toBe(1);
-        expect($el.find("em.warning").text()).toBe(
-            "This value must be a valid date"
-        );
+        expect($el.find("em.warning").text()).toBe("This value must be a valid date");
 
         $input.val("2000-02-28");
         $input.trigger("change");
@@ -261,15 +257,13 @@ describe("pat-validation", function () {
             $el
                 .find("em.warning")
                 .text()
-                .indexOf("The start date must on or before the end date.") !==
-                -1
+                .indexOf("The start date must on or before the end date.") !== -1
         ).toBe(true);
         expect(
             $el
                 .find("em.warning")
                 .text()
-                .indexOf("The end date must on or before the start date.") !==
-                -1
+                .indexOf("The end date must on or before the start date.") !== -1
         ).toBe(true);
 
         // Fulfill the before/after constraint - same date
@@ -374,18 +368,14 @@ describe("pat-validation", function () {
         await utils.timeout(1); // wait a tick for async to settle.
         $input1.trigger("change");
         expect($el.find("em.warning").length).toBe(1);
-        expect($el.find("em.warning").text()).toBe(
-            "This value must be an integer"
-        );
+        expect($el.find("em.warning").text()).toBe("This value must be an integer");
 
         var $input2 = $el.find(':input[name="integer2"]');
         $input2.val(5.1);
         $input2.trigger("change");
         expect($el.find("em.warning").length).toBe(2);
         expect($input2.next("em.warning").length).toBe(1);
-        expect($input2.next("em.warning").text()).toBe(
-            "This value must be an integer"
-        );
+        expect($input2.next("em.warning").text()).toBe("This value must be an integer");
 
         $input2.val(5);
         $input2.trigger("change");
@@ -409,9 +399,7 @@ describe("pat-validation", function () {
         await utils.timeout(1); // wait a tick for async to settle.
         $input.trigger("change");
         expect($el.find("em.warning").length).toBe(1);
-        expect($el.find("em.warning").text()).toBe(
-            "This value must be an integer"
-        );
+        expect($el.find("em.warning").text()).toBe("This value must be an integer");
         expect($el.find("#form-buttons-create")[0].disabled).toBe(true);
 
         $input.val(5);

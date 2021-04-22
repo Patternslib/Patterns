@@ -18,9 +18,7 @@ var Markdown = Base.extend({
              * to pat-inject. The following only applies to standalone, when
              * $el is explicitly configured with the pat-markdown trigger.
              */
-            var source = this.$el.is(":input")
-                ? this.$el.val()
-                : this.$el.text();
+            var source = this.$el.is(":input") ? this.$el.val() : this.$el.text();
             let rendered = await this.render(source);
             rendered.replaceAll(this.$el);
         }
@@ -35,10 +33,7 @@ var Markdown = Base.extend({
                 {
                     type: "output",
                     filter: function (source) {
-                        return source.replace(/(<pre>)?<code>/gi, function (
-                            match,
-                            pre
-                        ) {
+                        return source.replace(/(<pre>)?<code>/gi, function (match, pre) {
                             if (pre) {
                                 return '<pre class="pat-syntax-highlight" tabIndex="0"><code data-inner="1">';
                             } else {
@@ -65,18 +60,13 @@ var Markdown = Base.extend({
         if (cfg.source && (header = /^#+\s*(.*)/.exec(cfg.source)) !== null) {
             source = this.extractSection(source, header[1]);
             if (source === null) {
-                log.warn(
-                    'Could not find section "' + cfg.source + '" in ' + cfg.url
-                );
+                log.warn('Could not find section "' + cfg.source + '" in ' + cfg.url);
                 return $("<div/>").attr("data-src", cfg.url);
             }
             source += "\n"; // Needed for some markdown syntax
         }
         const rendered = await this.render(source);
-        return rendered.attr(
-            "data-src",
-            cfg.source ? cfg.url + cfg.source : cfg.url
-        );
+        return rendered.attr("data-src", cfg.source ? cfg.url + cfg.source : cfg.url);
     },
 
     extractSection(text, header) {

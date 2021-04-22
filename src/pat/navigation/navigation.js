@@ -42,10 +42,7 @@ export default Base.extend({
                 // set current class on target
                 $target.addClass(current);
                 // If target's parent is an LI, also set current class there
-                $target
-                    .parents(this.options.itemWrapper)
-                    .first()
-                    .addClass(current);
+                $target.parents(this.options.itemWrapper).first().addClass(current);
                 this._updatenavpath($el);
             }.bind(this)
         );
@@ -88,8 +85,8 @@ export default Base.extend({
         if (
             this.options.itemWrapper &&
             $el[0].querySelectorAll("." + current).length > 0 &&
-            $el[0].querySelectorAll(this.options.itemWrapper + "." + current)
-                .length === 0
+            $el[0].querySelectorAll(this.options.itemWrapper + "." + current).length ===
+                0
         ) {
             $("." + current, $el)
                 .parents(this.options.itemWrapper)

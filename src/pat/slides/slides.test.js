@@ -29,10 +29,7 @@ describe("pat-slides", function () {
         });
 
         it("Multiple parameters", function () {
-            expect(pattern._collapse_ids(["foo", "bar"])).toEqual([
-                "foo",
-                "bar",
-            ]);
+            expect(pattern._collapse_ids(["foo", "bar"])).toEqual(["foo", "bar"]);
         });
     });
 
@@ -40,9 +37,7 @@ describe("pat-slides", function () {
         it("Remove slides from DOM", function () {
             var $show = $("<div/>", { class: "pat-slides" });
             for (var i = 1; i <= 4; i++)
-                $("<div/>", { class: "slide", id: "slide" + i }).appendTo(
-                    $show
-                );
+                $("<div/>", { class: "slide", id: "slide" + i }).appendTo($show);
             pattern._remove_slides($show, ["slide1", "slide3"]);
             var ids = $.makeArray(
                 $show.find(".slide").map(function (idx, el) {
@@ -55,9 +50,7 @@ describe("pat-slides", function () {
         it.skip("Trigger reset when removing slides", function () {
             var $show = $("<div/>", { class: "pat-slides" });
             for (var i = 1; i <= 4; i++) {
-                $("<div/>", { class: "slide", id: "slide" + i }).appendTo(
-                    $show
-                );
+                $("<div/>", { class: "slide", id: "slide" + i }).appendTo($show);
             }
             jest.spyOn(utils, "debounce").mockImplementation((func) => {
                 return func;
@@ -71,9 +64,7 @@ describe("pat-slides", function () {
         it("Do not trigger reset when not doing anything", function () {
             var $show = $("<div/>", { class: "pat-slides" });
             for (var i = 1; i <= 2; i++)
-                $("<div/>", { class: "slide", id: "slide" + i }).appendTo(
-                    $show
-                );
+                $("<div/>", { class: "slide", id: "slide" + i }).appendTo($show);
             var spy_reset = spyOn(pattern, "_reset");
             pattern._remove_slides($show, ["slide1", "slide2"]);
             expect(spy_reset).not.toHaveBeenCalled();

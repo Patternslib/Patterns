@@ -52,8 +52,7 @@ describe("pat-datetime-picker", function () {
         ).toBe(day);
 
         expect(
-            document.querySelector(".pika-lendar th:first-child abbr")
-                .textContent
+            document.querySelector(".pika-lendar th:first-child abbr").textContent
         ).toBe("Sun");
     });
 
@@ -72,8 +71,7 @@ describe("pat-datetime-picker", function () {
         document.querySelector("input[type=text]").click();
 
         expect(
-            document.querySelector(".pika-lendar th:first-child abbr")
-                .textContent
+            document.querySelector(".pika-lendar th:first-child abbr").textContent
         ).toBe("Mon");
     });
 
@@ -124,9 +122,9 @@ describe("pat-datetime-picker", function () {
         await utils.timeout(1); // wait a tick for async to settle.
         document.querySelector("input[type=text]").click();
 
-        expect(
-            document.querySelectorAll(".pika-lendar .pika-week")[0].textContent
-        ).toBe("35");
+        expect(document.querySelectorAll(".pika-lendar .pika-week")[0].textContent).toBe(
+            "35"
+        );
     });
 
     it("Test today and clear buttons.", async function () {

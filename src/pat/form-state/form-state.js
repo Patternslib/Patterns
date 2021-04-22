@@ -100,18 +100,10 @@ var _ = {
 
         var time = new Date(),
             timestr =
-                time.getHours() +
-                ":" +
-                time.getMinutes() +
-                ":" +
-                time.getSeconds();
+                time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
         $form.find("time.last-saved").remove();
         $form.prepend(
-            "<time class='last-saved' datetime='" +
-                timestr +
-                "'>" +
-                timestr +
-                "</time>"
+            "<time class='last-saved' datetime='" + timestr + "'>" + timestr + "</time>"
         );
 
         $form.addClass("saved");

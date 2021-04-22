@@ -104,8 +104,7 @@ var methods = {
                     setTimeout(fn, Math.floor(data.time * 1000));
                 } else {
                     var now = new Date();
-                    var diff =
-                        Math.floor(data.time * 1000) - (now - data.lastEvent);
+                    var diff = Math.floor(data.time * 1000) - (now - data.lastEvent);
                     if (diff > 0) {
                         // the timeout has not ocurred, so set the timeout again
                         setTimeout(fn, diff + 100);
@@ -123,10 +122,7 @@ var methods = {
 
 $.fn.timeout = function (method) {
     if (methods[method]) {
-        return methods[method].apply(
-            this,
-            Array.prototype.slice.call(arguments, 1)
-        );
+        return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
     } else if (typeof method === "object" || !method) {
         return methods.init.apply(this, arguments);
     } else {
@@ -147,19 +143,15 @@ $.extend($.expr[":"], {
 
         vertically_scrollable =
             element.clientHeight < element.scrollHeight &&
-            ($.inArray($(element).css("overflowY"), ["scroll", "auto"]) !==
-                -1 ||
-                $.inArray($(element).css("overflow"), ["scroll", "auto"]) !==
-                    -1);
+            ($.inArray($(element).css("overflowY"), ["scroll", "auto"]) !== -1 ||
+                $.inArray($(element).css("overflow"), ["scroll", "auto"]) !== -1);
 
         if (vertically_scrollable) return true;
 
         horizontally_scrollable =
             element.clientWidth < element.scrollWidth &&
-            ($.inArray($(element).css("overflowX"), ["scroll", "auto"]) !==
-                -1 ||
-                $.inArray($(element).css("overflow"), ["scroll", "auto"]) !==
-                    -1);
+            ($.inArray($(element).css("overflowX"), ["scroll", "auto"]) !== -1 ||
+                $.inArray($(element).css("overflow"), ["scroll", "auto"]) !== -1);
         return horizontally_scrollable;
     },
 });
@@ -255,8 +247,7 @@ $.fn.positionAncestor = function (selector) {
         if ($ancestor.length && $ancestor.css("position") !== "static") {
             var $child = $(this);
             var childMarginEdgeLeft =
-                $child.safeOffset().left -
-                parseInt($child.css("marginLeft"), 10);
+                $child.safeOffset().left - parseInt($child.css("marginLeft"), 10);
             var childMarginEdgeTop =
                 $child.safeOffset().top - parseInt($child.css("marginTop"), 10);
             var ancestorPaddingEdgeLeft =

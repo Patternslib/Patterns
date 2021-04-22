@@ -9,7 +9,6 @@ var real_cleanData = $.cleanData;
 
 $.cleanData = function remove_cleanData(elems) {
     var i, el;
-    for (i = 0; (el = elems[i]) !== undefined; i++)
-        $(el).triggerHandler("destroy");
+    for (i = 0; (el = elems[i]) !== undefined; i++) $(el).triggerHandler("destroy");
     real_cleanData.call(this, arguments);
 };

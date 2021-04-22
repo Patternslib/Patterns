@@ -38,10 +38,7 @@ var _ = {
                 data.preview = {};
                 data.preview.element = $(opts.preview.id);
                 if (data.preview.element.length === 0) {
-                    log.error(
-                        "Invalid preview element ID supplied: " +
-                            opts.preview.id
-                    );
+                    log.error("Invalid preview element ID supplied: " + opts.preview.id);
                     return;
                 }
                 if (opts.previewWidth > 0 && opts.preview.height > 0) {
@@ -49,9 +46,7 @@ var _ = {
                     data.preview.height = opts.preview.height;
                 } else {
                     data.preview.width = data.preview.element.parent().width();
-                    data.preview.height = data.preview.element
-                        .parent()
-                        .height();
+                    data.preview.height = data.preview.element.parent().height();
                 }
             }
 
@@ -84,10 +79,8 @@ var _ = {
             // Initial coordinates
             //
             var ic = _._parseOpt(opts.initialSel);
-            if (ic.length !== 4)
-                log.warn("Invalid coordinates for initial selection");
-            else if (ic[2] - ic[0] > 0 && ic[3] - ic[1] > 0)
-                data.initialCoords = ic;
+            if (ic.length !== 4) log.warn("Invalid coordinates for initial selection");
+            else if (ic[2] - ic[0] > 0 && ic[3] - ic[1] > 0) data.initialCoords = ic;
 
             data.aspectRatio = opts.aspectRatio;
             data.minSize = _._parseOpt(opts.minSize);
@@ -118,9 +111,9 @@ var _ = {
     _setupInput: function ($form, prefix, name) {
         var input = $form.find("input[name=" + prefix + name + "]");
         if (input.length === 0)
-            input = $(
-                '<input type="hidden" name="' + prefix + name + '" />'
-            ).appendTo($form);
+            input = $('<input type="hidden" name="' + prefix + name + '" />').appendTo(
+                $form
+            );
         return input;
     },
 

@@ -108,30 +108,21 @@ export default Base.extend({
         );
         for (const box of chkbxs) {
             box.checked = true;
-            box.dispatchEvent(
-                new Event("change", { bubbles: true, cancelable: true })
-            );
+            box.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
         }
     },
 
     deselect_all(e) {
         e.preventDefault();
-        const chkbxs = this.find_checkboxes(
-            e.target,
-            "input[type=checkbox]:checked"
-        );
+        const chkbxs = this.find_checkboxes(e.target, "input[type=checkbox]:checked");
         for (const box of chkbxs) {
             box.checked = false;
-            box.dispatchEvent(
-                new Event("change", { bubbles: true, cancelable: true })
-            );
+            box.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
         }
     },
 
     change_checked() {
-        for (const it of [...this.all_checkboxes].concat([
-            ...this.all_radios,
-        ])) {
+        for (const it of [...this.all_checkboxes].concat([...this.all_radios])) {
             for (const label of it.labels) {
                 label.classList.remove("unchecked");
                 label.classList.remove("checked");

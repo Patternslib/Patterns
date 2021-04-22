@@ -73,17 +73,12 @@ export default Base.extend({
         } else if (this.$el[0].nodeName === "A") {
             const href = this.$el[0].href;
             const fragment =
-                (href.indexOf("#") !== -1 && href.split("#").pop()) ||
-                undefined;
+                (href.indexOf("#") !== -1 && href.split("#").pop()) || undefined;
             if (fragment) {
                 const $target = $("#" + fragment);
                 if ($target.length) {
                     if (
-                        utils.isElementInViewport(
-                            $target[0],
-                            true,
-                            this.options.offset
-                        )
+                        utils.isElementInViewport($target[0], true, this.options.offset)
                     ) {
                         // check that the anchor's target is visible
                         // if so, mark both the anchor and the target element
@@ -104,8 +99,7 @@ export default Base.extend({
         } else if (data.pattern === "scroll") {
             const href = this.$el[0].href;
             const fragment =
-                (href.indexOf("#") !== -1 && href.split("#").pop()) ||
-                undefined;
+                (href.indexOf("#") !== -1 && href.split("#").pop()) || undefined;
             if (fragment) {
                 const $target = $("#" + fragment);
                 if ($target.length) {
@@ -133,11 +127,9 @@ export default Base.extend({
                 return (
                     ["auto", "scroll"].indexOf($(el).css("overflow")) > -1 ||
                     (direction === "top" &&
-                        ["auto", "scroll"].indexOf($(el).css("overflow-y")) >
-                            -1) ||
+                        ["auto", "scroll"].indexOf($(el).css("overflow-y")) > -1) ||
                     (direction === "left" &&
-                        ["auto", "scroll"].indexOf($(el).css("overflow-x")) >
-                            -1)
+                        ["auto", "scroll"].indexOf($(el).css("overflow-x")) > -1)
                 );
             })
             .first();
@@ -148,15 +140,12 @@ export default Base.extend({
     },
 
     smoothScroll() {
-        const scroll =
-            this.options.direction == "top" ? "scrollTop" : "scrollLeft";
+        const scroll = this.options.direction == "top" ? "scrollTop" : "scrollLeft";
         const options = {};
         let scrollable;
         if (typeof this.options.offset != "undefined") {
             // apply scroll options directly
-            scrollable = this.options.selector
-                ? $(this.options.selector)
-                : this.$el;
+            scrollable = this.options.selector ? $(this.options.selector) : this.$el;
             options[scroll] = this.options.offset;
         } else if (this.options.selector === "top") {
             // Just scroll up or left, period.
@@ -181,9 +170,7 @@ export default Base.extend({
             } else {
                 const href = this.$el.attr("href");
                 fragment =
-                    href.indexOf("#") !== -1
-                        ? "#" + href.split("#").pop()
-                        : undefined;
+                    href.indexOf("#") !== -1 ? "#" + href.split("#").pop() : undefined;
             }
             const target = $(fragment);
             if (target.length === 0) {

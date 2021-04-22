@@ -115,9 +115,7 @@ describe("The Patterns parser", function () {
             var parser = new ArgumentParser();
             parser.addJSONArgument("json-color", { color: "red" });
             var opts = parser._parse('json-color: {"color": "pink"}');
-            expect(
-                _.isEqual(opts["json-color"], { color: "pink" })
-            ).toBeTruthy();
+            expect(_.isEqual(opts["json-color"], { color: "pink" })).toBeTruthy();
         });
 
         describe("the shorthand notation", function () {
@@ -242,9 +240,7 @@ describe("The Patterns parser", function () {
                 parser.addArgument("foo");
                 parser.addArgument("bar");
                 parser.addArgument("baz");
-                var opts = parser._parse(
-                    "foo: one&amp;bar: still one;baz: three"
-                );
+                var opts = parser._parse("foo: one&amp;bar: still one;baz: three");
                 expect(opts).toEqual({
                     foo: "one&amp;bar: still one",
                     baz: "three",
@@ -256,9 +252,7 @@ describe("The Patterns parser", function () {
                 parser.addArgument("foo");
                 parser.addArgument("bar");
                 parser.addArgument("baz");
-                var opts = parser._parse(
-                    "foo: one;; bar: still one;baz: three"
-                );
+                var opts = parser._parse("foo: one;; bar: still one;baz: three");
                 expect(opts).toEqual({
                     foo: "one; bar: still one",
                     baz: "three",
@@ -343,9 +337,7 @@ describe("The Patterns parser", function () {
             it("Value from data attribute", function () {
                 var parser = new ArgumentParser("mypattern");
                 parser.addArgument("selector", "default");
-                var opts = parser.parse(
-                    $('<div data-pat-mypattern="element"/>')
-                );
+                var opts = parser.parse($('<div data-pat-mypattern="element"/>'));
                 expect(opts.selector).toBe("element");
             });
 
@@ -361,9 +353,9 @@ describe("The Patterns parser", function () {
             it("Inherit value from parent data attribute", function () {
                 var parser = new ArgumentParser("mypattern");
                 parser.addArgument("selector", "default");
-                var $content = $(
-                    "<div data-pat-mypattern='parent'><span/></div>"
-                ).find("span");
+                var $content = $("<div data-pat-mypattern='parent'><span/></div>").find(
+                    "span"
+                );
                 var opts = parser.parse($content);
                 expect(opts.selector).toBe("parent");
             });
@@ -381,10 +373,9 @@ describe("The Patterns parser", function () {
             it("Parameter trumps all", function () {
                 var parser = new ArgumentParser("mypattern");
                 parser.addArgument("selector", "default");
-                var opts = parser.parse(
-                    $('<div data-pat-mypattern="element"/>'),
-                    { selector: "parameter" }
-                );
+                var opts = parser.parse($('<div data-pat-mypattern="element"/>'), {
+                    selector: "parameter",
+                });
                 expect(opts.selector).toBe("parameter");
             });
 
@@ -463,11 +454,7 @@ describe("The Patterns parser", function () {
             it("Provide multiple options to parse()", function () {
                 var parser = new ArgumentParser("mypattern");
                 parser.addArgument("value");
-                var opts = parser.parse(
-                    $(),
-                    [{ value: "one" }, { value: "two" }],
-                    true
-                );
+                var opts = parser.parse($(), [{ value: "one" }, { value: "two" }], true);
                 expect(Array.isArray(opts)).toBe(true);
                 expect(opts.length).toBe(2);
                 expect(opts[0].value).toBe("one");
@@ -724,11 +711,7 @@ describe("The Patterns parser", function () {
 
         it("Multiple simple token", function () {
             var parser = new ArgumentParser("mypattern");
-            expect(parser._split("one two three")).toEqual([
-                "one",
-                "two",
-                "three",
-            ]);
+            expect(parser._split("one two three")).toEqual(["one", "two", "three"]);
         });
 
         it("Single quoted value", function () {
