@@ -1,3 +1,17 @@
+### [4.2.1](https://github.com/Patternslib/patterns/compare/4.2.0...4.2.1) (2021-04-22)
+
+
+### Bug Fixes
+
+* **pat date picker:** styled behavior: do not format the date when no output-format is given. Also, only import display-date when it's actually used. ([ca8ddae](https://github.com/Patternslib/patterns/commit/ca8ddaedfadb6b309154d195c0323f20df03c607))
+* **pat display time:** Fix relative date / from-now option to work again. ([95e5dea](https://github.com/Patternslib/patterns/commit/95e5dea3f147b5bd5110f087049bbf36dbe3624a))
+
+
+### Maintenance
+
+* **pat display time:** Add tests with a fixed timezone. ([40bea37](https://github.com/Patternslib/patterns/commit/40bea37cdd27f3aec2d72a2fd5828ebe38bca6a4))
+* **Release process:** Fix make release-patch target to really release a patch level version. release-it does default to minor level. ([35461c4](https://github.com/Patternslib/patterns/commit/35461c4186f316994f68d7fe40b464e55d51d9a8))
+
 ## [4.2.0](https://github.com/Patternslib/patterns/compare/4.1.0...4.2.0) (2021-04-21)
 
 
