@@ -134,4 +134,19 @@ describe("pat-display-time tests", () => {
 
         done();
     });
+
+    it("Formating empty datetime clears the display.", async (done) => {
+        document.body.innerHTML = `
+          <time class="pat-display-time">
+          </time>
+        `;
+        const el = document.querySelector(".pat-display-time");
+
+        Pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.textContent).toBe("");
+
+        done();
+    });
 });

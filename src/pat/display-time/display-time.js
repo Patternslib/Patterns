@@ -42,15 +42,15 @@ export default Base.extend({
 
     format() {
         const datetime = this.el.getAttribute("datetime");
+        let out = "";
         if (datetime) {
             const date = Moment(datetime, this.options.format, this.options.strict);
-            let out;
             if (this.options.fromNow === true) {
                 out = date.fromNow(this.options.noSuffix);
             } else {
                 out = date.format(this.options.outputFormat || undefined);
             }
-            this.el.textContent = out;
         }
+        this.el.textContent = out;
     },
 });
