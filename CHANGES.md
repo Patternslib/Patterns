@@ -1,3 +1,16 @@
+### [4.2.2](https://github.com/Patternslib/patterns/compare/4.2.1...4.2.2) (2021-04-23)
+
+
+### Bug Fixes
+
+* **pat date picker:** Add test to check for working clear button in styled behavior with formatted dates. Needs previous commit to work. ([cdb7ba4](https://github.com/Patternslib/patterns/commit/cdb7ba408b277663712da1cf8354119fee1c6dc4))
+* **pat display time:** Restore old behavior and clear the pat-display-time contents on empty datetime attributes. ([58f992c](https://github.com/Patternslib/patterns/commit/58f992c25b0926c590fde30ce2ef2f7843822181))
+
+
+### Maintenance
+
+* Upgrade all version within the specified range. ([b0924a7](https://github.com/Patternslib/patterns/commit/b0924a7ccf8c5906f527ccb92296ffa0e534099b))
+
 ### [4.2.1](https://github.com/Patternslib/patterns/compare/4.2.0...4.2.1) (2021-04-22)
 
 
