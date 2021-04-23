@@ -348,7 +348,7 @@ describe("pat-date-picker", function () {
         expect(el.value).toBe("2021-03-12");
     });
 
-    it("Formatted date with clear button.", async function (done) {
+    it("Styled behavior with clear button.", async function (done) {
         document.body.innerHTML =
             '<input type="date" class="pat-date-picker" value="2021-03-09"/>';
         const el = document.querySelector("input[type=date]");
@@ -384,6 +384,62 @@ describe("pat-date-picker", function () {
         // After selecting in calendar overlay, the values are set
         expect(display_el.getAttribute("datetime")).toBe("2021-03-12");
         expect(display_el.textContent).toBe("2021-03-12");
+        expect(el.value).toBe("2021-03-12");
+
+        // ... and clear button available again
+        clear_button = display_el.querySelector(".cancel-button");
+        expect(clear_button).toBeTruthy();
+
+        clear_button.click();
+
+        // Activating the clear button again clears the values as before
+        expect(display_el.getAttribute("datetime")).toBe("");
+        expect(display_el.textContent).toBe("");
+        expect(el.value).toBe("");
+
+        // ... and the cancel button isn't available anymore.
+        clear_button = display_el.querySelector(".cancel-button");
+        expect(clear_button).toBeFalsy();
+
+        done();
+    });
+
+    it("Formatted date with clear button.", async function (done) {
+        document.body.innerHTML =
+            '<input type="date" class="pat-date-picker" value="2021-03-09" data-pat-date-picker="output-format: DD.MM.YYYY"/>';
+        const el = document.querySelector("input[type=date]");
+        pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+        const display_el = document.querySelector("time");
+
+        // Initial values on input field and time element
+        expect(display_el.getAttribute("datetime")).toBe("2021-03-09");
+        expect(display_el.textContent).toBe("09.03.2021");
+        expect(el.value).toBe("2021-03-09");
+
+        // Clear button is available
+        let clear_button = display_el.querySelector(".cancel-button");
+        expect(clear_button).toBeTruthy();
+
+        clear_button.click();
+
+        // Clear button clears input field value and time element content
+        expect(display_el.getAttribute("datetime")).toBe("");
+        expect(display_el.textContent).toBe("");
+        expect(el.value).toBe("");
+
+        // Clear button is removed when no value is present.
+        clear_button = display_el.querySelector(".cancel-button");
+        expect(clear_button).toBeFalsy();
+
+        display_el.click();
+
+        const day = document.querySelector(".pika-lendar td[data-day='12'] button"); // prettier-ignore
+        day.dispatchEvent(new Event("mousedown"));
+
+        // After selecting in calendar overlay, the values are set
+        expect(display_el.getAttribute("datetime")).toBe("2021-03-12");
+        expect(display_el.textContent).toBe("12.03.2021");
         expect(el.value).toBe("2021-03-12");
 
         // ... and clear button available again
