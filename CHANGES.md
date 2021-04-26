@@ -1,3 +1,10 @@
+### [4.2.3](https://github.com/Patternslib/patterns/compare/4.2.2...4.2.3) (2021-04-26)
+
+
+### Bug Fixes
+
+* **pat scroll:** Fix scrolling on body as scroll container. ([a099517](https://github.com/Patternslib/patterns/commit/a099517f02bcd7a03e9cc6138ee9f18a79dcd1f0))
+
 ### [4.2.2](https://github.com/Patternslib/patterns/compare/4.2.1...4.2.2) (2021-04-23)
 
 
