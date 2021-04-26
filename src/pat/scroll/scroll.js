@@ -202,6 +202,11 @@ export default Base.extend({
             }
         }
 
+        // Fix scrolling on body - need to scroll on HTML, howsoever.
+        if (scrollable[0] === document.body) {
+            scrollable = $("html");
+        }
+
         // execute the scroll
         scrollable.animate(options, {
             duration: 500,
