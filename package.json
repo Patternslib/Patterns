@@ -91,6 +91,7 @@
     "wrapper-webpack-plugin": "^2.0.0"
   },
   "resolutions": {
+    "moment": "2.27.0",
     "clean-css": "4.2.3",
     "lodash": "4.17.19",
     "serialize-javascript": "4.0.0"
