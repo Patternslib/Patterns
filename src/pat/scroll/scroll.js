@@ -184,6 +184,10 @@ define([
                 }
             }
 
+           
+            if (scrollable[0] === document.body) {
+                scrollable = $("html");
+            }
             // execute the scroll
             scrollable.animate(options, {
                 duration: 500,
