@@ -9,8 +9,8 @@ import store from "../../core/store";
 const log = logging.getLogger("calendar");
 export const parser = new Parser("calendar");
 
-parser.addArgument("calendar-controls", ""); // Calendar controls must have "id" attr set
-parser.addArgument("category-controls", "");
+parser.addArgument("calendar-controls", null); // Calendar controls must have "id" attr set
+parser.addArgument("category-controls", null);
 parser.addArgument("column-day", "dddd M/d");
 parser.addArgument("column-month", "ddd");
 parser.addArgument("column-week", "ddd M/d");
@@ -109,18 +109,21 @@ export default Base.extend({
         const fcTimeGrid = (await import("@fullcalendar/timegrid")).default;
 
         // Save some UI elements for reuse.
-        this.el_jump_next = this.el.querySelector(".jump-next");
-        this.el_jump_prev = this.el.querySelector(".jump-prev");
-        this.el_jump_today = this.el.querySelector(".jump-today");
-        this.el_view_month = this.el.querySelector(".view-month");
-        this.el_view_week = this.el.querySelector(".view-week");
-        this.el_view_day = this.el.querySelector(".view-day");
-        this.el_view_list_year = this.el.querySelector(".view-listYear");
-        this.el_view_list_month = this.el.querySelector(".view-listMonth");
-        this.el_view_list_week = this.el.querySelector(".view-listWeek");
-        this.el_view_list_day = this.el.querySelector(".view-listDay");
-        this.el_timezone = this.el.querySelector("select[name='timezone']");
-        this.el_title = this.el.querySelector(".cal-title");
+        const calendar_controls = this.options.calendarControls
+            ? document.querySelector(this.options.calendarControls)
+            : this.el;
+        this.el_jump_next = calendar_controls.querySelector(".jump-next");
+        this.el_jump_prev = calendar_controls.querySelector(".jump-prev");
+        this.el_jump_today = calendar_controls.querySelector(".jump-today");
+        this.el_view_month = calendar_controls.querySelector(".view-month");
+        this.el_view_week = calendar_controls.querySelector(".view-week");
+        this.el_view_day = calendar_controls.querySelector(".view-day");
+        this.el_view_list_year = calendar_controls.querySelector(".view-listYear");
+        this.el_view_list_month = calendar_controls.querySelector(".view-listMonth");
+        this.el_view_list_week = calendar_controls.querySelector(".view-listWeek");
+        this.el_view_list_day = calendar_controls.querySelector(".view-listDay");
+        this.el_timezone = calendar_controls.querySelector("select[name='timezone']");
+        this.el_title = calendar_controls.querySelector(".cal-title");
 
         const storage_prefix = `${this.name}-${window.location.pathname}`;
         this.storage =

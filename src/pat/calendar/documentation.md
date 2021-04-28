@@ -40,12 +40,12 @@ The calendar can be configured through a `data-pat-calendar` attribute. The avai
 
 | Property                  | Default value     | Values                                            | Description                                                                                                   | Type                   |
 | ------------------------- | ----------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| `calendar-controls`       |                   |                                                   |
-| `category-controls`       |                   |                                                   |
+| `calendar-controls`       |                   | Valid CSS selector.                               | Defines the element where the calendar UI controls are located in. If not given, the pat-calendar element is used as search context. | string |
+| `category-controls`       |                   | Valid CSS selector.                               | Defines the element where the category UI controls are located in. If not given, the pat-calendar element is used as search context. | string |
 | `column-day`              | dddd M/d          |                                                   |
 | `column-month`            | ddd               |                                                   |
 | `column-week`             | ddd M/d           |                                                   |
-| `initial-date`            | none              | ISO8601 date string (yyyy-mm-dd)                  | The initial date for the calendar. Defaults to the current date.
+| `initial-date`            |                   | ISO8601 date string (yyyy-mm-dd)                  | The initial date for the calendar. Defaults to the current date.
 | `initial-view`            | month             | month, basicWeek, basicDay, agendaWeek, agendaDay | The default view of the calendar.                                                                             | Mutually Exclusive     |
 | `drag-and-drop`           |                   | true, false                                       | Enable support for drag and drop or drag to resize of the events in the calendar.                             | Mutually Exclusive     |
 | `drop-external-events`    |                   | true, false                                       | Enable support for dragging and dropping events from outside of the calendar, into it.                        | Mutually Exclusive     |
