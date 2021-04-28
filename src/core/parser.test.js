@@ -100,6 +100,32 @@ describe("The Patterns parser", function () {
     });
 
     describe("When parsing", function () {
+        it("allows line breaks and spaces before and after the first and last argument", function (done) {
+            const parser = new ArgumentParser("mypattern");
+            parser.addArgument("selector");
+            parser.addArgument("reflector");
+            parser.addArgument("detector");
+            const content = document.createElement("div");
+            content.innerHTML = `
+                <div data-pat-mypattern="
+
+                    selector: 2;
+
+                    detector: 3;
+
+                    reflector: 4;
+
+                ">
+                </div>
+            `;
+            const opts = parser.parse(content.querySelector("[data-pat-mypattern]"));
+            expect(opts.selector).toBe("2");
+            expect(opts.detector).toBe("3");
+            expect(opts.reflector).toBe("4");
+
+            done();
+        });
+
         it("only the allowed values for an argument are parsed", function () {
             var parser = new ArgumentParser();
             parser.addArgument("color", "red", ["red", "blue"]);
