@@ -283,8 +283,6 @@ describe("Calendar tests", () => {
         const event2 = events.filter((it) => it.textContent === "Event 2")[0].closest(".fc-event"); // prettier-ignore
         const event3 = events.filter((it) => it.textContent === "Event 3")[0].closest(".fc-event"); // prettier-ignore
 
-        console.log(event3.outerHTML);
-
         expect(event1.classList.contains("pat-inject")).toBe(false);
         expect(event1.classList.contains("pat-switch")).toBe(true);
         expect(event1.hasAttribute("data-pat-inject")).toBe(false);
@@ -327,8 +325,6 @@ describe("Calendar tests", () => {
         const event2 = events.filter((it) => it.textContent === "Event 2")[0].closest(".fc-event"); // prettier-ignore
         const event3 = events.filter((it) => it.textContent === "Event 3")[0].closest(".fc-event"); // prettier-ignore
 
-        console.log(event3.outerHTML);
-
         expect(event1.classList.contains("pat-modal")).toBe(false);
         expect(event1.hasAttribute("data-pat-modal")).toBe(false);
 
@@ -364,8 +360,6 @@ describe("Calendar tests", () => {
         const event1 = events.filter((it) => it.textContent === "Event 1")[0].closest(".fc-event"); // prettier-ignore
         const event2 = events.filter((it) => it.textContent === "Event 2")[0].closest(".fc-event"); // prettier-ignore
         const event3 = events.filter((it) => it.textContent === "Event 3")[0].closest(".fc-event"); // prettier-ignore
-
-        console.log(event3.outerHTML);
 
         expect(event1.classList.contains("pat-tooltip")).toBe(false);
         expect(event1.hasAttribute("data-pat-tooltip")).toBe(false);

@@ -254,7 +254,6 @@ describe("core.dom tests", () => {
         it("don't break with DocumentFragment without a parent.", (done) => {
             const el = new DocumentFragment();
             el.innerHTML = `<div class="starthere"></div>`;
-            console.log(el.parentNode);
             const res = dom.get_parents(el.querySelector(".starthere"));
             expect(res.length).toEqual(0);
 
