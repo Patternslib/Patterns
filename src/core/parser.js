@@ -434,7 +434,7 @@ class ArgumentParser {
 
         for (const provider of $possible_config_providers) {
             let frame;
-            const data = $(provider).attr(this.attribute);
+            const data = ($(provider).attr(this.attribute) || "").trim();
             if (!data) {
                 continue;
             }
