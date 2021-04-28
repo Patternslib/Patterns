@@ -1,3 +1,16 @@
+### [4.2.4](https://github.com/Patternslib/patterns/compare/4.2.3...4.2.4) (2021-04-28)
+
+
+### Bug Fixes
+
+* **core parser:** Allow line breaks and spaces before and after pattern arguments. ([ff9c248](https://github.com/Patternslib/patterns/commit/ff9c24865d37e8b0dfdebfe8c8e44963b5e3e2ef))
+* **pat calendar:** Implement calendar-controls. ([bbbed29](https://github.com/Patternslib/patterns/commit/bbbed299404f08749eb6e8f65e62a6e88f8c7fc5))
+
+
+### Maintenance
+
+* **Tests:** Remove left-over log messages. ([058ba74](https://github.com/Patternslib/patterns/commit/058ba743cc454a8c1cd9be0260b26d8be47b5c28))
+
 ### [4.2.3](https://github.com/Patternslib/patterns/compare/4.2.2...4.2.3) (2021-04-26)
 
 
