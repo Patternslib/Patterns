@@ -2,7 +2,7 @@
 import pika
 import sys
 
-EXCHANGE = "quaive"
+EXCHANGE = "patternslib"
 
 
 if len(sys.argv) < 2:
@@ -13,11 +13,12 @@ if len(sys.argv) < 2:
     sys.exit()
 
 
-credentials = pika.PlainCredentials("admin", "admin")
+credentials = pika.PlainCredentials("guest", "guest")
 connection = pika.BlockingConnection(
     pika.ConnectionParameters(host="localhost", credentials=credentials)
 )
 channel = connection.channel()
+
 channel.exchange_declare(exchange=EXCHANGE, exchange_type="topic")
 
 routing_key = sys.argv[1]

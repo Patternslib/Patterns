@@ -33,40 +33,40 @@ import $ from "jquery";
 
 const push_kit = {
     async init() {
-        const push_url = $("meta[name=patterns-push-server-url]").attr("content"); // prettier-ignore
-        const push_exchange = $("meta[name=patterns-push-exchange-base-name]").attr("content"); // prettier-ignore
+        const url = $("meta[name=patterns-push-server]").attr("content"); // prettier-ignore
+        const exchange = $("meta[name=patterns-push-exchange]").attr("content"); // prettier-ignore
 
-        if (!push_url || !push_exchange) {
+        if (!url || !exchange) {
             return;
         }
 
-        const push_user_id = $("meta[name=patterns-push-user-id]").attr("content"); // prettier-ignore
-        const push_login = $("meta[name=patterns-push-login]").attr("content"); // prettier-ignore
-        const push_pass = $("meta[name=patterns-push-password]").attr("content"); // prettier-ignore
+        const user_id = $("meta[name=patterns-push-user-id]").attr("content"); // prettier-ignore
+        const user_login = $("meta[name=patterns-push-login]").attr("content"); // prettier-ignore
+        const user_pass = $("meta[name=patterns-push-password]").attr("content"); // prettier-ignore
 
         const StompJS = await import("@stomp/stompjs");
         const client = new StompJS.Client({
-            brokerURL: push_url,
+            brokerURL: url,
             connectHeaders: {
-                login: push_login,
-                passcode: push_pass,
+                login: user_login,
+                passcode: user_pass,
             },
             debug: function (str) {
                 console.log(str);
             },
             // reconnectDelay: 5000,
-            heartbeatIncoming: 0,
-            heartbeatOutgoing: 20000,
+            // heartbeatIncoming: 0,
+            // heartbeatOutgoing: 20000,
         });
 
         client.onConnect = () => {
             client.subscribe(
-                "/exchange/" + push_exchange + "_event/" + push_user_id + ".#",
+                "/exchange/" + exchange + "/" + user_id + ".#",
                 this.on_push_marker.bind(this)
             );
             // Only one subscription per connection is allowed. Otherwise the connection will terminate right away again.
             // client.subscribe(
-            //     "/exchange/" + push_exchange + "_notification/" + push_user_id + ".#",
+            //     "/exchange/" + exchange + "_notification/" + push_user_id + ".#",
             //     this.on_desktop_notification.bind(this)
             // );
         };
@@ -77,7 +77,7 @@ const push_kit = {
         };
 
         client.activate();
-        console.log("StompJS push support initialised on " + push_url);
+        console.log("StompJS push support initialised on " + url);
     },
 
     on_push_marker(message) {

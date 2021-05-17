@@ -1,4 +1,5 @@
 #!/bin/sh
-virtualenv .
+python -m venv .
 ./bin/pip install pika
 
+#
