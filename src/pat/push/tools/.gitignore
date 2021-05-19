@@ -1,6 +1,8 @@
 bin/
 include/
 lib/
-share/
 lib64
 pyvenv.cfg
+share/
+stamp-python
+stamp-run
