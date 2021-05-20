@@ -29,6 +29,9 @@
  * - patterns-push-password containing the password of a read only user on the message queue server used to connect.
  */
 import "regenerator-runtime/runtime"; // needed for ``await`` support
+import logging from "./logging";
+
+const logger = logging.getLogger("core push kit");
 
 const push_kit = {
     async init() {
@@ -51,7 +54,7 @@ const push_kit = {
                 passcode: user_pass,
             },
             debug: function (str) {
-                console.log(str);
+                logger.debug(str);
             },
             reconnectDelay: 5000,
             heartbeatIncoming: 0,
@@ -72,16 +75,16 @@ const push_kit = {
         };
 
         client.onStompError = (frame) => {
-            console.log("Broker reported error: " + frame.headers["message"]);
-            console.log("Additional details: " + frame.body);
+            logger.error("Broker reported error: " + frame.headers["message"]);
+            logger.debug("Additional details: " + frame.body);
         };
 
         client.activate();
-        console.log("StompJS push support initialised on " + url);
+        logger.debug("StompJS push support initialised on " + url);
     },
 
     on_push_marker(message) {
-        console.log("Received push marker: ", message);
+        logger.debug("Received push marker: ", message);
         if (!message || !message.body) {
             return;
         }
@@ -91,7 +94,7 @@ const push_kit = {
     },
 
     on_desktop_notification(message) {
-        console.log("Received desktop notification: ", message);
+        logger.debug("Received desktop notification: ", message);
         if (!message || !message.body) {
             return;
         }
@@ -103,7 +106,7 @@ const push_kit = {
 
         // Let's check if the browser supports notifications
         if (!("Notification" in window)) {
-            console.log("This browser does not support notifications.");
+            logger.error("This browser does not support notifications.");
             return;
         }
 
