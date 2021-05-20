@@ -53,9 +53,9 @@ const push_kit = {
             debug: function (str) {
                 console.log(str);
             },
-            // reconnectDelay: 5000,
-            // heartbeatIncoming: 0,
-            // heartbeatOutgoing: 20000,
+            reconnectDelay: 5000,
+            heartbeatIncoming: 0,
+            heartbeatOutgoing: 20000,
         });
 
         client.onConnect = () => {
