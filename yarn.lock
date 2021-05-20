@@ -1552,10 +1552,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@stomp/stompjs@^5.4.4":
-  version "5.4.4"
-  resolved "https://registry.yarnpkg.com/@stomp/stompjs/-/stompjs-5.4.4.tgz#f51d2edf9a00fac645dde3a494738d96ca17e5aa"
-  integrity sha512-RIzQ7MLRSJLUpTHcje1ZclnHH982amJSKC9bDxGO0wyu5OF9ROuuiLf7TxKxo1zUu7lGEYNedg9SEi87uMWDqg==
+"@stomp/stompjs@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@stomp/stompjs/-/stompjs-6.1.0.tgz#b77ca240775a7a34289b2c09618e256be761d142"
+  integrity sha512-Bt+whL0V51rSKP35OkgM1yeVu/usunpz5l1VYuoWw8mGsDMNd3W3FpWa4/4eis6QfXO3uteNGfyE21XWn0pGAQ==
 
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
