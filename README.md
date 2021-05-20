@@ -134,6 +134,15 @@ You can pass Jest any parameter it accepts, like `-t TESTPATTERN`::
     node --inspect-brk node_modules/.bin/jest --runInBand ./src/pat/tooltip/tooltip.test.js -t will.be.closed.when
 
 
+### Enabling log messages
+
+To facilitate debugging you can change the default log level through the URL query string by adding ``loglevel`` options.
+
+- ``http://www.example.com/?loglevel=DEBUG`` changes the default log level to ``DEBUG``.
+- ``http://www.example.com/?loglevel-inject=DEBUG`` changes the log level for just the inject pattern to ``DEBUG``.
+- ``http://www.example.com/?loglevel=ERROR&loglevel-inject=INFO`` changes the standard log level error, but enables messages at the ``INFO`` level for the inject pattern.
+
+
 ### Bundle build analyzation
 
 https://survivejs.com/webpack/optimizing/build-analysis/
