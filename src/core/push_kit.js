@@ -24,7 +24,7 @@
  * This pattern expects the following meta tags to be available in the page to get the necessary configuration
  * - patterns-push-server-url containing a url pointing to a message queue server. Eg. ws://127.0.0.1:15674/ws
  * - patterns-push-exchange-base-name containing a text prefix. It will append _event and _notification to that prefix and attempt to contact these two message exchanges.
- * - patterns-push-user-id containing the user id of the currently logged in user. This is necessary to subscribe to updates only for this specific user.
+ * - patterns-push-filter containing a topic filter including dot-seperated namespaces and wildcards. A commonly used filter value would be the currently logged in user. This will subscribe only to updates for this specific user.
  * - patterns-push-login containing the name of a read only user on the message queue server used to connect.
  * - patterns-push-password containing the password of a read only user on the message queue server used to connect.
  */
@@ -39,7 +39,7 @@ const push_kit = {
             return;
         }
 
-        const user_id = document.querySelector("meta[name=patterns-push-user-id]")?.content; // prettier-ignore
+        const topicfilter = document.querySelector("meta[name=patterns-push-filter]")?.content; // prettier-ignore
         const user_login = document.querySelector("meta[name=patterns-push-login]")?.content; // prettier-ignore
         const user_pass = document.querySelector("meta[name=patterns-push-password]")?.content; // prettier-ignore
 
@@ -60,13 +60,13 @@ const push_kit = {
 
         client.onConnect = () => {
             client.subscribe(
-                `/exchange/${exchange}/${user_id}.#`,
+                `/exchange/${exchange}/${topicfilter}.#`,
                 this.on_push_marker.bind(this)
             );
             // TODO: we probably want to distinguish for desktop notifications with routing_key.
             // Only one subscription per connection is allowed. Otherwise the connection will terminate right away again.
             // client.subscribe(
-            //     `/exchange/${exchange}_notification/${user_id}.#`,
+            //     `/exchange/${exchange}_notification/${topicfilter}.#`,
             //     this.on_desktop_notification.bind(this)
             // );
         };
