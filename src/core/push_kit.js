@@ -37,12 +37,14 @@ const push_kit = {
     async init() {
         const url = document.querySelector("meta[name=patterns-push-server]")?.content;
         const exchange = document.querySelector("meta[name=patterns-push-exchange]")?.content; // prettier-ignore
+        const exchange_notification = document.querySelector("meta[name=patterns-notification-exchange]")?.content; // prettier-ignore
 
-        if (!url || !exchange) {
+        if (!url || (!exchange && !exchange_notification)) {
             return;
         }
 
         const topicfilter = document.querySelector("meta[name=patterns-push-filter]")?.content; // prettier-ignore
+        const topicfilter_notification = document.querySelector("meta[name=patterns-notification-filter]")?.content; // prettier-ignore
         const user_login = document.querySelector("meta[name=patterns-push-login]")?.content; // prettier-ignore
         const user_pass = document.querySelector("meta[name=patterns-push-password]")?.content; // prettier-ignore
 
@@ -62,16 +64,21 @@ const push_kit = {
         });
 
         client.onConnect = () => {
-            client.subscribe(
-                `/exchange/${exchange}/${topicfilter}.#`,
-                this.on_push_marker.bind(this)
-            );
-            // TODO: we probably want to distinguish for desktop notifications with routing_key.
-            // Only one subscription per connection is allowed. Otherwise the connection will terminate right away again.
-            // client.subscribe(
-            //     `/exchange/${exchange}_notification/${topicfilter}.#`,
-            //     this.on_desktop_notification.bind(this)
-            // );
+            if (exchange) {
+                client.subscribe(
+                    `/exchange/${exchange}/${topicfilter}.#`,
+                    this.on_push_marker.bind(this)
+                );
+            }
+            if (exchange_notification) {
+                // TODO: should we distinguish for desktop notifications via routing_key.
+                // TODO: check following:
+                //       Only one subscription per connection is allowed. Otherwise the connection will terminate right away again.
+                client.subscribe(
+                    `/exchange/${exchange_notification}/${topicfilter_notification}.#`,
+                    this.on_desktop_notification.bind(this)
+                );
+            }
         };
 
         client.onStompError = (frame) => {
