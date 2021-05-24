@@ -22,7 +22,7 @@
  * that way, users will only receive updates explicitly directed to them.
  *
  * This pattern expects the following meta tags to be available in the page to get the necessary configuration
- * - patterns-push-server-url containing a url pointing to a message queue server. Eg. ws://127.0.0.1:15674/ws
+ * - patterns-push-url containing a url pointing to a message queue server. Eg. ws://127.0.0.1:15674/ws
  * - patterns-push-exchange-base-name containing a text prefix. It will append _event and _notification to that prefix and attempt to contact these two message exchanges.
  * - patterns-push-filter containing a topic filter including dot-seperated namespaces and wildcards. A commonly used filter value would be the currently logged in user. This will subscribe only to updates for this specific user.
  * - patterns-push-login containing the name of a read only user on the message queue server used to connect.
@@ -35,7 +35,7 @@ const logger = logging.getLogger("core push kit");
 
 const push_kit = {
     async init() {
-        const url = document.querySelector("meta[name=patterns-push-server]")?.content;
+        const url = document.querySelector("meta[name=patterns-push-url]")?.content;
         const exchange = document.querySelector("meta[name=patterns-push-exchange]")?.content; // prettier-ignore
         const exchange_notification = document.querySelector("meta[name=patterns-notification-exchange]")?.content; // prettier-ignore
 
