@@ -54,12 +54,12 @@ stamp-python:
 
 .PHONY: send-update-1
 send-update-1: stamp-python
-	./bin/python send.py fantasyfiltervalue.push_marker message_counter
+	./bin/python send.py patternslib fantasyfiltervalue message_counter
 
 
 .PHONY: send-update-2
 send-update-2: stamp-python
-	./bin/python send.py fantasyfiltervalue.push_marker message_counter2
+	./bin/python send.py patternslib fantasyfiltervalue message_counter2
 
 
 

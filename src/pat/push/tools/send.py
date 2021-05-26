@@ -2,14 +2,12 @@
 import pika
 import sys
 
-EXCHANGE = "patternslib"
 
-
-if len(sys.argv) < 2:
+if len(sys.argv) < 3:
     print("Usage:")
-    print("  python send.py ROUTING_KEY MESSAGE")
+    print("  python send.py EXCHANGE FILTER MESSAGE")
     print("Example:")
-    print("  python send.py push_marker content_updated")
+    print("  python send.py patternslib jane_doe.push_marker content_updated")
     sys.exit()
 
 
@@ -19,12 +17,13 @@ connection = pika.BlockingConnection(
 )
 channel = connection.channel()
 
-channel.exchange_declare(exchange=EXCHANGE, exchange_type="topic")
 
-routing_key = sys.argv[1]
-message = " ".join(sys.argv[2:])
+exchange = sys.argv[1]
+topicfilter = sys.argv[2]
+message = " ".join(sys.argv[3:])
 
-channel.basic_publish(exchange=EXCHANGE, routing_key=routing_key, body=message)
+channel.exchange_declare(exchange=exchange, exchange_type="topic")
+channel.basic_publish(exchange=exchange, routing_key=topicfilter, body=message)
 
-print(" [x] Sent %r:%r" % (routing_key, message))
+print(" [x] Sent %r:%r" % (topicfilter, message))
 connection.close()
