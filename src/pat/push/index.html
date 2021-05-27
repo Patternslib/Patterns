@@ -7,7 +7,7 @@
         <meta name="patterns-push-exchange" content="patternslib" />
         <meta name="patterns-push-login" content="guest" />
         <meta name="patterns-push-password" content="guest" />
-        <meta name="patterns-push-filter" content="fantasyfiltervalue" />
+        <meta name="patterns-push-filter" content="push_marker" />
         <title>Injection pattern</title>
         <link rel="stylesheet" href="/style/common.css" type="text/css" />
         <script
@@ -21,16 +21,10 @@
         <h1>Push examples</h1>
 
         <p>
-            The examples here listen to <code>push</code> events on the body
-            which are thrown by the <code>push_kit</code> service.<br />
-            The <code>push_kit</code> service subscribes to the
-            <code>push_marker</code> topic (currently hard-coded) on an exchange
-            and address as configured in the meta tags.<br />
-            This is: <code>ws://localhost:15674/ws/exchange/quaive</code>.<br />
-            If a message is sent through rabbitmq on the "quaive" exchange type
-            on the <code>push_marker</code> topic containing the message
-            "message_counter" or "message_counter2" the messages badge below
-            will be updated.
+            The examples here listen to <code>push</code> events on the body which are thrown by the <code>push_kit</code> service.<br />
+            The <code>push_kit</code> service subscribes to a topic/filter on an exchange and address as configured in the meta tags.<br />
+            In this example this is: <code>ws://localhost:15674/ws/exchange/patternslib</code> and a topic filter of <code>push_marker</code>.<br />
+            If a message is sent through rabbitmq on the "patternslib" exchange on the <code>push_marker</code> topic containing the message "message_counter" or "message_counter2" the messages badge below will be updated.
         </p>
 
         <h2>push-id: message_counter</h2>

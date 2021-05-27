@@ -2,17 +2,23 @@
 
 Here are some tools to help you test the push pattern.
 
-1. Bootstrap a python environment in the tools directory:
-   ``./initpython.sh``
+## Precondition
 
-2. Start the rabbitmq docker container for the first time with ``rabbitmq_start.sh``.
-   After that you can run the docker container with ``docker start rabbitmq``.
+- GNU make
+- Docker
+- Python 3
 
-3. Start the webpack dev server with ``yarn start`` in the root of the Patternslib directory.
+## Start
 
-4. Navigate to: ``http://0.0.0.0:3001/src/pat/push/index.html``
+1. Start the webpack dev server with ``yarn start`` in the root of the Patternslib directory.
 
-5. Send some messages to rabbitmq to update the message counters on the test page:
-    ``./bin/python send.py allan_neece.*  message_counter``
-   and
-    ``./bin/python send.py allan_neece.*  message_counter2``
+2. Start the RabbitMQ server via Docker just by invoking ``make start``.
+
+3. Navigate to: ``http://0.0.0.0:3001/src/pat/push/index.html``
+
+4. Send a message my invoking ``make send-update-1`` or ``make send-update-2``.
+   The counter in the example should update.
+
+
+Stop the Docker instance by ``make stop``.
+Check the logs with ``make log``.
