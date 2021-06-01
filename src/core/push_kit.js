@@ -22,74 +22,86 @@
  * that way, users will only receive updates explicitly directed to them.
  *
  * This pattern expects the following meta tags to be available in the page to get the necessary configuration
- * - patterns-push-server-url containing a url pointing to a message queue server. Eg. ws://127.0.0.1:15674/ws
+ * - patterns-push-url containing a url pointing to a message queue server. Eg. ws://127.0.0.1:15674/ws
  * - patterns-push-exchange-base-name containing a text prefix. It will append _event and _notification to that prefix and attempt to contact these two message exchanges.
- * - patterns-push-user-id containing the user id of the currently logged in user. This is necessary to subscribe to updates only for this specific user.
+ * - patterns-push-filter containing a topic filter including dot-seperated namespaces and wildcards. A commonly used filter value would be the currently logged in user. This will subscribe only to updates for this specific user.
  * - patterns-push-login containing the name of a read only user on the message queue server used to connect.
  * - patterns-push-password containing the password of a read only user on the message queue server used to connect.
  */
 import "regenerator-runtime/runtime"; // needed for ``await`` support
-import $ from "jquery";
+import logging from "./logging";
+
+const logger = logging.getLogger("core push kit");
 
 const push_kit = {
     async init() {
-        const push_url = $("meta[name=patterns-push-server-url]").attr("content"); // prettier-ignore
-        const push_exchange = $("meta[name=patterns-push-exchange-base-name]").attr("content"); // prettier-ignore
+        const url = document.querySelector("meta[name=patterns-push-url]")?.content;
+        const exchange = document.querySelector("meta[name=patterns-push-exchange]")?.content; // prettier-ignore
+        const exchange_notification = document.querySelector("meta[name=patterns-notification-exchange]")?.content; // prettier-ignore
 
-        if (!push_url || !push_exchange) {
+        if (!url || (!exchange && !exchange_notification)) {
             return;
         }
 
-        const push_user_id = $("meta[name=patterns-push-user-id]").attr("content"); // prettier-ignore
-        const push_login = $("meta[name=patterns-push-login]").attr("content"); // prettier-ignore
-        const push_pass = $("meta[name=patterns-push-password]").attr("content"); // prettier-ignore
+        const topicfilter = document.querySelector("meta[name=patterns-push-filter]")?.content; // prettier-ignore
+        const topicfilter_notification = document.querySelector("meta[name=patterns-notification-filter]")?.content; // prettier-ignore
+        const user_login = document.querySelector("meta[name=patterns-push-login]")?.content; // prettier-ignore
+        const user_pass = document.querySelector("meta[name=patterns-push-password]")?.content; // prettier-ignore
 
         const StompJS = await import("@stomp/stompjs");
         const client = new StompJS.Client({
-            brokerURL: push_url,
+            brokerURL: url,
             connectHeaders: {
-                login: push_login,
-                passcode: push_pass,
+                login: user_login,
+                passcode: user_pass,
             },
             debug: function (str) {
-                console.log(str);
+                logger.debug(str);
             },
-            // reconnectDelay: 5000,
+            reconnectDelay: 5000,
             heartbeatIncoming: 0,
             heartbeatOutgoing: 20000,
         });
 
         client.onConnect = () => {
-            client.subscribe(
-                "/exchange/" + push_exchange + "_event/" + push_user_id + ".#",
-                this.on_push_marker.bind(this)
-            );
-            // Only one subscription per connection is allowed. Otherwise the connection will terminate right away again.
-            // client.subscribe(
-            //     "/exchange/" + push_exchange + "_notification/" + push_user_id + ".#",
-            //     this.on_desktop_notification.bind(this)
-            // );
+            if (exchange) {
+                client.subscribe(
+                    `/exchange/${exchange}/${topicfilter}.#`,
+                    this.on_push_marker.bind(this)
+                );
+            }
+            if (exchange_notification) {
+                // TODO: should we distinguish for desktop notifications via routing_key.
+                // TODO: check following:
+                //       Only one subscription per connection is allowed. Otherwise the connection will terminate right away again.
+                client.subscribe(
+                    `/exchange/${exchange_notification}/${topicfilter_notification}.#`,
+                    this.on_desktop_notification.bind(this)
+                );
+            }
         };
 
         client.onStompError = (frame) => {
-            console.log("Broker reported error: " + frame.headers["message"]);
-            console.log("Additional details: " + frame.body);
+            logger.error("Broker reported error: " + frame.headers["message"]);
+            logger.debug("Additional details: " + frame.body);
         };
 
         client.activate();
-        console.log("StompJS push support initialised on " + push_url);
+        logger.debug("StompJS push support initialised on " + url);
     },
 
     on_push_marker(message) {
-        console.log("Received push marker: ", message);
+        logger.debug("Received push marker: ", message);
         if (!message || !message.body) {
             return;
         }
-        $("body").trigger("push", [message.body]);
+        document.body.dispatchEvent(
+            new CustomEvent("push", { detail: { body: message.body } })
+        );
     },
 
     on_desktop_notification(message) {
-        console.log("Received desktop notification: ", message);
+        logger.debug("Received desktop notification: ", message);
         if (!message || !message.body) {
             return;
         }
@@ -97,11 +109,11 @@ const push_kit = {
     },
 
     create_notification(text) {
-        const img = $("meta[name=desktop-notification-image]").attr("content");
+        const img = document.querySelector("meta[name=desktop-notification-image]")?.content; // prettier-ignore
 
         // Let's check if the browser supports notifications
         if (!("Notification" in window)) {
-            console.log("This browser does not support notifications.");
+            logger.error("This browser does not support notifications.");
             return;
         }
 

@@ -2,28 +2,28 @@
 import pika
 import sys
 
-EXCHANGE = "quaive"
 
-
-if len(sys.argv) < 2:
+if len(sys.argv) < 3:
     print("Usage:")
-    print("  python send.py ROUTING_KEY MESSAGE")
+    print("  python send.py EXCHANGE FILTER MESSAGE")
     print("Example:")
-    print("  python send.py push_marker content_updated")
+    print("  python send.py patternslib jane_doe.push_marker content_updated")
     sys.exit()
 
 
-credentials = pika.PlainCredentials("admin", "admin")
+credentials = pika.PlainCredentials("guest", "guest")
 connection = pika.BlockingConnection(
     pika.ConnectionParameters(host="localhost", credentials=credentials)
 )
 channel = connection.channel()
-channel.exchange_declare(exchange=EXCHANGE, exchange_type="topic")
 
-routing_key = sys.argv[1]
-message = " ".join(sys.argv[2:])
 
-channel.basic_publish(exchange=EXCHANGE, routing_key=routing_key, body=message)
+exchange = sys.argv[1]
+topicfilter = sys.argv[2]
+message = " ".join(sys.argv[3:])
 
-print(" [x] Sent %r:%r" % (routing_key, message))
+channel.exchange_declare(exchange=exchange, exchange_type="topic")
+channel.basic_publish(exchange=exchange, routing_key=topicfilter, body=message)
+
+print(" [x] Sent %r:%r" % (topicfilter, message))
 connection.close()
