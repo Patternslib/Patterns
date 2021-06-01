@@ -1,3 +1,30 @@
+## [4.3.0](https://github.com/Patternslib/patterns/compare/4.2.4...4.3.0) (2021-06-01)
+
+
+### Features
+
+* **core push kit:** Set connection parameters. ([427d0f1](https://github.com/Patternslib/patterns/commit/427d0f1e60653c95eef073f2a5279032702141e6))
+* **core push kit:** Support for desktop notifications via patterns-notification-exchange and patterns-notification-filter meta tags. ([4c3a615](https://github.com/Patternslib/patterns/commit/4c3a6152ab1bf27dd19d350c11f9b742d961d113))
+* **core push kit:** Use logging framework. ([515acc9](https://github.com/Patternslib/patterns/commit/515acc9d33265668f5162e0a8e94d4394259056b))
+* **core push kit:** Use more generic patterns-push-filter instead patterns-push-user-id to show filtering is available for any topics. ([2aa51b7](https://github.com/Patternslib/patterns/commit/2aa51b78d44f5c459f9b99920962ea05014529db))
+
+
+### Bug Fixes
+
+* **pat push:** Fix push kit and push pattern for basic operation. ([34ecbf8](https://github.com/Patternslib/patterns/commit/34ecbf802b37e40855425e34453e2fac0b1857e7))
+
+
+### Maintenance
+
+* **core push kit:** Modernize code. ([8987d82](https://github.com/Patternslib/patterns/commit/8987d8201b984b0eed2ed89d014157ed79479c05))
+* **core push kit:** Simplify push kit config, use url instead of server-url. ([6bed6be](https://github.com/Patternslib/patterns/commit/6bed6be0189d1f1dc86a9237f0518aaa03b7cb4d))
+* **core push kit:** Upgrade stompjs ([4ad7532](https://github.com/Patternslib/patterns/commit/4ad7532d0b621a4c6192be05fe1db4f47b2ba076))
+* **docs:** Add note about changing the loglevel through query parameters from https://github.com/Patternslib/logging#configuring-through-url ([695c56b](https://github.com/Patternslib/patterns/commit/695c56b474e81b43efb4bf4c3d23843ad1b1a03e))
+* **pat push:** Modernize code. ([e3da26f](https://github.com/Patternslib/patterns/commit/e3da26f41554f944e4ea1924db3a0576aabcac57))
+* **pat push demo:** Allow to pass the exchange name to the push send script. ([86435f0](https://github.com/Patternslib/patterns/commit/86435f00af14a95349b2773f0872f47566dd1aa6))
+* **pat push demo:** Provide Makefile to manage rabbitmq and producer. ([743e210](https://github.com/Patternslib/patterns/commit/743e2109d5d20a53d8c0089ac093e5b51ab26488))
+* **pat push demo:** Update documentation and examples. ([bdaaf84](https://github.com/Patternslib/patterns/commit/bdaaf84052007f13c6dfdd442c47a699b86f3fa4))
+
 ### [4.2.4](https://github.com/Patternslib/patterns/compare/4.2.3...4.2.4) (2021-04-28)
 
 
