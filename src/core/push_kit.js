@@ -29,20 +29,19 @@
  * - patterns-push-password containing the password of a read only user on the message queue server used to connect.
  */
 import "regenerator-runtime/runtime"; // needed for ``await`` support
-import $ from "jquery";
 
 const push_kit = {
     async init() {
-        const url = $("meta[name=patterns-push-server]").attr("content"); // prettier-ignore
-        const exchange = $("meta[name=patterns-push-exchange]").attr("content"); // prettier-ignore
+        const url = document.querySelector("meta[name=patterns-push-server]")?.content;
+        const exchange = document.querySelector("meta[name=patterns-push-exchange]")?.content; // prettier-ignore
 
         if (!url || !exchange) {
             return;
         }
 
-        const user_id = $("meta[name=patterns-push-user-id]").attr("content"); // prettier-ignore
-        const user_login = $("meta[name=patterns-push-login]").attr("content"); // prettier-ignore
-        const user_pass = $("meta[name=patterns-push-password]").attr("content"); // prettier-ignore
+        const user_id = document.querySelector("meta[name=patterns-push-user-id]")?.content; // prettier-ignore
+        const user_login = document.querySelector("meta[name=patterns-push-login]")?.content; // prettier-ignore
+        const user_pass = document.querySelector("meta[name=patterns-push-password]")?.content; // prettier-ignore
 
         const StompJS = await import("@stomp/stompjs");
         const client = new StompJS.Client({
@@ -61,12 +60,13 @@ const push_kit = {
 
         client.onConnect = () => {
             client.subscribe(
-                "/exchange/" + exchange + "/" + user_id + ".#",
+                `/exchange/${exchange}/${user_id}.#`,
                 this.on_push_marker.bind(this)
             );
+            // TODO: we probably want to distinguish for desktop notifications with routing_key.
             // Only one subscription per connection is allowed. Otherwise the connection will terminate right away again.
             // client.subscribe(
-            //     "/exchange/" + exchange + "_notification/" + push_user_id + ".#",
+            //     `/exchange/${exchange}_notification/${user_id}.#`,
             //     this.on_desktop_notification.bind(this)
             // );
         };
@@ -85,7 +85,9 @@ const push_kit = {
         if (!message || !message.body) {
             return;
         }
-        $("body").trigger("push", [message.body]);
+        document.body.dispatchEvent(
+            new CustomEvent("push", { detail: { body: message.body } })
+        );
     },
 
     on_desktop_notification(message) {
@@ -97,7 +99,7 @@ const push_kit = {
     },
 
     create_notification(text) {
-        const img = $("meta[name=desktop-notification-image]").attr("content");
+        const img = document.querySelector("meta[name=desktop-notification-image]")?.content; // prettier-ignore
 
         // Let's check if the browser supports notifications
         if (!("Notification" in window)) {
