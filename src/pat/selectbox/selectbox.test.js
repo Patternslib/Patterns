@@ -5,7 +5,7 @@ import utils from "../../core/utils";
 describe("pat selectbox tests", () => {
     // Tests from the core.dom module
 
-    it("works as indented.", async (done) => {
+    it("works as indented.", async () => {
         const el = document.createElement("div");
         el.innerHTML = `
           <form>
@@ -79,7 +79,5 @@ describe("pat selectbox tests", () => {
 
         expect(sel3.parentNode.getAttribute("data-option")).toBe("E");
         expect(sel3.parentNode.getAttribute("data-option-value")).toBe("e");
-
-        done();
     });
 });

@@ -3,6 +3,7 @@ import $ from "jquery";
 import Base from "./base";
 import utils from "./utils";
 import _ from "underscore";
+import { jest } from "@jest/globals";
 
 describe("pat-base: The Base class for patterns", function () {
     var patterns = registry.patterns;
@@ -13,6 +14,7 @@ describe("pat-base: The Base class for patterns", function () {
 
     afterEach(function () {
         registry.patterns = patterns;
+        jest.restoreAllMocks();
     });
 
     it("can be extended and used in similar way as classes", function () {
@@ -58,7 +60,7 @@ describe("pat-base: The Base class for patterns", function () {
     });
 
     it("will automatically register a pattern in the registry when extended", function () {
-        spyOn(registry, "register").and.callThrough();
+        jest.spyOn(registry, "register");
         var NewPattern = Base.extend({
             name: "example",
             trigger: ".pat-example",
@@ -71,14 +73,14 @@ describe("pat-base: The Base class for patterns", function () {
     });
 
     it('will not automatically register a pattern without a "name" attribute', function () {
-        spyOn(registry, "register").and.callThrough();
+        jest.spyOn(registry, "register");
         var NewPattern = Base.extend({ trigger: ".pat-example" });
         expect(NewPattern.prototype.trigger).toEqual(".pat-example");
         expect(registry.register).not.toHaveBeenCalled();
     });
 
     it('will not automatically register a pattern without a "trigger" attribute', function () {
-        spyOn(registry, "register").and.callThrough();
+        jest.spyOn(registry, "register");
         var NewPattern = Base.extend({ name: "example" });
         expect(registry.register).not.toHaveBeenCalled();
         expect(NewPattern.prototype.name).toEqual("example");
@@ -92,7 +94,7 @@ describe("pat-base: The Base class for patterns", function () {
                 expect(this.$el.attr("class")).toEqual("pat-example");
             },
         });
-        spyOn(NewPattern, "init").and.callThrough();
+        jest.spyOn(NewPattern, "init");
         registry.scan($('<div class="pat-example"/>'));
         expect(NewPattern.init).toHaveBeenCalled();
     });
@@ -151,7 +153,7 @@ describe("pat-base: The Base class for patterns", function () {
         );
     });
 
-    it("triggers the init event after init has finished.", async function (done) {
+    it("triggers the init event after init has finished.", async () => {
         const Tmp = Base.extend({
             name: "example",
             init: async function () {
@@ -173,7 +175,5 @@ describe("pat-base: The Base class for patterns", function () {
 
         expect(event_list[0]).toBe("pat init");
         expect(event_list[1]).toBe("base init");
-
-        done();
     });
 });

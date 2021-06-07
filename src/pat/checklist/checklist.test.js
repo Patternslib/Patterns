@@ -7,7 +7,7 @@ describe("pat-checklist", () => {
         document.body.innerHTML = "";
     });
 
-    it("Initializes on checkboxes with default options", async (done) => {
+    it("Initializes on checkboxes with default options", async () => {
         document.body.innerHTML = `
             <fieldset class="pat-checklist">
                 <button id="b1" class="select-all">Select all</button>
@@ -60,11 +60,9 @@ describe("pat-checklist", () => {
         expect(l3.classList.contains("unchecked")).toEqual(true);
         expect(b1.hasAttribute("disabled")).toEqual(false);
         expect(b2.hasAttribute("disabled")).toEqual(false);
-
-        done();
     });
 
-    it("Global de/select buttons only change the associated pat-checklist instance.", async (done) => {
+    it("Global de/select buttons only change the associated pat-checklist instance.", async () => {
         document.body.innerHTML = `
             <button id="b1">Select all</button>
             <button id="b2">Deselect all</button>
@@ -144,11 +142,9 @@ describe("pat-checklist", () => {
         expect(l4.classList.contains("unchecked")).toEqual(true);
         expect(l5.classList.contains("unchecked")).toEqual(true);
         expect(l6.classList.contains("unchecked")).toEqual(true);
-
-        done();
     });
 
-    it("Nested checklist.", async (done) => {
+    it("Nested checklist.", async () => {
         document.body.innerHTML = `
             <fieldset class="pat-checklist f1">
                 <button type="button" class="select-all">b1</button>
@@ -529,11 +525,9 @@ describe("pat-checklist", () => {
         expect(b8.hasAttribute("disabled")).toEqual(false);
         expect(b9.hasAttribute("disabled")).toEqual(false);
         expect(b10.hasAttribute("disabled")).toEqual(true);
-
-        done();
     });
 
-    it("Initializes on radio buttons", async (done) => {
+    it("Initializes on radio buttons", async () => {
         document.body.innerHTML = `
             <fieldset class="pat-checklist">
                 <label><input type="radio" name="radio" />1</label>
@@ -558,7 +552,5 @@ describe("pat-checklist", () => {
         expect(l1.classList.contains("unchecked")).toEqual(true);
         expect(l2.classList.contains("unchecked")).toEqual(true);
         expect(l3.classList.contains("checked")).toEqual(true);
-
-        done();
     });
 });

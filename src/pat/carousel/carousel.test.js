@@ -1,6 +1,7 @@
 import $ from "jquery";
 import pattern from "./carousel";
 import utils from "../../core/utils";
+import { jest } from "@jest/globals";
 
 describe("carousel-plugin", function () {
     beforeEach(function () {

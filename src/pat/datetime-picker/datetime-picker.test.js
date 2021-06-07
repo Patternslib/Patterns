@@ -1,6 +1,7 @@
 import $ from "jquery";
 import pattern from "./datetime-picker";
 import utils from "../../core/utils";
+import { jest } from "@jest/globals";
 
 describe("pat-datetime-picker", function () {
     beforeEach(function () {

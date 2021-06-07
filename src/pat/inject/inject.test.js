@@ -1,6 +1,7 @@
 import pattern from "./inject";
 import $ from "jquery";
 import utils from "../../core/utils";
+import { jest } from "@jest/globals";
 
 const mockFetch = (text = "") => () =>
     Promise.resolve({
@@ -48,8 +49,8 @@ describe("pat-inject", function () {
     });
 
     describe("The loading-class argument", function () {
-        it("has a default value of 'injecting' and gets added to the target while content is still loading'", async function () {
-            spyOn($, "ajax").and.returnValue(deferred);
+        it("has a default value of 'injecting' and gets added to the target while content is still loading", async function () {
+            jest.spyOn($, "ajax").mockImplementation(() => deferred);
             var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
             var $div = $('<div id="someid" />');
             $("#lab").empty().append($a).append($div);
@@ -72,7 +73,7 @@ describe("pat-inject", function () {
         });
 
         it("can be set to another string value which then gets added to the target while content is still loading'", async function () {
-            spyOn($, "ajax").and.returnValue(deferred);
+            jest.spyOn($, "ajax").mockImplementation(() => deferred);
             var $a = $(
                 '<a class="pat-inject" data-pat-inject="loading-class: other-class;" href="test.html#someid">link</a>'
             );
@@ -93,7 +94,7 @@ describe("pat-inject", function () {
         });
 
         it("can be set to an empty string value so that nothing gets added to the target while content is still loading'", function () {
-            spyOn($, "ajax");
+            jest.spyOn($, "ajax");
             var $a = $(
                 '<a class="pat-inject" data-pat-inject="loading-class: ;" href="test.html#someid">link</a>'
             );
@@ -112,8 +113,10 @@ describe("pat-inject", function () {
             var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
             var $div = $('<div id="someid" />');
             $("#lab").empty().append($a).append($div);
-            spyOn(pattern, "onTrigger").and.callThrough();
-            var spy_confirm = spyOn(window, "confirm").and.returnValue(false);
+            jest.spyOn(pattern, "onTrigger");
+            var spy_confirm = jest
+                .spyOn(window, "confirm")
+                .mockImplementation(() => false);
 
             // Test default value for parser argument
             var cfgs = pattern.extractConfig($a, {});
@@ -135,8 +138,10 @@ describe("pat-inject", function () {
             );
             var $div = $('<div id="someid" />');
             $("#lab").empty().append($a).append($div);
-            var spy_onTrigger = spyOn(pattern, "onTrigger").and.callThrough();
-            var spy_confirm = spyOn(window, "confirm").and.returnValue(false);
+            var spy_onTrigger = jest.spyOn(pattern, "onTrigger");
+            var spy_confirm = jest
+                .spyOn(window, "confirm")
+                .mockImplementation(() => false);
 
             // Test default value for parser argument
             var cfgs = pattern.extractConfig($a, {});
@@ -155,8 +160,10 @@ describe("pat-inject", function () {
             );
             var $div = $('<div id="someid" />');
             $("#lab").empty().append($a).append($div);
-            var spy_onTrigger = spyOn(pattern, "onTrigger").and.callThrough();
-            var spy_confirm = spyOn(window, "confirm").and.returnValue(true);
+            var spy_onTrigger = jest.spyOn(pattern, "onTrigger");
+            var spy_confirm = jest
+                .spyOn(window, "confirm")
+                .mockImplementation(() => true);
 
             // Test default value for parser argument
             var cfgs = pattern.extractConfig($a, {});
@@ -175,8 +182,10 @@ describe("pat-inject", function () {
             );
             var $div = $('<form id="someid"><input type="text" name="name"/></form>');
             $("#lab").empty().append($a).append($div);
-            var spy_onTrigger = spyOn(pattern, "onTrigger").and.callThrough();
-            var spy_confirm = spyOn(window, "confirm").and.returnValue(true);
+            var spy_onTrigger = jest.spyOn(pattern, "onTrigger");
+            var spy_confirm = jest
+                .spyOn(window, "confirm")
+                .mockImplementation(() => true);
 
             // Test default value for parser argument
             var cfgs = pattern.extractConfig($a, {});
@@ -191,7 +200,7 @@ describe("pat-inject", function () {
 
             $('[name="name"]').val("");
             $a.trigger("click");
-            expect(window.confirm.calls.count()).toBe(1);
+            expect(window.confirm.mock.calls.length).toBe(1);
             expect(spy_onTrigger).toHaveBeenCalled();
         });
 
@@ -202,8 +211,10 @@ describe("pat-inject", function () {
                 );
                 var $div = $('<div id="someid" />');
                 $("#lab").empty().append($a).append($div);
-                spyOn(pattern, "onTrigger").and.callThrough();
-                var spy_confirm = spyOn(window, "confirm").and.returnValue(false);
+                jest.spyOn(pattern, "onTrigger");
+                var spy_confirm = jest
+                    .spyOn(window, "confirm")
+                    .mockImplementation(() => false);
 
                 // Test default value for parser argument
                 var cfgs = pattern.extractConfig($a, {});
@@ -241,7 +252,7 @@ describe("pat-inject", function () {
         });
 
         it("Element without link attribute", function () {
-            var spy_rebaseURL = spyOn(utils, "rebaseURL");
+            var spy_rebaseURL = jest.spyOn(utils, "rebaseURL");
             expect(pattern._rebaseHTML("base", "<a>This is a test</a>")).toBe(
                 "<a>This is a test</a>"
             );
@@ -285,7 +296,7 @@ describe("pat-inject", function () {
             ).toBe("<p>This string has    src = \"foo\" , src= bar , and SrC='foo'</p>");
         });
 
-        it("rebase pattern configuration", async (done) => {
+        it("rebase pattern configuration", async () => {
             await import("../calendar/calendar");
             await import("../collapsible/collapsible");
             await import("../date-picker/date-picker");
@@ -320,11 +331,9 @@ describe("pat-inject", function () {
             expect(test3b_config.i18n).toEqual("https://example.com/test/./path/to/i18n"); // prettier-ignore
             const test3c_config = JSON.parse(el.querySelector(".test3").getAttribute("data-pat-collapsible")); // prettier-ignore
             expect(test3c_config["load-content"]).toEqual("https://example.com/test/../load/content/from/here"); // prettier-ignore
-
-            done();
         });
 
-        it("doesn't rebase invalid pattern configuration options", async (done) => {
+        it("doesn't rebase invalid pattern configuration options", async () => {
             await import("../calendar/calendar");
 
             const res = pattern._rebaseHTML(
@@ -343,8 +352,6 @@ describe("pat-inject", function () {
             expect(test_config["event-sources"]).toEqual([
                 "https://example.com/test/../calendar2.json",
             ]);
-
-            done();
         });
     });
 
@@ -446,7 +453,7 @@ describe("pat-inject", function () {
 
         describe("The patterns-injected event", function () {
             it("gets triggered after injection has finished'", async function () {
-                spyOn($, "ajax").and.returnValue(deferred);
+                jest.spyOn($, "ajax").mockImplementation(() => deferred);
                 var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
                 var $div = $('<div id="someid" />');
                 $("#lab").empty().append($a).append($div);
@@ -466,7 +473,7 @@ describe("pat-inject", function () {
             var $a, $div;
 
             beforeEach(function () {
-                spyOn($, "ajax").and.returnValue(deferred);
+                jest.spyOn($, "ajax").mockImplementation(() => deferred);
                 $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
                 $div = $('<div id="someid" />');
                 $("#lab").append($a).append($div);
@@ -476,14 +483,14 @@ describe("pat-inject", function () {
                 pattern.init($a);
                 $a.trigger("click");
                 expect($.ajax).toHaveBeenCalled();
-                expect($.ajax.calls.mostRecent().args[0].url).toBe("test.html");
+                expect($.ajax.mock.calls.pop()[0].url).toBe("test.html");
             });
 
             it("fetches url on autoload", function () {
                 $a.attr("data-pat-inject", "autoload");
                 pattern.init($a);
                 expect($.ajax).toHaveBeenCalled();
-                expect($.ajax.calls.mostRecent().args[0].url).toBe("test.html");
+                expect($.ajax.mock.calls.pop()[0].url).toBe("test.html");
             });
 
             it("fetches url on autoload-delayed", function () {
@@ -491,14 +498,14 @@ describe("pat-inject", function () {
                 pattern.init($a);
                 // this needs to be checked async - is beyond me
                 // expect($.ajax).toHaveBeenCalled();
-                // expect($.ajax.calls.mostRecent().args[0].url).toBe("test.html");
+                // expect($.ajax.mock.calls.pop()[0].url).toBe("test.html");
             });
             it("fetches url on push_marker sent", function () {
                 $a.attr("data-pat-inject", "push-marker: content-updated");
                 pattern.init($a);
                 $("body").trigger("push", ["content-updated"]);
                 expect($.ajax).toHaveBeenCalled();
-                expect($.ajax.calls.mostRecent().args[0].url).toBe("test.html");
+                expect($.ajax.mock.calls.pop()[0].url).toBe("test.html");
             });
 
             it("injects into existing div", async function () {
@@ -520,12 +527,8 @@ describe("pat-inject", function () {
                 // This is a trick to force the second ajax() call to return a new Deferred().
                 // It is only needed here, because this is the only test case that makes two ajax() calls.
                 deferred = new $.Deferred();
-                $.ajax.calls.reset();
-                $.ajax.and.returnValue(
-                    (function () {
-                        return deferred;
-                    })()
-                );
+                $.ajax.mockRestore();
+                jest.spyOn($, "ajax").mockImplementation(() => deferred);
 
                 $a.trigger("click");
                 answer(
@@ -644,7 +647,7 @@ describe("pat-inject", function () {
             var $form, $div;
 
             beforeEach(function () {
-                spyOn($, "ajax").and.returnValue(deferred);
+                jest.spyOn($, "ajax").mockImplementation(() => deferred);
                 $form = $('<form class="pat-inject" action="test.html#someid" />');
                 $div = $('<div id="someid" />');
                 $("#lab").append($form).append($div);
@@ -668,7 +671,7 @@ describe("pat-inject", function () {
                 pattern.init($form);
                 $form.trigger("submit");
 
-                var ajaxargs = $.ajax.calls.mostRecent().args[0];
+                var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
                 expect($.ajax).toHaveBeenCalled();
                 expect(ajaxargs.data).toContain("param=somevalue");
             });
@@ -680,7 +683,7 @@ describe("pat-inject", function () {
                 pattern.init($form);
                 $form.trigger("submit");
 
-                var ajaxargs = $.ajax.calls.mostRecent().args[0];
+                var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
                 expect($.ajax).toHaveBeenCalled();
                 expect(ajaxargs.data.get("param")).toContain("somevalue");
             });
@@ -693,7 +696,7 @@ describe("pat-inject", function () {
                 pattern.init($form);
                 $submit.trigger("click");
 
-                var ajaxargs = $.ajax.calls.mostRecent().args[0];
+                var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
                 expect($.ajax).toHaveBeenCalled();
                 expect(ajaxargs.data.get("submit")).toContain("label");
             });
@@ -713,7 +716,7 @@ describe("pat-inject", function () {
                     pattern.init($form);
                     $submit2.trigger("click");
 
-                    var ajaxargs = $.ajax.calls.mostRecent().args[0];
+                    var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
                     expect($.ajax).toHaveBeenCalled();
                     expect(ajaxargs.url).toBe("other.html");
                     expect(ajaxargs.data).toBe("submit=special");
@@ -733,7 +736,7 @@ describe("pat-inject", function () {
                     pattern.init($form);
                     $submit2.trigger("click");
 
-                    var ajaxargs = $.ajax.calls.mostRecent().args[0];
+                    var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
                     expect($.ajax).toHaveBeenCalled();
                     expect(ajaxargs.url).toBe("other.html");
                     expect(ajaxargs.data).toBe("submit=special");
@@ -761,7 +764,7 @@ describe("pat-inject", function () {
                     );
                     await utils.timeout(1); // wait a tick for async to settle.
 
-                    var ajaxargs = $.ajax.calls.mostRecent().args[0];
+                    var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
                     expect($.ajax).toHaveBeenCalled();
                     expect(ajaxargs.url).toBe("other.html");
                     expect(ajaxargs.data).toContain("submit=special");
@@ -791,7 +794,7 @@ describe("pat-inject", function () {
                     );
                     await utils.timeout(1); // wait a tick for async to settle.
 
-                    var ajaxargs = $.ajax.calls.mostRecent().args[0];
+                    var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
                     expect($.ajax).toHaveBeenCalled();
                     expect(ajaxargs.url).toBe("other.html");
                     expect(ajaxargs.data).toContain("submit=special");
@@ -825,7 +828,7 @@ describe("pat-inject", function () {
                     );
                     await utils.timeout(1); // wait a tick for async to settle.
 
-                    var ajaxargs = $.ajax.calls.mostRecent().args[0];
+                    var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
                     expect($.ajax).toHaveBeenCalled();
                     expect(ajaxargs.url).toBe("other.html");
                     expect(ajaxargs.data).toContain("submit=special");
@@ -861,7 +864,7 @@ describe("pat-inject", function () {
                     );
                     await utils.timeout(1); // wait a tick for async to settle.
 
-                    var ajaxargs = $.ajax.calls.mostRecent().args[0];
+                    var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
                     expect($.ajax).toHaveBeenCalled();
                     expect(ajaxargs.url).toBe("other.html");
                     expect(ajaxargs.data).toContain("submit=special");
@@ -897,7 +900,7 @@ describe("pat-inject", function () {
                     );
                     await utils.timeout(1); // wait a tick for async to settle.
 
-                    var ajaxargs = $.ajax.calls.mostRecent().args[0];
+                    var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
                     expect($.ajax).toHaveBeenCalled();
                     expect(ajaxargs.url).toBe("other.html");
                     expect(ajaxargs.data).toContain("submit=special");
@@ -905,7 +908,7 @@ describe("pat-inject", function () {
                     expect($target2.html()).toBe("other");
                 });
 
-                it("formaction which replaces itself", async (done) => {
+                it("formaction which replaces itself", async () => {
                     answer(`
                         <html>
                             <body>
@@ -938,11 +941,9 @@ describe("pat-inject", function () {
                     expect(document.querySelector("form").innerHTML.trim()).toBe(
                         "other"
                     );
-
-                    done();
                 });
 
-                it("nested injects keep correct configuration context", async (done) => {
+                it("nested injects keep correct configuration context", async () => {
                     answer(`
                         <html>
                             <body>
@@ -969,8 +970,6 @@ describe("pat-inject", function () {
                     expect(document.querySelector("form span").innerHTML.trim()).toBe(
                         "other"
                     );
-
-                    done();
                 });
             });
         });
@@ -981,7 +980,7 @@ describe("pat-inject", function () {
         let $div;
 
         beforeEach(() => {
-            spyOn($, "ajax").and.returnValue(deferred);
+            jest.spyOn($, "ajax").mockImplementation(() => deferred);
             $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
             $div = $('<div id="someid" />');
             $("#lab").append($a).append($div);
@@ -992,7 +991,7 @@ describe("pat-inject", function () {
             document.body.innerHTML = "";
         });
 
-        it("Adds on error a data-error-message to body in standard case.", async (done) => {
+        it("Adds on error a data-error-message to body in standard case.", async () => {
             pattern.init($a);
 
             // Invoke error case
@@ -1004,11 +1003,9 @@ describe("pat-inject", function () {
             expect(document.body.querySelector("#lab")).toBeTruthy();
             // In this case, the normal error reporting is used
             expect(document.body.hasAttribute("data-error-message")).toBeTruthy();
-
-            done();
         });
 
-        it("Gets error page from meta tags", async (done) => {
+        it("Gets error page from meta tags", async () => {
             global.fetch = jest.fn().mockImplementation(
                 mockFetch(`
                         <!DOCTYPE html>
@@ -1040,11 +1037,9 @@ describe("pat-inject", function () {
 
             global.fetch.mockClear();
             delete global.fetch;
-
-            done();
         });
 
-        it("Doesnt get error page from meta tags if query string present", async (done) => {
+        it("Doesnt get error page from meta tags if query string present", async () => {
             delete global.window.location;
             global.window.location = {
                 search: "?something=nothing&pat-inject-errorhandler.off",
@@ -1083,8 +1078,6 @@ describe("pat-inject", function () {
 
             global.fetch.mockClear();
             delete global.fetch;
-
-            done();
         });
     });
 });

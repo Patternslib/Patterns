@@ -1,5 +1,6 @@
 import pattern from "./ajax";
 import $ from "jquery";
+import { jest } from "@jest/globals";
 
 var $lab;
 
@@ -16,9 +17,9 @@ describe("pat-ajax", function () {
         it("triggers ajax request on click", function () {
             var $a = $("<a href='href.html' />").appendTo($lab);
             pattern.init($a);
-            spyOn($, "ajax");
+            jest.spyOn($, "ajax");
             $a.click();
-            var ajaxargs = $.ajax.calls.mostRecent().args[0];
+            var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
             expect(ajaxargs.context[0]).toBe($a[0]);
             expect(ajaxargs.url).toBe("href.html");
         });
@@ -38,7 +39,7 @@ describe("pat-ajax", function () {
             ).appendTo($form);
             $("<input name='input1' value='value1' />").appendTo($form);
             pattern.init($form);
-            spy_ajax = spyOn($, "ajax");
+            spy_ajax = jest.spyOn($, "ajax");
         });
 
         it("triggers ajax request on submit", function () {
@@ -49,7 +50,7 @@ describe("pat-ajax", function () {
         it("honors method='post'", function () {
             $form.attr("method", "post");
             $form.submit();
-            var ajaxargs = $.ajax.calls.mostRecent().args[0];
+            var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
             expect(ajaxargs.url).toEqual("action.html");
             expect(ajaxargs.method).toEqual("POST");
             expect(ajaxargs.data.get("input1")).toContain("value1");
@@ -62,14 +63,14 @@ describe("pat-ajax", function () {
 
         it("does include submit button clicked", function () {
             $button.click();
-            var ajaxargs = $.ajax.calls.mostRecent().args[0];
+            var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
             expect(ajaxargs.url).toEqual("action.html");
             expect(ajaxargs.data).toEqual("input1=value1&submit=submit");
         });
 
         it("does not include submit buttons if not clicked", function () {
             $form.submit();
-            var ajaxargs = $.ajax.calls.mostRecent().args[0];
+            var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
             expect(ajaxargs.url).toEqual("action.html");
             expect(ajaxargs.data).toEqual("input1=value1");
         });

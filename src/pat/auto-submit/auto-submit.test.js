@@ -1,6 +1,7 @@
 import pattern from "./auto-submit";
 import registry from "../../core/registry";
 import $ from "jquery";
+import { jest } from "@jest/globals";
 
 describe("pat-autosubmit", function () {
     beforeEach(function () {
@@ -21,7 +22,7 @@ describe("pat-autosubmit", function () {
                     " </fieldset>" +
                     "</form>"
             );
-            var spy_init = spyOn(pattern, "init");
+            var spy_init = jest.spyOn(pattern, "init");
             registry.scan($form);
             expect(spy_init).toHaveBeenCalled();
         });
@@ -35,7 +36,7 @@ describe("pat-autosubmit", function () {
                     " </fieldset>" +
                     "</form>"
             );
-            var spy_init = spyOn(pattern, "init");
+            var spy_init = jest.spyOn(pattern, "init");
             registry.scan($form);
             expect(spy_init).toHaveBeenCalled();
         });
@@ -44,7 +45,7 @@ describe("pat-autosubmit", function () {
             var $form = $(
                 '<form><input class="pat-autosubmit" type="text" name="q" placeholder="Search query"/></form>'
             );
-            var spy_init = spyOn(pattern, "init");
+            var spy_init = jest.spyOn(pattern, "init");
             registry.scan($form);
             expect(spy_init).toHaveBeenCalled();
         });
