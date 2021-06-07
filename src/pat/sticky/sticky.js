@@ -3,7 +3,10 @@ import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
+import logging from "../../core/logging";
 import utils from "../../core/utils";
+
+const logger = logging.getLogger("pat sticky");
 
 // Lazy loading modules.
 let Stickyfill;
@@ -15,6 +18,11 @@ export default Base.extend({
     name: "sticky",
     trigger: ".pat-sticky",
     async init() {
+        // TODO: remove this pattern with the next major version of patternslib.
+        logger.warn(
+            "This pattern is deprecated an will be removed in the next major version of Patternslib. Use CSS position:sticky instead."
+        );
+
         Stickyfill = (await import("stickyfilljs")).default;
         this.options = parser.parse(this.$el);
         this.makeSticky();
