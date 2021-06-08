@@ -29,7 +29,7 @@ const mockFetch = () =>
             }),
     });
 
-describe("Calendar tests", () => {
+describe("1 - Calendar tests", () => {
     beforeEach(() => {
         // create container
         const el = document.createElement("div");
@@ -393,7 +393,7 @@ describe("Calendar tests", () => {
     });
 });
 
-describe("Calendar tests with calendar controls outside pat-calendar", () => {
+describe("2 - Calendar tests with calendar controls outside pat-calendar", () => {
     beforeEach(() => {
         // create container
         const el = document.createElement("div");
@@ -428,7 +428,7 @@ describe("Calendar tests with calendar controls outside pat-calendar", () => {
         history.replaceState(null, null, "?"); // empty string doesn't reset, so "?"...
     });
 
-    it("Updates title according to display", async (done) => {
+    it("2.1 - Updates title according to display", async (done) => {
         const el = document.querySelector(".pat-calendar");
         el.setAttribute(
             "data-pat-calendar",
@@ -471,7 +471,7 @@ describe("Calendar tests with calendar controls outside pat-calendar", () => {
         done();
     });
 
-    it("Changes views when clicked", async (done) => {
+    it("2.2 - Changes views when clicked", async (done) => {
         const el = document.querySelector(".pat-calendar");
         el.setAttribute("data-pat-calendar", "calendar-controls: .calendar-controls");
 
@@ -501,6 +501,86 @@ describe("Calendar tests with calendar controls outside pat-calendar", () => {
         expect(el.querySelector(".fc-dayGridMonth-view")).toBeTruthy();
         expect(el.querySelector(".fc-timeGridWeek-view")).toBeFalsy();
         expect(el.querySelector(".fc-timeGridDay-view")).toBeFalsy();
+
+        done();
+    });
+});
+
+describe("3 - Calendar tests with calendar controls outside pat-calendar but title within", () => {
+    beforeEach(() => {
+        // create container
+        const el = document.createElement("div");
+        el.setAttribute("class", "root-element");
+        el.innerHTML = `
+          <div class="calendar-controls">
+              <div class="cal-toolbar">
+                <fieldset class="cal-nav">
+                  <button class="jump-prev" title="Back" type="button">&lt;</button>
+                  <button class="jump-today" title="Today" type="button">Today</button>
+                  <button class="jump-next" title="Forward" type="button">&gt;</button>
+                </fieldset>
+                <fieldset class="cal-views">
+                  <button class="view-month" type="button">Month</button>
+                  <button class="view-week" type="button">Week</button>
+                  <button class="view-day" type="button">Day</button>
+                </fieldset>
+              </div>
+          </div>
+
+          <div class="pat-calendar">
+              <h1 class="cal-title">title</h1>
+          </div>
+        `;
+        document.body.appendChild(el);
+    });
+
+    afterEach(() => {
+        // remove container
+        document.body.removeChild(document.querySelector(".root-element"));
+
+        // reset query string
+        history.replaceState(null, null, "?"); // empty string doesn't reset, so "?"...
+    });
+
+    it("3.1 - Updates title according to display", async (done) => {
+        const el = document.querySelector(".pat-calendar");
+        el.setAttribute(
+            "data-pat-calendar",
+            "initial-date: 2000-10-10; initial-view: month; calendar-controls: .calendar-controls"
+        );
+
+        const title_el = document.querySelector(".cal-title");
+        let title = title_el.innerHTML;
+
+        registry.scan(document.body);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(title_el.innerHTML === title).toBeFalsy();
+        title = title_el.innerHTML;
+
+        document.querySelector(".view-week").click();
+        expect(title_el.innerHTML === title).toBeFalsy();
+        title = title_el.innerHTML;
+
+        document.querySelector(".view-day").click();
+        expect(title_el.innerHTML === title).toBeFalsy();
+        title = title_el.innerHTML;
+
+        document.querySelector(".view-month").click();
+        expect(title_el.innerHTML === title).toBeFalsy();
+        title = title_el.innerHTML;
+
+        document.querySelector(".jump-next").click();
+        expect(title_el.innerHTML === title).toBeFalsy();
+        title = title_el.innerHTML;
+
+        document.querySelector(".jump-prev").click();
+        expect(title_el.innerHTML === title).toBeFalsy();
+        title = title_el.innerHTML;
+
+        document.querySelector(".jump-today").click();
+        expect(title_el.innerHTML === title).toBeFalsy();
+        title = title_el.innerHTML;
 
         done();
     });
