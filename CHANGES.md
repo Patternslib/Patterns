@@ -1,3 +1,15 @@
+### [4.3.1](https://github.com/Patternslib/patterns/compare/4.3.0...4.3.1) (2021-06-08)
+
+
+### Bug Fixes
+
+* **pat calendar:** Fix .cal-title only searched within calendar controls since 4.2.4. Fixes current date not being updated when browsing the calendar. ([7362b33](https://github.com/Patternslib/patterns/commit/7362b337b8a68ebd2d41bb1bb26bb4f3dd27130c))
+
+
+### Maintenance
+
+* **pat sticky:** Deprecate pat sticky. Use CSS position:sticky instead. ([8ac4603](https://github.com/Patternslib/patterns/commit/8ac4603c772a1fe3a3e2e1b38d1e0117124e2c7d))
+
 ## [4.3.0](https://github.com/Patternslib/patterns/compare/4.2.4...4.3.0) (2021-06-01)
 
 
