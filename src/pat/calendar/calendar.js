@@ -123,7 +123,9 @@ export default Base.extend({
         this.el_view_list_week = calendar_controls.querySelector(".view-listWeek");
         this.el_view_list_day = calendar_controls.querySelector(".view-listDay");
         this.el_timezone = calendar_controls.querySelector("select[name='timezone']");
-        this.el_title = calendar_controls.querySelector(".cal-title");
+        this.el_title =
+            this.el.querySelector(".cal-title") ||
+            calendar_controls.querySelector(".cal-title");
 
         const storage_prefix = `${this.name}-${window.location.pathname}`;
         this.storage =
