@@ -12,7 +12,7 @@ describe("pat-display-time tests", () => {
         document.body.innerHTML = "";
     });
 
-    it("default", async (done) => {
+    it("default", async () => {
         document.body.innerHTML = `
           <time
               class="pat-display-time"
@@ -25,11 +25,9 @@ describe("pat-display-time tests", () => {
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("2021-04-22T03:00:00-07:00");
-
-        done();
     });
 
-    it("Example setting the output format explicitly", async (done) => {
+    it("Example setting the output format explicitly", async () => {
         document.body.innerHTML = `
           <time
               class="pat-display-time"
@@ -43,11 +41,9 @@ describe("pat-display-time tests", () => {
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("April Thursday 22nd 2021, 3:00:00 am");
-
-        done();
     });
 
-    it("Example setting the output format explicitly in German", async (done) => {
+    it("Example setting the output format explicitly in German", async () => {
         document.body.innerHTML = `
           <time
               class="pat-display-time"
@@ -61,11 +57,9 @@ describe("pat-display-time tests", () => {
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("April Donnerstag 22. 2021, 4:00:00");
-
-        done();
     });
 
-    it("Output formatted as local", async (done) => {
+    it("Output formatted as local", async () => {
         document.body.innerHTML = `
           <time
               class="pat-display-time"
@@ -79,10 +73,8 @@ describe("pat-display-time tests", () => {
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("04/22/2021");
-
-        done();
     });
-    it("Output formatted as 'from now'", async (done) => {
+    it("Output formatted as 'from now'", async () => {
         document.body.innerHTML = `
           <time
               class="pat-display-time"
@@ -96,10 +88,8 @@ describe("pat-display-time tests", () => {
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent.indexOf("years ago") >= 0).toBe(true);
-
-        done();
     });
-    it("Output formatted as 'from now' with no suffix", async (done) => {
+    it("Output formatted as 'from now' with no suffix", async () => {
         document.body.innerHTML = `
           <time
               class="pat-display-time"
@@ -114,10 +104,8 @@ describe("pat-display-time tests", () => {
 
         expect(el.textContent.indexOf("years") >= 0).toBe(true);
         expect(el.textContent.indexOf("years ago") === -1).toBe(true);
-
-        done();
     });
-    it("Output formatted as 'from now' with no suffix in german", async (done) => {
+    it("Output formatted as 'from now' with no suffix in german", async () => {
         document.body.innerHTML = `
           <time
               class="pat-display-time"
@@ -131,11 +119,9 @@ describe("pat-display-time tests", () => {
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent.indexOf("Jahre") >= 0).toBe(true);
-
-        done();
     });
 
-    it("Formating empty datetime clears the display.", async (done) => {
+    it("Formating empty datetime clears the display.", async () => {
         document.body.innerHTML = `
           <time class="pat-display-time">
           </time>
@@ -146,7 +132,5 @@ describe("pat-display-time tests", () => {
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("");
-
-        done();
     });
 });

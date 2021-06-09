@@ -1,6 +1,7 @@
 import pattern from "./slides";
 import $ from "jquery";
 import utils from "../../core/utils";
+import { jest } from "@jest/globals";
 
 describe("pat-slides", function () {
     afterEach(function () {
@@ -65,7 +66,7 @@ describe("pat-slides", function () {
             var $show = $("<div/>", { class: "pat-slides" });
             for (var i = 1; i <= 2; i++)
                 $("<div/>", { class: "slide", id: "slide" + i }).appendTo($show);
-            var spy_reset = spyOn(pattern, "_reset");
+            var spy_reset = jest.spyOn(pattern, "_reset");
             pattern._remove_slides($show, ["slide1", "slide2"]);
             expect(spy_reset).not.toHaveBeenCalled();
         });

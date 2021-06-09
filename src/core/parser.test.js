@@ -1,6 +1,7 @@
 import _ from "underscore";
 import $ from "jquery";
 import ArgumentParser from "./parser";
+import { jest } from "@jest/globals";
 
 describe("trim", function () {
     it("No whitespace", function () {
@@ -683,7 +684,8 @@ describe("The Patterns parser", function () {
                 var parser = new ArgumentParser(),
                     opts = {};
                 parser.addArgument("value", 1);
-                spyOn(parser, "_coerce").and.returnValue("coerced!");
+                jest.spyOn(parser, "_coerce");
+                parser._coerce.mockReturnValue("coerced!");
                 parser._set(opts, "value", "1");
                 expect(parser._coerce).toHaveBeenCalledWith("value", "1");
                 expect(opts.value).toBe("coerced!");
@@ -693,7 +695,8 @@ describe("The Patterns parser", function () {
                 var parser = new ArgumentParser(),
                     opts = {};
                 parser.addArgument("value", 1);
-                spyOn(parser, "_coerce").and.returnValue(null);
+                jest.spyOn(parser, "_coerce");
+                parser._coerce.mockReturnValue(null);
                 parser._set(opts, "value", "1");
                 expect(opts.value).toBe(undefined);
             });
@@ -712,7 +715,8 @@ describe("The Patterns parser", function () {
                 var parser = new ArgumentParser(),
                     opts = {};
                 parser.addArgument("value", [1], null, true);
-                spyOn(parser, "_coerce").and.returnValue("coerced!");
+                jest.spyOn(parser, "_coerce");
+                parser._coerce.mockReturnValue("coerced!");
                 parser._set(opts, "value", "1");
                 expect(parser._coerce).toHaveBeenCalledWith("value", "1");
                 expect(opts.value).toEqual(["coerced!"]);
@@ -722,7 +726,8 @@ describe("The Patterns parser", function () {
                 var parser = new ArgumentParser(),
                     opts = {};
                 parser.addArgument("value", 1);
-                spyOn(parser, "_coerce").and.returnValue(null);
+                jest.spyOn(parser, "_coerce");
+                parser._coerce.mockReturnValue(null);
                 parser._set(opts, "value", "1");
                 expect(opts.value).toBe(undefined);
             });

@@ -2,6 +2,7 @@ import Base from "../../core/base";
 import registry from "../../core/registry";
 import Clone from "./clone";
 import $ from "jquery";
+import { jest } from "@jest/globals";
 
 describe("pat-clone", function () {
     beforeEach(function () {
@@ -10,6 +11,7 @@ describe("pat-clone", function () {
     });
     afterEach(function () {
         $("#lab").remove();
+        jest.restoreAllMocks();
     });
 
     it("clones the node's first child when .add-clone is clicked and places the clone after the cloned element", function () {
@@ -124,7 +126,7 @@ describe("pat-clone", function () {
     });
 
     it('has a "clone-element" argument which is necessary when starting with pre-existing clones', function () {
-        spyOn(window, "confirm").and.callFake(function () {
+        jest.spyOn(window, "confirm").mockImplementation(() => {
             return true;
         });
         var $lab = $("#lab");
@@ -156,7 +158,7 @@ describe("pat-clone", function () {
     });
 
     it("will remove a clone when .remove-clone inside the clone is clicked.", function () {
-        var spy_window = spyOn(window, "confirm").and.callFake(function () {
+        var spy_window = jest.spyOn(window, "confirm").mockImplementation(() => {
             return true;
         });
         var $lab = $("#lab");
@@ -182,7 +184,7 @@ describe("pat-clone", function () {
     });
 
     it("allows the remove element to be configured", function () {
-        var spy_window = spyOn(window, "confirm").and.callFake(function () {
+        var spy_window = jest.spyOn(window, "confirm").mockImplementation(() => {
             return true;
         });
         var $lab = $("#lab");
@@ -208,7 +210,7 @@ describe("pat-clone", function () {
     });
 
     it("will by default ask for confirmation before removing elements, but can be configured otherwise", function () {
-        var spy_confirm = spyOn(window, "confirm").and.callFake(function () {
+        var spy_confirm = jest.spyOn(window, "confirm").mockImplementation(() => {
             return true;
         });
         var $lab = $("#lab");
@@ -226,7 +228,7 @@ describe("pat-clone", function () {
 
         $lab.find(".remove-clone:last").click();
         expect(spy_confirm).toHaveBeenCalled();
-        expect(window.confirm.calls.count()).toBe(1);
+        expect(window.confirm.mock.calls.length).toBe(1);
         expect($("div.item").length).toBe(1);
 
         $lab.empty();
@@ -243,7 +245,7 @@ describe("pat-clone", function () {
         expect($("div.item").length).toBe(2);
 
         $lab.find(".remove-clone:last").click();
-        expect(window.confirm.calls.count()).toBe(1);
+        expect(window.confirm.mock.calls.length).toBe(1);
         expect($("div.item").length).toBe(1);
     });
 

@@ -12,7 +12,7 @@ describe("pat-autofocus", function () {
         document.body.innerHTML = "";
     });
 
-    it("Focus the first element.", async (done) => {
+    it("Focus the first element.", async () => {
         const container = document.querySelector("#lab");
         container.innerHTML = `
             <input name="i1" type="text" class="pat-autofocus"/>
@@ -24,11 +24,9 @@ describe("pat-autofocus", function () {
 
         const should_be_active = document.querySelector("input[name=i1]");
         expect(document.activeElement).toBe(should_be_active);
-
-        done();
     });
 
-    it("Focus the non-empty element, if available.", async (done) => {
+    it("Focus the non-empty element, if available.", async () => {
         const container = document.querySelector("#lab");
         container.innerHTML = `
             <input name="i1" type="text" class="pat-autofocus" value="okay"/>
@@ -40,7 +38,5 @@ describe("pat-autofocus", function () {
 
         const should_be_active = document.querySelector("input[name=i2]");
         expect(document.activeElement).toBe(should_be_active);
-
-        done();
     });
 });

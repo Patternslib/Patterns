@@ -3,11 +3,14 @@ import autosubmit from "../auto-submit/auto-submit";
 import pattern from "./tooltip";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
+import { jest } from "@jest/globals";
 
-const mockFetch = (text = "") => () =>
-    Promise.resolve({
-        text: () => Promise.resolve(text),
-    });
+const mockFetch =
+    (text = "") =>
+    () =>
+        Promise.resolve({
+            text: () => Promise.resolve(text),
+        });
 
 const testutils = {
     createTooltip(c) {
@@ -52,15 +55,6 @@ const testutils = {
     mouseleave($target) {
         testutils.dispatchEvent($target, "mouseleave");
     },
-
-    stopwatch(spy, name, timer) {
-        return (...args) => {
-            timer[name] = Date.now();
-            spy.and.callThrough();
-            spy.apply(null, args);
-            spy.and.callFake(testutils.stopwatch(name, timer));
-        };
-    },
 };
 
 describe("pat-tooltip", () => {
@@ -74,7 +68,7 @@ describe("pat-tooltip", () => {
     });
 
     describe("A tooltip", () => {
-        it("always gets the ``tooltip-container`` class set", async (done) => {
+        it("always gets the ``tooltip-container`` class set", async () => {
             const $el = testutils.createTooltip({
                 data: "trigger: click",
                 title: "tooltip",
@@ -88,12 +82,10 @@ describe("pat-tooltip", () => {
             expect(
                 instance.tippy.popper.classList.contains("tooltip-container")
             ).toBeTruthy();
-
-            done();
         });
 
         describe(`if the 'class' parameter exists`, () => {
-            it("will assign a class to the tooltip container", async (done) => {
+            it("will assign a class to the tooltip container", async () => {
                 const $el = testutils.createTooltip({
                     data: "source: title; trigger: hover; class: wasabi",
                 });
@@ -111,7 +103,7 @@ describe("pat-tooltip", () => {
                 // NOTE 2:
                 // spu on "onShow" because "onShown" isn't reached due to CSS
                 // animations won't work in jsDOM.
-                const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
+                const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
                 testutils.mouseenter($el);
                 await utils.timeout(1);
@@ -119,14 +111,12 @@ describe("pat-tooltip", () => {
                 const container = document.querySelectorAll(".tooltip-container");
                 expect(container.length).toEqual(1);
                 expect(container[0].classList.contains("wasabi")).toBeTruthy();
-                const expected = container[0].querySelector(".tippy-content")
-                    .textContent;
+                const expected =
+                    container[0].querySelector(".tippy-content").textContent;
                 expect(expected).toBe(title);
-
-                done();
             });
 
-            it("and only to the corresponding container", async (done) => {
+            it("and only to the corresponding container", async () => {
                 const $el1 = testutils.createTooltip({
                     data: "source: title; trigger: click; class: wasabi",
                     id: "tooltip1",
@@ -157,11 +147,9 @@ describe("pat-tooltip", () => {
                 container = document.querySelectorAll(".tooltip-container");
                 expect(container.length).toEqual(2);
                 expect(container[1].classList.contains("wasabi")).toBeFalsy();
-
-                done();
             });
 
-            it("with multiple values, all will be applied.", async (done) => {
+            it("with multiple values, all will be applied.", async () => {
                 const $el = testutils.createTooltip({
                     data: "source: title; trigger: click; class: wasabi kohlrabi",
                 });
@@ -175,13 +163,11 @@ describe("pat-tooltip", () => {
                 expect(container.classList.contains("wasabi")).toBeTruthy();
                 expect(container.classList.contains("kohlrabi")).toBeTruthy();
                 expect(container.classList.contains("tooltip-container")).toBeTruthy();
-
-                done();
             });
         });
 
         describe(`if the 'delay' parameter exists`, () => {
-            it("will wait accordingly before showing the tooltip", async (done) => {
+            it("will wait accordingly before showing the tooltip", async () => {
                 testutils.createTooltip({
                     data: "delay: 500; trigger: hover",
                 });
@@ -193,12 +179,10 @@ describe("pat-tooltip", () => {
 
                 const timer = {};
 
-                const spy_trigger = spyOn(instance.tippy.props, "onTrigger");
-                spy_trigger.and.callFake(
-                    testutils.stopwatch(spy_trigger, "onTrigger", timer)
-                );
-                const spy_show = spyOn(instance.tippy.props, "onShow");
-                spy_show.and.callFake(testutils.stopwatch(spy_show, "onShow", timer));
+                const spy_trigger = jest.spyOn(instance.tippy.props, "onTrigger");
+                spy_trigger.mockImplementation(() => (timer["onTrigger"] = Date.now()));
+                const spy_show = jest.spyOn(instance.tippy.props, "onShow");
+                spy_show.mockImplementation(() => (timer["onShow"] = Date.now()));
 
                 testutils.mouseenter($el);
                 await utils.timeout(1000);
@@ -206,20 +190,18 @@ describe("pat-tooltip", () => {
                 expect(spy_show).toHaveBeenCalled();
                 const container = document.querySelectorAll(".tippy-box");
                 expect(container.length).toEqual(1);
-                const expected = container[0].querySelector(".tippy-content")
-                    .textContent;
+                const expected =
+                    container[0].querySelector(".tippy-content").textContent;
                 expect(expected).toBe(title);
                 const duration = timer["onShow"] - timer["onTrigger"];
                 expect(duration / 500).toBeCloseTo(1, 1);
-
-                done();
             });
         });
     });
 
     describe("Tooltip closing behavior", () => {
         describe("with the default `closing: auto`", () => {
-            it("with `trigger: click` it will only close when clicking outside the tooltip element", async (done) => {
+            it("with `trigger: click` it will only close when clicking outside the tooltip element", async () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: click; closing: auto",
                 });
@@ -227,8 +209,8 @@ describe("pat-tooltip", () => {
                 await utils.timeout(1);
 
                 const tp = instance.tippy.props;
-                const spy_show = spyOn(tp, "onShow").and.callThrough();
-                const spy_hide = spyOn(tp, "onHide").and.callThrough();
+                const spy_show = jest.spyOn(tp, "onShow");
+                const spy_hide = jest.spyOn(tp, "onHide");
 
                 testutils.mouseenter($el);
                 await utils.timeout(1);
@@ -247,11 +229,9 @@ describe("pat-tooltip", () => {
                 testutils.click($el);
                 await utils.timeout(50);
                 expect(spy_hide).toHaveBeenCalled();
-
-                done();
             });
 
-            it("with `trigger: hover` it will close when hovering outside the tooltip element", async (done) => {
+            it("with `trigger: hover` it will close when hovering outside the tooltip element", async () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: hover; closing: auto",
                 });
@@ -259,11 +239,11 @@ describe("pat-tooltip", () => {
                 await utils.timeout(1);
 
                 const tp = instance.tippy.props;
-                const spy_show = spyOn(tp, "onShow").and.callThrough();
-                const spy_hide = spyOn(tp, "onHide").and.callThrough();
+                const spy_show = jest.spyOn(tp, "onShow");
+                const spy_hide = jest.spyOn(tp, "onHide");
 
                 // Shortcut any checks for mouse positions and just hide.
-                spyOn(instance.tippy, "hideWithInteractivity").and.callFake(
+                jest.spyOn(instance.tippy, "hideWithInteractivity").mockImplementation(
                     instance.tippy.hide
                 );
 
@@ -275,13 +255,11 @@ describe("pat-tooltip", () => {
                 testutils.mouseleave($el);
                 await utils.timeout(1);
                 expect(spy_hide).toHaveBeenCalled();
-
-                done();
             });
         });
 
         describe("with `closing: sticky`", () => {
-            it("with `trigger: click` there is no change in the closing behavior", async (done) => {
+            it("with `trigger: click` there is no change in the closing behavior", async () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: click; closing: sticky",
                 });
@@ -289,8 +267,8 @@ describe("pat-tooltip", () => {
                 await utils.timeout(1);
 
                 const tp = instance.tippy.props;
-                const spy_show = spyOn(tp, "onShow").and.callThrough();
-                const spy_hide = spyOn(tp, "onHide").and.callThrough();
+                const spy_show = jest.spyOn(tp, "onShow");
+                const spy_hide = jest.spyOn(tp, "onHide");
 
                 testutils.mouseenter($el);
                 await utils.timeout(1);
@@ -309,11 +287,9 @@ describe("pat-tooltip", () => {
                 testutils.click($el);
                 await utils.timeout(50);
                 expect(spy_hide).toHaveBeenCalled();
-
-                done();
             });
 
-            it("with `trigger: hover` the tooltip is only closed when clicking outside", async (done) => {
+            it("with `trigger: hover` the tooltip is only closed when clicking outside", async () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: hover; closing: sticky",
                 });
@@ -321,8 +297,8 @@ describe("pat-tooltip", () => {
                 await utils.timeout(1);
 
                 const tp = instance.tippy.props;
-                const spy_show = spyOn(tp, "onShow").and.callThrough();
-                const spy_hide = spyOn(tp, "onHide").and.callThrough();
+                const spy_show = jest.spyOn(tp, "onShow");
+                const spy_hide = jest.spyOn(tp, "onHide");
 
                 testutils.mouseenter($el);
                 await utils.timeout(1);
@@ -336,13 +312,11 @@ describe("pat-tooltip", () => {
                 testutils.click($el);
                 await utils.timeout(50);
                 expect(spy_hide).toHaveBeenCalled();
-
-                done();
             });
         });
 
         describe("with `closing: close-button`", () => {
-            it("with `trigger: click` the tooltip is only closed when clicking the close button", async (done) => {
+            it("with `trigger: click` the tooltip is only closed when clicking the close button", async () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: click; closing: close-button",
                 });
@@ -350,8 +324,8 @@ describe("pat-tooltip", () => {
                 await utils.timeout(1);
 
                 const tp = instance.tippy.props;
-                const spy_show = spyOn(tp, "onShow").and.callThrough();
-                const spy_hide = spyOn(tp, "onHide").and.callThrough();
+                const spy_show = jest.spyOn(tp, "onShow");
+                const spy_hide = jest.spyOn(tp, "onHide");
 
                 testutils.mouseenter($el);
                 await utils.timeout(1);
@@ -376,19 +350,17 @@ describe("pat-tooltip", () => {
                 closebutton.click();
                 await utils.timeout(50);
                 expect(spy_hide).toHaveBeenCalled();
-
-                done();
             });
 
-            it("with `trigger: hover` the tooltip is only closed when clicking outside", async (done) => {
+            it("with `trigger: hover` the tooltip is only closed when clicking outside", async () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: hover; closing: close-button",
                 });
                 const instance = new pattern($el);
                 await utils.timeout(1);
                 const tp = instance.tippy.props;
-                const spy_show = spyOn(tp, "onShow").and.callThrough();
-                const spy_hide = spyOn(tp, "onHide").and.callThrough();
+                const spy_show = jest.spyOn(tp, "onShow");
+                const spy_hide = jest.spyOn(tp, "onHide");
 
                 testutils.mouseenter($el);
                 await utils.timeout(1);
@@ -408,14 +380,12 @@ describe("pat-tooltip", () => {
                 closebutton.click();
                 await utils.timeout(50);
                 expect(spy_hide).toHaveBeenCalled();
-
-                done();
             });
         });
     });
 
     describe(`multiple tooltips...`, () => {
-        it("...no problem", async (done) => {
+        it("...no problem", async () => {
             const $el1 = testutils.createTooltip({
                 data: "source: title; trigger: click",
                 id: "tooltip1",
@@ -433,8 +403,8 @@ describe("pat-tooltip", () => {
             const instance2 = new pattern($el2);
             await utils.timeout(1);
 
-            const spy_show1 = spyOn(instance1.tippy.props, "onShow").and.callThrough();
-            const spy_show2 = spyOn(instance2.tippy.props, "onShow").and.callThrough();
+            const spy_show1 = jest.spyOn(instance1.tippy.props, "onShow");
+            const spy_show2 = jest.spyOn(instance2.tippy.props, "onShow");
 
             let container;
 
@@ -449,8 +419,8 @@ describe("pat-tooltip", () => {
                 title1
             );
 
-            spy_show1.calls.reset();
-            spy_show2.calls.reset();
+            spy_show1.mockClear();
+            spy_show2.mockClear();
 
             testutils.click($el2);
             await utils.timeout(1);
@@ -462,13 +432,11 @@ describe("pat-tooltip", () => {
             expect(container[1].querySelector(".tippy-content").textContent).toBe(
                 title2
             );
-
-            done();
         });
     });
 
     describe(`if the 'position-list' parameter exists`, () => {
-        it(`'lt' will place the tooltip as 'right-start'`, async (done) => {
+        it(`'lt' will place the tooltip as 'right-start'`, async () => {
             const $el = testutils.createTooltip({
                 data: "position-list: lt",
             });
@@ -480,10 +448,8 @@ describe("pat-tooltip", () => {
 
             const container = document.querySelector(".tippy-box");
             expect(container.getAttribute("data-placement")).toBe("right-start");
-
-            done();
         });
-        it(`'lb' will place the tooltip as 'right-end'`, async (done) => {
+        it(`'lb' will place the tooltip as 'right-end'`, async () => {
             const $el = testutils.createTooltip({
                 data: "position-list: lb",
             });
@@ -495,10 +461,8 @@ describe("pat-tooltip", () => {
 
             const container = document.querySelector(".tippy-box");
             expect(container.getAttribute("data-placement")).toBe("right-end");
-
-            done();
         });
-        it(`'lm' will place the tooltip as 'right'`, async (done) => {
+        it(`'lm' will place the tooltip as 'right'`, async () => {
             const $el = testutils.createTooltip({
                 data: "position-list: lm",
             });
@@ -510,10 +474,8 @@ describe("pat-tooltip", () => {
 
             const container = document.querySelector(".tippy-box");
             expect(container.getAttribute("data-placement")).toBe("right");
-
-            done();
         });
-        it(`'bl' will place the tooltip as 'top-start'`, async (done) => {
+        it(`'bl' will place the tooltip as 'top-start'`, async () => {
             const $el = testutils.createTooltip({
                 data: "position-list: bl",
             });
@@ -525,10 +487,8 @@ describe("pat-tooltip", () => {
 
             const container = document.querySelector(".tippy-box");
             expect(container.getAttribute("data-placement")).toBe("top-start");
-
-            done();
         });
-        it(`'br' will place the tooltip as 'top-end'`, async (done) => {
+        it(`'br' will place the tooltip as 'top-end'`, async () => {
             const $el = testutils.createTooltip({
                 data: "position-list: br",
             });
@@ -540,10 +500,8 @@ describe("pat-tooltip", () => {
 
             const container = document.querySelector(".tippy-box");
             expect(container.getAttribute("data-placement")).toBe("top-end");
-
-            done();
         });
-        it(`'bm' will place the tooltip as 'top'`, async (done) => {
+        it(`'bm' will place the tooltip as 'top'`, async () => {
             const $el = testutils.createTooltip({
                 data: "position-list: bm",
             });
@@ -555,11 +513,9 @@ describe("pat-tooltip", () => {
 
             const container = document.querySelector(".tippy-box");
             expect(container.getAttribute("data-placement")).toBe("top");
-
-            done();
         });
         describe(`and 'position-policy' is 'force'`, () => {
-            it(`'tl;force' will place the tooltip as 'bottom-start'`, async (done) => {
+            it(`'tl;force' will place the tooltip as 'bottom-start'`, async () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tl; position-policy: force",
                 });
@@ -571,10 +527,8 @@ describe("pat-tooltip", () => {
 
                 const container = document.querySelector(".tippy-box");
                 expect(container.getAttribute("data-placement")).toBe("bottom-start");
-
-                done();
             });
-            it(`'tr;force' will place the tooltip as 'bottom-end'`, async (done) => {
+            it(`'tr;force' will place the tooltip as 'bottom-end'`, async () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tr; position-policy: force",
                 });
@@ -586,10 +540,8 @@ describe("pat-tooltip", () => {
 
                 const container = document.querySelector(".tippy-box");
                 expect(container.getAttribute("data-placement")).toBe("bottom-end");
-
-                done();
             });
-            it(`'tm;force' will place the tooltip as 'bottom'`, async (done) => {
+            it(`'tm;force' will place the tooltip as 'bottom'`, async () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tm; position-policy: force",
                 });
@@ -601,10 +553,8 @@ describe("pat-tooltip", () => {
 
                 const container = document.querySelector(".tippy-box");
                 expect(container.getAttribute("data-placement")).toBe("bottom");
-
-                done();
             });
-            it(`'rt;force' will place the tooltip as 'left-start'`, async (done) => {
+            it(`'rt;force' will place the tooltip as 'left-start'`, async () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rt; position-policy: force",
                 });
@@ -616,10 +566,8 @@ describe("pat-tooltip", () => {
 
                 const container = document.querySelector(".tippy-box");
                 expect(container.getAttribute("data-placement")).toBe("left-start");
-
-                done();
             });
-            it(`'rb;force' will place the tooltip as 'left-end'`, async (done) => {
+            it(`'rb;force' will place the tooltip as 'left-end'`, async () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rb; position-policy: force",
                 });
@@ -631,10 +579,8 @@ describe("pat-tooltip", () => {
 
                 const container = document.querySelector(".tippy-box");
                 expect(container.getAttribute("data-placement")).toBe("left-end");
-
-                done();
             });
-            it(`'rm;force' will place the tooltip as 'left'`, async (done) => {
+            it(`'rm;force' will place the tooltip as 'left'`, async () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rm; position-policy: force",
                 });
@@ -646,15 +592,13 @@ describe("pat-tooltip", () => {
 
                 const container = document.querySelector(".tippy-box");
                 expect(container.getAttribute("data-placement")).toBe("left");
-
-                done();
             });
         });
     });
 
     describe(`and ...`, () => {
         describe(`the 'mark-inactive' paramater`, () => {
-            it("when true, toggles the active/inactive class on the trigger", async (done) => {
+            it("when true, toggles the active/inactive class on the trigger", async () => {
                 const $el = testutils.createTooltip({
                     data: "mark-inactive: true",
                 });
@@ -662,8 +606,8 @@ describe("pat-tooltip", () => {
                 const instance = new pattern($el);
                 await utils.timeout(1);
 
-                const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
-                const spy_hide = spyOn(instance.tippy.props, "onHide").and.callThrough();
+                const spy_show = jest.spyOn(instance.tippy.props, "onShow");
+                const spy_hide = jest.spyOn(instance.tippy.props, "onHide");
 
                 let containers;
 
@@ -691,10 +635,8 @@ describe("pat-tooltip", () => {
                 //expect(containers.length).toEqual(0);
                 expect(el.classList.contains("tooltip-active-click")).toBeFalsy();
                 expect(el.classList.contains("tooltip-inactive")).toBeTruthy();
-
-                done();
             });
-            it("when false, the trigger does not get the active/inactive class", async (done) => {
+            it("when false, the trigger does not get the active/inactive class", async () => {
                 const $el = testutils.createTooltip({
                     data: "mark-inactive: false",
                 });
@@ -702,8 +644,8 @@ describe("pat-tooltip", () => {
                 const instance = new pattern($el);
                 await utils.timeout(1);
 
-                const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
-                const spy_hide = spyOn(instance.tippy.props, "onHide").and.callThrough();
+                const spy_show = jest.spyOn(instance.tippy.props, "onShow");
+                const spy_hide = jest.spyOn(instance.tippy.props, "onHide");
 
                 let containers;
 
@@ -731,10 +673,8 @@ describe("pat-tooltip", () => {
                 //expect(containers.length).toEqual(0);
                 expect(el.classList.contains("tooltip-active-click")).toBeFalsy();
                 expect(el.classList.contains("tooltip-inactive")).toBeFalsy();
-
-                done();
             });
-            it("when true and trigger is hover, toggles a different active class on the trigger", async (done) => {
+            it("when true and trigger is hover, toggles a different active class on the trigger", async () => {
                 const $el = testutils.createTooltip({
                     data: "mark-inactive: true; trigger: hover",
                 });
@@ -742,7 +682,7 @@ describe("pat-tooltip", () => {
                 const instance = new pattern($el);
                 await utils.timeout(1);
 
-                const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
+                const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
                 let containers;
 
@@ -757,13 +697,11 @@ describe("pat-tooltip", () => {
                 expect(containers.length).toEqual(1);
                 expect(el.classList.contains("tooltip-active-hover")).toBeTruthy();
                 expect(el.classList.contains("tooltip-inactive")).toBeFalsy();
-
-                done();
             });
         });
         describe(`if the 'trigger' parameter is 'hover'`, () => {
             describe(`if the 'source' parameter is 'title'`, () => {
-                it(`will show the contents of the 'title' attribute`, async (done) => {
+                it(`will show the contents of the 'title' attribute`, async () => {
                     const $el = testutils.createTooltip({
                         data: "source: title; trigger: hover",
                     });
@@ -773,7 +711,7 @@ describe("pat-tooltip", () => {
                     const instance = new pattern($el);
                     await utils.timeout(1);
 
-                    const spy_show = spyOn(instance.tippy.props, "onShow");
+                    const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
                     // The 'title' attr gets removed, otherwise the browser's
                     // tooltip will appear
@@ -789,10 +727,8 @@ describe("pat-tooltip", () => {
                     expect(
                         container[0].querySelector(".tippy-content").textContent
                     ).toBe(title);
-
-                    done();
                 });
-                it("will hide the tooltip on mouseleave", async (done) => {
+                it("will hide the tooltip on mouseleave", async () => {
                     const $el = testutils.createTooltip({
                         data: "source: title; trigger: hover",
                     });
@@ -800,12 +736,13 @@ describe("pat-tooltip", () => {
                     const instance = new pattern($el);
                     await utils.timeout(1);
 
-                    const spy_hide = spyOn(instance.tippy.props, "onHide");
+                    const spy_hide = jest.spyOn(instance.tippy.props, "onHide");
 
                     // Shortcut any checks for mouse positions and just hide.
-                    spyOn(instance.tippy, "hideWithInteractivity").and.callFake(
-                        instance.tippy.hide
-                    );
+                    jest.spyOn(
+                        instance.tippy,
+                        "hideWithInteractivity"
+                    ).mockImplementation(instance.tippy.hide);
 
                     testutils.mouseenter($el);
                     await utils.timeout(1);
@@ -816,12 +753,10 @@ describe("pat-tooltip", () => {
                     await utils.timeout(1);
                     expect(spy_hide).toHaveBeenCalled();
                     expect(document.querySelectorAll(".tippy-box").length).toEqual(0);
-
-                    done();
                 });
             });
             describe(`if the 'source' parameter is 'content'`, () => {
-                it("it will show the content of the link", async (done) => {
+                it("it will show the content of the link", async () => {
                     const content = "Local content";
                     const $el = testutils.createTooltip({
                         data: "source: content; trigger: hover",
@@ -831,10 +766,7 @@ describe("pat-tooltip", () => {
                     const instance = new pattern($el);
                     await utils.timeout(1);
 
-                    const spy_show = spyOn(
-                        instance.tippy.props,
-                        "onShow"
-                    ).and.callThrough();
+                    const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
                     testutils.mouseenter($el);
                     await utils.timeout(1);
@@ -843,13 +775,11 @@ describe("pat-tooltip", () => {
                     expect(document.querySelector(".tippy-box").textContent).toBe(
                         content
                     );
-
-                    done();
                 });
             });
         });
         describe(`if the 'target' parameter is 'body'`, () => {
-            it("will append the .tippy-box to the document.body", async (done) => {
+            it("will append the .tippy-box to the document.body", async () => {
                 const $el = testutils.createTooltip({
                     data: "target: body",
                     href: "#",
@@ -863,12 +793,10 @@ describe("pat-tooltip", () => {
                 expect(
                     document.querySelectorAll("body > [data-tippy-root]").length
                 ).toEqual(1);
-
-                done();
             });
         });
         describe(`if the 'target' parameter is 'parent'`, () => {
-            it(`will append the .tippy-box to the reference element's parent node`, async (done) => {
+            it(`will append the .tippy-box to the reference element's parent node`, async () => {
                 const $el = testutils.createTooltip({
                     data: "target: parent",
                     href: "#",
@@ -882,12 +810,10 @@ describe("pat-tooltip", () => {
                 expect(
                     document.querySelectorAll("#lab > [data-tippy-root]").length
                 ).toEqual(1);
-
-                done();
             });
         });
         describe(`if the 'target' parameter is a selector`, () => {
-            it("will append the .tippy-box to the selected element", async (done) => {
+            it("will append the .tippy-box to the selected element", async () => {
                 const $el = testutils.createTooltip({
                     data: "target: #child3",
                     href: "#",
@@ -912,14 +838,12 @@ describe("pat-tooltip", () => {
                 expect(
                     document.querySelectorAll("#child3 > [data-tippy-root]").length
                 ).toEqual(1);
-
-                done();
             });
         });
     });
 
     describe("test the different `source` parameters", () => {
-        it("source: title will use the title attribute", async (done) => {
+        it("source: title will use the title attribute", async () => {
             const $el = testutils.createTooltip({
                 data: "source: title; trigger: click",
             });
@@ -932,14 +856,13 @@ describe("pat-tooltip", () => {
             testutils.click($el);
             await utils.timeout(1);
 
-            const expected = document.querySelector(".tooltip-container .tippy-content")
-                .textContent;
+            const expected = document.querySelector(
+                ".tooltip-container .tippy-content"
+            ).textContent;
             expect(expected).toBe(title);
-
-            done();
         });
 
-        it("source: content use the content of the link", async (done) => {
+        it("source: content use the content of the link", async () => {
             const content = "Local content";
             const $el = testutils.createTooltip({
                 data: "source: content; trigger: click",
@@ -952,11 +875,9 @@ describe("pat-tooltip", () => {
             await utils.timeout(1);
 
             expect(document.querySelector(".tippy-box").textContent).toBe(content);
-
-            done();
         });
 
-        it("source: ajax and an external url will fetch its contents via ajax", async (done) => {
+        it("source: ajax and an external url will fetch its contents via ajax", async () => {
             global.fetch = jest
                 .fn()
                 .mockImplementation(
@@ -970,8 +891,8 @@ describe("pat-tooltip", () => {
             const instance = new pattern($el);
             await utils.timeout(1);
 
-            const spy_content = spyOn(instance, "_getContent").and.callThrough();
-            const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
+            const spy_content = jest.spyOn(instance, "_getContent");
+            const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -985,11 +906,9 @@ describe("pat-tooltip", () => {
 
             global.fetch.mockClear();
             delete global.fetch;
-
-            done();
         });
 
-        it("source: ajax with a local selector will not use ajax but get the contents from the current DOM", async (done) => {
+        it("source: ajax with a local selector will not use ajax but get the contents from the current DOM", async () => {
             global.fetch = jest
                 .fn()
                 .mockImplementation(
@@ -1003,8 +922,8 @@ describe("pat-tooltip", () => {
             const instance = new pattern($el);
             await utils.timeout(1);
 
-            const spy_content = spyOn(instance, "_getContent").and.callThrough();
-            const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
+            const spy_content = jest.spyOn(instance, "_getContent");
+            const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1018,13 +937,11 @@ describe("pat-tooltip", () => {
 
             global.fetch.mockClear();
             delete global.fetch;
-
-            done();
         });
     });
 
     describe(`if the 'source' parameter is 'ajax'`, () => {
-        it("multiple clicks only fetches once AND the default click action is prevented", async (done) => {
+        it("multiple clicks only fetches once AND the default click action is prevented", async () => {
             global.fetch = jest.fn().mockImplementation(mockFetch());
 
             const $el = testutils.createTooltip({
@@ -1038,10 +955,10 @@ describe("pat-tooltip", () => {
 
             const call_order = [];
 
-            spyOn(click, "preventDefault").and.callFake(() =>
+            jest.spyOn(click, "preventDefault").mockImplementation(() =>
                 call_order.push("preventDefault")
             );
-            spyOn(instance, "_getContent").and.callFake(() =>
+            jest.spyOn(instance, "_getContent").mockImplementation(() =>
                 call_order.push("_getContent")
             );
 
@@ -1057,11 +974,9 @@ describe("pat-tooltip", () => {
 
             global.fetch.mockClear();
             delete global.fetch;
-
-            done();
         });
 
-        it("will fetch a section via ajax", async (done) => {
+        it("will fetch a section via ajax", async () => {
             global.fetch = jest.fn().mockImplementation(
                 mockFetch(`
 <h1>test fetching a secton</h1>
@@ -1076,8 +991,8 @@ describe("pat-tooltip", () => {
             const instance = new pattern($el);
             await utils.timeout(1);
 
-            const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
-            const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
+            const spy_ajax = jest.spyOn(instance, "_getContent");
+            const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1090,11 +1005,9 @@ describe("pat-tooltip", () => {
 
             global.fetch.mockClear();
             delete global.fetch;
-
-            done();
         });
 
-        it("will handle markdown content", async (done) => {
+        it("will handle markdown content", async () => {
             global.fetch = jest.fn().mockImplementation(mockFetch("## hello."));
 
             const $el = testutils.createTooltip({
@@ -1118,11 +1031,9 @@ describe("pat-tooltip", () => {
 
             global.fetch.mockClear();
             delete global.fetch;
-
-            done();
         });
 
-        it("will extract a section from markdown", async (done) => {
+        it("will extract a section from markdown", async () => {
             global.fetch = jest.fn().mockImplementation(
                 mockFetch(`
 # note a limitation
@@ -1142,8 +1053,8 @@ this will be extracted.
             const instance = new pattern($el);
             await utils.timeout(1);
 
-            const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
-            const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
+            const spy_ajax = jest.spyOn(instance, "_getContent");
+            const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1160,12 +1071,10 @@ this will be extracted.
 
             global.fetch.mockClear();
             delete global.fetch;
-
-            done();
         });
 
         describe("will not fetch again until tooltip is hidden", () => {
-            it("with click", async (done) => {
+            it("with click", async () => {
                 global.fetch = jest
                     .fn()
                     .mockImplementation(
@@ -1179,9 +1088,9 @@ this will be extracted.
                 const instance = new pattern($el);
                 await utils.timeout(1);
 
-                const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
-                const spy_fetch = spyOn(window, "fetch").and.callThrough();
-                const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
+                const spy_ajax = jest.spyOn(instance, "_getContent");
+                const spy_fetch = jest.spyOn(window, "fetch");
+                const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
                 // 1
                 testutils.click($el);
@@ -1205,11 +1114,9 @@ this will be extracted.
 
                 global.fetch.mockClear();
                 delete global.fetch;
-
-                done();
             });
 
-            it("with hover", async (done) => {
+            it("with hover", async () => {
                 global.fetch = jest
                     .fn()
                     .mockImplementation(
@@ -1223,9 +1130,9 @@ this will be extracted.
                 const instance = new pattern($el);
                 await utils.timeout(1);
 
-                const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
-                const spy_fetch = spyOn(window, "fetch").and.callThrough();
-                const spy_show = spyOn(instance.tippy.props, "onShow").and.callThrough();
+                const spy_ajax = jest.spyOn(instance, "_getContent");
+                const spy_fetch = jest.spyOn(window, "fetch");
+                const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
                 // 1
                 testutils.mouseenter($el);
@@ -1249,14 +1156,12 @@ this will be extracted.
 
                 global.fetch.mockClear();
                 delete global.fetch;
-
-                done();
             });
         });
     });
 
     describe("patterns-injected events", () => {
-        it("it throws the ``patterns-injected`` event", async (done) => {
+        it("it throws the ``patterns-injected`` event", async () => {
             global.fetch = jest.fn().mockImplementation(mockFetch("External content"));
 
             let called = false;
@@ -1278,11 +1183,9 @@ this will be extracted.
 
             global.fetch.mockClear();
             delete global.fetch;
-
-            done();
         });
 
-        it.skip("triggers event handlers in other patterns", async (done) => {
+        it.skip("triggers event handlers in other patterns", async () => {
             // TODO: fix tests
             global.fetch = jest
                 .fn()
@@ -1301,8 +1204,8 @@ this will be extracted.
             await utils.timeout(1);
 
             const instance2 = new autosubmit($(form));
-            const spy_handler1 = spyOn(instance2, "refreshListeners").and.callThrough();
-            const spy_handler2 = spyOn(instance2, "onInputChange").and.callThrough();
+            const spy_handler1 = jest.spyOn(instance2, "refreshListeners");
+            const spy_handler2 = jest.spyOn(instance2, "onInputChange");
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1317,18 +1220,16 @@ this will be extracted.
 
             global.fetch.mockClear();
             delete global.fetch;
-
-            done();
         });
 
-        it("only scans the tooltip content once", async (done) => {
+        it("only scans the tooltip content once", async () => {
             const $el = testutils.createTooltip({
                 data: "source: content; trigger: click",
             });
             new pattern($el);
             await utils.timeout(1);
 
-            const spy_scan = spyOn(registry, "scan");
+            const spy_scan = jest.spyOn(registry, "scan");
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1336,13 +1237,11 @@ this will be extracted.
             // Test, if registry.scan isn't invoked twice - another time by
             // pat-inject.
             expect(spy_scan).toHaveBeenCalledTimes(1);
-
-            done();
         });
     });
 
     describe("URL splitting", () => {
-        it("it extracts the correct parts from any url", async (done) => {
+        it("it extracts the correct parts from any url", async () => {
             const $el = testutils.createTooltip({});
             const instance = new pattern($el);
             await utils.timeout(1);
@@ -1358,8 +1257,6 @@ this will be extracted.
             parts = instance.get_url_parts("https://text.com/");
             expect(parts.url === "https://text.com/").toBeTruthy();
             expect(typeof parts.selector === "undefined").toBeTruthy();
-
-            done();
         });
     });
 });

@@ -1,5 +1,6 @@
 import pattern from "./switch";
 import $ from "jquery";
+import { jest } from "@jest/globals";
 
 describe("pat-switch", function () {
     beforeEach(function () {
@@ -24,9 +25,9 @@ describe("pat-switch", function () {
                     type: "click",
                     preventDefault: function () {},
                 };
-                var spy_onClick = spyOn(pattern, "_onClick").and.callThrough();
-                var spy_go = spyOn(pattern, "_go");
-                var spy_preventDefault = spyOn(ev, "preventDefault");
+                var spy_onClick = jest.spyOn(pattern, "_onClick");
+                var spy_go = jest.spyOn(pattern, "_go");
+                var spy_preventDefault = jest.spyOn(ev, "preventDefault");
                 pattern.init($el);
                 $el.trigger(ev);
                 expect(spy_onClick).toHaveBeenCalled();
@@ -49,9 +50,9 @@ describe("pat-switch", function () {
                     type: "click",
                     preventDefault: function () {},
                 };
-                var spy_onClick = spyOn(pattern, "_onClick").and.callThrough();
-                var spy_go = spyOn(pattern, "_go");
-                var spy_preventDefault = spyOn(ev, "preventDefault");
+                var spy_onClick = jest.spyOn(pattern, "_onClick");
+                var spy_go = jest.spyOn(pattern, "_go");
+                var spy_preventDefault = jest.spyOn(ev, "preventDefault");
                 pattern.init($el);
                 $el.trigger(ev);
                 expect(spy_onClick).toHaveBeenCalled();
@@ -83,8 +84,8 @@ describe("pat-switch", function () {
 
     describe("_update", function () {
         it("No targets", function () {
-            var spy_addClass = spyOn($.fn, "addClass");
-            var spy_removeClass = spyOn($.fn, "removeClass");
+            var spy_addClass = jest.spyOn($.fn, "addClass");
+            var spy_removeClass = jest.spyOn($.fn, "removeClass");
             pattern._update(".missing");
             expect(spy_addClass).not.toHaveBeenCalled();
             expect(spy_removeClass).not.toHaveBeenCalled();
@@ -110,7 +111,7 @@ describe("pat-switch", function () {
 
         it("Send pat-update event", function () {
             $("#lab").html("<div id='victim' class='always'/>");
-            var spy_trigger = spyOn($.fn, "trigger");
+            var spy_trigger = jest.spyOn($.fn, "trigger");
             pattern._update("#lab div", null, "icon-alert");
             expect(spy_trigger).toHaveBeenCalledWith("pat-update", {
                 pattern: "switch",

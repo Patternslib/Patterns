@@ -1,6 +1,7 @@
 import $ from "jquery";
 import pattern from "./markdown";
 import utils from "../../core/utils";
+import { jest } from "@jest/globals";
 
 describe("pat-markdown", function () {
     beforeEach(function () {

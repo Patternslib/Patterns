@@ -83,7 +83,7 @@ describe("Navigation pattern tests", function () {
         document.body.removeChild(document.querySelector("#page_wrapper"));
     });
 
-    it("Test 1: Test roundtrip", async function (done) {
+    it("Test 1: Test roundtrip", async () => {
         var injection_area = document.querySelector("#injection_area");
 
         var nav1 = document.querySelector(".nav1");
@@ -158,11 +158,9 @@ describe("Navigation pattern tests", function () {
         expect(w21.classList.contains("in-path")).toBeFalsy();
         expect(a21.classList.contains("active")).toBeTruthy();
         expect(a21.classList.contains("in-path")).toBeFalsy();
-
-        done();
     });
 
-    it("Test 2: Auto load current", async function (done) {
+    it("Test 2: Auto load current", async () => {
         var injection_area = document.querySelector("#injection_area");
 
         var nav2 = document.querySelector(".nav2");
@@ -186,8 +184,6 @@ describe("Navigation pattern tests", function () {
         expect(w21.classList.contains("in-path")).toBeFalsy();
         expect(a21.classList.contains("active")).toBeTruthy();
         expect(a21.classList.contains("in-path")).toBeFalsy();
-
-        done();
     });
 });
 

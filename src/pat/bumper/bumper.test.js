@@ -1,6 +1,7 @@
 import $ from "jquery";
 import Bumper from "./bumper";
 import utils from "../../core/utils";
+import { jest } from "@jest/globals";
 
 describe("pat-bumper", function () {
     beforeEach(function () {
@@ -120,7 +121,7 @@ describe("pat-bumper", function () {
         );
         var $el = $(".pat-bumper");
         var pattern = new Bumper($el);
-        var spy_update = spyOn(pattern, "_updateStatus");
+        var spy_update = jest.spyOn(pattern, "_updateStatus");
         pattern.init();
         window.dispatchEvent(new Event("scroll")); // simulate `window.scrollTo(0, 0);`
         expect(spy_update).toHaveBeenCalled();
@@ -141,7 +142,7 @@ describe("pat-bumper", function () {
         );
         var $el = $(".pat-bumper");
         var pattern = new Bumper($el);
-        var spy_mark = spyOn(pattern, "_markBumped");
+        var spy_mark = jest.spyOn(pattern, "_markBumped");
         pattern.init();
         $(".parent")[0].scrollTop = 5;
         $(".parent")[0].top = 5;
@@ -171,7 +172,7 @@ describe("pat-bumper", function () {
         );
         var $el = $(".pat-bumper");
         var pattern = new Bumper($el);
-        spyOn(pattern, "_markBumped");
+        jest.spyOn(pattern, "_markBumped");
         pattern.init();
         $(".parent")[0].scrollLeft = 5;
         pattern._updateStatus();

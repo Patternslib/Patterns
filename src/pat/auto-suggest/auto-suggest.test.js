@@ -2,6 +2,7 @@ import $ from "jquery";
 import pattern from "./auto-suggest";
 import utils from "../../core/utils";
 import registry from "../../core/registry";
+import { jest } from "@jest/globals";
 
 var testutils = {
     createInputElement: function (c) {
@@ -73,11 +74,11 @@ describe("pat-autosuggest", function () {
                 data: "ajax-url: http://test.org/test",
             });
             var $el = $("input.pat-autosuggest");
-            spyOn($el, "select2");
+            jest.spyOn($el, "select2");
 
             pattern.init($el);
             await utils.timeout(1); // wait a tick for async to settle.
-            expect($el.select2.calls.mostRecent().args[0].ajax).toBeDefined();
+            expect($el.select2.mock.calls.pop()[0].ajax).toBeDefined();
             testutils.removeSelect2();
         });
     });

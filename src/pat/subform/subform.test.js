@@ -1,6 +1,7 @@
 import registry from "../../core/registry";
 import $ from "jquery";
 import pattern from "./subform";
+import { jest } from "@jest/globals";
 
 describe("subform base tests", function () {
     describe("Triggering of the pattern", function () {
@@ -12,7 +13,7 @@ describe("subform base tests", function () {
                     "  </fieldset>" +
                     "</form>"
             );
-            var spy_init = spyOn(pattern, "init");
+            var spy_init = jest.spyOn(pattern, "init");
             registry.scan($form);
             expect(spy_init).toHaveBeenCalled();
         });
@@ -28,11 +29,8 @@ describe("subform base tests", function () {
                     "</form>"
             );
             const pat = new pattern($(".pat-subform", $form));
-            const spy_keyboard_handler = spyOn(
-                pat.__proto__,
-                "keyboard_handler"
-            ).and.callThrough();
-            const spy_submit = spyOn(pat.__proto__, "submit");
+            const spy_keyboard_handler = jest.spyOn(pat.__proto__, "keyboard_handler");
+            const spy_submit = jest.spyOn(pat.__proto__, "submit");
             registry.scan($form);
             $form.find("[name=q]").trigger({
                 type: "keydown",
@@ -50,11 +48,8 @@ describe("subform base tests", function () {
                     "</form>"
             );
             const pat = new pattern($(".pat-subform", $form));
-            const spy_keyboard_handler = spyOn(
-                pat.__proto__,
-                "keyboard_handler"
-            ).and.callThrough();
-            const spy_submit = spyOn(pat.__proto__, "submit");
+            const spy_keyboard_handler = jest.spyOn(pat.__proto__, "keyboard_handler");
+            const spy_submit = jest.spyOn(pat.__proto__, "submit");
             registry.scan($form);
             $form.find("[name=q]").trigger({
                 type: "keydown",
@@ -73,12 +68,9 @@ describe("subform base tests", function () {
                     "</form>"
             );
             const pat = new pattern($(".pat-subform", $form));
-            const spy_keyboard_handler = spyOn(
-                pat.__proto__,
-                "keyboard_handler"
-            ).and.callThrough();
-            const spy_submit = spyOn(pat.__proto__, "submit");
-            const spy_formsubmit = spyOn($form, "submit");
+            const spy_keyboard_handler = jest.spyOn(pat.__proto__, "keyboard_handler");
+            const spy_submit = jest.spyOn(pat.__proto__, "submit");
+            const spy_formsubmit = jest.spyOn($form, "submit");
             registry.scan($form);
             $form.find("[name=q]").trigger({
                 type: "keydown",

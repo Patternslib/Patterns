@@ -1,5 +1,6 @@
 import pattern from "./image-crop";
 import $ from "jquery";
+import { jest } from "@jest/globals";
 
 describe("pat-image-crop", function () {
     beforeEach(function () {
@@ -93,8 +94,8 @@ describe("pat-image-crop", function () {
         });
 
         it("Update from user interaction", function () {
-            var spy_updatePreview = spyOn(pattern, "updatePreview");
-            var spy_updateInputs = spyOn(pattern, "updateInputs");
+            var spy_updatePreview = jest.spyOn(pattern, "updatePreview");
+            var spy_updateInputs = jest.spyOn(pattern, "updateInputs");
 
             pattern.onSelect(c, data);
 

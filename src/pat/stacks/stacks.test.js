@@ -1,5 +1,6 @@
 import Stacks from "./stacks";
 import $ from "jquery";
+import { jest } from "@jest/globals";
 
 describe("pat-stacks", function () {
     beforeEach(function () {
@@ -65,7 +66,7 @@ describe("pat-stacks", function () {
         it("gets triggered when you click on an external link", function () {
             var e = { currentTarget: { href: "http://other.domain#s1" } };
             var pattern = new Stacks($(".pat-stacks"));
-            var spy_update = spyOn(pattern, "_updateAnchors");
+            var spy_update = jest.spyOn(pattern, "_updateAnchors");
             pattern._onClick(e);
             expect(spy_update).not.toHaveBeenCalled();
         });
@@ -75,7 +76,7 @@ describe("pat-stacks", function () {
             pattern.document = { URL: document.URL };
             pattern.document.URL = "http://www.example.com";
             var e = { currentTarget: { href: "http://www.example.com" } };
-            var spy_update = spyOn(pattern, "_updateAnchors");
+            var spy_update = jest.spyOn(pattern, "_updateAnchors");
             pattern._onClick(e);
             expect(spy_update).not.toHaveBeenCalled();
         });
@@ -87,7 +88,7 @@ describe("pat-stacks", function () {
             var e = {
                 currentTarget: { href: "http://www.example.com#other" },
             };
-            var spy_update = spyOn(pattern, "_updateAnchors");
+            var spy_update = jest.spyOn(pattern, "_updateAnchors");
             pattern._onClick(e);
             expect(spy_update).not.toHaveBeenCalled();
         });
@@ -114,7 +115,7 @@ describe("pat-stacks", function () {
             var pattern = new Stacks($el);
             pattern.document = { URL: document.URL };
             pattern.document.URL = "http://www.example.com";
-            var spy_trigger = spyOn($.fn, "trigger");
+            var spy_trigger = jest.spyOn($.fn, "trigger");
             var e = {
                 target: $el,
                 type: "click",

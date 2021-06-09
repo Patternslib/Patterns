@@ -1,6 +1,7 @@
 import _ from "underscore";
 import utils from "./utils";
 import $ from "jquery";
+import { jest } from "@jest/globals";
 
 jest.useFakeTimers();
 
@@ -285,7 +286,7 @@ describe("hideOrShow", function () {
     it("Single pat-update event without a transition", function () {
         $("#lab").append('<div style="display: none"/>');
         var $el = $("#lab div");
-        spyOn($.fn, "trigger");
+        jest.spyOn($.fn, "trigger");
         utils.hideOrShow(
             $el,
             true,
@@ -295,7 +296,7 @@ describe("hideOrShow", function () {
             },
             "depends"
         );
-        expect($.fn.trigger.calls.count()).toEqual(1);
+        expect($.fn.trigger.mock.calls.length).toEqual(1);
         expect($.fn.trigger).toHaveBeenCalledWith("pat-update", {
             pattern: "depends",
             transition: "complete",
@@ -329,7 +330,7 @@ describe("hideOrShow", function () {
     it("pat-update event with a transition", function () {
         $("#lab").append("<div/>");
         var $el = $("#lab div");
-        spyOn($.fn, "trigger");
+        jest.spyOn($.fn, "trigger");
         utils.hideOrShow(
             $el,
             false,

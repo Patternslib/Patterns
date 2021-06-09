@@ -71,42 +71,38 @@ describe("1 - Calendar tests", () => {
         history.replaceState(null, null, "?"); // empty string doesn't reset, so "?"...
     });
 
-    it("Initializes correctly", async (done) => {
+    it("Initializes correctly", async () => {
         const el = document.querySelector(".pat-calendar");
         registry.scan(document.body);
         await utils.timeout(1); // wait a tick for async to settle.
         expect(el.querySelector(".pat-calendar__fc")).toBeTruthy();
         expect(el.querySelector(".pat-calendar__fc").innerHTML).toBeTruthy();
-        done();
     });
 
-    it("Initializes with the default dayGridMonth view", async (done) => {
+    it("Initializes with the default dayGridMonth view", async () => {
         const el = document.querySelector(".pat-calendar");
         registry.scan(document.body);
         await utils.timeout(1); // wait a tick for async to settle.
         expect(el.querySelector(".fc-dayGridMonth-view")).toBeTruthy();
-        done();
     });
 
-    it("Initializes with the timeGridWeek view when configured", async (done) => {
+    it("Initializes with the timeGridWeek view when configured", async () => {
         const el = document.querySelector(".pat-calendar");
         el.setAttribute("data-pat-calendar", "initial-view: agendaWeek");
         registry.scan(document.body);
         await utils.timeout(1); // wait a tick for async to settle.
         expect(el.querySelector(".fc-timeGridWeek-view")).toBeTruthy();
-        done();
     });
 
-    it("Initializes with the timeGridDay view when configured", async (done) => {
+    it("Initializes with the timeGridDay view when configured", async () => {
         const el = document.querySelector(".pat-calendar");
         el.setAttribute("data-pat-calendar", "initial-view: agendaDay");
         registry.scan(document.body);
         await utils.timeout(1); // wait a tick for async to settle.
         expect(el.querySelector(".fc-timeGridDay-view")).toBeTruthy();
-        done();
     });
 
-    it("Updates title according to display", async (done) => {
+    it("Updates title according to display", async () => {
         const el = document.querySelector(".pat-calendar");
         el.setAttribute(
             "data-pat-calendar",
@@ -145,11 +141,9 @@ describe("1 - Calendar tests", () => {
         el.querySelector(".jump-today").click();
         expect(title_el.innerHTML === title).toBeFalsy();
         title = title_el.innerHTML;
-
-        done();
     });
 
-    it("Changes views when clicked", async (done) => {
+    it("Changes views when clicked", async () => {
         const el = document.querySelector(".pat-calendar");
         registry.scan(document.body);
         await utils.timeout(1); // wait a tick for async to settle.
@@ -177,11 +171,9 @@ describe("1 - Calendar tests", () => {
         expect(el.querySelector(".fc-dayGridMonth-view")).toBeTruthy();
         expect(el.querySelector(".fc-timeGridWeek-view")).toBeFalsy();
         expect(el.querySelector(".fc-timeGridDay-view")).toBeFalsy();
-
-        done();
     });
 
-    it("Loads initial date and navigates for/backwards", async (done) => {
+    it("Loads initial date and navigates for/backwards", async () => {
         const el = document.querySelector(".pat-calendar");
         el.setAttribute(
             "data-pat-calendar",
@@ -202,11 +194,9 @@ describe("1 - Calendar tests", () => {
         date = date.toISOString().split("T")[0];
         el.querySelector(".jump-today").click();
         expect(el.querySelector(`*[data-date='${date}']`)).toBeTruthy();
-
-        done();
     });
 
-    it("Loads events from a JSON feed", async (done) => {
+    it("Loads events from a JSON feed", async () => {
         const el = document.querySelector(".pat-calendar");
         el.setAttribute(
             "data-pat-calendar",
@@ -228,10 +218,9 @@ describe("1 - Calendar tests", () => {
 
         global.fetch.mockClear();
         delete global.fetch;
-        done();
     });
 
-    it("Loads events and does not set the href if not present", async (done) => {
+    it("Loads events and does not set the href if not present", async () => {
         const el = document.querySelector(".pat-calendar");
         el.setAttribute(
             "data-pat-calendar",
@@ -255,10 +244,9 @@ describe("1 - Calendar tests", () => {
 
         global.fetch.mockClear();
         delete global.fetch;
-        done();
     });
 
-    it("Loads events and initializes them with pat-inject and pat-switch", async (done) => {
+    it("Loads events and initializes them with pat-inject and pat-switch", async () => {
         // pat-inject is only set if event has a url.
         const el = document.querySelector(".pat-calendar");
         el.setAttribute(
@@ -300,10 +288,9 @@ describe("1 - Calendar tests", () => {
 
         global.fetch.mockClear();
         delete global.fetch;
-        done();
     });
 
-    it("Loads events and initializes them with pat-modal", async (done) => {
+    it("Loads events and initializes them with pat-modal", async () => {
         // pat-inject is only set if event has a url.
         const el = document.querySelector(".pat-calendar");
         el.setAttribute(
@@ -336,10 +323,9 @@ describe("1 - Calendar tests", () => {
 
         global.fetch.mockClear();
         delete global.fetch;
-        done();
     });
 
-    it("Loads events and initializes them with pat-tooltip", async (done) => {
+    it("Loads events and initializes them with pat-tooltip", async () => {
         // pat-inject is only set if event has a url.
         const el = document.querySelector(".pat-calendar");
         el.setAttribute(
@@ -372,10 +358,9 @@ describe("1 - Calendar tests", () => {
 
         global.fetch.mockClear();
         delete global.fetch;
-        done();
     });
 
-    it("Loads correct date if set in query string", async (done) => {
+    it("Loads correct date if set in query string", async () => {
         const el = document.querySelector(".pat-calendar");
         el.setAttribute("data-pat-calendar", "timezone: Europe/Berlin");
         window.history.replaceState(
@@ -388,8 +373,6 @@ describe("1 - Calendar tests", () => {
 
         const title_el = el.querySelector(".cal-title");
         expect(title_el.innerHTML).toEqual("March 2020");
-
-        done();
     });
 });
 
@@ -428,7 +411,7 @@ describe("2 - Calendar tests with calendar controls outside pat-calendar", () =>
         history.replaceState(null, null, "?"); // empty string doesn't reset, so "?"...
     });
 
-    it("2.1 - Updates title according to display", async (done) => {
+    it("2.1 - Updates title according to display", async () => {
         const el = document.querySelector(".pat-calendar");
         el.setAttribute(
             "data-pat-calendar",
@@ -467,11 +450,9 @@ describe("2 - Calendar tests with calendar controls outside pat-calendar", () =>
         document.querySelector(".jump-today").click();
         expect(title_el.innerHTML === title).toBeFalsy();
         title = title_el.innerHTML;
-
-        done();
     });
 
-    it("2.2 - Changes views when clicked", async (done) => {
+    it("2.2 - Changes views when clicked", async () => {
         const el = document.querySelector(".pat-calendar");
         el.setAttribute("data-pat-calendar", "calendar-controls: .calendar-controls");
 
@@ -501,8 +482,6 @@ describe("2 - Calendar tests with calendar controls outside pat-calendar", () =>
         expect(el.querySelector(".fc-dayGridMonth-view")).toBeTruthy();
         expect(el.querySelector(".fc-timeGridWeek-view")).toBeFalsy();
         expect(el.querySelector(".fc-timeGridDay-view")).toBeFalsy();
-
-        done();
     });
 });
 
@@ -542,7 +521,7 @@ describe("3 - Calendar tests with calendar controls outside pat-calendar but tit
         history.replaceState(null, null, "?"); // empty string doesn't reset, so "?"...
     });
 
-    it("3.1 - Updates title according to display", async (done) => {
+    it("3.1 - Updates title according to display", async () => {
         const el = document.querySelector(".pat-calendar");
         el.setAttribute(
             "data-pat-calendar",
@@ -581,7 +560,5 @@ describe("3 - Calendar tests with calendar controls outside pat-calendar but tit
         document.querySelector(".jump-today").click();
         expect(title_el.innerHTML === title).toBeFalsy();
         title = title_el.innerHTML;
-
-        done();
     });
 });

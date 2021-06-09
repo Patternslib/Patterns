@@ -1,6 +1,7 @@
 import $ from "jquery";
 import pattern from "./scroll";
 import utils from "../../core/utils";
+import { jest } from "@jest/globals";
 
 describe("pat-scroll", function () {
     beforeEach(function () {
@@ -12,7 +13,7 @@ describe("pat-scroll", function () {
     });
 
     describe("pat-scroll ...", function () {
-        it("will automatically scroll to an anchor if the trigger is set to 'auto' and will also handle 'click' events", async function (done) {
+        it("will automatically scroll to an anchor if the trigger is set to 'auto' and will also handle 'click' events", async () => {
             $("#lab").html(
                 [
                     '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>',
@@ -31,11 +32,9 @@ describe("pat-scroll", function () {
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect(spy_animate).toHaveBeenCalledTimes(2);
-
-            done();
         });
 
-        it("will scroll to an anchor on click if the trigger is set to 'click'", async function (done) {
+        it("will scroll to an anchor on click if the trigger is set to 'click'", async () => {
             $("#lab").html(
                 [
                     '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click">p1</a>',
@@ -43,7 +42,7 @@ describe("pat-scroll", function () {
                 ].join("\n")
             );
             const el = document.querySelector(".pat-scroll");
-            const spy_animate = spyOn($.fn, "animate");
+            const spy_animate = jest.spyOn($.fn, "animate");
 
             pattern.init(el);
             await utils.timeout(1); // wait a tick for async to settle.
@@ -52,10 +51,9 @@ describe("pat-scroll", function () {
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect(spy_animate).toHaveBeenCalled();
-            done();
         });
 
-        it("will scroll to an anchor on pat-update with originalEvent of click", async function (done) {
+        it("will scroll to an anchor on pat-update with originalEvent of click", async () => {
             $("#lab").html(
                 [
                     '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click">p1</a>',
@@ -63,7 +61,7 @@ describe("pat-scroll", function () {
                 ].join("\n")
             );
             const $el = $(".pat-scroll");
-            const spy_animate = spyOn($.fn, "animate");
+            const spy_animate = jest.spyOn($.fn, "animate");
             pattern.init($el);
             await utils.timeout(1); // wait a tick for async to settle.
             $el.trigger("pat-update", {
@@ -73,11 +71,10 @@ describe("pat-scroll", function () {
                 },
             });
             expect(spy_animate).toHaveBeenCalled();
-            done();
         });
 
         // Skipping - passes only in isolation.
-        it.skip("will scroll to bottom with selector:bottom", async function (done) {
+        it.skip("will scroll to bottom with selector:bottom", async () => {
             const outer = document.createElement("div");
             outer.innerHTML = `
                 <div id="scroll-container" style="overflow: scroll">
@@ -106,8 +103,6 @@ describe("pat-scroll", function () {
             expect(container.scrollTop > 0).toBe(true);
 
             jest.restoreAllMocks();
-
-            done();
         });
     });
 });
