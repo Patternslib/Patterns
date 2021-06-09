@@ -56,16 +56,10 @@ module.exports = (env, argv) => {
                 },
                 {
                     test: require.resolve("jquery"),
-                    use: [
-                        {
-                            loader: "expose-loader",
-                            query: "$",
-                        },
-                        {
-                            loader: "expose-loader",
-                            query: "jQuery",
-                        },
-                    ],
+                    loader: "expose-loader",
+                    options: {
+                        exposes: ["$", "jQuery"],
+                    },
                 },
                 {
                     test: /showdown-prettify/,
@@ -89,7 +83,7 @@ module.exports = (env, argv) => {
                     ],
                 },
                 {
-                    test: /\.(png|jpe?g|gif)$/i,
+                    test: /\.(eot|woff|woff2|ttf|png|jpe?g|gif)$/i,
                     use: "file-loader",
                 },
                 {
