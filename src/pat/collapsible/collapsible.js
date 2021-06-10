@@ -9,12 +9,13 @@
  */
 
 import $ from "jquery";
+import "../../core/jquery-ext";
 import inject from "../inject/inject";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import store from "../../core/store";
 import Base from "../../core/base";
-import "../../core/jquery-ext";
+import utils from "../../core/utils";
 
 const log = logging.getLogger("pat.collapsible");
 
@@ -34,6 +35,10 @@ parser.addArgument("closed", false);
 parser.addArgument("trigger", "::first");
 parser.addArgument("close-trigger");
 parser.addArgument("open-trigger");
+// pat-scroll support
+parser.addArgument("scroll-selector");
+
+const debounce_scroll_timer = { timer: null };
 
 export default Base.extend({
     name: "collapsible",
@@ -107,6 +112,12 @@ export default Base.extend({
             $(document).on("click", this.options.openTrigger, this.open.bind(this));
         }
 
+        this.debounce_scroll = utils.debounce(
+            () => this._scroll(),
+            10,
+            debounce_scroll_timer
+        ); // scroll debouncer for later use.
+
         return $el;
     },
 
@@ -165,11 +176,24 @@ export default Base.extend({
         if (new_state === "open") {
             this.$el.trigger("patterns-collapsible-open");
             this._transit(this.$el, "closed", "open");
+            this.debounce_scroll();
         } else {
             this.$el.trigger("patterns-collapsible-close");
             this._transit(this.$el, "open", "closed");
         }
         return this.$el; // allow chaining
+    },
+
+    async _scroll() {
+        const scroll_selector = this.options.scroll?.selector;
+        if (scroll_selector) {
+            const pat_scroll = (await import("../scroll/scroll")).default;
+            const scroll = new pat_scroll(this.el, {
+                trigger: "manual",
+                selector: scroll_selector,
+            });
+            await scroll.smoothScroll();
+        }
     },
 
     _transit: async function ($el, from_cls, to_cls) {
