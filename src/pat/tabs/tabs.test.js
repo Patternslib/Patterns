@@ -22,9 +22,12 @@ describe("pat-tabs", function () {
             </nav>
         `;
         const tabs = document.querySelector(".pat-tabs");
+        expect(tabs.classList.contains("tabs-ready")).toBeFalsy();
         pattern.init(tabs);
         await utils.timeout(100);
         expect(tabs.querySelectorAll(".extra-tabs").length).toBeTruthy();
+        expect(tabs.classList.contains("tabs-wrapped")).toBeTruthy();
+        expect(tabs.classList.contains("tabs-ready")).toBeTruthy();
     });
 
     it("When the size of all the tabs (padding included) cannot fit in the pat-tabs div some tabs will be placed in the extra-tabs span, which is a child of the pat-tabs element", async () => {
@@ -39,9 +42,12 @@ describe("pat-tabs", function () {
         `;
 
         const tabs = document.querySelector(".pat-tabs");
+        expect(tabs.classList.contains("tabs-ready")).toBeFalsy();
         pattern.init(tabs);
         await utils.timeout(100);
         expect(tabs.querySelectorAll(".extra-tabs").length).toBeTruthy();
+        expect(tabs.classList.contains("tabs-wrapped")).toBeTruthy();
+        expect(tabs.classList.contains("tabs-ready")).toBeTruthy();
     });
 
     it("When the size of all the tabs can fit in the pat-tabs div the extra-tabs span will not exist as a child of the pat-tabs element", async () => {
@@ -60,9 +66,12 @@ describe("pat-tabs", function () {
         `;
 
         const tabs = document.querySelector(".pat-tabs");
+        expect(tabs.classList.contains("tabs-ready")).toBeFalsy();
         pattern.init(tabs);
         await utils.timeout(100);
         expect(tabs.querySelectorAll(".extra-tabs").length).toBeFalsy();
+        expect(tabs.classList.contains("tabs-wrapped")).toBeFalsy();
+        expect(tabs.classList.contains("tabs-ready")).toBeTruthy();
     });
 
     it("When the size of all the tabs (padding included) can fit in the pat-tabs div the extra-tabs span will not exist as a child of the pat-tabs element", async () => {
@@ -81,9 +90,12 @@ describe("pat-tabs", function () {
         `;
 
         const tabs = document.querySelector(".pat-tabs");
+        expect(tabs.classList.contains("tabs-ready")).toBeFalsy();
         pattern.init(tabs);
         await utils.timeout(100);
         expect(tabs.querySelectorAll(".extra-tabs").length).toBeFalsy();
+        expect(tabs.classList.contains("tabs-wrapped")).toBeFalsy();
+        expect(tabs.classList.contains("tabs-ready")).toBeTruthy();
     });
 
     it("Clicking on extra-tabs toggles the ``open`` and ``closed`` classes.", async () => {

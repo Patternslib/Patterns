@@ -39,6 +39,12 @@ export default Base.extend({
     },
 
     adjust_tabs() {
+        this.el.classList.remove("tabs-ready", "tabs-wrapped");
+        this._adjust_tabs();
+        this.el.classList.add("tabs-ready");
+    },
+
+    _adjust_tabs() {
         this.skip_adjust = true;
         const container_width = this.$el.width() * 0.95;
 
@@ -75,7 +81,7 @@ export default Base.extend({
 
         const extra_el = document.createElement("span");
         extra_el.setAttribute("class", "extra-tabs");
-        this.el.classList.add("closed");
+        this.el.classList.add("closed", "tabs-wrapped");
         extra_el.addEventListener("click", () => {
             // Toggle opened/closed class on extra-tabs
             if (this.el.classList.contains("open")) {
