@@ -11,6 +11,7 @@ parser.addArgument("trigger", "click", ["click", "auto"]);
 parser.addArgument("direction", "top", ["top", "left"]);
 parser.addArgument("selector");
 parser.addArgument("offset");
+parser.addArgument("delay");
 
 export default Base.extend({
     name: "scroll",
@@ -139,7 +140,10 @@ export default Base.extend({
         return scrollable;
     },
 
-    smoothScroll() {
+    async smoothScroll() {
+        if (this.options.delay) {
+            await utils.timeout(this.options.delay);
+        }
         const scroll = this.options.direction == "top" ? "scrollTop" : "scrollLeft";
         const options = {};
         let scrollable;

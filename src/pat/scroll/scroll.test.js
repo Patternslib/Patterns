@@ -53,6 +53,28 @@ describe("pat-scroll", function () {
             expect(spy_animate).toHaveBeenCalled();
         });
 
+        it("allows to define a delay after which it will scroll to an anchor", async () => {
+            $("#lab").html(
+                [
+                    '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click; delay: 200">p1</a>',
+                    '<p id="p1"></p>',
+                ].join("\n")
+            );
+            const el = document.querySelector(".pat-scroll");
+            const spy_animate = jest.spyOn($.fn, "animate");
+
+            pattern.init(el);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            el.click();
+            await utils.timeout(1); // wait a tick for async to settle.
+            expect(spy_animate).not.toHaveBeenCalled();
+
+            await utils.timeout(300);
+
+            expect(spy_animate).toHaveBeenCalled();
+        });
+
         it("will scroll to an anchor on pat-update with originalEvent of click", async () => {
             $("#lab").html(
                 [
