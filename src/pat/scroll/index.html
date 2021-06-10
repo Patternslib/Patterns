@@ -116,12 +116,21 @@
                 >
             </p>
         </article>
-        <div class="pat-well pat-collapsible closed pat-scroll"
-             data-pat-collapsible="transition: fade; effect: slow;"
-             data-pat-scroll="selector: #s2; trigger: click"
+        <p>
+          The “Open” button opens the collapsible below and scrolls to the second section.
+        </p>
+        <fieldset class="pat-button-bar">
+            <button class="pat-button pat-scroll"
+                    id="close">Close</button>
+            <button class="pat-button pat-scroll"
+                    data-pat-scroll="selector: #s2; trigger: click; delay: 300"
+                    id="open">Open</button>
+        </fieldset>
+        <div class="pat-well pat-collapsible closed"
+             data-pat-collapsible="transition: fade; effect: slow; close-trigger: #close; open-trigger: #open"
              id="open-and-scroll">
             <h3>
-                Click to open and scroll down
+                Click above to open and scroll down
             </h3>
             <article>
               <section id="s1">
