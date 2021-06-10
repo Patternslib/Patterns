@@ -495,18 +495,23 @@ const timeout = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-const debounce = (func, ms) => {
+const debounce = (func, ms, timer = { timer: null }) => {
     // Returns a function, that, as long as it continues to be invoked, will not
     // be triggered. The function will be called after it stops being called for
     // N milliseconds.
     // From: https://underscorejs.org/#debounce
-    let timer = null;
+    //
+    // Make sure to initialize ``debounce`` only once per to-be-debounced
+    // function to not reinitialize the timer each time and debounce not being
+    // able to cancel previouse runs.
+    //
+    // Pass a module-global timer as an object ``{ timer: null }`` if you want
+    // to also cancel debounced functions from other pattern-invocations.
+    //
     return function () {
-        clearTimeout(timer);
+        clearTimeout(timer.timer);
         const args = arguments;
-        timer = setTimeout(() => {
-            func.apply(this, args);
-        }, ms);
+        timer.timer = setTimeout(() => func.apply(this, args), ms);
     };
 };
 
