@@ -138,6 +138,16 @@ export default Base.extend({
         return scrollable;
     },
 
+    _get_selector_target() {
+        const selector = this.options.selector;
+        if (!selector && this.el.href?.includes("#")) {
+            return document.querySelector(`#${this.el.href.split("#").pop()}`);
+        } else if (!selector || selector === "self") {
+            return this.el;
+        }
+        return document.querySelector(selector);
+    },
+
     async smoothScroll() {
         if (this.options.delay) {
             await utils.timeout(this.options.delay);
@@ -145,9 +155,9 @@ export default Base.extend({
         const scroll = this.options.direction == "top" ? "scrollTop" : "scrollLeft";
         const options = {};
         let scrollable;
-        if (typeof this.options.offset != "undefined") {
+        if (typeof this.options.offset !== "undefined") {
             // apply scroll options directly
-            scrollable = this.options.selector ? $(this.options.selector) : this.$el;
+            scrollable = $(this._get_selector_target());
             options[scroll] = this.options.offset;
         } else if (this.options.selector === "top") {
             // Just scroll up or left, period.
@@ -166,16 +176,10 @@ export default Base.extend({
             // starting from the *target*
             // The intent is to move target into view within scrollable
             // if the scrollable has no scrollbar, do not scroll body
-            let fragment;
-            if (this.options.selector) {
-                fragment = this.options.selector;
-            } else {
-                const href = this.$el.attr("href");
-                fragment =
-                    href.indexOf("#") !== -1 ? "#" + href.split("#").pop() : undefined;
-            }
-            const target = $(fragment);
-            if (target.length === 0) {
+
+            const target = $(this._get_selector_target());
+
+            if (!target.length) {
                 return;
             }
 

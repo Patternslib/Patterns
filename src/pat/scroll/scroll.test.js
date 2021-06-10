@@ -106,4 +106,32 @@ describe("pat-scroll", function () {
 
         expect(container.scrollTop).toBe(1000);
     });
+
+    it("handles different selector options.", () => {
+        document.body.innerHTML = `
+            <a href="#el3" class="pat-scroll" />
+            <div id="#el1" />
+            <div class=".el2 />
+            <div id="#el3" />
+        `;
+
+        const el_pat = document.querySelector(".pat-scroll");
+        const el_1 = document.querySelector("#el1");
+        const el_2 = document.querySelector(".el2");
+        const el_3 = document.querySelector("#el3");
+
+        const pat = pattern.init(el_pat);
+
+        pat.options.selector = "self";
+        expect(pat._get_selector_target()).toBe(el_pat);
+
+        pat.options.selector = "#el1";
+        expect(pat._get_selector_target()).toBe(el_1);
+
+        pat.options.selector = ".el2";
+        expect(pat._get_selector_target()).toBe(el_2);
+
+        pat.options.selector = null; // Using href target
+        expect(pat._get_selector_target()).toBe(el_3);
+    });
 });
