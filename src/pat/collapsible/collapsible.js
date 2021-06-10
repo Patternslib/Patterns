@@ -172,7 +172,7 @@ export default Base.extend({
         return this.$el; // allow chaining
     },
 
-    _transit: function ($el, from_cls, to_cls) {
+    _transit: async function ($el, from_cls, to_cls) {
         if (to_cls === "open" && this.options.loadContent) {
             this._loadContent($el, this.options.loadContent, this.$panel);
         }
@@ -195,7 +195,7 @@ export default Base.extend({
                 transition: "start",
             });
             this.$trigger.addClass("collapsible-in-progress");
-            this.$panel[t[to_cls]](
+            await this.$panel[t[to_cls]](
                 duration,
                 this.options.effect.easing,
                 function () {
@@ -211,7 +211,7 @@ export default Base.extend({
                             transition: "complete",
                         });
                 }.bind(this)
-            );
+            ).promise();
         }
     },
 });
