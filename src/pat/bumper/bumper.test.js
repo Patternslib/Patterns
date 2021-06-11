@@ -82,9 +82,9 @@ describe("pat-bumper", function () {
         var $el = $(".pat-bumper");
         var pattern = new Bumper($el);
         pattern.init();
-        pattern._markBumped(true);
+        pattern._markBumped(["top"]);
         if (utils.checkCSSFeature("position", "sticky")) {
-            expect(pattern.$el.attr("class")).toBe("pat-bumper sticky-supported bumped");
+            expect(pattern.$el.attr("class")).toBe("pat-bumper sticky-supported bumped bumped-top");
         } else {
             expect(pattern.$el.attr("class")).toBe("pat-bumper bumped");
         }
@@ -94,7 +94,7 @@ describe("pat-bumper", function () {
         $("#lab").html(
             [
                 '<div class="parent" style="overflow-y: auto; height: 50px">',
-                '<p class="pat-bumper bumped" ' +
+                '<p class="pat-bumper bumped bumped-top" ' +
                     '   data-pat-bumper="unbump-remove: bumped; unbump-add: plain"' +
                     "   >I'm sticky!</p>",
                 "</div>",
@@ -103,7 +103,7 @@ describe("pat-bumper", function () {
         var $el = $(".pat-bumper");
         var pattern = new Bumper($el);
         pattern.init();
-        pattern._markBumped(false);
+        pattern._markBumped([]);
         if (utils.checkCSSFeature("position", "sticky")) {
             expect(pattern.$el.attr("class")).toBe("pat-bumper sticky-supported plain");
         } else {
