@@ -57,7 +57,7 @@ export default Base.extend({
         this.$inputs = this.$el.find("input[name], select[name], textarea[name]");
         this.$el.find("input[type=number]").on(
             "keyup mouseup",
-            _.debounce(
+            utils.debounce(
                 function (ev) {
                     this.validateElement(ev.target);
                 }.bind(this),
