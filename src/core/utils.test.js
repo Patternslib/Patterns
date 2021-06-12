@@ -1,9 +1,8 @@
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import _ from "underscore";
 import utils from "./utils";
 import $ from "jquery";
 import { jest } from "@jest/globals";
-
-jest.useFakeTimers();
 
 describe("basic tests", function () {
     describe("rebaseURL", function () {
@@ -301,6 +300,7 @@ describe("hideOrShow", function () {
             pattern: "depends",
             transition: "complete",
         });
+        $.fn.trigger.mockRestore();
     });
 
     it("Fadeout with 0 duration", function () {
@@ -314,20 +314,19 @@ describe("hideOrShow", function () {
         expect(Array.prototype.slice.call($el[0].classList)).toEqual(["hidden"]);
     });
 
-    it("Fadeout with non-zero duration", function () {
+    it("Fadeout with non-zero duration", async function () {
         $("#lab").append("<div/>");
         var $el = $("#lab div");
         utils.hideOrShow($el, false, {
             transition: "slide",
             effect: { duration: "fast", easing: "swing" },
         });
-        setTimeout(function () {
-            expect($el[0].style.display).toBe("none");
-            expect(Array.prototype.slice.call($el[0].classList)).toEqual(["hidden"]);
-        }, 500);
+        await utils.timeout(500);
+        expect($el[0].style.display).toBe("none");
+        expect(Array.prototype.slice.call($el[0].classList)).toEqual(["hidden"]);
     });
 
-    it("pat-update event with a transition", function () {
+    it("pat-update event with a transition", async function () {
         $("#lab").append("<div/>");
         var $el = $("#lab div");
         jest.spyOn($.fn, "trigger");
@@ -340,17 +339,17 @@ describe("hideOrShow", function () {
             },
             "depends"
         );
-        setTimeout(function () {
-            expect($.fn.trigger.calls.count()).toEqual(2);
-            expect($.fn.trigger).toHaveBeenCalledWith("pat-update", {
-                pattern: "depends",
-                transition: "start",
-            });
-            expect($.fn.trigger).toHaveBeenCalledWith("pat-update", {
-                pattern: "depends",
-                transition: "complete",
-            });
-        }, 500);
+        await utils.timeout(500);
+        expect($.fn.trigger.mock.calls.length).toEqual(2);
+        expect($.fn.trigger).toHaveBeenCalledWith("pat-update", {
+            pattern: "depends",
+            transition: "start",
+        });
+        expect($.fn.trigger).toHaveBeenCalledWith("pat-update", {
+            pattern: "depends",
+            transition: "complete",
+        });
+        $.fn.trigger.mockRestore();
     });
 
     it("CSS-only hide", function () {

@@ -104,11 +104,7 @@ export default Base.extend({
                 const $target = $("#" + fragment);
                 if ($target.length) {
                     if (
-                        utils.isElementInViewport(
-                            $target[0],
-                            true,
-                            this.options.offset
-                        ) === false
+                        !utils.isElementInViewport($target[0], true, this.options.offset)
                     ) {
                         // if the anchor's target is invisible, remove current class from anchor and target.
                         $target.removeClass("current");

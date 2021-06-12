@@ -369,7 +369,7 @@ function mergeStack(stack, length) {
     return results;
 }
 
-function isElementInViewport(el, partial, offset) {
+function isElementInViewport(el, partial = false, offset = 0) {
     /* returns true if element is visible to the user ie. is in the viewport.
      * Setting partial parameter to true, will only check if a part of the element is visible
      * in the viewport, specifically that some part of that element is touching the top part
@@ -378,21 +378,14 @@ function isElementInViewport(el, partial, offset) {
      * some code taken from:
      * http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport/7557433#7557433
      */
-    if (el === []) {
-        return false;
-    }
     if (el instanceof $) {
         el = el[0];
     }
-    var rec = el.getBoundingClientRect(),
-        rec_values = [rec.top, rec.bottom, rec.left, rec.right];
-    if (
-        _.every(rec_values, function zero(v) {
-            if (v === 0) {
-                return true;
-            }
-        })
-    ) {
+
+    const rec = el.getBoundingClientRect();
+    const rec_values = [rec.top, rec.bottom, rec.left, rec.right];
+
+    if (rec_values.every((val) => val === 0)) {
         // if every property of rec is 0, the element is invisible;
         return false;
     } else if (partial) {
@@ -402,9 +395,6 @@ function isElementInViewport(el, partial, offset) {
         // rec.top must <= 0 and rec.bottom must >= 0
         // an optional tolerance offset can be added for when the desired element is not exactly
         // toucing the top of the viewport but needs to be considered as touching.
-        if (offset === undefined) {
-            offset = 0;
-        }
         return (
             rec.top <= 0 + offset && rec.bottom >= 0 + offset
             //(rec.top >= 0+offset && rec.top <= window.innerHeight) // this checks if the element
@@ -418,11 +408,8 @@ function isElementInViewport(el, partial, offset) {
             rec.top >= 0 &&
             rec.left >= 0 &&
             rec.bottom <=
-                (window.innerHeight ||
-                    document.documentElement.clientHeight) /*or $(window).height() */ &&
-            rec.right <=
-                (window.innerWidth ||
-                    document.documentElement.clientWidth) /*or $(window).width() */
+                (window.innerHeight || document.documentElement.clientHeight) &&
+            rec.right <= (window.innerWidth || document.documentElement.clientWidth)
         );
     }
 }
