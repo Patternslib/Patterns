@@ -125,6 +125,54 @@ describe("pat-scroll", function () {
         expect(container.scrollTop).toBe(1000);
     });
 
+    it("will adds an offset to scroll position", async () => {
+        // Testing with `selector: top`, as this just sets scrollTop to 0
+
+        document.body.innerHTML = `
+            <div id="scroll-container" style="overflow: scroll">
+              <button class="pat-scroll" data-pat-scroll="selector: top; offset: 40; trigger: manual">to bottom</button>
+            </div>
+        `;
+
+        const container = document.querySelector("#scroll-container");
+        const trigger = document.querySelector(".pat-scroll");
+        const spy_animate = jest.spyOn($.fn, "animate");
+
+        expect(container.scrollTop).toBe(0);
+
+        const pat = pattern.init(trigger);
+        await utils.timeout(1); // wait a tick for async to settle.
+        await pat.smoothScroll();
+
+        // get first called argument
+        const arg_1 = spy_animate.mock.calls[0][0];
+        expect(arg_1.scrollTop).toBe(40);
+    });
+
+    it("will adds a negative offset to scroll position", async () => {
+        // Testing with `selector: top`, as this just sets scrollTop to 0
+
+        document.body.innerHTML = `
+            <div id="scroll-container" style="overflow: scroll">
+              <button class="pat-scroll" data-pat-scroll="selector: top; offset: -40; trigger: manual">to bottom</button>
+            </div>
+        `;
+
+        const container = document.querySelector("#scroll-container");
+        const trigger = document.querySelector(".pat-scroll");
+        const spy_animate = jest.spyOn($.fn, "animate");
+
+        expect(container.scrollTop).toBe(0);
+
+        const pat = pattern.init(trigger);
+        await utils.timeout(1); // wait a tick for async to settle.
+        await pat.smoothScroll();
+
+        // get first called argument
+        const arg_1 = spy_animate.mock.calls[0][0];
+        expect(arg_1.scrollTop).toBe(-40);
+    });
+
     it("handles different selector options.", () => {
         document.body.innerHTML = `
             <a href="#el3" class="pat-scroll" />

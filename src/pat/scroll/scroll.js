@@ -12,7 +12,7 @@ export const parser = new Parser("scroll");
 parser.addArgument("trigger", "click", ["click", "auto", "manual"]);
 parser.addArgument("direction", "top", ["top", "left"]);
 parser.addArgument("selector");
-parser.addArgument("offset");
+parser.addArgument("offset", 0);
 parser.addArgument("delay");
 
 export default Base.extend({
@@ -157,11 +157,7 @@ export default Base.extend({
         const scroll = this.options.direction == "top" ? "scrollTop" : "scrollLeft";
         const options = {};
         let scrollable;
-        if (typeof this.options.offset !== "undefined") {
-            // apply scroll options directly
-            scrollable = $(this._get_selector_target());
-            options[scroll] = this.options.offset;
-        } else if (this.options.selector === "top") {
+        if (this.options.selector === "top") {
             // Just scroll up or left, period.
             scrollable = this.findScrollContainer(this.$el);
             options[scroll] = 0;
@@ -209,6 +205,8 @@ export default Base.extend({
                 );
             }
         }
+
+        options[scroll] += this.options.offset;
 
         // Fix scrolling on body - need to scroll on HTML, howsoever.
         if (scrollable[0] === document.body) {
