@@ -2,8 +2,11 @@ import "regenerator-runtime/runtime"; // needed for ``await`` support
 import "../../core/jquery-ext";
 import $ from "jquery";
 import Base from "../../core/base";
+import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";
+
+const log = logging.getLogger("pat.scroll");
 
 export const parser = new Parser("scroll");
 parser.addArgument("trigger", "click", ["click", "auto"]);
@@ -209,7 +212,10 @@ export default Base.extend({
         // execute the scroll
         scrollable.animate(options, {
             duration: 500,
-            start: () => $(".pat-scroll").addClass("pat-scroll-animated"),
+            start: () => {
+                $(".pat-scroll").addClass("pat-scroll-animated");
+                log.debug("scrolling.");
+            },
         });
     },
 });
