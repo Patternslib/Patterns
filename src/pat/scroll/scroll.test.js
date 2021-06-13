@@ -82,8 +82,7 @@ describe("pat-scroll", function () {
         expect(spy_animate).toHaveBeenCalled();
     });
 
-    // Skipping - passes only in isolation.
-    it.skip("will scroll to bottom with selector:bottom", async () => {
+    it("will scroll to bottom with selector:bottom", async () => {
         document.body.innerHTML = `
             <div id="scroll-container" style="overflow: scroll">
               <button class="pat-scroll" data-pat-scroll="selector: bottom">to bottom</button>
@@ -107,7 +106,5 @@ describe("pat-scroll", function () {
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(container.scrollTop > 0).toBe(true);
-
-        jest.restoreAllMocks();
     });
 });
