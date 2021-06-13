@@ -85,7 +85,7 @@ describe("pat-scroll", function () {
     it("will scroll to bottom with selector:bottom", async () => {
         document.body.innerHTML = `
             <div id="scroll-container" style="overflow: scroll">
-              <button class="pat-scroll" data-pat-scroll="selector: bottom">to bottom</button>
+              <button class="pat-scroll" data-pat-scroll="selector: bottom; trigger: manual">to bottom</button>
             </div>
         `;
 
@@ -93,18 +93,17 @@ describe("pat-scroll", function () {
         const trigger = document.querySelector(".pat-scroll");
 
         // mocking stuff jsDOM doesn't implement
-        jest.spyOn(container, "scrollHeight", "get").mockImplementation(() => 100000);
+        jest.spyOn(container, "scrollHeight", "get").mockImplementation(() => 1000);
 
         expect(container.scrollTop).toBe(0);
 
-        pattern.init(trigger);
+        const pat = pattern.init(trigger);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(container.scrollTop).toBe(0);
 
-        trigger.click();
-        await utils.timeout(1); // wait a tick for async to settle.
+        await pat.smoothScroll();
 
-        expect(container.scrollTop > 0).toBe(true);
+        expect(container.scrollTop).toBe(1000);
     });
 });

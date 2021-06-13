@@ -210,12 +210,14 @@ export default Base.extend({
         }
 
         // execute the scroll
-        scrollable.animate(options, {
-            duration: 500,
-            start: () => {
-                $(".pat-scroll").addClass("pat-scroll-animated");
-                log.debug("scrolling.");
-            },
-        });
+        await scrollable
+            .animate(options, {
+                duration: 500,
+                start: () => {
+                    $(".pat-scroll").addClass("pat-scroll-animated");
+                    log.debug("scrolling.");
+                },
+            })
+            .promise();
     },
 });
