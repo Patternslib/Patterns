@@ -82,6 +82,24 @@ describe("pat-scroll", function () {
         expect(spy_animate).toHaveBeenCalled();
     });
 
+    it("will allow for programmatic scrolling with trigger set to 'manual'", async () => {
+        document.body.innerHTML = `
+            <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: manual">p1</a>
+            <p id="p1"></p>
+        `;
+        const el = document.querySelector(".pat-scroll");
+        const spy_animate = jest.spyOn($.fn, "animate");
+
+        const pat = pattern.init(el);
+        await utils.timeout(1); // wait some ticks for async to settle.
+
+        expect(spy_animate).not.toHaveBeenCalled();
+
+        await pat.smoothScroll();
+
+        expect(spy_animate).toHaveBeenCalled();
+    });
+
     it("will scroll to bottom with selector:bottom", async () => {
         document.body.innerHTML = `
             <div id="scroll-container" style="overflow: scroll">

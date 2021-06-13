@@ -9,7 +9,7 @@ import utils from "../../core/utils";
 const log = logging.getLogger("pat.scroll");
 
 export const parser = new Parser("scroll");
-parser.addArgument("trigger", "click", ["click", "auto"]);
+parser.addArgument("trigger", "click", ["click", "auto", "manual"]);
 parser.addArgument("direction", "top", ["top", "left"]);
 parser.addArgument("selector");
 parser.addArgument("offset");
@@ -22,12 +22,14 @@ export default Base.extend({
 
     async init($el, opts) {
         this.options = parser.parse(this.$el, opts);
-        if (this.options.trigger == "auto") {
+        if (this.options.trigger === "auto") {
             const ImagesLoaded = (await import("imagesloaded")).default;
             // Only calculate the offset when all images are loaded
             ImagesLoaded(document.body, () => this.smoothScroll());
         }
-        this.el.addEventListener("click", this.onClick.bind(this));
+        if (this.options.trigger === "auto" || this.options.trigger === "click") {
+            this.el.addEventListener("click", this.onClick.bind(this));
+        }
         this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
         this.markBasedOnFragment();
         this.on("hashchange", this.clearIfHidden.bind(this));
