@@ -37,6 +37,7 @@ parser.addArgument("close-trigger");
 parser.addArgument("open-trigger");
 // pat-scroll support
 parser.addArgument("scroll-selector");
+parser.addArgument("scroll-offset", 0);
 
 const debounce_scroll_timer = { timer: null };
 
@@ -191,6 +192,7 @@ export default Base.extend({
             const scroll = new pat_scroll(this.el, {
                 trigger: "manual",
                 selector: scroll_selector,
+                offset: this.options.scroll?.offset,
             });
             await scroll.smoothScroll();
         }

@@ -180,5 +180,39 @@ describe("pat-collapsible", function () {
             // Other calls to _scroll resp. jQuery.animate should have been canceled.
             expect(spy_animate).toHaveBeenCalledTimes(1);
         });
+
+        it("can scroll to itself when opened with an offset.", async function () {
+            document.body.innerHTML = `
+            <div class="pat-collapsible closed" data-pat-collapsible="scroll-selector: self; scroll-offset: 40; transition: none">
+                <p>Collapsible content</p>
+            </div>
+        `;
+            const collapsible = document.querySelector(".pat-collapsible");
+            const pat = pattern.init(collapsible);
+            const spy_animate = jest.spyOn($.fn, "animate");
+
+            pat.toggle();
+            await utils.timeout(10);
+
+            const arg_1 = spy_animate.mock.calls[0][0];
+            expect(arg_1.scrollTop).toBe(40);
+        });
+
+        it("can scroll to itself when opened with a negative offset.", async function () {
+            document.body.innerHTML = `
+            <div class="pat-collapsible closed" data-pat-collapsible="scroll-selector: self; scroll-offset: -40; transition: none">
+                <p>Collapsible content</p>
+            </div>
+        `;
+            const collapsible = document.querySelector(".pat-collapsible");
+            const pat = pattern.init(collapsible);
+            const spy_animate = jest.spyOn($.fn, "animate");
+
+            pat.toggle();
+            await utils.timeout(10);
+
+            const arg_1 = spy_animate.mock.calls[0][0];
+            expect(arg_1.scrollTop).toBe(-40);
+        });
     });
 });
