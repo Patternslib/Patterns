@@ -99,7 +99,6 @@ module.exports = (env, argv) => {
         resolve: {
             alias: {
                 modernizr$: path.resolve(__dirname, "../.modernizrrc.js"),
-                moment: path.resolve(__dirname, "../node_modules/moment"),
             },
         },
         plugins: [
