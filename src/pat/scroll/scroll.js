@@ -1,7 +1,6 @@
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import "../../core/jquery-ext";
 import $ from "jquery";
-import _ from "underscore";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";
@@ -29,7 +28,7 @@ export default Base.extend({
         this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
         this.markBasedOnFragment();
         this.on("hashchange", this.clearIfHidden.bind(this));
-        $(window).scroll(_.debounce(this.markIfVisible.bind(this), 50));
+        $(window).scroll(utils.debounce(this.markIfVisible.bind(this), 50));
     },
 
     onClick() {
@@ -105,11 +104,7 @@ export default Base.extend({
                 const $target = $("#" + fragment);
                 if ($target.length) {
                     if (
-                        utils.isElementInViewport(
-                            $target[0],
-                            true,
-                            this.options.offset
-                        ) === false
+                        !utils.isElementInViewport($target[0], true, this.options.offset)
                     ) {
                         // if the anchor's target is invisible, remove current class from anchor and target.
                         $target.removeClass("current");
