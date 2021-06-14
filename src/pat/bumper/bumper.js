@@ -69,14 +69,21 @@ export default Base.extend({
         return $();
     },
 
-    _markBumped: function markBumper(is_bumped) {
+    _markBumped: function markBumper(sides) {
         var $target = this.options.selector ? $(this.options.selector) : this.$el,
-            todo = is_bumped ? this.options.bump : this.options.unbump;
+            todo = sides.length ? this.options.bump : this.options.unbump;
         if (todo.add) {
             $target.addClass(todo.add);
         }
         if (todo.remove) {
             $target.removeClass(todo.remove);
+        }
+        for (const side of ["top", "bottom", "left", "right"]) {
+            if (sides.indexOf(side) >= 0) {
+                $target.addClass("bumped-" + side);
+            } else {
+                $target.removeClass("bumped-" + side);
+            }
         }
     },
 
@@ -101,22 +108,27 @@ export default Base.extend({
         box.left -= delta.left;
         box.right -= delta.left;
 
+        let sides = [];
         if (frame.top > box.top && this.options.bumptop) {
+            sides.push("top");
             sticker.style.top = frame.top - box.top + "px";
         } else if (frame.bottom < box.bottom && this.options.bumpbottom) {
+            sides.push("bottom");
             sticker.style.top = frame.bottom - box.bottom + "px";
         } else {
             sticker.style.top = "";
         }
 
         if (frame.left > box.left && this.options.bumpleft) {
+            sides.push("left");
             sticker.style.left = frame.left - box.left + "px";
         } else if (frame.right < box.right && this.options.bumpright) {
+            sides.push("right");
             sticker.style.left = frame.right - box.right + "px";
         } else {
             sticker.style.left = "";
         }
-        this._markBumped(!!(sticker.style.top || sticker.style.left));
+        this._markBumped(sides);
     },
 
     _getViewport: function getViewport() {
