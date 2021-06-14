@@ -1,17 +1,7 @@
-/* @group Bumper */
-@import "../../../_sass/_settings.scss";
-
 .pat-bumper {
-    z-index: 99;
-
-    &.success {
-        background-color: $colour-success;
-        color: white;
-    }
-    &.warning {
-        background-color: $colour-warning;
-        color: black;
-    }
+    position: sticky;
+    top: -0.51em;
+    bottom: -0.51em;
+    left: -0.51em;
+    right: -0.51em;
 }
-
-/* @end */
