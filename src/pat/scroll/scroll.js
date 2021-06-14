@@ -2,14 +2,17 @@ import "regenerator-runtime/runtime"; // needed for ``await`` support
 import "../../core/jquery-ext";
 import $ from "jquery";
 import Base from "../../core/base";
+import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";
 
+const log = logging.getLogger("pat.scroll");
+
 export const parser = new Parser("scroll");
-parser.addArgument("trigger", "click", ["click", "auto"]);
+parser.addArgument("trigger", "click", ["click", "auto", "manual"]);
 parser.addArgument("direction", "top", ["top", "left"]);
 parser.addArgument("selector");
-parser.addArgument("offset");
+parser.addArgument("offset", 0);
 parser.addArgument("delay");
 
 export default Base.extend({
@@ -19,12 +22,14 @@ export default Base.extend({
 
     async init($el, opts) {
         this.options = parser.parse(this.$el, opts);
-        if (this.options.trigger == "auto") {
+        if (this.options.trigger === "auto") {
             const ImagesLoaded = (await import("imagesloaded")).default;
             // Only calculate the offset when all images are loaded
             ImagesLoaded(document.body, () => this.smoothScroll());
         }
-        this.el.addEventListener("click", this.onClick.bind(this));
+        if (this.options.trigger === "auto" || this.options.trigger === "click") {
+            this.el.addEventListener("click", this.onClick.bind(this));
+        }
         this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
         this.markBasedOnFragment();
         this.on("hashchange", this.clearIfHidden.bind(this));
@@ -135,6 +140,16 @@ export default Base.extend({
         return scrollable;
     },
 
+    _get_selector_target() {
+        const selector = this.options.selector;
+        if (!selector && this.el.href?.includes("#")) {
+            return document.querySelector(`#${this.el.href.split("#").pop()}`);
+        } else if (!selector || selector === "self") {
+            return this.el;
+        }
+        return document.querySelector(selector);
+    },
+
     async smoothScroll() {
         if (this.options.delay) {
             await utils.timeout(this.options.delay);
@@ -142,11 +157,7 @@ export default Base.extend({
         const scroll = this.options.direction == "top" ? "scrollTop" : "scrollLeft";
         const options = {};
         let scrollable;
-        if (typeof this.options.offset != "undefined") {
-            // apply scroll options directly
-            scrollable = this.options.selector ? $(this.options.selector) : this.$el;
-            options[scroll] = this.options.offset;
-        } else if (this.options.selector === "top") {
+        if (this.options.selector === "top") {
             // Just scroll up or left, period.
             scrollable = this.findScrollContainer(this.$el);
             options[scroll] = 0;
@@ -163,16 +174,10 @@ export default Base.extend({
             // starting from the *target*
             // The intent is to move target into view within scrollable
             // if the scrollable has no scrollbar, do not scroll body
-            let fragment;
-            if (this.options.selector) {
-                fragment = this.options.selector;
-            } else {
-                const href = this.$el.attr("href");
-                fragment =
-                    href.indexOf("#") !== -1 ? "#" + href.split("#").pop() : undefined;
-            }
-            const target = $(fragment);
-            if (target.length === 0) {
+
+            const target = $(this._get_selector_target());
+
+            if (!target.length) {
                 return;
             }
 
@@ -201,15 +206,22 @@ export default Base.extend({
             }
         }
 
+        options[scroll] += this.options.offset;
+
         // Fix scrolling on body - need to scroll on HTML, howsoever.
         if (scrollable[0] === document.body) {
             scrollable = $("html");
         }
 
         // execute the scroll
-        scrollable.animate(options, {
-            duration: 500,
-            start: () => $(".pat-scroll").addClass("pat-scroll-animated"),
-        });
+        await scrollable
+            .animate(options, {
+                duration: 500,
+                start: () => {
+                    $(".pat-scroll").addClass("pat-scroll-animated");
+                    log.debug("scrolling.");
+                },
+            })
+            .promise();
     },
 });

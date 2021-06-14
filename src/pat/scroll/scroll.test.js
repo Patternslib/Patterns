@@ -82,11 +82,28 @@ describe("pat-scroll", function () {
         expect(spy_animate).toHaveBeenCalled();
     });
 
-    // Skipping - passes only in isolation.
-    it.skip("will scroll to bottom with selector:bottom", async () => {
+    it("will allow for programmatic scrolling with trigger set to 'manual'", async () => {
+        document.body.innerHTML = `
+            <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: manual">p1</a>
+            <p id="p1"></p>
+        `;
+        const el = document.querySelector(".pat-scroll");
+        const spy_animate = jest.spyOn($.fn, "animate");
+
+        const pat = pattern.init(el);
+        await utils.timeout(1); // wait some ticks for async to settle.
+
+        expect(spy_animate).not.toHaveBeenCalled();
+
+        await pat.smoothScroll();
+
+        expect(spy_animate).toHaveBeenCalled();
+    });
+
+    it("will scroll to bottom with selector:bottom", async () => {
         document.body.innerHTML = `
             <div id="scroll-container" style="overflow: scroll">
-              <button class="pat-scroll" data-pat-scroll="selector: bottom">to bottom</button>
+              <button class="pat-scroll" data-pat-scroll="selector: bottom; trigger: manual">to bottom</button>
             </div>
         `;
 
@@ -94,20 +111,93 @@ describe("pat-scroll", function () {
         const trigger = document.querySelector(".pat-scroll");
 
         // mocking stuff jsDOM doesn't implement
-        jest.spyOn(container, "scrollHeight", "get").mockImplementation(() => 100000);
+        jest.spyOn(container, "scrollHeight", "get").mockImplementation(() => 1000);
 
         expect(container.scrollTop).toBe(0);
 
-        pattern.init(trigger);
+        const pat = pattern.init(trigger);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(container.scrollTop).toBe(0);
 
-        trigger.click();
+        await pat.smoothScroll();
+
+        expect(container.scrollTop).toBe(1000);
+    });
+
+    it("will adds an offset to scroll position", async () => {
+        // Testing with `selector: top`, as this just sets scrollTop to 0
+
+        document.body.innerHTML = `
+            <div id="scroll-container" style="overflow: scroll">
+              <button class="pat-scroll" data-pat-scroll="selector: top; offset: 40; trigger: manual">to bottom</button>
+            </div>
+        `;
+
+        const container = document.querySelector("#scroll-container");
+        const trigger = document.querySelector(".pat-scroll");
+        const spy_animate = jest.spyOn($.fn, "animate");
+
+        expect(container.scrollTop).toBe(0);
+
+        const pat = pattern.init(trigger);
         await utils.timeout(1); // wait a tick for async to settle.
+        await pat.smoothScroll();
 
-        expect(container.scrollTop > 0).toBe(true);
+        // get first called argument
+        const arg_1 = spy_animate.mock.calls[0][0];
+        expect(arg_1.scrollTop).toBe(40);
+    });
 
-        jest.restoreAllMocks();
+    it("will adds a negative offset to scroll position", async () => {
+        // Testing with `selector: top`, as this just sets scrollTop to 0
+
+        document.body.innerHTML = `
+            <div id="scroll-container" style="overflow: scroll">
+              <button class="pat-scroll" data-pat-scroll="selector: top; offset: -40; trigger: manual">to bottom</button>
+            </div>
+        `;
+
+        const container = document.querySelector("#scroll-container");
+        const trigger = document.querySelector(".pat-scroll");
+        const spy_animate = jest.spyOn($.fn, "animate");
+
+        expect(container.scrollTop).toBe(0);
+
+        const pat = pattern.init(trigger);
+        await utils.timeout(1); // wait a tick for async to settle.
+        await pat.smoothScroll();
+
+        // get first called argument
+        const arg_1 = spy_animate.mock.calls[0][0];
+        expect(arg_1.scrollTop).toBe(-40);
+    });
+
+    it("handles different selector options.", () => {
+        document.body.innerHTML = `
+            <a href="#el3" class="pat-scroll" />
+            <div id="#el1" />
+            <div class=".el2 />
+            <div id="#el3" />
+        `;
+
+        const el_pat = document.querySelector(".pat-scroll");
+        const el_1 = document.querySelector("#el1");
+        const el_2 = document.querySelector(".el2");
+        const el_3 = document.querySelector("#el3");
+
+        const pat = pattern.init(el_pat);
+
+        pat.options.selector = "self";
+        expect(pat._get_selector_target()).toBe(el_pat);
+
+        pat.options.selector = "#el1";
+        expect(pat._get_selector_target()).toBe(el_1);
+
+        pat.options.selector = ".el2";
+        expect(pat._get_selector_target()).toBe(el_2);
+
+        pat.options.selector = null; // Using href target
+        expect(pat._get_selector_target()).toBe(el_3);
     });
 });

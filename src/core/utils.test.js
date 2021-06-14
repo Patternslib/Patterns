@@ -580,3 +580,51 @@ describe("core.utils tests", () => {
         });
     });
 });
+
+describe("debounce ...", function () {
+    it("runs function after x ms", async () => {
+        const test_func = jest.fn();
+        const debouncer = utils.debounce(test_func, 1);
+        debouncer();
+        expect(test_func).not.toHaveBeenCalled();
+        await utils.timeout(1);
+        expect(test_func).toHaveBeenCalled();
+    });
+    it("is called with correct args", async () => {
+        const test_func = jest.fn();
+        const debouncer = utils.debounce(test_func, 1);
+        debouncer("hello.", "there.");
+        expect(test_func).not.toHaveBeenCalled();
+        await utils.timeout(1);
+        expect(test_func).toHaveBeenCalledWith("hello.", "there.");
+    });
+    it("cancels previous runs", async () => {
+        const test_func = jest.fn();
+        const debouncer = utils.debounce(test_func, 1);
+        debouncer();
+        debouncer();
+        debouncer();
+        expect(test_func).not.toHaveBeenCalled();
+        await utils.timeout(1);
+        expect(test_func).toHaveBeenCalledTimes(1);
+    });
+    it("incorrect usage by multi instantiation won't cancel previous runs", async () => {
+        const test_func = jest.fn();
+        utils.debounce(test_func, 1)();
+        utils.debounce(test_func, 1)();
+        utils.debounce(test_func, 1)();
+        expect(test_func).not.toHaveBeenCalled();
+        await utils.timeout(1);
+        expect(test_func).toHaveBeenCalledTimes(3);
+    });
+    it("can be instantiated multiple times and cancel previous runs by passing a timer object.", async () => {
+        const test_func = jest.fn();
+        const timer = { timer: null };
+        utils.debounce(test_func, 1, timer)();
+        utils.debounce(test_func, 1, timer)();
+        utils.debounce(test_func, 1, timer)();
+        expect(test_func).not.toHaveBeenCalled();
+        await utils.timeout(1);
+        expect(test_func).toHaveBeenCalledTimes(1);
+    });
+});
