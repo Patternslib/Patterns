@@ -18,9 +18,9 @@ export default Base.extend({
     name: "sticky",
     trigger: ".pat-sticky",
     async init() {
-        // TODO: remove this pattern with the next major version of patternslib.
+        // TODO: remove this pattern with the next version of patternslib.
         logger.warn(
-            "This pattern is deprecated an will be removed in the next major version of Patternslib. Use CSS position:sticky instead."
+            "This pattern is deprecated an will be removed in the next version of Patternslib. Use CSS position:sticky instead."
         );
 
         Stickyfill = (await import("stickyfilljs")).default;
