@@ -1,3 +1,44 @@
+## [4.4.0](https://github.com/Patternslib/patterns/compare/4.3.1...4.4.0) (2021-06-15)
+
+
+### Features
+
+* **core utils debounce:** Improve cancelation of previous runs. ([a845264](https://github.com/Patternslib/patterns/commit/a845264379826a790291bfa71a392caa8f4479f2))
+* **pat bumper:** Extra classes depending on bumped side ([#847](https://github.com/Patternslib/patterns/issues/847)). ([5b1acac](https://github.com/Patternslib/patterns/commit/5b1acac3cf67c0aa84208f31562e47e2c3724716))
+* **pat collapsible:** async support for transition function. ([8c35a1a](https://github.com/Patternslib/patterns/commit/8c35a1afa86170dc966b84b67958548adeace1bd))
+* **pat collapsible:** Scroll offset support. ([48a2cdd](https://github.com/Patternslib/patterns/commit/48a2cdddee49c7934fa6d49242cb90f899a135b6)), closes [#840](https://github.com/Patternslib/patterns/issues/840)
+* **pat collapsible:** Scrolling support. ([18901c8](https://github.com/Patternslib/patterns/commit/18901c8b8fd9fd68dbbe771b11a7cdae14d5064a)), closes [#840](https://github.com/Patternslib/patterns/issues/840)
+* **pat scroll:** Add support for selector self. ([be4d322](https://github.com/Patternslib/patterns/commit/be4d322929d6b1683163fd88636527be1e3eaeaf)), closes [#840](https://github.com/Patternslib/patterns/issues/840)
+* **pat scroll:** Add trigger value "manual". ([f3a04a6](https://github.com/Patternslib/patterns/commit/f3a04a6ec2273cdbb2527e990303a0e11e4ca699)), closes [#840](https://github.com/Patternslib/patterns/issues/840)
+* **pat scroll:** Allow a delay before scrolling ([#842](https://github.com/Patternslib/patterns/issues/842)). ([cd146eb](https://github.com/Patternslib/patterns/commit/cd146ebed9ea0da0a35a244a36144979222199e6))
+* **pat scroll:** Support await for smoothScroll. ([0a353b3](https://github.com/Patternslib/patterns/commit/0a353b33309e7f308b20b1a91f4b5ef9026e768b))
+* **pat tabs:** Extra classes to indicate tabs state ([#841](https://github.com/Patternslib/patterns/issues/841)). ([aa0efbe](https://github.com/Patternslib/patterns/commit/aa0efbeaa2adee456a5c16757fd662a6839978b1))
+
+
+### Bug Fixes
+
+* **pat tabs:** Improve calculation of available space of pat-tabs. Ref: [#848](https://github.com/Patternslib/patterns/issues/848). ([77787af](https://github.com/Patternslib/patterns/commit/77787af9907c502bf83cb7989312f2e8915364c6))
+
+
+### Breaking Changes
+
+* **pat scroll:** Apply offset to scrolling position. ([6d54876](https://github.com/Patternslib/patterns/commit/6d548761c6d5eb4a7c29dee877293ff53cd64bde)), closes [#840](https://github.com/Patternslib/patterns/issues/840)
+
+
+### Maintenance
+
+* **dependencies:** Upgrade dependencies on major level. ([c190e52](https://github.com/Patternslib/patterns/commit/c190e52bcf5e5b7e6a8901a137ec4574cb7624c2))
+* **dependencies:** Upgrade dependencies on minor+patch level. ([53d1434](https://github.com/Patternslib/patterns/commit/53d1434bc87cad2c71aacf1dbeeb4b853c1c5c9c))
+* **pat bumper:** Anounce breaking change for pat-bumper. The JavaScript based positioning will be dropped and needs to be done via CSS position:sticky only. This pattern will only set classes to indicate a bumped element. ([206b02f](https://github.com/Patternslib/patterns/commit/206b02f8bf7ac659d7a48ac6c9c8e3aafba7f0c6))
+* **pat scroll:** Add debug message when scrolling. ([eeaf054](https://github.com/Patternslib/patterns/commit/eeaf05413fe5e0c7935eb5a64749def33b999d08))
+* **pat scroll:** Un-skip selector:bottom test - it passes now. ([769e578](https://github.com/Patternslib/patterns/commit/769e5783403ca38bd1f6c8c76eb69f412bbf7357))
+* **pat scroll:** Updated demo to properly show the use of `delay` ([#842](https://github.com/Patternslib/patterns/issues/842)). ([8984519](https://github.com/Patternslib/patterns/commit/8984519fab2dfe7f6377279f1f42e41963bf028c))
+* **webpack:** Add config entry to minify all available bundles and chunks. No need to configure bundle minification in depending packages. ([b7b1587](https://github.com/Patternslib/patterns/commit/b7b1587e2206ea191e4795c4c03dc0b1d7759e13))
+* **webpack:** Remove unnecessary moment resolve-alias. No need to overload in sub packages for that anymore. ([1127367](https://github.com/Patternslib/patterns/commit/112736716cda3e7872760e72ca9311a8d081db37))
+* Minor code modernizations and cleanup. ([81fa5dc](https://github.com/Patternslib/patterns/commit/81fa5dca6a2bba9434977e17ea0ad7def4acced5))
+* Replace last occurrences of underscore debounce with utils debounce. ([2ef57bf](https://github.com/Patternslib/patterns/commit/2ef57bfc13c97f4cb09542cf2f63d8d88c44ea4b))
+* **webpack:** Update build system with necessary changed from recent version updates. We're still on Webpack 4. ([fbff9f9](https://github.com/Patternslib/patterns/commit/fbff9f9700a55ef33691afaac2375b83e115acd6))
+
 ### [4.3.1](https://github.com/Patternslib/patterns/compare/4.3.0...4.3.1) (2021-06-08)
 
 
