@@ -11,7 +11,10 @@ import $ from "jquery";
 import _ from "underscore";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
+import logging from "../../core/logging";
 import utils from "../../core/utils";
+
+const logger = logging.getLogger("pat bumper");
 
 export const parser = new Parser("bumper");
 parser.addArgument("margin", 0);
@@ -27,6 +30,12 @@ export default Base.extend({
     trigger: ".pat-bumper",
 
     init: function initBumper($el, opts) {
+        logger.warn(
+            `The behavior of this pattern will be changed in the next version of Patternslib.
+            The JavaScript based positioning will be dropped and needs to be done via CSS position:sticky only.
+            This pattern will only set classes to indicate a bumped element.`
+        );
+
         this.options = parser.parse(this.$el, opts);
         this.$container = this._findScrollContainer();
 
