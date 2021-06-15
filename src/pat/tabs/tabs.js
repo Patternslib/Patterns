@@ -6,7 +6,6 @@ export default Base.extend({
     name: "tabs",
     trigger: ".pat-tabs",
     jquery_plugin: true,
-    skip_adjust: false, // do not run into an resize/adjust loop
     allowed_update_patterns: [
         "stacks",
         "switch",
@@ -18,14 +17,12 @@ export default Base.extend({
     ],
 
     init() {
-        const debounced_resize = utils.debounce(() => this.adjust_tabs(), 50);
+        // debounce_resize to cancel previous runs of adjust_tabs
+        const debounced_resize = utils.debounce(() => this.adjust_tabs(), 10);
         const resize_observer = new ResizeObserver(() => {
-            if (!this.skip_adjust) {
-                debounced_resize();
-            }
-            this.skip_adjust = false;
+            debounced_resize();
         });
-        resize_observer.observe(this.el);
+        resize_observer.observe(this.el.parentElement); // observe on size changes of parent.
 
         // Also listen for ``pat-update`` event for cases where no resize but
         // an immediate display of the element is done.
@@ -39,74 +36,74 @@ export default Base.extend({
     },
 
     adjust_tabs() {
-        this.el.classList.remove("tabs-ready", "tabs-wrapped");
+        this.el.classList.remove("tabs-ready");
+        this.el.classList.remove("tabs-wrapped");
+        this._flatten_tabs();
         this._adjust_tabs();
         this.el.classList.add("tabs-ready");
     },
 
-    _adjust_tabs() {
-        this.skip_adjust = true;
-        const container_width = this.$el.width() * 0.95;
+    _flatten_tabs() {
+        // Remove the extra-tabs structure and place all tabs directly under .pat-tabs
+        const extra_wrapper = this.el.querySelector(".extra-tabs");
+        if (extra_wrapper) {
+            this.el.append(...extra_wrapper.children);
+            extra_wrapper.remove();
+        }
+    },
 
-        // here we want to gather all tabs including those that may be in a special 'extra-tabs'
-        // span and place them all as equal children, before we recalculate which tabs are
-        // visible and which are potentially fully or partially obscured.
-        let extratabs = [];
-        let children = [...this.el.children].filter((it) => {
-            if (it.classList.contains("extra-tabs")) {
-                extratabs.push(...it.children);
-                return false;
-            }
-            return true;
-        });
-        children.push(...extratabs);
+    _adjust_tabs() {
+        const children = [...this.el.children].filter(
+            (it) => !it.classList.contains("extra-tabs")
+        );
 
         if (children.length === 0) {
             // nothing to do.
             return;
         }
 
-        this.el.innerHTML = "";
-        this.el.append(...children);
-
-        // precalculate the collective size of all the tabs
-        let total_width = [...this.el.children].reduce((val, it) => {
-            return val + $(it).outerWidth(true);
-        }, 0);
-
-        if (total_width <= container_width) {
+        // Check if tabs are broken into multiple lines.
+        // This is done by comparing the positions, which need to be increasing.
+        // Instead of calculating the width of each element, this has methods
+        // also taking whitespace between elements into account.
+        let last_x;
+        let all_in_line = true;
+        for (const it of this.el.children) {
+            const bounds = it.getBoundingClientRect();
+            if (last_x && last_x > bounds.x) {
+                // broke into new line
+                all_in_line = false;
+                break;
+            }
+            // Next position-left must be greater than last position-left plus element width.
+            last_x = bounds.x + bounds.width;
+        }
+        if (all_in_line) {
             // allright, nothing to do
             return;
         }
 
-        const extra_el = document.createElement("span");
-        extra_el.setAttribute("class", "extra-tabs");
-        this.el.classList.add("closed", "tabs-wrapped");
-        extra_el.addEventListener("click", () => {
-            // Toggle opened/closed class on extra-tabs
-            if (this.el.classList.contains("open")) {
-                this.el.classList.remove("open");
-                this.el.classList.add("closed");
-            } else {
-                this.el.classList.remove("closed");
-                this.el.classList.add("open");
-            }
-        });
-        this.el.append(extra_el);
-        const extra_width = $(extra_el).width();
+        let extra_tabs = this.el.querySelector(".extra-tabs");
+        if (!extra_tabs) {
+            extra_tabs = document.createElement("span");
+            extra_tabs.classList.add("extra-tabs");
+            this.el.classList.add("closed");
+            this.el.classList.add("tabs-wrapped");
 
-        extratabs = [];
-        total_width = extra_width;
-        for (const [idx, it] of [...children].entries()) {
-            total_width += $(it).outerWidth(true);
-            if (total_width > container_width) {
-                extratabs = children.splice(idx);
-                break;
-            }
+            extra_tabs.addEventListener("click", () => {
+                // Toggle opened/closed class on extra-tabs
+                if (this.el.classList.contains("open")) {
+                    this.el.classList.remove("open");
+                    this.el.classList.add("closed");
+                } else {
+                    this.el.classList.remove("closed");
+                    this.el.classList.add("open");
+                }
+            });
+            this.el.append(extra_tabs);
         }
-        this.el.innerHTML = "";
-        this.el.append(...children);
-        extra_el.append(...extratabs);
-        this.el.append(extra_el);
+        extra_tabs.prepend(children.pop());
+
+        this._adjust_tabs();
     },
 });

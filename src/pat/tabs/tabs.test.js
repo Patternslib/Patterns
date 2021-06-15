@@ -2,143 +2,177 @@ import pattern from "./tabs";
 import utils from "../../core/utils";
 
 describe("pat-tabs", function () {
-    beforeEach(function () {
-        const el = document.createElement("div");
-        el.setAttribute("id", "lab");
-        document.body.append(el);
-    });
     afterEach(function () {
+        jest.restoreAllMocks();
         document.body.innerHTML = "";
     });
 
-    it("When the size of all the tabs cannot fit in the pat-tabs div some tabs will be placed in the extra-tabs span, which is a child of the pat-tabs element", async () => {
-        const container = document.querySelector("#lab");
-        container.innerHTML = `
-            <nav class="navigation tabs pat-tabs" style="width:400px;">
-                <a href="" style="width:100px; display:block;">General</a>
-                <a href="" style="width:100px; display:block;">Members</a>
-                <a href="" style="width:100px; display:block;">Security</a>
-                <a href="" style="width:100px; display:block;">Advanced</a>
+    it("1 - Tabs which do not fit into a single line will be put into .extra-tabs.", async () => {
+        document.body.innerHTML = `
+            <nav class="pat-tabs">
+                <a>1</a>
+                <a>2</a>
+                <a>3</a>
+                <a>4</a>
             </nav>
         `;
-        const tabs = document.querySelector(".pat-tabs");
-        expect(tabs.classList.contains("tabs-ready")).toBeFalsy();
-        pattern.init(tabs);
-        await utils.timeout(100);
-        expect(tabs.querySelectorAll(".extra-tabs").length).toBeTruthy();
-        expect(tabs.classList.contains("tabs-wrapped")).toBeTruthy();
-        expect(tabs.classList.contains("tabs-ready")).toBeTruthy();
+
+        // Mock layout.
+        const tabs = document.querySelectorAll(".pat-tabs a");
+        jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
+        jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 200, width: 40 }; }); // prettier-ignore
+        jest.spyOn(tabs[2], "getBoundingClientRect").mockImplementation(() => { return { x: 300, width: 40 }; }); // prettier-ignore
+        jest.spyOn(tabs[3], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
+
+        const nav = document.querySelector(".pat-tabs");
+        expect(nav.classList.contains("tabs-ready")).toBeFalsy();
+        pattern.init(nav);
+        await utils.timeout(11);
+
+        expect(nav.querySelector(".extra-tabs")).toBeTruthy();
+        expect(nav.querySelector(".extra-tabs").children.length).toBe(1);
+        expect(nav.classList.contains("tabs-wrapped")).toBeTruthy();
+        expect(nav.classList.contains("tabs-ready")).toBeTruthy();
     });
 
-    it("When the size of all the tabs (padding included) cannot fit in the pat-tabs div some tabs will be placed in the extra-tabs span, which is a child of the pat-tabs element", async () => {
-        const container = document.querySelector("#lab");
-        container.innerHTML = `
-            <nav class="navigation tabs pat-tabs" style="width:440px;">
-                <a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">General</a>
-                <a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">Members</a>
-                <a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">Security</a>
-                <a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">Advanced</a>
+    it("2 - Mote tabs which do not fit into a single line will be put into .extra-tabs.", async () => {
+        document.body.innerHTML = `
+            <nav class="pat-tabs">
+                <a>1</a>
+                <a>2</a>
+                <a>3</a>
+                <a>4</a>
             </nav>
         `;
 
-        const tabs = document.querySelector(".pat-tabs");
-        expect(tabs.classList.contains("tabs-ready")).toBeFalsy();
-        pattern.init(tabs);
-        await utils.timeout(100);
-        expect(tabs.querySelectorAll(".extra-tabs").length).toBeTruthy();
-        expect(tabs.classList.contains("tabs-wrapped")).toBeTruthy();
-        expect(tabs.classList.contains("tabs-ready")).toBeTruthy();
+        // Mock layout.
+        const tabs = document.querySelectorAll(".pat-tabs a");
+        jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
+        jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 200, width: 40 }; }); // prettier-ignore
+        jest.spyOn(tabs[2], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
+        jest.spyOn(tabs[3], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
+
+        const nav = document.querySelector(".pat-tabs");
+        expect(nav.classList.contains("tabs-ready")).toBeFalsy();
+        pattern.init(nav);
+        await utils.timeout(11);
+
+        expect(nav.querySelector(".extra-tabs")).toBeTruthy();
+        expect(nav.querySelector(".extra-tabs").children.length).toBe(2);
+        expect(nav.classList.contains("tabs-wrapped")).toBeTruthy();
+        expect(nav.classList.contains("tabs-ready")).toBeTruthy();
     });
 
-    it("When the size of all the tabs can fit in the pat-tabs div the extra-tabs span will not exist as a child of the pat-tabs element", async () => {
-        // XXX: Somehow the browsers doesn't behave so nicely, elements
-        // wrap around even though according to our calculations they
-        // don't have to. So we now check for 5% less than the
-        // container width. That means, 401px must become 1.05*401 =422
-        const container = document.querySelector("#lab");
-        container.innerHTML = `
-            <nav class="navigation tabs pat-tabs" style="width:422px;">
-                <a href="" style="width:100px; display:block;">General</a>
-                <a href="" style="width:100px; display:block;">Members</a>
-                <a href="" style="width:100px; display:block;">Security</a>
-                <a href="" style="width:100px; display:block;">Advanced</a>
+    it("3 - When all tabs fit into a sinlge line, no extra-tabs will be used.", async () => {
+        document.body.innerHTML = `
+            <nav class="pat-tabs">
+                <a>1</a>
+                <a>2</a>
+                <a>3</a>
+                <a>4</a>
             </nav>
         `;
 
-        const tabs = document.querySelector(".pat-tabs");
-        expect(tabs.classList.contains("tabs-ready")).toBeFalsy();
-        pattern.init(tabs);
-        await utils.timeout(100);
-        expect(tabs.querySelectorAll(".extra-tabs").length).toBeFalsy();
-        expect(tabs.classList.contains("tabs-wrapped")).toBeFalsy();
-        expect(tabs.classList.contains("tabs-ready")).toBeTruthy();
+        // Mock layout.
+        const tabs = document.querySelectorAll(".pat-tabs a");
+        jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
+        jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 200, width: 40 }; }); // prettier-ignore
+        jest.spyOn(tabs[2], "getBoundingClientRect").mockImplementation(() => { return { x: 300, width: 40 }; }); // prettier-ignore
+        jest.spyOn(tabs[3], "getBoundingClientRect").mockImplementation(() => { return { x: 400, width: 40 }; }); // prettier-ignore
+
+        const nav = document.querySelector(".pat-tabs");
+        expect(nav.classList.contains("tabs-ready")).toBeFalsy();
+        pattern.init(nav);
+        await utils.timeout(11);
+
+        expect(nav.querySelector(".extra-tabs")).toBeFalsy();
+        expect(nav.classList.contains("tabs-wrapped")).toBeFalsy();
+        expect(nav.classList.contains("tabs-ready")).toBeTruthy();
     });
 
-    it("When the size of all the tabs (padding included) can fit in the pat-tabs div the extra-tabs span will not exist as a child of the pat-tabs element", async () => {
-        // XXX: Somehow the browsers doesn't behave so nicely, elements
-        // wrap around even though according to our calculations they
-        // don't have to. So we now check for 5% less than the
-        // container width. That means, 441px must become 1.05*441 =422
-        const container = document.querySelector("#lab");
-        container.innerHTML = `
-            <nav class="navigation tabs pat-tabs" style="width:464px;">
-                <a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">General</a>
-                <a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">Members</a>
-                <a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">Security</a>
-                <a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">Advanced</a>
+    it("4 - The order of items in extra-tabs will be retained.", async () => {
+        document.body.innerHTML = `
+            <nav class="pat-tabs">
+                <a>1</a>
+                <a>2</a>
+                <a>3</a>
+                <a>4</a>
             </nav>
         `;
 
-        const tabs = document.querySelector(".pat-tabs");
-        expect(tabs.classList.contains("tabs-ready")).toBeFalsy();
-        pattern.init(tabs);
-        await utils.timeout(100);
-        expect(tabs.querySelectorAll(".extra-tabs").length).toBeFalsy();
-        expect(tabs.classList.contains("tabs-wrapped")).toBeFalsy();
-        expect(tabs.classList.contains("tabs-ready")).toBeTruthy();
+        // Mock layout.
+        const tabs = document.querySelectorAll(".pat-tabs a");
+        jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
+        jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
+        jest.spyOn(tabs[2], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
+        jest.spyOn(tabs[3], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
+
+        const nav = document.querySelector(".pat-tabs");
+        expect(nav.classList.contains("tabs-ready")).toBeFalsy();
+        pattern.init(nav);
+        await utils.timeout(11);
+
+        expect(nav.querySelector(".extra-tabs")).toBeTruthy();
+        expect(nav.querySelector(".extra-tabs").children.length).toBe(3);
+        expect(nav.querySelector(".extra-tabs").children[0].textContent).toBe("2");
+        expect(nav.querySelector(".extra-tabs").children[1].textContent).toBe("3");
+        expect(nav.querySelector(".extra-tabs").children[2].textContent).toBe("4");
+
+        expect(nav.classList.contains("tabs-wrapped")).toBeTruthy();
+        expect(nav.classList.contains("tabs-ready")).toBeTruthy();
     });
 
-    it("Clicking on extra-tabs toggles the ``open`` and ``closed`` classes.", async () => {
-        const container = document.querySelector("#lab");
-        container.innerHTML = `
-            <nav class="navigation tabs pat-tabs" style="width:120px;">
-                <a href="" style="width:100px; display:block;">General</a>
-                <a href="" style="width:100px; display:block;">Members</a>
+    it("5 - Clicking on extra-tabs toggles the ``open`` and ``closed`` classes.", async () => {
+        document.body.innerHTML = `
+            <nav class="pat-tabs">
+                <a>1</a>
+                <a>2</a>
             </nav>
         `;
-        const tabs = document.querySelector(".pat-tabs");
-        pattern.init(tabs);
-        await utils.timeout(100);
 
-        const extra_tabs = tabs.querySelector(".extra-tabs");
+        // Mock layout.
+        const tabs = document.querySelectorAll(".pat-tabs a");
+        jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
+        jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
 
-        expect(tabs.classList.contains("open")).toBeFalsy();
-        expect(tabs.classList.contains("closed")).toBeTruthy();
+        const nav = document.querySelector(".pat-tabs");
+        pattern.init(nav);
+        await utils.timeout(11);
+
+        const extra_tabs = nav.querySelector(".extra-tabs");
+
+        expect(nav.classList.contains("open")).toBeFalsy();
+        expect(nav.classList.contains("closed")).toBeTruthy();
 
         extra_tabs.click();
-        expect(tabs.classList.contains("open")).toBeTruthy();
-        expect(tabs.classList.contains("closed")).toBeFalsy();
+        expect(nav.classList.contains("open")).toBeTruthy();
+        expect(nav.classList.contains("closed")).toBeFalsy();
 
         extra_tabs.click();
-        expect(tabs.classList.contains("open")).toBeFalsy();
-        expect(tabs.classList.contains("closed")).toBeTruthy();
+        expect(nav.classList.contains("open")).toBeFalsy();
+        expect(nav.classList.contains("closed")).toBeTruthy();
     });
 
-    it("If there are no extra-tabs, there is no default ``closed`` class.", async () => {
-        const container = document.querySelector("#lab");
-        container.innerHTML = `
-            <nav class="navigation tabs pat-tabs" style="width:220px;">
-                <a href="" style="width:100px; display:block;">General</a>
-                <a href="" style="width:100px; display:block;">Members</a>
+    it("6 - If there are no extra-tabs, there is no default ``closed`` class.", async () => {
+        document.body.innerHTML = `
+            <nav class="pat-tabs">
+                <a>1</a>
+                <a>2</a>
             </nav>
         `;
-        const tabs = document.querySelector(".pat-tabs");
-        pattern.init(tabs);
-        await utils.timeout(100);
 
-        const extra_tabs = tabs.querySelector(".extra-tabs");
+        // Mock layout.
+        const tabs = document.querySelectorAll(".pat-tabs a");
+        jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
+        jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 200, width: 40 }; }); // prettier-ignore
+
+        const nav = document.querySelector(".pat-tabs");
+        pattern.init(nav);
+        await utils.timeout(11);
+
+        const extra_tabs = nav.querySelector(".extra-tabs");
         expect(extra_tabs).toBeFalsy();
 
-        expect(tabs.classList.contains("closed")).toBeFalsy();
+        expect(nav.classList.contains("closed")).toBeFalsy();
     });
 });
