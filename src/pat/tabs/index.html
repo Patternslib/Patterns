@@ -9,26 +9,53 @@
             type="text/javascript"
             charset="utf-8"
         ></script>
+        <style type="text/css" media="screen">
+            .pat-tabs {
+                background: #eee;
+                margin-bottom: 2em;
+                border-bottom: 1px solid silver;
+            }
+            .pat-tabs > * {
+                display: inline-block;
+                margin-right: 1em;
+                padding: 0.3em;
+                border-top-left-radius: 4px;
+                border-top-right-radius: 4px;
+            }
+            .extra-tabs {
+                width: 1em;
+                height: 1em;
+                padding: 0.3em 0;
+                overflow: hidden;
+            }
+            .extra-tabs::before {
+              content: ">>";
+            }
+            .extra-tabs > * {
+                color: #f0f !important;
+                display: block;
+                white-space: nowrap;
+            }
+            .open .extra-tabs {
+                height: auto;
+                overflow: visible;
+            }
+
+
+        </style>
     </head>
     <body>
-        <style media="screen" type="text/css">
-            .extra-tabs > a {
-                color: #f0f !important;
-            }
-            .navigation.tabs.pat-tabs {
-                background: #eee;
-            }
-        </style>
-        <nav class="navigation tabs pat-tabs">
-            <a href="" class="pat-inject current">General</a>
-            <a href="" class="pat-inject">Members</a>
-            <a href="" class="pat-inject">Security</a>
-            <a href="" class="pat-inject">Advanced</a>
-            <a href="" class="pat-inject">Other</a>
-            <a href="" class="pat-inject">Documentation</a>
-            <a href="" class="pat-inject">Configuration</a>
-            <a href="" class="pat-inject">Promotions</a>
+        <nav class="pat-tabs">
+            <a>1 General</a>
+            <a>2 Members</a>
+            <a>3 Security</a>
+            <a>4 Advanced</a>
+            <a>5 Other</a>
+            <a>6 Documentation</a>
+            <a>7 Configuration</a>
+            <a>8 Promotions</a>
         </nav>
+
         <div>&nbsp;</div>
         <div>
             Resize the browser window, pink colored tabs are those that are
@@ -48,27 +75,27 @@
         <div>&nbsp;</div>
         <article class="pat-stacks">
             <section id="sheet-1">
-                <nav class="navigation tabs pat-tabs">
-                    <a href="" class="pat-inject">General</a>
-                    <a href="" class="pat-inject">Members</a>
-                    <a href="" class="pat-inject">Security</a>
-                    <a href="" class="pat-inject">Advanced</a>
-                    <a href="" class="pat-inject">Other</a>
-                    <a href="" class="pat-inject">Documentation</a>
-                    <a href="" class="pat-inject">Configuration</a>
-                    <a href="" class="pat-inject">Promotions</a>
-                    <a href="" class="pat-inject">Actions</a>
-                    <a href="" class="pat-inject">Tools</a>
+                <nav class="pat-tabs">
+                    <a>1 General</a>
+                    <a>2 Members</a>
+                    <a>3 Security</a>
+                    <a>4 Advanced</a>
+                    <a>5 Other</a>
+                    <a>6 Documentation</a>
+                    <a>7 Configuration</a>
+                    <a>8 Promotions</a>
+                    <a>9 Actions</a>
+                    <a>10 Tools</a>
                 </nav>
             </section>
             <section id="sheet-2">
                 <h4>Sheet two</h4>
-                <nav class="navigation tabs pat-tabs">
-                    <a href="" class="pat-inject">Configuration</a>
-                    <a href="" class="pat-inject">Other</a>
-                    <a href="" class="pat-inject">Promotions</a>
-                    <a href="" class="pat-inject">Actions</a>
-                    <a href="" class="pat-inject">Tools</a>
+                <nav class="pat-tabs">
+                    <a>1 Configuration</a>
+                    <a>2 Other</a>
+                    <a>3 Promotions</a>
+                    <a>4 Actions</a>
+                    <a>5 Tools</a>
                 </nav>
             </section>
         </article>
