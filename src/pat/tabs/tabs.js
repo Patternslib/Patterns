@@ -53,10 +53,6 @@ export default Base.extend({
     },
 
     _adjust_tabs() {
-        const padding_left = utils.getCSSValue(this.el, "padding-left", true);
-        const padding_right = utils.getCSSValue(this.el, "padding-right", true);
-        const container_width = this.el.clientWidth - padding_left - padding_right;
-
         const children = [...this.el.children].filter(
             (it) => !it.classList.contains("extra-tabs")
         );
@@ -66,20 +62,28 @@ export default Base.extend({
             return;
         }
 
-        // precalculate the collective size of all the tabs
-        const total_width = [...this.el.children].reduce((val, it) => {
-            const rect = it.getBoundingClientRect();
-            const margin_left = utils.getCSSValue(it, "margin-left", true);
-            const margin_right = utils.getCSSValue(it, "margin-right", true);
-            return val + rect.width + margin_left + margin_right;
-        }, 0);
-
-        if (total_width <= container_width) {
+        // Check if tabs are broken into multiple lines.
+        // This is done by comparing the positions, which need to be increasing.
+        // Instead of calculating the width of each element, this has methods
+        // also taking whitespace between elements into account.
+        let last_x;
+        let all_in_line = true;
+        for (const it of this.el.children) {
+            const bounds = it.getBoundingClientRect();
+            if (last_x && last_x > bounds.x) {
+                // broke into new line
+                all_in_line = false;
+                break;
+            }
+            // Next position-left must be greater than last position-left plus element width.
+            last_x = bounds.x + bounds.width;
+        }
+        if (all_in_line) {
             // allright, nothing to do
             return;
         }
 
-        let extra_tabs = document.querySelector(".extra-tabs");
+        let extra_tabs = this.el.querySelector(".extra-tabs");
         if (!extra_tabs) {
             extra_tabs = document.createElement("span");
             extra_tabs.classList.add("extra-tabs");
