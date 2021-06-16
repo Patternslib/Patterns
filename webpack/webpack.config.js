@@ -9,8 +9,8 @@ const TerserPlugin = require("terser-webpack-plugin");
 const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
-module.exports = (env, argv) => {
-    const config = {
+module.exports = (env, argv, config) => {
+    const base_config = {
         entry: {
             "bundle": path.resolve(__dirname, "../src/patterns.js"),
             "bundle-polyfills": path.resolve(__dirname, "../src/polyfills.js"),
@@ -47,7 +47,8 @@ module.exports = (env, argv) => {
                     test: /\.js$/,
                     // Exclude node modules except patternslib, pat-* and mockup packgages.
                     // Allows for extending this file without needing to override for a successful webpack build.
-                    exclude: /node_modules\/(?!(.*patternslib)\/)(?!(pat-.*)\/)(?!(mockup)\/).*/,
+                    exclude:
+                        /node_modules\/(?!(.*patternslib)\/)(?!(pat-.*)\/)(?!(mockup)\/).*/,
                     loader: "babel-loader",
                 },
                 {
@@ -120,6 +121,11 @@ module.exports = (env, argv) => {
             }),
         ],
     };
+
+    // Override base_config with entries from config.
+    // Most useful the ``entry`` entry.
+    config = Object.assign(base_config, config);
+
     if (argv.mode === "development") {
         // Add a dev server.
         config.devServer = {
