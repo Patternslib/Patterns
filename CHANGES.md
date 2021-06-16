@@ -1,3 +1,17 @@
+### [4.4.1](https://github.com/Patternslib/patterns/compare/4.4.0...4.4.1) (2021-06-16)
+
+
+### Features
+
+* **styles:** Introduce a _fonts.scss to do font imports. Fixes a problem where Webpack could not resolve the font assets path correctly. ([1439e0e](https://github.com/Patternslib/patterns/commit/1439e0e1610770e5447eb68f1ca32db44dfb6d92))
+* **webpack:** Allow passing a config object which overrides keys from a base config. ([f8973ae](https://github.com/Patternslib/patterns/commit/f8973aedb0fdadd669aea4b4ee6d5e7164dda32e))
+
+
+### Maintenance
+
+* **dependencies:** Minor version updates. ([ccb00a0](https://github.com/Patternslib/patterns/commit/ccb00a0d1b98fec024a0b54802aa6ac3958939f2))
+* **dependencies:** Upgrade fullcalendar to 5.8.0. ([3c8dcab](https://github.com/Patternslib/patterns/commit/3c8dcab120ca09cd517a64a088f49f1c12e426bb))
+
 ## [4.4.0](https://github.com/Patternslib/patterns/compare/4.3.1...4.4.0) (2021-06-15)
 
 
