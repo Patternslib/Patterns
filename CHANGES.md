@@ -1,3 +1,10 @@
+### [4.4.2](https://github.com/Patternslib/patterns/compare/4.4.1...4.4.2) (2021-06-17)
+
+
+### Bug Fixes
+
+* **pat tabs:** Improve calculation of available space. It does now 1) check for line breaks of tab elements and 2) check if new position exceeds initial width of .pat-tabs container. ([6d323ac](https://github.com/Patternslib/patterns/commit/6d323ac664979b17453d077ae92e1dfcafa35201))
+
 ### [4.4.1](https://github.com/Patternslib/patterns/compare/4.4.0...4.4.1) (2021-06-16)
 
 
