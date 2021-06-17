@@ -1,6 +1,9 @@
 import $ from "jquery";
 import Base from "../../core/base";
+import logging from "../../core/logging";
 import utils from "../../core/utils";
+
+const logger = logging.getLogger("tabs");
 
 export default Base.extend({
     name: "tabs",
@@ -20,6 +23,7 @@ export default Base.extend({
         // debounce_resize to cancel previous runs of adjust_tabs
         const debounced_resize = utils.debounce(() => this.adjust_tabs(), 10);
         const resize_observer = new ResizeObserver(() => {
+            logger.debug("Entering resize observer");
             debounced_resize();
         });
         resize_observer.observe(this.el.parentElement); // observe on size changes of parent.
@@ -36,9 +40,11 @@ export default Base.extend({
     },
 
     adjust_tabs() {
+        logger.debug("Entering adjust_tabs");
         this.el.classList.remove("tabs-ready");
         this.el.classList.remove("tabs-wrapped");
         this._flatten_tabs();
+        this.max_x = this._get_max_x();
         this._adjust_tabs();
         this.el.classList.add("tabs-ready");
     },
@@ -52,7 +58,19 @@ export default Base.extend({
         }
     },
 
+    _get_max_x() {
+        const max_x =
+            parseInt(this.el.getBoundingClientRect().x, 10) +
+            parseInt(utils.getCSSValue(this.el, "border-right") || 0, 10) +
+            parseInt(this.el.clientWidth, 10) -
+            parseInt(utils.getCSSValue(this.el, "padding-right") || 0, 10);
+        logger.debug(`Max right position max_x: ${max_x}px.`);
+
+        return max_x;
+    },
+
     _adjust_tabs() {
+        logger.debug("Entering _adjust_tabs");
         const children = [...this.el.children].filter(
             (it) => !it.classList.contains("extra-tabs")
         );
@@ -62,29 +80,39 @@ export default Base.extend({
             return;
         }
 
-        // Check if tabs are broken into multiple lines.
-        // This is done by comparing the positions, which need to be increasing.
-        // Instead of calculating the width of each element, this has methods
-        // also taking whitespace between elements into account.
+        // Check if tabs fit into one line by checking their start position not
+        // exceeding the available inner width or if they are not broken to a
+        // new line.
+        // This also takes whitespace between elements into account.
         let last_x;
         let all_in_line = true;
+        // iterate over all including extra-tabs element.
         for (const it of this.el.children) {
             const bounds = it.getBoundingClientRect();
-            if (last_x && last_x > bounds.x) {
+            const it_x = parseInt(bounds.x, 10);
+            const it_w =
+                parseInt(bounds.width, 10) +
+                parseInt(utils.getCSSValue(this.el, "margin-right") || 0, 10);
+            logger.debug(`New tab right position: ${it_x + it_w}px.`);
+            if ((last_x && last_x > it_x) || it_x + it_w > this.max_x) {
                 // broke into new line
                 all_in_line = false;
                 break;
             }
+
             // Next position-left must be greater than last position-left plus element width.
-            last_x = bounds.x + bounds.width;
+            last_x = it_x + it_w;
         }
         if (all_in_line) {
             // allright, nothing to do
             return;
         }
 
+        logger.debug("Breaks into new line.");
+
         let extra_tabs = this.el.querySelector(".extra-tabs");
         if (!extra_tabs) {
+            logger.debug("Creating .extra-tabs element.");
             extra_tabs = document.createElement("span");
             extra_tabs.classList.add("extra-tabs");
             this.el.classList.add("closed");
@@ -102,6 +130,8 @@ export default Base.extend({
             });
             this.el.append(extra_tabs);
         }
+
+        logger.debug("Prepend last tab to .extra_tabs.");
         extra_tabs.prepend(children.pop());
 
         this._adjust_tabs();

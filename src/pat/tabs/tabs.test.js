@@ -17,14 +17,17 @@ describe("pat-tabs", function () {
             </nav>
         `;
 
-        // Mock layout.
+        const nav = document.querySelector(".pat-tabs");
         const tabs = document.querySelectorAll(".pat-tabs a");
+
+        // Mock layout.
+        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100 }; }); // prettier-ignore
+        jest.spyOn(nav, "clientWidth", "get").mockImplementation(() => 340);
         jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 200, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[2], "getBoundingClientRect").mockImplementation(() => { return { x: 300, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[3], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
 
-        const nav = document.querySelector(".pat-tabs");
         expect(nav.classList.contains("tabs-ready")).toBeFalsy();
         pattern.init(nav);
         await utils.timeout(11);
@@ -35,7 +38,7 @@ describe("pat-tabs", function () {
         expect(nav.classList.contains("tabs-ready")).toBeTruthy();
     });
 
-    it("2 - Mote tabs which do not fit into a single line will be put into .extra-tabs.", async () => {
+    it("2 - More tabs which do not fit into a single line will be put into .extra-tabs.", async () => {
         document.body.innerHTML = `
             <nav class="pat-tabs">
                 <a>1</a>
@@ -45,14 +48,17 @@ describe("pat-tabs", function () {
             </nav>
         `;
 
-        // Mock layout.
+        const nav = document.querySelector(".pat-tabs");
         const tabs = document.querySelectorAll(".pat-tabs a");
+
+        // Mock layout.
+        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100 }; }); // prettier-ignore
+        jest.spyOn(nav, "clientWidth", "get").mockImplementation(() => 200);
         jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 200, width: 40 }; }); // prettier-ignore
-        jest.spyOn(tabs[2], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
-        jest.spyOn(tabs[3], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
+        jest.spyOn(tabs[2], "getBoundingClientRect").mockImplementation(() => { return { x: 300, width: 40 }; }); // prettier-ignore
+        jest.spyOn(tabs[3], "getBoundingClientRect").mockImplementation(() => { return { x: 400, width: 40 }; }); // prettier-ignore
 
-        const nav = document.querySelector(".pat-tabs");
         expect(nav.classList.contains("tabs-ready")).toBeFalsy();
         pattern.init(nav);
         await utils.timeout(11);
@@ -73,14 +79,17 @@ describe("pat-tabs", function () {
             </nav>
         `;
 
-        // Mock layout.
+        const nav = document.querySelector(".pat-tabs");
         const tabs = document.querySelectorAll(".pat-tabs a");
+
+        // Mock layout.
+        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100 }; }); // prettier-ignore
+        jest.spyOn(nav, "clientWidth", "get").mockImplementation(() => 340);
         jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 200, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[2], "getBoundingClientRect").mockImplementation(() => { return { x: 300, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[3], "getBoundingClientRect").mockImplementation(() => { return { x: 400, width: 40 }; }); // prettier-ignore
 
-        const nav = document.querySelector(".pat-tabs");
         expect(nav.classList.contains("tabs-ready")).toBeFalsy();
         pattern.init(nav);
         await utils.timeout(11);
@@ -100,14 +109,17 @@ describe("pat-tabs", function () {
             </nav>
         `;
 
-        // Mock layout.
+        const nav = document.querySelector(".pat-tabs");
         const tabs = document.querySelectorAll(".pat-tabs a");
+
+        // Mock layout.
+        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100 }; }); // prettier-ignore
+        jest.spyOn(nav, "clientWidth", "get").mockImplementation(() => 40);
         jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[2], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[3], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
 
-        const nav = document.querySelector(".pat-tabs");
         expect(nav.classList.contains("tabs-ready")).toBeFalsy();
         pattern.init(nav);
         await utils.timeout(11);
@@ -130,12 +142,15 @@ describe("pat-tabs", function () {
             </nav>
         `;
 
-        // Mock layout.
+        const nav = document.querySelector(".pat-tabs");
         const tabs = document.querySelectorAll(".pat-tabs a");
+
+        // Mock layout.
+        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100 }; }); // prettier-ignore
+        jest.spyOn(nav, "clientWidth", "get").mockImplementation(() => 40);
         jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
 
-        const nav = document.querySelector(".pat-tabs");
         pattern.init(nav);
         await utils.timeout(11);
 
@@ -161,12 +176,15 @@ describe("pat-tabs", function () {
             </nav>
         `;
 
-        // Mock layout.
+        const nav = document.querySelector(".pat-tabs");
         const tabs = document.querySelectorAll(".pat-tabs a");
+
+        // Mock layout.
+        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100 }; }); // prettier-ignore
+        jest.spyOn(nav, "clientWidth", "get").mockImplementation(() => 140);
         jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 200, width: 40 }; }); // prettier-ignore
 
-        const nav = document.querySelector(".pat-tabs");
         pattern.init(nav);
         await utils.timeout(11);
 
