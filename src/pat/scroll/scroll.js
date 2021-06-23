@@ -22,6 +22,9 @@ export default Base.extend({
 
     async init($el, opts) {
         this.options = parser.parse(this.$el, opts);
+        if (this.options.delay) {
+            this.options.delay = utils.parseTime(this.options.delay);
+        }
         if (this.options.trigger === "auto") {
             const ImagesLoaded = (await import("imagesloaded")).default;
             // Only calculate the offset when all images are loaded
