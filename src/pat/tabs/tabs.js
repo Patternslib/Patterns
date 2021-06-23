@@ -85,9 +85,10 @@ export default Base.extend({
         // new line.
         // This also takes whitespace between elements into account.
         let last_x;
-        let all_in_line = true;
-        // iterate over all including extra-tabs element.
-        for (const it of this.el.children) {
+        let tabs_fit = true;
+        // iterate over all children excluding .extra-tabs element.
+        // The .extra-tabs element is absolute positioned and therefore does not count against the available space.
+        for (const it of children) {
             const bounds = it.getBoundingClientRect();
             const it_x = parseInt(bounds.x, 10);
             const it_w =
@@ -95,15 +96,16 @@ export default Base.extend({
                 parseInt(utils.getCSSValue(this.el, "margin-right") || 0, 10);
             logger.debug(`New tab right position: ${it_x + it_w}px.`);
             if ((last_x && last_x > it_x) || it_x + it_w > this.max_x) {
-                // broke into new line
-                all_in_line = false;
+                // this tab exceeds initial available width or
+                // breaks into a new line when width
+                tabs_fit = false;
                 break;
             }
 
             // Next position-left must be greater than last position-left plus element width.
             last_x = it_x + it_w;
         }
-        if (all_in_line) {
+        if (tabs_fit) {
             // allright, nothing to do
             return;
         }

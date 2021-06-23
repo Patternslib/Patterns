@@ -18,6 +18,9 @@ export default Base.extend({
         if (!this.options.selector) {
             return;
         }
+        if (this.options.delay) {
+            this.options.delay = utils.parseTime(this.options.delay);
+        }
 
         this.el.addEventListener("click", this.on_click.bind(this));
         if (this.options.trigger === "auto") {

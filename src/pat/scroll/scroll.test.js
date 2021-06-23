@@ -58,9 +58,29 @@ describe("pat-scroll", function () {
         el.click();
         await utils.timeout(1); // wait a tick for async to settle.
         expect(spy_animate).not.toHaveBeenCalled();
+        await utils.timeout(100);
+        expect(spy_animate).not.toHaveBeenCalled();
+        await utils.timeout(100);
+        expect(spy_animate).toHaveBeenCalled();
+    });
 
-        await utils.timeout(300);
+    it("allows to define a delay with units after which it will scroll to an anchor", async () => {
+        document.body.innerHTML = `
+            <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click; delay: 200ms">p1</a>
+            <p id="p1"></p>
+        `;
+        const el = document.querySelector(".pat-scroll");
+        const spy_animate = jest.spyOn($.fn, "animate");
 
+        pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        el.click();
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(spy_animate).not.toHaveBeenCalled();
+        await utils.timeout(100);
+        expect(spy_animate).not.toHaveBeenCalled();
+        await utils.timeout(100);
         expect(spy_animate).toHaveBeenCalled();
     });
 
@@ -125,7 +145,7 @@ describe("pat-scroll", function () {
         expect(container.scrollTop).toBe(1000);
     });
 
-    it("will adds an offset to scroll position", async () => {
+    it("will add an offset to the scroll position", async () => {
         // Testing with `selector: top`, as this just sets scrollTop to 0
 
         document.body.innerHTML = `
@@ -146,7 +166,7 @@ describe("pat-scroll", function () {
 
         // get first called argument
         const arg_1 = spy_animate.mock.calls[0][0];
-        expect(arg_1.scrollTop).toBe(40);
+        expect(arg_1.scrollTop).toBe(-40); // the offset is substracted from the scroll position to stop BEFORE the target position
     });
 
     it("will adds a negative offset to scroll position", async () => {
@@ -170,7 +190,7 @@ describe("pat-scroll", function () {
 
         // get first called argument
         const arg_1 = spy_animate.mock.calls[0][0];
-        expect(arg_1.scrollTop).toBe(-40);
+        expect(arg_1.scrollTop).toBe(40); // the offset is substracted from the scroll position, so a negative offset is added to the scroll position and stops AFTER the target position.
     });
 
     it("handles different selector options.", () => {

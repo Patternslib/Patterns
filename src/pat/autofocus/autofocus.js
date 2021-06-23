@@ -1,7 +1,8 @@
 import $ from "jquery";
 import Base from "../../core/base";
+import utils from "../../core/utils";
 
-let scheduled_task = null;
+const debounce_timer = { timer: null };
 let registered_event_handler = false;
 
 export default Base.extend({
@@ -23,31 +24,26 @@ export default Base.extend({
             return;
         }
 
-        this.setFocus(this.trigger);
+        const debouncer = utils.debounce(this.setFocus, 10, debounce_timer);
+
+        debouncer(this.trigger);
 
         if (!registered_event_handler) {
             // Register the event handler only once.
             $(document).on("patterns-injected pat-update", (e) => {
-                this.setFocus($(e.target).find(this.trigger));
+                debouncer($(e.target).find(this.trigger));
             });
             registered_event_handler = true;
         }
     },
 
     setFocus(target) {
-        // Exit if task is scheduled. setFocus operates on whole DOM anyways.
-        if (scheduled_task) {
-            return;
-        }
         const $all = $(target);
         const visible = [...$all].filter((it) => $(it).is(":visible"));
         const empty = visible.filter((it) => it.value === "");
         const el = empty[0] || visible[0];
         if (el) {
-            scheduled_task = setTimeout(() => {
-                el.focus();
-                scheduled_task = null;
-            }, 10);
+            el.focus();
         }
     },
 });

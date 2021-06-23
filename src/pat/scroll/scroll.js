@@ -22,6 +22,9 @@ export default Base.extend({
 
     async init($el, opts) {
         this.options = parser.parse(this.$el, opts);
+        if (this.options.delay) {
+            this.options.delay = utils.parseTime(this.options.delay);
+        }
         if (this.options.trigger === "auto") {
             const ImagesLoaded = (await import("imagesloaded")).default;
             // Only calculate the offset when all images are loaded
@@ -206,7 +209,7 @@ export default Base.extend({
             }
         }
 
-        options[scroll] += this.options.offset;
+        options[scroll] -= this.options.offset;
 
         // Fix scrolling on body - need to scroll on HTML, howsoever.
         if (scrollable[0] === document.body) {
