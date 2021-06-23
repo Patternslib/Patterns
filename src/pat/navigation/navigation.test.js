@@ -188,7 +188,7 @@ describe("Navigation pattern tests", function () {
 });
 
 describe("Navigation pattern tests - no predefined structure", function () {
-    it("Reacts on DOM change", function (done) {
+    it("Reacts on DOM change", async function () {
         var w1 = document.createElement("div");
         w1.setAttribute("class", "w1");
 
@@ -234,21 +234,20 @@ describe("Navigation pattern tests - no predefined structure", function () {
         load_nav.click();
 
         // wait for everything done until testing.
-        window.setTimeout(function () {
-            var w1 = nav.querySelector(".w1");
-            var a1 = nav.querySelector(".a1");
-            var w11 = nav.querySelector(".w11");
-            var a11 = nav.querySelector(".a11");
-            expect(w1.classList.contains("current")).toBeFalsy();
-            expect(w1.classList.contains("navigation-in-path")).toBeTruthy();
-            expect(a1.classList.contains("current")).toBeFalsy();
-            expect(a1.classList.contains("navigation-in-path")).toBeFalsy();
-            expect(w11.classList.contains("current")).toBeTruthy();
-            expect(w11.classList.contains("navigation-in-path")).toBeFalsy();
-            expect(a11.classList.contains("current")).toBeTruthy();
-            expect(a11.classList.contains("navigation-in-path")).toBeFalsy();
+        await utils.timeout(300);
 
-            done();
-        }, 300);
+        w1 = nav.querySelector(".w1");
+        a1 = nav.querySelector(".a1");
+        w11 = nav.querySelector(".w11");
+        a11 = nav.querySelector(".a11");
+
+        expect(w1.classList.contains("current")).toBeFalsy();
+        expect(w1.classList.contains("navigation-in-path")).toBeTruthy();
+        expect(a1.classList.contains("current")).toBeFalsy();
+        expect(a1.classList.contains("navigation-in-path")).toBeFalsy();
+        expect(w11.classList.contains("current")).toBeTruthy();
+        expect(w11.classList.contains("navigation-in-path")).toBeFalsy();
+        expect(a11.classList.contains("current")).toBeTruthy();
+        expect(a11.classList.contains("navigation-in-path")).toBeFalsy();
     });
 });
