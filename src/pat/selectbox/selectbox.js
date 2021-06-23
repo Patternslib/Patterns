@@ -2,6 +2,7 @@
 import $ from "jquery";
 import Base from "../../core/base";
 import dom from "../../core/dom";
+import utils from "../../core/utils";
 
 const KEY_RESET = "__patternslib__pat_selectbox__reset";
 
@@ -33,15 +34,14 @@ export default Base.extend({
         return $el.off(".pat-selectbox");
     },
 
-    form_reset() {
+    async form_reset() {
         // This event is triggered before the form is reset, and we need
         // the post-reset state to update our pattern. Use a small delay
         // to fix this.
-        setTimeout(() => {
-            for (const sel of this.all_selects) {
-                this.change_select(sel);
-            }
-        }, 50);
+        await utils.timeout(50);
+        for (const sel of this.all_selects) {
+            this.change_select(sel);
+        }
     },
 
     change_select(el) {
