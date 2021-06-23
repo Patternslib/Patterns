@@ -195,7 +195,7 @@ describe("pat-collapsible", function () {
             await utils.timeout(10);
 
             const arg_1 = spy_animate.mock.calls[0][0];
-            expect(arg_1.scrollTop).toBe(40);
+            expect(arg_1.scrollTop).toBe(-40); // the offset is substracted from the scroll position to stop BEFORE the target position.
         });
 
         it("can scroll to itself when opened with a negative offset.", async function () {
@@ -212,7 +212,7 @@ describe("pat-collapsible", function () {
             await utils.timeout(10);
 
             const arg_1 = spy_animate.mock.calls[0][0];
-            expect(arg_1.scrollTop).toBe(-40);
+            expect(arg_1.scrollTop).toBe(40); // the offset is substracted from the scroll position, so a negative offset is added to the scroll position and stops AFTER the target position.
         });
     });
 });
