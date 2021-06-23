@@ -80,10 +80,33 @@ describe("pat-forward", function () {
             pattern.init($(pattern.trigger));
             expect($lab.find("#checkbox").is(":checked")).toBeFalsy();
             $lab.find(".pat-forward").click();
+            await utils.timeout(1); // wait a tick for async to settle.
             expect($lab.find("#checkbox").is(":checked")).toBeFalsy();
+            await utils.timeout(100);
+            expect($lab.find("#checkbox").is(":checked")).toBeFalsy();
+            await utils.timeout(100);
+            expect($lab.find("#checkbox").is(":checked")).toBeTruthy();
+        });
 
-            await utils.timeout(300);
+        it("allows to define a delay with units after which the click event is forwarded.", async function () {
+            var $lab = $("#lab");
+            $lab.append(
+                $(
+                    "<form>" +
+                        '    <input id="checkbox" type="checkbox" />' +
+                        '    <button class="pat-forward" data-pat-forward="#checkbox; delay: 200ms">Button</button>' +
+                        "</form>"
+                )
+            );
 
+            pattern.init($(pattern.trigger));
+            expect($lab.find("#checkbox").is(":checked")).toBeFalsy();
+            $lab.find(".pat-forward").click();
+            await utils.timeout(1); // wait a tick for async to settle.
+            expect($lab.find("#checkbox").is(":checked")).toBeFalsy();
+            await utils.timeout(100);
+            expect($lab.find("#checkbox").is(":checked")).toBeFalsy();
+            await utils.timeout(100);
             expect($lab.find("#checkbox").is(":checked")).toBeTruthy();
         });
 
