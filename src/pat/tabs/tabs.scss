@@ -1,0 +1,9 @@
+.pat-tabs {
+    position: relative;
+    overflow: hidden;
+
+    .extra-tabs {
+        position: absolute;
+        right: 0;
+    }
+}

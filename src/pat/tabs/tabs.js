@@ -86,8 +86,9 @@ export default Base.extend({
         // This also takes whitespace between elements into account.
         let last_x;
         let tabs_fit = true;
-        // iterate over all including extra-tabs element.
-        for (const it of this.el.children) {
+        // iterate over all children excluding .extra-tabs element.
+        // The .extra-tabs element is absolute positioned and therefore does not count against the available space.
+        for (const it of children) {
             const bounds = it.getBoundingClientRect();
             const it_x = parseInt(bounds.x, 10);
             const it_w =
