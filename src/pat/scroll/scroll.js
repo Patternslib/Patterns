@@ -206,7 +206,7 @@ export default Base.extend({
             }
         }
 
-        options[scroll] += this.options.offset;
+        options[scroll] -= this.options.offset;
 
         // Fix scrolling on body - need to scroll on HTML, howsoever.
         if (scrollable[0] === document.body) {

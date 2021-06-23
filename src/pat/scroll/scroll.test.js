@@ -125,7 +125,7 @@ describe("pat-scroll", function () {
         expect(container.scrollTop).toBe(1000);
     });
 
-    it("will adds an offset to scroll position", async () => {
+    it("will add an offset to the scroll position", async () => {
         // Testing with `selector: top`, as this just sets scrollTop to 0
 
         document.body.innerHTML = `
@@ -146,7 +146,7 @@ describe("pat-scroll", function () {
 
         // get first called argument
         const arg_1 = spy_animate.mock.calls[0][0];
-        expect(arg_1.scrollTop).toBe(40);
+        expect(arg_1.scrollTop).toBe(-40); // the offset is substracted from the scroll position to stop BEFORE the target position
     });
 
     it("will adds a negative offset to scroll position", async () => {
@@ -170,7 +170,7 @@ describe("pat-scroll", function () {
 
         // get first called argument
         const arg_1 = spy_animate.mock.calls[0][0];
-        expect(arg_1.scrollTop).toBe(-40);
+        expect(arg_1.scrollTop).toBe(40); // the offset is substracted from the scroll position, so a negative offset is added to the scroll position and stops AFTER the target position.
     });
 
     it("handles different selector options.", () => {
