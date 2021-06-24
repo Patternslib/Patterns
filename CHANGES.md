@@ -1,3 +1,10 @@
+### [4.4.4](https://github.com/Patternslib/patterns/compare/4.4.3...4.4.4) (2021-06-24)
+
+
+### Bug Fixes
+
+* **pat tabs:** Improve available width calculation by excluding invisible and absolute positioned elements, making it more robust for different scenarios. ([bb0dd19](https://github.com/Patternslib/patterns/commit/bb0dd19a509d9d588b988b78730322b8a8971a64))
+
 ### [4.4.3](https://github.com/Patternslib/patterns/compare/4.4.2...4.4.3) (2021-06-24)
 
 
