@@ -1,3 +1,23 @@
+### [4.4.3](https://github.com/Patternslib/patterns/compare/4.4.2...4.4.3) (2021-06-24)
+
+
+### Bug Fixes
+
+* **pat forward:** Allow to define the delay with units, e.g. 100ms. ([add916b](https://github.com/Patternslib/patterns/commit/add916b9fec6df7fe89ebb6282e669bb4c86c0df))
+* **pat scroll:** Allow to define the delay with units, e.g. 100ms. Fixes: [#869](https://github.com/Patternslib/patterns/issues/869) ([5a7f783](https://github.com/Patternslib/patterns/commit/5a7f783c24955107fcf1ead318eb808217025af0))
+* **pat scroll:** Reverse the semantics of the scroll offset. Offsets are substracted from the target position to stop BEFORE it. Fixes: [#867](https://github.com/Patternslib/patterns/issues/867) ([318fc99](https://github.com/Patternslib/patterns/commit/318fc9927e426318d83a7de794aa96d8b31768f1))
+* **pat tabs:** Do not count extra-tabs element against available width as this one is absolutely positioned. Fixes: [#868](https://github.com/Patternslib/patterns/issues/868). ([bb2e48c](https://github.com/Patternslib/patterns/commit/bb2e48cd57b145df32992cac32498dad973d00c8))
+
+
+### Maintenance
+
+* **pat autofocus:** Use utils.debounce instead custom logic. ([3c9a51c](https://github.com/Patternslib/patterns/commit/3c9a51cf6ce423ffed76e8b9407f0a37b6967b56))
+* **pat calendar:** Use utils.debounce instead custom logic. ([abc4c21](https://github.com/Patternslib/patterns/commit/abc4c2123886b9a510d602b6e042228a38fb5cc0))
+* **pat collapsible:** scroll semantics have changed for pat-scroll. Adapt tests and add doku. ([99a2d38](https://github.com/Patternslib/patterns/commit/99a2d387c23d17772ed869d9e413552d82c8539c))
+* **pat navigation tests:** Use utils.timeout instead nested setTimeout in tests. ([a477076](https://github.com/Patternslib/patterns/commit/a477076aefe6c27c32d32b6f3323b29be8c32958))
+* **pat selectbox:** Use utils.timeout instead setTimeout. ([0eea9b2](https://github.com/Patternslib/patterns/commit/0eea9b2cd87246ffe19bbca2d06945ee7672b29c))
+* **pat tabs:** Clarify tabs calculation logic in code. ([98866ed](https://github.com/Patternslib/patterns/commit/98866eddfa67869efeaa40d5f94e54116d94b566))
+
 ### [4.4.2](https://github.com/Patternslib/patterns/compare/4.4.1...4.4.2) (2021-06-17)
 
 
