@@ -2,6 +2,7 @@ import $ from "jquery";
 import Base from "../../core/base";
 import logging from "../../core/logging";
 import utils from "../../core/utils";
+import dom from "../../core/dom";
 
 const logger = logging.getLogger("tabs");
 
@@ -72,8 +73,9 @@ export default Base.extend({
     _adjust_tabs() {
         logger.debug("Entering _adjust_tabs");
         const children = [...this.el.children].filter(
-            (it) => !it.classList.contains("extra-tabs")
-        );
+            (it) =>
+                dom.is_visible(it) && utils.getCSSValue(it, "position") !== "absolute"
+        ); // remove elements, which do not count against available width.
 
         if (children.length === 0) {
             // nothing to do.
@@ -86,8 +88,7 @@ export default Base.extend({
         // This also takes whitespace between elements into account.
         let last_x;
         let tabs_fit = true;
-        // iterate over all children excluding .extra-tabs element.
-        // The .extra-tabs element is absolute positioned and therefore does not count against the available space.
+        // iterate over all children excluding absolutely positioned or invisible elements.
         for (const it of children) {
             const bounds = it.getBoundingClientRect();
             const it_x = parseInt(bounds.x, 10);
@@ -134,7 +135,10 @@ export default Base.extend({
         }
 
         logger.debug("Prepend last tab to .extra_tabs.");
-        extra_tabs.prepend(children.pop());
+        // ... but exclude `.extra-tabs` if it is part of children.
+        extra_tabs.prepend(
+            children.filter((it) => !it.classList.contains("extra-tabs")).pop()
+        );
 
         this._adjust_tabs();
     },
