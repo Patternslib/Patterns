@@ -5,7 +5,6 @@ import Modal from "../modal/modal";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
 import store from "../../core/store";
-import utils from "../../core/utils";
 
 const log = logging.getLogger("calendar");
 export const parser = new Parser("calendar");
@@ -417,12 +416,15 @@ export default Base.extend({
         /* The "category controls" are checkboxes that cause different
          * types of events to be shown or hidden.
          */
-        const debouncer = utils.debounce(() => {
-            this.reset_active_categories();
-            this.calendar.getEvents().map(this.filter_event.bind(this));
-        }, 50);
+        let timer;
         for (const ctrl of this.get_category_controls()) {
-            ctrl.addEventListener("change", debouncer);
+            ctrl.addEventListener("change", () => {
+                clearTimeout(timer); // Cancel scheduled filter runs
+                timer = setTimeout(() => {
+                    this.reset_active_categories();
+                    this.calendar.getEvents().map(this.filter_event.bind(this));
+                }, 50);
+            });
         }
     },
 
