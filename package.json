@@ -43,7 +43,6 @@
         "slick-carousel": "^1.8.1",
         "slides": "git+https://github.com/Patternslib/slides.git",
         "spectrum-colorpicker": "^1.8.0",
-        "stickyfilljs": "git+https://github.com/syslabcom/stickyfill.git",
         "tippy.js": "^6.2.7",
         "underscore": "^1.13.1",
         "url-polyfill": "^1.1.9",

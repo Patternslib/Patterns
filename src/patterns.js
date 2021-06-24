@@ -51,7 +51,6 @@ import "./pat/selectbox/selectbox";
 import "./pat/slides/slides";
 import "./pat/sortable/sortable";
 import "./pat/stacks/stacks";
-import "./pat/sticky/sticky";
 import "./pat/subform/subform";
 import "./pat/switch/switch";
 import "./pat/syntax-highlight/syntax-highlight";
