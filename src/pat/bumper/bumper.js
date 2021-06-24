@@ -75,8 +75,19 @@ export default Base.extend({
                 if (this.options.bump.remove) {
                     el.classList.remove(this.options.bump.remove);
                 }
+
                 const root = entry.rootBounds;
+                if (!root) {
+                    // No root found - e.g. CSS not fully applied when scroll
+                    // container was searched - as can happen as a corner case
+                    // after injecting content and initializing this pattern in
+                    // the same repaint cycle.
+                    // This is actually prevented by the 1ms timeout in the
+                    // init method.
+                    return;
+                }
                 const bounds = entry.boundingClientRect;
+
                 if (bounds.left <= root.left) {
                     el.classList.add("bumped-left");
                 } else {
