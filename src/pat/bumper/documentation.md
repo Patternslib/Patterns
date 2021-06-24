@@ -56,7 +56,6 @@ The available options are:
 
 | Property        | Default value | Description                                                                                                               | Type         |
 | --------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| `margin`        | 0             | The distance (in pixels) from the edge of the element from which the 'bumped' behaviour will be activated.                | Number       |
 | `selector`      | _unset_       | CSS selector for elements whose classes must be updated.                                                                  | CSS selector |
 | `bump-add`      | `bumped`      | CSS class(es) to add when an element is bumped.                                                                           | String       |
 | `bump-remove`   | _unset_       | CSS class(es) to removed when an element is bumped.                                                                       | String       |
