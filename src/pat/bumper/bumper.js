@@ -17,7 +17,7 @@ export default Base.extend({
     name: "bumper",
     trigger: ".pat-bumper",
 
-    init() {
+    async init() {
         // Based on: https://davidwalsh.name/detect-sticky
 
         this.options = parser.parse(this.el, this.options);
@@ -26,6 +26,13 @@ export default Base.extend({
             ? document.querySelector(this.options.selector)
             : this.el;
 
+        // wait for next repaint for things to settle.
+        // e.g. CSS applied for injected content.
+        await utils.timeout(1);
+        this._init();
+    },
+
+    _init() {
         const scroll_container_y = this.findScrollContainer("y");
         const scroll_container_x = this.findScrollContainer("x");
 
