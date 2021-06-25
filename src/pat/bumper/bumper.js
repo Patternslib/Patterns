@@ -1,168 +1,162 @@
 /**
- * Patterns bumper - `bumper' handling for elements
- *
- * Copyright 2012 Humberto Sermeno
- * Copyright 2013 Florian Friesdorf
- * Copyright 2013-2014 Simplon B.V. - Wichert Akkerman
+ * Patterns bumper - Add bumping classes for sticky elements.
  */
 
-import "../../core/jquery-ext";
-import $ from "jquery";
-import _ from "underscore";
 import Base from "../../core/base";
-import Parser from "../../core/parser";
 import logging from "../../core/logging";
+import Parser from "../../core/parser";
 import utils from "../../core/utils";
 
-const logger = logging.getLogger("pat bumper");
+const logger = logging.getLogger("tabs");
 
 export const parser = new Parser("bumper");
-parser.addArgument("margin", 0);
 parser.addArgument("selector");
 parser.addArgument("bump-add", "bumped");
 parser.addArgument("bump-remove");
 parser.addArgument("unbump-add");
 parser.addArgument("unbump-remove", "bumped");
-parser.addArgument("side", "top", ["all", "top", "right", "bottom", "left"]);
 
 export default Base.extend({
     name: "bumper",
     trigger: ".pat-bumper",
 
-    init: function initBumper($el, opts) {
-        logger.warn(
-            `The behavior of this pattern will be changed in the next version of Patternslib.
-            The JavaScript based positioning will be dropped and needs to be done via CSS position:sticky only.
-            This pattern will only set classes to indicate a bumped element.`
-        );
+    async init() {
+        // Based on: https://davidwalsh.name/detect-sticky
 
-        this.options = parser.parse(this.$el, opts);
-        this.$container = this._findScrollContainer();
+        if (!utils.checkCSSFeature("position", "sticky")) {
+            // IE11
+            logger.warn("No position sticky support.");
+            return;
+        }
 
-        if (utils.checkCSSFeature("position", "sticky")) {
-            this.$el.addClass("sticky-supported");
-        }
-        this.$el[0].style.position = "relative";
-        if (!this.$container.length) {
-            $(window).on("scroll.bumper", this._updateStatus.bind(this));
-        } else {
-            this.$container.on("scroll.bumper", this._updateStatus.bind(this));
-        }
-        var bumpall = this.options.side.indexOf("all") > -1;
-        this.options.bumptop = bumpall || this.options.side.indexOf("top") > -1;
-        this.options.bumpright = bumpall || this.options.side.indexOf("right") > -1;
-        this.options.bumpbottom = bumpall || this.options.side.indexOf("bottom") > -1;
-        this.options.bumpleft = bumpall || this.options.side.indexOf("left") > -1;
-        this._updateStatus();
-        return this.$el;
+        this.options = parser.parse(this.el, this.options);
+
+        this.target_element = this.options.selector
+            ? document.querySelector(this.options.selector)
+            : this.el;
+
+        // wait for next repaint for things to settle.
+        // e.g. CSS applied for injected content.
+        await utils.timeout(1);
+        this._init();
     },
 
-    _findScrollContainer: function findScrollContainer() {
-        var $parent = this.$el.parent(),
-            overflow;
-        while (!$parent.is($(document.body)) && $parent.length) {
-            if (_.contains(["all", "top", "bottom"], this.options.side)) {
-                overflow = $parent.css("overflow-y");
-                if (overflow === "auto" || overflow === "scroll") {
-                    return $parent;
-                }
-            }
-            if (_.contains(["all", "left", "right"], this.options.side)) {
-                overflow = $parent.css("overflow-x");
-                if (overflow === "auto" || overflow === "scroll") {
-                    return $parent;
-                }
-            }
-            $parent = $parent.parent();
-        }
-        return $();
-    },
+    _init() {
+        const scroll_container_y = this.findScrollContainer("y");
+        const scroll_container_x = this.findScrollContainer("x");
 
-    _markBumped: function markBumper(sides) {
-        var $target = this.options.selector ? $(this.options.selector) : this.$el,
-            todo = sides.length ? this.options.bump : this.options.unbump;
-        if (todo.add) {
-            $target.addClass(todo.add);
-        }
-        if (todo.remove) {
-            $target.removeClass(todo.remove);
-        }
-        for (const side of ["top", "bottom", "left", "right"]) {
-            if (sides.indexOf(side) >= 0) {
-                $target.addClass("bumped-" + side);
-            } else {
-                $target.removeClass("bumped-" + side);
-            }
-        }
-    },
-
-    _updateStatus: function () {
-        const sticker = this.$el[0];
-        const margin = this.options ? this.options.margin : 0;
-        const box = this._getBoundingBox(this.$el, margin);
-        const delta = {};
-        let frame;
-
-        if (this.$container.length) {
-            frame = this._getBoundingBox(this.$container, 0); // Scrolling on a container
-        } else {
-            frame = this._getViewport(); // Scrolling on the window
-        }
-
-        delta.top = utils.getCSSValue(sticker, "top", true) || 0;
-        delta.left = utils.getCSSValue(sticker, "left", true) || 0;
-
-        box.top -= delta.top;
-        box.bottom -= delta.top;
-        box.left -= delta.left;
-        box.right -= delta.left;
-
-        let sides = [];
-        if (frame.top > box.top && this.options.bumptop) {
-            sides.push("top");
-            sticker.style.top = frame.top - box.top + "px";
-        } else if (frame.bottom < box.bottom && this.options.bumpbottom) {
-            sides.push("bottom");
-            sticker.style.top = frame.bottom - box.bottom + "px";
-        } else {
-            sticker.style.top = "";
-        }
-
-        if (frame.left > box.left && this.options.bumpleft) {
-            sides.push("left");
-            sticker.style.left = frame.left - box.left + "px";
-        } else if (frame.right < box.right && this.options.bumpright) {
-            sides.push("right");
-            sticker.style.left = frame.right - box.right + "px";
-        } else {
-            sticker.style.left = "";
-        }
-        this._markBumped(sides);
-    },
-
-    _getViewport: function getViewport() {
-        /* Calculates the bounding box for the current viewport
-         */
-        const $win = $(window);
-        let view = {
-            top: $win.scrollTop(),
-            left: $win.scrollLeft(),
+        const pos = {
+            top: utils.getCSSValue(this.el, "top", true),
+            right: utils.getCSSValue(this.el, "right", true),
+            bottom: utils.getCSSValue(this.el, "bottom", true),
+            left: utils.getCSSValue(this.el, "left", true),
         };
-        view.right = view.left + $win.width();
-        view.bottom = view.top + $win.height();
-        return view;
+        const intersection_observer_config_y = {
+            threshold: [1, 0.99, 0.97, 0.96, 0.95, 0.94, 0.93, 0.92, 0.91, 0.9],
+            root: scroll_container_y,
+            rootMargin: `
+                    ${-pos.top - 1}px
+                    ${-pos.right - 1}px
+                    ${-pos.bottom - 1}px
+                    ${-pos.left - 1}px`, // add margin as inverted sticky positions.
+        };
+
+        const observer_y = new IntersectionObserver(
+            this._intersection_observer_callback.bind(this),
+            intersection_observer_config_y
+        );
+        observer_y.observe(this.el);
+
+        if (scroll_container_x !== scroll_container_y) {
+            const intersection_observer_config_x = Object.assign(
+                {},
+                intersection_observer_config_y,
+                { root: scroll_container_x }
+            );
+            const observer_x = new IntersectionObserver(
+                this._intersection_observer_callback.bind(this),
+                intersection_observer_config_x
+            );
+            observer_x.observe(this.el);
+        }
     },
 
-    _getBoundingBox: function getBoundingBox($sticker, margin) {
-        /* Calculates the bounding box for a given element, taking margins
-         * into consideration
-         */
-        var box = $sticker.safeOffset();
-        margin = margin ? margin : 0;
-        box.top -= (parseFloat($sticker.css("margin-top")) || 0) + margin;
-        box.left -= (parseFloat($sticker.css("margin-left")) || 0) + margin;
-        box.right = box.left + $sticker.outerWidth(true) + 2 * margin;
-        box.bottom = box.top + $sticker.outerHeight(true) + 2 * margin;
-        return box;
+    _intersection_observer_callback(entries) {
+        const el = this.target_element;
+        for (const entry of entries) {
+            if (entry.intersectionRatio < 1) {
+                if (this.options.bump.add) {
+                    el.classList.add(this.options.bump.add);
+                }
+                if (this.options.bump.remove) {
+                    el.classList.remove(this.options.bump.remove);
+                }
+
+                const root = entry.rootBounds;
+                if (!root) {
+                    // No root found - e.g. CSS not fully applied when scroll
+                    // container was searched - as can happen as a corner case
+                    // after injecting content and initializing this pattern in
+                    // the same repaint cycle.
+                    // This is actually prevented by the 1ms timeout in the
+                    // init method.
+                    return;
+                }
+                const bounds = entry.boundingClientRect;
+
+                if (bounds.left <= root.left) {
+                    el.classList.add("bumped-left");
+                } else {
+                    el.classList.remove("bumped-left");
+                }
+                if (bounds.top <= root.top) {
+                    el.classList.add("bumped-top");
+                } else {
+                    el.classList.remove("bumped-top");
+                }
+                if (bounds.right >= root.right) {
+                    el.classList.add("bumped-right");
+                } else {
+                    el.classList.remove("bumped-right");
+                }
+                if (bounds.bottom >= root.bottom) {
+                    el.classList.add("bumped-bottom");
+                } else {
+                    el.classList.remove("bumped-bottom");
+                }
+            } else {
+                if (this.options.unbump.add) {
+                    el.classList.add(this.options.unbump.add);
+                }
+                if (this.options.unbump.remove) {
+                    el.classList.remove(this.options.unbump.remove);
+                }
+                el.classList.remove("bumped-left");
+                el.classList.remove("bumped-top");
+                el.classList.remove("bumped-right");
+                el.classList.remove("bumped-bottom");
+            }
+        }
+    },
+
+    findScrollContainer(direction = null) {
+        let parent = this.el.parentElement;
+        let overflow;
+        while (parent && parent !== document.body) {
+            if (!direction || direction === "y") {
+                overflow = utils.getCSSValue(parent, "overflow-y");
+                if (overflow === "auto" || overflow === "scroll") {
+                    return parent;
+                }
+            }
+            if (!direction || direction === "x") {
+                overflow = utils.getCSSValue(parent, "overflow-x");
+                if (overflow === "auto" || overflow === "scroll") {
+                    return parent;
+                }
+            }
+            parent = parent.parentElement;
+        }
+        return null;
     },
 });

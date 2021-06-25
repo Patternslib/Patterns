@@ -9,25 +9,63 @@
             type="text/javascript"
             charset="utf-8"
         ></script>
+        <style type="text/css" media="screen">
+          .pat-bumper {
+            position: sticky;
+            top: 1em;
+            bottom: 1em;
+            left: 1em;
+            right: 1em;
+            border: 3px solid transparent;
+          }
+
+          .bumper-1 {
+            padding: 0.5em;
+            background: green;
+            color: white;
+          }
+          .bumper-2 {
+            padding: 0.5em;
+            width: 100px;
+            background: pink;
+            float: right;
+          }
+          .bumped-top {
+              border-top: 3px solid blue;
+          }
+          .bumped-bottom {
+              border-bottom: 3px solid blue;
+          }
+          .bumped-left {
+              border-left: 3px solid blue;
+          }
+          .bumped-right {
+              border-right: 3px solid blue;
+          }
+          #spacer {
+            width: 100px;
+          }
+
+          body {
+            min-height: 200vh;
+          }
+          .sticky_container {
+              height: 200px;
+              width: 200px;
+              overflow: auto;
+              border: 1px solid silver;
+              /*padding: 10px;*/
+          }
+          .sticky_container p {
+            width: 600px;
+          }
+        </style>
     </head>
     <body>
-        <div style="height: 82px">
-            <div
-                class="pat-bumper pat-message success"
-                style="z-index: 100; padding: 0.5em"
-            >
-                This bar will stick to the top of the screen when you scroll.
-            </div>
+        <div class="pat-bumper bumper-1">
+            This bar will stick to the top of the screen when you scroll.
         </div>
-        <article
-            class="pat-rich"
-            style="
-                height: 170px;
-                overflow: auto;
-                border: 1px solid silver;
-                padding: 10px;
-            "
-        >
+        <article class="sticky_container">
             <p>
                 Sed ut perspiciatis unde omnis iste natus error sit voluptatem
                 accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
@@ -47,12 +85,12 @@
                 molestiae consequatur, vel illum qui dolorem eum fugiat quo
                 voluptas nulla pariatur?
             </p>
-            <p class="pat-bumper message warning"
-               data-pat-bumper="margin: 0; side: all"
-               style="padding: 0.5em; background: pink">
-                This bar will stick to the top or bottom of its parent element when you
-                scroll.
-            </p>
+            <div id="spacer">
+                Making some space to the left
+            </div>
+            <div class="pat-bumper bumper-2" data-pat-bumper="margin: 20; side: all">
+                Sticky bar.
+            </div>
             <p>
                 Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit
                 aut fugit. Sed quia consequuntur magni dolores eos qui ratione

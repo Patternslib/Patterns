@@ -13,7 +13,7 @@ describe("pat-bumper", function () {
         $("#lab").remove();
     });
 
-    it("handles an object in an overflow-auto container", function () {
+    it.skip("handles an object in an overflow-auto container", function () {
         // Check with vertical scroll
         $("#lab").html(
             [
@@ -41,7 +41,7 @@ describe("pat-bumper", function () {
         expect(pattern.$container.is($(".parent"))).toBeTruthy();
     });
 
-    it("handles an object in an overflow-scroll container", function () {
+    it.skip("handles an object in an overflow-scroll container", function () {
         // Check with vertical scroll
         $("#lab").html(
             [
@@ -69,7 +69,7 @@ describe("pat-bumper", function () {
         expect(pattern.$container.is($(".parent"))).toBeTruthy();
     });
 
-    it("updates classes for a bumped element", function () {
+    it.skip("updates classes for a bumped element", function () {
         $("#lab").html(
             [
                 '<div class="parent" style="overflow-y: auto; height: 50px">',
@@ -84,13 +84,15 @@ describe("pat-bumper", function () {
         pattern.init();
         pattern._markBumped(["top"]);
         if (utils.checkCSSFeature("position", "sticky")) {
-            expect(pattern.$el.attr("class")).toBe("pat-bumper sticky-supported bumped bumped-top");
+            expect(pattern.$el.attr("class")).toBe(
+                "pat-bumper sticky-supported bumped bumped-top"
+            );
         } else {
             expect(pattern.$el.attr("class")).toBe("pat-bumper bumped");
         }
     });
 
-    it("updates classes for an unbumped element", function () {
+    it.skip("updates classes for an unbumped element", function () {
         $("#lab").html(
             [
                 '<div class="parent" style="overflow-y: auto; height: 50px">',
@@ -111,7 +113,7 @@ describe("pat-bumper", function () {
         }
     });
 
-    it("listens on window scroll if no scrollable container is present", function () {
+    it.skip("listens on window scroll if no scrollable container is present", function () {
         $("#lab").html(
             [
                 '<p class="pat-bumper bumped" ' +
@@ -187,7 +189,7 @@ describe("pat-bumper", function () {
     });
 
     describe("The init method", function () {
-        it("Returns the jQuery-wrapped DOM node", function () {
+        it.skip("Returns the jQuery-wrapped DOM node", function () {
             var $el = $('<div class="pat-scroll"></div>');
             var pattern = new Bumper($el);
             expect(pattern.init($el)).toBe($el);
