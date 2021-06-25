@@ -1,3 +1,24 @@
+## [4.5.0](https://github.com/Patternslib/patterns/compare/4.4.4...4.5.0) (2021-06-25)
+
+
+### Bug Fixes
+
+* **pat bumper:** Do not the intersection observer callback break when no root is found. ([008b307](https://github.com/Patternslib/patterns/commit/008b3079f33800628b56c422c6bb6096dd294e62))
+* **pat bumper:** Wait for next repaint cycle before searching for the scroll container. Fixes a corner case where no scroll container was found after injecting content and initializing this pattern in the same repaint cycle where no CSS was yet applied. ([4da6918](https://github.com/Patternslib/patterns/commit/4da69182d421027b9d429c6a2ac9d12be3221e10))
+
+
+### Breaking Changes
+
+* **pat bumper:** Rework pat-bumper to only set bumping classes. Needs CSS position:sticky. Does not set positions via JavaScript anymore. Ensure performant operation by using an IntersectionObserver. Note: You need to set your pat-bumper elements via CSS to position: sticky. Ref: [#846](https://github.com/Patternslib/patterns/issues/846) Fixes: [#846](https://github.com/Patternslib/patterns/issues/846). Fixes: [#870](https://github.com/Patternslib/patterns/issues/870). ([82d3112](https://github.com/Patternslib/patterns/commit/82d3112edce9afd265c0f9c9b97a6036059b8b16))
+* **pat sticky:** Remove obsolete polyfill for position: sticky. ([bb2bc9a](https://github.com/Patternslib/patterns/commit/bb2bc9ab346c703719229b856ecb0948922cc38c))
+
+
+### Maintenance
+
+* **dependencies:** Minor version upgrade of dependencies. ([92ac3d0](https://github.com/Patternslib/patterns/commit/92ac3d029b434178ca64872480449bbb58a15f5e))
+* **pat bumper:** Remove unused/unnecessary side and margin options. Side is dropped as we always set the classes according to the bumped position. Margin is retrieved from the CSS. Register observers for x+y scroll containers if they are different. ([12d56e9](https://github.com/Patternslib/patterns/commit/12d56e9fc222d4fa80bcc8587620454de3a839a0))
+* **pat bumper:** Warn and exit if no position:sticky support is available. E.g. IE11. ([3fe42a9](https://github.com/Patternslib/patterns/commit/3fe42a9e84b1819e0ed869c6587eebd638cea1af))
+
 ### [4.4.4](https://github.com/Patternslib/patterns/compare/4.4.3...4.4.4) (2021-06-24)
 
 
