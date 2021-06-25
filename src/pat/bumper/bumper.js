@@ -3,8 +3,11 @@
  */
 
 import Base from "../../core/base";
+import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";
+
+const logger = logging.getLogger("tabs");
 
 export const parser = new Parser("bumper");
 parser.addArgument("selector");
@@ -19,6 +22,12 @@ export default Base.extend({
 
     async init() {
         // Based on: https://davidwalsh.name/detect-sticky
+
+        if (!utils.checkCSSFeature("position", "sticky")) {
+            // IE11
+            logger.warn("No position sticky support.");
+            return;
+        }
 
         this.options = parser.parse(this.el, this.options);
 
