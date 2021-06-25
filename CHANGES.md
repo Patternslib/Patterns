@@ -1,3 +1,10 @@
+### [4.5.1](https://github.com/Patternslib/patterns/compare/4.5.0...4.5.1) (2021-06-25)
+
+
+### Bug Fixes
+
+* **pat tabs:** Improve calculation of available width by querying the new available width after each recurision where a tab has been moved into the extra-tabs span. The width might change due to an applied padding when the extra-tabs span is added. ([92c284a](https://github.com/Patternslib/patterns/commit/92c284af00eb1f2a75363734efb4811b705f02b9))
+
 ## [4.5.0](https://github.com/Patternslib/patterns/compare/4.4.4...4.5.0) (2021-06-25)
 
 
