@@ -5,6 +5,7 @@ import utils from "../../core/utils";
 import dom from "../../core/dom";
 
 const logger = logging.getLogger("tabs");
+export const DEBOUNCE_TIMEOUT = 10;
 
 export default Base.extend({
     name: "tabs",
@@ -22,7 +23,10 @@ export default Base.extend({
 
     init() {
         // debounce_resize to cancel previous runs of adjust_tabs
-        const debounced_resize = utils.debounce(() => this.adjust_tabs(), 10);
+        const debounced_resize = utils.debounce(
+            () => this.adjust_tabs(),
+            DEBOUNCE_TIMEOUT
+        );
         const resize_observer = new ResizeObserver(() => {
             logger.debug("Entering resize observer");
             debounced_resize();
@@ -45,6 +49,7 @@ export default Base.extend({
         this.el.classList.remove("tabs-ready");
         this.el.classList.remove("tabs-wrapped");
         this._flatten_tabs();
+        this.max_x = this._get_max_x();
         this._adjust_tabs();
         this.el.classList.add("tabs-ready");
     },
@@ -81,8 +86,6 @@ export default Base.extend({
             return;
         }
 
-        const max_x = this._get_max_x();
-
         // Check if tabs fit into one line by checking their start position not
         // exceeding the available inner width or if they are not broken to a
         // new line.
@@ -97,7 +100,7 @@ export default Base.extend({
                 parseInt(bounds.width, 10) +
                 parseInt(utils.getCSSValue(this.el, "margin-right") || 0, 10);
             logger.debug(`New tab right position: ${it_x + it_w}px.`);
-            if ((last_x && last_x > it_x) || it_x + it_w > max_x) {
+            if ((last_x && last_x > it_x) || it_x + it_w > this.max_x) {
                 // this tab exceeds initial available width or
                 // breaks into a new line when width
                 tabs_fit = false;
@@ -133,6 +136,7 @@ export default Base.extend({
                 }
             });
             this.el.append(extra_tabs);
+            this.max_x = this._get_max_x();
         }
 
         logger.debug("Prepend last tab to .extra_tabs.");
