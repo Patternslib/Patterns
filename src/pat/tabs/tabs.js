@@ -5,6 +5,7 @@ import utils from "../../core/utils";
 import dom from "../../core/dom";
 
 const logger = logging.getLogger("tabs");
+export const DEBOUNCE_TIMEOUT = 10;
 
 export default Base.extend({
     name: "tabs",
@@ -22,7 +23,10 @@ export default Base.extend({
 
     init() {
         // debounce_resize to cancel previous runs of adjust_tabs
-        const debounced_resize = utils.debounce(() => this.adjust_tabs(), 10);
+        const debounced_resize = utils.debounce(
+            () => this.adjust_tabs(),
+            DEBOUNCE_TIMEOUT
+        );
         const resize_observer = new ResizeObserver(() => {
             logger.debug("Entering resize observer");
             debounced_resize();

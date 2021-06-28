@@ -1,5 +1,6 @@
 import pattern from "./tabs";
 import utils from "../../core/utils";
+import { DEBOUNCE_TIMEOUT } from "./tabs";
 
 describe("pat-tabs", function () {
     afterEach(function () {
@@ -30,7 +31,7 @@ describe("pat-tabs", function () {
 
         expect(nav.classList.contains("tabs-ready")).toBeFalsy();
         pattern.init(nav);
-        await utils.timeout(11);
+        await utils.timeout(DEBOUNCE_TIMEOUT);
 
         expect(nav.querySelector(".extra-tabs")).toBeTruthy();
         expect(nav.querySelector(".extra-tabs").children.length).toBe(1);
@@ -61,7 +62,7 @@ describe("pat-tabs", function () {
 
         expect(nav.classList.contains("tabs-ready")).toBeFalsy();
         pattern.init(nav);
-        await utils.timeout(11);
+        await utils.timeout(DEBOUNCE_TIMEOUT);
 
         expect(nav.querySelector(".extra-tabs")).toBeTruthy();
         expect(nav.querySelector(".extra-tabs").children.length).toBe(2);
@@ -92,7 +93,7 @@ describe("pat-tabs", function () {
 
         expect(nav.classList.contains("tabs-ready")).toBeFalsy();
         pattern.init(nav);
-        await utils.timeout(11);
+        await utils.timeout(DEBOUNCE_TIMEOUT);
 
         expect(nav.querySelector(".extra-tabs")).toBeFalsy();
         expect(nav.classList.contains("tabs-wrapped")).toBeFalsy();
@@ -122,7 +123,7 @@ describe("pat-tabs", function () {
 
         expect(nav.classList.contains("tabs-ready")).toBeFalsy();
         pattern.init(nav);
-        await utils.timeout(11);
+        await utils.timeout(DEBOUNCE_TIMEOUT);
 
         expect(nav.querySelector(".extra-tabs")).toBeTruthy();
         expect(nav.querySelector(".extra-tabs").children.length).toBe(3);
@@ -152,7 +153,7 @@ describe("pat-tabs", function () {
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
 
         pattern.init(nav);
-        await utils.timeout(11);
+        await utils.timeout(DEBOUNCE_TIMEOUT);
 
         const extra_tabs = nav.querySelector(".extra-tabs");
 
@@ -186,11 +187,28 @@ describe("pat-tabs", function () {
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 200, width: 40 }; }); // prettier-ignore
 
         pattern.init(nav);
-        await utils.timeout(11);
+        await utils.timeout(DEBOUNCE_TIMEOUT);
 
         const extra_tabs = nav.querySelector(".extra-tabs");
         expect(extra_tabs).toBeFalsy();
 
         expect(nav.classList.contains("closed")).toBeFalsy();
+    });
+
+    it("7 - The adjust_tabs method is called after 10ms.", async () => {
+        document.body.innerHTML = `<nav class="pat-tabs"></nav>`;
+        const nav = document.querySelector(".pat-tabs");
+
+        const pat = pattern.init(nav);
+        const spy_adjust_tabs = jest
+            .spyOn(pat, "adjust_tabs")
+            .mockImplementation(() => {});
+        expect(spy_adjust_tabs).not.toHaveBeenCalled();
+        await utils.timeout(1);
+        expect(spy_adjust_tabs).not.toHaveBeenCalled();
+        await utils.timeout(5);
+        expect(spy_adjust_tabs).not.toHaveBeenCalled();
+        await utils.timeout(4);
+        expect(spy_adjust_tabs).toHaveBeenCalled();
     });
 });
