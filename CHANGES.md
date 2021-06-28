@@ -1,3 +1,15 @@
+### [4.5.2](https://github.com/Patternslib/patterns/compare/4.5.1...4.5.2) (2021-06-28)
+
+
+### Bug Fixes
+
+* **pat tabs:** Only calculate available space twice: Once initially and then after the extra-tabs span including extra classes have been added. This should stabilize tabs calculation in some cases. ([923614a](https://github.com/Patternslib/patterns/commit/923614ab304b617bba64d62ac7b77a3f4cde41af))
+
+
+### Maintenance
+
+* **pat tabs:** Test for debounce timeout. ([3c184aa](https://github.com/Patternslib/patterns/commit/3c184aa161cef82b75afb1d85a00f91a839b9bfc))
+
 ### [4.5.1](https://github.com/Patternslib/patterns/compare/4.5.0...4.5.1) (2021-06-25)
 
 
