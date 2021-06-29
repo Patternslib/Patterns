@@ -215,7 +215,7 @@ describe("pat-tabs", function () {
         expect(nav.classList.contains("closed")).toBeFalsy();
     });
 
-    it("7 - The adjust_tabs method is called after 10ms.", async () => {
+    it.skip("7 - The adjust_tabs method is called after 10ms.", async () => {
         document.body.innerHTML = `<nav class="pat-tabs"></nav>`;
         const nav = document.querySelector(".pat-tabs");
 
