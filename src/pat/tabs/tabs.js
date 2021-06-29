@@ -29,11 +29,23 @@ export default Base.extend({
             this.adjust_tabs.bind(this),
             DEBOUNCE_TIMEOUT
         );
-        const resize_observer = new ResizeObserver(() => {
-            logger.debug("Entering resize observer");
-            debounced_resize();
+
+        // ResizeObserver allows for calling the adjust_tabs method after an
+        // animation is done, e.g. a menu is slided in. At the end of the
+        // animation the calculation is done with the final layout.
+        let previous_parent_width = utils.get_bounds(this.el.parentElement).width;
+        this.resize_observer = new ResizeObserver((entry) => {
+            const width = parseInt(entry[0].contentRect.width, 10);
+            // Only run the resize callback for changes in width.
+            // Apply a threshold of 3 pixels to compensate for rounding errors
+            // and not run this adjust_tabs for very small layout changes.
+            if (Math.abs(width - previous_parent_width) > 3) {
+                logger.debug("Entering resize observer");
+                previous_parent_width = width;
+                debounced_resize();
+            }
         });
-        resize_observer.observe(this.el.parentElement); // observe on size changes of parent.
+        this.resize_observer.observe(this.el.parentElement); // observe on size changes of parent.
 
         // Also listen for ``pat-update`` event for cases where no resize but
         // an immediate display of the element is done.
