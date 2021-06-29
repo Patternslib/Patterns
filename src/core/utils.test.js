@@ -699,3 +699,20 @@ describe("debounce ...", function () {
         expect(test_func).toHaveBeenCalledTimes(1);
     });
 });
+
+describe("animation_frame ...", function () {
+    it("waits for the next repaint cycle...", async () => {
+        const mock = jest.fn();
+
+        const testfn = async () => {
+            await utils.animation_frame();
+            mock();
+        };
+
+        testfn();
+        expect(mock).not.toHaveBeenCalled();
+
+        await utils.animation_frame();
+        expect(mock).toHaveBeenCalled();
+    });
+});

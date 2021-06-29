@@ -509,6 +509,13 @@ const checkCSSFeature = (attribute, value, tag = "div") => {
     return supported;
 };
 
+const animation_frame = () => {
+    // Return promise to await next repaint cycle
+    // Use it in your async function like so: ``await utils.animation_frame()``
+    // From: http://www.albertlobo.com/fractals/async-await-requestanimationframe-buddhabrot
+    return new Promise(window.requestAnimationFrame);
+};
+
 const timeout = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
 };
@@ -585,6 +592,7 @@ var utils = {
     get_bounds: get_bounds,
     checkInputSupport: checkInputSupport,
     checkCSSFeature: checkCSSFeature,
+    animation_frame: animation_frame,
     timeout: timeout,
     debounce: debounce,
     isIE: isIE,
