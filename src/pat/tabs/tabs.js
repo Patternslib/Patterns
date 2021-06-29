@@ -24,7 +24,7 @@ export default Base.extend({
     init() {
         // debounce_resize to cancel previous runs of adjust_tabs
         const debounced_resize = utils.debounce(
-            () => this.adjust_tabs(),
+            this.adjust_tabs.bind(this),
             DEBOUNCE_TIMEOUT
         );
         const resize_observer = new ResizeObserver(() => {
@@ -44,13 +44,13 @@ export default Base.extend({
         debounced_resize();
     },
 
-    adjust_tabs() {
+    async adjust_tabs() {
         logger.debug("Entering adjust_tabs");
         this.el.classList.remove("tabs-ready");
         this.el.classList.remove("tabs-wrapped");
         this._flatten_tabs();
-        this.max_x = this._get_max_x();
-        this._adjust_tabs();
+        this.dimensions = this._get_dimensions();
+        await this._adjust_tabs();
         this.el.classList.add("tabs-ready");
     },
 
@@ -63,18 +63,32 @@ export default Base.extend({
         }
     },
 
-    _get_max_x() {
-        const max_x =
-            parseInt(this.el.getBoundingClientRect().x, 10) +
-            parseInt(utils.getCSSValue(this.el, "border-right") || 0, 10) +
-            parseInt(this.el.clientWidth, 10) -
-            parseInt(utils.getCSSValue(this.el, "padding-right") || 0, 10);
-        logger.debug(`Max right position max_x: ${max_x}px.`);
+    _get_dimensions() {
+        const bounds = utils.get_bounds(this.el);
+        const x = bounds.x;
+        const width = bounds.width;
+        const border_left = utils.getCSSValue(this.el, "border-left", true);
+        const padding_left = utils.getCSSValue(this.el, "padding-left", true);
+        const border_right = utils.getCSSValue(this.el, "border-right", true);
+        const padding_right = utils.getCSSValue(this.el, "padding-right", true);
+        const max_width =
+            width - border_left - padding_left - padding_right - border_right;
+        const max_x = bounds.x + max_width + border_left + padding_left;
 
-        return max_x;
+        const dimensions = {
+            x: x,
+            max_x: max_x,
+            width: width,
+            max_width: max_width,
+            border_left: border_left,
+            border_right: border_right,
+            padding_left: padding_left,
+            padding_right: padding_right,
+        };
+        return dimensions;
     },
 
-    _adjust_tabs() {
+    async _adjust_tabs() {
         logger.debug("Entering _adjust_tabs");
         const children = [...this.el.children].filter(
             (it) =>
@@ -94,13 +108,15 @@ export default Base.extend({
         let tabs_fit = true;
         // iterate over all children excluding absolutely positioned or invisible elements.
         for (const it of children) {
-            const bounds = it.getBoundingClientRect();
-            const it_x = parseInt(bounds.x, 10);
-            const it_w =
-                parseInt(bounds.width, 10) +
-                parseInt(utils.getCSSValue(this.el, "margin-right") || 0, 10);
-            logger.debug(`New tab right position: ${it_x + it_w}px.`);
-            if ((last_x && last_x > it_x) || it_x + it_w > this.max_x) {
+            const bounds = utils.get_bounds(it);
+            const it_x = bounds.x;
+            const it_w = bounds.width + utils.getCSSValue(this.el, "margin-right", true);
+
+            if (
+                (last_x && last_x - 3 > it_x) ||
+                it_x + it_w - 3 > this.dimensions.max_x
+                // -3 pixel to compensate for rounding errors (x, width, margin-right).
+            ) {
                 // this tab exceeds initial available width or
                 // breaks into a new line when width
                 tabs_fit = false;
@@ -135,8 +151,10 @@ export default Base.extend({
                     this.el.classList.add("open");
                 }
             });
+
             this.el.append(extra_tabs);
-            this.max_x = this._get_max_x();
+            await utils.animation_frame(); // Wait for CSS to be applied.
+            this.dimensions = this._get_dimensions(); // Update dimensions after CSS was applied
         }
 
         logger.debug("Prepend last tab to .extra_tabs.");
@@ -145,6 +163,7 @@ export default Base.extend({
             children.filter((it) => !it.classList.contains("extra-tabs")).pop()
         );
 
+        await utils.animation_frame();
         this._adjust_tabs();
     },
 });

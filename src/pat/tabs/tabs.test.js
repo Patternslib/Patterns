@@ -1,6 +1,5 @@
-import pattern from "./tabs";
+import pattern, { DEBOUNCE_TIMEOUT } from "./tabs";
 import utils from "../../core/utils";
-import { DEBOUNCE_TIMEOUT } from "./tabs";
 
 describe("pat-tabs", function () {
     afterEach(function () {
@@ -22,8 +21,7 @@ describe("pat-tabs", function () {
         const tabs = document.querySelectorAll(".pat-tabs a");
 
         // Mock layout.
-        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100 }; }); // prettier-ignore
-        jest.spyOn(nav, "clientWidth", "get").mockImplementation(() => 340);
+        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 340 }; }); // prettier-ignore
         jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 200, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[2], "getBoundingClientRect").mockImplementation(() => { return { x: 300, width: 40 }; }); // prettier-ignore
@@ -34,8 +32,19 @@ describe("pat-tabs", function () {
         await utils.timeout(DEBOUNCE_TIMEOUT);
 
         expect(nav.querySelector(".extra-tabs")).toBeTruthy();
+
+        // set the .extra-tabs to position-absolute after creation and before next repaint.
+        document.querySelector(".extra-tabs").style.position = "absolute";
+
+        await utils.animation_frame();
         expect(nav.querySelector(".extra-tabs").children.length).toBe(1);
         expect(nav.classList.contains("tabs-wrapped")).toBeTruthy();
+        expect(nav.classList.contains("tabs-ready")).toBeFalsy();
+
+        await utils.animation_frame();
+        await utils.animation_frame(); // wait for 2 more rounds to be finished.
+
+        expect(nav.querySelector(".extra-tabs").children.length).toBe(1);
         expect(nav.classList.contains("tabs-ready")).toBeTruthy();
     });
 
@@ -53,8 +62,7 @@ describe("pat-tabs", function () {
         const tabs = document.querySelectorAll(".pat-tabs a");
 
         // Mock layout.
-        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100 }; }); // prettier-ignore
-        jest.spyOn(nav, "clientWidth", "get").mockImplementation(() => 200);
+        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 200 }; }); // prettier-ignore
         jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 200, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[2], "getBoundingClientRect").mockImplementation(() => { return { x: 300, width: 40 }; }); // prettier-ignore
@@ -65,6 +73,14 @@ describe("pat-tabs", function () {
         await utils.timeout(DEBOUNCE_TIMEOUT);
 
         expect(nav.querySelector(".extra-tabs")).toBeTruthy();
+
+        // set the .extra-tabs to position-absolute after creation and before next repaint.
+        document.querySelector(".extra-tabs").style.position = "absolute";
+
+        await utils.animation_frame();
+        await utils.animation_frame();
+        await utils.animation_frame(); // wait for 3 rounds to be finished.
+
         expect(nav.querySelector(".extra-tabs").children.length).toBe(2);
         expect(nav.classList.contains("tabs-wrapped")).toBeTruthy();
         expect(nav.classList.contains("tabs-ready")).toBeTruthy();
@@ -84,8 +100,7 @@ describe("pat-tabs", function () {
         const tabs = document.querySelectorAll(".pat-tabs a");
 
         // Mock layout.
-        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100 }; }); // prettier-ignore
-        jest.spyOn(nav, "clientWidth", "get").mockImplementation(() => 340);
+        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 340 }; }); // prettier-ignore
         jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 200, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[2], "getBoundingClientRect").mockImplementation(() => { return { x: 300, width: 40 }; }); // prettier-ignore
@@ -114,8 +129,7 @@ describe("pat-tabs", function () {
         const tabs = document.querySelectorAll(".pat-tabs a");
 
         // Mock layout.
-        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100 }; }); // prettier-ignore
-        jest.spyOn(nav, "clientWidth", "get").mockImplementation(() => 40);
+        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[2], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
@@ -126,6 +140,14 @@ describe("pat-tabs", function () {
         await utils.timeout(DEBOUNCE_TIMEOUT);
 
         expect(nav.querySelector(".extra-tabs")).toBeTruthy();
+
+        // set the .extra-tabs to position-absolute after creation and before next repaint.
+        document.querySelector(".extra-tabs").style.position = "absolute";
+
+        await utils.animation_frame();
+        await utils.animation_frame();
+        await utils.animation_frame(); // wait for 3 rounds to be finished.
+
         expect(nav.querySelector(".extra-tabs").children.length).toBe(3);
         expect(nav.querySelector(".extra-tabs").children[0].textContent).toBe("2");
         expect(nav.querySelector(".extra-tabs").children[1].textContent).toBe("3");
@@ -147,8 +169,7 @@ describe("pat-tabs", function () {
         const tabs = document.querySelectorAll(".pat-tabs a");
 
         // Mock layout.
-        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100 }; }); // prettier-ignore
-        jest.spyOn(nav, "clientWidth", "get").mockImplementation(() => 40);
+        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
 
@@ -181,8 +202,7 @@ describe("pat-tabs", function () {
         const tabs = document.querySelectorAll(".pat-tabs a");
 
         // Mock layout.
-        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100 }; }); // prettier-ignore
-        jest.spyOn(nav, "clientWidth", "get").mockImplementation(() => 140);
+        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 140 }; }); // prettier-ignore
         jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 200, width: 40 }; }); // prettier-ignore
 
@@ -229,8 +249,7 @@ describe("pat-tabs", function () {
         const tabs = document.querySelectorAll(".pat-tabs a");
 
         // Mock layout.
-        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100 }; }); // prettier-ignore
-        jest.spyOn(nav, "clientWidth", "get").mockImplementation(() => 40);
+        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[2], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
@@ -238,16 +257,24 @@ describe("pat-tabs", function () {
 
         expect(nav.classList.contains("tabs-ready")).toBeFalsy();
         const pat = pattern.init(nav);
-        const spy_get_max_x = jest.spyOn(pat, "_get_max_x");
+        const spy_get_dimensions = jest.spyOn(pat, "_get_dimensions");
 
         await utils.timeout(DEBOUNCE_TIMEOUT);
 
         expect(nav.querySelector(".extra-tabs")).toBeTruthy();
+
+        // set the .extra-tabs to position-absolute after creation and before next repaint.
+        document.querySelector(".extra-tabs").style.position = "absolute";
+
+        await utils.animation_frame();
+        await utils.animation_frame();
+        await utils.animation_frame(); // wait for 3 rounds to be finished.
+
         expect(nav.querySelector(".extra-tabs").children.length).toBe(3);
 
         expect(nav.classList.contains("tabs-wrapped")).toBeTruthy();
         expect(nav.classList.contains("tabs-ready")).toBeTruthy();
 
-        expect(spy_get_max_x).toHaveBeenCalledTimes(2);
+        expect(spy_get_dimensions).toHaveBeenCalledTimes(2);
     });
 });
