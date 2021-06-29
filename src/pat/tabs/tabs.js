@@ -7,6 +7,8 @@ import dom from "../../core/dom";
 const logger = logging.getLogger("tabs");
 export const DEBOUNCE_TIMEOUT = 10;
 
+//logger.setLevel(logging.Level.DEBUG);
+
 export default Base.extend({
     name: "tabs",
     trigger: ".pat-tabs",
@@ -37,6 +39,7 @@ export default Base.extend({
         // an immediate display of the element is done.
         $("body").on("pat-update", (e, data) => {
             if (this.allowed_update_patterns.includes(data.pattern)) {
+                logger.debug("pat-update received.");
                 debounced_resize();
             }
         });
@@ -46,6 +49,9 @@ export default Base.extend({
 
     async adjust_tabs() {
         logger.debug("Entering adjust_tabs");
+        logger.debug("Element:");
+        logger.debug(this.el);
+
         this.el.classList.remove("tabs-ready");
         this.el.classList.remove("tabs-wrapped");
         this._flatten_tabs();
@@ -85,6 +91,10 @@ export default Base.extend({
             padding_left: padding_left,
             padding_right: padding_right,
         };
+
+        logger.debug("dimensions:");
+        logger.debug(dimensions);
+
         return dimensions;
     },
 
@@ -97,6 +107,7 @@ export default Base.extend({
 
         if (children.length === 0) {
             // nothing to do.
+            logger.debug("no children, exit _adjust_tabs.");
             return;
         }
 
@@ -111,6 +122,15 @@ export default Base.extend({
             const bounds = utils.get_bounds(it);
             const it_x = bounds.x;
             const it_w = bounds.width + utils.getCSSValue(this.el, "margin-right", true);
+
+            logger.debug("Item:");
+            logger.debug(it);
+            logger.debug(`
+                item dimensions: x: ${it_x},
+                width: ${it_w},
+                max x: ${it_x + it_w},
+                last_x: ${last_x}
+            `);
 
             if (
                 (last_x && last_x - 3 > it_x) ||
@@ -128,6 +148,7 @@ export default Base.extend({
         }
         if (tabs_fit) {
             // allright, nothing to do
+            logger.debug("tabs fit, exit _adjust_tabs.");
             return;
         }
 
