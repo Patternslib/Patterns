@@ -497,8 +497,16 @@ describe("getCSSValue", function () {
     it("Return values for CSS properties of a HTML node", function () {
         const el1 = document.querySelector("#el1");
         expect(utils.getCSSValue(el1, "font-size")).toBe("12px");
-        expect(utils.getCSSValue(el1, "font-size", true)).toBe(12.0);
+        expect(utils.getCSSValue(el1, "font-size", true)).toBe(12);
         expect(utils.getCSSValue(el1, "position")).toBe("relative");
+    });
+
+    it("Return string, int or float, as requested.", function () {
+        const el1 = document.querySelector("#el1");
+        expect(utils.getCSSValue(el1, "font-size")).toBe("12px");
+        expect(utils.getCSSValue(el1, "font-size", true)).toBe(12);
+        expect(utils.getCSSValue(el1, "font-size", true, true)).toBe(12.0);
+        expect(utils.getCSSValue(el1, "font-size", null, true)).toBe(12.0);
     });
 
     it.skip("Return inherited values for CSS properties", function () {
@@ -530,10 +538,10 @@ describe("getCSSValue", function () {
         const el2 = document.querySelector("#el2");
         // Relative length-type values are converted to absolute pixels.
         expect(utils.getCSSValue(el1, "margin-top")).toBe("12px");
-        expect(utils.getCSSValue(el1, "margin-top", true)).toBe(12.0);
-        expect(utils.getCSSValue(el2, "margin-top", true)).toBe(0.0);
+        expect(utils.getCSSValue(el1, "margin-top", true)).toBe(12);
+        expect(utils.getCSSValue(el2, "margin-top", true)).toBe(0);
         expect(utils.getCSSValue(el2, "margin-bottom")).toBe("24px");
-        expect(utils.getCSSValue(el2, "margin-bottom", true)).toBe(24.0);
+        expect(utils.getCSSValue(el2, "margin-bottom", true)).toBe(24);
     });
 });
 

@@ -450,14 +450,17 @@ function findRelatives(el) {
     return $relatives;
 }
 
-function getCSSValue(el, property, asPixels) {
+function getCSSValue(el, property, as_pixels = false, as_float = false) {
     /* Return a CSS property value for a given DOM node.
      * For length-values, relative values are converted to pixels.
      * Optionally parse as pixels, if applicable.
      */
-    var value = window.getComputedStyle(el).getPropertyValue(property);
-    if (asPixels) {
+    let value = window.getComputedStyle(el).getPropertyValue(property);
+    if (as_pixels || as_float) {
         value = parseFloat(value) || 0.0;
+    }
+    if (as_pixels && !as_float) {
+        value = parseInt(Math.round(value), 10);
     }
     return value;
 }
