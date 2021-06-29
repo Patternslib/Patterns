@@ -509,6 +509,13 @@ describe("getCSSValue", function () {
         expect(utils.getCSSValue(el1, "font-size", null, true)).toBe(12.0);
     });
 
+    it("Returns 0 for when requesting a numerical value which doesn't exist.", function () {
+        const el = document.createElement("div");
+        expect(utils.getCSSValue(el, "hallo", true)).toBe(0);
+        expect(utils.getCSSValue(el, "hallo", true, true)).toBe(0.0);
+        expect(utils.getCSSValue(el, "hallo", null, true)).toBe(0.0);
+    });
+
     it.skip("Return inherited values for CSS properties", function () {
         // Missing JSDOM support for style inheritance yet. See:
         // https://github.com/jsdom/jsdom/issues/2160
