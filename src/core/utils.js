@@ -465,6 +465,21 @@ function getCSSValue(el, property, as_pixels = false, as_float = false) {
     return value;
 }
 
+function get_bounds(el) {
+    // Return bounds of an element with it's values rounded and converted to ints.
+    const bounds = el.getBoundingClientRect();
+    return {
+        x: parseInt(Math.round(bounds.x), 10) || 0,
+        y: parseInt(Math.round(bounds.y), 10) || 0,
+        top: parseInt(Math.round(bounds.top), 10) || 0,
+        bottom: parseInt(Math.round(bounds.bottom), 10) || 0,
+        left: parseInt(Math.round(bounds.left), 10) || 0,
+        right: parseInt(Math.round(bounds.right), 10) || 0,
+        width: parseInt(Math.round(bounds.width), 10) || 0,
+        height: parseInt(Math.round(bounds.height), 10) || 0,
+    };
+}
+
 function checkInputSupport(type, invalid_value) {
     /* Check input type support.
      *  See: https://stackoverflow.com/a/10199306/1337474
@@ -567,6 +582,7 @@ var utils = {
     parseTime: parseTime,
     findRelatives: findRelatives,
     getCSSValue: getCSSValue,
+    get_bounds: get_bounds,
     checkInputSupport: checkInputSupport,
     checkCSSFeature: checkCSSFeature,
     timeout: timeout,

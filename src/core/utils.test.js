@@ -552,6 +552,62 @@ describe("getCSSValue", function () {
     });
 });
 
+describe("get_bounds", function () {
+    it("returns the bounds values as integer numbers instead of double/float values.", () => {
+        const el = document.createElement("div");
+        jest.spyOn(el, "getBoundingClientRect").mockImplementation(() => {
+            return {
+                x: 10.01,
+                y: 11.11,
+                top: 12.22,
+                right: 13.33,
+                bottom: 14.44,
+                left: 15.55,
+                width: 16.66,
+                height: 17.77,
+            };
+        });
+
+        const bounds = utils.get_bounds(el);
+
+        expect(bounds.x).toBe(10);
+        expect(bounds.y).toBe(11);
+        expect(bounds.top).toBe(12);
+        expect(bounds.right).toBe(13);
+        expect(bounds.bottom).toBe(14);
+        expect(bounds.left).toBe(16);
+        expect(bounds.width).toBe(17);
+        expect(bounds.height).toBe(18);
+    });
+
+    it("returns 0 for any dimension where getBoundingClientRect fails.", () => {
+        const el = document.createElement("div");
+        jest.spyOn(el, "getBoundingClientRect").mockImplementation(() => {
+            return {
+                x: null,
+                y: null,
+                top: null,
+                right: null,
+                bottom: null,
+                left: null,
+                width: null,
+                height: null,
+            };
+        });
+
+        const bounds = utils.get_bounds(el);
+
+        expect(bounds.x).toBe(0);
+        expect(bounds.y).toBe(0);
+        expect(bounds.top).toBe(0);
+        expect(bounds.right).toBe(0);
+        expect(bounds.bottom).toBe(0);
+        expect(bounds.left).toBe(0);
+        expect(bounds.width).toBe(0);
+        expect(bounds.height).toBe(0);
+    });
+});
+
 describe("core.utils tests", () => {
     describe("jqToNode tests", () => {
         it("always returns a bare DOM node no matter if a jQuery or bare DOM node was passed.", (done) => {
