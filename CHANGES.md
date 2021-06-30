@@ -1,3 +1,24 @@
+### [4.5.3](https://github.com/Patternslib/patterns/compare/4.5.2...4.5.3) (2021-06-30)
+
+
+### Features
+
+* **core utils:** Add animation_frame which returns a Promise to be resolved with the next animation frame. Can be used to await for the next repaint cycle in async functions. ([808439a](https://github.com/Patternslib/patterns/commit/808439af22941b92a61d41ee1dacd366622f9c8b))
+* **core utils:** Add get_bounds function to return the client bounding rectangle with rounded integer values instead of double/float values. ([2be2abe](https://github.com/Patternslib/patterns/commit/2be2abebc8a3aa68bc776e41896a36766fbf8758))
+* **core utils:** Make getCSSValue return pixels as integer by default. Introduce a as_float option, if float/double values are needed. ([e0c027d](https://github.com/Patternslib/patterns/commit/e0c027dd2ac990d812cf6e92ae1a14016a1fb7e1))
+
+
+### Bug Fixes
+
+* **pat tabs:** Improve algorithm to calculate available width to ensure better stability (not shrinking while moving tabs) and correctness (taking .extra-tabs and style updates while moving tabs into account). ([b812aba](https://github.com/Patternslib/patterns/commit/b812abae6367fc6c1915e60c3cf02792de1c0f09))
+* **pat tabs:** Only run the ResizeObserver callback when width of parent container has changed. This avoids a infinite ResizeObserver callback loop when the height changes due to tab manipulation. Also apply a small threshold of 3 pixels for which the callback isn't run to avoid unnecessary runs. ([7a4432e](https://github.com/Patternslib/patterns/commit/7a4432e49745f028728afa9f588b8de95d655954))
+
+
+### Maintenance
+
+* **core utils getCSSValue:** Test for returning 0 if a numerical value (as_pixels, as_float) was requested which doesn't exist. ([51f5bcb](https://github.com/Patternslib/patterns/commit/51f5bcb375a726e1ff7bd0820f8abb79d122d318))
+* **pat tabs:** More debug messages. ([83fcfc5](https://github.com/Patternslib/patterns/commit/83fcfc5114a06b363bbb000c40c2f4f1686edf2c))
+
 ### [4.5.2](https://github.com/Patternslib/patterns/compare/4.5.1...4.5.2) (2021-06-28)
 
 
