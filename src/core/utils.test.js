@@ -497,8 +497,23 @@ describe("getCSSValue", function () {
     it("Return values for CSS properties of a HTML node", function () {
         const el1 = document.querySelector("#el1");
         expect(utils.getCSSValue(el1, "font-size")).toBe("12px");
-        expect(utils.getCSSValue(el1, "font-size", true)).toBe(12.0);
+        expect(utils.getCSSValue(el1, "font-size", true)).toBe(12);
         expect(utils.getCSSValue(el1, "position")).toBe("relative");
+    });
+
+    it("Return string, int or float, as requested.", function () {
+        const el1 = document.querySelector("#el1");
+        expect(utils.getCSSValue(el1, "font-size")).toBe("12px");
+        expect(utils.getCSSValue(el1, "font-size", true)).toBe(12);
+        expect(utils.getCSSValue(el1, "font-size", true, true)).toBe(12.0);
+        expect(utils.getCSSValue(el1, "font-size", null, true)).toBe(12.0);
+    });
+
+    it("Returns 0 for when requesting a numerical value which doesn't exist.", function () {
+        const el = document.createElement("div");
+        expect(utils.getCSSValue(el, "hallo", true)).toBe(0);
+        expect(utils.getCSSValue(el, "hallo", true, true)).toBe(0.0);
+        expect(utils.getCSSValue(el, "hallo", null, true)).toBe(0.0);
     });
 
     it.skip("Return inherited values for CSS properties", function () {
@@ -530,10 +545,66 @@ describe("getCSSValue", function () {
         const el2 = document.querySelector("#el2");
         // Relative length-type values are converted to absolute pixels.
         expect(utils.getCSSValue(el1, "margin-top")).toBe("12px");
-        expect(utils.getCSSValue(el1, "margin-top", true)).toBe(12.0);
-        expect(utils.getCSSValue(el2, "margin-top", true)).toBe(0.0);
+        expect(utils.getCSSValue(el1, "margin-top", true)).toBe(12);
+        expect(utils.getCSSValue(el2, "margin-top", true)).toBe(0);
         expect(utils.getCSSValue(el2, "margin-bottom")).toBe("24px");
-        expect(utils.getCSSValue(el2, "margin-bottom", true)).toBe(24.0);
+        expect(utils.getCSSValue(el2, "margin-bottom", true)).toBe(24);
+    });
+});
+
+describe("get_bounds", function () {
+    it("returns the bounds values as integer numbers instead of double/float values.", () => {
+        const el = document.createElement("div");
+        jest.spyOn(el, "getBoundingClientRect").mockImplementation(() => {
+            return {
+                x: 10.01,
+                y: 11.11,
+                top: 12.22,
+                right: 13.33,
+                bottom: 14.44,
+                left: 15.55,
+                width: 16.66,
+                height: 17.77,
+            };
+        });
+
+        const bounds = utils.get_bounds(el);
+
+        expect(bounds.x).toBe(10);
+        expect(bounds.y).toBe(11);
+        expect(bounds.top).toBe(12);
+        expect(bounds.right).toBe(13);
+        expect(bounds.bottom).toBe(14);
+        expect(bounds.left).toBe(16);
+        expect(bounds.width).toBe(17);
+        expect(bounds.height).toBe(18);
+    });
+
+    it("returns 0 for any dimension where getBoundingClientRect fails.", () => {
+        const el = document.createElement("div");
+        jest.spyOn(el, "getBoundingClientRect").mockImplementation(() => {
+            return {
+                x: null,
+                y: null,
+                top: null,
+                right: null,
+                bottom: null,
+                left: null,
+                width: null,
+                height: null,
+            };
+        });
+
+        const bounds = utils.get_bounds(el);
+
+        expect(bounds.x).toBe(0);
+        expect(bounds.y).toBe(0);
+        expect(bounds.top).toBe(0);
+        expect(bounds.right).toBe(0);
+        expect(bounds.bottom).toBe(0);
+        expect(bounds.left).toBe(0);
+        expect(bounds.width).toBe(0);
+        expect(bounds.height).toBe(0);
     });
 });
 
@@ -626,5 +697,22 @@ describe("debounce ...", function () {
         expect(test_func).not.toHaveBeenCalled();
         await utils.timeout(1);
         expect(test_func).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe("animation_frame ...", function () {
+    it("waits for the next repaint cycle...", async () => {
+        const mock = jest.fn();
+
+        const testfn = async () => {
+            await utils.animation_frame();
+            mock();
+        };
+
+        testfn();
+        expect(mock).not.toHaveBeenCalled();
+
+        await utils.animation_frame();
+        expect(mock).toHaveBeenCalled();
     });
 });
