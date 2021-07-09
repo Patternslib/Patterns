@@ -8,6 +8,7 @@ const logger = logging.getLogger("push");
 export const parser = new Parser("push");
 parser.addArgument("url", null);
 parser.addArgument("push-id", null);
+parser.addArgument("mode", "replace");
 
 export default Base.extend({
     name: "push",
@@ -32,7 +33,11 @@ export default Base.extend({
         try {
             const response = await fetch(this.options.url);
             const data = await response.text();
-            this.el.innerHTML = data;
+            if (this.options.mode === "append") {
+                this.el.insertAdjacentHTML("beforeend", data);
+            } else {
+                this.el.innerHTML = data;
+            }
         } catch (e) {
             logger.error(
                 `Could not fetch from ${this.options.url} on push-id ${this.options.pushId}.`
