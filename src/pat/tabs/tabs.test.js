@@ -79,7 +79,8 @@ describe("pat-tabs", function () {
 
         await utils.animation_frame();
         await utils.animation_frame();
-        await utils.animation_frame(); // wait for 3 rounds to be finished.
+        await utils.animation_frame();
+        await utils.animation_frame(); // wait some rounds to be finished.
 
         expect(nav.querySelector(".extra-tabs").children.length).toBe(2);
         expect(nav.classList.contains("tabs-wrapped")).toBeTruthy();
@@ -146,7 +147,9 @@ describe("pat-tabs", function () {
 
         await utils.animation_frame();
         await utils.animation_frame();
-        await utils.animation_frame(); // wait for 3 rounds to be finished.
+        await utils.animation_frame();
+        await utils.animation_frame();
+        await utils.animation_frame(); // wait some rounds to be finished.
 
         expect(nav.querySelector(".extra-tabs").children.length).toBe(3);
         expect(nav.querySelector(".extra-tabs").children[0].textContent).toBe("2");
@@ -268,7 +271,9 @@ describe("pat-tabs", function () {
 
         await utils.animation_frame();
         await utils.animation_frame();
-        await utils.animation_frame(); // wait for 3 rounds to be finished.
+        await utils.animation_frame();
+        await utils.animation_frame();
+        await utils.animation_frame(); // wait some rounds to be finished.
 
         expect(nav.querySelector(".extra-tabs").children.length).toBe(3);
 
@@ -276,5 +281,42 @@ describe("pat-tabs", function () {
         expect(nav.classList.contains("tabs-ready")).toBeTruthy();
 
         expect(spy_get_dimensions).toHaveBeenCalledTimes(2);
+    });
+
+    it("9 - Don't get trapped in a infinite loop when .extra-tabs is bigger than the available space.", async () => {
+        jest.spyOn(utils, "animation_frame").mockImplementation(async () => {});
+
+        document.body.innerHTML = `
+            <nav class="pat-tabs">
+                <a>1</a>
+                <a>2</a>
+                <a>3</a>
+                <a>4</a>
+            </nav>
+        `;
+
+        const nav = document.querySelector(".pat-tabs");
+        const tabs = document.querySelectorAll(".pat-tabs a");
+
+        // Mock layout.
+        jest.spyOn(nav, "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 100 }; }); // prettier-ignore
+        jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 200 }; }); // prettier-ignore
+        jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 200 }; }); // prettier-ignore
+        jest.spyOn(tabs[2], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 200 }; }); // prettier-ignore
+        jest.spyOn(tabs[3], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 200 }; }); // prettier-ignore
+
+        expect(nav.classList.contains("tabs-ready")).toBeFalsy();
+        const pat = pattern.init(nav);
+        await utils.timeout(DEBOUNCE_TIMEOUT);
+
+        // make .extra-tabs wider than available space, which result in an infinite loop in a previous version of this code.
+        jest.spyOn(nav.querySelector(".extra-tabs"), "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 200 }; }); // prettier-ignore
+        expect(nav.querySelector(".extra-tabs")).toBeTruthy();
+
+        const spy_adjust_tabs = jest.spyOn(pat, "_adjust_tabs");
+
+        await pat._adjust_tabs();
+
+        expect(spy_adjust_tabs).toHaveBeenCalledTimes(1);
     });
 });
