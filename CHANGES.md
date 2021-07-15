@@ -1,3 +1,17 @@
+### [4.5.4](https://github.com/Patternslib/patterns/compare/4.5.3...4.5.4) (2021-07-15)
+
+
+### Bug Fixes
+
+* **pat bumper:** Fix IntersectionObserver issue with Safari where rootMargin wasn't correctly recognized due to formatting issues. ([c0c3351](https://github.com/Patternslib/patterns/commit/c0c3351888d2ead17ac472565f78a5680d647690))
+* **pat tabs:** Prevent infinite loop when only child element is .extra-tabs. ([812fb50](https://github.com/Patternslib/patterns/commit/812fb504263eaaf7b8241e11ce22a8c5d00cd68c))
+
+
+### Maintenance
+
+* **dependencies:** Patch level upgrades (eslint minor level) of development dependencies. ([6f6f613](https://github.com/Patternslib/patterns/commit/6f6f6130ecd0301c883962b8b9e503427fdf76d8))
+* Fix the pre-commit command ([8401791](https://github.com/Patternslib/patterns/commit/8401791d088193ceb6cc7a6c9a3776b63964f527))
+
 ### [4.5.3](https://github.com/Patternslib/patterns/compare/4.5.2...4.5.3) (2021-06-30)
 
 
