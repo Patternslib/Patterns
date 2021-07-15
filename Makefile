@@ -23,7 +23,7 @@ stamp-yarn:
 	# Install pre commit hook
 	$(YARN) husky install
 	# We have checked in the .husky files, so no need to add the commitlint hook again.
-	# $(YARN) husky add .husky/commit-msg "yarn commitlint --edit $1"
+	# $(YARN) husky add .husky/commit-msg "npx yarn commitlint --edit $1"
 	touch stamp-yarn
 
 clean-dist:
