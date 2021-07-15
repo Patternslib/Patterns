@@ -54,11 +54,8 @@ export default Base.extend({
         const intersection_observer_config_y = {
             threshold: [1, 0.99, 0.97, 0.96, 0.95, 0.94, 0.93, 0.92, 0.91, 0.9],
             root: scroll_container_y,
-            rootMargin: `
-                    ${-pos.top - 1}px
-                    ${-pos.right - 1}px
-                    ${-pos.bottom - 1}px
-                    ${-pos.left - 1}px`, // add margin as inverted sticky positions.
+            // add margin as inverted sticky positions.
+            rootMargin: `${-pos.top - 1}px ${-pos.right - 1}px ${-pos.bottom - 1}px ${-pos.left - 1}px`, // prettier-ignore
         };
 
         const observer_y = new IntersectionObserver(
