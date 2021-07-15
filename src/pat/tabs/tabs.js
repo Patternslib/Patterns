@@ -117,7 +117,11 @@ export default Base.extend({
                 dom.is_visible(it) && utils.getCSSValue(it, "position") !== "absolute"
         ); // remove elements, which do not count against available width.
 
-        if (children.length === 0) {
+        const children_no_extra = children.filter(
+            (it) => !it.classList.contains("extra-tabs")
+        );
+
+        if (children_no_extra.length === 0) {
             // nothing to do.
             logger.debug("no children, exit _adjust_tabs.");
             return;
@@ -192,11 +196,9 @@ export default Base.extend({
 
         logger.debug("Prepend last tab to .extra_tabs.");
         // ... but exclude `.extra-tabs` if it is part of children.
-        extra_tabs.prepend(
-            children.filter((it) => !it.classList.contains("extra-tabs")).pop()
-        );
+        extra_tabs.prepend(children_no_extra.pop());
 
         await utils.animation_frame();
-        this._adjust_tabs();
+        await this._adjust_tabs();
     },
 });
