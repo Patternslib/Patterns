@@ -1,3 +1,18 @@
+### [4.5.5](https://github.com/Patternslib/patterns/compare/4.5.4...4.5.5) (2021-07-23)
+
+
+### Bug Fixes
+
+* **core dom:** querySelectorAllAndMe: Do not break when no element is passed but return an empty list. ([b5a7177](https://github.com/Patternslib/patterns/commit/b5a7177c7d0901ca8dbe2dad0383c37da6c63fa0))
+* **core registry:** scan: Do not throw an error when trying to scan undefined. ([8c97ae5](https://github.com/Patternslib/patterns/commit/8c97ae5fedf4cb16d55106c5bb80b20a8bf0734e))
+* **pat tooltip:** If a  trigger is defined, do not prevent other event handlers from being run. Prevents an error where a form submit button was prevented from submitting the form when it also had the  class applied. ([db70b55](https://github.com/Patternslib/patterns/commit/db70b557785cf41c6140d87b7b163a6944fbfdb3))
+
+
+### Maintenance
+
+* **pat tooltip:** Correct demo - 1) there is no source: auto, 2) source: content is only for the contents of the tooltip element. When referencing other content on the same page, source: ajax has to be used. ([9205ce0](https://github.com/Patternslib/patterns/commit/9205ce0c4df57a6030f16992db7642c047ddef96))
+* **pat tooltip:** Document that delay can be defined with units. ([88d271a](https://github.com/Patternslib/patterns/commit/88d271a1fb189b76d09cc7d784319d5a99c13bb6))
+
 ### [4.5.4](https://github.com/Patternslib/patterns/compare/4.5.3...4.5.4) (2021-07-15)
 
 
