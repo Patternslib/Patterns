@@ -98,4 +98,10 @@ describe("pat-registry: The registry for patterns", function () {
                 .content.firstElementChild.querySelector(".pat-example").textContent
         ).toBe("");
     });
+
+    it("Does not break when trying to scan undefined.", function (done) {
+        expect(() => registry.scan(undefined, [], "")).not.toThrow(Error);
+
+        done();
+    });
 });

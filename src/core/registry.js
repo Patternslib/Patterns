@@ -120,6 +120,10 @@ const registry = {
     },
 
     scan(content, patterns, trigger) {
+        if (!content) {
+            return;
+        }
+
         if (typeof content === "string") {
             content = document.querySelector(content);
         } else if (content.jquery) {
