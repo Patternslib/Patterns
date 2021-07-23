@@ -17,6 +17,10 @@ const querySelectorAllAndMe = (el, selector) => {
     // Like querySelectorAll but including the element where it starts from.
     // Returns an Array, not a NodeList
 
+    if (!el) {
+        return [];
+    }
+
     const all = [...el.querySelectorAll(selector)];
     if (el.matches(selector)) {
         all.unshift(el); // start element should be first.
