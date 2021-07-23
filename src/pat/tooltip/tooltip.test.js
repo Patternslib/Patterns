@@ -29,10 +29,6 @@ const testutils = {
             .appendTo($("div#lab"));
     },
 
-    cleanup() {
-        document.body.innerHTML = "";
-    },
-
     createTooltipSource() {
         return $(
             `<span style='display: none' id='tooltip-source'>` +
@@ -59,12 +55,12 @@ const testutils = {
 
 describe("pat-tooltip", () => {
     beforeEach(() => {
-        testutils.cleanup();
-        $("<div/>", { id: "lab" }).appendTo(document.body);
+        document.body.innerHTML = `<div id="lab"></div>`;
     });
 
     afterEach(() => {
         jest.restoreAllMocks();
+        document.body.innerHTML = "";
     });
 
     describe("A tooltip", () => {
@@ -380,6 +376,40 @@ describe("pat-tooltip", () => {
                 closebutton.click();
                 await utils.timeout(50);
                 expect(spy_hide).toHaveBeenCalled();
+            });
+
+            it("a close-panel doesn't prevent a form submit.", async () => {
+                document.body.innerHTML = `
+                    <a class="pat-tooltip" href="#form" data-pat-tooltip="source: ajax">open form</a>
+
+                    <div hidden id="form">
+                        <form action=".">
+                          <button class="close-panel" type="submit">send and close</button>
+                        </form>
+                    </div>
+                `;
+
+                const el = document.querySelector(".pat-tooltip");
+                new pattern(el);
+                await utils.timeout(1);
+
+                el.click();
+                await utils.timeout(1);
+
+                const form = document.querySelector(".tooltip-container form");
+                const mock_listener = jest.fn().mockImplementation((e) => {
+                    e.preventDefault();
+                });
+
+                form.addEventListener("submit", mock_listener);
+
+                const btn_submit = form.querySelector("button.close-panel");
+
+                btn_submit.click();
+                await utils.timeout(1);
+
+                expect(mock_listener).toHaveBeenCalledTimes(1);
+                expect(document.querySelectorAll(".tooltip-container").length).toBe(0);
             });
         });
     });

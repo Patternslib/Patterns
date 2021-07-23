@@ -168,7 +168,7 @@ export default Base.extend({
                     // Tooltip content from title attribute
                     content = this.el.getAttribute("title");
                 } else if (opts.source === "content") {
-                    // Tooltiop content from trigger child content.
+                    // Tooltip content from trigger childs.
                     content = this.el.innerHTML;
                     tippy_options.allowHTML = true;
                 } else if (opts.source === "ajax") {
@@ -221,7 +221,8 @@ export default Base.extend({
             ".pat-tooltip--close-button"
         );
         for (let close_el of close_els) {
-            close_el.addEventListener("click", () => {
+            close_el.addEventListener("click", async () => {
+                await utils.timeout(1); // wait a tick for event being processed by other handlers.
                 for (let close_button of close_buttons) {
                     // Also remove the close button
                     close_button.parentNode.removeChild(close_button);

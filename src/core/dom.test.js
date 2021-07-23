@@ -86,6 +86,14 @@ describe("core.dom tests", () => {
 
             done();
         });
+
+        it("return empty list, if no element is passed.", (done) => {
+            const res = dom.querySelectorAllAndMe();
+            expect(Array.isArray(res)).toBe(true);
+            expect(res.length).toBe(0);
+
+            done();
+        });
     });
 
     describe("wrap tests", () => {
