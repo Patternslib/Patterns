@@ -869,33 +869,33 @@ const inject = {
                 $page[0],
                 `[data-pat-${pattern_name}]`
             )) {
-                const val = el_.getAttribute(`data-pat-${pattern_name}`, false);
-                if (val) {
-                    const pattern = registry.patterns[pattern_name];
-                    const pattern_parser = pattern?.parser;
-                    if (!pattern_parser) {
-                        continue;
-                    }
-                    let options = pattern_parser._parse(val);
-                    let changed = false;
+                const pattern = registry.patterns?.[pattern_name];
+                const pattern_parser = pattern?.parser;
+                if (!pattern_parser) {
+                    continue;
+                }
+                // parse: no default options, possibly multiple configs, no grouping.
+                const options = pattern_parser.parse(el_, {}, true, false, false);
+                let changed = false;
+                for (const config of options) {
                     for (const opt of opts) {
-                        const val = options[opt];
+                        const val = config[opt];
                         if (!val) {
                             continue;
                         }
                         changed = true;
                         if (Array.isArray(val)) {
-                            options[opt] = val.map((it) => utils.rebaseURL(base, it));
+                            config[opt] = val.map((it) => utils.rebaseURL(base, it));
                         } else {
-                            options[opt] = utils.rebaseURL(base, val);
+                            config[opt] = utils.rebaseURL(base, val);
                         }
                     }
-                    if (changed) {
-                        el_.setAttribute(
-                            `data-pat-${pattern_name}`,
-                            JSON.stringify(options)
-                        );
-                    }
+                }
+                if (changed) {
+                    el_.setAttribute(
+                        `data-pat-${pattern_name}`,
+                        JSON.stringify(options.length === 1 ? options[0] : options)
+                    );
                 }
             }
         }
