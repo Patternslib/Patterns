@@ -1,3 +1,20 @@
+## [4.6.0](https://github.com/Patternslib/patterns/compare/4.5.5...4.6.0) (2021-08-17)
+
+
+### Features
+
+* **core parser:** Add config to not group parsed options. This allows more flexibility when reusing the parser. ([7fea6e6](https://github.com/Patternslib/patterns/commit/7fea6e6a0920989a2575f9d4aca1aa4c18fc084e))
+
+
+### Bug Fixes
+
+* **pat inject:** Use the main argument parser when rebasing HTML so that it supports all kinds of arguments, including multiple configurations as seen in pat-inject and semicolons at the end of a config line after a line-break. ([d65892d](https://github.com/Patternslib/patterns/commit/d65892d629aa94e41a54d7a16c6a4d0f24c4b2d6))
+
+
+### Maintenance
+
+* **pat inject:** Fix invalid HTML in demo. ([725f834](https://github.com/Patternslib/patterns/commit/725f834d5c7d6de151e8dc4b7b529efc21c60188))
+
 ### [4.5.5](https://github.com/Patternslib/patterns/compare/4.5.4...4.5.5) (2021-07-23)
 
 
