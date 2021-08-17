@@ -363,7 +363,7 @@ class ArgumentParser {
         return result;
     }
 
-    _cleanupOptions(options) {
+    _cleanupOptions(options, group_options = true) {
         // Resolve references
         for (const name of Object.keys(options)) {
             const spec = this.parameters[name];
@@ -376,28 +376,31 @@ class ArgumentParser {
             )
                 options[name] = options[spec.value.slice(1)];
         }
-        // Move options into groups and do renames
-        for (const name of Object.keys(options)) {
-            const spec = this.parameters[name];
-            let target;
-            if (spec === undefined) continue;
+        if (group_options) {
+            // Move options into groups and do renames
+            for (const name of Object.keys(options)) {
+                const spec = this.parameters[name];
+                let target;
+                if (spec === undefined) continue;
 
-            if (spec.group) {
-                if (typeof options[spec.group] !== "object") options[spec.group] = {};
-                target = options[spec.group];
-            } else {
-                target = options;
-            }
+                if (spec.group) {
+                    if (typeof options[spec.group] !== "object")
+                        options[spec.group] = {};
+                    target = options[spec.group];
+                } else {
+                    target = options;
+                }
 
-            if (spec.dest !== name) {
-                target[spec.dest] = options[name];
-                delete options[name];
+                if (spec.dest !== name) {
+                    target[spec.dest] = options[name];
+                    delete options[name];
+                }
             }
         }
         return options;
     }
 
-    parse($el, options, multiple, inherit) {
+    parse($el, options, multiple, inherit, group_options = true) {
         if (!$el.jquery) {
             $el = $($el);
         }
@@ -452,14 +455,16 @@ class ArgumentParser {
             if (Array.isArray(options)) {
                 stack.push(options);
                 final_length = Math.max(options.length, final_length);
-            } else stack.push([options]);
+            } else {
+                stack.push([options]);
+            }
         }
         if (!multiple) {
             final_length = 1;
         }
         const results = utils
             .removeDuplicateObjects(utils.mergeStack(stack, final_length))
-            .map(this._cleanupOptions.bind(this));
+            .map((current_value) => this._cleanupOptions(current_value, group_options));
         return multiple ? results : results[0];
     }
 }
