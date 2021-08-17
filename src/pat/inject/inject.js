@@ -1077,14 +1077,9 @@ const inject = {
         onInteraction();
 
         ["scroll", "resize"].forEach((e) => window.addEventListener(e, onInteraction));
-        [
-            "click",
-            "keypress",
-            "keyup",
-            "mousemove",
-            "touchstart",
-            "touchend",
-        ].forEach((e) => document.addEventListener(e, onInteraction));
+        ["click", "keypress", "keyup", "mousemove", "touchstart", "touchend"].forEach(
+            (e) => document.addEventListener(e, onInteraction)
+        );
     },
 
     // XXX: simple so far to see what the team thinks of the idea
