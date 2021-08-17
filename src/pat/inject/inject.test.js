@@ -3,10 +3,12 @@ import $ from "jquery";
 import utils from "../../core/utils";
 import { jest } from "@jest/globals";
 
-const mockFetch = (text = "") => () =>
-    Promise.resolve({
-        text: () => Promise.resolve(text),
-    });
+const mockFetch =
+    (text = "") =>
+    () =>
+        Promise.resolve({
+            text: () => Promise.resolve(text),
+        });
 
 describe("pat-inject", function () {
     var deferred;
@@ -312,7 +314,6 @@ describe("pat-inject", function () {
                      data-pat-collapsible="load-content:../load/content/from/here"
                  />`
             );
-            console.log(res);
 
             const el = document.createElement("div");
             el.innerHTML = res;
@@ -333,6 +334,47 @@ describe("pat-inject", function () {
             expect(test3c_config["load-content"]).toEqual("https://example.com/test/../load/content/from/here"); // prettier-ignore
         });
 
+        it("rebase pattern configuration creatively styled.", async () => {
+            // tests for an error where a semicolon at the end of a pattern
+            // config as well as multiple configs were not correctly parsed.
+
+            const res = pattern._rebaseHTML(
+                "https://example.com/test/",
+                `<div
+                    class="test1"
+                    data-pat-inject="
+                        url:./index.html; source: #one; target: .two;
+
+                        &&
+
+                        url:./index2.html; source: #okay
+
+                        &&
+
+                        loading-class:some;
+
+
+                        "/>
+                `
+            );
+
+            const el = document.createElement("div");
+            el.innerHTML = res;
+
+            const test1_config = JSON.parse(el.querySelector(".test1").getAttribute("data-pat-inject")); // prettier-ignore
+            console.log(test1_config);
+
+            expect(test1_config.length).toBe(3);
+            expect(test1_config[0].url).toEqual("https://example.com/test/./index.html");
+            expect(test1_config[0].source).toEqual("#one");
+            expect(test1_config[0].target).toEqual(".two");
+            expect(test1_config[1].url).toEqual(
+                "https://example.com/test/./index2.html"
+            );
+            expect(test1_config[1].source).toEqual("#okay");
+            expect(test1_config[2]["loading-class"]).toEqual("some");
+        });
+
         it("doesn't rebase invalid pattern configuration options", async () => {
             await import("../calendar/calendar");
 
@@ -340,7 +382,6 @@ describe("pat-inject", function () {
                 "https://example.com/test/",
                 '<div id="test" data-pat-calendar="url: ; event-sources: ../calendar2.json"/>'
             );
-            console.log(res);
 
             const el = document.createElement("div");
             el.innerHTML = res;

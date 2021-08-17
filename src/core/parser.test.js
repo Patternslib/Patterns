@@ -127,6 +127,69 @@ describe("The Patterns parser", function () {
             done();
         });
 
+        it("does a type casting to the default value's type", function (done) {
+            const parser = new ArgumentParser("mypattern");
+            parser.addArgument("selector");
+            parser.addArgument("detector", 0);
+            parser.addArgument("reflector");
+            parser.addArgument("collector", false);
+            const content = document.createElement("div");
+            content.innerHTML = `
+                <div data-pat-mypattern="selector: 2; detector: 2; reflector: true; collector: true"></div>
+            `;
+            const opts = parser.parse(content.querySelector("[data-pat-mypattern]"));
+            expect(opts).toEqual({
+                selector: "2", // no typecast without default
+                detector: 2,
+                reflector: "true", // no typecast without default
+                collector: true,
+            });
+
+            done();
+        });
+
+        it("does not include defaults with inherit set to false", function (done) {
+            const parser = new ArgumentParser("mypattern");
+            parser.addArgument("selector", 0);
+            parser.addArgument("detector", 1);
+            parser.addArgument("reflector", 2);
+
+            const content = document.createElement("div");
+            content.innerHTML = `
+                <div data-pat-mypattern="selector: 2"></div>
+            `;
+            const opts = parser.parse(
+                content.querySelector("[data-pat-mypattern]"),
+                {},
+                false,
+                false
+            );
+            expect(opts).toEqual({ selector: 2 });
+
+            done();
+        });
+
+        it("does not group options when set to false", function (done) {
+            const parser = new ArgumentParser("mypattern");
+            parser.addArgument("group-one", 0);
+            parser.addArgument("group-two", 0);
+
+            const content = document.createElement("div");
+            content.innerHTML = `
+                <div data-pat-mypattern="group-one: 1; group-two: 2"></div>
+            `;
+            const opts = parser.parse(
+                content.querySelector("[data-pat-mypattern]"),
+                {},
+                false,
+                false,
+                false
+            );
+            expect(opts).toEqual({ "group-one": 1, "group-two": 2 });
+
+            done();
+        });
+
         it("only the allowed values for an argument are parsed", function () {
             var parser = new ArgumentParser();
             parser.addArgument("color", "red", ["red", "blue"]);
@@ -811,6 +874,15 @@ describe("The Patterns parser", function () {
                 var opts = { "group-foo": 15, "group": { bar: 20 } };
                 parser._cleanupOptions(opts);
                 expect(opts).toEqual({ group: { foo: 15, bar: 20 } });
+            });
+
+            it("Do not group", function () {
+                const parser = new ArgumentParser();
+                parser.addArgument("group-foo");
+                parser.addArgument("group-bar");
+                const opts = { "group-foo": 15, "group-bar": 20 };
+                parser._cleanupOptions(opts, false);
+                expect(opts).toEqual({ "group-foo": 15, "group-bar": 20 });
             });
         });
     });
