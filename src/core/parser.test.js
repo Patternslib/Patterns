@@ -208,6 +208,112 @@ describe("The Patterns parser", function () {
             expect(_.isEqual(opts["json-color"], { color: "pink" })).toBeTruthy();
         });
 
+        describe("JSON data attributes", function () {
+            it("parses JSON objects", function (done) {
+                const parser = new ArgumentParser("mypattern");
+                parser.addArgument("arg1", 0);
+                const content = document.createElement("div");
+                content.innerHTML = `
+                    <div data-pat-mypattern='{ "arg1": 1 }'></div>
+                `;
+                const opts = parser.parse(content.querySelector("[data-pat-mypattern]"));
+                expect(opts).toEqual({
+                    arg1: 1,
+                });
+
+                done();
+            });
+            it("parses JSON arrays", function (done) {
+                const parser = new ArgumentParser("mypattern");
+                parser.addArgument("arg1", 0);
+                const content = document.createElement("div");
+                content.innerHTML = `
+                    <div data-pat-mypattern='[{ "arg1": 1 }]'></div>
+                `;
+                const opts = parser.parse(content.querySelector("[data-pat-mypattern]"));
+                expect(opts).toEqual({
+                    arg1: 1,
+                });
+
+                done();
+            });
+            it("parses JSON arrays with multiple configs", function (done) {
+                const parser = new ArgumentParser("mypattern");
+                parser.addArgument("arg1", 0);
+                parser.addArgument("arg2", false);
+                const content = document.createElement("div");
+                content.innerHTML = `
+                    <div data-pat-mypattern='
+                        [
+                            {
+                                "arg1": 1,
+                                "arg2": true
+                            },
+                            {
+                                "arg1": 2,
+                                "arg2": false
+                            }
+                        ]
+                    '></div>
+                `;
+                const opts = parser.parse(
+                    content.querySelector("[data-pat-mypattern]"),
+                    {},
+                    true
+                );
+                expect(opts.length).toBe(2);
+                expect(opts[0]).toEqual({
+                    arg1: 1,
+                    arg2: true,
+                });
+                expect(opts[1]).toEqual({
+                    arg1: 2,
+                    arg2: false,
+                });
+
+                done();
+            });
+            it("parses JSON arrays and includes defaults", function (done) {
+                const parser = new ArgumentParser("mypattern");
+                parser.addArgument("arg1", 0);
+                parser.addArgument("arg2", "okay");
+                parser.addArgument("arg3", false);
+                const content = document.createElement("div");
+                content.innerHTML = `
+                    <div data-pat-mypattern='{"arg1": 1}'></div>
+                `;
+                const opts = parser.parse(content.querySelector("[data-pat-mypattern]"));
+                expect(opts).toEqual({
+                    arg1: 1,
+                    arg2: "okay",
+                    arg3: false,
+                });
+
+                done();
+            });
+            it("parses JSON arrays and does not include defaults if set so", function (done) {
+                const parser = new ArgumentParser("mypattern");
+                parser.addArgument("arg1", 0);
+                parser.addArgument("arg2", "okay");
+                parser.addArgument("arg3", false);
+                const content = document.createElement("div");
+                content.innerHTML = `
+                    <div data-pat-mypattern='{"arg1": 1}'></div>
+                `;
+                const opts = parser.parse(
+                    content.querySelector("[data-pat-mypattern]"),
+                    {},
+                    false,
+                    false
+                );
+                expect(opts).toEqual({
+                    arg1: 1,
+                });
+
+                done();
+            });
+        });
+
         describe("the shorthand notation", function () {
             it("Single argument", function () {
                 var parser = new ArgumentParser();
