@@ -15,7 +15,7 @@ class ArgumentParser {
         this.log = logging.getLogger(name + ".parser");
 
         this.group_pattern = /([a-z][a-z0-9]*)-([A-Z][a-z0-0\-]*)/i;
-        this.json_param_pattern = /^\s*{/i;
+        this.json_param_pattern = /^\s*\[?\s*{/i;
         this.named_param_pattern = /^\s*([a-z][a-z0-9\-]*)\s*:(.*)/i;
         this.token_pattern = /((["']).*?(?!\\)\2)|\s*(\S+)\s*/g;
     }
@@ -442,10 +442,14 @@ class ArgumentParser {
                 continue;
             }
             const _parse = this._parse.bind(this);
+
             if (data.match(/&&/)) {
                 frame = data.split(/\s*&&\s*/).map(_parse);
             } else {
-                frame = [_parse(data)];
+                frame = _parse(data);
+            }
+            if (!Array.isArray(frame)) {
+                frame = [frame];
             }
             final_length = Math.max(frame.length, final_length);
             stack.push(frame);
