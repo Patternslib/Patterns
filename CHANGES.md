@@ -1,3 +1,10 @@
+### [4.6.1](https://github.com/Patternslib/patterns/compare/4.6.0...4.6.1) (2021-08-18)
+
+
+### Bug Fixes
+
+* **pat inject:** Parse data attributes as JSON also when the value is a JSON array. ([de9ee8b](https://github.com/Patternslib/patterns/commit/de9ee8b762ed67b359928e713bee021e7465d3c8))
+
 ## [4.6.0](https://github.com/Patternslib/patterns/compare/4.5.5...4.6.0) (2021-08-17)
 
 
