@@ -9,7 +9,6 @@ parser.attribute = "data-form-data-event"; // do not require ``data-pat-``
 parser.addArgument("event-name-submit");
 parser.addArgument("event-name-init");
 parser.addArgument("prevent-submit", true);
-parser.addArgument("close-modal", true);
 
 export default Base.extend({
     name: "form-data-event",
@@ -46,12 +45,6 @@ export default Base.extend({
             detail: { form_data: form_data },
         });
         document.dispatchEvent(ev);
-        if (this.options.closeModal) {
-            const modal = this.el.closest(".pat-modal");
-            if (modal) {
-                modal["pattern-modal"].destroy();
-            }
-        }
         if (this.options.event["name-init"]) {
             document.removeEventListener(
                 this.options.event["name-init"],
