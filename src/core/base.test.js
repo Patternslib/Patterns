@@ -176,4 +176,32 @@ describe("pat-base: The Base class for patterns", function () {
         expect(event_list[0]).toBe("pat init");
         expect(event_list[1]).toBe("base init");
     });
+
+    it("adds the pattern instance on the element when manually initialized", async () => {
+        const Tmp = Base.extend({
+            name: "example",
+            init: () => {},
+        });
+        const node = document.createElement("div");
+        node.setAttribute("class", "pat-example");
+        const tmp = new Tmp(node);
+        await utils.timeout(1);
+        expect(tmp instanceof Tmp).toBeTruthy();
+        expect(tmp.el["pattern-example"]).toBe(tmp);
+        expect(tmp.$el.data("pattern-example")).toBe(tmp);
+    });
+
+    it("adds the pattern instance on the element when scanning the DOM tree", async () => {
+        const Tmp = Base.extend({
+            name: "example",
+            trigger: ".pat-example",
+            init: () => {},
+        });
+        const node = document.createElement("div");
+        node.setAttribute("class", "pat-example");
+        registry.scan(node);
+        await utils.timeout(1);
+        expect(node["pattern-example"] instanceof Tmp).toBeTruthy();
+        expect($(node).data("pattern-example") instanceof Tmp).toBeTruthy();
+    });
 });

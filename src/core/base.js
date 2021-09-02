@@ -36,7 +36,6 @@ const initBasePattern = function ($el, options, trigger) {
         } catch (e) {
             plog.error(`Failed while initializing ${name} pattern.`, e);
         }
-        $el.data(`pattern-${name}`, pattern);
     }
     return pattern;
 };
@@ -49,6 +48,11 @@ const Base = async function ($el, options, trigger) {
     this.el = $el[0];
     this.options = $.extend(true, {}, this.defaults || {}, options || {});
     await this.init($el, options, trigger);
+
+    // Store pattern instance on element
+    this.$el.data(`pattern-${this.name}`, this);
+    this.el[`pattern-${this.name}`] = this;
+
     this.emit("init");
 };
 
