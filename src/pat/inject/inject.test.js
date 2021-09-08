@@ -1033,13 +1033,16 @@ describe("pat-inject", function () {
 
     describe("Error handling", () => {
         let $a;
-        let $div;
 
         beforeEach(() => {
             jest.spyOn($, "ajax").mockImplementation(() => deferred);
-            $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
-            $div = $('<div id="someid" />');
-            $("#lab").append($a).append($div);
+            document.body.innerhtml = `
+              <div id="lab">
+                <a class="pat-inject" href="test.html#someid">link</a>
+                <div id="someid" />
+              </div>
+            `;
+            $a = $(".pat-inject");
         });
 
         afterEach(() => {
@@ -1128,6 +1131,7 @@ describe("pat-inject", function () {
         });
 
         it("Doesnt get error page from meta tags if query string present", async () => {
+            const _window_location = global.window.location;
             delete global.window.location;
             global.window.location = {
                 search: "?something=nothing&pat-inject-errorhandler.off",
@@ -1162,6 +1166,151 @@ describe("pat-inject", function () {
 
             expect(document.body.querySelector("#lab")).toBeTruthy();
             // In this case, the normal error reporting is used
+            expect(document.body.hasAttribute("data-error-message")).toBeTruthy();
+
+            global.fetch.mockClear();
+            delete global.fetch;
+            global.window.location = _window_location;
+        });
+
+        it("Injects an error message from the error response.", async () => {
+            // In this test the error message from the error reponse is used instead of the error template.
+            // No need to mock fetch which would get the error template.
+
+            // Configure fallback error page with a error zone selector #error-message
+            document.head.innerHTML = `
+                <meta name="pat-inject-status-404" content="/404.html#error-message" />
+            `;
+
+            // Add body with a error zone (#error-message)
+            document.body.innerHTML = `
+                <a class="pat-inject" href="test.html#someid">link</a>
+                <div id="error-message"></div>
+            `;
+
+            $a = $(".pat-inject");
+
+            pattern.init($a);
+
+            // Invoke error case
+            pattern._onInjectError($a, [], {
+                jqxhr: {
+                    status: 404,
+                    responseText: `
+                      <!DOCTYPE html>
+                      <html>
+                        <head>
+                          <title>404</title>
+                        </head>
+                        <body>
+                          <section id="error-message">
+                              <h1>oh no, what did you do?!</h1>
+                          </section>
+                        </body>
+                      </html>
+                    `,
+                },
+            });
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelector("#error-message").innerHTML.trim()).toEqual(
+                "<h1>oh no, what did you do?!</h1>"
+            );
+        });
+
+        it("Injects an error message from the error template.", async () => {
+            // Let the error response contain a error zone section with an ID as configured further below.
+            global.fetch = jest.fn().mockImplementation(
+                mockFetch(`
+                  <!DOCTYPE html>
+                  <html>
+                    <head>
+                      <title>404</title>
+                    </head>
+                    <body>
+                      <section id="error-message">
+                          <h1>this is a message from your operator.</h1>
+                      </section>
+                    </body>
+                  </html>
+                `)
+            );
+
+            // Configure fallback error page with a error zone selector #error-message
+            document.head.innerHTML = `
+                <meta name="pat-inject-status-404" content="/404.html#error-message"/>
+            `;
+
+            // Add body with a error zone (#error-message)
+            document.body.innerHTML = `
+                <a class="pat-inject" href="test.html#someid">link</a>
+                <div id="error-message"></div>
+            `;
+
+            $a = $(".pat-inject");
+
+            pattern.init($a);
+
+            // Invoke error case
+            pattern._onInjectError($a, [], {
+                jqxhr: {
+                    status: 404,
+                    responseText: `
+                      <!DOCTYPE html>
+                      <html>
+                        <head>
+                          <title>404</title>
+                        </head>
+                        <body>
+                          <section id="error-message-not-to-be-found">
+                              <h1>oh no, what did you do?!</h1>
+                          </section>
+                        </body>
+                      </html>
+                    `,
+                },
+            });
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelector("#error-message").innerHTML.trim()).toEqual(
+                "<h1>this is a message from your operator.</h1>"
+            );
+
+            global.fetch.mockClear();
+            delete global.fetch;
+        });
+
+        it("Falls back to data-error-message attribute if no error page can be found.", async () => {
+            global.fetch = jest.fn().mockImplementation(mockFetch(""));
+
+            // Configure fallback error page with a error zone selector #error-message
+            document.head.innerHTML = `
+                <meta name="pat-inject-status-404" content="/404.html#error-message"/>
+            `;
+
+            // Add body with a error zone (#error-message)
+            document.body.innerHTML = `
+                <a class="pat-inject" href="test.html#someid">link</a>
+                <div id="error-message"></div>
+            `;
+
+            $a = $(".pat-inject");
+
+            pattern.init($a);
+
+            // Invoke error case
+            pattern._onInjectError($a, [], {
+                jqxhr: {
+                    status: 404,
+                    responseText: "",
+                },
+            });
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelector("#error-message").innerHTML.trim()).toEqual(
+                ""
+            );
+
             expect(document.body.hasAttribute("data-error-message")).toBeTruthy();
 
             global.fetch.mockClear();

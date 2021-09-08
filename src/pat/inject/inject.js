@@ -216,7 +216,7 @@ const inject = {
         const cfgs = parser.parse($el, opts, true);
         cfgs.forEach((cfg) => {
             cfg.$context = $el;
-            // opts and cfg have priority, fallback to href/action
+            // opts and cfg have priority, fall back to href/action
             cfg.url =
                 opts.url ||
                 cfg.url ||
@@ -628,7 +628,6 @@ const inject = {
 
     async _onInjectError($el, cfgs, event) {
         let explanation = "";
-        let fallback;
         const status = event.jqxhr.status;
         const timestamp = new Date();
         if (status % 100 == 4) {
@@ -642,21 +641,36 @@ const inject = {
                 "It seems, the server is down. Please make a screenshot and contact support. Thank you!";
         }
 
+        let error_page;
+        let error_page_fragment;
         const url_params = new URLSearchParams(window.location.search);
+        if (url_params.get("pat-inject-errorhandler.off") === null) {
+            // Prepare a error page to be injected into the document.
 
-        const fallback_url = document
-            .querySelector(`meta[name=pat-inject-status-${status}]`)
-            ?.getAttribute("content", false);
-        if (fallback_url && url_params.get("pat-inject-errorhandler.off") === null) {
-            try {
-                const fallback_response = await fetch(fallback_url, {
-                    method: "GET",
-                });
-                fallback = document.createElement("html");
-                fallback.innerHTML = await fallback_response.text();
-                fallback = fallback.querySelector("body");
-            } catch {
-                // fallback to standard error message and ignore.
+            // Try to get a suitable error message from pre-configured error pages.
+            const error_page_url = document
+                .querySelector(`meta[name^=pat-inject-status-${status}]`)
+                ?.getAttribute("content", false);
+            error_page_fragment = error_page_url?.split("#")[1];
+            error_page_fragment = error_page_fragment ? `#${error_page_fragment}` : null;
+
+            if (error_page_fragment) {
+                error_page = document.createElement("html");
+                error_page.innerHTML = event.jqxhr.responseText;
+                error_page = error_page.querySelector(error_page_fragment);
+            }
+
+            if (!error_page && error_page_url) {
+                try {
+                    const error_page_response = await fetch(error_page_url, {
+                        method: "GET",
+                    });
+                    error_page = document.createElement("html");
+                    error_page.innerHTML = await error_page_response.text();
+                    error_page = error_page.querySelector(error_page_fragment || "body");
+                } catch {
+                    // fall back to standard error message and ignore.
+                }
             }
         }
 
@@ -671,12 +685,12 @@ const inject = {
         $el.off("pat-ajax-success.pat-inject");
         $el.off("pat-ajax-error.pat-inject");
 
-        if (fallback) {
-            document.body.innerHTML = fallback.innerHTML;
+        if (error_page) {
+            const error_zone = document.querySelector(error_page_fragment || "body");
+            error_zone.innerHTML = error_page.innerHTML;
+            registry.scan(error_zone); // initialize any patterns in error page
         } else {
-            const msg_attr =
-                fallback ||
-                `${explanation} Status is ${status} ${event.jqxhr.statusText}, time was ${timestamp}. You can click to close this.`;
+            const msg_attr = `${explanation} Status is ${status} ${event.jqxhr.statusText}, time was ${timestamp}. You can click to close this.`;
             $("body").attr("data-error-message", msg_attr);
             $("body").on("click", () => {
                 $("body").removeAttr("data-error-message");
