@@ -626,7 +626,6 @@ const inject = {
 
     async _onInjectError($el, cfgs, event) {
         let explanation = "";
-        let fallback;
         const status = event.jqxhr.status;
         const timestamp = new Date();
         if (status % 100 == 4) {
@@ -640,21 +639,41 @@ const inject = {
                 "It seems, the server is down. Please make a screenshot and contact support. Thank you!";
         }
 
+        let fallback;
         const url_params = new URLSearchParams(window.location.search);
+        if (url_params.get("pat-inject-errorhandler.off") === null) {
+            // Prepare a error page to be injected into the document.
 
-        const fallback_url = document
-            .querySelector(`meta[name=pat-inject-status-${status}]`)
-            ?.getAttribute("content", false);
-        if (fallback_url && url_params.get("pat-inject-errorhandler.off") === null) {
-            try {
-                const fallback_response = await fetch(fallback_url, {
-                    method: "GET",
-                });
-                fallback = document.createElement("html");
-                fallback.innerHTML = await fallback_response.text();
-                fallback = fallback.querySelector("body");
-            } catch {
-                // fallback to standard error message and ignore.
+            // Check if a valid error page can be found in the response.
+            const valid_error_page_selector = document
+                .querySelector(`meta[name=pat-inject-valid-error-page]`)
+                ?.getAttribute("content", null);
+
+            if (valid_error_page_selector) {
+                const tmp = document.createElement("html");
+                tmp.innerHTML = event.jqxhr.responseText;
+                const is_valid_error_page = tmp.querySelector(valid_error_page_selector);
+                if (is_valid_error_page) {
+                    fallback = tmp;
+                }
+            }
+
+            // Otherwise try to get a suitable error message from pre-configured error pages.
+            const fallback_url = document
+                .querySelector(`meta[name=pat-inject-status-${status}]`)
+                ?.getAttribute("content", false);
+
+            if (!fallback && fallback_url) {
+                try {
+                    const fallback_response = await fetch(fallback_url, {
+                        method: "GET",
+                    });
+                    fallback = document.createElement("html");
+                    fallback.innerHTML = await fallback_response.text();
+                    fallback = fallback.querySelector("body");
+                } catch {
+                    // fallback to standard error message and ignore.
+                }
             }
         }
 
