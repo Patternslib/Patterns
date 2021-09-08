@@ -193,8 +193,8 @@ export default Base.extend({
             utils.redraw(this.$el.find(".panel-body"));
         }
     },
-    destroy() {
-        // if working without injection, destroy right away.
+    async destroy() {
+        await utils.timeout(1); // wait a tick for event handlers (e.g. form submit) have a chance to kick in first.
         $(document).off(".pat-modal");
         this.$el.remove();
         $("body").removeClass("modal-active");
@@ -204,20 +204,15 @@ export default Base.extend({
         if (this.$el.find("form").hasClass("pat-inject")) {
             // if pat-inject in modal form, listen to patterns-inject-triggered and destroy first
             // once that has been triggered
-            let destroy_handler = () => {
-                $(document).off(".pat-modal");
-                this.$el.remove();
-                $("body").removeClass("modal-active");
-                $("body").removeClass("modal-panel");
+            const destroy_handler = () => {
+                this.destroy();
                 $("body").off("patterns-inject-triggered", destroy_handler);
             };
-            $("body").on("patterns-inject-triggered", destroy_handler);
+            $("body").on("patterns-inject-triggered", destroy_handler.bind(this));
         } else {
-            // if working without injection, destroy right away.
-            $(document).off(".pat-modal");
-            this.$el.remove();
-            $("body").removeClass("modal-active");
-            $("body").removeClass("modal-panel");
+            // if working without injection, destroy after waiting a tick to let
+            // eventually registered on-submit handlers kick in first.
+            this.destroy();
         }
     },
 });
