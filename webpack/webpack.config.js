@@ -126,7 +126,7 @@ module.exports = (env, argv, config) => {
     // Most useful the ``entry`` entry.
     config = Object.assign(base_config, config);
 
-    if (argv.mode === "development") {
+    if (process.env.NODE_ENV === "development") {
         // Add a dev server.
         config.devServer = {
             inline: true,
@@ -140,7 +140,7 @@ module.exports = (env, argv, config) => {
         config.optimization.minimize = false;
         config.devtool = false;
     }
-    if (argv.mode === "production") {
+    if (process.env.NODE_ENV === "production") {
         // Also create minified bundles along with the non-minified ones.
         for (const bundle of Object.keys(config.entry)) {
             config.entry[`${bundle}.min`] = config.entry[bundle];

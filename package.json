@@ -93,9 +93,9 @@
     },
     "resolutions": {},
     "scripts": {
-        "start": "webpack serve --config webpack/webpack.config.js --mode=development",
-        "build": "webpack --config webpack/webpack.config.js --mode=production",
-        "build:stats": "webpack --config webpack/webpack.config.js --mode=production --json > stats.json",
+        "start": "NODE_ENV=development webpack serve --config webpack/webpack.config.js",
+        "build": "NODE_ENV=production webpack --config webpack/webpack.config.js",
+        "build:stats": "NODE_ENV=production webpack --config webpack/webpack.config.js --json > stats.json",
         "test": "jest --watch",
         "testonce": "jest",
         "release": "release-it",
