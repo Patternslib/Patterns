@@ -136,6 +136,9 @@ module.exports = (env, argv, config) => {
         };
         // Output public path for dev-server
         config.output.publicPath = "/dist/";
+        // Don't minimize
+        config.optimization.minimize = false;
+        config.devtool = false;
     }
     if (argv.mode === "production") {
         // Also create minified bundles along with the non-minified ones.
