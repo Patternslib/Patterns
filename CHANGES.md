@@ -1,3 +1,22 @@
+## [5.0.0](https://github.com/Patternslib/patterns/compare/4.7.0...5.0.0) (2021-09-09)
+
+
+### Bug Fixes
+
+* **build:** Fix passing of environment variables for production and development, so that also babel get's notice of it. ([6a0ad46](https://github.com/Patternslib/patterns/commit/6a0ad4624c397ce299dbe5121ed68847b59d9e43))
+
+
+### Maintenance
+
+* **dependencies:** Upgrade dev dependencies up to minor releases. ([61d8bd1](https://github.com/Patternslib/patterns/commit/61d8bd125d46315e0c2caead50ce20419cf95c52))
+* Development mode - explicitly set to no minification and no sourcemap generation (includes no inclusion of code via eval and thus preventing another layer of minification). ([f2de973](https://github.com/Patternslib/patterns/commit/f2de9739e3bee97627c85356a85d9816fd29c66b))
+* In development mode, use latest Chrome and Firefox browser versions for better debugging. ([f04da66](https://github.com/Patternslib/patterns/commit/f04da664c61ae415f6ad222aad2a2cc6605fc410))
+
+
+### Breaking Changes
+
+* **build:** The development/production mode needs now be passed via the NODE_ENV environment variable, so that also babel gets notice of it. You eventually need to adapt your build environment. Refer to this change: https://github.com/Patternslib/Patterns/commit/6a0ad4624c397ce299dbe5121ed68847b59d9e43 ([be5a670](https://github.com/Patternslib/patterns/commit/be5a670deab2736c5933e245a6a0346dd1a97d25))
+
 ## [4.7.0](https://github.com/Patternslib/patterns/compare/4.6.1...4.7.0) (2021-09-09)
 
 
