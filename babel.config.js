@@ -22,10 +22,7 @@ module.exports = (env) => {
                         modules: false,
                         debug: true,
                         useBuiltIns: false,
-                        targets: {
-                            chrome: "80",
-                            firefox: "80",
-                        },
+                        targets: "last 1 Chrome version, last 1 Firefox version",
                     },
                 ],
             ],
