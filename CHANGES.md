@@ -1,3 +1,21 @@
+## [4.7.0](https://github.com/Patternslib/patterns/compare/4.6.1...4.7.0) (2021-09-09)
+
+
+### Features
+
+* **core base:** Store the pattern instance on the element also when instantiating manually without scanning the DOM. Also store the pattern instance directly on the DOM node without jQuery.data. ([252f537](https://github.com/Patternslib/patterns/commit/252f537dc3e266b991edef84c2d79c2784a9b1af))
+* **core dom:** add_event_listener and remove_event_listener methods to register event handlers for DOM nodes which can be unregistered by an id. Event handlers with the same id on the same node won't be registered twice. ([57febfd](https://github.com/Patternslib/patterns/commit/57febfd18c5a5d015ab837114ad999f9c14ab2d7))
+
+
+### Bug Fixes
+
+* **pat modal:** Wait a tick before destroying the modal so that registered event handlers (like form submit) can kick in before the modal disappears. ([c26ed3a](https://github.com/Patternslib/patterns/commit/c26ed3a70067bb54df4b7575cc10b81654974127))
+
+
+### Maintenance
+
+* **dependencies:** Upgrade dev dependencies up to minor releases and other releases up to patch level. ([42cd837](https://github.com/Patternslib/patterns/commit/42cd83716435c595b038ea14da55fc5bb55f205c))
+
 ### [4.6.1](https://github.com/Patternslib/patterns/compare/4.6.0...4.6.1) (2021-08-18)
 
 
