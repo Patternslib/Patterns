@@ -12,6 +12,7 @@ module.exports = (env) => {
         plugins: ["@babel/plugin-proposal-optional-chaining"],
     };
 
+    // passed via NODE_ENV=development environment variable.
     if (env.env() === "development") {
         // For development, do less transformations for better readability.
         config = {
