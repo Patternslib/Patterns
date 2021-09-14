@@ -89,6 +89,26 @@ const get_parents = (el) => {
     return parents;
 };
 
+/**
+ * Return the value of the first attribute found in the list of parents.
+ *
+ * @param {DOM element} el - The DOM element to start the acquisition search for the given attribute.
+ * @param {string} attribute - Name of the attribute to search for.
+ * @param {Boolean} include_empty - Also return empty values.
+ *
+ * @returns {*} - Returns the value of the searched attribute.
+ */
+const acquire_attribute = (el, attribute, include_empty = false) => {
+    let _el = el;
+    while (_el) {
+        const val = _el.getAttribute(attribute);
+        if (val || (include_empty && val === "")) {
+            return val;
+        }
+        _el = _el.parentElement;
+    }
+};
+
 const is_visible = (el) => {
     // Check, if element is visible in DOM.
     // https://stackoverflow.com/a/19808107/1337474
@@ -169,6 +189,7 @@ const dom = {
     find_parents: find_parents,
     find_scoped: find_scoped,
     get_parents: get_parents,
+    acquire_attribute: acquire_attribute,
     is_visible: is_visible,
     create_from_string: create_from_string,
     add_event_listener: add_event_listener,

@@ -269,6 +269,81 @@ describe("core.dom tests", () => {
         });
     });
 
+    describe("acquire_attribute", () => {
+        it("finds the first occurrence of an non-empty attribute in all parents.", (done) => {
+            document.body.innerHTML = `
+                <div lang="en">
+                    <div id="start" lang="">
+                    </div>
+                </div>
+            `;
+            const el = document.querySelector("#start");
+            const res = dom.acquire_attribute(el, "lang");
+            expect(res).toBe("en");
+
+            done();
+        });
+        it("finds the first occurrence of an attribute in all parents, even if empty.", (done) => {
+            document.body.innerHTML = `
+                <div lang="en">
+                    <div lang="">
+                        <div id="start">
+                        </div>
+                    </div>
+                </div>
+            `;
+            const el = document.querySelector("#start");
+            const res = dom.acquire_attribute(el, "lang", true);
+            expect(res).toBe("");
+
+            done();
+        });
+        it("traverses up a long way to find an attribute.", (done) => {
+            document.body.innerHTML = `
+                <div lang="en">
+                    <div>
+                        <div lang="">
+                            <div>
+                                <div lang="">
+                                    <div>
+                                        <div lang="">
+                                            <div>
+                                                <div lang="">
+                                                    <div>
+                                                        <div id="start" lang="">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const el = document.querySelector("#start");
+            const res = dom.acquire_attribute(el, "lang");
+            expect(res).toBe("en");
+
+            done();
+        });
+        it("just returns if it finds nothing.", (done) => {
+            document.body.innerHTML = `
+                <div>
+                    <div id="start">
+                    </div>
+                </div>
+            `;
+            const el = document.querySelector("#start");
+            const res = dom.acquire_attribute(el, "lang");
+            expect(res).toBe(undefined);
+
+            done();
+        });
+    });
+
     describe("is_visible", () => {
         it.skip("checks, if an element is visible or not.", (done) => {
             const div1 = document.createElement("div");
