@@ -95,17 +95,30 @@ const get_parents = (el) => {
  * @param {DOM element} el - The DOM element to start the acquisition search for the given attribute.
  * @param {string} attribute - Name of the attribute to search for.
  * @param {Boolean} include_empty - Also return empty values.
+ * @param {Boolean} include_all - Return a list of attribute values found in all parents.
  *
- * @returns {*} - Returns the value of the searched attribute.
+ * @returns {*} - Returns the value of the searched attribute or a list of all attributes.
  */
-const acquire_attribute = (el, attribute, include_empty = false) => {
+const acquire_attribute = (
+    el,
+    attribute,
+    include_empty = false,
+    include_all = false
+) => {
     let _el = el;
+    const ret = []; // array for ``include_all`` mode.
     while (_el) {
         const val = _el.getAttribute(attribute);
         if (val || (include_empty && val === "")) {
-            return val;
+            if (!include_all) {
+                return val;
+            }
+            ret.push(val);
         }
         _el = _el.parentElement;
+    }
+    if (include_all) {
+        return ret;
     }
 };
 

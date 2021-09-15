@@ -342,6 +342,64 @@ describe("core.dom tests", () => {
 
             done();
         });
+
+        it("includes all parents mode: return a list of all attributes found in the element parents.", (done) => {
+            document.body.innerHTML = `
+                <div lang="en">
+                    <div lang="">
+                        <div lang="ga">
+                            <div lang="it">
+                                <div lang="de">
+                                    <div id="start" lang="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const el = document.querySelector("#start");
+            const res = dom.acquire_attribute(el, "lang", false, true);
+            expect(res).toEqual(["de", "it", "ga", "en"]);
+
+            done();
+        });
+
+        it("includes all parents mode: also include empties, if requested.", (done) => {
+            document.body.innerHTML = `
+                <div lang="en">
+                    <div lang="">
+                        <div lang="ga">
+                            <div lang="it">
+                                <div lang="de">
+                                    <div id="start" lang="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const el = document.querySelector("#start");
+            const res = dom.acquire_attribute(el, "lang", true, true);
+            expect(res).toEqual(["", "de", "it", "ga", "", "en"]);
+
+            done();
+        });
+
+        it("includes all parents mode: return an empty list if nothing is found.", (done) => {
+            document.body.innerHTML = `
+                <div>
+                    <div id="start">
+                    </div>
+                </div>
+            `;
+            const el = document.querySelector("#start");
+            const res = dom.acquire_attribute(el, "lang", true, true);
+            expect(res).toEqual([]);
+
+            done();
+        });
     });
 
     describe("is_visible", () => {
