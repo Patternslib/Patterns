@@ -34,6 +34,7 @@ parser.addArgument("mark-inactive", true);
 parser.addArgument("class");
 parser.addArgument("target", "body");
 parser.addArgument("arrow-padding", null);
+parser.addArgument("url", null);
 
 export default Base.extend({
     name: "tooltip",
@@ -300,7 +301,10 @@ export default Base.extend({
         if (this.ajax_state.isFetching || !this.ajax_state.canFetch) {
             return undefined;
         }
-        const { url, selector } = this.get_url_parts(this.el.getAttribute("href"));
+
+        const { url, selector } = this.get_url_parts(
+            this.options.url || this.el.getAttribute("href")
+        );
         let content;
         if (url) {
             // Tooltip from remote page.

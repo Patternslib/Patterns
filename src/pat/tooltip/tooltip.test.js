@@ -968,6 +968,89 @@ describe("pat-tooltip", () => {
             global.fetch.mockClear();
             delete global.fetch;
         });
+
+        it("source: ajax loading via the url parameter.", async () => {
+            global.fetch = jest
+                .fn()
+                .mockImplementation(
+                    mockFetch("External content fetched via an HTTP request.")
+                );
+
+            document.body.innerHTML = `
+                <button
+                    class="pat-tooltip"
+                    type="button"
+                    data-pat-tooltip="
+                      source: ajax;
+                      url: https://the-internets.url;
+                      trigger: click">
+                  click me
+                </button>
+            `;
+
+            const el = document.body.querySelector(".pat-tooltip");
+
+            const instance = new pattern(el);
+            await utils.timeout(1);
+
+            const spy_content = jest.spyOn(instance, "_getContent");
+            const spy_show = jest.spyOn(instance.tippy.props, "onShow");
+
+            el.click();
+            await utils.timeout(1); // wait a tick
+
+            expect(global.fetch).toHaveBeenCalled();
+            expect(spy_content).toHaveBeenCalled();
+            expect(spy_show).toHaveBeenCalled();
+            expect(document.querySelector(".tippy-box .tippy-content").textContent).toBe(
+                "External content fetched via an HTTP request."
+            );
+
+            global.fetch.mockClear();
+            delete global.fetch;
+        });
+
+        it("source: ajax loading from current DOM via the url parameter and a fragment specifier.", async () => {
+            global.fetch = jest
+                .fn()
+                .mockImplementation(
+                    mockFetch("External content fetched via an HTTP request.")
+                );
+
+            document.body.innerHTML = `
+                <button
+                    class="pat-tooltip"
+                    type="button"
+                    data-pat-tooltip="
+                      source: ajax;
+                      url: #fragment;
+                      trigger: click">
+                  click me
+                </button>
+                <div id="fragment">hello.</div>
+            `;
+
+            const el = document.body.querySelector(".pat-tooltip");
+
+            const instance = new pattern(el);
+            await utils.timeout(1);
+
+            const spy_content = jest.spyOn(instance, "_getContent");
+            const spy_show = jest.spyOn(instance.tippy.props, "onShow");
+
+            el.click();
+            await utils.timeout(1); // wait a tick
+
+            expect(global.fetch).not.toHaveBeenCalled();
+            expect(spy_content).toHaveBeenCalled();
+            expect(spy_show).toHaveBeenCalled();
+            expect(document.querySelector(".tippy-box .tippy-content").textContent).toBe(
+                "hello."
+            );
+
+            global.fetch.mockClear();
+            delete global.fetch;
+        });
     });
 
     describe(`if the 'source' parameter is 'ajax'`, () => {
