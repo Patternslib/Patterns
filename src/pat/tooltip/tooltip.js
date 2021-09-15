@@ -48,7 +48,7 @@ export default Base.extend({
     active_class: "tooltip-active-hover",
     inactive_class: "tooltip-inactive",
 
-    async init($el, opts) {
+    async init() {
         const el = this.el;
 
         if (window.__patternslib_import_styles) {
@@ -56,7 +56,7 @@ export default Base.extend({
         }
         const Tippy = (await import("tippy.js")).default;
 
-        this.options = parser.parse(el, opts);
+        this.options = parser.parse(el, this.options);
         this.tippy_options = this.parseOptionsForTippy(this.options);
 
         const defaultProps = {
