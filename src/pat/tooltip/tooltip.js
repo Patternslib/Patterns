@@ -25,7 +25,7 @@ const all_positions = [
 ];
 parser.addArgument("position-list", [], all_positions, true);
 parser.addArgument("position-policy", "auto", ["auto", "force"]);
-parser.addArgument("trigger", "click", ["click", "hover"]);
+parser.addArgument("trigger", "click", ["click", "hover", "none"]);
 parser.addArgument("source", "title", ["ajax", "content", "title"]);
 parser.addArgument("ajax-data-type", "html", ["html", "markdown"]);
 parser.addArgument("closing", "auto", ["auto", "sticky", "close-button"]);
@@ -160,6 +160,9 @@ export default Base.extend({
             trigger() {
                 if (opts.trigger === "hover") {
                     tippy_options.trigger = "mouseenter focus";
+                } else if (opts.trigger === "none") {
+                    tippy_options.trigger = "manual";
+                    tippy_options.hideOnClick = false;
                 }
             },
 

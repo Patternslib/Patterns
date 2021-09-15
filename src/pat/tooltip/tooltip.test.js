@@ -808,6 +808,45 @@ describe("pat-tooltip", () => {
                 });
             });
         });
+        describe("if the 'trigger' parameter is 'none'", () => {
+            it("does not open or close via click or mousehover", async () => {
+                const el = document.createElement("div");
+                el.setAttribute("title", "hello.");
+
+                const instance = new pattern(el, { trigger: "none" });
+                await utils.timeout(1);
+
+                // normal trigger shouldn't open
+                el.click();
+                el.dispatchEvent(
+                    new Event("mouseover", { bubbles: true, cancelable: true })
+                );
+                await utils.timeout(1);
+
+                expect(document.querySelector(".tippy-box .tippy-content")).toBeFalsy();
+
+                instance.tippy.show();
+                await utils.timeout(1);
+
+                expect(
+                    document.querySelector(".tippy-box .tippy-content").textContent
+                ).toBe("hello.");
+
+                // normal trigger shouldn't close
+                el.dispatchEvent(
+                    new Event("mouseout", { bubbles: true, cancelable: true })
+                );
+                document.body.click();
+                document.body.dispatchEvent(
+                    new Event("mouseover", { bubbles: true, cancelable: true })
+                );
+                await utils.timeout(1);
+
+                expect(
+                    document.querySelector(".tippy-box .tippy-content").textContent
+                ).toBe("hello.");
+            });
+        });
         describe(`if the 'target' parameter is 'body'`, () => {
             it("will append the .tippy-box to the document.body", async () => {
                 const $el = testutils.createTooltip({

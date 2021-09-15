@@ -299,6 +299,34 @@
                         Like
                     </button>
                 </form>
+
+                <h4>programmatic triggering</h4>
+                <p>
+                    This example triggers the tooltip via the option <code>trigger: manual</code>
+                    which allows you to show the tooltip via code.
+                    <button
+                        id="trigger-manual"
+                        class="pat-tooltip"
+                        type="button"
+                        data-pat-tooltip="
+                          source: ajax;
+                          url: pattern-test-response.html#myTip;
+                          trigger: manual">
+                      Click on a button with url configuration
+                    </button>
+                    <script charset="utf-8">
+                        var trigger_manual = document.querySelector("#trigger-manual");
+                        trigger_manual.addEventListener("click", () => {
+                            // Show tooltip programmatically.
+                            // Get the pattern instance from the element
+                            var pat = trigger_manual["pattern-tooltip"];
+                            // Open the tooltip programmatically after a timeout.
+                            // There is some async behavior hidden.
+                            window.setTimeout(() => pat.tippy.show(), 1);
+                        });
+                    </script>
+                </p>
+
             </article>
         </div>
 
