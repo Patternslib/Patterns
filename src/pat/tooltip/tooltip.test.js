@@ -846,6 +846,28 @@ describe("pat-tooltip", () => {
                     document.querySelector(".tippy-box .tippy-content").textContent
                 ).toBe("hello.");
             });
+
+            it("does opens / closes via the API", async () => {
+                const el = document.createElement("div");
+                el.setAttribute("title", "hello.");
+
+                const instance = new pattern(el, { trigger: "none" });
+                await utils.timeout(1);
+
+                expect(document.querySelector(".tippy-box .tippy-content")).toBeFalsy();
+
+                instance.show();
+                await utils.timeout(1);
+
+                expect(
+                    document.querySelector(".tippy-box .tippy-content").textContent
+                ).toBe("hello.");
+
+                instance.hide();
+                await utils.timeout(1);
+
+                expect(document.querySelector(".tippy-box .tippy-content")).toBeFalsy();
+            });
         });
         describe(`if the 'target' parameter is 'body'`, () => {
             it("will append the .tippy-box to the document.body", async () => {

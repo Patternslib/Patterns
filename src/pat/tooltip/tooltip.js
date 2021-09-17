@@ -99,6 +99,21 @@ export default Base.extend({
         }
     },
 
+    show() {
+        // Show this tooltip
+        this.tippy.show();
+    },
+
+    hide() {
+        // Hide this tooltip
+        this.tippy.hide();
+    },
+
+    destroy() {
+        // Remove this tooltip
+        this.tippy.destroy();
+    },
+
     parseOptionsForTippy(opts) {
         const placement = (pos) => {
             // note that Cornelis needs the positioning to be the placement of the thingy on the bubble
