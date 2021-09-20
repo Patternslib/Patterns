@@ -347,6 +347,7 @@ export default Base.extend({
         }
         if (content) {
             this.tippy.setContent(content);
+            await utils.timeout(1); // Wait a tick before forceUpdate. Might fail due to unset popperInstance.
             this.tippy.popperInstance.forceUpdate(); // re-position tippy after content is known.
         }
     },

@@ -395,6 +395,7 @@ describe("pat-tooltip", () => {
 
                 el.click();
                 await utils.timeout(1);
+                await utils.timeout(1); // wait another tick for all asyncs to finish.
 
                 const form = document.querySelector(".tooltip-container form");
                 const mock_listener = jest.fn().mockImplementation((e) => {
@@ -1352,6 +1353,7 @@ this will be extracted.
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
+            await utils.timeout(1); // wait another tick for all asyncs to finish.
 
             expect(called).toBeTruthy();
 
