@@ -121,7 +121,7 @@ export default Base.extend({
         }
 
         if (window.__patternslib_import_styles) {
-            import("pikaday/scss/pikaday.scss");
+            import("./_date-picker.scss");
         }
         const Pikaday = (await import("pikaday")).default;
 

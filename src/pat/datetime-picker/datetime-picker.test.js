@@ -4,13 +4,7 @@ import utils from "../../core/utils";
 import { jest } from "@jest/globals";
 
 describe("pat-datetime-picker", function () {
-    beforeEach(function () {
-        $(
-            '<link href="src/pat/datetime-picker/datetime-picker.css" rel="stylesheet"/>'
-        ).appendTo(document.head);
-    });
     afterEach(function () {
-        //$('head link[href$="date-picker.css"').remove();
         $("input.pat-datetime-picker").remove();
         $(".datetime-picker-wrapper").remove();
         $(".pika-single, .pika-lendar").remove();

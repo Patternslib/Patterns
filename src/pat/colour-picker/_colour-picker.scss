@@ -1,0 +1,12 @@
+@charset "UTF-8";
+@import "../../../node_modules/spectrum-colorpicker/spectrum.css";
+
+.checkNative,
+.checkPattern {
+    font-size: 3vh;
+}
+
+#native {
+    width: 5%;
+    height: 4vh;
+}
