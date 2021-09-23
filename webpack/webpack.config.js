@@ -52,10 +52,6 @@ module.exports = (env, argv, config) => {
                     loader: "babel-loader",
                 },
                 {
-                    test: /\.*(?:html|xml)$/i,
-                    use: "raw-loader",
-                },
-                {
                     test: require.resolve("jquery"),
                     loader: "expose-loader",
                     options: {
@@ -84,12 +80,16 @@ module.exports = (env, argv, config) => {
                     ],
                 },
                 {
+                    test: /\.*(?:html|xml)$/i,
+                    type: "asset/source",
+                },
+                {
                     test: /\.(eot|woff|woff2|ttf|png|jpe?g|gif)$/i,
-                    use: "file-loader",
+                    type: "asset/resource",
                 },
                 {
                     test: /\.svg$/,
-                    loader: "svg-inline-loader",
+                    type: "asset/inline",
                 },
                 {
                     test: /\.modernizrrc\.js$/,
@@ -109,7 +109,10 @@ module.exports = (env, argv, config) => {
                 ],
             }),
             new CleanWebpackPlugin(),
-            new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+            new webpack.IgnorePlugin({
+                resourceRegExp: /^\.\/locale$/,
+                contextRegExp: /moment$/,
+            }),
             new webpack.ProvidePlugin({
                 $: "jquery",
                 jQuery: "jquery",
@@ -129,8 +132,9 @@ module.exports = (env, argv, config) => {
     if (process.env.NODE_ENV === "development") {
         // Add a dev server.
         config.devServer = {
-            inline: true,
-            contentBase: "./",
+            static: {
+                directory: path.resolve(__dirname, "../"),
+            },
             port: "3001",
             host: "0.0.0.0",
         };
