@@ -4,10 +4,10 @@ const webpack = require("webpack");
 const webpack_helpers = require("./webpack-helpers");
 
 // plugins
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
-const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const { DuplicatesPlugin } = require("inspectpack/plugin");
 
 module.exports = (env, argv, config) => {
     const base_config = {
@@ -114,9 +114,10 @@ module.exports = (env, argv, config) => {
                 jQuery: "jquery",
                 jquery: "jquery",
             }),
-            new DuplicatePackageCheckerPlugin({
+            new DuplicatesPlugin({
+                emitErrors: false,
                 verbose: true,
-                emitError: true,
+                ignoredPackages: [/.css/],
             }),
         ],
     };
