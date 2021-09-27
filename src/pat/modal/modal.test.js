@@ -77,7 +77,7 @@ describe("pat-modal", function () {
             $("#lab").html(
                 [
                     '<a id="modalLink" class="pat-modal"',
-                    '   href="../demo/bug_modal/modal-sources.html">Open a modal',
+                    '   href="some-page-with-modal.html">Open a modal',
                     "   containing a form with pat-modal CSS class.</a>",
                 ].join("/n")
             );

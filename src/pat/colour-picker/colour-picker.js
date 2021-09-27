@@ -12,6 +12,9 @@ var _ = {
     trigger: "input.pat-colour-picker,input.pat-color-picker",
     async init($el) {
         await import("spectrum-colorpicker");
+        if (window.__patternslib_import_styles) {
+            import("./_colour-picker.scss");
+        }
         return $el.spectrum({ preferredFormat: "hex" });
     },
 };

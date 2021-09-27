@@ -96,36 +96,32 @@ src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-yarn
 all-css:: css
 	@echo "Hang tight!"
 	@$(SASS) -I . -I _sass src/pat/auto-scale/_auto-scale.scss src/pat/auto-scale/auto-scale.css
-	@$(SASS) -I . -I _sass src/pat/auto-submit/_auto-submit.scss src/pat/auto-submit/auto-submit.css
 	@$(SASS) -I . -I _sass src/pat/auto-suggest/_auto-suggest.scss src/pat/auto-suggest/auto-suggest.css
-	@$(SASS) -I . -I _sass src/pat/autofocus/_autofocus.scss src/pat/autofocus/autofocus.css
 	@$(SASS) -I . -I _sass src/pat/bumper/_bumper.scss src/pat/bumper/bumper.css
 	@$(SASS) -I . -I _sass src/pat/carousel/_carousel.scss src/pat/carousel/carousel.css
 	@$(SASS) -I . -I _sass src/pat/checklist/_checklist.scss src/pat/checklist/checklist.css
-	@$(SASS) -I . -I _sass src/pat/clone/_clone.scss src/pat/clone/clone.css
 	@$(SASS) -I . -I _sass src/pat/collapsible/_collapsible.scss src/pat/collapsible/collapsible.css
+	@$(SASS) -I . -I _sass src/pat/colour-picker/_colour-picker.scss src/pat/colour-picker/colour-picker.css
 	@$(SASS) -I . -I _sass src/pat/date-picker/_date-picker.scss src/pat/date-picker/date-picker.css
 	@$(SASS) -I . -I _sass src/pat/datetime-picker/_datetime-picker.scss src/pat/datetime-picker/datetime-picker.css
-	@$(SASS) -I . -I _sass src/pat/depends/_depends.scss src/pat/depends/depends.css
 	@$(SASS) -I . -I _sass src/pat/equaliser/_equaliser.scss src/pat/equaliser/equaliser.css
 	@$(SASS) -I . -I _sass src/pat/expandable-tree/_expandable-tree.scss src/pat/expandable-tree/expandable-tree.css
 	@$(SASS) -I . -I _sass src/pat/focus/_focus.scss src/pat/focus/focus.css
-	@echo "Almost there, don't give up!"
-	@$(SASS) -I . -I _sass src/pat/forward/_forward.scss src/pat/forward/forward.css
 	@$(SASS) -I . -I _sass src/pat/gallery/_gallery.scss src/pat/gallery/gallery.css
+	@echo "Almost there, don't give up!"
 	@$(SASS) -I . -I _sass src/pat/grid/_grid.scss src/pat/grid/grid.css
 	@$(SASS) -I . -I _sass src/pat/image-crop/_image-crop.scss src/pat/image-crop/image-crop.css
-	@$(SASS) -I . -I _sass src/pat/inject-history/_inject-history.scss src/pat/inject-history/inject-history.css
 	@$(SASS) -I . -I _sass src/pat/inject/_inject.scss src/pat/inject/inject.css
-	@$(SASS) -I . -I _sass src/pat/markdown/_markdown.scss src/pat/markdown/markdown.css
 	@$(SASS) -I . -I _sass src/pat/masonry/_masonry.scss src/pat/masonry/masonry.css
+	@$(SASS) -I . -I _sass src/pat/menu/_menu.scss src/pat/menu/menu.css
 	@$(SASS) -I . -I _sass src/pat/modal/_modal.scss src/pat/modal/modal.css
 	@$(SASS) -I . -I _sass src/pat/notification/_notification.scss src/pat/notification/notification.css
 	@$(SASS) -I . -I _sass src/pat/sortable/_sortable.scss src/pat/sortable/sortable.css
 	@$(SASS) -I . -I _sass src/pat/stacks/_stacks.scss src/pat/stacks/stacks.css
 	@$(SASS) -I . -I _sass src/pat/switch/_switch.scss src/pat/switch/switch.css
+	@$(SASS) -I . -I _sass src/pat/syntax-highlight/_syntax-highlight.scss src/pat/syntax-highlight/syntax-highlight.css
 	@$(SASS) -I . -I _sass src/pat/toggle/_toggle.scss src/pat/toggle/toggle.css
-	@$(SASS) -I . -I _sass src/pat/zoom/_zoom.scss src/pat/zoom/zoom.css
+	@$(SASS) -I . -I _sass src/pat/tooltip/_tooltip.scss src/pat/tooltip/tooltip.css
 	@echo "Done. Each pattern now has a CSS file."
 
 .PHONY: css
