@@ -80,16 +80,12 @@ module.exports = (env, argv, config) => {
                     ],
                 },
                 {
-                    test: /\.*(?:html|xml)$/i,
+                    test: /\.*(?:html|xml|svg)$/i,
                     type: "asset/source",
                 },
                 {
                     test: /\.(eot|woff|woff2|ttf|png|jpe?g|gif)$/i,
                     type: "asset/resource",
-                },
-                {
-                    test: /\.svg$/,
-                    type: "asset/inline",
                 },
                 {
                     test: /\.modernizrrc\.js$/,
