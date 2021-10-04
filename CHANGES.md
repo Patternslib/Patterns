@@ -1,3 +1,29 @@
+## [5.1.0](https://github.com/Patternslib/patterns/compare/5.0.0...5.1.0) (2021-10-04)
+
+
+### Features
+
+* **pat tooltip:** Add config option url to explicitly define an url where no <a href> is available. ([557cbe4](https://github.com/Patternslib/patterns/commit/557cbe40b60e5605e5ffb7f76fa06e495f055b51))
+* **pat tooltip:** Allow to open the tooltip in JavaScript with via the trigger value none. ([f48dbf6](https://github.com/Patternslib/patterns/commit/f48dbf6d3838a62e2958426bfb86b909b8e14699))
+
+
+### Bug Fixes
+
+* **pat tooltip:** Wait a tick before repositioning after setting the content. Might fail due to unset popper instance. ([b5b2797](https://github.com/Patternslib/patterns/commit/b5b279759b558e8a012d116ef72cd5db49cd0304))
+
+
+### Maintenance
+
+* **cleanup:** Cleanup unused SCSS/CSS files. ([f53acb0](https://github.com/Patternslib/patterns/commit/f53acb0e8054b8182a0dd5cbf88acf4daf284601))
+* **dependencies:** Upgrade dev dependencies up to minor releases. ([5417506](https://github.com/Patternslib/patterns/commit/54175063edce0df04ca7074ac8fd1479a480b424))
+* **dependencies:** Upgrade dev dependencies up to minor releases. ([ffd3d73](https://github.com/Patternslib/patterns/commit/ffd3d73053f05f1a825558ffcb965fda501ef752))
+* **dependencies:** Upgrade jest-watch-typeahead to 1.0.0. ([23fd772](https://github.com/Patternslib/patterns/commit/23fd772b15d18845291e556e52c085027d0df6f6))
+* **dependencies:** Upgrade tippy.js to 6.3.2. ([5d2aed0](https://github.com/Patternslib/patterns/commit/5d2aed0aeed65eb92cd783ca1be33302b7a23ec1))
+* **pat calendar:** Upgrade fullcalendar from 5.8.0 to 5.9.0. ([28eab77](https://github.com/Patternslib/patterns/commit/28eab77a134f84dc9ad184d49983f4ecb70d5b66))
+* **pat tooltip:** Add pattern API methods to show/hide/destroy the tooltip. ([09a79e1](https://github.com/Patternslib/patterns/commit/09a79e1c22aa4015a953b7062b9ee177ff144a5a))
+* **pat tooltip:** Minor code cleanup. ([6c175ee](https://github.com/Patternslib/patterns/commit/6c175ee9bd7bc6b1ac2d94091ce0e59d1021468c))
+* Update patterns.css. ([39510a3](https://github.com/Patternslib/patterns/commit/39510a3adb41b7918c177327a99dc592b1b059f5))
+
 ## [5.0.0](https://github.com/Patternslib/patterns/compare/4.7.0...5.0.0) (2021-09-09)
 
 
