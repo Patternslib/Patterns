@@ -395,6 +395,7 @@ describe("pat-tooltip", () => {
 
                 el.click();
                 await utils.timeout(1);
+                await utils.timeout(1); // wait another tick for all asyncs to finish.
 
                 const form = document.querySelector(".tooltip-container form");
                 const mock_listener = jest.fn().mockImplementation((e) => {
@@ -808,6 +809,67 @@ describe("pat-tooltip", () => {
                 });
             });
         });
+        describe("if the 'trigger' parameter is 'none'", () => {
+            it("does not open or close via click or mousehover", async () => {
+                const el = document.createElement("div");
+                el.setAttribute("title", "hello.");
+
+                const instance = new pattern(el, { trigger: "none" });
+                await utils.timeout(1);
+
+                // normal trigger shouldn't open
+                el.click();
+                el.dispatchEvent(
+                    new Event("mouseover", { bubbles: true, cancelable: true })
+                );
+                await utils.timeout(1);
+
+                expect(document.querySelector(".tippy-box .tippy-content")).toBeFalsy();
+
+                instance.tippy.show();
+                await utils.timeout(1);
+
+                expect(
+                    document.querySelector(".tippy-box .tippy-content").textContent
+                ).toBe("hello.");
+
+                // normal trigger shouldn't close
+                el.dispatchEvent(
+                    new Event("mouseout", { bubbles: true, cancelable: true })
+                );
+                document.body.click();
+                document.body.dispatchEvent(
+                    new Event("mouseover", { bubbles: true, cancelable: true })
+                );
+                await utils.timeout(1);
+
+                expect(
+                    document.querySelector(".tippy-box .tippy-content").textContent
+                ).toBe("hello.");
+            });
+
+            it("does opens / closes via the API", async () => {
+                const el = document.createElement("div");
+                el.setAttribute("title", "hello.");
+
+                const instance = new pattern(el, { trigger: "none" });
+                await utils.timeout(1);
+
+                expect(document.querySelector(".tippy-box .tippy-content")).toBeFalsy();
+
+                instance.show();
+                await utils.timeout(1);
+
+                expect(
+                    document.querySelector(".tippy-box .tippy-content").textContent
+                ).toBe("hello.");
+
+                instance.hide();
+                await utils.timeout(1);
+
+                expect(document.querySelector(".tippy-box .tippy-content")).toBeFalsy();
+            });
+        });
         describe(`if the 'target' parameter is 'body'`, () => {
             it("will append the .tippy-box to the document.body", async () => {
                 const $el = testutils.createTooltip({
@@ -964,6 +1026,89 @@ describe("pat-tooltip", () => {
             expect(
                 document.querySelector(".tippy-box .tippy-content .pat-tooltip")
             ).toBeTruthy();
+
+            global.fetch.mockClear();
+            delete global.fetch;
+        });
+
+        it("source: ajax loading via the url parameter.", async () => {
+            global.fetch = jest
+                .fn()
+                .mockImplementation(
+                    mockFetch("External content fetched via an HTTP request.")
+                );
+
+            document.body.innerHTML = `
+                <button
+                    class="pat-tooltip"
+                    type="button"
+                    data-pat-tooltip="
+                      source: ajax;
+                      url: https://the-internets.url;
+                      trigger: click">
+                  click me
+                </button>
+            `;
+
+            const el = document.body.querySelector(".pat-tooltip");
+
+            const instance = new pattern(el);
+            await utils.timeout(1);
+
+            const spy_content = jest.spyOn(instance, "_getContent");
+            const spy_show = jest.spyOn(instance.tippy.props, "onShow");
+
+            el.click();
+            await utils.timeout(1); // wait a tick
+
+            expect(global.fetch).toHaveBeenCalled();
+            expect(spy_content).toHaveBeenCalled();
+            expect(spy_show).toHaveBeenCalled();
+            expect(document.querySelector(".tippy-box .tippy-content").textContent).toBe(
+                "External content fetched via an HTTP request."
+            );
+
+            global.fetch.mockClear();
+            delete global.fetch;
+        });
+
+        it("source: ajax loading from current DOM via the url parameter and a fragment specifier.", async () => {
+            global.fetch = jest
+                .fn()
+                .mockImplementation(
+                    mockFetch("External content fetched via an HTTP request.")
+                );
+
+            document.body.innerHTML = `
+                <button
+                    class="pat-tooltip"
+                    type="button"
+                    data-pat-tooltip="
+                      source: ajax;
+                      url: #fragment;
+                      trigger: click">
+                  click me
+                </button>
+                <div id="fragment">hello.</div>
+            `;
+
+            const el = document.body.querySelector(".pat-tooltip");
+
+            const instance = new pattern(el);
+            await utils.timeout(1);
+
+            const spy_content = jest.spyOn(instance, "_getContent");
+            const spy_show = jest.spyOn(instance.tippy.props, "onShow");
+
+            el.click();
+            await utils.timeout(1); // wait a tick
+
+            expect(global.fetch).not.toHaveBeenCalled();
+            expect(spy_content).toHaveBeenCalled();
+            expect(spy_show).toHaveBeenCalled();
+            expect(document.querySelector(".tippy-box .tippy-content").textContent).toBe(
+                "hello."
+            );
 
             global.fetch.mockClear();
             delete global.fetch;
@@ -1208,6 +1353,7 @@ this will be extracted.
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
+            await utils.timeout(1); // wait another tick for all asyncs to finish.
 
             expect(called).toBeTruthy();
 

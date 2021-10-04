@@ -25,7 +25,7 @@ const all_positions = [
 ];
 parser.addArgument("position-list", [], all_positions, true);
 parser.addArgument("position-policy", "auto", ["auto", "force"]);
-parser.addArgument("trigger", "click", ["click", "hover"]);
+parser.addArgument("trigger", "click", ["click", "hover", "none"]);
 parser.addArgument("source", "title", ["ajax", "content", "title"]);
 parser.addArgument("ajax-data-type", "html", ["html", "markdown"]);
 parser.addArgument("closing", "auto", ["auto", "sticky", "close-button"]);
@@ -34,6 +34,7 @@ parser.addArgument("mark-inactive", true);
 parser.addArgument("class");
 parser.addArgument("target", "body");
 parser.addArgument("arrow-padding", null);
+parser.addArgument("url", null);
 
 export default Base.extend({
     name: "tooltip",
@@ -48,7 +49,7 @@ export default Base.extend({
     active_class: "tooltip-active-hover",
     inactive_class: "tooltip-inactive",
 
-    async init($el, opts) {
+    async init() {
         const el = this.el;
 
         if (window.__patternslib_import_styles) {
@@ -56,7 +57,7 @@ export default Base.extend({
         }
         const Tippy = (await import("tippy.js")).default;
 
-        this.options = parser.parse(el, opts);
+        this.options = parser.parse(el, this.options);
         this.tippy_options = this.parseOptionsForTippy(this.options);
 
         const defaultProps = {
@@ -96,6 +97,21 @@ export default Base.extend({
             // Initially mark as inactive
             el.classList.add(this.inactive_class);
         }
+    },
+
+    show() {
+        // Show this tooltip
+        this.tippy.show();
+    },
+
+    hide() {
+        // Hide this tooltip
+        this.tippy.hide();
+    },
+
+    destroy() {
+        // Remove this tooltip
+        this.tippy.destroy();
     },
 
     parseOptionsForTippy(opts) {
@@ -159,6 +175,9 @@ export default Base.extend({
             trigger() {
                 if (opts.trigger === "hover") {
                     tippy_options.trigger = "mouseenter focus";
+                } else if (opts.trigger === "none") {
+                    tippy_options.trigger = "manual";
+                    tippy_options.hideOnClick = false;
                 }
             },
 
@@ -300,7 +319,10 @@ export default Base.extend({
         if (this.ajax_state.isFetching || !this.ajax_state.canFetch) {
             return undefined;
         }
-        const { url, selector } = this.get_url_parts(this.el.getAttribute("href"));
+
+        const { url, selector } = this.get_url_parts(
+            this.options.url || this.el.getAttribute("href")
+        );
         let content;
         if (url) {
             // Tooltip from remote page.
@@ -325,6 +347,7 @@ export default Base.extend({
         }
         if (content) {
             this.tippy.setContent(content);
+            await utils.timeout(1); // Wait a tick before forceUpdate. Might fail due to unset popperInstance.
             this.tippy.popperInstance.forceUpdate(); // re-position tippy after content is known.
         }
     },
