@@ -1,3 +1,10 @@
+const fs = require("fs");
+const path = require("path");
+
+const commits_template = fs
+    .readFileSync(path.resolve(".release-it", "conventional-changelog-commit.hbs"))
+    .toString();
+
 module.exports = {
     npm: {
         publish: true,
@@ -30,6 +37,9 @@ module.exports = {
                         section: "Maintenance",
                     },
                 ],
+            },
+            writerOpts: {
+                commitPartial: commits_template,
             },
         },
     },
