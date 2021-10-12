@@ -24,6 +24,18 @@ Both buttons will submit the form with a page load to the action and method
 specified on the form. The global button will submit the whole form, the local
 button will only submit the contents within the subform.
 
+You can submit to a different URL by defining a formaction on the button:
+
+    <form action=... method=...>
+      <input type="text" name="global" placeholder="Global control"/>
+      <fieldset class="pat-subform">
+        <input type="text" name="local" placeholder="Local control"/>
+        <button formaction="..." type="submit" name="local-button">Local submit to different URL</button>
+      </fieldset>
+      <button type="submit" name="global-button">Global submit</button>
+    </form>
+
+
 The form and/or subform can have "pat-autosubmit" installed to submit their
 respective form-data automatically upon input:
 
