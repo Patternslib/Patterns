@@ -183,15 +183,6 @@ export default Base.extend({
             this.$el.addClass("max-height").css({ height: modal_height + "px" });
             this.setPosition();
         }
-        // XXX: This is a hack. When you have a modal inside a
-        // modal.max-height, the CSS of the outermost modal affects the
-        // innermost .panel-body. By redrawing here, it's fixed.
-        //
-        // I think ideally the CSS needs to be fixed here, but I need to
-        // discuss with Cornelis first.
-        if (this.$el.parent().closest(".pat-modal").length > 0) {
-            utils.redraw(this.$el.find(".panel-body"));
-        }
     },
     async destroy() {
         await utils.timeout(1); // wait a tick for event handlers (e.g. form submit) have a chance to kick in first.
