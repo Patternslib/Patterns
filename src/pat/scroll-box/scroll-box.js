@@ -8,6 +8,7 @@ export default Base.extend({
     // A timeout of 200 works good for smooth scrolling on trackpads.
     // With low values like 10 or 50 sometimes no change in scroll position is detected.
     timeout: 200,
+    timeout_in_use: null,
 
     init: function ($el) {
         const el = $el[0];
@@ -28,6 +29,7 @@ export default Base.extend({
         let last_known_scroll_position = 0;
         let scroll_y = 0;
         let timeout_id = null;
+        let timeout_id__scroll_stop = null;
 
         let set_scroll_classes = (scroll_pos) => {
             el.classList.remove("scroll-up");
@@ -57,12 +59,27 @@ export default Base.extend({
         };
 
         scroll_listener.addEventListener("scroll", () => {
+            if (timeout_id === null) {
+                // Run first callback quite soon to immediately set correct classes.
+                this.timeout_in_use = 10;
+            }
+
             window.clearTimeout(timeout_id);
             timeout_id = window.setTimeout(() => {
                 scroll_y = this.get_scroll_y(scroll_listener);
                 set_scroll_classes(scroll_y);
                 last_known_scroll_position = scroll_y;
-            }, this.timeout);
+                this.timeout_in_use = this.timeout; // Set to normal timeout after first run
+            }, this.timeout_in_use || this.timeout); // If not set for any reason, fallback to this.timeout
+
+            // Reset the timeout_id after a multiple of timeout when scrolling
+            // has stopped for sure.
+            // Then, when scrolling again the scroll classes are set
+            // immediately and at the end of a series of scroll events.
+            window.clearTimeout(timeout_id__scroll_stop);
+            timeout_id__scroll_stop = window.setTimeout(() => {
+                timeout_id = null;
+            }, Math.max(500, this.timeout * 3)); // Note: should be more than the timespan in which scroll events are thrown.
         });
 
         // Set initial state
