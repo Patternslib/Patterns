@@ -4,6 +4,9 @@ import Base from "../../core/base";
 export default Base.extend({
     name: "scroll-box",
     trigger: ".pat-scroll-box",
+
+    // A timeout of 200 works good for smooth scrolling on trackpads.
+    // With low values like 10 or 50 sometimes no change in scroll position is detected.
     timeout: 200,
 
     init: function ($el) {
@@ -54,13 +57,11 @@ export default Base.extend({
         };
 
         scroll_listener.addEventListener("scroll", () => {
-            if (!timeout_id) {
+            window.clearTimeout(timeout_id);
+            timeout_id = window.setTimeout(() => {
                 scroll_y = this.get_scroll_y(scroll_listener);
                 set_scroll_classes(scroll_y);
                 last_known_scroll_position = scroll_y;
-            }
-            timeout_id = window.setTimeout(() => {
-                timeout_id = null;
             }, this.timeout);
         });
 
