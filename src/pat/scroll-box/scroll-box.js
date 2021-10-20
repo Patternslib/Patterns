@@ -1,12 +1,12 @@
 import Base from "../../core/base";
 
+export const TIMEOUT_FIRST_CALLBACK = 40; // Timeout for first run of the callback
+export const TIMEOUT_CALLBACK = 200; // Timeout for subsequent runs of the callback
+export const TIMEOUT_PAUSE = 600; // Timeout to detect scrolling pause and reset for TIMEOUT_FIRST_CALLBACK
+
 export default Base.extend({
     name: "scroll-box",
     trigger: ".pat-scroll-box",
-
-    // A timeout of 200 works good for smooth scrolling on trackpads.
-    // With low values like 10 or 50 sometimes no change in scroll position is detected.
-    timeout: 200,
 
     scroll_listener: null,
     last_known_scroll_position: 0,
@@ -35,7 +35,7 @@ export default Base.extend({
                     const scroll_y = this.get_scroll_y();
                     this.set_scroll_classes(scroll_y);
                     this.last_known_scroll_position = scroll_y;
-                }, 10);
+                }, TIMEOUT_FIRST_CALLBACK);
                 // Set a dummy timeout_id and return.
                 // Next scroll event should not reach this block but start with
                 // default callback scheduling.
@@ -48,16 +48,14 @@ export default Base.extend({
                 const scroll_y = this.get_scroll_y();
                 this.set_scroll_classes(scroll_y);
                 this.last_known_scroll_position = scroll_y;
-            }, this.timeout);
+            }, TIMEOUT_CALLBACK);
 
-            // Reset the timeout_id after a multiple of timeout when scrolling
-            // has stopped for sure.
-            // Then, when scrolling again the scroll classes are set
-            // immediately and at the end of a series of scroll events.
+            // Reset the timeout_id after when he user stops scrolling.
+            // When scrolling again the scroll classes are set again after TIMEOUT_FIRST_CALLBACK
             window.clearTimeout(this.timeout_id__scroll_stop);
             this.timeout_id__scroll_stop = window.setTimeout(() => {
                 this.timeout_id = null;
-            }, Math.max(500, this.timeout * 3)); // Note: should be more than the timespan in which scroll events are thrown.
+            }, TIMEOUT_PAUSE);
         });
 
         // Set initial state
