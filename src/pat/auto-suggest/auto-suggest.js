@@ -89,10 +89,10 @@ export default Base.extend({
         }
         this.$el.select2(config);
         this.$el.on("pat-update", (e, data) => {
-            if (data.pattern === "depends") {
-                if (data.enabled === true) {
+            if (data?.pattern === "depends") {
+                if (data?.enabled === true) {
                     this.$el.select2("enable", true);
-                } else if (data.enabled === false) {
+                } else if (data?.enabled === false) {
                     this.$el.select2("disable", true);
                 }
             }
