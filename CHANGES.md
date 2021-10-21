@@ -3,7 +3,7 @@
 
 ### Features
 
-* **pat tooltip:** Add config option url to explicitly define an url where no <a href> is available. ([557cbe4](https://github.com/Patternslib/patterns/commit/557cbe40b60e5605e5ffb7f76fa06e495f055b51))
+* **pat tooltip:** Add config option url to explicitly define an url where no ``<a href>`` is available. ([557cbe4](https://github.com/Patternslib/patterns/commit/557cbe40b60e5605e5ffb7f76fa06e495f055b51))
 * **pat tooltip:** Allow to open the tooltip in JavaScript with via the trigger value none. ([f48dbf6](https://github.com/Patternslib/patterns/commit/f48dbf6d3838a62e2958426bfb86b909b8e14699))
 
 
@@ -214,7 +214,7 @@
 
 ### Features
 
-* **styles:** Introduce a _fonts.scss to do font imports. Fixes a problem where Webpack could not resolve the font assets path correctly. ([1439e0e](https://github.com/Patternslib/patterns/commit/1439e0e1610770e5447eb68f1ca32db44dfb6d92))
+* **styles:** Introduce a ``_fonts.scss`` to do font imports. Fixes a problem where Webpack could not resolve the font assets path correctly. ([1439e0e](https://github.com/Patternslib/patterns/commit/1439e0e1610770e5447eb68f1ca32db44dfb6d92))
 * **webpack:** Allow passing a config object which overrides keys from a base config. ([f8973ae](https://github.com/Patternslib/patterns/commit/f8973aedb0fdadd669aea4b4ee6d5e7164dda32e))
 
 
