@@ -4,14 +4,14 @@
 ### Bug Fixes
 
 * **pat modal:** Remove call to utils.redraw, which was added in 2014 but apparently never in utils. ([75c410c](https://github.com/Patternslib/patterns/commit/75c410c64ea0bf5e6681a89ac2255cece3e9fb16))
-* **pat scroll:** Also set scroll classes immediately in a series of scroll events, additionally to the last scroll event within a threshold. Fixes a problem where some visual changes are applied recognizably late. ([07edce9](https://github.com/Patternslib/patterns/commit/07edce9f804441a1fce047e3b43a300f602f988a))
+* **pat scroll-box:** Also set scroll classes immediately in a series of scroll events, additionally to the last scroll event within a threshold. Fixes a problem where some visual changes are applied recognizably late. ([07edce9](https://github.com/Patternslib/patterns/commit/07edce9f804441a1fce047e3b43a300f602f988a))
 * **pat scroll-box:** Set classes on the last scroll event within the threshold time. Fixing a problem where scroll-position-top wasn't set correctly on subsequent scroll-up events. ([fd829d7](https://github.com/Patternslib/patterns/commit/fd829d732f4451ed18f8934ed63edf80804e1012))
 
 
 ### Maintenance
 
 * **dependencies:** Upgrade dev dependencies up to minor releases. ([1cb75b7](https://github.com/Patternslib/patterns/commit/1cb75b7eff85e1da940b2bf5ad78712e7ca3382d))
-* **pat scroll:** Restructure and modernize code for better readability. ([93fe976](https://github.com/Patternslib/patterns/commit/93fe9762515a682f937abeb6749a714c038cfd24))
+* **pat scroll-box:** Restructure and modernize code for better readability. ([93fe976](https://github.com/Patternslib/patterns/commit/93fe9762515a682f937abeb6749a714c038cfd24))
 * **pat subform:** Documenting the use case of submitting a subform to a different url via formaction on a subform submit button. ([14bd8f6](https://github.com/Patternslib/patterns/commit/14bd8f6cb5f69a312fc990af5f59d8e80514c989))
 
 ## [5.1.0](https://github.com/Patternslib/patterns/compare/5.0.0...5.1.0) (2021-10-04)
