@@ -1,3 +1,10 @@
+### [5.1.2](https://github.com/Patternslib/patterns/compare/5.1.1...5.1.2) (2021-10-21)
+
+
+### Bug Fixes
+
+* Ignore pat-update events with missing parameters. ([b8e1949](https://github.com/Patternslib/patterns/commit/b8e19492091e16e21fd90329bfad2bb187674965))
+
 ### [5.1.1](https://github.com/Patternslib/patterns/compare/5.1.0...5.1.1) (2021-10-21)
 
 
