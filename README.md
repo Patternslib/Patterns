@@ -2,28 +2,27 @@
 
 [![Build Status](https://github.com/Patternslib/Patterns/workflows/test/badge.svg?branch=master)](https://travis-ci.org/Patternslib/Patterns)
 
-Patterns is a toolkit that enables designers to build rich
-interactive prototypes without the need for writing any JavaScript. All events
-are triggered by classes and other attributes in the HTML, without abusing the
-HTML as a programming language. Accessibility, SEO and well structured HTML are
-core values of Patterns.
+Patterns is a toolkit that enables designers to build rich interactive prototypes without the need for writing any JavaScript.
+All functionality is triggered by classes and other attributes in the HTML, without abusing the HTML as a programming language.
+Accessibility, SEO and well structured HTML are core values of Patterns.
+
 
 ## Browser support
 
-Patterns aims to support at least the two latest major versions of all popular browsers.
+Patterns aims to support at least the two latest major versions of all popular browsers:
 
-Currently that means:
-
--   Apple Safari 5+
--   Google Chrome 30+
--   Microsoft Internet Explorer 9+
+- Apple Safari
+- Google Chrome
+- Firefox
 
 Other browser version may work too, but are not actively tested against.
+
+Additionally we do support Microsoft Internet Explorer 11 until a certain extend via optional polyfills loading.
 
 
 ## Using polyfills
 
-For Internet Explorer support we have included a ``src/polyfills.js`` module.
+For Internet Explorer 11 support we have included a ``src/polyfills.js`` module.
 You can inlcude it optionally via ``src/polyfills-loader.js`` which injects the polyfills bundle only if the current browser is Internet Explorer.
 For this to work, include the following in BEFORE you load the patternslib bundle:
 
@@ -167,11 +166,12 @@ https://www.npmjs.com/package/webpack-bundle-analyzer
 
 -   [Overstroom ik?](http://www.overstroomik.nl), a website which informs Dutch citizens of their risk of flooding. It was introduced and highly praised by the Dutch minister of infrastructure and environment, Melanie Schultz.
 -   [OiRA](https://client.oiraproject.eu/), an online risk assessment tool, created for the Occupational Health and Safety Agency (OSHA) of the European Union.
--   [Staralliance](http://www.staralliance.com) uses Patternslib in their intranet.
--   [Plone](http://plone.com) CMS and [Plone Intranet project](http://ploneintranet.com) both use Patternslib.
+-   [Staralliance](https://www.staralliance.com) uses Patternslib in their intranet.
+-   [Plone](https://plone.com) CMS via [Mockup](https://github.com/plone/mockup/), which is built upon Patternslib.
+-   [Quaive Intranet](https://quaivecloud.com/) uses Patternslib.
 
 
 ### Interactive HTML/CSS prototypes made with Patternslib
 
--   [The Plone Intranet prototype](http://prototype.ploneintranet.net/dashboard.html)
 -   The [Patternslib.com](http://patternslib.com) website uses Patternslib and is based upon a prototype, which can be found [here](https://github.com/patternslib/Patterns-site).
+
