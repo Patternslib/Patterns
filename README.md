@@ -7,6 +7,11 @@ All functionality is triggered by classes and other attributes in the HTML, with
 Accessibility, SEO and well structured HTML are core values of Patterns.
 
 
+## Changelog
+
+See the [Changelog at GitHub](https://github.com/Patternslib/Patterns/blob/master/CHANGES.md).
+
+
 ## Browser support
 
 Patterns aims to support at least the two latest major versions of all popular browsers:
