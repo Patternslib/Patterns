@@ -25,7 +25,7 @@ export default Base.extend({
         /* Handler which gets called when pat-update is triggered within
          * the .pat-sortable element.
          */
-        if (data.pattern == "clone") {
+        if (data?.pattern == "clone") {
             this.recordPositions();
             data.$el.on("dragstart", this.onDragStart.bind(this));
             data.$el.on("dragend", this.onDragEnd.bind(this));

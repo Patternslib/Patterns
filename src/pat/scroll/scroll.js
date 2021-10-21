@@ -100,11 +100,11 @@ export default Base.extend({
     },
 
     onPatternsUpdate(ev, data) {
-        if (data.pattern === "stacks") {
+        if (data?.pattern === "stacks") {
             if (data.originalEvent && data.originalEvent.type === "click") {
                 this.smoothScroll();
             }
-        } else if (data.pattern === "scroll") {
+        } else if (data?.pattern === "scroll") {
             const href = this.$el[0].href;
             const fragment =
                 (href.indexOf("#") !== -1 && href.split("#").pop()) || undefined;

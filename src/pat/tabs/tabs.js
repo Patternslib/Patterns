@@ -50,7 +50,7 @@ export default Base.extend({
         // Also listen for ``pat-update`` event for cases where no resize but
         // an immediate display of the element is done.
         $("body").on("pat-update", (e, data) => {
-            if (this.allowed_update_patterns.includes(data.pattern)) {
+            if (this.allowed_update_patterns.includes(data?.pattern)) {
                 logger.debug("pat-update received.");
                 debounced_resize();
             }

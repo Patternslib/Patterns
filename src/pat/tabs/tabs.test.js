@@ -319,4 +319,15 @@ describe("pat-tabs", function () {
 
         expect(spy_adjust_tabs).toHaveBeenCalledTimes(1);
     });
+
+    it("10 - Does not break on pat-update without data attribute.", async () => {
+        const el = document.createElement("div");
+        el.innerHTML = "<div></div>";
+        jest.spyOn(el, "getBoundingClientRect").mockImplementation(() => { return { x: 0, width: 0 }; }); // prettier-ignore
+
+        pattern.init(el.querySelector("div"));
+        await utils.timeout(1);
+        document.body.dispatchEvent(new Event("pat-update"));
+        expect(pattern).not.toThrow(TypeError);
+    });
 });

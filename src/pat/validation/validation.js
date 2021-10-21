@@ -412,12 +412,12 @@ export default Base.extend({
          * form. In that case we need to remove and then reassign event
          * handlers.
          */
-        if (data.pattern == "clone" || data.pattern == "inject") {
+        if (data?.pattern == "clone" || data?.pattern == "inject") {
             this.$inputs.off("change.pat-validation");
             this.$el.off("submit.pat-validation");
             this.$el.off("pat-update.pat-validation");
             this.init();
-            if (data.pattern == "clone" && data.action == "remove") {
+            if (data?.pattern == "clone" && data?.action == "remove") {
                 this.validateForm(ev);
             }
         }
