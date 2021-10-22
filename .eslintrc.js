@@ -9,8 +9,14 @@ module.exports = {
     },
     parser: "@babel/eslint-parser",
     ignorePatterns: [
+        "cache/",
+        "coverage/",
+        "dist/",
+        "node_modules/",
         "src/lib/depends_parse.js",
         "src/pat/calendar/moment-timezone-with-data-2010-2020.js",
+        "stats.json",
+        "style/",
     ],
     rules: {
         "no-debugger": 1,

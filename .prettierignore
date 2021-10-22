@@ -1,4 +1,6 @@
+cache/
+coverage/
 dist/
 node_modules/
-style/
 stats.json
+style/
