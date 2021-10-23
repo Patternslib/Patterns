@@ -6,7 +6,6 @@ const webpack_helpers = require("./webpack-helpers");
 // plugins
 const CopyPlugin = require("copy-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 // const { DuplicatesPlugin } = require("inspectpack/plugin");
 
 module.exports = (env, argv, config) => {
@@ -24,6 +23,7 @@ module.exports = (env, argv, config) => {
             filename: "[name].js",
             chunkFilename: "chunks/[name].[contenthash].js",
             path: path.resolve(__dirname, "../dist/"),
+            clean: true, // Clean directory before compiling
             // publicPath set in bundle entry points via __webpack_public_path__
             // See: https://webpack.js.org/guides/public-path/
             // publicPath: "/dist/",
@@ -104,7 +104,6 @@ module.exports = (env, argv, config) => {
                     { from: path.resolve(__dirname, "../src/polyfills-loader.js"), }, // prettier-ignore
                 ],
             }),
-            new CleanWebpackPlugin(),
             new webpack.IgnorePlugin({
                 resourceRegExp: /^\.\/locale$/,
                 contextRegExp: /moment$/,

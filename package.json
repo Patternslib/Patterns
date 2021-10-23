@@ -59,7 +59,6 @@
         "@release-it/conventional-changelog": "^3.3.0",
         "@testing-library/jest-dom": "^5.15.0",
         "babel-loader": "^8.2.3",
-        "clean-webpack-plugin": "^4.0.0",
         "copy-webpack-plugin": "^9.0.1",
         "core-js": "3.19.1",
         "css-loader": "^6.5.0",
