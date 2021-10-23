@@ -134,6 +134,9 @@ module.exports = (env, argv, config) => {
         // Don't minimize
         config.optimization.minimize = false;
         config.devtool = false;
+        config.watchOptions = {
+            ignored: ["node_modules/**", "docs/**"],
+        };
     }
     if (process.env.NODE_ENV === "production") {
         // Also create minified bundles along with the non-minified ones.
