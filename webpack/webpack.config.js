@@ -128,6 +128,9 @@ module.exports = (env, argv, config) => {
             },
             port: "3001",
             host: "0.0.0.0",
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+            },
         };
         // Output public path for dev-server
         config.output.publicPath = "/dist/";
