@@ -109,11 +109,6 @@ module.exports = (env, argv, config) => {
                 resourceRegExp: /^\.\/locale$/,
                 contextRegExp: /moment$/,
             }),
-            new webpack.ProvidePlugin({
-                $: "jquery",
-                jQuery: "jquery",
-                jquery: "jquery",
-            }),
             //new DuplicatesPlugin({
             //    emitErrors: false,
             //    verbose: true,
