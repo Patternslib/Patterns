@@ -47,7 +47,7 @@ parser.addArgument("height", "auto");
 parser.addArgument("ignore-url", false);
 parser.addArgument("lang", null); // If not set, use "en" (See below)
 parser.addArgument("store", "none", ["none", "session", "local"]);
-parser.addArgument("time-format", "h(:mm)t");
+parser.addArgument("time-format", "H(:mm)");
 parser.addArgument("timezone", null);
 parser.addArgument("title-day", "dddd, MMM d, YYYY");
 parser.addArgument("title-month", "MMMM YYYY");
