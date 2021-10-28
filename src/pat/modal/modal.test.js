@@ -1,14 +1,24 @@
-import pattern from "./modal";
 import $ from "jquery";
+import pattern from "./modal";
+import utils from "../../core/utils";
+import { jest } from "@jest/globals";
 
 describe("pat-modal", function () {
+    let deferred;
+
+    const answer = function (html) {
+        deferred.resolve(html, "ok", { responseText: html });
+    };
+
     beforeEach(function () {
-        $("<div/>", { id: "lab" }).appendTo(document.body);
+        deferred = new $.Deferred();
+        document.body.innerHTML = `<div id="lab"></div>`;
     });
 
     afterEach(function () {
-        $("#lab").remove();
-        $("body").removeClass("modal-active");
+        document.body.innerHTML = "";
+        document.body.classList.remove("modal-active");
+        jest.restoreAllMocks();
     });
 
     describe("init", function () {
@@ -120,6 +130,45 @@ describe("pat-modal", function () {
             expect($modal.find(".header").text()).toBe("Shutdown");
             expect($modal.find(".header .close-panel").length).toBeTruthy();
             expect($("body").hasClass("modal-active")).toBeTruthy();
+        });
+
+        it("Dispatch pat-modal-ready with a div-modal.", async function () {
+            document.body.innerHTML = `
+                <div class="pat-modal" id="modal">
+                  <p>Modal content</p>
+                </div>
+            `;
+
+            const callback = jest.fn();
+            const modal_el = document.querySelector(".pat-modal");
+            modal_el.addEventListener("pat-modal-ready", callback);
+            pattern.init(modal_el);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // Opened immediately
+            expect(callback).toHaveBeenCalled();
+        });
+
+        it("Dispatch pat-modal-ready with a inject-modal.", async function () {
+            jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            document.body.innerHTML = `
+                <a
+                    class="pat-modal"
+                    href="test.html">Open modal</a>
+            `;
+
+            const callback = jest.fn();
+            const modal_el = document.querySelector(".pat-modal");
+            modal_el.addEventListener("pat-modal-ready", callback);
+            pattern.init(modal_el);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(callback).not.toHaveBeenCalled();
+
+            answer("<html><body><div></div></body></html>");
+            modal_el.click();
+            await utils.timeout(1); // wait a tick for async to settle.
+            expect(callback).toHaveBeenCalled();
         });
     });
 });
