@@ -561,7 +561,9 @@ const inject = {
             }
         }
 
-        $el.trigger("pat-inject-success");
+        $el[0].dispatchEvent(
+            new Event("pat-inject-success", { bubbles: true, cancelable: true })
+        );
     },
 
     async _onInjectSuccess($el, cfgs, ev) {

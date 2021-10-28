@@ -136,7 +136,7 @@ export default Base.extend({
         var inject_opts = {
             target: "#pat-notification-temp",
         };
-        $el.on("pat-inject-success.pat-notification", (e) => {
+        $el[0].addEventListener("pat-inject-success", (e) => {
             var $trigger = $(e.target),
                 cfg = parser.parse($trigger, { type: "banner" });
 

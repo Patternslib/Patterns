@@ -1,5 +1,6 @@
 import pattern from "./inject";
 import $ from "jquery";
+import registry from "../../core/registry";
 import utils from "../../core/utils";
 import { jest } from "@jest/globals";
 
@@ -19,11 +20,11 @@ describe("pat-inject", function () {
 
     beforeEach(function () {
         deferred = new $.Deferred();
-        $("<div/>", { id: "lab" }).appendTo(document.body);
+        document.body.innerHTML = `<div id="lab"></div>`;
     });
 
     afterEach(function () {
-        $("#lab").remove();
+        document.body.innerHTML = "";
         jest.restoreAllMocks();
     });
 
@@ -362,7 +363,6 @@ describe("pat-inject", function () {
             el.innerHTML = res;
 
             const test1_config = JSON.parse(el.querySelector(".test1").getAttribute("data-pat-inject")); // prettier-ignore
-            console.log(test1_config);
 
             expect(test1_config.length).toBe(3);
             expect(test1_config[0].url).toEqual("https://example.com/test/./index.html");
@@ -491,6 +491,21 @@ describe("pat-inject", function () {
 
     describe("DOM tests", function () {
         beforeEach(function () {});
+
+        it("The pat-inject-success get triggered after successful injection", async function () {
+            jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            document.body.innerHTML = `
+               <a class="pat-inject" href="test.html">link</a>
+            `;
+            const callback = jest.fn();
+            const inject_el = document.querySelector(".pat-inject");
+            inject_el.addEventListener("pat-inject-success", callback);
+            registry.scan(document.body);
+            inject_el.click();
+            answer("<html><body><div></div></body></html>");
+            await utils.timeout(1); // wait a tick for async to settle.
+            expect(callback).toHaveBeenCalled();
+        });
 
         describe("The patterns-injected event", function () {
             it("gets triggered after injection has finished'", async function () {
