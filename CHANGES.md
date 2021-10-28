@@ -1,3 +1,8 @@
+## [5.2.0] (2021-10-21)
+
+* Unintentional release with no changes.
+
+
 ### [5.1.2](https://github.com/Patternslib/patterns/compare/5.1.1...5.1.2) (2021-10-21)
 
 
