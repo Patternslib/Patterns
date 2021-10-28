@@ -53,6 +53,14 @@ export default Base.extend({
         this.$el.on("pat-inject-missingSource pat-inject-missingTarget", () => {
             $("#pat-modal").detach();
         });
+
+        this.el.addEventListener("pat-inject-success", () => {
+            // Dispatch the pat-modal-ready event after injection is done.
+            this.el.dispatchEvent(
+                new Event("pat-modal-ready", { bubbles: true, cancelable: true })
+            );
+        });
+
         inject.init(this.$el, opts);
     },
 
@@ -94,6 +102,9 @@ export default Base.extend({
         this.resize();
         this.setPosition();
         $("body").addClass("modal-active");
+        this.el.dispatchEvent(
+            new Event("pat-modal-ready", { bubbles: true, cancelable: true })
+        );
     },
 
     _init_handlers() {
