@@ -1,3 +1,5 @@
+## [5.2.0](https://github.com/Patternslib/patterns/compare/5.1.2...5.2.0) (2021-10-28)
+
 ### [5.1.2](https://github.com/Patternslib/patterns/compare/5.1.1...5.1.2) (2021-10-21)
 
 
