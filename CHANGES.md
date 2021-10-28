@@ -1,3 +1,22 @@
+## [5.3.0](https://github.com/Patternslib/patterns/compare/5.1.2...5.3.0) (2021-10-28)
+
+
+### Features
+
+* **pat modal:** Dispatch a pat-modal-ready event after the modal is shown. ([4bfb841](https://github.com/Patternslib/patterns/commit/4bfb841642cd564127e643baf35260bfd6b98fdb))
+
+
+### Bug Fixes
+
+* **pat inject:** Dispatch the pat-inject-success event via plain JavaScript which better supports plain JavaScript event listeners. ([bf12c5c](https://github.com/Patternslib/patterns/commit/bf12c5c119cb34093d0cc00ffd01d949df063bd9))
+
+
+### Maintenance
+
+* **dependencies:** Upgrade dependencies up to minor versions. ([55bf6d6](https://github.com/Patternslib/patterns/commit/55bf6d624b1a601f45a90609481ed02af685ce8c))
+* **Docs:** Add a reference to the changelog. ([0fc8788](https://github.com/Patternslib/patterns/commit/0fc8788f05cc12d48e21e9c467e90a8983f21d92))
+* **Docs:** Update outdated information. ([6025b31](https://github.com/Patternslib/patterns/commit/6025b31e495746c0f317efe2ac09e2a5fe7dd7cb))
+
 ## [5.2.0] (2021-10-21)
 
 * Unintentional release with no changes.
