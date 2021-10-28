@@ -55,7 +55,11 @@ The calendar can be configured through a `data-pat-calendar` attribute. The avai
 | `height`                  | auto              |                                                   |
 | `ignore-url`              |                   |                                                   |
 | `store`                   | none              | none, session, local                              |
-| `time-format`             | h(:mm)t           |                                                   |
+| `time-format-hour`        |                   | null, "numeric", "2-digit"                        |
+| `time-format-minute`      |                   | null, "numeric", "2-digit"                        |
+| `time-format-second`      |                   | null, "numeric", "2-digit"                        |
+| `time-format-meridiem`    |                   | null, false, "narrow", "short"                    |
+| `time-format-twelvehours` |                   | null, true, false                                 |
 | `title-day`               | dddd, MMM d, YYYY |                                                   |
 | `title-month`             | MMMM YYYY         |                                                   |
 | `title-week`              | MMM D YYYY        |                                                   |

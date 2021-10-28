@@ -9,8 +9,8 @@ const mockFetch = () =>
                 items: [
                     {
                         title: "Event 1",
-                        start: "2020-10-10T10:00:00Z",
-                        end: "2020-10-10T12:00:00Z",
+                        start: "2020-10-10T16:00:00Z",
+                        end: "2020-10-10T18:00:00Z",
                     },
                     {
                         "title": "Event 2",
@@ -100,6 +100,25 @@ describe("1 - Calendar tests", () => {
         registry.scan(document.body);
         await utils.timeout(1); // wait a tick for async to settle.
         expect(el.querySelector(".fc-timeGridDay-view")).toBeTruthy();
+    });
+
+    it("Formats time according to the configuration", async () => {
+        const el = document.querySelector(".pat-calendar");
+        el.setAttribute(
+            "data-pat-calendar",
+            `time-format-hour: 2-digit; time-format-twelvehours: false; lang: en;
+             initial-date: 2020-10-10; timezone: Europe/Berlin; url: ./test.json;`
+        );
+
+        global.fetch = jest.fn().mockImplementation(mockFetch);
+
+        registry.scan(document.body);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(document.querySelector(".event-source--1 .fc-event-time").textContent).toBe("18");
+
+        global.fetch.mockClear();
+        delete global.fetch;
     });
 
     it("Updates title according to display", async () => {

@@ -47,7 +47,11 @@ parser.addArgument("height", "auto");
 parser.addArgument("ignore-url", false);
 parser.addArgument("lang", null); // If not set, use "en" (See below)
 parser.addArgument("store", "none", ["none", "session", "local"]);
-parser.addArgument("time-format", "h(:mm)t");
+parser.addArgument("time-format-hour", null, [null, "numeric", "2-digit"]);
+parser.addArgument("time-format-minute", null, [null, "numeric", "2-digit"]);
+parser.addArgument("time-format-second", null, [null, "numeric", "2-digit"]);
+parser.addArgument("time-format-twelvehours", null, [true, false]);
+parser.addArgument("time-format-meridiem", null, [null, "false", "narrow", "short"]);
 parser.addArgument("timezone", null);
 parser.addArgument("title-day", "dddd, MMM d, YYYY");
 parser.addArgument("title-month", "MMMM YYYY");
@@ -172,6 +176,30 @@ export default Base.extend({
         let timezone = this.el_timezone?.value || this.options.timezone || null;
         if (timezone) {
             config.timeZone = timezone;
+        }
+
+        let eventTimeFormat = {};
+        if (this.options.time["format-hour"] !== null) {
+            eventTimeFormat["hour"] = this.options.time["format-hour"];
+        }
+        if (this.options.time["format-minute"] !== null) {
+            eventTimeFormat["minute"] = this.options.time["format-minute"];
+        }
+        if (this.options.time["format-second"] !== null) {
+            eventTimeFormat["second"] = this.options.time["format-second"];
+        }
+        if (this.options.time["format-twelvehours"] !== null) {
+            eventTimeFormat["hour12"] = this.options.time["format-twelvehours"];
+        }
+        if (this.options.time["format-meridiem"] !== null) {
+            if (this.options.time["format-meridiem"] == "false") {
+                eventTimeFormat["meridiem"] = false;
+            } else {
+                eventTimeFormat["meridiem"] = this.options.time["format-meridiem"];
+            }
+        }
+        if (Object.keys(eventTimeFormat).length > 0) {
+            config.eventTimeFormat = eventTimeFormat;
         }
 
         const sources = [...(this.options.event.sources || [])];
