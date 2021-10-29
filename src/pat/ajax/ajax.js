@@ -12,12 +12,10 @@ import registry from "../../core/registry";
 const log = logging.getLogger("pat.ajax");
 
 export const parser = new Parser("ajax");
+parser.addArgument("accept", "text/html");
 parser.addArgument("url", function ($el) {
-    return ($el.is("a")
-        ? $el.attr("href")
-        : $el.is("form")
-        ? $el.attr("action")
-        : ""
+    return (
+        $el.is("a") ? $el.attr("href") : $el.is("form") ? $el.attr("action") : ""
     ).split("#")[0];
 });
 
@@ -104,9 +102,14 @@ var _ = {
             args = {
                 context: $el,
                 data: [$el.serialize(), clickedData].filter(Boolean).join("&"),
+                headers: {},
                 url: cfg.url,
                 method: $el.attr("method") ? $el.attr("method") : "GET",
             };
+
+        if (cfg.accept) {
+            args.headers.Accept = cfg.accept;
+        }
 
         if (
             $el.is("form") &&

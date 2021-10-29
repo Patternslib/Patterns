@@ -135,5 +135,23 @@ describe("pat-ajax", function () {
             const ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
             expect(ajaxargs.url).toEqual("else.html");
         });
+
+        // Accept
+        it("Default accept header", function () {
+            document.body.innerHTML = `<a class="pat-ajax" />`;
+            registry.scan(document.body);
+            jest.spyOn($, "ajax");
+            document.body.querySelector(".pat-ajax").click();
+            const ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
+            expect(ajaxargs.headers).toEqual({ Accept: "text/html" });
+        });
+        it("Can set accept header", function () {
+            document.body.innerHTML = `<a class="pat-ajax" data-pat-ajax="accept: */*"/>`;
+            registry.scan(document.body);
+            jest.spyOn($, "ajax");
+            document.body.querySelector(".pat-ajax").click();
+            const ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
+            expect(ajaxargs.headers).toEqual({ Accept: "*/*" });
+        });
     });
 });
