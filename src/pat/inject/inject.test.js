@@ -1095,6 +1095,38 @@ describe("pat-inject", function () {
             delete global.fetch;
         });
 
+        it("Removes loading and executing classes.", async () => {
+            document.body.innerHTML = `
+              <a
+                  class="pat-inject i-am-executing"
+                  href="test.html"
+              >link</a>
+              <div id="someid" class="i-am-loading" />
+            `;
+
+            $a = $(".pat-inject");
+            pattern.init($a);
+
+            // Invoke error case
+            pattern._onInjectError(
+                $a,
+                [
+                    {
+                        $target: $("#someid"),
+                        loadingClass: "i-am-loading",
+                        executingClass: "i-am-executing",
+                    },
+                ],
+                {
+                    jqxhr: { status: 404 },
+                }
+            );
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelector(".pat-inject").getAttribute("class")).toEqual("pat-inject"); // prettier-ignore
+            expect(document.querySelector("#someid").getAttribute("class")).toEqual("");
+        });
+
         it("Doesnt get error page from meta tags if query string present", async () => {
             delete global.window.location;
             global.window.location = {
