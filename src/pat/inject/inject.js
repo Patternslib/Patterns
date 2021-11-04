@@ -662,7 +662,11 @@ const inject = {
 
         // clean up
         cfgs.forEach((cfg) => {
-            if ("$injected" in cfg) cfg.$injected.remove();
+            if ("$injected" in cfg) {
+                cfg.$injected.remove();
+            }
+            cfg.$target.removeClass(cfg.loadingClass);
+            $el.removeClass(cfg.executingClass);
         });
         $el.off("pat-ajax-success.pat-inject");
         $el.off("pat-ajax-error.pat-inject");
