@@ -170,5 +170,42 @@ describe("pat-modal", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(callback).toHaveBeenCalled();
         });
+
+        it("Submit form, do injection and close overlay.", async function () {
+            await import("../inject/inject");
+            const registry = (await import("../../core/registry")).default;
+
+            jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            answer(
+                `<html><body><div id="source">hello.</div><div id="source2">there</div></body></html>`
+            );
+
+            document.body.innerHTML = `
+              <div class="pat-modal">
+                <form
+                    class="pat-inject"
+                    action="test.html"
+                    data-pat-inject="source: #source; target: #target && source: #source2; target: #target2">
+                  <button type="submit" class="close-panel">submit</button>
+                </form>
+              </div>
+              <div id="target">
+              </div>
+              <div id="target2">
+              </div>
+            `;
+            registry.scan(document.body);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            document.querySelector("button.close-panel[type=submit]").click();
+            await utils.timeout(1); // wait a tick for pat-inject to settle.
+            await utils.timeout(1); // wait a tick for pat-modal destroy to settle.
+
+            console.log(document.body.innerHTML);
+
+            expect(document.querySelector(".pat-modal")).toBe(null);
+            expect(document.querySelector("#target").textContent).toBe("hello.");
+            expect(document.querySelector("#target2").textContent).toBe("there");
+        });
     });
 });
