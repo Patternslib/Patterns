@@ -205,5 +205,73 @@ describe("pat-modal", function () {
             expect(document.querySelector("#target").textContent).toBe("hello.");
             expect(document.querySelector("#target2").textContent).toBe("there");
         });
+
+        it("Ensure destroy callback isn't called multiple times.", async function () {
+            document.body.innerHTML = `
+              <div id="pat-modal" class="pat-modal">
+                <button id="close-modal" class="close-panel">close</button>
+              </div>
+            `;
+
+            const instance = new pattern(document.querySelector(".pat-modal"));
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            const spy_destroy = jest.spyOn(instance, "destroy");
+
+            // ``destroy`` was already initialized with instantiating the pattern above.
+            // Call init again for new instantiation.
+            instance.init($(".pat-modal"));
+
+            document.querySelector("#close-modal").click();
+            await utils.timeout(1); // wait a tick for pat-modal destroy to settle.
+
+            expect(spy_destroy).toHaveBeenCalledTimes(1);
+        });
+
+        it("Ensure destroy callback isn't called multiple times with forms and injection.", async function () {
+            const markup = `
+              <div id="pat-modal" class="pat-modal">
+                <form action="." class="pat-inject" data-pat-inject="source: body; target: body">
+                  <button id="close-modal" class="close-panel" type="submit">close</button>
+                </form>
+              </div>
+            `;
+
+            // Set up inject mocks
+            const pattern_inject = (await import("../inject/inject")).default;
+            jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            answer("<html><body><p>OK</p></body></html>"); // empties body
+
+            document.body.innerHTML = markup;
+
+            pattern_inject.init($(".pat-inject"));
+            const instance = new pattern(document.querySelector(".pat-modal"));
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            const spy_destroy = jest.spyOn(instance, "destroy");
+            const spy_destroy_inject = jest.spyOn(instance, "destroy_inject");
+
+            // ``destroy`` was already initialized with instantiating the pattern above.
+            // Call init again for new instantiation.
+            instance.init($(".pat-modal"));
+
+            document.querySelector("#close-modal").click();
+            await utils.timeout(1); // wait a tick for pat-inject to settle.
+
+            expect(spy_destroy_inject).toHaveBeenCalledTimes(1);
+            expect(spy_destroy).toHaveBeenCalledTimes(1);
+
+            // re-attach and re-initialize. Event handler should only be active once.
+            document.body.innerHTML = markup;
+            pattern_inject.init($(".pat-inject"));
+            new pattern(document.querySelector(".pat-modal"));
+            await utils.timeout(1); // wait a tick for async to settle.
+            document.querySelector("#close-modal").click();
+            await utils.timeout(1); // wait a tick for pat-inject to settle.
+            // Previous mocks still active.
+            // Handlers executed exactly once.
+            expect(spy_destroy_inject).toHaveBeenCalledTimes(1);
+            expect(spy_destroy).toHaveBeenCalledTimes(1);
+        });
     });
 });
