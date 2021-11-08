@@ -208,9 +208,9 @@ export default Base.extend({
             // once that has been triggered
             const destroy_handler = () => {
                 this.destroy();
-                $("body").off("patterns-inject-triggered", destroy_handler);
+                $("body").off("pat-inject-success", destroy_handler);
             };
-            $("body").on("patterns-inject-triggered", destroy_handler.bind(this));
+            $("body").on("pat-inject-success", destroy_handler.bind(this));
         } else {
             // if working without injection, destroy after waiting a tick to let
             // eventually registered on-submit handlers kick in first.
