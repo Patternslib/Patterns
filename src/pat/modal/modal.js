@@ -1,6 +1,7 @@
 import $ from "jquery";
 import Parser from "../../core/parser";
 import Base from "../../core/base";
+import dom from "../../core/dom";
 import utils from "../../core/utils";
 import inject from "../inject/inject";
 
@@ -108,26 +109,26 @@ export default Base.extend({
     },
 
     _init_handlers() {
-        $(document).on(
-            "click.pat-modal",
-            "#pat-modal .close-panel[type!=submit]",
-            this.destroy.bind(this)
-        );
-        $(document).on(
-            "click.pat-modal",
-            ".pat-modal .close-panel[type!=submit]",
-            this.destroy.bind(this)
-        );
-        $(document).on(
-            "click.pat-modal",
-            "#pat-modal .close-panel[type=submit]",
-            this.destroy_inject.bind(this)
-        );
-        $(document).on(
-            "click.pat-modal",
-            ".pat-modal .close-panel[type=submit]",
-            this.destroy_inject.bind(this)
-        );
+        for (const _el of this.el.querySelectorAll(".close-panel:not([type=submit])")) {
+            dom.add_event_listener(
+                _el,
+                "click",
+                "pat-modal--destroy--trigger",
+                this.destroy.bind(this),
+                { once: true }
+            );
+        }
+
+        for (const _el of this.el.querySelectorAll(".close-panel[type=submit]")) {
+            dom.add_event_listener(
+                _el,
+                "click",
+                "pat-modal--destroy-inject--trigger",
+                this.destroy.bind(this),
+                { once: true }
+            );
+        }
+
         $(document).on("keyup.pat-modal", this._onKeyUp.bind(this));
         if (this.options.closing.indexOf("outside") !== -1) {
             $(document).on("click.pat-modal", this._onPossibleOutsideClick.bind(this));
@@ -197,6 +198,14 @@ export default Base.extend({
     },
     async destroy() {
         await utils.timeout(1); // wait a tick for event handlers (e.g. form submit) have a chance to kick in first.
+
+        for (const _el of this.el.querySelectorAll(".close-panel:not([type=submit])")) {
+            dom.remove_event_listener(_el, "pat-modal--destroy--trigger");
+        }
+        for (const _el of this.el.querySelectorAll(".close-panel[type=submit]")) {
+            dom.remove_event_listener(_el, "pat-modal--destroy-inject--trigger");
+        }
+
         $(document).off(".pat-modal");
         this.$el.remove();
         $("body").removeClass("modal-active");
@@ -204,13 +213,18 @@ export default Base.extend({
     },
     destroy_inject() {
         if (this.$el.find("form").hasClass("pat-inject")) {
-            // if pat-inject in modal form, listen to patterns-inject-triggered and destroy first
-            // once that has been triggered
+            // if pat-inject in modal form, listen to patterns-inject-triggered
+            // and destroy first one that has been triggere
             const destroy_handler = () => {
                 this.destroy();
-                $("body").off("pat-inject-success", destroy_handler);
+                dom.remove_event_listener(document.body, "pat-modal--destroy-inject");
             };
-            $("body").on("pat-inject-success", destroy_handler.bind(this));
+            dom.add_event_listener(
+                document.body,
+                "pat-inject-success",
+                "pat-modal--destroy-inject",
+                destroy_handler.bind(this)
+            );
         } else {
             // if working without injection, destroy after waiting a tick to let
             // eventually registered on-submit handlers kick in first.
