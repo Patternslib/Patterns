@@ -1,3 +1,4 @@
+import registry from "../../core/registry";
 import pattern from "./ajax";
 import $ from "jquery";
 import { jest } from "@jest/globals";
@@ -5,15 +6,16 @@ import { jest } from "@jest/globals";
 var $lab;
 
 describe("pat-ajax", function () {
-    beforeEach(function () {
-        $lab = $("<div/>", { id: "lab" }).appendTo(document.body);
-    });
-
-    afterEach(function () {
-        $("#lab").remove();
-    });
-
     describe("anchor", function () {
+        beforeEach(function () {
+            $lab = $("<div/>", { id: "lab" }).appendTo(document.body);
+        });
+
+        afterEach(function () {
+            document.body.innerHTML = "";
+            jest.restoreAllMocks();
+        });
+
         it("triggers ajax request on click", function () {
             var $a = $("<a href='href.html' />").appendTo($lab);
             pattern.init($a);
@@ -33,6 +35,7 @@ describe("pat-ajax", function () {
         var $form, $button, spy_ajax;
 
         beforeEach(function () {
+            $lab = $("<div/>", { id: "lab" }).appendTo(document.body);
             $form = $("<form action='action.html'></form>").appendTo($lab);
             $button = $(
                 "<button type='submit' name='submit' value='submit' />"
@@ -40,6 +43,11 @@ describe("pat-ajax", function () {
             $("<input name='input1' value='value1' />").appendTo($form);
             pattern.init($form);
             spy_ajax = jest.spyOn($, "ajax");
+        });
+
+        afterEach(function () {
+            document.body.innerHTML = "";
+            jest.restoreAllMocks();
         });
 
         it("triggers ajax request on submit", function () {
@@ -73,6 +81,59 @@ describe("pat-ajax", function () {
             var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
             expect(ajaxargs.url).toEqual("action.html");
             expect(ajaxargs.data).toEqual("input1=value1");
+        });
+    });
+
+    describe("Arguments can be set", function () {
+        afterEach(function () {
+            document.body.innerHTML = "";
+            jest.restoreAllMocks();
+        });
+
+        // URL
+        it("Gets URL from anchor-href", function () {
+            document.body.innerHTML = `<a class="pat-ajax" href="somewhere.html"/>`;
+            registry.scan(document.body);
+            jest.spyOn($, "ajax");
+            document.body.querySelector(".pat-ajax").click();
+            const ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
+            expect(ajaxargs.url).toEqual("somewhere.html");
+        });
+        it("Gets URL from form-action", function () {
+            document.body.innerHTML = `<form class="pat-ajax" action="somewhere.html"/>`;
+            registry.scan(document.body);
+            jest.spyOn($, "ajax");
+            $(".pat-ajax").submit();
+            const ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
+            expect(ajaxargs.url).toEqual("somewhere.html");
+        });
+        it("Can explicitly set URL on anchor", function () {
+            document.body.innerHTML = `
+              <a
+                  class="pat-ajax"
+                  href="somewhere.html"
+                  data-pat-ajax="url: else.html"
+              />
+            `;
+            registry.scan(document.body);
+            jest.spyOn($, "ajax");
+            document.body.querySelector(".pat-ajax").click();
+            const ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
+            expect(ajaxargs.url).toEqual("else.html");
+        });
+        it("Can explicitly set URL on form", function () {
+            document.body.innerHTML = `
+              <form
+                  class="pat-ajax"
+                  action="somewhere.html"
+                  data-pat-ajax="url: else.html"
+              />
+            `;
+            registry.scan(document.body);
+            jest.spyOn($, "ajax");
+            $(".pat-ajax").submit();
+            const ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
+            expect(ajaxargs.url).toEqual("else.html");
         });
     });
 });
