@@ -1,3 +1,30 @@
+## [5.4.0](https://github.com/Patternslib/patterns/compare/5.3.0...5.4.0) (2021-11-10)
+
+
+### Features
+
+* **pat ajax:** Add accept parameter with default text/html for ajax requests. We are mainly using text/html in Patternslib - if a JSON response is needed you need to configure it when using pat-ajax. ([f47ea84](https://github.com/Patternslib/patterns/commit/f47ea84c4628efa00e531ef7c5a6c07323867917))
+
+* **pat inject:** After failed ajax request, remove loading and executing classes from target and trigger elements. ([3039a4f](https://github.com/Patternslib/patterns/commit/3039a4f84f1afeb45505665284f854f410b889ef))
+
+* **pat inject:** Better error handling. ([64fdb9a](https://github.com/Patternslib/patterns/commit/64fdb9afa9f8f26296b246bb522438c1c1e52577))
+Error handling: In a case of injection error, search for a configurable CSS id selector in the error response.
+If it is found, inject the rendered error page into the document.
+If no valid error response is found fall back to pre-configured error pages.
+This allows for some more informative error pages than a very generic one.
+The CSS id selector is defined by an optional URL fragment in the pre-configured error pages.
+
+
+### Maintenance
+
+* **dependencies:** Upgraade dev dependencies. ([e730900](https://github.com/Patternslib/patterns/commit/e7309000ed74ba44a8c158a6b03c847a12c46a2a))
+
+* **pat ajax:** Add more tests for passing arguments. ([e64ecac](https://github.com/Patternslib/patterns/commit/e64ecace0c49a4b8981f224d3ef09bc261f9963f))
+
+* **release process:** Use JS file instead JSON for the release-it config. ([fc597d7](https://github.com/Patternslib/patterns/commit/fc597d7ffda7c7bda316dc8dd7e4e01320bdcaed))
+
+* **Release workflow:** Include commit body and footer messages in the generated Changelog. ([50c70fa](https://github.com/Patternslib/patterns/commit/50c70faac091694010c5c574ae92dbe167f47e80))
+
 ## [5.3.0](https://github.com/Patternslib/patterns/compare/5.1.2...5.3.0) (2021-10-28)
 
 
