@@ -8,7 +8,21 @@ const CopyPlugin = require("copy-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 // const { DuplicatesPlugin } = require("inspectpack/plugin");
 
-module.exports = (env, argv, config) => {
+module.exports = (env, argv, config, babel_include = []) => {
+    // Webpack config
+
+    // Packages in node_modules to NOT exclude from babel processing.
+    // We exclude everything under `node_modules` except packages listed in
+    // babel_include, like any packages within `@patternslib`, any other
+    // `pat-*` and other packges which need babel processing so that node can
+    // make sense of it when compiling.
+    babel_include = new Set(["patternslib", "pat-.*", ...babel_include]);
+    let babel_exclude = "";
+    for (const it of babel_include) {
+        babel_exclude += `(?!(${it})/)`;
+    }
+    babel_exclude = `node_modules/${babel_exclude}.*`;
+
     const base_config = {
         entry: {
             "bundle": path.resolve(__dirname, "../src/patterns.js"),
@@ -47,8 +61,7 @@ module.exports = (env, argv, config) => {
                     test: /\.js$/,
                     // Exclude node modules except patternslib, pat-* and mockup packgages.
                     // Allows for extending this file without needing to override for a successful webpack build.
-                    exclude:
-                        /node_modules\/(?!(.*patternslib)\/)(?!(pat-.*)\/)(?!(mockup)\/).*/,
+                    exclude: new RegExp(babel_exclude),
                     loader: "babel-loader",
                 },
                 {
