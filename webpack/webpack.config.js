@@ -16,7 +16,7 @@ module.exports = (env, argv, config, babel_include = []) => {
     // babel_include, like any packages within `@patternslib`, any other
     // `pat-*` and other packges which need babel processing so that node can
     // make sense of it when compiling.
-    babel_include = new Set(["patternslib", "pat-.*", ...babel_include]);
+    babel_include = new Set(["patternslib", "pat-.*", "screenfull", ...babel_include]);
     let babel_exclude = "";
     for (const it of babel_include) {
         babel_exclude += `(?!(${it})/)`;

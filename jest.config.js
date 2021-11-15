@@ -9,5 +9,5 @@ module.exports = {
         "\\.(css|less|sass|scss)$": "identity-obj-proxy",
     },
     testEnvironment: "jsdom",
-    transformIgnorePatterns: ["/node_modules/(?!@fullcalendar/*).+\\.[t|j]sx?$"],
+    transformIgnorePatterns: ["/node_modules/(?!screenfull/*).+\\.[t|j]sx?$"],
 };
