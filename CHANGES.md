@@ -1,3 +1,16 @@
+## [5.5.0](https://github.com/Patternslib/patterns/compare/5.4.0...5.5.0) (2021-11-15)
+
+
+### Bug Fixes
+
+* **pat modal:** Fix injection problem with too early closed modals. ([e73bad9](https://github.com/Patternslib/patterns/commit/e73bad98879c1156d997cac3700babe852cef4de))
+
+* **pat modal:** Fix not properly unregistered callbacks. ([297f248](https://github.com/Patternslib/patterns/commit/297f2483d0e90d746fa5b57c895ce6c4d4ee90f9))
+Fix a problem with too many callback calls due to multiple handler registrations.
+This also led to a situation where the modal was not closed due to one
+callback unregistering an event handler where another would have closed
+the modal.
+
 ## [5.4.0](https://github.com/Patternslib/patterns/compare/5.3.0...5.4.0) (2021-11-10)
 
 
