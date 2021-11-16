@@ -3,6 +3,7 @@
 *.swo
 *.swp
 *~
+.env
 .DS_Store
 .bundle
 .sass-cache
