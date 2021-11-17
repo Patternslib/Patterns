@@ -2,7 +2,9 @@ const fs = require("fs");
 const path = require("path");
 
 const commits_template = fs
-    .readFileSync(path.resolve(".release-it", "conventional-changelog-commit.hbs"))
+    .readFileSync(
+        path.resolve(__dirname, ".release-it", "conventional-changelog-commit.hbs")
+    )
     .toString();
 
 module.exports = {
