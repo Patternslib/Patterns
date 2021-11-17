@@ -1,3 +1,18 @@
+### [6.0.1](https://github.com/Patternslib/patterns/compare/6.0.0...6.0.1) (2021-11-17)
+
+
+### Maintenance
+
+* **build:** Cleanup package.json a bit. ([81f3bde](https://github.com/Patternslib/patterns/commit/81f3bde733202593ec4c9787550fd7fc21a70ab2))
+
+* **build:** Read release-it changelog template from absolute path. This allows for extending this config in external packages. ([6fb6854](https://github.com/Patternslib/patterns/commit/6fb6854a18c015c988629b8c78b6ff85e2c9dace))
+
+* **dependencies:** Upgrade copy-webpack-plugin and specify minimum Node.js version to 12.20.0. ([4804e84](https://github.com/Patternslib/patterns/commit/4804e84ef93ec77776d3c1d52fb75718ac9ce445))
+
+* **dependencies:** Upgrade dev dependencies up to minor versions. ([5138216](https://github.com/Patternslib/patterns/commit/51382167b86988f68eb67626e1564fca04c2ba88))
+
+* **docs:** Release notes about GitHub access tokens for GitHub releases. ([4167497](https://github.com/Patternslib/patterns/commit/4167497acdbee8d959f60db824b823f27c70040c))
+
 ## [6.0.0](https://github.com/Patternslib/patterns/compare/5.5.0...6.0.0) (2021-11-17)
 
 
