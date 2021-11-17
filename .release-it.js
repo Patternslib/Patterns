@@ -17,6 +17,7 @@ module.exports = {
     plugins: {
         "@release-it/conventional-changelog": {
             infile: "CHANGES.md",
+            ignoreRecommendedBump: true,
             preset: {
                 name: "conventionalcommits",
                 types: [
