@@ -1,3 +1,57 @@
+## [6.0.0](https://github.com/Patternslib/patterns/compare/5.5.0...6.0.0) (2021-11-17)
+
+
+### Bug Fixes
+
+* **build:** Do not recommend the next version bump. ([b875a08](https://github.com/Patternslib/patterns/commit/b875a0874f5a13dcd3d63f13b0c3755fc7f6fe83))
+Add option to not automatically detect the next recommended version bump.
+Ref: https://github.com/release-it/release-it/issues/833
+Ref: https://github.com/release-it/conventional-changelog/issues/37
+
+
+### Breaking Changes
+
+* **build:** Upgrade Webpack to v5. ([39762db](https://github.com/Patternslib/patterns/commit/39762dba37230473b8e27d50ee18dc1a5060a1bf))
+If you extend this webpack configuration and run into problems see the
+Webpack upgrade guide: https://webpack.js.org/migrate/5/
+
+
+### Maintenance
+
+* **build:** Add `babel_include` option to Webpack config factory. ([d97ded0](https://github.com/Patternslib/patterns/commit/d97ded044c2d60606c50245b4fcba7867058e954))
+Allow to configure exclusions from babel-loader exclude string via the
+`babel_include` config option.
+The default is to not exclude anything in `node_modules/@patternslib`
+and all `pat-*` packaes.
+Anything else in `node_modules` is excluded from babel processing.
+* **build:** Add CORS header 'Access-Control-Allow-Origin' to allow including the JS from a different URL in test sites. ([3c51dd2](https://github.com/Patternslib/patterns/commit/3c51dd22a974dd56ff947759a597e07cb6ac27d2))
+
+* **build:** Add release to Github. ([4636a9d](https://github.com/Patternslib/patterns/commit/4636a9d397e433a437b135b77c7081a31f1e9f49))
+
+* **build:** Allow multiple bundles expose jQuery. Needed for module federation where multiple Webpack entry points are loaded. ([59a9991](https://github.com/Patternslib/patterns/commit/59a99915a79d4142eba50c51ba959ccf89e888e1))
+
+* **build:** Deactivate duplicates plugin due to non-resolvable error. ([867e08f](https://github.com/Patternslib/patterns/commit/867e08ff50cb5b3dacf0332c14c38e85b564c749))
+
+* **build:** Ignore node_modules and docs folder when watching for better performance. ([7b8a1e0](https://github.com/Patternslib/patterns/commit/7b8a1e0c81548f0f686dd5be8f46dba4739a07a3))
+
+* **build:** Let screenful be processed by babel-loader. This is necessary since screenful 6.0.0. ([ff95ec6](https://github.com/Patternslib/patterns/commit/ff95ec65ffc58a976486786b77de1ca6b1743467))
+
+* **build:** Load svg as resource and not inline. ([298be11](https://github.com/Patternslib/patterns/commit/298be113cf743c422a7ae43bbd36168848cbc7ff))
+
+* **build:** Remove clean-webpack-plugin. Use built-in option to clean the output directory before compiling instead. ([604a8ed](https://github.com/Patternslib/patterns/commit/604a8ed58dbe7eaabbf5cdaa6ab76ea6885f4f88))
+
+* **build:** Remove ProvidePlugin. Modules depending on jQuery need to explicitly import it. ([f43c8af](https://github.com/Patternslib/patterns/commit/f43c8afd056b1e95959e4ad84e2d4fb37da4d2ae))
+
+* **build:** Use new inspectpack instead duplicate-package-checker-webpack-plugin. ([cf57b67](https://github.com/Patternslib/patterns/commit/cf57b678c4ffe45157f0b424a44d0fcb4773b83f))
+
+* **dependencies:** Upgrade fullcalendar to 5.10.1. ([9cefa48](https://github.com/Patternslib/patterns/commit/9cefa48921930eb2bcd38050e459f1b656908b7d))
+
+* **dependencies:** Upgrade moment-timezone to 0.5.34. ([a7d8d3c](https://github.com/Patternslib/patterns/commit/a7d8d3c38af1651934bfc771f4d25443bb97aa04))
+
+* **dependencies:** Upgrade screenfull to 6.0.0. ([491d92e](https://github.com/Patternslib/patterns/commit/491d92e87e08aab5f4ecf0a1500fbf868c89ed27))
+
+* **dependencies:** Upgrade tippy.js to 6.3.7. ([0dd51e0](https://github.com/Patternslib/patterns/commit/0dd51e0910f92094701794d3c958b1c984aa1986))
+
 ## [5.5.0](https://github.com/Patternslib/patterns/compare/5.4.0...5.5.0) (2021-11-15)
 
 
