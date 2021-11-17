@@ -93,9 +93,7 @@
         "build": "NODE_ENV=production webpack --config webpack/webpack.config.js",
         "build:stats": "NODE_ENV=production webpack --config webpack/webpack.config.js --json > stats.json",
         "test": "jest --watch",
-        "testonce": "jest",
-        "release": "release-it",
-        "release-test": "release-it --dry-run"
+        "testonce": "jest"
     },
     "browserslist": [
         ">0.2%",
