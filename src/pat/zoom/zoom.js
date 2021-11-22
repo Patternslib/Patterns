@@ -1,4 +1,5 @@
 import $ from "jquery";
+import { BasePattern } from "../../core/base";
 import registry from "../../core/registry";
 import Parser from "../../core/parser";
 
@@ -6,32 +7,28 @@ export const parser = new Parser("zoom");
 parser.addArgument("min", 0);
 parser.addArgument("max", 2);
 
-var zoom = {
-    name: "zoom",
-    trigger: ".pat-zoom",
+class zoom extends BasePattern {
+    name = "zoom";
+    static trigger = ".pat-zoom";
 
-    init: function ($el, opts) {
-        return $el.each(function () {
-            var $block = $(this),
-                options = parser.parse($block, opts);
+    init() {
+        this.options = parser.parse(this.el, this.options);
 
-            let $slider = $("<input/>", {
-                type: "range",
-                step: "any",
-                value: 1,
-                min: options.min,
-                max: options.max,
-            });
+        const slider = (this.slider = document.createElement("input"));
+        slider.setAttribute("type", "range");
+        slider.setAttribute("step", "any");
+        slider.setAttribute("value", 1);
+        slider.setAttribute("min", this.options.min);
+        slider.setAttribute("max", this.options.max);
+        slider.addEventListener("input", this.do_zoom.bind(this));
 
-            $slider.insertBefore($block).on("change input", null, $block, zoom.onZoom);
-        });
-    },
+        this.el.parentNode.insertBefore(slider, this.el);
+    }
 
-    onZoom: function (event) {
-        var $block = event.data;
-        $block.css("zoom", this.value);
-    },
-};
+    do_zoom() {
+        this.el.css("zoom", this.slider.value);
+    }
+}
 
 registry.register(zoom);
 export default zoom;
