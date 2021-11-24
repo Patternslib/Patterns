@@ -16,7 +16,7 @@ describe("pat-scroll", function () {
         const el = document.querySelector(".pat-scroll");
         const spy_animate = jest.spyOn($.fn, "animate");
 
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(10); // wait some ticks for async to settle.
 
         expect(spy_animate).toHaveBeenCalledTimes(1);
@@ -35,7 +35,7 @@ describe("pat-scroll", function () {
         const el = document.querySelector(".pat-scroll");
         const spy_animate = jest.spyOn($.fn, "animate");
 
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         el.click();
@@ -52,7 +52,7 @@ describe("pat-scroll", function () {
         const el = document.querySelector(".pat-scroll");
         const spy_animate = jest.spyOn($.fn, "animate");
 
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         el.click();
@@ -72,7 +72,7 @@ describe("pat-scroll", function () {
         const el = document.querySelector(".pat-scroll");
         const spy_animate = jest.spyOn($.fn, "animate");
 
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         el.click();
@@ -91,7 +91,7 @@ describe("pat-scroll", function () {
         `;
         const $el = $(".pat-scroll");
         const spy_animate = jest.spyOn($.fn, "animate");
-        pattern.init($el);
+        new pattern($el);
         await utils.timeout(1); // wait a tick for async to settle.
         $el.trigger("pat-update", {
             pattern: "stacks",
@@ -110,7 +110,7 @@ describe("pat-scroll", function () {
         const el = document.querySelector(".pat-scroll");
         const spy_animate = jest.spyOn($.fn, "animate");
 
-        const pat = pattern.init(el);
+        const pat = new pattern(el);
         await utils.timeout(1); // wait some ticks for async to settle.
 
         expect(spy_animate).not.toHaveBeenCalled();
@@ -135,7 +135,7 @@ describe("pat-scroll", function () {
 
         expect(container.scrollTop).toBe(0);
 
-        const pat = pattern.init(trigger);
+        const pat = new pattern(trigger);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(container.scrollTop).toBe(0);
@@ -160,7 +160,7 @@ describe("pat-scroll", function () {
 
         expect(container.scrollTop).toBe(0);
 
-        const pat = pattern.init(trigger);
+        const pat = new pattern(trigger);
         await utils.timeout(1); // wait a tick for async to settle.
         await pat.smoothScroll();
 
@@ -184,7 +184,7 @@ describe("pat-scroll", function () {
 
         expect(container.scrollTop).toBe(0);
 
-        const pat = pattern.init(trigger);
+        const pat = new pattern(trigger);
         await utils.timeout(1); // wait a tick for async to settle.
         await pat.smoothScroll();
 
@@ -206,7 +206,7 @@ describe("pat-scroll", function () {
         const el_2 = document.querySelector(".el2");
         const el_3 = document.querySelector("#el3");
 
-        const pat = pattern.init(el_pat);
+        const pat = new pattern(el_pat);
 
         pat.options.selector = "self";
         expect(pat._get_selector_target()).toBe(el_pat);

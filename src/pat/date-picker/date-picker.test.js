@@ -47,7 +47,7 @@ describe("pat-date-picker", function () {
         document.body.innerHTML = '<input type="date" class="pat-date-picker"/>';
         const el = document.querySelector("input[type=date]");
 
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         const display_el = document.querySelector("time");
@@ -89,7 +89,7 @@ describe("pat-date-picker", function () {
         document.body.innerHTML =
             '<input type="date" class="pat-date-picker" data-pat-date-picker="first-day: 1" />';
         const el = document.querySelector("input[type=date]");
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
         const display_el = document.querySelector("time");
         display_el.click();
@@ -102,7 +102,7 @@ describe("pat-date-picker", function () {
         document.body.innerHTML =
             '<input type="date" class="pat-date-picker" value="1900-01-01"/>';
         const el = document.querySelector("input[type=date]");
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
         const display_el = document.querySelector("time");
         display_el.click();
@@ -124,7 +124,7 @@ describe("pat-date-picker", function () {
         document.body.innerHTML =
             '<input type="date" class="pat-date-picker" data-pat-date-picker="week-numbers: show" value="2017-09-18"/>';
         const el = document.querySelector("input[type=date]");
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
         const display_el = document.querySelector("time");
         display_el.click();
@@ -140,7 +140,7 @@ describe("pat-date-picker", function () {
                 document.body.innerHTML =
                     '<input type="date" class="pat-date-picker" value="2018-10-21" data-pat-date-picker="i18n:/path/to/i18njson" />';
                 const el = document.querySelector("input[type=date]");
-                pattern.init(el);
+                new pattern(el);
                 await utils.timeout(1); // wait a tick for async to settle.
                 const display_el = document.querySelector("time");
                 display_el.click();
@@ -163,7 +163,7 @@ describe("pat-date-picker", function () {
                 document.body.innerHTML =
                     '<input type="date" class="pat-date-picker" value="2018-10-21" data-pat-date-picker="i18n:/path/to/i18njson" />';
                 const el = document.querySelector("input[type=date]");
-                pattern.init(el);
+                new pattern(el);
                 await utils.timeout(1); // wait a tick for async to settle.
                 const display_el = document.querySelector("time");
                 display_el.click();
@@ -188,8 +188,8 @@ describe("pat-date-picker", function () {
             const start = wrapper.querySelector("input[name=start]");
             const end = wrapper.querySelector("input[name=end]");
 
-            pattern.init(start);
-            pattern.init(end);
+            new pattern(start);
+            new pattern(end);
             await utils.timeout(1); // wait a tick for async to settle.
 
             const start_display = document.querySelectorAll("time")[0];
@@ -282,8 +282,8 @@ describe("pat-date-picker", function () {
             const start = wrapper.querySelector("input[name=start]");
             const end = wrapper.querySelector("input[name=end]");
 
-            pattern.init(start);
-            pattern.init(end);
+            new pattern(start);
+            new pattern(end);
             await utils.timeout(1); // wait a tick for async to settle.
 
             const start_display = document.querySelectorAll("time")[0];
@@ -328,7 +328,7 @@ describe("pat-date-picker", function () {
         document.body.innerHTML =
             '<input type="date" class="pat-date-picker" value="2021-03-09" data-pat-date-picker="output-format: Do MMMM YYYY; locale: de"/>';
         const el = document.querySelector("input[type=date]");
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
         const display_el = document.querySelector("time");
 
@@ -350,7 +350,7 @@ describe("pat-date-picker", function () {
         document.body.innerHTML =
             '<input type="date" class="pat-date-picker" value="2021-03-09"/>';
         const el = document.querySelector("input[type=date]");
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
         const display_el = document.querySelector("time");
 
@@ -404,7 +404,7 @@ describe("pat-date-picker", function () {
         document.body.innerHTML =
             '<input type="date" class="pat-date-picker" value="2021-03-09" data-pat-date-picker="output-format: DD.MM.YYYY"/>';
         const el = document.querySelector("input[type=date]");
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
         const display_el = document.querySelector("time");
 
@@ -458,7 +458,7 @@ describe("pat-date-picker", function () {
         document.body.innerHTML =
             '<input type="date" class="pat-date-picker" value="2021-03-01" required/>';
         const el = document.querySelector("input[type=date]");
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
         const display_el = document.querySelector("time");
 
@@ -494,7 +494,7 @@ describe("pat-date-picker", function () {
             '<input type="date" class="pat-date-picker" data-pat-date-picker="behavior: native"/>';
         const el = document.querySelector("input[type=date]");
 
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         const display_el = document.querySelector("time");
@@ -539,7 +539,7 @@ describe("pat-date-picker", function () {
             />';
         `;
         const el = document.querySelector("input[type=date]");
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         const display_el = document.querySelector("time");
@@ -567,7 +567,7 @@ describe("pat-date-picker", function () {
         `;
 
         pattern_auto_submit.init(document.querySelector("form"));
-        pattern.init(document.querySelector("input"));
+        new pattern(document.querySelector("input"));
         await utils.timeout(1); // wait a tick for async to settle.
 
         const handle_submit = jest.fn();
