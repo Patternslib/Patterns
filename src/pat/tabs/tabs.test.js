@@ -28,7 +28,7 @@ describe("pat-tabs", function () {
         jest.spyOn(tabs[3], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
 
         expect(nav.classList.contains("tabs-ready")).toBeFalsy();
-        pattern.init(nav);
+        new pattern(nav);
         await utils.timeout(DEBOUNCE_TIMEOUT);
 
         expect(nav.querySelector(".extra-tabs")).toBeTruthy();
@@ -69,7 +69,7 @@ describe("pat-tabs", function () {
         jest.spyOn(tabs[3], "getBoundingClientRect").mockImplementation(() => { return { x: 400, width: 40 }; }); // prettier-ignore
 
         expect(nav.classList.contains("tabs-ready")).toBeFalsy();
-        pattern.init(nav);
+        new pattern(nav);
         await utils.timeout(DEBOUNCE_TIMEOUT);
 
         expect(nav.querySelector(".extra-tabs")).toBeTruthy();
@@ -108,7 +108,7 @@ describe("pat-tabs", function () {
         jest.spyOn(tabs[3], "getBoundingClientRect").mockImplementation(() => { return { x: 400, width: 40 }; }); // prettier-ignore
 
         expect(nav.classList.contains("tabs-ready")).toBeFalsy();
-        pattern.init(nav);
+        new pattern(nav);
         await utils.timeout(DEBOUNCE_TIMEOUT);
 
         expect(nav.querySelector(".extra-tabs")).toBeFalsy();
@@ -137,7 +137,7 @@ describe("pat-tabs", function () {
         jest.spyOn(tabs[3], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
 
         expect(nav.classList.contains("tabs-ready")).toBeFalsy();
-        pattern.init(nav);
+        new pattern(nav);
         await utils.timeout(DEBOUNCE_TIMEOUT);
 
         expect(nav.querySelector(".extra-tabs")).toBeTruthy();
@@ -176,7 +176,7 @@ describe("pat-tabs", function () {
         jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
 
-        pattern.init(nav);
+        new pattern(nav);
         await utils.timeout(DEBOUNCE_TIMEOUT);
 
         const extra_tabs = nav.querySelector(".extra-tabs");
@@ -209,7 +209,7 @@ describe("pat-tabs", function () {
         jest.spyOn(tabs[0], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
         jest.spyOn(tabs[1], "getBoundingClientRect").mockImplementation(() => { return { x: 200, width: 40 }; }); // prettier-ignore
 
-        pattern.init(nav);
+        new pattern(nav);
         await utils.timeout(DEBOUNCE_TIMEOUT);
 
         const extra_tabs = nav.querySelector(".extra-tabs");
@@ -222,7 +222,7 @@ describe("pat-tabs", function () {
         document.body.innerHTML = `<nav class="pat-tabs"></nav>`;
         const nav = document.querySelector(".pat-tabs");
 
-        const pat = pattern.init(nav);
+        const pat = new pattern(nav);
         const spy_adjust_tabs = jest
             .spyOn(pat, "adjust_tabs")
             .mockImplementation(() => {});
@@ -259,7 +259,7 @@ describe("pat-tabs", function () {
         jest.spyOn(tabs[3], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 40 }; }); // prettier-ignore
 
         expect(nav.classList.contains("tabs-ready")).toBeFalsy();
-        const pat = pattern.init(nav);
+        const pat = new pattern(nav);
         const spy_get_dimensions = jest.spyOn(pat, "_get_dimensions");
 
         await utils.timeout(DEBOUNCE_TIMEOUT);
@@ -306,7 +306,7 @@ describe("pat-tabs", function () {
         jest.spyOn(tabs[3], "getBoundingClientRect").mockImplementation(() => { return { x: 100, width: 200 }; }); // prettier-ignore
 
         expect(nav.classList.contains("tabs-ready")).toBeFalsy();
-        const pat = pattern.init(nav);
+        const pat = new pattern(nav);
         await utils.timeout(DEBOUNCE_TIMEOUT);
 
         // make .extra-tabs wider than available space, which result in an infinite loop in a previous version of this code.
@@ -327,7 +327,7 @@ describe("pat-tabs", function () {
 
         let thrown = false;
         try {
-            pattern.init(el.querySelector("div"));
+            new pattern(el.querySelector("div"));
             await utils.timeout(1);
             document.body.dispatchEvent(new Event("pat-update"));
             await utils.timeout(1);

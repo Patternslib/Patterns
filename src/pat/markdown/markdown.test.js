@@ -22,7 +22,7 @@ describe("pat-markdown", function () {
             jest.spyOn(pattern.prototype, "render").mockImplementation(() => {
                 return $("<p>Rendering</p>");
             });
-            pattern.init($el);
+            new pattern($el);
             await utils.timeout(1); // wait a tick for async to settle.
             expect($("#lab").html()).toBe("<p>Rendering</p>");
         });
@@ -33,7 +33,7 @@ describe("pat-markdown", function () {
             jest.spyOn(pattern.prototype, "render").mockImplementation(() => {
                 return $("<p>Rendering</p>");
             });
-            pattern.init($el);
+            new pattern($el);
             expect($("#lab").html()).toBe("<p></p>");
         });
 
@@ -45,7 +45,7 @@ describe("pat-markdown", function () {
                 .mockImplementation(() => {
                     return $("<p/>");
                 });
-            pattern.init($el);
+            new pattern($el);
             expect(spy_render).toHaveBeenCalledWith("This is markdown");
         });
 
@@ -57,7 +57,7 @@ describe("pat-markdown", function () {
                 .mockImplementation(() => {
                     return $("<p/>");
                 });
-            pattern.init($el);
+            new pattern($el);
             expect(spy_render).toHaveBeenCalledWith("This is markdown");
         });
     });

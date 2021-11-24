@@ -19,7 +19,7 @@ describe("pat-collapsible", function () {
         `;
 
         var $collapsible = $(".pat-collapsible");
-        pattern.init($collapsible);
+        new pattern($collapsible);
         expect($collapsible.find(".panel-content").length).toBe(1);
     });
 
@@ -32,7 +32,7 @@ describe("pat-collapsible", function () {
         `;
 
         var $collapsible = $(".pat-collapsible");
-        pattern.init($collapsible);
+        new pattern($collapsible);
         expect($collapsible.hasClass("open")).toBeTruthy();
     });
 
@@ -45,7 +45,7 @@ describe("pat-collapsible", function () {
         `;
 
         var $collapsible = $(".pat-collapsible");
-        pattern.init($collapsible);
+        new pattern($collapsible);
         expect($collapsible.hasClass("open")).toBeFalsy();
     });
 
@@ -58,7 +58,7 @@ describe("pat-collapsible", function () {
         `;
 
         var $collapsible = $(".pat-collapsible");
-        var pat = pattern.init($collapsible, { transition: "none" });
+        var pat = new pattern($collapsible, { transition: "none" });
         pat.toggle($collapsible);
         expect($collapsible.hasClass("open")).toBe(false);
         expect($collapsible.hasClass("closed")).toBe(true);
@@ -75,7 +75,7 @@ describe("pat-collapsible", function () {
             </div>
         `;
         var $collapsible = $(".pat-collapsible");
-        var pat = pattern.init($collapsible, { transition: "none" });
+        var pat = new pattern($collapsible, { transition: "none" });
         pat.toggle($collapsible);
         expect($collapsible.hasClass("open")).toBe(true);
         expect($collapsible.hasClass("closed")).toBe(false);
@@ -128,7 +128,7 @@ describe("pat-collapsible", function () {
             </div>
         `;
             const collapsible = document.querySelector(".pat-collapsible");
-            const pat = pattern.init(collapsible);
+            const pat = new pattern(collapsible);
             const spy_scroll = jest.spyOn(pat, "_scroll");
 
             pat.toggle();
@@ -144,7 +144,7 @@ describe("pat-collapsible", function () {
             </div>
         `;
             const collapsible = document.querySelector(".pat-collapsible");
-            const pat = pattern.init(collapsible);
+            const pat = new pattern(collapsible);
             const spy_scroll = jest.spyOn(pat, "_scroll");
 
             pat.toggle();
@@ -188,7 +188,7 @@ describe("pat-collapsible", function () {
             </div>
         `;
             const collapsible = document.querySelector(".pat-collapsible");
-            const pat = pattern.init(collapsible);
+            const pat = new pattern(collapsible);
             const spy_animate = jest.spyOn($.fn, "animate");
 
             pat.toggle();
@@ -205,7 +205,7 @@ describe("pat-collapsible", function () {
             </div>
         `;
             const collapsible = document.querySelector(".pat-collapsible");
-            const pat = pattern.init(collapsible);
+            const pat = new pattern(collapsible);
             const spy_animate = jest.spyOn($.fn, "animate");
 
             pat.toggle();

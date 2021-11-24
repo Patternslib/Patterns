@@ -18,7 +18,7 @@ describe("pat-ajax", function () {
 
         it("triggers ajax request on click", function () {
             var $a = $("<a href='href.html' />").appendTo($lab);
-            pattern.init($a);
+            new pattern($a);
             jest.spyOn($, "ajax");
             $a.click();
             var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
@@ -41,7 +41,7 @@ describe("pat-ajax", function () {
                 "<button type='submit' name='submit' value='submit' />"
             ).appendTo($form);
             $("<input name='input1' value='value1' />").appendTo($form);
-            pattern.init($form);
+            new pattern($form);
             spy_ajax = jest.spyOn($, "ajax");
         });
 

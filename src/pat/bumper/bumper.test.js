@@ -24,7 +24,7 @@ describe("pat-bumper", function () {
         );
         var $el = $(".pat-bumper");
         var pattern = new Bumper($el);
-        pattern.init();
+        new pattern();
         expect(pattern.$container.is($(".parent"))).toBeTruthy();
 
         // Check with horizontal scroll
@@ -37,7 +37,7 @@ describe("pat-bumper", function () {
         );
         $el = $(".pat-bumper");
         pattern = new Bumper($el);
-        pattern.init();
+        new pattern();
         expect(pattern.$container.is($(".parent"))).toBeTruthy();
     });
 
@@ -52,7 +52,7 @@ describe("pat-bumper", function () {
         );
         var $el = $(".pat-bumper");
         var pattern = new Bumper($el);
-        pattern.init();
+        new pattern();
         expect(pattern.$container.is($(".parent"))).toBeTruthy();
 
         // Check with horizontal scroll
@@ -65,7 +65,7 @@ describe("pat-bumper", function () {
         );
         $el = $(".pat-bumper");
         pattern = new Bumper($el);
-        pattern.init();
+        new pattern();
         expect(pattern.$container.is($(".parent"))).toBeTruthy();
     });
 
@@ -81,7 +81,7 @@ describe("pat-bumper", function () {
         );
         var $el = $(".pat-bumper");
         var pattern = new Bumper($el);
-        pattern.init();
+        new pattern();
         pattern._markBumped(["top"]);
         if (utils.checkCSSFeature("position", "sticky")) {
             expect(pattern.$el.attr("class")).toBe(
@@ -104,7 +104,7 @@ describe("pat-bumper", function () {
         );
         var $el = $(".pat-bumper");
         var pattern = new Bumper($el);
-        pattern.init();
+        new pattern();
         pattern._markBumped([]);
         if (utils.checkCSSFeature("position", "sticky")) {
             expect(pattern.$el.attr("class")).toBe("pat-bumper sticky-supported plain");
@@ -124,7 +124,7 @@ describe("pat-bumper", function () {
         var $el = $(".pat-bumper");
         var pattern = new Bumper($el);
         var spy_update = jest.spyOn(pattern, "_updateStatus");
-        pattern.init();
+        new pattern();
         window.dispatchEvent(new Event("scroll")); // simulate `window.scrollTo(0, 0);`
         expect(spy_update).toHaveBeenCalled();
     });
@@ -145,7 +145,7 @@ describe("pat-bumper", function () {
         var $el = $(".pat-bumper");
         var pattern = new Bumper($el);
         var spy_mark = jest.spyOn(pattern, "_markBumped");
-        pattern.init();
+        new pattern();
         $(".parent")[0].scrollTop = 5;
         $(".parent")[0].top = 5;
         pattern._updateStatus();
@@ -175,7 +175,7 @@ describe("pat-bumper", function () {
         var $el = $(".pat-bumper");
         var pattern = new Bumper($el);
         jest.spyOn(pattern, "_markBumped");
-        pattern.init();
+        new pattern();
         $(".parent")[0].scrollLeft = 5;
         pattern._updateStatus();
         expect(pattern._markBumped).toHaveBeenCalled();

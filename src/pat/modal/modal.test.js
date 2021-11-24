@@ -33,7 +33,7 @@ describe("pat-modal", function () {
             );
             expect($("body").hasClass("modal-active")).toBeFalsy();
             var $modal = $("#modal");
-            pattern.init($modal);
+            new pattern($modal);
             expect($modal.find(".header").length).toBeTruthy();
             expect($modal.find(".header").text()).toBe("Close");
             expect($modal.find(".header .close-panel").length).toBeTruthy();
@@ -53,7 +53,7 @@ describe("pat-modal", function () {
             );
             expect($("body").hasClass("modal-active")).toBeFalsy();
             var $modal = $("#modal");
-            pattern.init($modal);
+            new pattern($modal);
             expect($modal.find(".header").text()).toBe("Modal headerClose");
             expect($modal.find(".header .close-panel").length).toBeTruthy();
             expect($modal.find(".panel-content").text()).toBe("Modal content");
@@ -73,7 +73,7 @@ describe("pat-modal", function () {
             );
             expect($("body").hasClass("modal-active")).toBeFalsy();
             var $modal = $("#modal");
-            pattern.init($modal);
+            new pattern($modal);
             expect($modal.find(".header").text()).toBe("Modal headerClose");
             expect($modal.find(".header .close-panel").length).toBeTruthy();
             expect($modal.find(".panel-content p").length).toBe(2);
@@ -94,7 +94,7 @@ describe("pat-modal", function () {
             );
 
             $modalLink = $("#modalLink");
-            pattern.init($modalLink);
+            new pattern($modalLink);
 
             // najprej #modalLink ne obstaja
             $modal = $("div#pat-modal");
@@ -126,7 +126,7 @@ describe("pat-modal", function () {
             );
             expect($("body").hasClass("modal-active")).toBeFalsy();
             var $modal = $("#modal");
-            pattern.init($modal);
+            new pattern($modal);
             expect($modal.find(".header").length).toBeTruthy();
             expect($modal.find(".header").text()).toBe("Shutdown");
             expect($modal.find(".header .close-panel").length).toBeTruthy();
@@ -143,7 +143,7 @@ describe("pat-modal", function () {
             const callback = jest.fn();
             const modal_el = document.querySelector(".pat-modal");
             modal_el.addEventListener("pat-modal-ready", callback);
-            pattern.init(modal_el);
+            new pattern(modal_el);
             await utils.timeout(1); // wait a tick for async to settle.
 
             // Opened immediately
@@ -161,7 +161,7 @@ describe("pat-modal", function () {
             const callback = jest.fn();
             document.body.addEventListener("pat-modal-ready", callback);
             const modal_el = document.querySelector(".pat-modal");
-            pattern.init(modal_el);
+            new pattern(modal_el);
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect(callback).not.toHaveBeenCalled();

@@ -35,7 +35,7 @@ export default Base.extend({
         }
         this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
         this.markBasedOnFragment();
-        this.on("hashchange", this.clearIfHidden.bind(this));
+        this.$el.on("hashchange", this.clearIfHidden.bind(this));
         $(window).scroll(utils.debounce(this.markIfVisible.bind(this), 50));
     },
 

@@ -19,7 +19,7 @@ describe("pat-datetime-picker", function () {
                 type="datetime-local"
                 class="pat-datetime-picker"/>
         `;
-        pattern.init(document.querySelector("input"));
+        new pattern(document.querySelector("input"));
         await utils.timeout(1); // wait a tick for async to settle.
         document.querySelector("input[type=text]").click();
 
@@ -61,7 +61,7 @@ describe("pat-datetime-picker", function () {
                 class="pat-datetime-picker"
                 data-pat-datetime-picker="first-day: 1" />
         `;
-        pattern.init(document.querySelector("input"));
+        new pattern(document.querySelector("input"));
         await utils.timeout(1); // wait a tick for async to settle.
         document.querySelector("input[type=text]").click();
 
@@ -80,7 +80,7 @@ describe("pat-datetime-picker", function () {
                 class="pat-datetime-picker"
                 value="1900-01-01T00:00"/>
         `;
-        pattern.init(document.querySelector("input"));
+        new pattern(document.querySelector("input"));
         await utils.timeout(1); // wait a tick for async to settle.
         document.querySelector("input[type=text]").click();
 
@@ -113,7 +113,7 @@ describe("pat-datetime-picker", function () {
                 class="pat-datetime-picker"
                 data-pat-datetime-picker="week-numbers: show;" value="2017-09-18T23:42"/>
         `;
-        pattern.init(document.querySelector("input"));
+        new pattern(document.querySelector("input"));
         await utils.timeout(1); // wait a tick for async to settle.
         document.querySelector("input[type=text]").click();
 
@@ -133,7 +133,7 @@ describe("pat-datetime-picker", function () {
             <input type="datetime-local"/>
         `;
 
-        pattern.init(document.querySelector("input"));
+        new pattern(document.querySelector("input"));
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(document.querySelector("input[type=text]").value).toBe("");
