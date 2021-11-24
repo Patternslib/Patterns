@@ -101,9 +101,11 @@ export default Base.extend({
         if (document.activeElement) {
             document.activeElement.focus();
         }
+
         this._init_handlers();
         this.resize();
         this.setPosition();
+
         $("body").addClass("modal-active");
         this.el.dispatchEvent(
             new Event("pat-modal-ready", { bubbles: true, cancelable: true })
@@ -225,9 +227,10 @@ export default Base.extend({
         $("body").removeClass("modal-panel");
     },
 
-    destroy_inject() {
-        const form = this.el.querySelector("form.pat-inject");
-        if (form) {
+    destroy_inject(e) {
+        const button = e.target;
+        const form = button.form;
+        if (form && form.classList.contains("pat-inject")) {
             // if the modal contains a for mwith pat-inject, wait for injection
             // to be finished and then destroy the modal.
             const destroy_handler = () => {
@@ -241,8 +244,7 @@ export default Base.extend({
                 destroy_handler.bind(this)
             );
         } else {
-            // if working without injection, destroy after waiting a tick to let
-            // eventually registered on-submit handlers kick in first.
+            // if working without form injection, just destroy.
             this.destroy();
         }
     },
