@@ -67,7 +67,7 @@ export default Base.extend({
         inject.init(this.$el, opts);
     },
 
-    _init_div1() {
+    async _init_div1() {
         const $header = $("<div class='header' />");
         if (this.options.closing.indexOf("close-button") !== -1) {
             $(
@@ -102,7 +102,6 @@ export default Base.extend({
             document.activeElement.focus();
         }
 
-        this._init_handlers();
         this.resize();
         this.setPosition();
 
@@ -110,6 +109,12 @@ export default Base.extend({
         this.el.dispatchEvent(
             new Event("pat-modal-ready", { bubbles: true, cancelable: true })
         );
+
+        // Wait a bit to let any pattern initializations settle before initializing handlers.
+        await utils.timeout(2);
+        this._init_handlers();
+        const modal_observer = new MutationObserver(this._init_handlers.bind(this));
+        modal_observer.observe(this.el, { childList: true, subtree: true });
     },
 
     _init_handlers() {

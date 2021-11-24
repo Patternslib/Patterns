@@ -196,6 +196,7 @@ describe("pat-modal", function () {
             `;
             registry.scan(document.body);
             await utils.timeout(1); // wait a tick for async to settle.
+            await utils.timeout(2); // wait a tick for async to settle.
 
             document.querySelector("button.close-panel[type=submit]").click();
             await utils.timeout(1); // wait a tick for pat-inject to settle.
@@ -235,6 +236,7 @@ describe("pat-modal", function () {
             `;
             registry.scan(document.body);
             await utils.timeout(1); // wait a tick for async to settle.
+            await utils.timeout(2); // wait a tick for async to settle.
 
             document.querySelector(".form2 button.close-panel[type=submit]").click();
             await utils.timeout(1); // wait a tick for pat-inject to settle.
@@ -242,6 +244,26 @@ describe("pat-modal", function () {
 
             expect(document.querySelector(".pat-modal")).toBe(null);
             expect(document.querySelector("#target").textContent).toBe("hello.");
+        });
+
+        it("Initialize modal also when modal contents change.", async function () {
+            document.body.innerHTML = `
+              <div class="pat-modal">
+              </div>
+            `;
+            const instance = new pattern(document.querySelector(".pat-modal"));
+            const spy_init_handlers = jest.spyOn(instance, "_init_handlers");
+            expect(spy_init_handlers).toHaveBeenCalledTimes(0);
+
+            // first call is invoked after some ticks to allow any other
+            // patterns to modify the dom before the handlers are initialized.
+            await utils.timeout(2); // wait for init to happen.
+            expect(spy_init_handlers).toHaveBeenCalledTimes(1);
+
+            // Provoke a DOM subtree change and the MutationObserver to kick in
+            document.querySelector(".pat-modal").innerHTML = "<div/>";
+            await utils.timeout(1); // wait a tick for async to settle.
+            expect(spy_init_handlers).toHaveBeenCalledTimes(2);
         });
 
         it("Ensure destroy callback isn't called multiple times.", async function () {
@@ -253,12 +275,13 @@ describe("pat-modal", function () {
 
             const instance = new pattern(document.querySelector(".pat-modal"));
             await utils.timeout(1); // wait a tick for async to settle.
+            await utils.timeout(2); // wait a tick for async to settle.
 
             const spy_destroy = jest.spyOn(instance, "destroy");
 
             // ``destroy`` was already initialized with instantiating the pattern above.
             // Call init again for new instantiation.
-            instance.init($(".pat-modal"));
+            await instance.init($(".pat-modal"));
 
             document.querySelector("#close-modal").click();
             await utils.timeout(1); // wait a tick for pat-modal destroy to settle.
@@ -285,13 +308,14 @@ describe("pat-modal", function () {
             pattern_inject.init($(".pat-inject"));
             const instance = new pattern(document.querySelector(".pat-modal"));
             await utils.timeout(1); // wait a tick for async to settle.
+            await utils.timeout(2); // wait a tick for async to settle.
 
             const spy_destroy = jest.spyOn(instance, "destroy");
             const spy_destroy_inject = jest.spyOn(instance, "destroy_inject");
 
             // ``destroy`` was already initialized with instantiating the pattern above.
             // Call init again for new instantiation.
-            instance.init($(".pat-modal"));
+            await instance.init($(".pat-modal"));
 
             document.querySelector("#close-modal").click();
             await utils.timeout(1); // wait a tick for pat-inject to settle.
@@ -304,6 +328,7 @@ describe("pat-modal", function () {
             pattern_inject.init($(".pat-inject"));
             new pattern(document.querySelector(".pat-modal"));
             await utils.timeout(1); // wait a tick for async to settle.
+            await utils.timeout(2); // wait a tick for async to settle.
             document.querySelector("#close-modal").click();
             await utils.timeout(1); // wait a tick for pat-inject to settle.
             // Previous mocks still active.
