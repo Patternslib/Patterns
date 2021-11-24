@@ -206,6 +206,44 @@ describe("pat-modal", function () {
             expect(document.querySelector("#target2").textContent).toBe("there");
         });
 
+        it("Submit form, do injection and close overlay with multiple forms.", async function () {
+            await import("../inject/inject");
+            const registry = (await import("../../core/registry")).default;
+
+            jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            answer(
+                `<html><body><div id="source">hello.</div><div id="source2">there</div></body></html>`
+            );
+
+            document.body.innerHTML = `
+              <div class="pat-modal">
+                <form
+                    class="form1 pat-inject"
+                    action="test.html"
+                    data-pat-inject="source: #source; target: #target">
+                  <button type="submit" class="close-panel">submit</button>
+                </form>
+                <form
+                    class="form2 pat-inject"
+                    action="test.html"
+                    data-pat-inject="source: #source; target: #target">
+                  <button type="submit" class="close-panel">submit</button>
+                </form>
+              </div>
+              <div id="target">
+              </div>
+            `;
+            registry.scan(document.body);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            document.querySelector(".form2 button.close-panel[type=submit]").click();
+            await utils.timeout(1); // wait a tick for pat-inject to settle.
+            await utils.timeout(1); // wait a tick for pat-modal destroy to settle.
+
+            expect(document.querySelector(".pat-modal")).toBe(null);
+            expect(document.querySelector("#target").textContent).toBe("hello.");
+        });
+
         it("Ensure destroy callback isn't called multiple times.", async function () {
             document.body.innerHTML = `
               <div id="pat-modal" class="pat-modal">
