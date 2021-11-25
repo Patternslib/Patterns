@@ -1,3 +1,20 @@
+### [6.0.2](https://github.com/Patternslib/patterns/compare/6.0.1...6.0.2) (2021-11-25)
+
+
+### Bug Fixes
+
+* **pat modal:** Fix close-panel with multiple inject forms. ([251675b](https://github.com/Patternslib/patterns/commit/251675ba786ccb3506d6277280a0c8821b12f413))
+Support close-panel with multiple forms.pat-inject in a modal, for example together with pat-stacks.
+Previously only the first form used to attach the event handler which listens for the injection success event for closing the modal.
+In these cases the modal wasn't closed properly.
+
+
+### Maintenance
+
+* **build:** Run the GitHub release task unattendet and checkout the modified CHANGES.md afterwards. ([5945e60](https://github.com/Patternslib/patterns/commit/5945e6015edddf7f6aed355f5c63a1dc5236368b))
+
+* **dependencies:** Upgrade dev dependencies up to minor versions. ([3f4d0c0](https://github.com/Patternslib/patterns/commit/3f4d0c0a346c031f78e6cbc499ffc870af610034))
+
 ### [6.0.1](https://github.com/Patternslib/patterns/compare/6.0.0...6.0.1) (2021-11-17)
 
 
