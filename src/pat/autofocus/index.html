@@ -1,24 +1,48 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Focus demo page</title>
-    <link rel="stylesheet" href="/style/common.css" type="text/css" />
-    <script src="/dist/bundle.js" type="text/javascript"></script>
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=UTF-8"
+    />
+    <title>pat-autofocus demo page</title>
+    <link href="/style/common.css"
+          rel="stylesheet"
+          type="text/css"
+    />
+    <script src="/dist/bundle.js"
+            type="text/javascript"
+    ></script>
   </head>
   <body>
-    <form action="">
+    <form>
       <fieldset class="horizontal">
-        <label>Title
-          <input class="pat-autofocus" type="text" value="Prefilled title" />
+        <label>Input 1 (has value)
+          <input class="pat-autofocus"
+                 type="text"
+                 value="Prefilled title"
+          />
         </label>
         <br />
-        <label>Keywords
-          <input class="pat-autofocus" type="text" placeholder="This field should get the focus" />
+        <label>Input 2 (hidden)
+          <input class="pat-autofocus"
+                 hidden
+                 type="text"
+          />
+        </label>
+        <br />
+        <label>Input 3 (should get focus)
+          <input class="pat-autofocus"
+                 placeholder="This field should get the focus"
+                 type="text"
+          />
         </label>
       </fieldset>
     </form>
+
     <p>Elements in the iframe below should not get the focus.</p>
-    <iframe src="./index-iframed.html" frameborder="0" style="width: 400px; height: 300px; border: 1px solid black;"></iframe>
+    <iframe frameborder="0"
+            src="./index-iframed.html"
+            style="width: 400px; height: 300px; border: 1px solid black"
+    ></iframe>
   </body>
 </html>
