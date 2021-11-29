@@ -1,6 +1,7 @@
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import Base from "../../core/base";
 import Parser from "../../core/parser";
+import dom from "../../core/dom";
 import logging from "../../core/logging";
 
 // Lazy loading modules.
@@ -27,7 +28,7 @@ export default Base.extend({
 
         this.options = parser.parse(this.el, this.options);
 
-        let lang = this.options.locale || document.querySelector("html").lang || "en";
+        let lang = this.options.locale || dom.acquire_attribute(this.el, "lang") || "en";
         // we don't support any country-specific language variants, always use first 2 letters
         lang = lang.substr(0, 2).toLowerCase();
         try {
