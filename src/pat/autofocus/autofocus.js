@@ -1,8 +1,7 @@
-import $ from "jquery";
 import Base from "../../core/base";
+import dom from "../../core/dom";
 
 let scheduled_task = null;
-let registered_event_handler = false;
 
 export default Base.extend({
     name: "autofocus",
@@ -22,32 +21,25 @@ export default Base.extend({
             // Do not autofocus in iframes.
             return;
         }
-
-        this.setFocus(this.trigger);
-
-        if (!registered_event_handler) {
-            // Register the event handler only once.
-            $(document).on("patterns-injected pat-update", (e) => {
-                this.setFocus($(e.target).find(this.trigger));
-            });
-            registered_event_handler = true;
-        }
+        this.set_focus();
     },
 
-    setFocus(target) {
-        // Exit if task is scheduled. setFocus operates on whole DOM anyways.
-        if (scheduled_task) {
-            return;
-        }
-        const $all = $(target);
-        const visible = [...$all].filter((it) => $(it).is(":visible"));
-        const empty = visible.filter((it) => it.value === "");
-        const el = empty[0] || visible[0];
-        if (el) {
+    set_focus() {
+        if (dom.is_visible(this.el) && this.el.value === "") {
+            // Set autofocus only for visible and empty inputs.
+
+            // Clear scheduled tasks if there are any.
+            // Note: Patterns scanning initizlizes patterns "inside-out", so
+            //       DOM nodes later in the tree are initizlized first.
+            //       With multiple pattern instantiations and then module-
+            //       globally clearing and re-scheduling tasks we are
+            //       initializing in the end the first pattern which matches
+            //       the conditions.
+            clearTimeout(scheduled_task);
             scheduled_task = setTimeout(() => {
-                el.focus();
+                this.el.focus();
                 scheduled_task = null;
-            }, 10);
+            }, 100);
         }
     },
 });

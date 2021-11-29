@@ -1,10 +1,11 @@
 ## Description
 
-With the Autofocus pattern you may choose which input field gets the focus when a page load, or after it was injected.
+With the Autofocus pattern you may choose which input field gets the focus when a page is loaded or injected.
+
 
 ## Documentation
 
-Patterns augments the standard HTML5 autofocus behaviour, and implements it for browsers that do not support it natively.
+Patterns augments the standard HTML5 autofocus behaviour.
 
 On initial page load or when new content is injected it is scanned for input elements with an `autofocus` attribute or `pat-autofocus` class.
 
