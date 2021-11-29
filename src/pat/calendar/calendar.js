@@ -1,5 +1,6 @@
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import Base from "../../core/base";
+import dom from "../../core/dom";
 import logging from "../../core/logging";
 import Modal from "../modal/modal";
 import Parser from "../../core/parser";
@@ -150,10 +151,7 @@ export default Base.extend({
         config.plugins = [fcDayGrid, fcInteraction, fcList, fcLuxon, fcTimeGrid];
         config.eventColor = this.options.eventColor;
 
-        let lang =
-            this.options.lang ||
-            document.querySelector("html").getAttribute("lang") ||
-            "en";
+        let lang = this.options.lang || dom.acquire_attribute(this.el, "lang") || "en";
         // we don't support any country-specific language variants, always use first 2 letters
         lang = lang.substr(0, 2).toLowerCase();
         if (lang !== "en") {
