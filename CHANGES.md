@@ -1,3 +1,32 @@
+## [6.1.0](https://github.com/Patternslib/patterns/compare/6.0.2...6.1.0) (2021-11-30)
+
+
+### Features
+
+* **core dom:** Add acquire_attribute to get the value of the first occurence of a defined attribute up the DOM tree. ([d3a2db3](https://github.com/Patternslib/patterns/commit/d3a2db346be549146a6c135cda218c6ac7e59a8a))
+
+* **core dom:** Add parameter to acquire_attribute to return a list of all found attributes up the DOM tree. ([732ef34](https://github.com/Patternslib/patterns/commit/732ef34a8d90230661b71a37caa1c25735b4e655))
+
+* **pat calendar:** Acquire language from the DOM tree instead only the HTML node if the language is not configured. ([d659e09](https://github.com/Patternslib/patterns/commit/d659e09b1edc11868e6679dbd383953069713626))
+
+* **pat display time:** Acquire language from the DOM tree instead only the HTML node if the language is not configured. ([7c65d5c](https://github.com/Patternslib/patterns/commit/7c65d5c18cb0cb6a28cb318750e7421abbba9577))
+
+
+
+### Bug Fixes
+
+* **pat autofocus:** Scoped autofocus. ([f820445](https://github.com/Patternslib/patterns/commit/f8204451aaf70dabc4671771a5a5c831b610ec31))
+Do not operate on whole DOM tree but only on the scoped element while still working with multiple pat-autofocus instances.
+
+This fixes a problem where autofocus was set on the wrong element after injection.
+
+
+### Maintenance
+
+* **Cleanup:** Remove unused icon.svg. Icons are in /style/pattern-icons.svg. ([8ca2acf](https://github.com/Patternslib/patterns/commit/8ca2acf8630c1b639146aa36c2f5a8b51c153e14))
+
+* **dependencies:** Upgrade dev dependencies up to minor versions. ([405674d](https://github.com/Patternslib/patterns/commit/405674da28cf95486d631732ccfe9a38a5f27397))
+
 ### [6.0.2](https://github.com/Patternslib/patterns/compare/6.0.1...6.0.2) (2021-11-25)
 
 
