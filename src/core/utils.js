@@ -570,6 +570,49 @@ const localized_isodate = (date) => {
     return `${year}-${month}-${day}`;
 };
 
+/**
+ * Replace HTML reserved characters with html entities to add HTML for user
+ * editing to e.g. a textarea or a contenteditable.
+ *
+ * See: https://developer.mozilla.org/en-US/docs/Glossary/Entity#reserved_characters
+ *
+ * @param {string} html - The HTML string to encode.
+ *
+ * @returns {string} - Returns the escaped html string:
+ *                     ``&`` will be replaced with ``&amp;``.
+ *                     ``<`` will be repalced with ``&lt;``,
+ *                     ``>`` will be replaced with ``&gt;``,
+ *                     ``"`` will be replaced with ``&quot;``.
+ */
+const escape_html = (html) => {
+    return (html || "")
+        .replace(/&/g, "&amp;") // needs to be first!
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+};
+
+/**
+ * Return unescaped, raw HTML from an escaped HTML  string.
+ *
+ * See: https://developer.mozilla.org/en-US/docs/Glossary/Entity#reserved_characters
+ *
+ * @param {string} escaped_html - The HTML string to decode.
+ *
+ * @returns {string} - Returns the escaped html string:
+ *                     ``&amp;`` will be replaced with ``&``,
+ *                     ``&lt;`` will be repalced with ``<``,
+ *                     ``&gt;`` will be replaced with ``>``,
+ *                     ``&quot;`` will be replaced with ``"``.
+ */
+const unescape_html = (escaped_html) => {
+    return (escaped_html || "")
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"');
+};
+
 var utils = {
     // pattern pimping - own module?
     jqueryPlugin: jqueryPlugin,
@@ -599,6 +642,8 @@ var utils = {
     jqToNode: jqToNode,
     ensureArray: ensureArray,
     localized_isodate: localized_isodate,
+    escape_html: escape_html,
+    unescape_html: unescape_html,
 };
 
 export default utils;
