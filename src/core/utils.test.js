@@ -716,3 +716,21 @@ describe("animation_frame ...", function () {
         expect(mock).toHaveBeenCalled();
     });
 });
+
+describe("escape/unescape html ...", function () {
+    it("escapes and unescapes html", () => {
+        const unescaped = `<hello attribute="value">this & that</hello>`;
+        const escaped = `&lt;hello attribute=&quot;value&quot;&gt;this &amp; that&lt;/hello&gt;`;
+
+        expect(utils.escape_html(unescaped)).toBe(escaped);
+        expect(utils.unescape_html(escaped)).toBe(unescaped);
+    });
+
+    it("does not break with null-ish input", () => {
+        expect(utils.escape_html(null)).toBe("");
+        expect(utils.escape_html(undefined)).toBe("");
+
+        expect(utils.unescape_html(null)).toBe("");
+        expect(utils.unescape_html(undefined)).toBe("");
+    });
+});
