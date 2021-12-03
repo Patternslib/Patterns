@@ -1,3 +1,18 @@
+## [6.2.0](https://github.com/Patternslib/patterns/compare/6.1.0...6.2.0) (2021-12-03)
+
+
+### Features
+
+* **core utils:** Add escape_html and unescape_html function to replace/unreplace html entity characters. ([dead69c](https://github.com/Patternslib/patterns/commit/dead69c6d51bcfccfb8adaed21999a78bcc1bcfa))
+
+
+
+### Maintenance
+
+* **pat calendar:** Document preference of setting the language as lang attribute. ([bbf7a6c](https://github.com/Patternslib/patterns/commit/bbf7a6c172a78cdb286c3481b2fbef76881778b7))
+
+* **pat display time:** Document preference of setting the language as lang attribute. ([71391db](https://github.com/Patternslib/patterns/commit/71391db5926b01d2fe444c8fc8ae74ca2b879f22))
+
 ## [6.1.0](https://github.com/Patternslib/patterns/compare/6.0.2...6.1.0) (2021-11-30)
 
 
