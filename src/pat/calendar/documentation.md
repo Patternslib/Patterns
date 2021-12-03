@@ -25,10 +25,10 @@ This is the full initialization tag:
 
 ```
   <div id="calendar" class="pat-calendar"
+      lang="de"
       data-pat-calendar="
         url: http://localhost:8080/Plone/@search?portal_type=Event&start.query=${end_str}&start.range=max&end.query=${start_str}&end.range=min&metadata_fields=start&metadata_fields=end&metadata_fields=whole_day&metadata_fields=location;
         initial-date: 2020-10-10;
-        lang: de;
         store: session;"
   >
 ```
@@ -68,4 +68,5 @@ The calendar can be configured through a `data-pat-calendar` attribute. The avai
 | `pat-switch-remove`       |                   | CSS class name                                    | Defines the class name to be removed.                                                                         | string                 |
 | `pat-tooltip-source`      | null              | null, "ajax"                                      | If set to "ajax" and a URL is configured for an displayed event, it will open the url in a tooltip.           | string                 |
 | `pat-modal-class`         | null              | null, CSS class names                             | If set to a string of space seperated CSS class names a modal will be initialized on an event.                | string                 |
+| `lang`                    | null              | language code                                     | Language of the calendar. You might want to set the ``lang`` attribute on the element or it's container.      | string                 |
 
