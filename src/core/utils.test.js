@@ -214,40 +214,87 @@ describe("basic tests", function () {
 });
 
 describe("removeWildcardClass", function () {
-    it("Remove basic class", function () {
-        var $el = $("<div class='on'/>");
-        utils.removeWildcardClass($el, "on");
-        expect($el.hasClass("on")).toBe(false);
+    describe("... with single element", function () {
+        it("Remove basic class", function () {
+            const el = document.createElement("div");
+            el.classList.add("on");
+            utils.removeWildcardClass(el, "on");
+            expect(el.classList.contains("on")).toBe(false);
+        });
+
+        it("Keep other classes", function () {
+            const el = document.createElement("div");
+            el.classList.add("one");
+            el.classList.add("two");
+            utils.removeWildcardClass(el, "one");
+            expect(el.classList.contains("one")).toBe(false);
+            expect(el.classList.contains("two")).toBe(true);
+        });
+
+        it("Remove removes whole words", function () {
+            const el = document.createElement("div");
+            el.classList.add("cheese-on-bread");
+            utils.removeWildcardClass(el, "on");
+            expect(el.getAttribute("class")).toBe("cheese-on-bread");
+        });
+
+        it("Remove wildcard postfix class", function () {
+            const el = document.createElement("div");
+            el.classList.add("icon-small");
+            utils.removeWildcardClass(el, "icon-*");
+            expect(el.getAttribute("class")).toBeFalsy();
+        });
+
+        it("Remove wildcard infix class", function () {
+            const el = document.createElement("div");
+            el.classList.add("icon-small-alert");
+            utils.removeWildcardClass(el, "icon-*-alert");
+            expect(el.getAttribute("class")).toBeFalsy();
+        });
+
+        it("Keep other classes when removing wildcards", function () {
+            const el = document.createElement("div");
+            el.classList.add("icon-small");
+            el.classList.add("foo");
+            utils.removeWildcardClass(el, "icon-*");
+            expect(el.getAttribute("class")).toBe("foo");
+        });
     });
 
-    it("Keep other classes", function () {
-        var $el = $("<div class='one two'/>");
-        utils.removeWildcardClass($el, "one");
-        expect($el.attr("class")).toBe("two");
-    });
+    describe("... with a list of elements", function () {
+        beforeEach(function () {
+            document.body.innerHTML = "";
+        });
 
-    it("Remove uses whole words", function () {
-        var $el = $("<div class='cheese-on-bread'/>");
-        utils.removeWildcardClass($el, "on");
-        expect($el.attr("class")).toBe("cheese-on-bread");
-    });
+        afterEach(function () {
+            document.body.innerHTML = "";
+        });
 
-    it("Remove wildcard postfix class", function () {
-        var $el = $("<div class='icon-small'/>");
-        utils.removeWildcardClass($el, "icon-*");
-        expect($el.attr("class")).toBeFalsy();
-    });
-
-    it("Remove wildcard infix class", function () {
-        var $el = $("<div class='icon-small-alert/>");
-        utils.removeWildcardClass($el, "icon-*-alert");
-        expect($el.attr("class")).toBeFalsy();
-    });
-
-    it("Keep other classes when removing wildcards", function () {
-        var $el = $("<div class='icon-small foo'/>");
-        utils.removeWildcardClass($el, "icon-*");
-        expect($el.attr("class")).toBe("foo");
+        it("Keep other classes", function () {
+            document.body.innerHTML = `
+                <div class="one two"></div>
+                <div class="two three"></div>
+            `;
+            const inner_els = document.querySelectorAll("div");
+            utils.removeWildcardClass(inner_els, "two");
+            expect(inner_els[0].classList.contains("one")).toBe(true);
+            expect(inner_els[0].classList.contains("two")).toBe(false);
+            expect(inner_els[1].classList.contains("two")).toBe(false);
+            expect(inner_els[1].classList.contains("three")).toBe(true);
+        });
+        it("Remove wildcard infix class", function () {
+            document.body.innerHTML = `
+                <div class="one icon-1-alert"></div>
+                <div class="two icon-2-alert icon-3-alert"></div>
+            `;
+            const inner_els = document.querySelectorAll("div");
+            utils.removeWildcardClass(inner_els, "icon-*-alert");
+            expect(inner_els[0].classList.contains("one")).toBe(true);
+            expect(inner_els[0].classList.contains("icon-1-alert")).toBe(false);
+            expect(inner_els[1].classList.contains("two")).toBe(true);
+            expect(inner_els[1].classList.contains("icon-2-alert")).toBe(false);
+            expect(inner_els[1].classList.contains("icon-3-alert")).toBe(false);
+        });
     });
 });
 
