@@ -204,21 +204,40 @@ function escapeRegExp(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
 
-function removeWildcardClass($targets, classes) {
-    if (classes.indexOf("*") === -1) $targets.removeClass(classes);
-    else {
-        var matcher = classes.replace(/[\-\[\]{}()+?.,\\\^$|#\s]/g, "\\$&");
+/**
+ * Remove classes from a list of targets if they match a specific pattern.
+ *
+ * @param {Node, NodeList} targets: Dom Node or NodeList where the classes should be removed.
+ * @param {string} classes: String matching classes to be removed.
+ *                          You can add a "*" as wildcard to search for classes to be removed.
+ *                          E.g. "icon-*-alert" to remove any of "icon-1-alert icon-2-alert".
+ *
+ * @returns {undefined}: This method directly operates on the targets.
+ */
+function removeWildcardClass(targets, classes) {
+    targets = utils.ensureArray(targets);
+
+    if (classes.indexOf("*") === -1) {
+        for (const target of targets) {
+            target.classList.remove(classes);
+        }
+    } else {
+        let matcher = classes.replace(/[\-\[\]{}()+?.,\\\^$|#\s]/g, "\\$&");
         matcher = matcher.replace(/[*]/g, ".*");
         matcher = new RegExp("^" + matcher + "$");
-        $targets.filter("[class]").each(function () {
-            var $this = $(this),
-                classes = $this.attr("class").split(/\s+/),
-                ok = [];
-            for (var i = 0; i < classes.length; i++)
-                if (!matcher.test(classes[i])) ok.push(classes[i]);
-            if (ok.length) $this.attr("class", ok.join(" "));
-            else $this.removeAttr("class");
-        });
+
+        for (const target of targets) {
+            const class_list = (target.getAttribute("class") || "").split(/\s+/);
+            if (!class_list.length) {
+                continue;
+            }
+            const ok = class_list.filter((it) => !matcher.test(it));
+            if (ok.length) {
+                target.setAttribute("class", ok.join(" "));
+            } else {
+                target.removeAttribute("class");
+            }
+        }
     }
 }
 
