@@ -554,9 +554,22 @@ const jqToNode = (el) => {
     return el;
 };
 
-const ensureArray = (it) => {
+/**
+ * Always return an iterable object.
+ *
+ * @param {any} it: The object which needs to be wrapped in an array or returned as is if it is iterable.
+ * @param {boolean} force_array: If the object is iterable but not an Array, convert it to an array (e.g. For jQuery items or NodeList objects).
+ *
+ * @returns {Array}: Returns the object wrapped in an Array, expanded to an Array or as-is if it is already iterable.
+ */
+const ensureArray = (it, force_array) => {
     // Ensure to return always an array
-    return Array.isArray(it) || it.jquery ? it : [it];
+    const array_like = !!(
+        NodeList.prototype.isPrototypeOf(it) || // eslint-disable-line no-prototype-builtins
+        Array.isArray(it) ||
+        it.jquery
+    );
+    return array_like ? (force_array ? [...it] : it) : [it];
 };
 
 const localized_isodate = (date) => {

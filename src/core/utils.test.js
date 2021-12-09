@@ -642,6 +642,34 @@ describe("core.utils tests", () => {
 
             done();
         });
+
+        it("returns a array-like NodeList object as is", () => {
+            const el = document.createElement("div");
+            el.innerHTML = `
+                <div></div>
+                <div></div>
+                <div></div>
+            `;
+            const node_list = el.querySelectorAll("div");
+            const result = utils.ensureArray(node_list);
+            expect(result.length).toBe(3);
+            expect(NodeList.prototype.isPrototypeOf(result)).toBe(true); // eslint-disable-line no-prototype-builtins
+            expect(Array.isArray(result)).toBe(false);
+        });
+
+        it("returns a array from a NodeList is force_array is set", () => {
+            const el = document.createElement("div");
+            el.innerHTML = `
+                <div></div>
+                <div></div>
+                <div></div>
+            `;
+            const node_list = el.querySelectorAll("div");
+            const result = utils.ensureArray(node_list, true);
+            expect(result.length).toBe(3);
+            expect(NodeList.prototype.isPrototypeOf(result)).toBe(false); // eslint-disable-line no-prototype-builtins
+            expect(Array.isArray(result)).toBe(true);
+        });
     });
 
     describe("localized_isodate tests", () => {
