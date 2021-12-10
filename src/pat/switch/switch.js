@@ -1,16 +1,11 @@
-/**
- * Patterns switch - toggle classes on click
- *
- * Copyright 2013 Simplon B.V. - Wichert Akkerman
- * Copyright 2012 Florian Friesdorf
- * Copyright 2012 SYSLAB.COM GmbH
- */
+// Patterns switch - toggle classes on click
 import $ from "jquery";
-import registry from "../../core/registry";
+import Base from "../../core/base";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import store from "../../core/store";
 import utils from "../../core/utils";
+import dom from "../../core/dom";
 
 const log = logging.getLogger("pat.switch");
 
@@ -20,78 +15,54 @@ parser.addArgument("remove");
 parser.addArgument("add");
 parser.addArgument("store", "none", ["none", "session", "local"]);
 
-var switcher = {
+export default Base.extend({
     name: "switch",
     trigger: ".pat-switch",
-    jquery_plugin: true,
 
-    init: function ($el, defaults) {
-        return $el.each(function () {
-            var $trigger = $(this),
-                options = parser.parse($trigger, defaults, true);
-            options = switcher._validateOptions(options);
-            if (options.length) {
-                $trigger
-                    .data("patternSwitch", options)
-                    .off(".patternSwitch")
-                    .on("click.patternSwitch", switcher._onClick);
-                for (var i = 0; i < options.length; i++) {
-                    var option = options[i];
-                    if (option.store !== "none") {
-                        option._storage = (option.store === "local"
-                            ? store.local
-                            : store.session)("switch");
-                        var state = option._storage.get(option.selector);
-                        if (
-                            state &&
-                            state.remove === option.remove &&
-                            state.add === option.add
-                        )
-                            switcher._update(option.selector, state.remove, state.add);
-                    }
-                }
+    init() {
+        this.options = this._validateOptions(parser.parse(this.el, this.options, true));
+        if (!this.options.length) {
+            log.error("Switch without options cannot be initialized.");
+        }
+
+        dom.add_event_listener(this.el, "click", "pat-switch--on-click", (e) => {
+            if (e.tagName === "A") {
+                e.preventDefault();
             }
+            this._go();
         });
-    },
 
-    destroy: function ($el) {
-        return $el.each(function () {
-            $(this).removeData("patternSwitch").off("click.patternSwitch");
-        });
-    },
-
-    // jQuery API to toggle a switch
-    execute: function ($el) {
-        return $el.each(function () {
-            switcher._go($(this));
-        });
-    },
-
-    _onClick: function (ev) {
-        if ($(ev.currentTarget).is("a")) {
-            ev.preventDefault();
+        for (const option of this.options) {
+            if (option.store !== "none") {
+                option._storage = (
+                    option.store === "local" ? store.local : store.session
+                )("switch");
+                const state = option._storage.get(option.selector);
+                if (state && state.remove === option.remove && state.add === option.add)
+                    this._update(option.selector, state.remove, state.add);
+            }
         }
-        switcher._go($(this));
     },
 
-    _go: function ($trigger) {
-        var options = $trigger.data("patternSwitch"),
-            option,
-            i;
-        if (!options) {
-            log.error("Tried to execute a switch for an uninitialised element.");
-            return;
-        }
-        for (i = 0; i < options.length; i++) {
-            option = options[i];
-            switcher._update(option.selector, option.remove, option.add);
+    destroy() {
+        dom.remove_event_listener(this.el, "pat-switch--on-click");
+    },
+
+    execute() {
+        // jQuery API to toggle a switch
+        this._go();
+    },
+
+    _go() {
+        for (const option of this.options) {
+            this._update(option.selector, option.remove, option.add);
             if (option._storage)
                 option._storage.set(option.selector, {
                     remove: option.remove,
                     add: option.add,
                 });
         }
-        $trigger.trigger("resize");
+        $(this.el).trigger("resize");
     },
 
     _validateOptions: function (options) {
@@ -106,15 +77,17 @@ var switcher = {
     },
 
     _update: function (selector, remove, add) {
-        var $targets = $(selector);
+        const targets = document.querySelectorAll(selector);
+        for (const target of targets) {
+            if (remove) {
+                utils.removeWildcardClass(target, remove);
+            }
 
-        if (!$targets.length) return;
+            if (add) {
+                target.classList.add(add);
+            }
 
-        if (remove) utils.removeWildcardClass($targets, remove);
-        if (add) $targets.addClass(add);
-        $targets.trigger("pat-update", { pattern: "switch" });
+            $(target).trigger("pat-update", { pattern: "switch" });
+        }
     },
-};
-
-registry.register(switcher);
-export default switcher;
+});
