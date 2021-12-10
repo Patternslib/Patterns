@@ -62,7 +62,7 @@ export default Base.extend({
                     add: option.add,
                 });
         }
-        $(this.el).trigger("resize");
+        $(this.el).trigger("resize"); // See: https://github.com/Patternslib/Patterns/pull/539
     },
 
     _validateOptions: function (options) {
