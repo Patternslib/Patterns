@@ -100,15 +100,15 @@ export default Base.extend({
             },
             // Input is a unix timestamp
             format: function (value, options) {
-                var format = options.dateOnly ? "YYYY-MM-DD" : "YYYY-MM-DD hh:mm:ss";
+                const format = options.dateOnly ? "YYYY-MM-DD" : "YYYY-MM-DD hh:mm:ss";
                 return Moment.utc(value).format(format);
             },
         });
     },
 
-    getFieldType: function (input) {
-        var opts = parser.parse($(input));
-        var type = input.getAttribute("type");
+    getFieldType(input) {
+        const opts = parser.parse($(input));
+        let type = input.getAttribute("type");
         if (_.contains(["datetime", "date"], opts.type)) {
             type = opts.type;
         }
@@ -118,33 +118,33 @@ export default Base.extend({
         return type;
     },
 
-    setLocalDateConstraints: function (input, opts, constraints) {
+    setLocalDateConstraints(input, opts, constraints) {
         /* Set the relative date constraints, i.e. not-after and not-before, as well as custom messages.
          */
-        var name = input.getAttribute("name").replace(/\./g, "\\.");
-        var type = this.getFieldType(input);
-        var c = constraints[name][type];
+        const name = input.getAttribute("name").replace(/\./g, "\\.");
+        const type = this.getFieldType(input);
+        const c = constraints[name][type];
 
         if (!c || typeof opts == "undefined") {
             return constraints;
         }
 
         _.each(["before", "after"], function (relation) {
-            var relative = opts.not ? opts.not[relation] : undefined;
-            var $ref;
+            const relative = opts.not ? opts.not[relation] : undefined;
             if (typeof relative === "undefined") {
                 return;
             }
-            var relative_constraint = relation === "before" ? "earliest" : "latest";
+            const relative_constraint = relation === "before" ? "earliest" : "latest";
             if (Validate.moment.isDate(relative)) {
                 c[relative_constraint] = relative;
             } else {
+                let $ref;
                 try {
                     $ref = $(relative);
                 } catch (e) {
                     console.log(e);
                 }
-                var arr = $ref.data("pat-validation-refs") || [];
+                const arr = $ref.data("pat-validation-refs") || [];
                 if (!_.contains(arr, input)) {
                     arr.unshift(input);
                     $ref.data("pat-validation-refs", arr);
@@ -158,16 +158,16 @@ export default Base.extend({
         return constraints;
     },
 
-    setLocalConstraints: function (input, constraints) {
+    setLocalConstraints(input, constraints) {
         /* Some form fields might have their own data-pat-validation
          * attribute, used to set field-specific constraints.
          *
          * We parse them and add them to the passed in constraints obj.
          */
-        var name = input.getAttribute("name").replace(/\./g, "\\."),
-            type = this.getFieldType(input),
-            opts = parser.parse($(input)),
-            constraint = constraints[name];
+        const name = input.getAttribute("name").replace(/\./g, "\\.");
+        const type = this.getFieldType(input);
+        const opts = parser.parse($(input));
+        let constraint = constraints[name];
         if (_.contains(["datetime", "date"], type)) {
             constraints = this.setLocalDateConstraints(input, opts, constraints);
         } else if (type == "number") {
@@ -175,12 +175,9 @@ export default Base.extend({
                 // TODO: need to figure out how to add local validation
                 // messages for numericality operators
                 if (input.getAttribute(limit)) {
-                    var constraint = constraints[name],
-                        key =
-                            limit == "min"
-                                ? "greaterThanOrEqualTo"
-                                : "lessThanOrEqualTo",
-                        value = Number(input.getAttribute(limit));
+                    const key =
+                        limit == "min" ? "greaterThanOrEqualTo" : "lessThanOrEqualTo";
+                    const value = Number(input.getAttribute(limit));
                     if (typeof constraint.numericality === "boolean") {
                         constraint.numericality = {};
                     }
@@ -209,7 +206,7 @@ export default Base.extend({
 
         // Set local validation messages.
         _.each(Object.keys(VALIDATION_TYPE_MAP), function (type) {
-            var c = constraints[name][VALIDATION_TYPE_MAP[type]];
+            let c = constraints[name][VALIDATION_TYPE_MAP[type]];
             if (c === false) {
                 c = { message: "^" + opts.message[type] };
             } else {
@@ -219,11 +216,11 @@ export default Base.extend({
         return constraints;
     },
 
-    getConstraints: function (input) {
+    getConstraints(input) {
         // Get validation constraints by parsing the input element for hints
-        var name = input.getAttribute("name"),
-            type = this.getFieldType(input),
-            constraints = {};
+        const name = input.getAttribute("name");
+        const type = this.getFieldType(input);
+        const constraints = {};
         if (!name) {
             return;
         }
@@ -246,18 +243,17 @@ export default Base.extend({
                     ? { message: "^" + this.options.message.date }
                     : false,
         };
-        constraints = this.setLocalConstraints(input, constraints);
-        return constraints;
+        return this.setLocalConstraints(input, constraints);
     },
 
-    doDateCheck: function (input) {
+    doDateCheck(input) {
         // Returns true if a date check should be done.
         // Don't check if there is no input - this should be handled by
         // the ``required`` attribute.
         // In case of HTML5 date/datetime-local support we also have to
         // check for ``badInput`` as invalid date input will result in an
         // empty ``value``.
-        var type = input.getAttribute("type"); // we need the raw type here
+        const type = input.getAttribute("type"); // we need the raw type here
         if (
             utils.checkInputSupport("date", "wrong value") &&
             type.indexOf("date") === 0 &&
@@ -273,13 +269,13 @@ export default Base.extend({
         }
     },
 
-    getValueDict: function (input) {
+    getValueDict(input) {
         /* Return a dict {name: value} derived from a DOM input element.
          * Used by validate.js's validate method.
          */
-        var value_dict = {};
-        var name = input.getAttribute("name");
-        var value = input.value;
+        const value_dict = {};
+        const name = input.getAttribute("name");
+        let value = input.value;
         if (input.getAttribute("type") == "number") {
             if (value !== "") {
                 try {
@@ -295,23 +291,23 @@ export default Base.extend({
         return value_dict;
     },
 
-    validateForm: function (ev) {
+    validateForm(ev) {
         /* Handler which gets called when the entire form needs to be
          * validated. Will prevent the event's default action if validation fails.
          */
-        var has_errors = false;
+        let has_errors = false;
         // Ignore invisible elements (otherwise pat-clone template
         // elements get validated). Not aware of other cases where this
         // might cause problems.
-        var $single = this.$inputs.filter(
+        const $single = this.$inputs.filter(
             ":visible:enabled:not(:checkbox):not(:radio), .pat-autosuggest:not(:visible)"
         );
-        var group_names = this.$inputs
+        const group_names = this.$inputs
             .filter(":enabled:checkbox, :enabled:radio")
             .map(function () {
                 return this.getAttribute("name");
             });
-        var handleError = function (error) {
+        const handleError = function (error) {
             if (typeof error != "undefined") {
                 if (!has_errors && ev) {
                     ev.preventDefault();
@@ -332,13 +328,13 @@ export default Base.extend({
         }
     },
 
-    customizeMessage: function (msg, input) {
+    customizeMessage(msg, input) {
         /* Due to a limitation in validate.js, whereby we cannot have more
          * fine-grained error messages for sub-validations (e.g. is a
          * number and is bigger than 5), we need to customize the messages
          * after validation. We do that here.
          */
-        var opts = parser.parse($(input));
+        const opts = parser.parse($(input));
         if (msg.indexOf("must be greater than or equal to") != -1) {
             return Validate.format(opts.message.min, {
                 count: input.getAttribute("min"),
@@ -355,10 +351,10 @@ export default Base.extend({
         return msg;
     },
 
-    validateGroupedElement: function (name) {
+    validateGroupedElement(name) {
         /* Handler which gets called for :checkbox and :radio elments. */
-        var input = this.$el.find('[name="' + name + '"]')[0];
-        var error = Validate(
+        const input = this.$el.find('[name="' + name + '"]')[0];
+        const error = Validate(
             _.pick(Validate.collectFormValues(this.$el), name),
             this.getConstraints(input)
         );
@@ -375,7 +371,7 @@ export default Base.extend({
         return error;
     },
 
-    validateElement: function (input, no_recurse) {
+    validateElement(input, no_recurse) {
         /* Handler which gets called when a single form input element
          * needs to be validated. Will prevent the event's default action
          * if validation fails.
@@ -383,11 +379,11 @@ export default Base.extend({
         if (input.disabled) {
             return;
         }
-        var error = Validate(this.getValueDict(input), this.getConstraints(input));
+        const error = Validate(this.getValueDict(input), this.getConstraints(input));
         if (!error) {
             this.removeError(input);
         } else {
-            var name = input.getAttribute("name").replace(/\./g, "\\.");
+            const name = input.getAttribute("name").replace(/\./g, "\\.");
             _.each(
                 error[name],
                 function (msg) {
@@ -404,7 +400,7 @@ export default Base.extend({
         return error;
     },
 
-    onPatternUpdate: function (ev, data) {
+    onPatternUpdate(ev, data) {
         /* Handler which gets called when pat-update is triggered within
          * the .pat-validation element.
          *
@@ -424,19 +420,21 @@ export default Base.extend({
         return true;
     },
 
-    findErrorMessages: function (el) {
-        var $el = $(el),
-            selector = "em.validation.message",
-            $messages = $el.next(selector);
+    findErrorMessages(el) {
+        const $el = $(el);
+        const selector = "em.validation.message";
+        let $messages = $el.next(selector);
         if ($el.is("[type=radio],[type=checkbox]")) {
-            var $fieldset = $el.closest("fieldset.pat-checklist");
-            if ($fieldset.length) $messages = $fieldset.find(selector);
+            const $fieldset = $el.closest("fieldset.pat-checklist");
+            if ($fieldset.length) {
+                $messages = $fieldset.find(selector);
+            }
         }
         return $messages;
     },
 
-    removeError: function (input) {
-        var $errors = this.findErrorMessages(input);
+    removeError(input) {
+        const $errors = this.findErrorMessages(input);
         this.errors = this.errors - $errors.length;
         $errors.remove();
         utils.findRelatives(input).removeClass("is-invalid").addClass("is-valid");
@@ -447,15 +445,14 @@ export default Base.extend({
         }
     },
 
-    showError: function (error, input) {
-        var $el = $(input),
-            $relatives = utils.findRelatives(input),
-            $position = $el,
-            strategy = "after",
-            $message = $("<em/>", { class: "validation warning message" }),
-            $fieldset;
+    showError(error, input) {
+        const $el = $(input);
+        const $relatives = utils.findRelatives(input);
+        let $position = $el;
+        let strategy = "after";
+        const $message = $("<em/>", { class: "validation warning message" });
         if ($el.is("[type=radio],[type=checkbox]")) {
-            $fieldset = $el.closest("fieldset.pat-checklist");
+            const $fieldset = $el.closest("fieldset.pat-checklist");
             if ($fieldset.length) {
                 $position = $fieldset;
                 strategy = "append";
