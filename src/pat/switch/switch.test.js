@@ -1,6 +1,7 @@
 import pattern from "./switch";
 import $ from "jquery";
 import { jest } from "@jest/globals";
+import utils from "../../core/utils";
 
 describe("pat-switch", function () {
     beforeEach(function () {
@@ -8,111 +9,119 @@ describe("pat-switch", function () {
     });
 
     afterEach(function () {
-        $("#lab").remove();
+        document.body.innerHTML = "";
     });
 
     describe("When the switch is clicked", function () {
         describe("if the switch is a hyperlink", function () {
-            it("the default click action is prevented", function () {
-                var $el = $("<a/>", {
-                    "id": "anchor",
-                    "href": "#anchor",
-                    "text": "Switch",
-                    "class": "pat-switch",
-                    "data-pat-switch": "#lab on off",
-                }).appendTo(document.body);
-                var ev = {
-                    type: "click",
-                    preventDefault: function () {},
-                };
-                var spy_onClick = jest.spyOn(pattern, "_onClick");
-                var spy_go = jest.spyOn(pattern, "_go");
-                var spy_preventDefault = jest.spyOn(ev, "preventDefault");
-                pattern.init($el);
-                $el.trigger(ev);
-                expect(spy_onClick).toHaveBeenCalled();
+            it("the default click action is prevented", async function () {
+                document.body.innerHTML = `
+                    <a
+                        href=""
+                        class="pat-switch"
+                        data-pat-switch="#lab on off">test</a>
+                `;
+                const el = document.querySelector("a");
+
+                const instance = new pattern(el);
+                await utils.timeout(1);
+                const spy_go = jest.spyOn(instance, "_go");
+
+                const ev = new Event("click");
+                ev.tagName = "A";
+                const spy_preventDefault = jest.spyOn(ev, "preventDefault");
+
+                el.dispatchEvent(ev);
+
                 expect(spy_go).toHaveBeenCalled();
                 expect(spy_preventDefault).toHaveBeenCalled();
-                $el.remove();
             });
         });
 
         describe("if the switch is not a hyperlink", function () {
-            it("the default click action is not prevented", function () {
-                var $el = $("<button/>", {
-                    "id": "anchor",
-                    "text": "Switch",
-                    "class": "pat-switch",
-                    "data-pat-switch": "#lab on off",
-                }).appendTo(document.body);
+            it("the default click action is not prevented", async function () {
+                document.body.innerHTML = `
+                    <button
+                        class="pat-switch"
+                        data-pat-switch="#lab on off">test</button>
+                `;
+                const el = document.querySelector("button");
 
-                var ev = {
-                    type: "click",
-                    preventDefault: function () {},
-                };
-                var spy_onClick = jest.spyOn(pattern, "_onClick");
-                var spy_go = jest.spyOn(pattern, "_go");
-                var spy_preventDefault = jest.spyOn(ev, "preventDefault");
-                pattern.init($el);
-                $el.trigger(ev);
-                expect(spy_onClick).toHaveBeenCalled();
+                const instance = new pattern(el);
+                await utils.timeout(1);
+                const spy_go = jest.spyOn(instance, "_go");
+
+                const ev = new Event("click");
+                ev.tagName = "BUTTON";
+                const spy_preventDefault = jest.spyOn(ev, "preventDefault");
+
+                el.dispatchEvent(ev);
+
                 expect(spy_go).toHaveBeenCalled();
                 expect(spy_preventDefault).not.toHaveBeenCalled();
-                $el.remove();
             });
         });
     });
 
     describe("_validateOptions", function () {
         it("Bad options", function () {
-            var options = pattern._validateOptions([{}]);
+            const instance = new pattern(document.createElement("div"));
+            const options = instance._validateOptions([{}]);
             expect(options).toEqual([]);
         });
 
         it("Mix valid and invalid options", function () {
-            var options = pattern._validateOptions([
-                { selector: "#victim", add: "purple" },
+            const instance = new pattern(document.createElement("div"));
+            const options = instance._validateOptions([
+                { selector: "#valid", add: "purple" },
                 {},
             ]);
             expect(options.length).toBe(1);
             expect(options[0]).toEqual({
-                selector: "#victim",
+                selector: "#valid",
                 add: "purple",
             });
         });
     });
 
     describe("_update", function () {
-        it("No targets", function () {
-            var spy_addClass = jest.spyOn($.fn, "addClass");
-            var spy_removeClass = jest.spyOn($.fn, "removeClass");
-            pattern._update(".missing");
-            expect(spy_addClass).not.toHaveBeenCalled();
-            expect(spy_removeClass).not.toHaveBeenCalled();
-        });
-
         it("Remove basic class", function () {
-            $("#lab").html("<div class='on'/>");
-            pattern._update("#lab div", "on");
-            expect($("#lab div").hasClass("on")).toBe(false);
+            document.body.innerHTML = `
+                <div class="on"></div>
+            `;
+            const instance = new pattern(document.createElement("div"));
+            instance._update("body div", "on");
+            expect(document.querySelector("body div").classList.contains("on")).toBe(
+                false
+            );
         });
 
         it("Remove wildcard postfix class", function () {
-            $("#lab").html("<div class='icon-small'/>");
-            pattern._update("#lab div", "icon-*");
-            expect($("#lab div").attr("class")).toBeFalsy();
+            document.body.innerHTML = `
+                <div class="icon-small"></div>
+            `;
+            const instance = new pattern(document.createElement("div"));
+            instance._update("body div", "icon-*");
+            expect(document.querySelector("body div").getAttribute("class")).toBeFalsy();
         });
 
         it("Add class", function () {
-            $("#lab").html("<div/>");
-            pattern._update("#lab div", null, "icon-alert");
-            expect($("#lab div").attr("class")).toBe("icon-alert");
+            document.body.innerHTML = "<div></div>";
+            const instance = new pattern(document.createElement("div"));
+            instance._update("body div", null, "icon-alert");
+            expect(
+                document.querySelector("body div").classList.contains("icon-alert")
+            ).toBe(true);
         });
 
         it("Send pat-update event", function () {
-            $("#lab").html("<div id='victim' class='always'/>");
-            var spy_trigger = jest.spyOn($.fn, "trigger");
-            pattern._update("#lab div", null, "icon-alert");
+            document.body.innerHTML = "<div></div>";
+            const instance = new pattern(document.createElement("div"));
+            const spy_trigger = jest.spyOn($.fn, "trigger");
+            instance._update("body div", null, "icon-alert");
+            expect(
+                document.querySelector("body div").classList.contains("icon-alert")
+            ).toBe(true);
             expect(spy_trigger).toHaveBeenCalledWith("pat-update", {
                 pattern: "switch",
             });
@@ -121,77 +130,90 @@ describe("pat-switch", function () {
 
     describe("jQuery plugin usage", function () {
         describe("Initialise via jQuery", function () {
-            it("Specify defaults via API", function () {
-                $("#lab").html("<button>Click me</button>");
-                $("#lab button").patternSwitch({
-                    selector: "#victim",
+            it("Specify defaults via API", async function () {
+                document.body.innerHTML = `
+                    <button>Click me</button>
+                `;
+                $("body button").patternSwitch({
+                    selector: "#target",
                     add: "pink",
                 });
-                var $trigger = $("#lab button");
-                expect($trigger.data("patternSwitch")).toEqual([
-                    { store: "none", selector: "#victim", add: "pink" },
+                await utils.timeout(1);
+                const $trigger = $("body button");
+                const instance = $trigger.data("pattern-switch");
+                expect(instance.options).toEqual([
+                    { store: "none", selector: "#target", add: "pink" },
                 ]);
             });
 
-            it("Invalid defaults via API", function () {
-                $("#lab").html("<button>Click me</button>");
-                $("#lab button").patternSwitch({ selector: "#victim" });
-                var $trigger = $("#lab button");
-                expect($trigger.data("patternSwitch")).toBeFalsy();
+            it("Invalid defaults via API", async function () {
+                document.body.innerHTML = `
+                    <button>Click me</button>
+                `;
+                $("body button").patternSwitch({ selector: "#target" });
+                await utils.timeout(1);
+                const $trigger = $("body button");
+                const instance = $trigger.data("pattern-switch");
+                expect(instance.options).toEqual([]);
             });
 
-            it("Parse defaults from DOM", function () {
-                $("#lab").html(
-                    "<button data-pat-switch='#victim foo bar'>Click me</button>"
-                );
-                $("#lab button").patternSwitch();
-                var $trigger = $("#lab button");
-                expect($trigger.data("patternSwitch")).toEqual([
+            it("Parse defaults from DOM", async function () {
+                document.body.innerHTML = `
+                    <button data-pat-switch="#target foo bar">Click me</button>
+                `;
+                $("body button").patternSwitch();
+                await utils.timeout(1);
+                const $trigger = $("body button");
+                const instance = $trigger.data("pattern-switch");
+                expect(instance.options).toEqual([
                     {
                         store: "none",
-                        selector: "#victim",
+                        selector: "#target",
                         remove: "foo",
                         add: "bar",
                     },
                 ]);
             });
 
-            it("Setup click event handler", function () {
-                // Note that this relies on jQuery implementation details to check
-                // for registered event handlers.
-                $("#lab").html(
-                    "<button data-pat-switch='#victim foo'>Click me</button>"
-                );
-                var $trigger = $("#lab button").patternSwitch(),
-                    events = $._data($trigger[0]).events;
-                expect(events.click).toBeDefined();
-                expect(events.click[0].namespace).toBe("patternSwitch");
+            it("Setup click event handler", async function () {
+                document.body.innerHTML = `
+                    <button data-pat-switch="#target foo">Click me</button>
+                `;
+                $("body button").patternSwitch();
+                await utils.timeout(1);
+                const $trigger = $("body button");
+                const instance = $trigger.data("pattern-switch");
+                const spy_go = jest.spyOn(instance, "_go").mockImplementation(() => {});
+                $trigger.click();
+                expect(spy_go).toHaveBeenCalled();
             });
         });
 
-        it("Execute changes", function () {
-            $("#lab")
-                .append("<button data-pat-switch='#victim foo'>Click me</button>")
-                .append("<div id='victim' class='foo'/>");
-            var $trigger = $("#lab button").patternSwitch();
+        it("Execute changes via 'execute' API", async function () {
+            document.body.innerHTML = `
+                <button data-pat-switch="#target foo">Click me</button>
+                <div id="target" class="foo bar">ok</div>
+            `;
+            $("body button").patternSwitch();
+            await utils.timeout(1);
+            const $trigger = $("body button");
             $trigger.patternSwitch("execute");
-            expect($("#victim").hasClass("foo")).toBeFalsy();
+            expect($("#target").hasClass("foo")).toBe(false);
+            expect($("#target").hasClass("bar")).toBe(true);
         });
 
-        describe("Destroy all hooks", function () {
-            it("Setup click event handler", function () {
-                // Note that this relies on jQuery implementation details to check
-                // for registered event handlers.
-                $("#lab").html(
-                    "<button data-pat-switch='#victim foo'>Click me</button>"
-                );
-                var $trigger = $("#lab button").patternSwitch(),
-                    events = $._data($trigger[0]).events;
-                expect(events.click).toBeDefined();
-                $trigger.patternSwitch("destroy");
-                expect(events.click).not.toBeDefined();
-                expect($trigger.data("patternSwitch")).toBeFalsy();
-            });
+        it("Destroy all hooks", async function () {
+            document.body.innerHTML = `
+                <button data-pat-switch="#target foo">Click me</button>
+                <div id="target" class="foo bar">ok</div>
+            `;
+            $("body button").patternSwitch();
+            await utils.timeout(1);
+            const $trigger = $("body button");
+            $trigger.patternSwitch("destroy");
+            $trigger.click();
+            expect($("#target").hasClass("foo")).toBe(true);
+            expect($("#target").hasClass("bar")).toBe(true);
         });
     });
 });
