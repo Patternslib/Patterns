@@ -79,20 +79,19 @@
 
         <h1>Gallery adding wrapped and unwrapped images.</h1>
         <p>
-            The last image here is wrapped in a link and should not open the
-            gallery but Syslab.com website in a new tab.<br />
-            The image is included in the gallery, though.
+            The last image here is wrapped in a external link.<br/>
+            The external link can be opened in a new tab, the image is included in the gallery.
         </p>
         <nav
             class="pat-gallery"
-            data-pat-gallery="item-selector: a.add-to-gallery, :not(a.add-to-gallery) > img, > img"
+            data-pat-gallery="item-selector: a.add-to-gallery, :not(.add-to-gallery) > img"
         >
             <a href="full-1.jpg" class="add-to-gallery"
                 ><img src="thumb-1.jpg"
             /></a>
             <img src="full-2.jpg" />
             <img src="full-3.jpg" />
-            <a href="https://www.syslab.com/" target="_blank"
+            <a href="https://www.syslab.com/" target="_blank" class="exclude-from-gallery"
                 ><img src="full-4.jpg"
             /></a>
         </nav>
