@@ -1,13 +1,9 @@
-/**
- * Patterns gallery - A simple gallery
- *
- * Copyright 2013 Simplon B.V. - Wichert Akkerman
- */
+// pat-gallery - A gallery pattern.
 import "regenerator-runtime/runtime"; // needed for ``await`` support
-import $ from "jquery";
-import _ from "underscore";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
+import dom from "../../core/dom";
+import utils from "../../core/utils";
 
 export const parser = new Parser("gallery");
 parser.addArgument("item-selector", "a"); // selector for anchor element, which is added to the gallery.
@@ -16,41 +12,84 @@ parser.addArgument("scale-method", "fit", ["fit", "fitNoUpscale", "zoom"]);
 parser.addArgument("delay", 30000);
 parser.addArgument("effect-duration", 250);
 
+let PhotoSwipe;
+let PhotoSwipeUI;
+
 export default Base.extend({
     name: "gallery",
     trigger: ".pat-gallery",
-    origBodyOverflow: "auto",
+    orig_body_overflow: "auto",
 
-    async init($el, opts) {
+    images: [],
+
+    async init() {
         if (window.__patternslib_import_styles) {
             import("photoswipe/dist/photoswipe.css");
             import("photoswipe/dist/default-skin/default-skin.css");
         }
-        const PhotoSwipe = (await import("photoswipe")).default;
-        const PhotoSwipeUI = (await import("photoswipe/dist/photoswipe-ui-default")).default; // prettier-ignore
+        PhotoSwipe = (await import("photoswipe")).default;
+        PhotoSwipeUI = (await import("photoswipe/dist/photoswipe-ui-default")).default; // prettier-ignore
 
-        this.options = parser.parse(this.$el, opts);
-        if ($("#photoswipe-template").length === 0) {
+        this.options = parser.parse(this.el, this.options);
+
+        // Use default template, if no other template is defined.
+        if (!document.getElementById("photoswipe-template")) {
             const Template = (await import("./template.html")).default;
-            $("body").append(_.template(Template)());
+            const template_el = document.createElement("div");
+            template_el.setAttribute("class", "pat-gallery__template-wrapper");
+            template_el.innerHTML = Template;
+            document.body.appendChild(template_el);
         }
 
-        // Search for itemSelector including the current node
-        // See: https://stackoverflow.com/a/17538213/1337474
-        var image_wrapper = this.$el
-            .find(this.options.itemSelector)
-            .addBack(this.options.itemSelector);
-        var images = image_wrapper.map(function () {
+        this.initialize_trigger();
+    },
+
+    initialize_trigger() {
+        const image_wrapper_els = dom.querySelectorAllAndMe(
+            this.el,
+            this.options.itemSelector
+        );
+        this.images = [...image_wrapper_els].map((it) => {
+            dom.add_event_listener(
+                it,
+                "click",
+                "pat-gallery--image_handler",
+                this.initialize_gallery.bind(this)
+            );
+
+            const src =
+                it.getAttribute("href") ||
+                it.getAttribute("src") ||
+                it.querySelector("img")?.getAttribute("src");
+            const title =
+                it.getAttribute("title") ||
+                it.querySelector("img")?.getAttribute("title");
+
             return {
                 w: 0,
                 h: 0,
-                src: this.src || this.href,
-                title: this.title || $(this).find("img").attr("title"),
+                src: src,
+                title: title,
             };
         });
-        var pswpElement = document.querySelectorAll(".pswp")[0];
-        var options = {
-            index: 0,
+    },
+
+    initialize_gallery(e) {
+        const trigger_el = e.currentTarget;
+        e.preventDefault();
+
+        const pswpElement = document.querySelector(".pswp");
+
+        const index =
+            this.images
+                .map((it) => it.src)
+                .indexOf(
+                    trigger_el.getAttribute("href") || trigger_el.getAttribute("src")
+                ) || 0;
+
+        const options = {
+            // Get the index of the clicked gallery item in the list of images.
+            index: index,
             scaleMode: this.options.scaleMethod,
             loop: this.options.loop,
             slideshowDelay: this.options.delay,
@@ -58,51 +97,40 @@ export default Base.extend({
             showAnimationDuration: this.options.effectDuration,
             pinchToClose: false,
             closeOnScroll: false,
+            // Fix reload on gallery close which was induced by a history back call.
+            history: false,
         };
 
-        image_wrapper.click(function (ev) {
-            if (
-                this.tagName.toLowerCase() === "img" &&
-                $(this).closest("a").length !== 0
-            ) {
-                // Do not open auto-added images in gallery if they are wrapped in an anchor element.
-                return;
+        const gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI, this.images, options);
+        gallery.listen("gettingData", function (index, item) {
+            // Workaround for the fact that we don't know the image sizes.
+            // https://github.com/dimsemenov/PhotoSwipe/issues/796
+            if (item.w < 1 || item.h < 1) {
+                // unknown size
+                const img = new Image();
+                img.onload = (_e) => {
+                    const img_el = _e.target;
+                    // will get size after load
+                    item.w = img_el.width; // set image width
+                    item.h = img_el.height; // set image height
+                    gallery.invalidateCurrItems(); // reinit Items
+                    gallery.updateSize(true); // reinit Items
+                };
+                img.src = item.src; // let's download image
             }
-            ev.preventDefault();
-
-            // Get the index of the clicked gallery item in the list of images.
-            options.index =
-                _.indexOf(_.pluck(images, "src"), this.href || this.src) || 0;
-            // Fix reload on gallery close which was induced by a history back call.
-            options.history = false;
-
-            var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI, images, options);
-            gallery.listen("gettingData", function (index, item) {
-                // Workaround for the fact that we don't know the image sizes.
-                // https://github.com/dimsemenov/PhotoSwipe/issues/796
-                if (item.w < 1 || item.h < 1) {
-                    // unknown size
-                    var img = new Image();
-                    img.onload = function () {
-                        // will get size after load
-                        item.w = this.width; // set image width
-                        item.h = this.height; // set image height
-                        gallery.invalidateCurrItems(); // reinit Items
-                        gallery.updateSize(true); // reinit Items
-                    };
-                    img.src = item.src; // let's download image
-                }
-            });
-            gallery.listen("initialZoomInEnd", function () {
-                // don't show body scrollbars when overlay is open
-                this.origBodyOverflow = $("body").css("overflow");
-                $("body").css("overflow", "hidden");
-            });
-            gallery.listen("destroy", function () {
-                // show original overlay value on body after closing
-                $("body").css("overflow", this.origBodyOverflow);
-            });
-            gallery.init();
         });
+
+        gallery.listen("initialZoomInEnd", () => {
+            // don't show body scrollbars when overlay is open
+            this.orig_body_overflow = utils.getCSSValue(document.body, "overflow");
+            document.body.style.overflow = "hidden";
+        });
+
+        gallery.listen("destroy", () => {
+            // show original overlay value on body after closing
+            document.body.style.overflow = this.orig_body_overflow;
+        });
+
+        gallery.init();
     },
 });
