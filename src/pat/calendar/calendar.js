@@ -48,7 +48,7 @@ parser.addArgument("height", "auto");
 parser.addArgument("ignore-url", false);
 parser.addArgument("lang", null); // If not set, use "en" (See below)
 parser.addArgument("store", "none", ["none", "session", "local"]);
-parser.addArgument("time-format", "h(:mm)t");
+parser.addArgument("time-format", "24h", ["24h", "12h"]);
 parser.addArgument("timezone", null);
 parser.addArgument("title-day", "dddd, MMM d, YYYY");
 parser.addArgument("title-month", "MMMM YYYY");
@@ -170,6 +170,22 @@ export default Base.extend({
         let timezone = this.el_timezone?.value || this.options.timezone || null;
         if (timezone) {
             config.timeZone = timezone;
+        }
+
+        if (this.options.timeFormat == "12h") {
+            // 12h format
+            config.eventTimeFormat = {
+                hour12: true,
+                meridiem: "narrow",
+                hour: "numeric",
+            };
+        } else {
+            // 24h format
+            config.eventTimeFormat = {
+                hour12: false,
+                meridiem: "false",
+                hour: "numeric",
+            };
         }
 
         const sources = [...(this.options.event.sources || [])];

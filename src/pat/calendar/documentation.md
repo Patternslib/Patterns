@@ -55,7 +55,7 @@ The calendar can be configured through a `data-pat-calendar` attribute. The avai
 | `height`                  | auto              |                                                   |
 | `ignore-url`              |                   |                                                   |
 | `store`                   | none              | none, session, local                              |
-| `time-format`             | h(:mm)t           |                                                   |
+| `time-format`             | 24h               | 24h, 12h                                          | Time format (12 hour or 24 hour clock) to display on events. |
 | `title-day`               | dddd, MMM d, YYYY |                                                   |
 | `title-month`             | MMMM YYYY         |                                                   |
 | `title-week`              | MMM D YYYY        |                                                   |
