@@ -189,57 +189,43 @@ describe("Navigation pattern tests", function () {
 
 describe("Navigation pattern tests - no predefined structure", function () {
     it("Reacts on DOM change", async function () {
-        var w1 = document.createElement("div");
-        w1.setAttribute("class", "w1");
-
-        var a1 = document.createElement("a");
-        a1.setAttribute("href", "/path/to");
-        a1.setAttribute("class", "a1");
-        a1.appendChild(document.createTextNode("link a1"));
-        w1.appendChild(a1);
-
-        var w11 = document.createElement("div");
-        w11.setAttribute("class", "w11");
-        w1.appendChild(w11);
-
-        var a11 = document.createElement("a");
-        a11.setAttribute("href", "/path/to/test");
-        a11.setAttribute("class", "a11");
-        a11.appendChild(document.createTextNode("link a11"));
-        w11.appendChild(a11);
-
-        var injected_nav = document.createElement("div");
-        injected_nav.setAttribute("id", "injected_nav");
-        injected_nav.appendChild(w1);
-        document.body.appendChild(injected_nav);
-
-        var load_nav = document.createElement("a");
-        load_nav.setAttribute("href", "#injected_nav");
-        load_nav.setAttribute("class", "pat-inject");
-        load_nav.setAttribute("data-pat-inject", "target: #injection_target");
-        load_nav.appendChild(document.createTextNode("load navigation"));
-        document.body.appendChild(load_nav);
-
-        var nav = document.createElement("nav");
-        nav.setAttribute("id", "injection_target");
-        nav.setAttribute("class", "pat-navigation nav");
-        nav.setAttribute("data-pat-navigation", "item-wrapper: div");
-        document.body.appendChild(nav);
+        document.body.innerHTML = `
+          <div id="injected_nav">
+            <div class="w1">
+              <a href="/path/to" class="a1">link a1</a>
+              <div class="w11">
+                <a href="/path/to/test" class="a11">link a11</a>
+              </div>
+            </div>
+          </div>
+          <a
+              href="#injected_nav"
+              class="pat-inject load-nav"
+              data-pat-inject="target: #injection_target">load navigation</a>
+          <nav
+              id="injection_target"
+              class="pat-navigation nav"
+              data-pat-navigation="item-wrapper: div">
+          </nav>
+        `;
 
         // TODO: change when using Jest: https://remarkablemark.org/blog/2018/11/17/mock-window-location/
         history.pushState(null, "", "/path/to/test");
 
-        Registry.scan("body");
+        Registry.scan(document.body);
 
+        const nav = document.querySelector("nav");
+        const load_nav = document.querySelector(".load-nav");
         load_nav.click();
 
-        // wait for everything done until testing.
-        await utils.timeout(300);
+        await utils.timeout(1); // wait for MutationObserver
 
-        w1 = nav.querySelector(".w1");
-        a1 = nav.querySelector(".a1");
-        w11 = nav.querySelector(".w11");
-        a11 = nav.querySelector(".a11");
+        const w1 = nav.querySelector(".w1");
+        const a1 = nav.querySelector(".a1");
+        const w11 = nav.querySelector(".w11");
+        const a11 = nav.querySelector(".a11");
+
+        console.log(document.body.innerHTML);
 
         expect(w1.classList.contains("current")).toBeFalsy();
         expect(w1.classList.contains("navigation-in-path")).toBeTruthy();
