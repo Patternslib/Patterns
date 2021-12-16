@@ -34,11 +34,12 @@ export default Base.extend({
 
         // Use default template, if no other template is defined.
         if (!document.getElementById("photoswipe-template")) {
-            const Template = (await import("./template.html")).default;
-            const template_el = document.createElement("div");
-            template_el.setAttribute("class", "pat-gallery__template-wrapper");
-            template_el.innerHTML = Template;
-            document.body.appendChild(template_el);
+            const raw_template = (await import("./template.html")).default;
+            this.template = document.createElement("div");
+            this.template.setAttribute("class", "pat-gallery__template-wrapper");
+            this.template.setAttribute("hidden", "");
+            this.template.innerHTML = raw_template;
+            document.body.appendChild(this.template);
         }
 
         this.initialize_trigger();
@@ -78,6 +79,7 @@ export default Base.extend({
         const trigger_el = e.currentTarget;
         e.preventDefault();
 
+        this.template.removeAttribute("hidden");
         const pswpElement = document.querySelector(".pswp");
 
         const index =
@@ -129,6 +131,7 @@ export default Base.extend({
         gallery.listen("destroy", () => {
             // show original overlay value on body after closing
             document.body.style.overflow = this.orig_body_overflow;
+            this.template.setAttribute("hidden", "");
         });
 
         gallery.init();
