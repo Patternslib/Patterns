@@ -1,3 +1,40 @@
+## [6.3.0](https://github.com/Patternslib/patterns/compare/6.2.0...6.3.0) (2021-12-16)
+
+
+### Features
+
+* **core utils:** removeWildcardClass: Add support for pure DOM nodes instead of needing jQuery objects. ([6be62e8](https://github.com/Patternslib/patterns/commit/6be62e85c4b8148057e2010e7894495227c840a4))
+
+* **core utils:** Support NodeList in ensureArray and add option enforce_array if an array-like object should converted to a real array. ([23336b9](https://github.com/Patternslib/patterns/commit/23336b9708a4c2e8bc99e0cd322f54785dbce56c))
+
+* **pat calendar:** Change time-format option to configure 24h or 12h time format. ([03437e9](https://github.com/Patternslib/patterns/commit/03437e980cb50eca986e7bc9fdf6f35229725608))
+
+* **pat gallery:** Reinitialize the triggers when new elements are loadded into the gallery area. ([276f3f2](https://github.com/Patternslib/patterns/commit/276f3f29453e1e03d36e7c581d783b7596cd3358))
+
+
+
+### Bug Fixes
+
+* **pat gallery:** Unhide/hide the gallery template when opening/closing it. Fixes some layout issues when gallery isn't closed properly. ([5abca91](https://github.com/Patternslib/patterns/commit/5abca915d1a2e72959cbb6edd7e8ac0d852aaca6))
+
+
+
+### Maintenance
+
+* **dependencies:** Upgrade dependencies. ([9a35e71](https://github.com/Patternslib/patterns/commit/9a35e71d19f6457ab1de2da99fbcc323298dc1b0))
+
+* **pat gallery:** Modernize and improve code. ([30227e6](https://github.com/Patternslib/patterns/commit/30227e6de86de4e6d08dac1a0f0806bde9f63184))
+
+* **pat gallery:** Narrow the search path for the Photoswipe template element. It is just within the template. ([6dd5893](https://github.com/Patternslib/patterns/commit/6dd5893601d9575620a75666b89df686d2817fb6))
+
+* **pat navigation:** Reduce timeout from 300ms to 1ms to wait for MutationObserver. Also partly simplify test code. ([edf4f14](https://github.com/Patternslib/patterns/commit/edf4f14d6fb37705cd615502585b86b975850188))
+
+* **pat switch:** Modernize code. ([78e4756](https://github.com/Patternslib/patterns/commit/78e475675d359461b1a475a0a8e0e6b556437832))
+
+* **pat validation:** Modernize code. ([77d3410](https://github.com/Patternslib/patterns/commit/77d3410f7cb7b8eae9f77b60553ccf352e53d06c))
+
+* **tests:** Add jest-raw-loader to be able to load templates in tests. ([c36fb49](https://github.com/Patternslib/patterns/commit/c36fb494a26d9dbea7a3a99040d8f8f6d0525052))
+
 ## [6.2.0](https://github.com/Patternslib/patterns/compare/6.1.0...6.2.0) (2021-12-03)
 
 
