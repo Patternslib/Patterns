@@ -3,7 +3,10 @@ import "regenerator-runtime/runtime"; // needed for ``await`` support
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
+import logging from "../../core/logging";
 import utils from "../../core/utils";
+
+const log = logging.getLogger("pat.gallery");
 
 export const parser = new Parser("gallery");
 parser.addArgument("item-selector", "a"); // selector for anchor element, which is added to the gallery.
@@ -80,7 +83,14 @@ export default Base.extend({
         e.preventDefault();
 
         this.template.removeAttribute("hidden");
-        const pswpElement = document.querySelector(".pswp");
+
+        const pswp_el = dom.querySelectorAllAndMe(this.template, ".pswp")?.[0];
+        if (!pswp_el) {
+            log.warn("No photoswipe template found.");
+        }
+
+        // Now - when all is set - prevent default action.
+        e.preventDefault();
 
         const index =
             this.images
@@ -103,7 +113,7 @@ export default Base.extend({
             history: false,
         };
 
-        const gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI, this.images, options);
+        const gallery = new PhotoSwipe(pswp_el, PhotoSwipeUI, this.images, options);
         gallery.listen("gettingData", function (index, item) {
             // Workaround for the fact that we don't know the image sizes.
             // https://github.com/dimsemenov/PhotoSwipe/issues/796
