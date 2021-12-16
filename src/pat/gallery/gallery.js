@@ -45,6 +45,14 @@ export default Base.extend({
             document.body.appendChild(this.template);
         }
 
+        const gallery_observer = new MutationObserver(
+            this.initialize_trigger.bind(this)
+        );
+        gallery_observer.observe(this.el, {
+            subtree: true,
+            childList: true,
+        });
+
         this.initialize_trigger();
     },
 
