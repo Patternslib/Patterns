@@ -36,7 +36,10 @@ export default Base.extend({
         this.options = parser.parse(this.el, this.options);
 
         // Use default template, if no other template is defined.
-        if (!document.getElementById("photoswipe-template")) {
+        this.template = document.querySelector(
+            ".pat-gallery__template-wrapper, #photoswipe-template"
+        );
+        if (!this.template) {
             const raw_template = (await import("./template.html")).default;
             this.template = document.createElement("div");
             this.template.setAttribute("class", "pat-gallery__template-wrapper");
