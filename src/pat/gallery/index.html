@@ -18,8 +18,13 @@
         </style>
     </head>
     <body>
+
+        <nav>
+          <a href="." class="pat-inject" data-pat-inject="source: body; target: body::after">inject-extend</a>
+        </nav>
+
         <h1>Normal gallery</h1>
-        <nav class="pat-gallery" data-pat-gallery="hide-overlay: 0">
+        <section class="pat-gallery" data-pat-gallery="hide-overlay: 0">
             <a href="full-1.jpg"
                 ><img
                     src="thumb-1.jpg"
@@ -31,13 +36,13 @@
             <a href="full-3.jpg"
                 ><img src="thumb-3.jpg" title="Photy by Paulo Brandao"
             /></a>
-        </nav>
+        </section>
 
         <h1>Gallery with mixed content</h1>
         <p>
             Only items which match the selecor ``a.add-to-gallery`` are added.
         </p>
-        <nav
+        <section
             class="pat-gallery"
             data-pat-gallery="item-selector: a.add-to-gallery"
         >
@@ -53,10 +58,10 @@
             <a href="full-3.jpg" class="add-to-gallery"
                 ><img src="thumb-3.jpg" title="Photy by Paulo Brandao"
             /></a>
-        </nav>
+        </section>
 
         <h1>Image popups, not collected in a gallery</h1>
-        <nav>
+        <section>
             <a href="full-1.jpg" class="pat-gallery"
                 ><img
                     src="thumb-1.jpg"
@@ -68,21 +73,21 @@
             <a href="full-3.jpg" class="pat-gallery"
                 ><img src="thumb-3.jpg" title="Photy by Paulo Brandao"
             /></a>
-        </nav>
+        </section>
 
         <h1>Gallery adding directly images.</h1>
-        <nav class="pat-gallery" data-pat-gallery="item-selector: img;">
+        <section class="pat-gallery" data-pat-gallery="item-selector: img;">
             <img src="full-1.jpg" />
             <img src="full-2.jpg" />
             <img src="full-3.jpg" />
-        </nav>
+        </section>
 
         <h1>Gallery adding wrapped and unwrapped images.</h1>
         <p>
             The last image here is wrapped in a external link.<br/>
             The external link can be opened in a new tab, the image is included in the gallery.
         </p>
-        <nav
+        <section
             class="pat-gallery"
             data-pat-gallery="item-selector: a.add-to-gallery, :not(.add-to-gallery) > img"
         >
@@ -94,7 +99,7 @@
             <a href="https://www.syslab.com/" target="_blank" class="exclude-from-gallery"
                 ><img src="full-4.jpg"
             /></a>
-        </nav>
+        </section>
 
         (Timestamp to see if page has reloaded:
         <script>
