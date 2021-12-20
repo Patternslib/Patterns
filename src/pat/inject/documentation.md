@@ -143,7 +143,7 @@ Like in CSS, the pseudo-element (a position) right before the content of the tar
 Can be used for `target` and combined with `::element`.
 
 `::after`
-Like in CSS, the pseudo-element (a position) right before the content of the selected element. It can be used for the `target` and combined with `::element`.
+Like in CSS, the pseudo-element (a position) right after the content of the selected element. It can be used for the `target` and combined with `::element`.
 
 Let's see these in action and combination:
 
