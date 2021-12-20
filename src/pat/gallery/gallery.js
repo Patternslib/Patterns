@@ -88,7 +88,6 @@ export default Base.extend({
 
     initialize_gallery(e) {
         const trigger_el = e.currentTarget;
-        e.preventDefault();
 
         this.template.removeAttribute("hidden");
 
