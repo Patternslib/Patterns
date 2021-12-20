@@ -35,18 +35,7 @@ export default Base.extend({
 
         this.options = parser.parse(this.el, this.options);
 
-        // Use default template, if no other template is defined.
-        this.template = document.querySelector(
-            ".pat-gallery__template-wrapper, #photoswipe-template"
-        );
-        if (!this.template) {
-            const raw_template = (await import("./template.html")).default;
-            this.template = document.createElement("div");
-            this.template.setAttribute("class", "pat-gallery__template-wrapper");
-            this.template.setAttribute("hidden", "");
-            this.template.innerHTML = raw_template;
-            document.body.appendChild(this.template);
-        }
+        this.template = await this.get_template();
 
         const gallery_observer = new MutationObserver(
             this.initialize_trigger.bind(this)
@@ -57,6 +46,23 @@ export default Base.extend({
         });
 
         this.initialize_trigger();
+    },
+
+    async get_template() {
+        // Check for already defined templates.
+        let template = document.querySelector(
+            ".pat-gallery__template-wrapper, #photoswipe-template"
+        );
+        // Otherwise, use default template.
+        if (!template) {
+            const raw_template = (await import("./template.html")).default;
+            template = document.createElement("div");
+            template.setAttribute("class", "pat-gallery__template-wrapper");
+            template.setAttribute("hidden", "");
+            template.innerHTML = raw_template;
+            document.body.appendChild(template);
+        }
+        return template;
     },
 
     initialize_trigger() {
