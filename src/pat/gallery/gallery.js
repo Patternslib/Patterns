@@ -130,6 +130,11 @@ export default Base.extend({
         };
 
         const gallery = new PhotoSwipe(pswp_el, PhotoSwipeUI, this.images, options);
+
+        const gallery_reinit_sizes_debouncer = utils.debounce(() => {
+            gallery.updateSize(true); // reinit Items
+        }, 50);
+
         gallery.listen("gettingData", function (index, item) {
             // Workaround for the fact that we don't know the image sizes.
             // https://github.com/dimsemenov/PhotoSwipe/issues/796
@@ -141,8 +146,8 @@ export default Base.extend({
                     // will get size after load
                     item.w = img_el.width; // set image width
                     item.h = img_el.height; // set image height
-                    gallery.invalidateCurrItems(); // reinit Items
-                    gallery.updateSize(true); // reinit Items
+                    item.needsUpdate = true;
+                    gallery_reinit_sizes_debouncer(); // debounce to not land in a re-init loop.
                 };
                 img.src = item.src; // let's download image
             }
