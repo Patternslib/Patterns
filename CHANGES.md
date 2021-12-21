@@ -1,3 +1,26 @@
+### [6.3.1](https://github.com/Patternslib/patterns/compare/6.3.0...6.3.1) (2021-12-21)
+
+
+### Bug Fixes
+
+* **pat gallery:** Correctly re-use existing default templates. ([5191041](https://github.com/Patternslib/patterns/commit/51910416235ac5873e1c8480b76574ad5b2cd1c5))
+
+* **pat gallery:** Do not reinitialize gallery image sizes too often. ([1f1e4d4](https://github.com/Patternslib/patterns/commit/1f1e4d4c244a8235a088fd9bf3a1da980eb9cabb))
+
+
+
+### Maintenance
+
+* **dependencies:** Upgrade up to minor versions. ([b0d2177](https://github.com/Patternslib/patterns/commit/b0d2177a67fa083c91b751ac664b7414a0e7acdb))
+
+* **pat gallery:** Add demo/test case for extending the pat-gallery page with itself. ([433a95a](https://github.com/Patternslib/patterns/commit/433a95a365269093bbc9b230ab2f78bd4e7037e1))
+
+* **pat gallery:** Factor out get_template so that it can be overwritten in subclasses. ([5341141](https://github.com/Patternslib/patterns/commit/53411414d86947b337c3e8db394bbb12ec2165a9))
+
+* **pat gallery:** Remove redundant preventDefault. ([8a341aa](https://github.com/Patternslib/patterns/commit/8a341aaf3bb92afd513d8bc18537dbc2ecbeadef))
+
+* **pat inject:** Minor documentation fix. ([3b091b8](https://github.com/Patternslib/patterns/commit/3b091b84ccea8fd0ee26dfcc90b39a5961dae3bf))
+
 ## [6.3.0](https://github.com/Patternslib/patterns/compare/6.2.0...6.3.0) (2021-12-16)
 
 
