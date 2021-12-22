@@ -1,3 +1,18 @@
+### [6.3.2](https://github.com/Patternslib/patterns/compare/6.3.1...6.3.2) (2021-12-22)
+
+
+### Bug Fixes
+
+* **pat inject:** autoload-visible only when in viewport. ([49863b7](https://github.com/Patternslib/patterns/commit/49863b7999f77e6f8c7b152e4505ca389073d982))
+Fix autload-visible trigger to only load the injection if the element is in the viewport.
+As before, this check is done after 100ms.
+This prevents loading items when we quickly scoll across them, like with href-section-jumps.
+
+
+### Maintenance
+
+* **dependencies:** Upgrade dependencies. ([bd1ba37](https://github.com/Patternslib/patterns/commit/bd1ba370faedc1eaaaa9e665461e612d25a46d35))
+
 ### [6.3.1](https://github.com/Patternslib/patterns/compare/6.3.0...6.3.1) (2021-12-21)
 
 
