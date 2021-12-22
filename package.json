@@ -75,7 +75,7 @@
         "prettier": "^2.5.1",
         "regenerator-runtime": "^0.13.9",
         "release-it": "^14.11.8",
-        "sass": "^1.45.0",
+        "sass": "^1.45.1",
         "sass-loader": "^12.4.0",
         "style-loader": "^3.3.0",
         "terser-webpack-plugin": "^5.3.0",
@@ -83,7 +83,7 @@
         "webpack": "^5.65.0",
         "webpack-bundle-analyzer": "^4.4.2",
         "webpack-cli": "^4.9.1",
-        "webpack-dev-server": "^4.6.0",
+        "webpack-dev-server": "^4.7.0",
         "webpack-modernizr-loader": "^5.0.0",
         "whybundled": "^2.0.0",
         "yarn": "^1.22.17"
