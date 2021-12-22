@@ -992,6 +992,9 @@ const inject = {
                 if (!$el.is(":visible")) {
                     return false;
                 }
+                if (!utils.elementInViewport($el[0])) {
+                    return false;
+                }
                 // check if the target element still exists. Otherwise halt and catch fire
                 const target = (
                     $el.data("pat-inject")[0].target || cfgs[0].defaultSelector
@@ -999,17 +1002,12 @@ const inject = {
                 if (target && target !== "self" && $(target).length === 0) {
                     return false;
                 }
-                const reltop =
-                        $el.safeOffset().top - $scrollable.safeOffset().top - 1000,
-                    doTrigger = reltop <= $scrollable.innerHeight();
-                if (doTrigger) {
-                    // checkVisibility was possibly installed as a scroll
-                    // handler and has now served its purpose -> remove
-                    $($scrollable[0]).off("scroll", checkVisibility);
-                    $(window).off("resize.pat-autoload", checkVisibility);
-                    return trigger();
-                }
-                return false;
+
+                // checkVisibility was possibly installed as a scroll
+                // handler and has now served its purpose -> remove
+                $($scrollable[0]).off("scroll", checkVisibility);
+                $(window).off("resize.pat-autoload", checkVisibility);
+                return trigger();
             }, 100);
             if (checkVisibility()) {
                 return true;
