@@ -24,7 +24,7 @@ $.ajaxSetup({
     cache: false,
 });
 
-var xhrCount = {};
+const xhrCount = {};
 xhrCount.get = function (a) {
     return this[a] !== undefined ? this[a] : 0;
 };
@@ -33,11 +33,11 @@ xhrCount.inc = function (a) {
     return this.get(a);
 };
 
-var _ = {
+const _ = {
     name: "ajax",
     trigger: ".pat-ajax",
     parser: parser,
-    init: function ($el) {
+    init($el) {
         $el.off(".pat-ajax");
         $el.filter("a").on("click.pat-ajax", _.onTriggerEvents);
         $el.filter("form")
@@ -48,64 +48,64 @@ var _ = {
         });
         return $el;
     },
-    destroy: function ($el) {
+    destroy($el) {
         $el.off(".pat-ajax");
     },
-    onClickSubmit: function (event) {
-        var $form = $(event.target).parents("form").first(),
-            name = event.target.name,
-            value = $(event.target).val(),
-            data = {};
+    onClickSubmit(event) {
+        const $form = $(event.target).parents("form").first();
+        const name = event.target.name;
+        const value = $(event.target).val();
+        const data = {};
         if (name) {
             data[name] = value;
         }
         $form.data("pat-ajax.clicked-data", data);
     },
-    onTriggerEvents: function (event) {
+    onTriggerEvents(event) {
         if (event) {
             event.preventDefault();
         }
         _.request($(this));
     },
-    request: function ($el, opts) {
+    request($el, opts) {
         return $el.each(function () {
             _._request($(this), opts);
         });
     },
-    _request: function ($el, opts) {
-        var cfg = _.parser.parse($el, opts),
-            onError = function (jqxhr, status, error) {
-                // error can also stem from a javascript
-                // exception, not only errors described in the
-                // jqxhr.
-                log.error("load error for " + cfg.url + ":", error, jqxhr);
+    _request($el, opts) {
+        const cfg = _.parser.parse($el, opts);
+        const onError = function (jqxhr, status, error) {
+            // error can also stem from a javascript
+            // exception, not only errors described in the
+            // jqxhr.
+            log.error("load error for " + cfg.url + ":", error, jqxhr);
+            $el.trigger({
+                type: "pat-ajax-error",
+                jqxhr: jqxhr,
+            });
+        };
+        const seqNumber = xhrCount.inc(cfg.url);
+        const onSuccess = function (data, status, jqxhr) {
+            log.debug("success: jqxhr:", jqxhr);
+            if (seqNumber === xhrCount.get(cfg.url)) {
+                // if this url is requested multiple time, only return the last result
                 $el.trigger({
-                    type: "pat-ajax-error",
+                    type: "pat-ajax-success",
                     jqxhr: jqxhr,
                 });
-            },
-            seqNumber = xhrCount.inc(cfg.url),
-            onSuccess = function (data, status, jqxhr) {
-                log.debug("success: jqxhr:", jqxhr);
-                if (seqNumber === xhrCount.get(cfg.url)) {
-                    // if this url is requested multiple time, only return the last result
-                    $el.trigger({
-                        type: "pat-ajax-success",
-                        jqxhr: jqxhr,
-                    });
-                } else {
-                    // ignore
-                }
-            },
-            temp = $el.data("pat-ajax.clicked-data"),
-            clickedData = temp ? $.param(temp) : "",
-            args = {
-                context: $el,
-                data: [$el.serialize(), clickedData].filter(Boolean).join("&"),
-                headers: {},
-                url: cfg.url,
-                method: $el.attr("method") ? $el.attr("method") : "GET",
-            };
+            } else {
+                // ignore
+            }
+        };
+        const temp = $el.data("pat-ajax.clicked-data");
+        const clickedData = temp ? $.param(temp) : "";
+        const args = {
+            context: $el,
+            data: [$el.serialize(), clickedData].filter(Boolean).join("&"),
+            headers: {},
+            url: cfg.url,
+            method: $el.attr("method") ? $el.attr("method") : "GET",
+        };
 
         if (cfg.accept) {
             args.headers.Accept = cfg.accept;
@@ -116,8 +116,8 @@ var _ = {
             $el.attr("method") &&
             $el.attr("method").toUpperCase() == "POST"
         ) {
-            var formdata = new FormData($el[0]);
-            for (var key in temp) {
+            const formdata = new FormData($el[0]);
+            for (const key in temp) {
                 formdata.append(key, temp[key]);
             }
             args["method"] = "POST";
@@ -132,7 +132,7 @@ var _ = {
         log.debug("request:", args, $el[0]);
 
         // Make it happen
-        var ajax_deferred = $.ajax(args);
+        const ajax_deferred = $.ajax(args);
 
         if (ajax_deferred) ajax_deferred.done(onSuccess).fail(onError);
     },
