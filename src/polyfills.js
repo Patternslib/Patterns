@@ -1,10 +1,13 @@
 // Polyfills for older browsers, most notably IE11.
-// Usage: Import this module
-//      import "@patternslib/patternslib/src/polyfills";
+//
+// Use polyfills-loader.js before the Patternslib bundle to conditionally load
+// the polyfills for Internet Explorer:
+//
+//     <script src="polyfills-loader.js" type="text/javascript"></script>
 
 // Core JS features
 // You can also import individual core-js features:
-//import "core-js/stable/object/assign";
+//     import "core-js/stable/object/assign";
 // But we're importing them all:
 import "core-js/stable";
 
