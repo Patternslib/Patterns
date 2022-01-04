@@ -4,6 +4,7 @@ import $ from "jquery";
 import Base from "../../core/base";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
+import dom from "../../core/dom";
 
 const log = logging.getLogger("autosuggest");
 
@@ -88,6 +89,8 @@ export default Base.extend({
             config = this.create_input_config(config);
         }
         this.$el.select2(config);
+        dom.hide(this.el); // hide input, but keep active (e.g. for validation)
+
         this.$el.on("pat-update", (e, data) => {
             if (data?.pattern === "depends") {
                 if (data?.enabled === true) {
@@ -248,17 +251,5 @@ export default Base.extend({
     destroy($el) {
         $el.off(".pat-autosuggest");
         $el.select2("destroy");
-    },
-
-    transform($content) {
-        $content
-            .findInclusive("input[type=text].pat-autosuggest")
-            .each(function (idx, el) {
-                // We need the original element to be hidden not only for not
-                // displaying it, but also input-change-events registering a
-                // change handler which allows e.g. for auto-submitting.
-                // ``input`` event isn't thrown when updating select2.
-                el.setAttribute("type", "hidden");
-            });
     },
 });

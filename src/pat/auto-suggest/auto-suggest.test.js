@@ -64,7 +64,8 @@ describe("pat-autosuggest", function () {
             expect($(".select2-container").length).toBe(1);
             testutils.removeSelect2();
 
-            expect($el[0].getAttribute("type")).toBe("hidden");
+            expect($el[0].getAttribute("type")).toBe("text");
+            expect($el[0].hasAttribute("hidden")).toBe(true);
         });
     });
 
