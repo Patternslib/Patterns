@@ -4,6 +4,7 @@ import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";
+import dom from "../../core/dom";
 
 export const parser = new Parser("date-picker");
 parser.addArgument("behavior", "styled", ["native", "styled"]);
@@ -66,7 +67,7 @@ export default Base.extend({
 
         let display_el;
         if (this.options.behavior === "styled") {
-            el.setAttribute("type", "hidden");
+            dom.hide(el); // hide input, but keep active (e.g. for validation)
 
             display_el = document.createElement("time");
             display_el.setAttribute("class", "output-field");
@@ -75,6 +76,16 @@ export default Base.extend({
                 display_el.classList.add("disabled");
             }
             el.insertAdjacentElement("beforebegin", display_el);
+
+            // Disable click on label, as this invokes a click on the invisible
+            // input field which opens the calendar in Firefox and masks a
+            // click on display_el on Chrome.
+            const label = display_el.closest("label");
+            if (label) {
+                dom.add_event_listener(label, "click", "pat-date-picker--label", (e) => {
+                    e.preventDefault();
+                });
+            }
 
             let display_el_pat;
             if (this.options.outputFormat) {
