@@ -108,11 +108,13 @@ export default Base.extend({
                 e.stopPropagation()
             );
 
-        // Clear the values when a reset button is pressed
-        this.$el
-            .closest("form")
-            .find("button[type=reset]")
-            .on("click", () => this.$el.select2("val", ""));
+        // Clear values on reset.
+        dom.add_event_listener(
+            this.el.closest("form"),
+            "reset",
+            "pat-auto-suggest--reset",
+            () => this.$el.select2("val", "")
+        );
     },
 
     create_input_config(config) {
