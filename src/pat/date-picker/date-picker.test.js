@@ -54,6 +54,9 @@ describe("pat-date-picker", function () {
         expect(display_el).toBeTruthy();
         expect(display_el.textContent).toBeFalsy();
 
+        expect(el.getAttribute("type")).toBe("date");
+        expect(el.hasAttribute("hidden")).toBe(true);
+
         display_el.click();
 
         const date = new Date();
