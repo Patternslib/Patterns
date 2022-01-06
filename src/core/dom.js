@@ -46,6 +46,7 @@ const hide = (el) => {
         el[DATA_STYLE_DISPLAY] = el.style.display;
     }
     el.style.display = "none";
+    el.setAttribute("hidden", "");
 };
 
 const show = (el) => {
@@ -54,6 +55,7 @@ const show = (el) => {
     const val = el[DATA_STYLE_DISPLAY] || null;
     el.style.display = val;
     delete el[DATA_STYLE_DISPLAY];
+    el.removeAttribute("hidden", "");
 };
 
 const find_parents = (el, selector) => {
