@@ -122,6 +122,7 @@ describe("core.dom tests", () => {
             expect(el.style.marginTop).toBe("4em");
             expect(el.style.display).toBe("none");
             expect(el.getAttribute("style").indexOf("display") >= -1).toBeTruthy();
+            expect(el.hasAttribute("hidden")).toBe(true);
 
             dom.show(el);
 
@@ -129,6 +130,7 @@ describe("core.dom tests", () => {
             expect(el.style.marginTop).toBe("4em");
             expect(el.style.display).toBeFalsy();
             expect(el.getAttribute("style").indexOf("display") === -1).toBeTruthy();
+            expect(el.hasAttribute("hidden")).toBe(false);
 
             el.style.display = "inline";
             dom.hide(el);
@@ -137,6 +139,7 @@ describe("core.dom tests", () => {
             expect(el.style.marginTop).toBe("4em");
             expect(el.style.display).toBe("none");
             expect(el.getAttribute("style").indexOf("display") >= -1).toBeTruthy();
+            expect(el.hasAttribute("hidden")).toBe(true);
 
             dom.show(el);
 
@@ -144,6 +147,7 @@ describe("core.dom tests", () => {
             expect(el.style.marginTop).toBe("4em");
             expect(el.style.display).toBe("inline");
             expect(el.getAttribute("style").indexOf("display") >= -1).toBeTruthy();
+            expect(el.hasAttribute("hidden")).toBe(false);
 
             done();
         });
