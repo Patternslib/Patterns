@@ -400,7 +400,7 @@ class ArgumentParser {
         return options;
     }
 
-    parse($el, options, multiple, inherit, group_options = true) {
+    parse($el, options, multiple, inherit = true, group_options = true) {
         if (!$el.jquery) {
             $el = $($el);
         }
@@ -409,7 +409,6 @@ class ArgumentParser {
             multiple = options;
             options = {};
         }
-        inherit = inherit !== false;
         const stack = inherit ? [[this._defaults($el)]] : [[{}]];
         let $possible_config_providers;
         let final_length = 1;
