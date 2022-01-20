@@ -38,9 +38,7 @@ module.exports = (env, argv, config, babel_include = []) => {
             chunkFilename: "chunks/[name].[contenthash].min.js",
             path: path.resolve(__dirname, "../dist/"),
             clean: true, // Clean directory before compiling
-            // publicPath set in bundle entry points via __webpack_public_path__
-            // See: https://webpack.js.org/guides/public-path/
-            // publicPath: "/dist/",
+            publicPath: "auto",
         },
         optimization: {},
         module: {
@@ -137,8 +135,6 @@ module.exports = (env, argv, config, babel_include = []) => {
                 "Access-Control-Allow-Origin": "*",
             },
         };
-        // Output public path for dev-server
-        config.output.publicPath = "/dist/";
         config.optimization.minimize = false;
         config.devtool = "source-map"; // Slowest option. False for no source maps.
         config.watchOptions = {
