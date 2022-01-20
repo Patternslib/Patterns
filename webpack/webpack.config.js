@@ -25,8 +25,8 @@ module.exports = (env, argv, config, babel_include = []) => {
 
     const base_config = {
         entry: {
-            "bundle": path.resolve(__dirname, "../src/patterns.js"),
-            "bundle-polyfills": path.resolve(__dirname, "../src/polyfills.js"),
+            "bundle.min": path.resolve(__dirname, "../src/patterns.js"),
+            "bundle-polyfills.min": path.resolve(__dirname, "../src/polyfills.js"),
         },
         externals: [
             {
@@ -35,26 +35,14 @@ module.exports = (env, argv, config, babel_include = []) => {
         ],
         output: {
             filename: "[name].js",
-            chunkFilename: "chunks/[name].[contenthash].js",
+            chunkFilename: "chunks/[name].[contenthash].min.js",
             path: path.resolve(__dirname, "../dist/"),
             clean: true, // Clean directory before compiling
             // publicPath set in bundle entry points via __webpack_public_path__
             // See: https://webpack.js.org/guides/public-path/
             // publicPath: "/dist/",
         },
-        optimization: {
-            minimizer: [
-                new TerserPlugin({
-                    include: /(\.min\.js$)/,
-                    extractComments: false,
-                    terserOptions: {
-                        output: {
-                            comments: false,
-                        },
-                    },
-                }),
-            ],
-        },
+        optimization: {},
         module: {
             rules: [
                 {
@@ -151,7 +139,6 @@ module.exports = (env, argv, config, babel_include = []) => {
         };
         // Output public path for dev-server
         config.output.publicPath = "/dist/";
-        // Don't minimize
         config.optimization.minimize = false;
         config.devtool = false;
         config.watchOptions = {
@@ -159,11 +146,18 @@ module.exports = (env, argv, config, babel_include = []) => {
         };
     }
     if (process.env.NODE_ENV === "production") {
-        // Also create minified bundles along with the non-minified ones.
-        for (const bundle of Object.keys(config.entry)) {
-            config.entry[`${bundle}.min`] = config.entry[bundle];
-        }
-        config.output.chunkFilename = "chunks/[name].[contenthash].min.js";
+        // Minify all JS files in production mode.
+        config.optimization.minimizer = [
+            new TerserPlugin({
+                include: /(\.js$)/,
+                extractComments: false,
+                terserOptions: {
+                    output: {
+                        comments: false,
+                    },
+                },
+            }),
+        ];
     }
     return config;
 };
