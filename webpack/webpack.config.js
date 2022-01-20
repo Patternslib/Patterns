@@ -140,7 +140,7 @@ module.exports = (env, argv, config, babel_include = []) => {
         // Output public path for dev-server
         config.output.publicPath = "/dist/";
         config.optimization.minimize = false;
-        config.devtool = false;
+        config.devtool = "source-map"; // Slowest option. False for no source maps.
         config.watchOptions = {
             ignored: ["node_modules/**", "docs/**"],
         };
@@ -158,6 +158,7 @@ module.exports = (env, argv, config, babel_include = []) => {
                 },
             }),
         ];
+        config.devtool = "source-map"; // Slowest option. False for no source maps.
     }
     return config;
 };
