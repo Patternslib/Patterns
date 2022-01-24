@@ -1,3 +1,24 @@
+## [6.4.0](https://github.com/Patternslib/patterns/compare/6.3.2...6.4.0) (2022-01-24)
+
+
+### Features
+
+* **webpack:** Add source maps for production and development builds. ([5c720a4](https://github.com/Patternslib/patterns/commit/5c720a4dc54719acf04bca856962cea8d4e9c12f))
+We are using a faster source map generation option with good results for
+development builds.
+* **webpack:** Only minimize in production mode. ([a6cf125](https://github.com/Patternslib/patterns/commit/a6cf1251985e9f5a01a642d4ececd4cd1b834679))
+Compile development and production bundles with the name bundle.min.js.
+This allows to get rid to adapt the script name in production and development - both modes use the same name.
+However, it's only minified in production mode.
+We think the name .min.js also fits the development bundle as it is still babel-transpiled and webpack compiled.
+
+
+### Maintenance
+
+* **docs:** Improve documentation on how to use the polyfills loader. ([11339af](https://github.com/Patternslib/patterns/commit/11339af25d91045a28ec8130344b78c936b39af9))
+
+* **webpack:** Use automatic publicPath determination instead of manually setting it. ([1b61431](https://github.com/Patternslib/patterns/commit/1b6143127f61e5e1c41b088e70ec636c629cd5bb))
+
 ### [6.3.2](https://github.com/Patternslib/patterns/compare/6.3.1...6.3.2) (2021-12-22)
 
 
