@@ -54,7 +54,7 @@ Please install it with e.g. ``brew install gnu-tar``.
 
 ## Development installation
 
-The following commands will generate a `bundle.js` file in the `dist` directory
+The following commands will generate a `bundle.min.js` file in the `dist` directory
 which contains Patterns and all its dependencies:
 
     git clone git://github.com/Patternslib/Patterns.git
