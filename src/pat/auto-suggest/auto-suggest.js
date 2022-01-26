@@ -5,6 +5,7 @@ import Base from "../../core/base";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
+import events from "../../core/events";
 
 const log = logging.getLogger("autosuggest");
 
@@ -101,12 +102,13 @@ export default Base.extend({
             }
         });
 
-        // suppress propagation for second input field
-        this.$el
-            .prev()
-            .on("input-change input-defocus input-change-delayed", (e) =>
-                e.stopPropagation()
-            );
+        this.$el.on("click", () => {
+            // Work around the situation that a jQuery "change" event,
+            // submitted by select2, isn't caught by pat-validation.
+            // Select2 also triggers a click event, which we will use here to
+            // trigger a standard JS change event.
+            this.el.dispatchEvent(events.change_event());
+        });
 
         // Clear values on reset.
         dom.add_event_listener(
