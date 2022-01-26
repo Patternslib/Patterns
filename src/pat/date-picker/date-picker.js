@@ -3,8 +3,9 @@ import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
-import utils from "../../core/utils";
 import dom from "../../core/dom";
+import events from "../../core/events";
+import utils from "../../core/utils";
 
 export const parser = new Parser("date-picker");
 parser.addArgument("behavior", "styled", ["native", "styled"]);
@@ -82,9 +83,14 @@ export default Base.extend({
             // click on display_el on Chrome.
             const label = display_el.closest("label");
             if (label) {
-                dom.add_event_listener(label, "click", "pat-date-picker--label", (e) => {
-                    e.preventDefault();
-                });
+                events.add_event_listener(
+                    label,
+                    "click",
+                    "pat-date-picker--label",
+                    (e) => {
+                        e.preventDefault();
+                    }
+                );
             }
 
             let display_el_pat;

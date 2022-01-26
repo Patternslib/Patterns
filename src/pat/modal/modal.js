@@ -1,9 +1,10 @@
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
-import Parser from "../../core/parser";
 import Base from "../../core/base";
-import dom from "../../core/dom";
-import utils from "../../core/utils";
+import Parser from "../../core/parser";
+import events from "../../core/events";
 import inject from "../inject/inject";
+import utils from "../../core/utils";
 
 export const parser = new Parser("modal");
 parser.addArgument("class");
@@ -124,7 +125,7 @@ export default Base.extend({
         );
 
         for (const _el of this.els_close_panel) {
-            dom.add_event_listener(
+            events.add_event_listener(
                 _el,
                 "click",
                 "pat-modal--destroy--trigger",
@@ -134,7 +135,7 @@ export default Base.extend({
         }
 
         for (const _el of this.els_close_panel_submit) {
-            dom.add_event_listener(
+            events.add_event_listener(
                 _el,
                 "click",
                 "pat-modal--destroy-inject--trigger",
@@ -215,10 +216,10 @@ export default Base.extend({
         await utils.timeout(1); // wait a tick for event handlers (e.g. form submit) have a chance to kick in first.
 
         for (const _el of this.els_close_panel) {
-            dom.remove_event_listener(_el, "pat-modal--destroy--trigger");
+            events.remove_event_listener(_el, "pat-modal--destroy--trigger");
         }
         for (const _el of this.els_close_panel_submit) {
-            dom.remove_event_listener(_el, "pat-modal--destroy-inject--trigger");
+            events.remove_event_listener(_el, "pat-modal--destroy-inject--trigger");
         }
 
         $(document).off(".pat-modal");
@@ -235,9 +236,9 @@ export default Base.extend({
             // to be finished and then destroy the modal.
             const destroy_handler = () => {
                 this.destroy();
-                dom.remove_event_listener(form, "pat-modal--destroy-inject");
+                events.remove_event_listener(form, "pat-modal--destroy-inject");
             };
-            dom.add_event_listener(
+            events.add_event_listener(
                 form,
                 "pat-inject-success",
                 "pat-modal--destroy-inject",

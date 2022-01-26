@@ -3,6 +3,7 @@ import "regenerator-runtime/runtime"; // needed for ``await`` support
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
+import events from "../../core/events";
 import logging from "../../core/logging";
 import utils from "../../core/utils";
 
@@ -71,7 +72,7 @@ export default Base.extend({
             this.options.itemSelector
         );
         this.images = [...image_wrapper_els].map((it) => {
-            dom.add_event_listener(
+            events.add_event_listener(
                 it,
                 "click",
                 "pat-gallery--image_handler",
