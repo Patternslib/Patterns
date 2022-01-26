@@ -1,15 +1,24 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Form validation</title>
-        <link rel="stylesheet" href="/style/common.css" type="text/css" />
-        <script
+<html lang="de">
+  <head>
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=UTF-8"
+    />
+    <title>Form validation</title>
+    <link href="/style/common.css"
+          rel="stylesheet"
+          type="text/css"
+    />
+    <script charset="utf-8"
             src="/bundle.min.js"
             type="text/javascript"
-            charset="utf-8"
-        ></script>
-        <style type="text/css" media="screen">
+    ></script>
+    <style media="screen"
+           type="text/css"
+    >
+          input:required {
+            border: 1px solid red;
+          }
           time.output-field {
             min-width: 6em;
             height: 2em;
@@ -26,178 +35,191 @@
             width: 1em;
             height: 1em;
             margin-left: 0.2em;
-            background-color: red;
+            background-color: blue;
           }
-        </style>
-    </head>
-    <body>
-        <form
-            class="pat-validation vertical"
-            data-pat-validation="disable-selector: .pat-button"
-            method="get"
-            action="#"
-            novalidate
-        >
-            <fieldset class="horizontal">
-                <label
-                    >Full name <input type="text" name="name" required
-                /></label>
+    </style>
+  </head>
+  <body>
+    <form class="pat-validation vertical"
+          action="#"
+          method="get"
+          novalidate
+          data-pat-validation="disable-selector: .pat-button"
+    >
+      <fieldset class="horizontal">
+        <label>Full name
+          <input autocomplete="off"
+                 name="name"
+                 required
+                 type="text"
+          /></label>
 
-                <label
-                    >Age
-                    <input type="number" name="age" min="16" max="65" required
-                /></label>
+        <label>Age
+          <input autocomplete="off"
+                 max="65"
+                 min="16"
+                 name="age"
+                 required
+                 type="number"
+                 data-pat-validation="type: integer"
+          /></label>
 
-                <label
-                    >E-mail
-                    <input type="email" name="email"
-                /></label>
+        <label>Real number, limited between 10.0 and 10.9, with a step of 0.1.
+          <input autocomplete="off"
+                 max="10.9"
+                 min="10.0"
+                 name="real"
+                 step="0.1"
+                 type="number"
+          /></label>
 
-                <fieldset class="group pat-checklist radio">
-                    <legend>Favourite colour</legend>
-                    <label
-                        ><input
-                            name="colour"
-                            required
-                            type="radio"
-                            value="blue"
-                        />
-                        Blue</label
-                    >
-                    <label
-                        ><input
-                            name="colour"
-                            required
-                            type="radio"
-                            value="pink"
-                        />
-                        Pink</label
-                    >
-                    <label
-                        ><input
-                            name="colour"
-                            required
-                            type="radio"
-                            value="red"
-                        />
-                        Red</label
-                    >
-                    <label
-                        ><input
-                            name="colour"
-                            required
-                            type="radio"
-                            value="yellow"
-                        />
-                        yellow</label
-                    >
-                </fieldset>
+        <label>Real number, limited between 10.0 and 10.9, with a step of ``any``.
+          <input autocomplete="off"
+                 max="10.9"
+                 min="10.0"
+                 name="real"
+                 step="any"
+                 type="number"
+          /></label>
 
-                <hr/>
+        <label>E-mail
+          <input autocomplete="off"
+                 name="email"
+                 type="email"
+          /></label>
 
-                <label
-                    >Planning start
-                    <input
-                        type="date"
-                        class="pat-date-picker"
-                        name="measure.planning_start:records"
-                        data-pat-validation="type: date; not-after: #planning-end; message-date: This date must be on or before the end date."
-                        id="planning-start"
-                        value="2015-10-10"
-                    />
-                </label>
+        <fieldset class="group pat-checklist radio">
+          <legend>Favourite colour</legend>
+          <label><input autocomplete="off"
+                   name="colour"
+                   required
+                   type="radio"
+                   value="blue"
+            />
+            Blue</label>
+          <label><input autocomplete="off"
+                   name="colour"
+                   required
+                   type="radio"
+                   value="pink"
+            />
+            Pink</label>
+          <label><input autocomplete="off"
+                   name="colour"
+                   required
+                   type="radio"
+                   value="red"
+            />
+            Red</label>
+          <label><input autocomplete="off"
+                   name="colour"
+                   required
+                   type="radio"
+                   value="yellow"
+            />
+            yellow</label>
+        </fieldset>
 
-                <label
-                    >Planning end
-                    <input
-                        type="date"
-                        class="pat-date-picker"
-                        name="measure.planning_end:records"
-                        data-pat-date-picker="after: #planning-start"
-                        data-pat-validation="type: date; not-before: #planning-start; message-date: This date must be on or after the start date."
-                        id="planning-end"
-                        value="2015-09-10"
-                    />
-                </label>
+        <hr />
 
-                <label
-                    >Required date
-                    <input
-                        type="date"
-                        required
-                        name="measure.date-required:records"
-                        id="date-required"
-                    />
-                </label>
+        <label>Planning start
+          <input class="pat-date-picker"
+                 id="planning-start"
+                 autocomplete="off"
+                 name="measure.planning_start:records"
+                 type="date"
+                 value="2015-10-10"
+                 data-pat-validation="type: date; not-after: #planning-end; message-date: This date must be on or before the end date."
+          />
+        </label>
 
-                <label
-                    >Optional date
-                    <input
-                        type="date"
-                        name="measure.date-optional:records"
-                        id="date-optional"
-                    />
-                </label>
+        <label>Planning end
+          <input class="pat-date-picker"
+                 id="planning-end"
+                 autocomplete="off"
+                 name="measure.planning_end:records"
+                 type="date"
+                 value="2015-09-10"
+                 data-pat-date-picker="after: #planning-start"
+                 data-pat-validation="type: date; not-before: #planning-start; message-date: This date must be on or after the start date."
+          />
+        </label>
 
-                <label
-                    >Disabled start
-                    <input
-                        type="date"
-                        class="pat-date-picker"
-                        name="disabled_start"
-                        data-pat-validation="type: date; not-after: #planning-end; message-date: This date must be on or before the end date."
-                        id="disabled_start"
-                        value="2021-04-21"
-                        disabled
-                    />
-                </label>
+        <label>Required date
+          <input id="date-required"
+                 autocomplete="off"
+                 name="measure.date-required:records"
+                 required
+                 type="date"
+          />
+        </label>
 
-                <label
-                    >End
-                    <input
-                        type="date"
-                        class="pat-date-picker"
-                        name="disabled_end"
-                        data-pat-validation="type: date; not-before: #disabled_start; message-date: This date must be on or after the start date."
-                        id="disabled_end"
-                        value="2021-04-22"
-                    />
-                </label>
+        <label>Optional date
+          <input id="date-optional"
+                 autocomplete="off"
+                 name="measure.date-optional:records"
+                 type="date"
+          />
+        </label>
 
-                <hr />
+        <label>Disabled start
+          <input class="pat-date-picker"
+                 id="disabled_start"
+                 autocomplete="off"
+                 disabled
+                 name="disabled_start"
+                 type="date"
+                 value="2021-04-21"
+                 data-pat-validation="type: date; not-after: #planning-end; message-date: This date must be on or before the end date."
+          />
+        </label>
 
-                <label
-                    >Password
-                    <input id="password" type="password" name="password" />
-                </label>
+        <label>End
+          <input class="pat-date-picker"
+                 id="disabled_end"
+                 autocomplete="off"
+                 name="disabled_end"
+                 type="date"
+                 data-pat-validation="type: date; not-before: #disabled_start; message-date: This date must be on or after the start date."
+          />
+        </label>
 
-                <label
-                    >Password confirmation
-                    <input
-                        id="password-confirmation"
-                        type="password"
-                        name="password-confirmation"
-                        data-pat-validation="equality: password; message-equality: I would like this to be equal to %{attribute}"
-                    />
-                </label>
+        <hr />
 
-                <label
-                    >Food preference
-                    <input
-                        id="a1"
-                        name="a1"
-                        class="pat-autosuggest"
-                        placeholder="Pick some fruit"
-                        required="required"
-                        data-pat-autosuggest="words: Apples, Oranges, Pears, Bananas; maximum-selection-size: 1"
-                        type="text"
-                    />
-                </label>
+        <label>Password
+          <input id="password"
+                 autocomplete="off"
+                 name="password"
+                 type="password"
+          />
+        </label>
 
-                <fieldset class="buttons">
-                    <button class="pat-button">Test</button>
-                </fieldset>
-            </fieldset>
-        </form>
-    </body>
+        <label>Password confirmation
+          <input id="password-confirmation"
+                 autocomplete="off"
+                 name="password-confirmation"
+                 type="password"
+                 data-pat-validation="equality: password; message-equality: This field needs to be equal to %{attribute}"
+          />
+        </label>
+
+        <label>Food preference
+          <input class="pat-autosuggest"
+                 id="a1"
+                 autocomplete="off"
+                 name="a1"
+                 placeholder="Pick some fruit"
+                 required="required"
+                 type="text"
+                 data-pat-autosuggest="words: Apples, Oranges, Pears, Bananas; maximum-selection-size: 1"
+          />
+        </label>
+
+        <fieldset class="buttons">
+          <button class="pat-button">Test</button>
+          <button>Submit</button>
+        </fieldset>
+      </fieldset>
+    </form>
+  </body>
 </html>
