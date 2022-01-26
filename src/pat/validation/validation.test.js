@@ -214,6 +214,31 @@ describe("pat-validation", function () {
         expect(el.querySelector("#form-buttons-create").disabled).toBe(false);
     });
 
+    it("1.9 - can define a custom error message template.", async function () {
+        const _msg = "${this.message}"; // need to define the template in normal quotes here to not make the parser expand the missing variable.
+        document.body.innerHTML = `
+          <form class="pat-validation"
+            data-pat-validation='
+                message-required: need this;
+                error-template: &lt;div class="validation-error"&gt;${_msg}&lt;/div&gt;'>
+            <input type="text" name="name" required>
+          </form>
+        `;
+        const el = document.querySelector(".pat-validation");
+        const inp = el.querySelector("[name=name]");
+
+        new Pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        inp.value = "";
+        inp.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("div.validation-error").length).toBe(1);
+        expect(el.querySelectorAll("div.validation-error")[0].textContent).toBe(
+            "need this"
+        );
+    });
+
     it("2.1 - validates required inputs", async function () {
         document.body.innerHTML = `
           <form class="pat-validation">

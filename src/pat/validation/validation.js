@@ -3,6 +3,7 @@ import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
+import dom from "../../core/dom";
 import events from "../../core/events";
 import logging from "../../core/logging";
 import utils from "../../core/utils";
@@ -24,6 +25,12 @@ parser.addArgument("not-after", null);
 parser.addArgument("not-before", null);
 parser.addArgument("equality", null);
 parser.addArgument("delay", 100); // Delay before validation is done to avoid validating while typing.
+
+// Template for the validation message
+parser.addArgument(
+    "error-template",
+    '<em class="validation warning message">${this.message}</em>'
+);
 
 // BBB
 // TODO: deprecated. Will be removed with next major version.
@@ -266,9 +273,9 @@ export default Base.extend({
             inputs = [...this.inputs].filter((it) => it.name === input.name);
         }
         for (const it of inputs) {
-            const msg_el = it[KEY_ERROR_EL];
+            const error_node = it[KEY_ERROR_EL];
             it[KEY_ERROR_EL] = null;
-            msg_el?.remove();
+            error_node?.remove();
         }
 
         // disable selector
@@ -292,20 +299,26 @@ export default Base.extend({
             return;
         }
 
-        const msg_el = document.createElement("em");
-        msg_el.setAttribute("class", "validation warning message");
-        msg_el.textContent = input.validationMessage || input[KEY_ERROR_MSG];
+        // Create the validation error DOM node from the template
+        const validation_message = input.validationMessage || input[KEY_ERROR_MSG];
+        // See: https://stackoverflow.com/a/37217166/1337474
+        const error_template = new Function(
+            "return `" + options.errorTemplate + "`;"
+        ).call({
+            message: validation_message,
+        });
+        const error_node = dom.create_from_string(error_template).firstChild;
 
         let fieldset;
         if (input.type === "radio" || input.type === "checkbox") {
             fieldset = input.closest("fieldset.pat-checklist");
         }
         if (fieldset) {
-            fieldset.append(msg_el);
+            fieldset.append(error_node);
         } else {
-            input.after(msg_el);
+            input.after(error_node);
         }
-        input[KEY_ERROR_EL] = msg_el;
+        input[KEY_ERROR_EL] = error_node;
 
         if (options.disableSelector) {
             const disabled = document.querySelectorAll(options.disableSelector);
