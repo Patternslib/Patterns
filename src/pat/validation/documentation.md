@@ -14,13 +14,14 @@ This pattern has several advantages over standard HTML 5 form validation:
 
 ### The following attributes may be used.
 
-| Name          | Syntax                   | Description                                                  |
-| ------------- | ------------------------ | ------------------------------------------------------------ |
-| Required      | `required="required"`    | Mark an input as required.                                   |
-| Email address | `type="email"`           | Only allow valid email addresses.                            |
-| Numeric value | `type="number"`          | Only allow valid numbers.                                    |
-| Minimum value | `type="number" min="6"`  | Check if a number is greater than or equal to a given value. |
-| Maximum value | `type="number" max="10"` | Check if a number is less than or equal to a given value.    |
+| Name          | Syntax                     | Description                                                  |
+| ------------- | -------------------------- | ------------------------------------------------------------ |
+| Required      | `required="required"`      | Mark an input as required.                                   |
+| Email address | `type="email"`             | Only allow valid email addresses.                            |
+| Numeric value | `type="number"`            | Only allow valid numbers.                                    |
+| Minimum value | `type="number" min="6"`    | Check if a number is greater than or equal to a given value. |
+| Maximum value | `type="number" max="10"`   | Check if a number is less than or equal to a given value.    |
+| Real number   | `type="number" step="any"` | Check if a number is less than or equal to a given value.    |
 
 ### Error messages
 
@@ -60,7 +61,7 @@ Error messages are unique per type of validation (e.g. `required`, `email` or `n
 
 Error messages can also be overridden on a per-field basis, for example:
 
-    <input type="date" name="date" data-pat-validation="type: date; not-after: #planning-end-${number}; message-date: This date must be on or before the end date."/>
+    <input type="date" name="date" data-pat-validation="not-after: #planning-end-${number}; message-date: This date must be on or before the end date."/>
 
 ### Options reference
 
@@ -72,11 +73,9 @@ Error messages can also be overridden on a per-field basis, for example:
 | message-datetime | The error message for datetime fields.                                                                                     | This value must be a valid date and time             | String                                 |
 | message-email    | The error message for email fields.                                                                                        | This value must be a valid email address             | String                                 |
 | message-equality | The error message for fields required to be equal                                                                          | is not equal to %{attribute}                         | String                                 |
-| message-integer  | The error message for integers.                                                                                            | This value must be an integer                        | String                                 |
 | message-max      | The error message for max number values.                                                                                   | This value must be less than or equal to %{count}    | String                                 |
 | message-min      | The error message for min number values.                                                                                   | This value must be greater than or equal to %{count} | String                                 |
 | message-number   | The error message for numbers.                                                                                             | This value must be a number.                         | String                                 |
 | message-required | The error message for required fields.                                                                                     | This field is required.                              | String                                 |
 | not-after        | Field-specific. A lower time limit restriction for date and datetime fields.                                               |                                                      | CSS Selector or a ISO8601 date string. |
 | not-before       | Field-specific. An upper time limit restriction for date and datetime fields.                                              |                                                      | CSS Selector or a ISO8601 date string. |
-| type             | Field-specific. Denotes a special field type not supported by default in (all) browsers. Can be integer, date or datetime. |                                                      | String                                 |
