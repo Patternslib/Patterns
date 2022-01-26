@@ -132,10 +132,9 @@ const is_visible = (el) => {
 };
 
 const create_from_string = (string) => {
-    // Create a DOM element from a string.
-    const div = document.createElement("div");
-    div.innerHTML = string.trim();
-    return div.firstChild;
+    // Create a DOM nodes from a string.
+    // See: https://davidwalsh.name/convert-html-stings-dom-nodes
+    return document.createRange().createContextualFragment(string.trim());
 };
 
 const dom = {

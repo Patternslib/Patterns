@@ -434,26 +434,52 @@ describe("core.dom tests", () => {
 
     describe("create_from_string", () => {
         it("Creates a DOM element from a string", (done) => {
-            let res = dom.create_from_string(`
+            const res = dom.create_from_string(`
                 <section id="section1">
                     <span class='yo'>does work.</span>
                 </section>`);
 
-            expect(res.getAttribute("id")).toEqual("section1");
-            expect(res.querySelector("span.yo").textContent).toEqual("does work.");
+            // The returned result is like a NodeList
+            expect(res.firstChild.getAttribute("id")).toEqual("section1");
+            expect(res.firstChild.querySelector("span.yo").textContent).toEqual(
+                "does work."
+            );
 
-            res = dom.create_from_string(`
+            done();
+        });
+
+        it("Creates multiple siblings from a string", (done) => {
+            const res = dom.create_from_string(`
                 <section id="section1"></section>
                 <section id="section2"></section>
             `);
-            // Section 2 is not returned.
-            expect(res.getAttribute("id")).toEqual("section1");
+            // Multiple sibplings are also returned.
+            const sections = res.querySelectorAll("section");
+            expect(sections[0].getAttribute("id")).toEqual("section1");
+            expect(sections[1].getAttribute("id")).toEqual("section2");
 
-            // TD elements or others which can not be direct children of a
-            // <div> are not yet supported.
+            done();
+        });
+
+        it("Can append multiple siblings to another DOM node", (done) => {
+            const res = dom.create_from_string(`
+                <section id="section1"></section>
+                <section id="section2"></section>
+            `);
+            const el = document.createElement("div");
+            // Multiple siblings can be appended to another element
+            el.append(res);
+            expect(el.querySelectorAll("section").length).toBe(2);
+
+            done();
+        });
+
+        it("It cannot create out-of-context elements like a <td> without a <table> 😔", (done) => {
+            // TD elements or others which need to be defined in the context of a <table>
+            // are not yet supported.
             // Also see: https://stackoverflow.com/a/494348/1337474
-            res = dom.create_from_string(`<td></td>`);
-            expect(res).toBeFalsy();
+            const res = dom.create_from_string(`<td></td>`);
+            expect(res.firstChild).toBe(null);
 
             done();
         });
