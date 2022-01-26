@@ -75,7 +75,7 @@ describe("pat-autosuggest", function () {
             var $el = $("input.pat-autosuggest");
             jest.spyOn($el, "select2");
 
-            pattern.init($el);
+            new pattern($el);
             await utils.timeout(1); // wait a tick for async to settle.
             expect($el.select2.mock.calls.pop()[0].ajax).toBeDefined();
             testutils.removeSelect2();
@@ -86,7 +86,7 @@ describe("pat-autosuggest", function () {
             var $el = $("select.pat-autosuggest");
             expect($(".select2-container").length).toBe(0);
             expect($el.hasClass("select2-offscreen")).toBeFalsy();
-            pattern.init($el);
+            new pattern($el);
             await utils.timeout(1); // wait a tick for async to settle.
             expect($el.hasClass("select2-offscreen")).toBeTruthy();
             expect($(".select2-container").length).toBe(1);
@@ -101,7 +101,7 @@ describe("pat-autosuggest", function () {
             });
             var $el = $("input.pat-autosuggest");
             expect($(".select2-search-choice").length).toBe(0);
-            pattern.init($el);
+            new pattern($el);
             await utils.timeout(1); // wait a tick for async to settle.
             expect($(".select2-search-choice").length).toBe(1);
             expect($(".select2-search-choice").hasClass("fruit")).toBeTruthy();
@@ -115,7 +115,7 @@ describe("pat-autosuggest", function () {
                 data: "words: apple,orange,pear; pre-fill: orange",
             });
             expect($(".select2-input").length).toBe(0);
-            pattern.init($("input.pat-autosuggest"));
+            new pattern($("input.pat-autosuggest"));
             await utils.timeout(1); // wait a tick for async to settle.
             expect($(".select2-input").length).toBe(1);
             expect($(".select2-selection-limit").length).toBe(0);
@@ -128,7 +128,7 @@ describe("pat-autosuggest", function () {
                 data: "maximum-selection-size: 1; words: apple,orange,pear; pre-fill: orange",
             });
             expect($(".select2-input").length).toBe(0);
-            pattern.init($("input.pat-autosuggest"));
+            new pattern($("input.pat-autosuggest"));
             await utils.timeout(1); // wait a tick for async to settle.
             expect($(".select2-input").length).toBe(1);
             expect($(".select2-selection-limit").length).toBe(0);
@@ -195,7 +195,7 @@ describe("pat-autosuggest", function () {
             var $el = $("input.pat-autosuggest");
 
             expect($el.prop("placeholder")).toBe(placeholder);
-            pattern.init($el);
+            new pattern($el);
             await utils.timeout(1); // wait a tick for async to settle.
             // XXX Placeholder is used as value of the input field.
             // Change this as soon Select2 changes this odd behavior.
@@ -212,7 +212,7 @@ describe("pat-autosuggest", function () {
             var $el = $("input.pat-autosuggest");
 
             expect($el.prop("placeholder")).toBe("");
-            pattern.init($el);
+            new pattern($el);
             await utils.timeout(1); // wait a tick for async to settle.
             // XXX Placeholder is used as value of the input field.
             // Change this as soon Select2 changes this odd behavior.

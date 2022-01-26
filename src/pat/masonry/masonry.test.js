@@ -23,7 +23,7 @@ describe("pat-masonry", function () {
         );
         $msnry = $("#lab .pat-masonry");
         expect($msnry.hasClass("masonry-ready")).toBeFalsy();
-        pattern.init($msnry);
+        new pattern($msnry);
         setTimeout(function () {
             // XXX: Reenable when pattern.init returns a promise
             // expect($msnry.hasClass("masonry-ready")).toBeTruthy();

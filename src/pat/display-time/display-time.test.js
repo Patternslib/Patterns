@@ -21,7 +21,7 @@ describe("pat-display-time tests", () => {
         `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("2021-04-22T03:00:00-07:00");
@@ -37,7 +37,7 @@ describe("pat-display-time tests", () => {
         `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("April Thursday 22nd 2021, 3:00:00 am");
@@ -53,7 +53,7 @@ describe("pat-display-time tests", () => {
         `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("April Donnerstag 22. 2021, 4:00:00");
@@ -104,7 +104,7 @@ describe("pat-display-time tests", () => {
         `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("04/22/2021");
@@ -119,7 +119,7 @@ describe("pat-display-time tests", () => {
         `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent.indexOf("years ago") >= 0).toBe(true);
@@ -134,7 +134,7 @@ describe("pat-display-time tests", () => {
         `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent.indexOf("years") >= 0).toBe(true);
@@ -150,7 +150,7 @@ describe("pat-display-time tests", () => {
         `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent.indexOf("Jahre") >= 0).toBe(true);
@@ -180,7 +180,7 @@ describe("pat-display-time tests", () => {
         `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("");
