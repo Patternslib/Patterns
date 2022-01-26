@@ -24,7 +24,7 @@ describe("pat-menu", function () {
             );
             var $list = $("ul.pat-menu");
 
-            pattern.init($list);
+            new pattern($list);
 
             expect($($list).children().not(".closed").length).toBe(0);
         });

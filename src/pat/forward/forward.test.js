@@ -23,7 +23,7 @@ describe("pat-forward", function () {
                 )
             );
 
-            pattern.init($(pattern.trigger));
+            new pattern($(pattern.trigger));
             expect($lab.find("#checkbox").is(":checked")).toBeFalsy();
             $lab.find(".pat-forward").click();
             expect($lab.find("#checkbox").is(":checked")).toBeTruthy();
@@ -40,7 +40,7 @@ describe("pat-forward", function () {
                 )
             );
 
-            pattern.init($(pattern.trigger));
+            new pattern($(pattern.trigger));
             expect($lab.find("#checkbox").is(":checked")).toBeTruthy();
             $lab.find(".pat-forward").click();
             expect($lab.find("#checkbox").is(":checked")).toBeFalsy();
@@ -58,7 +58,7 @@ describe("pat-forward", function () {
                 )
             );
 
-            pattern.init($(pattern.trigger));
+            new pattern($(pattern.trigger));
             expect($lab.find("#checkbox1").is(":checked")).toBeFalsy();
             expect($lab.find("#checkbox2").is(":checked")).toBeFalsy();
             $lab.find(".pat-forward").click();
@@ -77,7 +77,7 @@ describe("pat-forward", function () {
                 )
             );
 
-            pattern.init($(pattern.trigger));
+            new pattern($(pattern.trigger));
             expect($lab.find("#checkbox").is(":checked")).toBeFalsy();
             $lab.find(".pat-forward").click();
             await utils.timeout(1); // wait a tick for async to settle.
@@ -99,7 +99,7 @@ describe("pat-forward", function () {
                 )
             );
 
-            pattern.init($(pattern.trigger));
+            new pattern($(pattern.trigger));
             expect($lab.find("#checkbox").is(":checked")).toBeFalsy();
             $lab.find(".pat-forward").click();
             await utils.timeout(1); // wait a tick for async to settle.
@@ -118,7 +118,7 @@ describe("pat-forward", function () {
                 )
             );
 
-            pattern.init($(pattern.trigger));
+            new pattern($(pattern.trigger));
 
             expect(window.location.href.indexOf("#oh") > -1).toBe(false);
             await utils.timeout(300);

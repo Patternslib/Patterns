@@ -22,13 +22,13 @@ describe("carousel-plugin", function () {
                     "</ul>"
             );
 
-            pattern.init(document.createElement("div")); // Just to async-load slick before initializing the spy.
+            new pattern(document.createElement("div")); // Just to async-load slick before initializing the spy.
             await utils.timeout(10); // wait a bit for all to settle.
 
             var $carousel = $("#lab ul");
             var spy_slick = jest.spyOn($.fn, "slick");
 
-            pattern.init($carousel);
+            new pattern($carousel);
             await utils.timeout(20); // wait a bit for all to settle.
 
             expect(spy_slick).toHaveBeenCalled();
@@ -53,7 +53,7 @@ describe("carousel-plugin", function () {
                     "</ul>"
             );
             var $carousel = $("#lab ul");
-            pattern.init($carousel);
+            new pattern($carousel);
             await utils.timeout(20); // wait a bit for all to settle.
 
             // has been initialized
@@ -75,7 +75,7 @@ describe("carousel-plugin", function () {
             );
             var $carousel = $("#lab ul");
             var spy_slick = jest.spyOn($.fn, "slick");
-            pattern.init($carousel);
+            new pattern($carousel);
             await utils.timeout(20); // wait a bit for all to settle.
 
             expect(spy_slick).toHaveBeenCalled();

@@ -20,7 +20,7 @@ describe("pat-depends", function () {
                 ].join("\n")
             );
             var $dependent = $("#dependent");
-            pattern.init($dependent, { condition: "control" });
+            new pattern($dependent, { condition: "control" });
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect($dependent.css("display")).toBe("none");
@@ -34,7 +34,7 @@ describe("pat-depends", function () {
                 ].join("\n")
             );
             var $dependent = $("#dependent");
-            pattern.init($dependent, { condition: "control" });
+            new pattern($dependent, { condition: "control" });
             await utils.timeout(1); // wait a tick for async to settle.
             expect($dependent.css("display")).not.toBe("none");
         });
@@ -56,7 +56,7 @@ describe("pat-depends", function () {
                     '<button id="dependent" class="pat-depends" type="button">Click me</button>',
                 ].join("\n")
             );
-            var pat = pattern.init($(".pat-depends"), {
+            var pat = new pattern($(".pat-depends"), {
                 condition: "control",
             });
             await utils.timeout(1); // wait a tick for async to settle.
@@ -73,7 +73,7 @@ describe("pat-depends", function () {
                     '<a class="pat-depends" href="#target">Click me</a>',
                 ].join("\n")
             );
-            var pat = pattern.init($(".pat-depends"), { condition: "control" });
+            var pat = new pattern($(".pat-depends"), { condition: "control" });
             await utils.timeout(1); // wait a tick for async to settle.
             var $dependent = $("#lab a");
             pat.disable();
@@ -100,7 +100,7 @@ describe("pat-depends", function () {
                     '<button disabled="disabled" class="pat-depends disabled" type="button">Click me</button>',
                 ].join("\n")
             );
-            var pat = pattern.init($(".pat-depends"), {
+            var pat = new pattern($(".pat-depends"), {
                 condition: "control",
             });
             await utils.timeout(1); // wait a tick for async to settle.
@@ -117,7 +117,7 @@ describe("pat-depends", function () {
                     '<a href="#target" class="pat-depends disabled">Click me</a>',
                 ].join("\n")
             );
-            var pat = pattern.init($(".pat-depends"), {
+            var pat = new pattern($(".pat-depends"), {
                 condition: "control",
             });
             await utils.timeout(1); // wait a tick for async to settle.

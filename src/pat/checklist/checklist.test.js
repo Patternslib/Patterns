@@ -18,7 +18,7 @@ describe("pat-checklist", () => {
                 <label><input type="checkbox">Option 3</label>
             </fieldset>
         `;
-        Pattern.init(document.querySelector(".pat-checklist"));
+        new Pattern(document.querySelector(".pat-checklist"));
 
         const [f1] = document.querySelectorAll("fieldset");
         const [b1, b2] = document.querySelectorAll("button");
@@ -535,7 +535,7 @@ describe("pat-checklist", () => {
                 <label><input type="radio" name="radio" />3</label>
             </fieldset>
         `;
-        Pattern.init(document.querySelector(".pat-checklist"));
+        new Pattern(document.querySelector(".pat-checklist"));
 
         const [f1] = document.querySelectorAll("fieldset");
         const [l1, l2, l3] = document.querySelectorAll("label");

@@ -428,7 +428,7 @@ describe("1 - Calendar tests", () => {
             null,
             "?date=2020-02-29T23%3A00%3A00.000Z&view=dayGridMonth"
         );
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         const title_el = el.querySelector(".cal-title");

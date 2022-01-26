@@ -20,7 +20,7 @@ describe("pat-autosubmit", function () {
                 </fieldset>
               </form>
             `;
-            var spy_init = jest.spyOn(Pattern, "init");
+            const spy_init = jest.spyOn(Pattern.prototype, "init");
             registry.scan(document.body);
             expect(spy_init).toHaveBeenCalled();
         });
@@ -34,7 +34,7 @@ describe("pat-autosubmit", function () {
                 </fieldset>
               </form>
             `;
-            var spy_init = jest.spyOn(Pattern, "init");
+            const spy_init = jest.spyOn(Pattern.prototype, "init");
             registry.scan(document.body);
             expect(spy_init).toHaveBeenCalled();
         });
@@ -50,7 +50,7 @@ describe("pat-autosubmit", function () {
                 />
               </form>
             `;
-            var spy_init = jest.spyOn(Pattern, "init");
+            const spy_init = jest.spyOn(Pattern.prototype, "init");
             registry.scan(document.body);
             expect(spy_init).toHaveBeenCalled();
         });
