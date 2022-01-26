@@ -111,7 +111,7 @@ export default Base.extend({
         });
 
         // Clear values on reset.
-        dom.add_event_listener(
+        events.add_event_listener(
             this.el.closest("form"),
             "reset",
             "pat-auto-suggest--reset",

@@ -1,11 +1,11 @@
 // Patterns switch - toggle classes on click
 import $ from "jquery";
 import Base from "../../core/base";
-import logging from "../../core/logging";
 import Parser from "../../core/parser";
+import events from "../../core/events";
+import logging from "../../core/logging";
 import store from "../../core/store";
 import utils from "../../core/utils";
-import dom from "../../core/dom";
 
 const log = logging.getLogger("pat.switch");
 
@@ -25,7 +25,7 @@ export default Base.extend({
             log.error("Switch without options cannot be initialized.");
         }
 
-        dom.add_event_listener(this.el, "click", "pat-switch--on-click", (e) => {
+        events.add_event_listener(this.el, "click", "pat-switch--on-click", (e) => {
             if (e.tagName === "A") {
                 e.preventDefault();
             }
@@ -45,7 +45,7 @@ export default Base.extend({
     },
 
     destroy() {
-        dom.remove_event_listener(this.el, "pat-switch--on-click");
+        events.remove_event_listener(this.el, "pat-switch--on-click");
     },
 
     execute() {
