@@ -52,14 +52,13 @@ const _ = {
         $el.off(".pat-ajax");
     },
     onClickSubmit(event) {
-        const $form = $(event.target).parents("form").first();
-        const name = event.target.name;
-        const value = $(event.target).val();
+        const el = event.target;
+        const form = el.closest("form");
         const data = {};
-        if (name) {
-            data[name] = value;
+        if (el.name) {
+            data[el.name] = el.value;
         }
-        $form.data("pat-ajax.clicked-data", data);
+        $(form).data("pat-ajax.clicked-data", data);
     },
     onTriggerEvents(event) {
         if (event) {
