@@ -1,5 +1,6 @@
 import "../../core/jquery-ext"; // for :scrollable for autoLoading-visible
 import "regenerator-runtime/runtime"; // needed for ``await`` support
+import Base from "../../core/base";
 import $ from "jquery";
 import _ from "underscore";
 import ajax from "../ajax/ajax";
@@ -41,18 +42,18 @@ parser.addArgument("scroll");
 // to us
 parser.addArgument("url");
 
-const inject = {
+export default Base.extend({
     name: "inject",
     trigger:
         ".raptor-ui .ui-button.pat-inject, a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
     parser: parser,
 
-    init($el, opts) {
-        const cfgs = this.extractConfig($el, opts);
+    init() {
+        const cfgs = this.extractConfig(this.el, this.options);
         if (cfgs.some((e) => e.history === "record") && !("pushState" in history)) {
             // if the injection shall add a history entry and HTML5 pushState
             // is missing, then don't initialize the injection.
-            return $el;
+            return;
         }
         $el.data("pat-inject", cfgs);
 
@@ -161,9 +162,10 @@ const inject = {
         const $el = $(e.currentTarget);
         const cfgs = $el.data("pat-inject");
         if ($el.is("form")) {
-            $(cfgs).each((i, v) => {
-                v.params = $.param($el.serializeArray());
-            });
+            // store the params of the form in the config, to be used by history
+            for (cfg of cfgs) {
+                cfg.params = $.param($sub.serializeArray());
+            }
         }
         e.preventDefault && e.preventDefault();
         $el.trigger("patterns-inject-triggered");
@@ -182,9 +184,10 @@ const inject = {
         const $cfg_node = $button.closest("[data-pat-inject]");
         const cfgs = this.extractConfig($cfg_node, opts);
 
-        $(cfgs).each((i, v) => {
-            v.params = $.param($form.serializeArray());
-        });
+        // store the params of the form in the config, to be used by history
+        for (cfg of cfgs) {
+            cfg.params = $.param($sub.serializeArray());
+        }
 
         e.preventDefault();
         $form.trigger("patterns-inject-triggered");
@@ -194,13 +197,13 @@ const inject = {
     submitSubform($sub) {
         /* This method is called from pat-subform
          */
-        const $el = $sub.parents("form");
-        const cfgs = $sub.data("pat-inject");
+        const $el = $($sub[0].closest("form"));
+        const cfgs = this.extractConfig($sub[0]);
 
         // store the params of the subform in the config, to be used by history
-        $(cfgs).each((i, v) => {
-            v.params = $.param($sub.serializeArray());
-        });
+        for (cfg of cfgs) {
+            cfg.params = $.param($sub.serializeArray());
+        }
 
         try {
             $el.trigger("patterns-inject-triggered");
@@ -210,19 +213,20 @@ const inject = {
         this.execute(cfgs, $el);
     },
 
-    extractConfig($el, opts) {
-        opts = $.extend({}, opts);
+    extractConfig(el, options = {}) {
+        el = utils.jqToNode(el);
+        options = Object.assign({}, options); // copy
 
-        const cfgs = parser.parse($el, opts, true);
+        const cfgs = parser.parse(el, options, true);
         cfgs.forEach((cfg) => {
-            cfg.$context = $el;
-            // opts and cfg have priority, fall back to href/action
+            cfg.$context = $(el);
+            // options and cfg have priority, fall back to href/action
             cfg.url =
-                opts.url ||
+                options.url ||
                 cfg.url ||
-                $el.attr("href") ||
-                $el.attr("action") ||
-                $el.parents("form").attr("action") ||
+                el.getAttribute("href") ||
+                el.getAttribute("action") ||
+                el.closest("form")?.getAttribute("action") ||
                 "";
 
             // separate selector from url
@@ -1122,7 +1126,7 @@ const inject = {
             },
         },
     },
-};
+});
 
 $(document).on("patterns-injected.inject", (ev, cfg, trigger, injected) => {
     /* Listen for the patterns-injected event.
@@ -1169,6 +1173,3 @@ if ("replaceState" in history) {
         log.debug(e);
     }
 }
-
-registry.register(inject);
-export default inject;
