@@ -131,8 +131,14 @@ const is_visible = (el) => {
     return el.offsetWidth > 0 && el.offsetHeight > 0;
 };
 
+/**
+ * Return a DocumentFragment from a given string.
+ *
+ * @param {String} string - The HTML structure as a string.
+ *
+ * @returns {DocumentFragment} - The DOM nodes as a DocumentFragment.
+ */
 const create_from_string = (string) => {
-    // Create a DOM nodes from a string.
     // See: https://davidwalsh.name/convert-html-stings-dom-nodes
     return document.createRange().createContextualFragment(string.trim());
 };
