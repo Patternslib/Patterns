@@ -143,6 +143,27 @@ const create_from_string = (string) => {
     return document.createRange().createContextualFragment(string.trim());
 };
 
+/**
+ * Find the closest scrollable container.
+ *
+ * @param {Node} el - A DOM node to start the search.
+ * @param {String} [direction=xy] - The scroll direction we want to search for.
+ *                                  "x" for a scroll direction in x-position,
+ *                                  "y" for a scroll direction in y-position,
+ *                                  "xy" for a both directions.
+ *
+ * @returns {(Node|null)} - The DOM Node which can act as a scrollable container or "null".
+ */
+const find_scroll_container = (el) => {
+    //
+    // These all have some sort of ``:scrollable`` support:
+    // jquery-ext
+    // pat inject
+    // pat-scroll
+    // pat-scroll-box
+    // bumper
+};
+
 const dom = {
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
@@ -157,6 +178,7 @@ const dom = {
     create_from_string: create_from_string,
     add_event_listener: events.add_event_listener, // BBB export. TODO: Remove in an upcoming version.
     remove_event_listener: events.remove_event_listener, // BBB export. TODO: Remove in an upcoming version.
+    find_scroll_container: find_scroll_container,
 };
 
 export default dom;
