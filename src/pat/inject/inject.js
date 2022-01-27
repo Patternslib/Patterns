@@ -980,7 +980,7 @@ const inject = {
         };
         $el.click(trigger);
 
-        // Use case 1: a (heigh-constrained) scrollable parent
+        // Use case 1: a (height-constrained) scrollable parent
         if ($scrollable.length) {
             // if scrollable parent and visible -> trigger it
             // we only look at the closest scrollable parent, no nesting
