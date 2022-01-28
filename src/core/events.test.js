@@ -84,6 +84,15 @@ describe("core.events tests", () => {
             expect(catched).toBe("outer");
         });
 
+        it("scroll event", async () => {
+            outer.addEventListener("scroll", () => {
+                catched = "outer";
+            });
+            inner.dispatchEvent(events.scroll_event());
+            await utils.timeout(1);
+            expect(catched).toBe("outer");
+        });
+
         it("submit event", async () => {
             outer.addEventListener("submit", () => {
                 catched = "outer";
