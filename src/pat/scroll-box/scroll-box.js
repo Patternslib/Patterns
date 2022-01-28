@@ -58,34 +58,45 @@ export default Base.extend({
     set_scroll_classes() {
         const scroll_pos = this.get_scroll_y();
         const el = this.el;
-        el.classList.remove("scroll-up");
-        el.classList.remove("scroll-down");
-        el.classList.remove("scrolling-up");
-        el.classList.remove("scrolling-down");
-        el.classList.remove("scroll-position-top");
-        el.classList.remove("scroll-position-bottom");
+
+        const to_add = [];
 
         if (scroll_pos < this.last_known_scroll_position) {
-            el.classList.add("scroll-up");
-            el.classList.add("scrolling-up");
+            to_add.push("scroll-up");
+            to_add.push("scroll-up");
+            to_add.push("scrolling-up");
         } else if (this.last_known_scroll_position < scroll_pos) {
-            el.classList.add("scroll-down");
-            el.classList.add("scrolling-down");
+            to_add.push("scroll-down");
+            to_add.push("scrolling-down");
         }
 
         if (scroll_pos === 0) {
-            el.classList.add("scroll-position-top");
+            to_add.push("scroll-position-top");
         } else if (
             this.scroll_listener === window &&
             window.innerHeight + scroll_pos >= el.scrollHeight
         ) {
-            el.classList.add("scroll-position-bottom");
+            to_add.push("scroll-position-bottom");
         } else if (
             this.scroll_listener !== window &&
             el.clientHeight + scroll_pos >= el.scrollHeight
         ) {
-            el.classList.add("scroll-position-bottom");
+            to_add.push("scroll-position-bottom");
         }
+
+        // Keep DOM manipulation calls together to let the browser optimize reflow/repaint.
+        // See: https://areknawo.com/dom-performance-case-study/
+
+        el.classList.remove(
+            "scroll-up",
+            "scroll-down",
+            "scrolling-up",
+            "scrolling-down",
+            "scroll-position-top",
+            "scroll-position-bottom"
+        );
+        el.classList.add(...to_add);
+
         this.last_known_scroll_position = scroll_pos;
     },
 
