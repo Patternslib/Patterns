@@ -1,9 +1,6 @@
-import pattern, {
-    TIMEOUT_CALLBACK,
-    TIMEOUT_FIRST_CALLBACK,
-    TIMEOUT_PAUSE,
-} from "./scroll-box";
+import pattern from "./scroll-box";
 import utils from "../../core/utils";
+import events from "../../core/events";
 
 describe("pat-scroll-box", function () {
     afterEach(function () {
@@ -11,63 +8,57 @@ describe("pat-scroll-box", function () {
         document.body.innerHTML = "";
     });
 
-    it("1 - First callback invoked early", async function () {
+    it("1 - Basic functionality", async function () {
         document.body.innerHTML = `
           <div id="el1" style="overflow: scroll"></div>
         `;
         const el = document.querySelector("#el1");
 
-        const instance = new pattern(el);
+        // mocks
+        Object.defineProperty(el, "clientHeight", { value: 100, writable: false });
+        Object.defineProperty(el, "scrollHeight", { value: 300, writable: false });
+        Object.defineProperty(el, "scrollTop", { value: 0, writable: true });
+
+        new pattern(el);
         await utils.timeout(1);
 
-        const spy_set_scroll_classes = jest.spyOn(instance, "set_scroll_classes");
+        el.scrollTop = 0;
+        el.dispatchEvent(events.scroll_event());
+        expect(el.classList).toContain("scroll-position-top");
+        expect(el.classList).not.toContain("scroll-position-bottom");
+        expect(el.classList).not.toContain("scroll-up");
+        expect(el.classList).not.toContain("scroll-down");
 
-        // First invocation is after TIMEOUT_FIRST_CALLBACK
-        el.dispatchEvent(new Event("scroll"));
-        await utils.timeout(1);
-        expect(spy_set_scroll_classes).toHaveBeenCalledTimes(0);
-        await utils.timeout(TIMEOUT_FIRST_CALLBACK - 1);
-        expect(spy_set_scroll_classes).toHaveBeenCalledTimes(1);
-        // No other callback invocations with just one scroll event.
-        await utils.timeout(TIMEOUT_CALLBACK - TIMEOUT_FIRST_CALLBACK - 1);
-        expect(spy_set_scroll_classes).toHaveBeenCalledTimes(1);
+        el.scrollTop = 100;
+        el.dispatchEvent(events.scroll_event());
+        await utils.animation_frame();
+        expect(el.classList).not.toContain("scroll-position-top");
+        expect(el.classList).not.toContain("scroll-position-bottom");
+        expect(el.classList).not.toContain("scroll-up");
+        expect(el.classList).toContain("scroll-down");
 
-        // Now, subsequent scroll events invoke the callback after TIMEOUT_CALLBACK
-        // But multiple scroll events don't lead to multiple callback invocations.
-        el.dispatchEvent(new Event("scroll"));
-        await utils.timeout(1);
-        el.dispatchEvent(new Event("scroll"));
-        await utils.timeout(1);
-        el.dispatchEvent(new Event("scroll"));
-        // After TIMEOUT_FIRST_CALLBACK no NEW cb invocation
-        await utils.timeout(TIMEOUT_FIRST_CALLBACK);
-        expect(spy_set_scroll_classes).toHaveBeenCalledTimes(1);
-        // After TIMEOUT_CALLBACK there should be another cb invocation
-        await utils.timeout(TIMEOUT_CALLBACK - TIMEOUT_FIRST_CALLBACK);
-        expect(spy_set_scroll_classes).toHaveBeenCalledTimes(2);
-        // But without a new scroll event no more callback invocations.
-        await utils.timeout(TIMEOUT_CALLBACK);
-        expect(spy_set_scroll_classes).toHaveBeenCalledTimes(2);
+        el.scrollTop = 50;
+        el.dispatchEvent(events.scroll_event());
+        await utils.animation_frame();
+        expect(el.classList).not.toContain("scroll-position-top");
+        expect(el.classList).not.toContain("scroll-position-bottom");
+        expect(el.classList).toContain("scroll-up");
+        expect(el.classList).not.toContain("scroll-down");
 
-        // Another scroll event, another callback invocation after 200ms
-        // We have to dispatch again
-        el.dispatchEvent(new Event("scroll"));
-        // After TIMEOUT_FIRST_CALLBACK no NEW cb invocation
-        await utils.timeout(TIMEOUT_FIRST_CALLBACK);
-        expect(spy_set_scroll_classes).toHaveBeenCalledTimes(2);
-        // After TIMEOUT_CALLBACK there should be another cb invocation
-        await utils.timeout(TIMEOUT_CALLBACK - TIMEOUT_FIRST_CALLBACK);
-        expect(spy_set_scroll_classes).toHaveBeenCalledTimes(3);
+        el.scrollTop = 200;
+        el.dispatchEvent(events.scroll_event());
+        await utils.animation_frame();
+        expect(el.classList).not.toContain("scroll-position-top");
+        expect(el.classList).toContain("scroll-position-bottom");
+        expect(el.classList).not.toContain("scroll-up");
+        expect(el.classList).toContain("scroll-down");
 
-        // Let's wait for TIMEOUT_PAUSE to reset and start again with the
-        // first call after TIMEOUT_FIRST_CALLBACK.
-        // The user probably stopped scrolling and starts over again
-        await utils.timeout(TIMEOUT_PAUSE);
-        el.dispatchEvent(new Event("scroll"));
-        await utils.timeout(TIMEOUT_FIRST_CALLBACK);
-        expect(spy_set_scroll_classes).toHaveBeenCalledTimes(4);
-        el.dispatchEvent(new Event("scroll"));
-        await utils.timeout(TIMEOUT_CALLBACK);
-        expect(spy_set_scroll_classes).toHaveBeenCalledTimes(5);
+        el.scrollTop = 0;
+        el.dispatchEvent(events.scroll_event());
+        await utils.animation_frame();
+        expect(el.classList).toContain("scroll-position-top");
+        expect(el.classList).not.toContain("scroll-position-bottom");
+        expect(el.classList).toContain("scroll-up");
+        expect(el.classList).not.toContain("scroll-down");
     });
 });
