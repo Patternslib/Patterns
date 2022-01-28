@@ -51,17 +51,6 @@ module.exports = (env, argv, config, babel_include = []) => {
                     loader: "babel-loader",
                 },
                 {
-                    test: require.resolve("jquery"),
-                    loader: "expose-loader",
-                    options: {
-                        exposes: [
-                            // Webpack module federation does load multiple expose-loaders. Just override previous set values.
-                            { globalName: "$", override: true },
-                            { globalName: "jQuery", override: true },
-                        ],
-                    },
-                },
-                {
                     test: /showdown-prettify/,
                     use: [
                         {
