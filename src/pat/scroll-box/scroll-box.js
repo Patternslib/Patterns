@@ -1,8 +1,5 @@
 import Base from "../../core/base";
-
-export const TIMEOUT_FIRST_CALLBACK = 40; // Timeout for first run of the callback
-export const TIMEOUT_CALLBACK = 200; // Timeout for subsequent runs of the callback
-export const TIMEOUT_PAUSE = 600; // Timeout to detect scrolling pause and reset for TIMEOUT_FIRST_CALLBACK
+import events from "../../core/events";
 
 export default Base.extend({
     name: "scroll-box",
@@ -10,7 +7,6 @@ export default Base.extend({
 
     scroll_listener: null,
     last_known_scroll_position: 0,
-    timeout_id: null,
     timeout_id__scroll_stop: null,
 
     init() {
@@ -26,43 +22,28 @@ export default Base.extend({
             return;
         }
 
-        this.scroll_listener.addEventListener("scroll", () => {
-            if (this.timeout_id === null) {
-                // Run first callback early and don't clear it's scheduled run.
-                // This sets up classes early for a better user experience in
-                // contrast of setting classes at the end of scrolling.
-                window.setTimeout(() => {
-                    const scroll_y = this.get_scroll_y();
-                    this.set_scroll_classes(scroll_y);
-                    this.last_known_scroll_position = scroll_y;
-                }, TIMEOUT_FIRST_CALLBACK);
-                // Set a dummy timeout_id and return.
-                // Next scroll event should not reach this block but start with
-                // default callback scheduling.
-                this.timeout_id = 0;
-                return;
+        let ticking = false;
+        events.add_event_listener(
+            this.scroll_listener,
+            "scroll",
+            "pat-scroll-box--scroll_listener",
+            () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        this.set_scroll_classes();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
             }
-
-            window.clearTimeout(this.timeout_id);
-            this.timeout_id = window.setTimeout(() => {
-                const scroll_y = this.get_scroll_y();
-                this.set_scroll_classes(scroll_y);
-                this.last_known_scroll_position = scroll_y;
-            }, TIMEOUT_CALLBACK);
-
-            // Reset the timeout_id after when he user stops scrolling.
-            // When scrolling again the scroll classes are set again after TIMEOUT_FIRST_CALLBACK
-            window.clearTimeout(this.timeout_id__scroll_stop);
-            this.timeout_id__scroll_stop = window.setTimeout(() => {
-                this.timeout_id = null;
-            }, TIMEOUT_PAUSE);
-        });
+        );
 
         // Set initial state
-        this.set_scroll_classes(this.get_scroll_y());
+        this.set_scroll_classes();
     },
 
-    set_scroll_classes(scroll_pos) {
+    set_scroll_classes() {
+        const scroll_pos = this.get_scroll_y();
         const el = this.el;
         el.classList.remove("scroll-up");
         el.classList.remove("scroll-down");
@@ -88,6 +69,7 @@ export default Base.extend({
         ) {
             el.classList.add("scroll-position-bottom");
         }
+        this.last_known_scroll_position = scroll_pos;
     },
 
     get_scroll_y() {
