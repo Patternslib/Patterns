@@ -72,6 +72,13 @@ const input_event = () => {
     });
 };
 
+const scroll_event = () => {
+    return new Event("scroll", {
+        bubbles: true,
+        cancelable: false,
+    });
+};
+
 const submit_event = () => {
     return new Event("submit", {
         bubbles: true,
@@ -84,5 +91,6 @@ export default {
     remove_event_listener: remove_event_listener,
     change_event: change_event,
     input_event: input_event,
+    scroll_event: scroll_event,
     submit_event: submit_event,
 };
