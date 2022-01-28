@@ -859,6 +859,85 @@ describe("pat-validation", function () {
         );
     });
 
+    it("5.8 - validates datetime-local with before/after constraints", async function () {
+        document.body.innerHTML = `
+            <form class="pat-validation">
+              <input
+                    type="datetime-local"
+                    id="start"
+                    name="start"
+                    data-pat-validation="
+                        not-after: #end;
+                        message-date: The start date/time must on or before the end date/time.
+                    ">
+              <input
+                    type="datetime-local"
+                    id="end"
+                    name="end"
+                    data-pat-validation="
+                        not-before: #start;
+                        message-date: The end date/time must on or before the start date/time.
+                    ">
+            </form>
+        `;
+
+        const el = document.querySelector(".pat-validation");
+        const inp_start = el.querySelector("[name=start]");
+        const inp_end = el.querySelector("[name=end]");
+
+        new Pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        // Before/after without required allows for empty dates of the
+        // relation.
+        inp_start.value = "2022-01-05T10:00";
+        inp_start.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(0);
+
+        // Violate the before/after constraint
+        inp_end.value = "2022-01-05T09:00";
+        inp_end.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(1);
+        expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
+            "The end date/time must on or before the start date/time."
+        );
+
+        // Violate the before/after constraint
+        inp_start.value = "2022-01-05T11:00";
+        inp_start.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(2);
+        expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
+            "The start date/time must on or before the end date/time."
+        );
+        expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
+            "The end date/time must on or before the start date/time."
+        );
+
+        // Fulfill the before/after constraint - same date
+        inp_start.value = "2022-01-05T10:00";
+        inp_start.dispatchEvent(events.change_event());
+        inp_end.value = "2022-01-05T10:00";
+        inp_end.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(0);
+
+        // Fulfill the before/after constraint - start before end
+        inp_start.value = "2022-01-04T10:00";
+        inp_start.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(0);
+
+        // Before/after without required allows for empty dates of the
+        // relation.
+        inp_start.value = "";
+        inp_start.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(0);
+    });
+
     it("6.1 - validates radio buttons", async function () {
         document.body.innerHTML = `
           <form class="pat-validation"

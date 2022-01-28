@@ -186,6 +186,30 @@
 
         <hr />
 
+        <label>Date/Time start
+          <input
+                 id="datetime-start"
+                 autocomplete="off"
+                 name="datetime-start"
+                 type="datetime-local"
+                 value="2022-01-05T10:00"
+                 data-pat-validation="not-after: #datetime-end; message-date: This date/time must be on or before the end date/time."
+          />
+        </label>
+
+        <label>Date/Time end
+          <input
+                 id="datetime-end"
+                 autocomplete="off"
+                 name="datetime-end"
+                 type="datetime-local"
+                 value="2022-01-05T14:00"
+                 data-pat-validation="not-before: #datetime-start; message-date: This date/time must be on or after the start date/time."
+          />
+        </label>
+
+        <hr />
+
         <label>Password
           <input id="password"
                  autocomplete="off"
