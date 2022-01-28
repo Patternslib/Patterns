@@ -1,3 +1,96 @@
+## [7.0.0](https://github.com/Patternslib/patterns/compare/6.4.0...7.0.0) (2022-01-28)
+
+
+### Features
+
+* **core dom:** Hide method: also set hidden attribute for better semantics. ([379e4a9](https://github.com/Patternslib/patterns/commit/379e4a92992919ddc20d07df59f3af09625c716f))
+
+* **core events:** Standard JavaScript event factories - add "scroll" event. ([949b1dc](https://github.com/Patternslib/patterns/commit/949b1dcb05145f1b00e261606aeea794ca65f90d))
+
+* **core events:** Standard JavaScript event factories. ([951084f](https://github.com/Patternslib/patterns/commit/951084ffa2eab7a3e96b0f99eaa3f19a778dae8e))
+Provide a library with standard JavaScript event factories, beginning with ``changed`` and ``submit`` events.
+* **pat scroll-box:** Allow detection of scroll-stop. ([b226aeb](https://github.com/Patternslib/patterns/commit/b226aebddc3e67ba9e6cf4f8334b0b0c1be5af78))
+Add ``scrolling-up`` and ``scrolling-down`` classes which will be removed after the user has stopped scrolling.
+This allows for detection of a scrolling situation vs non-scrolling situation.
+* **pat scroll-box:** Optimize performance. ([9caf2be](https://github.com/Patternslib/patterns/commit/9caf2bea348839856c286ae35aedd87ae829cbcd))
+Optimize performance by grouping together DOM manipulation calls.
+The browser is now able to better optimize the code in regard to the reflow/repaint cycles.
+Also see: https://areknawo.com/dom-performance-case-study/
+* **pat validation:** Allow to define a custom error template. ([986a092](https://github.com/Patternslib/patterns/commit/986a092f892582585a97b5e2f7c1af5780bb6b32))
+
+
+
+### Bug Fixes
+
+* **pat auto suggest:** Do not change input field to type "hidden". ([ab12b36](https://github.com/Patternslib/patterns/commit/ab12b363db484257f2f8368ffb7dad061fa5ccbc))
+Don't change the date field to a hidden field which would prevent it from validation.
+Instead just hide it.
+Also, do this not in the transform method but on initialization.
+* **pat auto suggest:** Instead of searching for a reset button, listen on the form's reset event for clearing the data. ([cd69e92](https://github.com/Patternslib/patterns/commit/cd69e92cb62b43406d54a0178b392141613d2798))
+
+* **pat auto suggest:** Invoke standard JS change event. ([31da974](https://github.com/Patternslib/patterns/commit/31da9748a9288652685ce069f538ea87e6893eea))
+Work around the situation that a jQuery "change" event, submitted by select2, isn't caught by pat-validation.
+Select2 also triggers a click event, which we will use here to trigger a standard JS change event.
+* **pat date picker:** Do not change input field to type "hidden". ([66f4333](https://github.com/Patternslib/patterns/commit/66f4333bd1f16ed0661a1da0d0cc30256751fe1d))
+Don't change the date field to a hidden field which would prevent it from validation.
+Instead just hide it.
+Also disable click on label as this would focus/click-forward to the invisible input field and invokes some weird behavior.
+* **pat scroll-box:** Immediately and correctly set CSS classes. ([7e7fd23](https://github.com/Patternslib/patterns/commit/7e7fd233480f9eeb9da3b5d01c3f4d283560c179))
+Fix pat-scroll-box to immediately and correctly set the CSS classes by using requestAnimationFrame instead timeouts.
+
+
+### Breaking Changes
+
+* **core dom create_from_string:** Change create_from_string to be able to create multiple siblings from a string. ([062991c](https://github.com/Patternslib/patterns/commit/062991c45bf5604f36dd38f3da3c7d8661b8a150))
+Returns now a DocumentFragment instead of a single DOM node.
+This method wasn't used in Patternslib or any of the core addons.
+If you used it and it breaks your code, let me know.
+* **core events:** Move add_event_listener and remove_event_listener to core.events. ([661b74c](https://github.com/Patternslib/patterns/commit/661b74c137f5a10ac5144216742386d6f756632c))
+Move add_event_listener and remove_event_listener from core.dom to core.events.
+Provide backwards compatibility imports in core.dom.
+Those imports will be removed in an upcoming version.
+* **pat validation:** Refactor pat-validation for full HTML5 compatibility. ([9999c8f](https://github.com/Patternslib/patterns/commit/9999c8f484ddefd2d043a9dd728451cbb6b173b9))
+- Use the Web API validation framework.
+
+- Define custom errors with the Web API method ``setCustomValidity`` (e.g. the custom error for the start date not being after the end date with the not ``not-after`` option).
+
+- Make use and set the Web API ``validityState`` according to validity of the form inputs.
+
+- Making use of the Web API validation framework allows to use the ``:invalid`` and ``:valid`` CSS selevtors - including for those inpyts with custom validity messages.
+
+- Validate the form on ``input``, ``change``, ``blur`` and ``submit`` events but make sure only one is run at once.
+
+- Remove default validation error messages from the configuration.
+  If no validation message is defined the browser will show a default validation message, already translated into the language of the browser.
+
+- Remove configuration option ``type``.
+  Use the ``type`` attribute of the input element instead. For a date field, use ``date``.
+  For ``integer`` just use ``number``.
+  If you want to support real, floating numbers, use ``step="any"`` or a real number as step size.
+
+- Remove dependency on validate.js.
+
+
+### Maintenance
+
+* Remove unused core/scroll_detection.js. ([19779d2](https://github.com/Patternslib/patterns/commit/19779d227d9a5f79e4438d283fbfe131552bccd6))
+
+* **core parser:** Minimal code simplification. ([3c28bb2](https://github.com/Patternslib/patterns/commit/3c28bb241b4c6e508e0627e16e0629cafdc5dc30))
+
+* **dependencies:** Remove now unused dependency on validate.js. ([d698930](https://github.com/Patternslib/patterns/commit/d698930e040cb8fca2ae74108d8a587d3ef0d6c3))
+
+* **dependencies:** Update browserslist database / caniuse-lite. ([60ac00f](https://github.com/Patternslib/patterns/commit/60ac00fa40beda67f4173839692819b656b7bb9e))
+
+* **dependencies:** Upgrade dependencies. ([9f0d41f](https://github.com/Patternslib/patterns/commit/9f0d41fba2448db6f0b33d8b141f35a6b01b7616))
+
+* **docs:** Add improve JSDoc strings a bit. ([5f0f6ec](https://github.com/Patternslib/patterns/commit/5f0f6ec08b4b7b7800034d86cce5cff22e044de3))
+
+* **pat ajax:** Modernize code. ([3953112](https://github.com/Patternslib/patterns/commit/3953112122a2b05ecfde8e6e2fce18d53af1a54f))
+
+* **tests:** Use global instead of window in node based tools like Jest for registering global variables. ([634325c](https://github.com/Patternslib/patterns/commit/634325c7f7c6c2c3dc928a20207c95fdab4e2f9d))
+
+* Use caching in GitHub actions. ([504e342](https://github.com/Patternslib/patterns/commit/504e342f58115c66fb563f6eedca8a33e7062beb))
+
 ## [6.4.0](https://github.com/Patternslib/patterns/compare/6.3.2...6.4.0) (2022-01-24)
 
 
