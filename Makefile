@@ -62,9 +62,9 @@ bundle: stamp-yarn
 release-zip: clean-dist bundle
 	@echo name is $(PACKAGE_NAME)
 	@echo version is $(PACKAGE_VERSION)
-	mkdir -p dist/$(PACKAGE_NAME)-$(PACKAGE_VERSION)
-	-mv dist/* dist/$(PACKAGE_NAME)-$(PACKAGE_VERSION)
-	cd dist/ && zip -r $(PACKAGE_NAME)-$(PACKAGE_VERSION).zip $(PACKAGE_NAME)-$(PACKAGE_VERSION)/
+	mkdir -p dist/$(PACKAGE_NAME)-bundle-$(PACKAGE_VERSION)
+	-mv dist/* dist/$(PACKAGE_NAME)-bundle-$(PACKAGE_VERSION)
+	cd dist/ && zip -r $(PACKAGE_NAME)-bundle-$(PACKAGE_VERSION).zip $(PACKAGE_NAME)-bundle-$(PACKAGE_VERSION)/
 
 .PHONY: release-major
 release-major: check
