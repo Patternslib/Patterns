@@ -29,20 +29,20 @@ The scope must be in parentheses.
 
 We are using these types:
 
-- feat (Feature)
-- fix (Bugfix)
-- maint (Maintainance)
-- breaking (Breaking changes)
+- feat (Feature),
+- fix (Bugfix),
+- maint (Maintainance),
+- breaking (Breaking changes).
 
 For the optional scope, we roughly use these categories:
 
-- "Docs" for documentation
-- "Release workflow"
-- "Webpack"
-- "Cleanup"
-- "pat PATTERNNAME" for the pattern which is changed
-- "core MODULENAME" for the core module which is changed
-- "lib MODULENAME" for the library module wich is changed
+- "Dependencies" for upgrading package.json dependencies.
+- "Docs" for documentation.
+- "Build" for everything related to the release workflow, Webpack and building bundles.
+- "Cleanup" for cleaning up or reformatting code.
+- "pat PATTERNNAME" for changes to individual patterns in src/pat.
+- "core MODULENAME" for changes to core modules in src/core.
+- "lib MODULENAME" for changes in src/lib.
 
 
 An example for a valid commit message:
