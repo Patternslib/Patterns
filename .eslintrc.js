@@ -14,7 +14,6 @@ module.exports = {
         "dist/",
         "node_modules/",
         "src/lib/depends_parse.js",
-        "src/pat/calendar/moment-timezone-with-data-2010-2020.js",
         "stats.json",
         "style/",
     ],
@@ -26,8 +25,5 @@ module.exports = {
         "no-control-regex": 0,
         "no-self-assign": 0,
         "no-useless-escape": 0,
-    },
-    globals: {
-        spyOn: true, // eventually replace with jest.spyOn and then fix a ton of test failures.
     },
 };
