@@ -21,7 +21,8 @@ all:: bundle css
 ########################################################################
 ## Install dependencies
 
-stamp-yarn:
+.PHONY: install
+stamp-yarn install:
 	$(YARN) install
 	# Install pre commit hook
 	$(YARN) husky install
