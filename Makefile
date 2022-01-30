@@ -18,6 +18,7 @@ PACKAGE_VERSION := $(call get_package_var,version)
 
 all:: bundle css
 
+
 ########################################################################
 ## Install dependencies
 
@@ -46,7 +47,7 @@ eslint: stamp-yarn
 	$(ESLINT) ./src
 
 .PHONY: check
-check:: stamp-yarn eslint
+check: stamp-yarn eslint
 	$(YARN) run testonce
 
 
@@ -54,7 +55,7 @@ check:: stamp-yarn eslint
 ## Builds
 
 .PHONY: build
-build:: bundle all-css
+build: bundle all-css
 
 .PHONY: bundle
 bundle: stamp-yarn
@@ -96,7 +97,7 @@ src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-yarn
 	sed -i~ -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
 .PHONY: all-css
-all-css:: css
+all-css: css
 	@echo "Hang tight!"
 	@$(SASS) -I . -I _sass src/pat/auto-scale/_auto-scale.scss src/pat/auto-scale/auto-scale.css
 	@$(SASS) -I . -I _sass src/pat/auto-suggest/_auto-suggest.scss src/pat/auto-suggest/auto-suggest.css
@@ -128,11 +129,11 @@ all-css:: css
 	@echo "Done. Each pattern now has a CSS file."
 
 .PHONY: css
-css::
+css:
 	@$(SASS) -I style -I _sass -I . _sass/_patterns.scss style/patterns.css
 
 .PHONY: watch
-watch::
+watch:
 	$(SASS) --watch -I style -I . -I _sass _sass/_patterns.scss:style/patterns.css
 
 ########################################################################
@@ -143,5 +144,5 @@ serve: bundle css
 	@printf "\nBundle built\n\n"
 
 .PHONY: designerhappy
-designerhappy:: serve
+designerhappy: serve
 
