@@ -58,6 +58,17 @@ const remove_event_listener = (el, id) => {
     }
 };
 
+/**
+ * Event factories
+ */
+
+const click_event = () => {
+    return new Event("click", {
+        bubbles: true,
+        cancelable: true,
+    });
+};
+
 const change_event = () => {
     return new Event("change", {
         bubbles: true,
@@ -89,6 +100,7 @@ const submit_event = () => {
 export default {
     add_event_listener: add_event_listener,
     remove_event_listener: remove_event_listener,
+    click_event: click_event,
     change_event: change_event,
     input_event: input_event,
     scroll_event: scroll_event,

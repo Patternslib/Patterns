@@ -66,6 +66,15 @@ describe("core.events tests", () => {
             inner = el.querySelector("#inner");
         });
 
+        it("click event", async () => {
+            outer.addEventListener("click", () => {
+                catched = "outer";
+            });
+            inner.dispatchEvent(events.click_event());
+            await utils.timeout(1);
+            expect(catched).toBe("outer");
+        });
+
         it("change event", async () => {
             outer.addEventListener("change", () => {
                 catched = "outer";
