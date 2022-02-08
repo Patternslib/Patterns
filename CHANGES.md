@@ -1,3 +1,31 @@
+### [7.0.1](https://github.com/Patternslib/patterns/compare/7.0.0...7.0.1) (2022-02-08)
+
+
+### Bug Fixes
+
+* **Build:** Use public_path script while also having publicPath set to auto. ([b8dfdbd](https://github.com/Patternslib/patterns/commit/b8dfdbdd2087f8012defa45aa4ce40ab52c604da))
+We still need to use the ``src/public_path.js`` script as first import in our bundles to correctly resolve the loading path for chunks.
+publicPath set to auto does not work in certain environments (e.g. the Plone resource registry).
+
+Partially reverts 1b6143127f61e5e1c41b088e70ec636c629cd5bb, "Use automatic publicPath determination instead of manually setting it."
+
+
+### Maintenance
+
+* **build:** Add and expose a "install" target alias to the Makefile as an alias to stamp-yarn. ([e204037](https://github.com/Patternslib/patterns/commit/e2040374eaee37c54f88cc83e89cc2d967eeb8c4))
+
+* **build:** Remove unnecessary double-colon from targets. ([070e4d9](https://github.com/Patternslib/patterns/commit/070e4d9d8fa42b1998043cc7715355ce64acc14c))
+
+* **Cleanup:** Remove reference to moment-timezone-with-data in .eslintrc - a file which was removed some time ago. ([5de91cc](https://github.com/Patternslib/patterns/commit/5de91cc48ee8f38d8fa8a9f3b1276462a583b0b9))
+
+* **Cleanup:** Restructure package.json entries to move less relevant info down. ([a25043b](https://github.com/Patternslib/patterns/commit/a25043b924332ea3410777e92cb400f211d233f4))
+
+* **Docs:** Update developer styleguide with simpler commit message scope naming guidelines. ([1b391cb](https://github.com/Patternslib/patterns/commit/1b391cb381a252c54b56f7fb11d41d5f58175eef))
+
+* Change the bundle name whichis uploaded to the GitHub release page from patternslib-VERSION.zip to patternslib-bundle-VERSION.zip to better distinguish it from the automatically created Patterns-VERSION.zip source distribution. ([c489a8c](https://github.com/Patternslib/patterns/commit/c489a8ca3c0ce151cf17dd30698fde4d0c7df44e))
+
+* **pat validation:** Test and demo validation of datetime-local. ([dc58887](https://github.com/Patternslib/patterns/commit/dc5888773a291f4065eafde183d355eb4b842720))
+
 ## [7.0.0](https://github.com/Patternslib/patterns/compare/6.4.0...7.0.0) (2022-01-28)
 
 
