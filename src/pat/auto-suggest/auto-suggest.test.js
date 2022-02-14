@@ -44,7 +44,7 @@ describe("pat-autosuggest", function () {
     });
 
     afterEach(function () {
-        $("#lab").remove();
+        document.body.innerHTML = "";
         jest.restoreAllMocks();
     });
 
@@ -218,6 +218,30 @@ describe("pat-autosuggest", function () {
             // Change this as soon Select2 changes this odd behavior.
             expect($(".select2-input").val()).toBe("");
             testutils.removeSelect2();
+        });
+    });
+
+    describe("4 - Integration...", function () {
+        it("4.1 - Works with pat-auto-submit", async function () {
+            document.body.innerHTML = `
+                <input
+                    type="text"
+                    class="pat-autosuggest pat-autosubmit"
+                    data-pat-autosuggest="words: apple, orange, pear"
+                    data-pat-autosubmit="delay:0" />
+            `;
+
+            const pattern_autosubmit = (await import("../auto-submit/auto-submit")).default; // prettier-ignore
+            const input = document.querySelector("input");
+            new pattern(input);
+            const instance_autosubmit = new pattern_autosubmit(input);
+            const spy = jest.spyOn(instance_autosubmit.$el, "submit");
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            $(".select2-input").click();
+            $(document.querySelector(".select2-result")).mouseup();
+
+            expect(spy).toHaveBeenCalled();
         });
     });
 });

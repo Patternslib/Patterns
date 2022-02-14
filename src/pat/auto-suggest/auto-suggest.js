@@ -108,6 +108,10 @@ export default Base.extend({
             // Select2 also triggers a click event, which we will use here to
             // trigger a standard JS change event.
             this.el.dispatchEvent(events.change_event());
+            // Also dispatch a ``input`` event for ``input-change-events``
+            // and pat-auto-suggest to pick this up.
+            // TODO: Revisit after ``input-change-events`` is removed.
+            this.el.dispatchEvent(events.input_event());
         });
 
         // Clear values on reset.
