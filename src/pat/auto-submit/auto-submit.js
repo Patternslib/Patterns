@@ -17,26 +17,23 @@ parser.addArgument("delay", "400ms");
 export default Base.extend({
     name: "autosubmit",
     trigger: ".pat-autosubmit, .pat-auto-submit",
-    parser: {
-        parse($el, opts) {
-            const cfg = parser.parse($el, opts);
-            if (cfg.delay !== "defocus") {
-                cfg.delay = parseInt(cfg.delay.replace(/[^\d]*/g, ""), 10);
-            }
-            return cfg;
-        },
-    },
 
     init() {
-        this.options = this.parser.parse(this.$el, this.options);
+        this.options = parser.parse(this.el, this.options);
+        if (this.options.delay !== "defocus") {
+            this.options.delay = parseInt(this.options.delay.replace(/[^\d]*/g, ""), 10);
+        }
+
         input_change_events.setup(this.$el, "autosubmit");
         this.registerListeners();
         this.registerTriggers();
-        return this.$el;
     },
 
     registerListeners() {
-        this.$el.on("input-change-delayed.pat-autosubmit", this.onInputChange);
+        this.$el.on(
+            "input-change-delayed.pat-autosubmit",
+            this.onInputChange.bind(this)
+        );
         this.registerSubformListeners();
         this.$el.on("patterns-injected", this.refreshListeners.bind(this));
     },
@@ -50,7 +47,10 @@ export default Base.extend({
         $el.find(".pat-subform")
             .not(".pat-autosubmit")
             .each((idx, el) => {
-                $(el).on("input-change-delayed.pat-autosubmit", this.onInputChange);
+                $(el).on(
+                    "input-change-delayed.pat-autosubmit",
+                    this.onInputChange.bind(this)
+                );
             });
     },
 
@@ -101,9 +101,9 @@ export default Base.extend({
         }
     },
 
-    onInputChange(ev) {
-        ev.stopPropagation();
-        $(this).submit();
-        log.debug("triggered by " + ev.type);
+    onInputChange(e) {
+        e.stopPropagation();
+        this.$el.submit();
+        log.debug("triggered by " + e.type);
     },
 });
