@@ -2,7 +2,7 @@ import events from "./events";
 import utils from "./utils";
 
 describe("core.events tests", () => {
-    describe("add / remove event listener", () => {
+    describe("1 - add / remove event listener", () => {
         const _el = {
             event_list: [],
             addEventListener(event_type, cb) {
@@ -49,7 +49,7 @@ describe("core.events tests", () => {
         });
     });
 
-    describe("event factories", () => {
+    describe("2 - event factories", () => {
         let catched;
         let outer;
         let inner;
@@ -100,6 +100,43 @@ describe("core.events tests", () => {
             inner.dispatchEvent(events.submit_event());
             await utils.timeout(1);
             expect(catched).toBe("outer");
+        });
+    });
+
+    describe("3 - jQuery vs native", () => {
+        // These tests show an annoying difference between jQuery and native
+        // JavaScript events. jQuery catches native JavaScript events, which is
+        // good. But events triggered by jQuery are not compatibel with native
+        // JavaScript events and are not catched by native JavaScript event
+        // handlers.
+        // We want to get rid of jQuery events in the mid-term.
+
+        it("jQuery catches native", async () => {
+            let catched = false;
+            const $ = (await import("jquery")).default;
+            const el = document.createElement("input");
+            el.setAttribute("type", "text");
+            el.setAttribute("name", "inp");
+            $(el).on("input", () => {
+                catched = true;
+            });
+            el.dispatchEvent(events.input_event());
+            await utils.timeout(1);
+            expect(catched).toBe(true);
+        });
+
+        it("native does not catch jQuery", async () => {
+            let catched = false;
+            const $ = (await import("jquery")).default;
+            const el = document.createElement("input");
+            el.setAttribute("type", "text");
+            el.setAttribute("name", "inp");
+            el.addEventListener("input", () => {
+                catched = true;
+            });
+            $(el).trigger("input");
+            await utils.timeout(1);
+            expect(catched).toBe(false);
         });
     });
 });
