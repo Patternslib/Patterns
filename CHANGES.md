@@ -1,3 +1,25 @@
+### [7.0.2](https://github.com/Patternslib/patterns/compare/7.0.1...7.0.2) (2022-02-15)
+
+
+### Bug Fixes
+
+* **pat auto suggest:** Fix issue with pat-auto-submit. ([bbf5735](https://github.com/Patternslib/patterns/commit/bbf5735e05717d4faa0c1bab5a3398691775641e))
+Also dispatch a input event after a value has changed to let auto-submit do a form submit.
+This fixes an issue introduced in Patternslib 7.0.0.
+Note: this will be revisited when reworking auto-submit and input-change-events for standard JavaScript event compatibility.
+
+
+### Maintenance
+
+* **core events tests:** Add jQuery vs native JavaScript events tests. ([bb3a8e8](https://github.com/Patternslib/patterns/commit/bb3a8e87ce8f201518b4aa4239d14ddc0b233d50))
+Add test showing that jQuery catches native events, but native listeners do not catch jQuery events.
+In the mid-term we want to switch to native-only to get rid of this difference.
+* **Dependencies:** Upgrade dependencies. ([d5fd1ad](https://github.com/Patternslib/patterns/commit/d5fd1ad41776d1a7ed9b5cc674ef107319317c27))
+
+* **pat auto submit:** Cleanup code, improve tests. ([8d289eb](https://github.com/Patternslib/patterns/commit/8d289ebff716ab9a30e7f8ce8c7c47f21835582a))
+
+* **pat auto suggest:** Improve and extend tests. ([d4d2e99](https://github.com/Patternslib/patterns/commit/d4d2e994716b7f01647128aad888b3250ed0a4de))
+
 ### [7.0.1](https://github.com/Patternslib/patterns/compare/7.0.0...7.0.1) (2022-02-08)
 
 
