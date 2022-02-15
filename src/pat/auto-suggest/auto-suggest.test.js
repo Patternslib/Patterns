@@ -48,8 +48,8 @@ describe("pat-autosuggest", function () {
         jest.restoreAllMocks();
     });
 
-    describe("An ordinary <input> element", function () {
-        it("gets converted into a select2 widget", async function () {
+    describe("1 - Basic tests", function () {
+        it("1.1 - An ordinary <input> element gets converted into a select2 widget", async function () {
             testutils.createInputElement();
             var $el = $("input.pat-autosuggest");
 
@@ -67,10 +67,8 @@ describe("pat-autosuggest", function () {
             expect($el[0].getAttribute("type")).toBe("text");
             expect($el[0].hasAttribute("hidden")).toBe(true);
         });
-    });
 
-    describe("An <input> element with an ajax option", function () {
-        it("keeps the ajax option when turning into a select2 widget", async function () {
+        it("1.1 - An <input> element with an ajax option keeps the ajax option when turning into a select2 widget", async function () {
             testutils.createInputElement({
                 data: "ajax-url: http://test.org/test",
             });
@@ -82,10 +80,8 @@ describe("pat-autosuggest", function () {
             expect($el.select2.mock.calls.pop()[0].ajax).toBeDefined();
             testutils.removeSelect2();
         });
-    });
 
-    describe("A <select> element", function () {
-        it("gets converted into a select2 widget", async function () {
+        it("1.3 - A <select> element gets converted into a select2 widget", async function () {
             testutils.createSelectElement();
             var $el = $("select.pat-autosuggest");
             expect($(".select2-container").length).toBe(0);
@@ -98,11 +94,10 @@ describe("pat-autosuggest", function () {
         });
     });
 
-    describe("Selected items", function () {
-        it("can be given custom CSS classes", async function () {
+    describe("2.1 - Selected items", function () {
+        it("4.1 - can be given custom CSS classes", async function () {
             testutils.createInputElement({
-                data:
-                    'words: apple,orange,pear; pre-fill: orange; selection-classes: {"orange": ["fruit", "orange"]}',
+                data: 'words: apple,orange,pear; pre-fill: orange; selection-classes: {"orange": ["fruit", "orange"]}',
             });
             var $el = $("input.pat-autosuggest");
             expect($(".select2-search-choice").length).toBe(0);
@@ -114,7 +109,7 @@ describe("pat-autosuggest", function () {
             testutils.removeSelect2();
         });
 
-        it("can be restricted to a certain amount", async function () {
+        it("2.2 - can be restricted to a certain amount", async function () {
             // First check without limit
             testutils.createInputElement({
                 data: "words: apple,orange,pear; pre-fill: orange",
@@ -130,8 +125,7 @@ describe("pat-autosuggest", function () {
 
             // Then with limit
             testutils.createInputElement({
-                data:
-                    "maximum-selection-size: 1; words: apple,orange,pear; pre-fill: orange",
+                data: "maximum-selection-size: 1; words: apple,orange,pear; pre-fill: orange",
             });
             expect($(".select2-input").length).toBe(0);
             pattern.init($("input.pat-autosuggest"));
@@ -143,10 +137,53 @@ describe("pat-autosuggest", function () {
             expect($(".select2-search-choice-close").length).toBe(1);
             testutils.removeSelect2();
         });
+
+        it("2.3 - select an item from a word list.", async function () {
+            document.body.innerHTML = `
+                <input
+                    type="text"
+                    class="pat-autosuggest"
+                    data-pat-autosuggest="words: apple, orange, pear" />
+            `;
+
+            const input = document.querySelector("input");
+            new pattern(input);
+            await utils.timeout(1); // wait a tick for async to settle.
+            $(".select2-input").click();
+            $(document.querySelector(".select2-result")).mouseup();
+
+            const selected = document.querySelectorAll(".select2-search-choice");
+            expect(selected.length).toBe(1);
+            expect(selected[0].textContent.trim()).toBe("apple");
+            expect(input.value).toBe("apple");
+        });
+
+        it("2.4 - select multiple items from a word list.", async function () {
+            document.body.innerHTML = `
+                <input
+                    type="text"
+                    class="pat-autosuggest"
+                    data-pat-autosuggest="words: apple, orange, pear" />
+            `;
+
+            const input = document.querySelector("input");
+            new pattern(input);
+            await utils.timeout(1); // wait a tick for async to settle.
+            $(".select2-input").click();
+            $(document.querySelector(".select2-result")).mouseup();
+            $(".select2-input").click();
+            $(document.querySelector(".select2-result")).mouseup();
+
+            const selected = document.querySelectorAll(".select2-search-choice");
+            expect(selected.length).toBe(2);
+            expect(selected[0].textContent.trim()).toBe("apple");
+            expect(selected[1].textContent.trim()).toBe("orange");
+            expect(input.value).toBe("apple,orange");
+        });
     });
 
-    describe("Placeholder tests", function () {
-        it("A placeholder on the original element is reused on the auto-suggest element", async function () {
+    describe("3 - Placeholder tests", function () {
+        it("3.1 - A placeholder on the original element is reused on the auto-suggest element", async function () {
             var placeholder = "Test placeholder";
 
             $("<input/>", {
@@ -166,7 +203,7 @@ describe("pat-autosuggest", function () {
             testutils.removeSelect2();
         });
 
-        it("No placeholder doesn't create an automatic one.", async function () {
+        it("3.2 - No placeholder doesn't create an automatic one.", async function () {
             $("<input/>", {
                 id: "select2",
                 class: "pat-autosuggest",
