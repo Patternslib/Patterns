@@ -1,3 +1,35 @@
+## [7.1.0](https://github.com/Patternslib/patterns/compare/7.0.2...7.1.0) (2022-02-16)
+
+
+### Features
+
+* **core events:** Standard JavaScript event factories - add "click" event. ([8c7ce5f](https://github.com/Patternslib/patterns/commit/8c7ce5ffdaed0c9fd5641052ca2f0c095c42da1d))
+
+* **pat validation:** Do not submit when a formnovalidate buttons was used. ([35f4227](https://github.com/Patternslib/patterns/commit/35f4227227b4acdfe5f202b7d5d996724081beec))
+
+* **pat validation:** Set novalidation to pat-validation forms to prevent the browser's validation bubbles to appear. ([a6a8188](https://github.com/Patternslib/patterns/commit/a6a8188dbb11fc56c16f3f0b9aa20a87abb0cd92))
+
+
+
+### Bug Fixes
+
+* **pat toggle:** Don't let pat-toggle steal the click event and prevent double clicks. ([8b75b8e](https://github.com/Patternslib/patterns/commit/8b75b8eaca157e19e2ccb18354e3e876a23c84ee))
+Do not let pat-toggle prevent the click event after it was catched.
+This makes pat-toggle work together with other Patterns, like pat-checklist.
+Also, when clicking on a label wrapping a checkbox, the checkbox also emits a click event which results in a unmodified toggle-state.
+Prevent double-clicks by debouncing and canceling events.
+
+
+### Maintenance
+
+* **core events:** Show behvavior of two click events emitted when clicking on a lable wrapping a checkbox. ([259173f](https://github.com/Patternslib/patterns/commit/259173fd6bce27ccfbc7d1ba7091227a96da8417))
+
+* **Dependencies:** Upgrade dependencies. ([6a7ea33](https://github.com/Patternslib/patterns/commit/6a7ea330f8ced3c27f08ada1e4d37b0024e367f6))
+
+* **pat toggle:** Modernize code. ([5a478a4](https://github.com/Patternslib/patterns/commit/5a478a4576b3f2c9469ca02e1eaed6a45598985e))
+
+* **pat validation:** Demo - remove pat-validation type options. ([d60e39b](https://github.com/Patternslib/patterns/commit/d60e39bc48b57ba35308b3cbec1c65c24f457888))
+
 ### [7.0.2](https://github.com/Patternslib/patterns/compare/7.0.1...7.0.2) (2022-02-15)
 
 
