@@ -1,5 +1,6 @@
 // Patterns validate - Form vlidation
 import "regenerator-runtime/runtime"; // needed for ``await`` support
+import "event-submitter-polyfill"; // SubmitEvent.submitter for Safari < 15.4 and jsDOM
 import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
@@ -91,11 +92,15 @@ export default Base.extend({
             // No need to check disabled inputs.
             return;
         }
-        const input_options = parser.parse(input);
 
         // In any case, clear the custom validity first.
         this.set_validity({ input: input, msg: "" });
         const validity_state = input.validity;
+
+        if (e.submitter?.hasAttribute("formnovalidate")) {
+            // Do not submit when a button with ``formnovalidate`` was used.
+            return;
+        }
 
         log.debug(`
             validity_state.badInput ${validity_state.badInput}
@@ -110,6 +115,8 @@ export default Base.extend({
             validity_state.valid ${validity_state.valid}
             validity_state.valueMissing ${validity_state.valueMissing}
         `);
+
+        const input_options = parser.parse(input);
 
         if (validity_state.valid) {
             // Custom error cases or no invalid state.

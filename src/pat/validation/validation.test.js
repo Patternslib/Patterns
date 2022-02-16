@@ -253,6 +253,40 @@ describe("pat-validation", function () {
         expect(el.hasAttribute("novalidate")).toBe(true);
     });
 
+    it("1.11 - Prevents submit when invalid.", async function () {
+        document.body.innerHTML = `
+          <form class="pat-validation">
+            <input name="ok" required />
+            <button>submit</button>
+          </form>
+        `;
+        const el = document.querySelector(".pat-validation");
+        new Pattern(el);
+
+        el.querySelector("button").click();
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.querySelectorAll("em.warning").length).toBe(1);
+    });
+
+    it("1.12 - Allows submit with ``formnovalidate``.", async function () {
+        // Buttons with ``formnovalidate`` should prevent validation.
+
+        document.body.innerHTML = `
+          <form class="pat-validation">
+            <input name="ok" required />
+            <button formnovalidate>submit</button>
+          </form>
+        `;
+        const el = document.querySelector(".pat-validation");
+        new Pattern(el);
+
+        el.querySelector("button").click();
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.querySelectorAll("em.warning").length).toBe(0);
+    });
+
     it("2.1 - validates required inputs", async function () {
         document.body.innerHTML = `
           <form class="pat-validation">
