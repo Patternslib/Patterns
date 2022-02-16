@@ -1332,12 +1332,15 @@ disabled look for disabled choices in the results dropdown
 .pat-checklist > br {
   display: none;
 }
+.pat-checklist,
 .pat-checklist label {
   padding-left: 1.5em;
   position: relative;
   display: block;
 }
-.pat-checklist label.checked:before, .pat-checklist label.unchecked:before {
+.pat-checklist.checked:before, .pat-checklist.unchecked:before,
+.pat-checklist label.checked:before,
+.pat-checklist label.unchecked:before {
   font-family: fontello;
   content: "󢀂";
   float: left;
@@ -1345,9 +1348,12 @@ disabled look for disabled choices in the results dropdown
   left: 0;
   top: 0em;
 }
+.pat-checklist.checked:before,
 .pat-checklist label.checked:before {
   content: "󢀃";
 }
+.pat-checklist input[type=checkbox],
+.pat-checklist input[type=radio],
 .pat-checklist label input[type=checkbox],
 .pat-checklist label input[type=radio] {
   opacity: 0;
@@ -4945,6 +4951,7 @@ code .atv {
   border-radius: 4px;
   font-size: 14px;
   line-height: 1.4;
+  white-space: normal;
   outline: 0;
   transition-property: transform, visibility, opacity;
 }

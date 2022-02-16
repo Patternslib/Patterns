@@ -1,10 +1,9 @@
-import pattern from "./toggle";
 import $ from "jquery";
+import Pattern, { ClassToggler, AttributeToggler } from "./toggle";
+import utils from "../../core/utils";
 
 describe("pat-toggle", function () {
     describe("ClassToggler", function () {
-        var ClassToggler = pattern._ClassToggler;
-
         describe("Check if ClassToggler.get()", function () {
             it("handles elements without classes.", function () {
                 var el = document.createElement("div"),
@@ -85,8 +84,6 @@ describe("pat-toggle", function () {
     });
 
     describe("AttributeToggler", function () {
-        var AttributeToggler = pattern._AttributeToggler;
-
         describe("Check if AttributeToggler.get()", function () {
             it("handles null attribute value.", function () {
                 var el = document.createElement("input"),
@@ -135,40 +132,40 @@ describe("pat-toggle", function () {
 });
 
 describe("Pattern implementation", function () {
-    var toggle = pattern;
-
-    describe("When validating options", function () {
-        it("make sure a selector is provided", function () {
-            expect(toggle._validateOptions(null, [{ attr: "disabled" }])).toEqual([]);
+    describe("1 - When validating options", function () {
+        it("1.1 - make sure a selector is provided", function () {
+            const instance = new Pattern(document.createElement("div"));
+            expect(instance._validateOptions([{ attr: "disabled" }])).toEqual([]);
         });
 
-        it("verify values are provided when class attribute is used", function () {
-            expect(toggle._validateOptions(null, [{ attr: "class" }])).toEqual([]);
+        it("1.2 - verify values are provided when class attribute is used", function () {
+            const instance = new Pattern(document.createElement("div"));
+            expect(instance._validateOptions([{ attr: "class" }])).toEqual([]);
         });
 
-        it("verify values are not provided when a non-class attribute is used", function () {
+        it("1.3 - verify values are not provided when a non-class attribute is used", function () {
+            const instance = new Pattern(document.createElement("div"));
             expect(
-                toggle._validateOptions(null, [
-                    { attr: "disabled", values: "true false" },
-                ])
+                instance._validateOptions([{ attr: "disabled", values: "true false" }])
             ).toEqual([]);
         });
 
-        it("check trigger has an id when storage is requested", function () {
-            var trigger = document.createElement("div");
+        it("1.4 - check trigger has an id when storage is requested", function () {
+            const instance = new Pattern(document.createElement("div"));
             expect(
-                toggle._validateOptions(trigger, [{ attr: "disabled", store: "local" }])
+                instance._validateOptions([{ attr: "disabled", store: "local" }])
             ).toEqual([]);
         });
 
-        it("accept valid options", function () {
+        it("1.5 - accept valid options", function () {
+            const instance = new Pattern(document.createElement("div"));
             var input = {
                     selector: "div",
                     attr: "disabled",
                     store: "none",
                 },
                 output;
-            output = toggle._validateOptions(null, [input]);
+            output = instance._validateOptions([input]);
             expect(output.length).toBe(1);
             output = output[0];
             delete output.toggler;
@@ -180,7 +177,7 @@ describe("Pattern implementation", function () {
         });
     });
 
-    describe("When clicking on a toggle", function () {
+    describe("2 - When clicking on a toggle", function () {
         var lab, trigger, victims;
 
         beforeEach(function () {
@@ -205,30 +202,34 @@ describe("Pattern implementation", function () {
             document.body.removeChild(lab);
         });
 
-        it("the class is toggled", function () {
+        it("2.1 - the class is toggled", async function () {
             var $trigger = $(trigger);
             $(victims).addClass("foo");
             trigger.dataset.patToggle = ".victim; value: foo bar";
-            pattern.init($trigger);
+            new Pattern($trigger);
             $trigger.click();
+            await utils.timeout(1);
             expect(victims[0].className).toBe("victim bar");
             $trigger.click();
+            await utils.timeout(1);
             expect(victims[0].className).toBe("victim foo");
         });
 
-        it("attributes are updated", function () {
+        it("2.2 - attributes are updated", async function () {
             var $trigger = $(trigger);
             trigger.dataset.patToggle = ".victim; attr: disabled";
-            pattern.init($trigger);
+            new Pattern($trigger);
             $trigger.click();
+            await utils.timeout(1);
             expect(victims[0].disabled).toBe(true);
             $trigger.click();
+            await utils.timeout(1);
             expect(victims[0].disabled).toBe(false);
         });
     });
 
-    describe("Toggle event triggers", function () {
-        it("by default on click event", function () {
+    describe("3 - Toggle event triggers", function () {
+        it("3.1 - by default on click event", async function () {
             $(
                 "" +
                     '<div id="lab">' +
@@ -242,16 +243,18 @@ describe("Pattern implementation", function () {
             ).appendTo(document.body);
 
             expect($(".toggled").length).toEqual(0);
-            pattern.init($(".pat-toggle"));
+            new Pattern($(".pat-toggle"));
 
             expect($(".toggled").length).toEqual(0);
             $(".pat-toggle").click();
+            await utils.timeout(1);
             expect($(".toggled").length).toEqual(1);
             $(".pat-toggle").click();
+            await utils.timeout(1);
             expect($(".toggled").length).toEqual(0);
         });
 
-        it("can also listen to custom event", function () {
+        it("3.2 - can also listen to custom event", async function () {
             $(
                 "" +
                     '<div id="lab">' +
@@ -265,11 +268,56 @@ describe("Pattern implementation", function () {
             ).appendTo(document.body);
 
             expect($(".toggled").length).toEqual(0);
-            pattern.init($(".pat-toggle"));
+            new Pattern($(".pat-toggle"));
+            await utils.timeout(1);
 
             expect($(".toggled").length).toEqual(0);
             $(".pat-toggle").trigger("onmouseenter");
+            await utils.timeout(1);
             expect($(".toggled").length).toEqual(1);
+        });
+    });
+
+    describe("4 - Works together with other patterns", function () {
+        afterEach(function () {
+            document.body.innerHTML = "";
+        });
+
+        it("4.1 - the class is toggled", async function () {
+            document.body.innerHTML = `
+              <div
+                  class="red"
+                  id="target">target</div>
+              <label
+                  class="pat-checklist pat-toggle"
+                  data-pat-toggle="selector: #target; value: red green">
+				<input type="checkbox" name="toggler">
+			  </label>
+            `;
+
+            const pattern_checklist = (await import("../checklist/checklist")).default;
+
+            const el_label = document.querySelector("label");
+            const el_target = document.querySelector("#target");
+            const el_checkbox = document.querySelector("input");
+
+            new Pattern(el_label);
+            new pattern_checklist(el_label);
+            await utils.timeout(1);
+
+            $(el_label).click();
+            await utils.timeout(1);
+
+            expect(el_target.classList.length).toBe(1);
+            expect(el_target.classList[0]).toBe("green");
+            expect(el_checkbox.checked).toBe(true);
+
+            $(el_label).click();
+            await utils.timeout(1);
+
+            expect(el_target.classList.length).toBe(1);
+            expect(el_target.classList[0]).toBe("red");
+            expect(el_checkbox.checked).toBe(false);
         });
     });
 });
