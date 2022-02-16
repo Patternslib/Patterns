@@ -1,5 +1,6 @@
 import $ from "jquery";
 import Pattern, { ClassToggler, AttributeToggler } from "./toggle";
+import utils from "../../core/utils";
 
 describe("pat-toggle", function () {
     describe("ClassToggler", function () {
@@ -201,30 +202,34 @@ describe("Pattern implementation", function () {
             document.body.removeChild(lab);
         });
 
-        it("2.1 - the class is toggled", function () {
+        it("2.1 - the class is toggled", async function () {
             var $trigger = $(trigger);
             $(victims).addClass("foo");
             trigger.dataset.patToggle = ".victim; value: foo bar";
             new Pattern($trigger);
             $trigger.click();
+            await utils.timeout(1);
             expect(victims[0].className).toBe("victim bar");
             $trigger.click();
+            await utils.timeout(1);
             expect(victims[0].className).toBe("victim foo");
         });
 
-        it("2.2 - attributes are updated", function () {
+        it("2.2 - attributes are updated", async function () {
             var $trigger = $(trigger);
             trigger.dataset.patToggle = ".victim; attr: disabled";
             new Pattern($trigger);
             $trigger.click();
+            await utils.timeout(1);
             expect(victims[0].disabled).toBe(true);
             $trigger.click();
+            await utils.timeout(1);
             expect(victims[0].disabled).toBe(false);
         });
     });
 
     describe("3 - Toggle event triggers", function () {
-        it("3.1 - by default on click event", function () {
+        it("3.1 - by default on click event", async function () {
             $(
                 "" +
                     '<div id="lab">' +
@@ -242,12 +247,14 @@ describe("Pattern implementation", function () {
 
             expect($(".toggled").length).toEqual(0);
             $(".pat-toggle").click();
+            await utils.timeout(1);
             expect($(".toggled").length).toEqual(1);
             $(".pat-toggle").click();
+            await utils.timeout(1);
             expect($(".toggled").length).toEqual(0);
         });
 
-        it("3.2 - can also listen to custom event", function () {
+        it("3.2 - can also listen to custom event", async function () {
             $(
                 "" +
                     '<div id="lab">' +
@@ -262,10 +269,55 @@ describe("Pattern implementation", function () {
 
             expect($(".toggled").length).toEqual(0);
             new Pattern($(".pat-toggle"));
+            await utils.timeout(1);
 
             expect($(".toggled").length).toEqual(0);
             $(".pat-toggle").trigger("onmouseenter");
+            await utils.timeout(1);
             expect($(".toggled").length).toEqual(1);
+        });
+    });
+
+    describe("4 - Works together with other patterns", function () {
+        afterEach(function () {
+            document.body.innerHTML = "";
+        });
+
+        it("4.1 - the class is toggled", async function () {
+            document.body.innerHTML = `
+              <div
+                  class="red"
+                  id="target">target</div>
+              <label
+                  class="pat-checklist pat-toggle"
+                  data-pat-toggle="selector: #target; value: red green">
+				<input type="checkbox" name="toggler">
+			  </label>
+            `;
+
+            const pattern_checklist = (await import("../checklist/checklist")).default;
+
+            const el_label = document.querySelector("label");
+            const el_target = document.querySelector("#target");
+            const el_checkbox = document.querySelector("input");
+
+            new Pattern(el_label);
+            new pattern_checklist(el_label);
+            await utils.timeout(1);
+
+            $(el_label).click();
+            await utils.timeout(1);
+
+            expect(el_target.classList.length).toBe(1);
+            expect(el_target.classList[0]).toBe("green");
+            expect(el_checkbox.checked).toBe(true);
+
+            $(el_label).click();
+            await utils.timeout(1);
+
+            expect(el_target.classList.length).toBe(1);
+            expect(el_target.classList[0]).toBe("red");
+            expect(el_checkbox.checked).toBe(false);
         });
     });
 });

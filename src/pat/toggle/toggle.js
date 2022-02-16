@@ -8,6 +8,7 @@ import Base from "../../core/base";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import store from "../../core/store";
+import utils from "../../core/utils";
 
 const log = logging.getLogger("pat.toggle");
 
@@ -117,9 +118,17 @@ export default Base.extend({
             }
         }
 
+        // Clicking a label of a checkbox would submit two click events - once
+        // for the label, the other for the checkbox.
+        // Using debounce, we prevent double-toggle which would result in
+        // toggling having no effect.
+        this.click_debouncer = utils.debounce(() => {
+            this._onClick();
+        }, 1);
+
         this.$el
             .off(".toggle")
-            .on(`${event_name || "click"}.toggle`, this._onClick.bind(this))
+            .on(`${event_name || "click"}.toggle`, () => this.click_debouncer())
             .on("keypress.toggle", this._onKeyPress.bind(this));
     },
 
@@ -205,7 +214,6 @@ export default Base.extend({
             // element above.
             this.$el.trigger("pat-update", { pattern: "toggle" });
         }
-        event.preventDefault();
     },
 
     _onKeyPress(event) {
