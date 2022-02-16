@@ -61,7 +61,6 @@
                  name="age"
                  required
                  type="number"
-                 data-pat-validation="type: integer"
           /></label>
 
         <label>Real number, limited between 10.0 and 10.9, with a step of 0.1.
@@ -129,7 +128,7 @@
                  name="measure.planning_start:records"
                  type="date"
                  value="2015-10-10"
-                 data-pat-validation="type: date; not-after: #planning-end; message-date: This date must be on or before the end date."
+                 data-pat-validation="not-after: #planning-end; message-date: This date must be on or before the end date."
           />
         </label>
 
@@ -141,7 +140,7 @@
                  type="date"
                  value="2015-09-10"
                  data-pat-date-picker="after: #planning-start"
-                 data-pat-validation="type: date; not-before: #planning-start; message-date: This date must be on or after the start date."
+                 data-pat-validation="not-before: #planning-start; message-date: This date must be on or after the start date."
           />
         </label>
 
@@ -170,7 +169,7 @@
                  name="disabled_start"
                  type="date"
                  value="2021-04-21"
-                 data-pat-validation="type: date; not-after: #planning-end; message-date: This date must be on or before the end date."
+                 data-pat-validation="not-after: #planning-end; message-date: This date must be on or before the end date."
           />
         </label>
 
@@ -180,7 +179,7 @@
                  autocomplete="off"
                  name="disabled_end"
                  type="date"
-                 data-pat-validation="type: date; not-before: #disabled_start; message-date: This date must be on or after the start date."
+                 data-pat-validation="not-before: #disabled_start; message-date: This date must be on or after the start date."
           />
         </label>
 
