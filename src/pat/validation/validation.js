@@ -49,6 +49,10 @@ export default Base.extend({
             "input[name], select[name], textarea[name]"
         );
 
+        // Set ``novalidate`` attribute to disable the browser's validation
+        // bubbles but not disable the validation API.
+        this.el.setAttribute("novalidate", "");
+
         for (const [cnt, input] of this.inputs.entries()) {
             // Cancelable debouncer.
             const debouncer = utils.debounce((e) => {

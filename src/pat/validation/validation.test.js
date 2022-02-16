@@ -239,6 +239,20 @@ describe("pat-validation", function () {
         );
     });
 
+    it("1.10 - Adds a novalidate attribute to not show the browsers validation bubbles.", function () {
+        // See: https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation#a_more_detailed_example
+        // The ``novalidate`` attribute does not deactivate the validation API
+        // but prevents the browser from showing validation messages by itself.
+        document.body.innerHTML = `
+          <form class="pat-validation">
+          </form>
+        `;
+        const el = document.querySelector(".pat-validation");
+        new Pattern(el);
+
+        expect(el.hasAttribute("novalidate")).toBe(true);
+    });
+
     it("2.1 - validates required inputs", async function () {
         document.body.innerHTML = `
           <form class="pat-validation">
