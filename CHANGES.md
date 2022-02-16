@@ -1,3 +1,18 @@
+### [7.1.1](https://github.com/Patternslib/patterns/compare/7.1.0...7.1.1) (2022-02-16)
+
+
+### Features
+
+* **core polyfills:** Add polyfills module for modern browsers. ([69402f6](https://github.com/Patternslib/patterns/commit/69402f60c7d80a3cf702a55518404c634bda2eda))
+Currently this holds a polyfill for SubmitEvent.submitter, which isn't available in Safari < 15.4 and jsDOM.
+
+
+### Bug Fixes
+
+* **pat validation:** Fix release 7.1.0. ([3afb42b](https://github.com/Patternslib/patterns/commit/3afb42bc0ac6f82c634471560f8a73ea58144ce6))
+The event-submitter-polyfill package isn't universally built.
+Let's use our new core/polyfills.js module instead and fix the previous release.
+
 ## [7.1.0](https://github.com/Patternslib/patterns/compare/7.0.2...7.1.0) (2022-02-16)
 
 
