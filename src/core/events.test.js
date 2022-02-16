@@ -58,10 +58,10 @@ describe("core.events tests", () => {
             catched = null;
             const el = document.createElement("div");
             el.innerHTML = `
-            <div id="outer">
+              <div id="outer">
                 <div id="inner"></div>
-            </div>
-        `;
+              </div>
+            `;
             outer = el.querySelector("#outer");
             inner = el.querySelector("#inner");
         });
@@ -146,6 +146,38 @@ describe("core.events tests", () => {
             $(el).trigger("input");
             await utils.timeout(1);
             expect(catched).toBe(false);
+        });
+    });
+
+    describe("4 - Special DOM behavior", () => {
+        afterEach(() => {
+            document.body.innerHTML = "";
+        });
+
+        it("4.1 - Two click events when clicking on a label wrapping a checkbox.", async () => {
+            // Clicking on the label emits a click on the checkbox, which bubbles up.
+            // This results in two clicks.
+            // This behavior was seen in Chrome 98, but not in jsDOM.
+
+            document.body.innerHTML = `
+              <label>
+                <input type="checkbox" name="ok" />
+              </label>
+            `;
+
+            let counter = 0;
+            const label = document.querySelector("label");
+
+            label.addEventListener("click", () => counter++);
+
+            label.dispatchEvent(events.click_event());
+            // Actually jsDOM does not emit a second click. But Chrome does.
+            // Let's fake this behavior to make the point.
+            document.querySelector("input").dispatchEvent(events.click_event());
+            await utils.timeout(1);
+            await utils.timeout(1);
+
+            expect(counter).toBe(2);
         });
     });
 });
