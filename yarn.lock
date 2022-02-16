@@ -4475,6 +4475,11 @@ ev-emitter@^1.0.0:
   resolved "https://registry.yarnpkg.com/ev-emitter/-/ev-emitter-1.1.1.tgz#8f18b0ce5c76a5d18017f71c0a795c65b9138f2a"
   integrity sha512-ipiDYhdQSCZ4hSbX4rMW+XzNKMD1prg/sTvoVmSLkuQ1MVlwjJQQA+sW8tMYR3BLUr9KjodFV4pvzunvRhd33Q==
 
+event-submitter-polyfill@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/event-submitter-polyfill/-/event-submitter-polyfill-0.2.3.tgz#cf1804c89f4cb9c53ca6ed751367a78bd3413bcb"
+  integrity sha512-5pyBVQCxKyba6xvvIyJmOWGp/LmQKjrHdQOMgY0rpM2B866/IqtrRZmsFINa+B/sx8h+/Rz8yb9cV61Ui5I4zg==
+
 eventemitter3@^4.0.0:
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
