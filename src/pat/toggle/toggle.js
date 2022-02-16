@@ -4,7 +4,7 @@
  * Copyright 2012-2014 Simplon B.V. - Wichert Akkerman
  */
 import $ from "jquery";
-import registry from "../../core/registry";
+import Base from "../../core/base";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import store from "../../core/store";
@@ -18,32 +18,33 @@ parser.addArgument("attr", "class");
 parser.addArgument("value");
 parser.addArgument("store", "none", ["none", "session", "local"]);
 
-function ClassToggler(values) {
+export function ClassToggler(values) {
     this.values = values.slice(0);
     if (this.values.length > 1) this.values.push(values[0]);
 }
 
 ClassToggler.prototype = {
-    toggle: function Toggler_toggle(el) {
-        var current = this.get(el),
-            next = this.next(current);
+    toggle(el) {
+        const current = this.get(el);
+        const next = this.next(current);
         this.set(el, next);
         return next;
     },
 
-    get: function Toggler_get(el) {
-        var classes = el.className.split(/\s+/);
-        for (var i = 0; i < this.values.length; i++)
-            if (classes.indexOf(this.values[i]) !== -1) return this.values[i];
+    get(el) {
+        const classes = el.className.split(/\s+/);
+        for (const value of this.values) {
+            if (classes.indexOf(value) !== -1) {
+                return value;
+            }
+        }
         return null;
     },
 
-    set: function Toggler_set(el, value) {
-        var classes = el.className.split(/\s+/),
-            values = this.values;
-        classes = classes.filter(function (v) {
-            return v.length && values.indexOf(v) === -1;
-        });
+    set(el, value) {
+        const values = this.values;
+        let classes = el.className.split(/\s+/);
+        classes = classes.filter((it) => it && values.indexOf(it) === -1);
         if (value) {
             classes.push(value);
         }
@@ -51,99 +52,95 @@ ClassToggler.prototype = {
         $(el).trigger("pat-update", { pattern: "toggle" });
     },
 
-    next: function Toggler_next(current) {
-        if (this.values.length === 1) return current ? null : this.values[0];
-        for (var i = 0; i < this.values.length - 1; i++)
-            if (this.values[i] === current) return this.values[i + 1];
+    next(current) {
+        if (this.values.length === 1) {
+            return current ? null : this.values[0];
+        }
+        for (let i = 0; i < this.values.length - 1; i++) {
+            if (this.values[i] === current) {
+                return this.values[i + 1];
+            }
+        }
         return this.values[0];
     },
 };
 
-function AttributeToggler(attribute) {
+export function AttributeToggler(attribute) {
     this.attribute = attribute;
 }
 
 AttributeToggler.prototype = new ClassToggler([]);
-AttributeToggler.prototype.get = function AttributeToggler_get(el) {
+AttributeToggler.prototype.get = function (el) {
     return !!el[this.attribute];
 };
 
-AttributeToggler.prototype.set = function AttributeToggler_set(el, value) {
+AttributeToggler.prototype.set = function (el, value) {
     if (value) el[this.attribute] = value;
     else el.removeAttribute(this.attribute);
 };
 
-AttributeToggler.prototype.next = function AttributeToggler_next(value) {
+AttributeToggler.prototype.next = function (value) {
     return !value;
 };
 
-var toggle = {
+export default Base.extend({
     name: "toggle",
     trigger: ".pat-toggle",
 
-    // Hook for testing
-    _ClassToggler: ClassToggler,
-    _AttributeToggler: AttributeToggler,
+    init() {
+        const options = this._validateOptions(parser.parse(this.$el, true));
+        this.options = options;
 
-    init: function toggle_init($el) {
-        return $el.each(function toggle_init_el() {
-            var $trigger = $(this),
-                event_name,
-                options = toggle._validateOptions(this, parser.parse($trigger, true));
+        if (!options.length) {
+            return;
+        }
 
-            if (!options.length) {
-                return;
-            }
-
-            for (var i = 0; i < options.length; i++) {
-                if (options[i].value_storage) {
-                    var victims, state, last_state;
-                    victims = $(options[i].selector);
-                    if (!victims.length) {
-                        continue;
-                    }
-                    state = options[i].toggler.get(victims[0]);
-                    last_state = options[i].value_storage.get();
-                    if (state !== last_state && last_state !== null) {
-                        for (var j = 0; j < victims.length; j++) {
-                            options[i].toggler.set(victims[j], last_state);
-                        }
+        let event_name;
+        for (const option of options) {
+            if (option.value_storage) {
+                const victims = $(option.selector);
+                if (!victims.length) {
+                    continue;
+                }
+                const state = option.toggler.get(victims[0]);
+                const last_state = option.value_storage.get();
+                if (state !== last_state && last_state !== null) {
+                    for (const victim of victims) {
+                        option.toggler.set(victim, last_state);
                     }
                 }
-
-                if (options[i].event) {
-                    event_name = options[i].event;
-                } else {
-                    event_name = "click";
-                }
             }
+            if (option.event) {
+                event_name = option.event;
+            } else {
+                event_name = "click";
+            }
+        }
 
-            $trigger
-                .off(".toggle")
-                .on(event_name + ".toggle", null, options, toggle._onClick)
-                .on("keypress.toggle", null, options, toggle._onKeyPress);
-        });
+        this.$el
+            .off(".toggle")
+            .on(`${event_name || "click"}.toggle`, this._onClick.bind(this))
+            .on("keypress.toggle", this._onKeyPress.bind(this));
     },
 
-    _makeToggler: function toggle_makeToggler(options) {
-        if (options.attr === "class") {
-            var values = options.value.split(/\s+/);
-            values = values.filter(function (v) {
-                return v.length;
-            });
-            return new this._ClassToggler(values);
-        } else return new this._AttributeToggler(options.attr);
+    _makeToggler(option) {
+        if (option.attr === "class") {
+            let values = option.value.split(/\s+/);
+            values = values.filter((v) => v.length);
+            return new ClassToggler(values);
+        } else {
+            return new AttributeToggler(option.attr);
+        }
     },
 
-    _validateOptions: function toggle_validateOptions(trigger, options) {
-        var correct = [],
-            i,
-            option;
+    _validateOptions(options) {
+        const correct = [];
 
-        if (!options.length) return correct;
+        if (!options.length) {
+            return correct;
+        }
 
-        for (i = 0; i < options.length; i++) {
-            option = options[i];
+        for (const [idx, option] of options.entries()) {
             if (!option.selector) {
                 log.error("Toggle pattern requires a selector.");
                 continue;
@@ -156,12 +153,12 @@ var toggle = {
                 log.error("Toggle pattern needs values for class attributes.");
                 continue;
             }
-            if (i && option.store !== "none") {
+            if (idx && option.store !== "none") {
                 log.warn("store option can only be set on first argument");
                 option.store = "none";
             }
             if (option.store !== "none") {
-                if (!trigger.id) {
+                if (!this.el.id) {
                     log.warn("state persistance requested, but element has no id");
                     option.store = "none";
                 } else if (!store.supported) {
@@ -170,12 +167,12 @@ var toggle = {
                     );
                     option.store = "none";
                 } else {
-                    var storage = (option.store === "local"
-                        ? store.local
-                        : store.session)(toggle.name);
+                    const storage = (
+                        option.store === "local" ? store.local : store.session
+                    )(this.name);
                     option.value_storage = new store.ValueStorage(
                         storage,
-                        trigger.id + "-" + i
+                        `${this.el.id}-${idx}`
                     );
                 }
             }
@@ -185,24 +182,17 @@ var toggle = {
         return correct;
     },
 
-    _onClick: function toggle_onClick(event) {
-        var options = event.data,
-            updated = false,
-            option,
-            victims,
-            toggler,
-            next_state,
-            j;
+    _onClick() {
+        let updated = false;
 
-        for (var i = 0; i < options.length; i++) {
-            option = options[i];
-            victims = $(option.selector);
+        for (const option of this.options) {
+            const victims = $(option.selector);
             if (!victims.length) {
                 continue;
             }
-            toggler = option.toggler;
-            next_state = toggler.toggle(victims[0]);
-            for (j = 1; j < victims.length; j++) {
+            const toggler = option.toggler;
+            const next_state = toggler.toggle(victims[0]);
+            for (let j = 1; j < victims.length; j++) {
                 toggler.set(victims[j], next_state);
             }
             if (option.value_storage) {
@@ -213,18 +203,15 @@ var toggle = {
         if (updated) {
             // XXX: Is this necessary? pat-update gets called on changed
             // element above.
-            $(this).trigger("pat-update", { pattern: "toggle" });
+            this.$el.trigger("pat-update", { pattern: "toggle" });
         }
         event.preventDefault();
     },
 
-    _onKeyPress: function toggle_onKeyPress(event) {
-        var keycode = event.keyCode ? event.keyCode : event.which;
+    _onKeyPress(event) {
+        const keycode = event.keyCode ? event.keyCode : event.which;
         if (keycode === "13") {
-            $(this).trigger("click", event);
+            this.$el.trigger("click");
         }
     },
-};
-
-registry.register(toggle);
-export default toggle;
+});
