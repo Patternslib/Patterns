@@ -320,10 +320,7 @@ export default Base.extend({
 
         // Create the validation error DOM node from the template
         const validation_message = input.validationMessage || input[KEY_ERROR_MSG];
-        // See: https://stackoverflow.com/a/37217166/1337474
-        const error_template = new Function(
-            "return `" + options.errorTemplate + "`;"
-        ).call({
+        const error_template = dom.template(options.errorTemplate, {
             message: validation_message,
         });
         const error_node = dom.create_from_string(error_template).firstChild;

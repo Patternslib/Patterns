@@ -230,6 +230,26 @@ const set_data = (el, name, value) => {
     el[`${DATA_PREFIX}${name}`] = value;
 };
 
+/**
+ * Simple template engine, based on JS template literal
+ *
+ * Please note: You cannot pass a template literal as template_string.
+ * JavaScript itself would try to expand it and would fail.
+ *
+ * See: https://stackoverflow.com/a/37217166/1337474
+ *
+ * @param {String} template_string - The template string as a JavaScript template literal.
+ *                                   For each variable in the template you have to use ``this``.
+ *                                   E.g. if you pass ``{message: "ok"}`` as template_variables, you can use it like so:
+ *                                   `<h1>${this.message}</h1>`
+ * @param {Object} template_variables - Object literal with all the variables which should be used in the template.
+ *
+ * @returns {String} - Returns the a string as template expanded with the template_variables.
+ */
+const template = (template_string, template_variables = {}) => {
+    return new Function("return `" + template_string + "`;").call(template_variables);
+};
+
 const dom = {
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
@@ -246,6 +266,7 @@ const dom = {
     find_scroll_container: find_scroll_container,
     get_data: get_data,
     set_data: set_data,
+    template: template,
     add_event_listener: events.add_event_listener, // BBB export. TODO: Remove in an upcoming version.
     remove_event_listener: events.remove_event_listener, // BBB export. TODO: Remove in an upcoming version.
 };
