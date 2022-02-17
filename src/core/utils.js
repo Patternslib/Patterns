@@ -1,5 +1,4 @@
 import $ from "jquery";
-import _ from "underscore";
 import dom from "./dom";
 
 $.fn.safeClone = function () {
@@ -343,25 +342,24 @@ function removeDuplicateObjects(objs) {
     /* Given an array of objects, remove any duplicate objects which might
      * be present.
      */
-    var comparator = function (v, k) {
+    const comparator = function (k, v) {
         return this[k] === v;
     };
-    return _.reduce(
-        objs,
-        function (list, next_obj) {
-            var is_duplicate = false;
-            _.each(list, function (obj) {
-                is_duplicate =
-                    _.keys(obj).length === _.keys(next_obj).length &&
-                    !_.chain(obj).omit(comparator.bind(next_obj)).keys().value().length;
-            });
-            if (!is_duplicate) {
-                list.push(next_obj);
-            }
-            return list;
-        },
-        []
-    );
+
+    return objs.reduce(function (list, next_obj) {
+        let is_duplicate = false;
+        for (const obj of list) {
+            is_duplicate =
+                Object.keys(obj).length === Object.keys(next_obj).length &&
+                Object.entries(obj).filter(
+                    (it) => !comparator.bind(next_obj)(it[0], it[1])
+                ).length === 0;
+        }
+        if (!is_duplicate) {
+            list.push(next_obj);
+        }
+        return list;
+    }, []);
 }
 
 function mergeStack(stack, length) {
@@ -372,19 +370,19 @@ function mergeStack(stack, length) {
      * If a certain sub-list doesn't have an object at that particular
      * index, the last object in that list is merged.
      */
-    var results = [];
-    for (var i = 0; i < length; i++) {
+    const results = [];
+    for (let i = 0; i < length; i++) {
         results.push({});
     }
-    _.each(stack, function (frame) {
-        var frame_length = frame.length - 1;
-        for (var x = 0; x < length; x++) {
+    for (const frame of stack) {
+        const frame_length = frame.length - 1;
+        for (let x = 0; x < length; x++) {
             results[x] = $.extend(
                 results[x] || {},
                 frame[x > frame_length ? frame_length : x]
             );
         }
-    });
+    }
     return results;
 }
 

@@ -1,5 +1,4 @@
 import "regenerator-runtime/runtime"; // needed for ``await`` support
-import _ from "underscore";
 import utils from "./utils";
 import $ from "jquery";
 import { jest } from "@jest/globals";
@@ -57,58 +56,52 @@ describe("basic tests", function () {
 
             objs = [{}, {}];
             expect(utils.removeDuplicateObjects(objs).length).toBe(1);
-            expect(_.isArray(utils.removeDuplicateObjects(objs))).toBeTruthy();
+            expect(Array.isArray(utils.removeDuplicateObjects(objs))).toBeTruthy();
 
-            _.each(
-                [
-                    [{ a: "1" }],
-                    [{ a: "1" }, { a: "1" }],
-                    [{ a: "1" }, { a: "1" }, { a: "1" }],
-                    [{ a: "1" }, { a: "1" }, { a: "1" }, { a: "1" }],
-                ],
-                function (objs) {
-                    expect(utils.removeDuplicateObjects(objs).length).toBe(1);
-                    expect(_.keys(utils.removeDuplicateObjects(objs)[0]).length).toBe(1);
-                    expect(_.keys(utils.removeDuplicateObjects(objs)[0])[0]).toBe("a");
-                    expect(_.values(utils.removeDuplicateObjects(objs)[0])[0]).toBe("1");
-                }
-            );
+            for (const objs of [
+                [{ a: "1" }],
+                [{ a: "1" }, { a: "1" }],
+                [{ a: "1" }, { a: "1" }, { a: "1" }],
+                [{ a: "1" }, { a: "1" }, { a: "1" }, { a: "1" }],
+            ]) {
+                expect(utils.removeDuplicateObjects(objs).length).toBe(1);
+                expect(Object.keys(utils.removeDuplicateObjects(objs)[0]).length).toBe(1); // prettier-ignore
+                expect(Object.keys(utils.removeDuplicateObjects(objs)[0])[0]).toBe("a");
+                expect(Object.values(utils.removeDuplicateObjects(objs)[0])[0]).toBe("1"); // prettier-ignore
+            }
 
             objs = [{ a: "1" }, { a: "2" }];
             expect(utils.removeDuplicateObjects(objs).length).toBe(2);
-            expect(_.keys(utils.removeDuplicateObjects(objs)[0]).length).toBe(1);
-            expect(_.keys(utils.removeDuplicateObjects(objs)[0])[0]).toBe("a");
-            expect(_.values(utils.removeDuplicateObjects(objs)[0])[0]).toBe("1");
-            expect(_.keys(utils.removeDuplicateObjects(objs)[1]).length).toBe(1);
-            expect(_.keys(utils.removeDuplicateObjects(objs)[1])[0]).toBe("a");
-            expect(_.values(utils.removeDuplicateObjects(objs)[1])[0]).toBe("2");
+            expect(Object.keys(utils.removeDuplicateObjects(objs)[0]).length).toBe(1);
+            expect(Object.keys(utils.removeDuplicateObjects(objs)[0])[0]).toBe("a");
+            expect(Object.values(utils.removeDuplicateObjects(objs)[0])[0]).toBe("1");
+            expect(Object.keys(utils.removeDuplicateObjects(objs)[1]).length).toBe(1);
+            expect(Object.keys(utils.removeDuplicateObjects(objs)[1])[0]).toBe("a");
+            expect(Object.values(utils.removeDuplicateObjects(objs)[1])[0]).toBe("2");
 
             objs = [{ a: "1" }, { b: "1" }];
             expect(utils.removeDuplicateObjects(objs).length).toBe(2);
-            expect(_.keys(utils.removeDuplicateObjects(objs)[0]).length).toBe(1);
-            expect(_.keys(utils.removeDuplicateObjects(objs)[0])[0]).toBe("a");
-            expect(_.values(utils.removeDuplicateObjects(objs)[0])[0]).toBe("1");
-            expect(_.keys(utils.removeDuplicateObjects(objs)[1]).length).toBe(1);
-            expect(_.keys(utils.removeDuplicateObjects(objs)[1])[0]).toBe("b");
-            expect(_.values(utils.removeDuplicateObjects(objs)[1])[0]).toBe("1");
+            expect(Object.keys(utils.removeDuplicateObjects(objs)[0]).length).toBe(1);
+            expect(Object.keys(utils.removeDuplicateObjects(objs)[0])[0]).toBe("a");
+            expect(Object.values(utils.removeDuplicateObjects(objs)[0])[0]).toBe("1");
+            expect(Object.keys(utils.removeDuplicateObjects(objs)[1]).length).toBe(1);
+            expect(Object.keys(utils.removeDuplicateObjects(objs)[1])[0]).toBe("b");
+            expect(Object.values(utils.removeDuplicateObjects(objs)[1])[0]).toBe("1");
 
-            _.each(
-                [
-                    [{ a: "1" }, { a: "1", b: "1" }],
-                    [{ a: "1" }, { a: "1" }, { a: "1", b: "1" }],
-                ],
-                function (objs) {
-                    expect(utils.removeDuplicateObjects(objs).length).toBe(2);
-                    expect(_.keys(utils.removeDuplicateObjects(objs)[0]).length).toBe(1);
-                    expect(_.keys(utils.removeDuplicateObjects(objs)[1]).length).toBe(2);
-                    expect(_.keys(utils.removeDuplicateObjects(objs)[0])[0]).toBe("a");
-                    expect(_.values(utils.removeDuplicateObjects(objs)[0])[0]).toBe("1");
-                    expect(_.keys(utils.removeDuplicateObjects(objs)[1])[0]).toBe("a");
-                    expect(_.values(utils.removeDuplicateObjects(objs)[1])[0]).toBe("1");
-                    expect(_.keys(utils.removeDuplicateObjects(objs)[1])[1]).toBe("b");
-                    expect(_.values(utils.removeDuplicateObjects(objs)[1])[1]).toBe("1");
-                }
-            );
+            for (const objs of [
+                [{ a: "1" }, { a: "1", b: "1" }],
+                [{ a: "1" }, { a: "1" }, { a: "1", b: "1" }],
+            ]) {
+                expect(utils.removeDuplicateObjects(objs).length).toBe(2);
+                expect(Object.keys(utils.removeDuplicateObjects(objs)[0]).length).toBe(1); // prettier-ignore
+                expect(Object.keys(utils.removeDuplicateObjects(objs)[1]).length).toBe(2); // prettier-ignore
+                expect(Object.keys(utils.removeDuplicateObjects(objs)[0])[0]).toBe("a");
+                expect(Object.values(utils.removeDuplicateObjects(objs)[0])[0]).toBe("1"); // prettier-ignore
+                expect(Object.keys(utils.removeDuplicateObjects(objs)[1])[0]).toBe("a");
+                expect(Object.values(utils.removeDuplicateObjects(objs)[1])[0]).toBe("1"); // prettier-ignore
+                expect(Object.keys(utils.removeDuplicateObjects(objs)[1])[1]).toBe("b");
+                expect(Object.values(utils.removeDuplicateObjects(objs)[1])[1]).toBe("1"); // prettier-ignore
+            }
         });
     });
 
@@ -116,39 +109,39 @@ describe("basic tests", function () {
         it("merges a list of lists of objects", function () {
             var stack = [];
             var length = 0;
-            expect(_.isArray(utils.mergeStack(stack, length))).toBeTruthy();
+            expect(Array.isArray(utils.mergeStack(stack, length))).toBeTruthy();
             expect(utils.mergeStack(stack, length).length).toBe(0);
 
-            _.each([1, 2, 3, 99], function (length) {
-                expect(_.isArray(utils.mergeStack(stack, length))).toBeTruthy();
+            for (const length of [1, 2, 3, 99]) {
+                expect(Array.isArray(utils.mergeStack(stack, length))).toBeTruthy();
                 expect(utils.mergeStack(stack, length).length).toBe(length);
-                expect(_.isObject(utils.mergeStack(stack, length)[0])).toBeTruthy();
-                expect(_.keys(utils.mergeStack(stack, length)[0]).length).toBe(0);
-            });
+                expect(typeof utils.mergeStack(stack, length)[0] === "object").toBeTruthy(); // prettier-ignore
+                expect(Object.keys(utils.mergeStack(stack, length)[0]).length).toBe(0);
+            }
 
             stack = [[{ a: 1 }], [{ b: 1 }, { b: 2 }]];
             length = 2;
-            expect(_.isArray(utils.mergeStack(stack, length))).toBeTruthy();
+            expect(Array.isArray(utils.mergeStack(stack, length))).toBeTruthy();
             expect(utils.mergeStack(stack, length).length).toBe(2);
-            expect(_.keys(utils.mergeStack(stack, length)[0])[0]).toBe("a");
-            expect(_.keys(utils.mergeStack(stack, length)[0])[1]).toBe("b");
-            expect(_.keys(utils.mergeStack(stack, length)[1])[0]).toBe("a");
-            expect(_.keys(utils.mergeStack(stack, length)[1])[1]).toBe("b");
-            expect(_.values(utils.mergeStack(stack, length)[0])[0]).toBe(1);
-            expect(_.values(utils.mergeStack(stack, length)[0])[1]).toBe(1);
-            expect(_.values(utils.mergeStack(stack, length)[1])[0]).toBe(1);
-            expect(_.values(utils.mergeStack(stack, length)[1])[1]).toBe(2);
+            expect(Object.keys(utils.mergeStack(stack, length)[0])[0]).toBe("a");
+            expect(Object.keys(utils.mergeStack(stack, length)[0])[1]).toBe("b");
+            expect(Object.keys(utils.mergeStack(stack, length)[1])[0]).toBe("a");
+            expect(Object.keys(utils.mergeStack(stack, length)[1])[1]).toBe("b");
+            expect(Object.values(utils.mergeStack(stack, length)[0])[0]).toBe(1);
+            expect(Object.values(utils.mergeStack(stack, length)[0])[1]).toBe(1);
+            expect(Object.values(utils.mergeStack(stack, length)[1])[0]).toBe(1);
+            expect(Object.values(utils.mergeStack(stack, length)[1])[1]).toBe(2);
 
             stack = [[{ a: 1 }], [{ a: 2 }, { a: 3 }]];
             length = 2;
-            expect(_.isArray(utils.mergeStack(stack, length))).toBeTruthy();
+            expect(Array.isArray(utils.mergeStack(stack, length))).toBeTruthy();
             expect(utils.mergeStack(stack, length).length).toBe(2);
-            expect(_.keys(utils.mergeStack(stack, length)[0]).length).toBe(1);
-            expect(_.keys(utils.mergeStack(stack, length)[1]).length).toBe(1);
-            expect(_.keys(utils.mergeStack(stack, length)[0])[0]).toBe("a");
-            expect(_.keys(utils.mergeStack(stack, length)[1])[0]).toBe("a");
-            expect(_.values(utils.mergeStack(stack, length)[0])[0]).toBe(2);
-            expect(_.values(utils.mergeStack(stack, length)[1])[0]).toBe(3);
+            expect(Object.keys(utils.mergeStack(stack, length)[0]).length).toBe(1);
+            expect(Object.keys(utils.mergeStack(stack, length)[1]).length).toBe(1);
+            expect(Object.keys(utils.mergeStack(stack, length)[0])[0]).toBe("a");
+            expect(Object.keys(utils.mergeStack(stack, length)[1])[0]).toBe("a");
+            expect(Object.values(utils.mergeStack(stack, length)[0])[0]).toBe(2);
+            expect(Object.values(utils.mergeStack(stack, length)[1])[0]).toBe(3);
         });
     });
 
