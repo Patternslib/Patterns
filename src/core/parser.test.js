@@ -1,4 +1,3 @@
-import _ from "underscore";
 import $ from "jquery";
 import ArgumentParser from "./parser";
 import { jest } from "@jest/globals";
@@ -29,9 +28,7 @@ describe("The Patterns parser", function () {
             expect(parser.parameters.color.value).toBe("red");
 
             parser.addJSONArgument("color", { color: "red" });
-            expect(
-                _.isEqual(parser.parameters.color.value, { color: "red" })
-            ).toBeTruthy();
+            expect(parser.parameters.color.value).toEqual({ color: "red" });
         });
 
         it("preserves the argument order", function () {
@@ -205,7 +202,7 @@ describe("The Patterns parser", function () {
             var parser = new ArgumentParser();
             parser.addJSONArgument("json-color", { color: "red" });
             var opts = parser._parse('json-color: {"color": "pink"}');
-            expect(_.isEqual(opts["json-color"], { color: "pink" })).toBeTruthy();
+            expect(opts["json-color"]).toEqual({ color: "pink" });
         });
 
         describe("JSON data attributes", function () {
