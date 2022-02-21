@@ -484,4 +484,87 @@ describe("core.dom tests", () => {
             done();
         });
     });
+
+    describe("get_css_value", function () {
+        beforeEach(function () {
+            document.body.innerHTML = `
+              <div
+                  id="el1"
+                  style="
+                    position: relative;
+                    margin-top: 1em;
+                    font-size: 12px;
+                    border: 1px solid black;
+                  ">
+                <div
+                    id="el2"
+                    style="
+                      margin-bottom: 2em;
+                    ">
+                </div>
+              </div>
+            `;
+        });
+
+        afterEach(function () {
+            document.body.innerHTML = "";
+        });
+
+        it("Return values for CSS properties of a HTML node", function () {
+            const el1 = document.querySelector("#el1");
+            expect(dom.get_css_value(el1, "font-size")).toBe("12px");
+            expect(dom.get_css_value(el1, "font-size", true)).toBe(12);
+            expect(dom.get_css_value(el1, "position")).toBe("relative");
+        });
+
+        it("Return string, int or float, as requested.", function () {
+            const el1 = document.querySelector("#el1");
+            expect(dom.get_css_value(el1, "font-size")).toBe("12px");
+            expect(dom.get_css_value(el1, "font-size", true)).toBe(12);
+            expect(dom.get_css_value(el1, "font-size", true, true)).toBe(12.0);
+            expect(dom.get_css_value(el1, "font-size", null, true)).toBe(12.0);
+        });
+
+        it("Returns 0 for when requesting a numerical value which doesn't exist.", function () {
+            const el = document.createElement("div");
+            expect(dom.get_css_value(el, "hallo", true)).toBe(0);
+            expect(dom.get_css_value(el, "hallo", true, true)).toBe(0.0);
+            expect(dom.get_css_value(el, "hallo", null, true)).toBe(0.0);
+        });
+
+        it.skip("Return inherited values for CSS properties", function () {
+            // Missing JSDOM support for style inheritance yet. See:
+            // https://github.com/jsdom/jsdom/issues/2160
+            // https://github.com/jsdom/jsdom/pull/2668
+            // https://github.com/jsdom/jsdom/blob/master/Changelog.md
+
+            const el2 = document.querySelector("#el2");
+            expect(dom.get_css_value(el2, "font-size")).toBe("12px");
+        });
+
+        it.skip("Shorthand properties are split up", function () {
+            // Missing JSDOM support for property split yet.
+
+            const el1 = document.querySelector("#el1");
+            // ``em`` are parsed to pixel values.
+            // shorthand property sets like ``border`` are split up into their
+            // individual properties, like ``border-top-width``.
+            expect(dom.get_css_value(el1, "border-top-width")).toBe("12px");
+            expect(dom.get_css_value(el1, "border-top-style")).toBe("solid");
+            expect(dom.get_css_value(el1, "border-top-color")).toBe("rgb(0, 0, 0)");
+        });
+
+        it.skip("Values with relative units are converted to pixels", function () {
+            // Missing JSDOM support for unit conversion yet.
+
+            const el1 = document.querySelector("#el1");
+            const el2 = document.querySelector("#el2");
+            // Relative length-type values are converted to absolute pixels.
+            expect(dom.get_css_value(el1, "margin-top")).toBe("12px");
+            expect(dom.get_css_value(el1, "margin-top", true)).toBe(12);
+            expect(dom.get_css_value(el2, "margin-top", true)).toBe(0);
+            expect(dom.get_css_value(el2, "margin-bottom")).toBe("24px");
+            expect(dom.get_css_value(el2, "margin-bottom", true)).toBe(24);
+        });
+    });
 });

@@ -143,6 +143,31 @@ const create_from_string = (string) => {
     return document.createRange().createContextualFragment(string.trim());
 };
 
+/**
+ * Return a CSS property value for a given DOM node.
+ * For length-values, relative values are converted to pixels.
+ * Optionally parse as pixels, if applicable.
+ *
+ * Note: The element must be attached to the body to make CSS caluclations work.
+ *
+ * @param {Node} el - DOM node.
+ * @param {String} property - CSS property to query on DOM node.
+ * @param {Boolean} [as_pixels=false] - Convert value to pixels, if applicable.
+ * @param {Boolean} [as_float=false] - Convert value to float, if applicable.
+ *
+ * @returns {(String|Number)} - The CSS value to return.
+ */
+function get_css_value(el, property, as_pixels = false, as_float = false) {
+    let value = window.getComputedStyle(el).getPropertyValue(property);
+    if (as_pixels || as_float) {
+        value = parseFloat(value) || 0.0;
+    }
+    if (as_pixels && !as_float) {
+        value = parseInt(Math.round(value), 10);
+    }
+    return value;
+}
+
 const dom = {
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
@@ -155,6 +180,7 @@ const dom = {
     acquire_attribute: acquire_attribute,
     is_visible: is_visible,
     create_from_string: create_from_string,
+    get_css_value: get_css_value,
     add_event_listener: events.add_event_listener, // BBB export. TODO: Remove in an upcoming version.
     remove_event_listener: events.remove_event_listener, // BBB export. TODO: Remove in an upcoming version.
 };
