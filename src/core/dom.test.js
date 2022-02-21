@@ -567,4 +567,120 @@ describe("core.dom tests", () => {
             expect(dom.get_css_value(el2, "margin-bottom", true)).toBe(24);
         });
     });
+
+    describe("find_scroll_container", function () {
+        it("finds itself", function (done) {
+            document.body.innerHTML = `
+              <div
+                  id="div1"
+                  style="overflow-y: scroll">
+                <div
+                    id="div2"
+                    style="overflow-y: scroll">
+                </div>
+              </div>
+            `;
+            const div2 = document.querySelector("#div2");
+            expect(dom.find_scroll_container(div2)).toBe(div2);
+            done();
+        });
+        it("finds a scrollable parent", function (done) {
+            document.body.innerHTML = `
+              <div
+                  id="div1"
+                  style="overflow-y: scroll">
+                <div
+                    id="div2">
+                </div>
+              </div>
+            `;
+            const div1 = document.querySelector("#div1");
+            const div2 = document.querySelector("#div2");
+            expect(dom.find_scroll_container(div2)).toBe(div1);
+            done();
+        });
+        it("finds any scrolling direction", function (done) {
+            document.body.innerHTML = `
+              <div
+                  id="div1"
+                  style="overflow-x: scroll">
+                <div
+                    id="div2">
+                </div>
+              </div>
+            `;
+            const div1 = document.querySelector("#div1");
+            const div2 = document.querySelector("#div2");
+            expect(dom.find_scroll_container(div2)).toBe(div1);
+            done();
+        });
+        it.skip("finds any scrolling direction with generic overflow property", function (done) {
+            // Skipped due to jsDOM not setting overflow-x or overflow-y when only overflow is set.
+            document.body.innerHTML = `
+              <div
+                  id="div1"
+                  style="overflow: scroll">
+                <div
+                    id="div2">
+                </div>
+              </div>
+            `;
+            const div1 = document.querySelector("#div1");
+            const div2 = document.querySelector("#div2");
+            expect(dom.find_scroll_container(div2)).toBe(div1);
+            done();
+        });
+        it("finds only scrolling direction y", function (done) {
+            document.body.innerHTML = `
+              <div
+                  id="div1"
+                  style="overflow-y: scroll">
+                <div
+                    id="div2"
+                    style="overflow-x: scroll">
+                  <div
+                      id="div3">
+                  </div>
+                </div>
+              </div>
+            `;
+            const div1 = document.querySelector("#div1");
+            const div3 = document.querySelector("#div3");
+            expect(dom.find_scroll_container(div3, "y")).toBe(div1);
+            done();
+        });
+        it("finds only scrolling direction x", function (done) {
+            document.body.innerHTML = `
+              <div
+                  id="div1"
+                  style="overflow-x: scroll">
+                <div
+                    id="div2"
+                    style="overflow-y: scroll">
+                  <div
+                      id="div3">
+                  </div>
+                </div>
+              </div>
+            `;
+            const div1 = document.querySelector("#div1");
+            const div3 = document.querySelector("#div3");
+            expect(dom.find_scroll_container(div3, "x")).toBe(div1);
+            done();
+        });
+        it("returns document.body if nothing else is found", function (done) {
+            document.body.innerHTML = `
+              <div
+                  id="div1"
+                  style="overflow-x: scroll">
+                <div
+                    id="div2">
+                </div>
+              </div>
+            `;
+            const div2 = document.querySelector("#div2");
+            expect(dom.find_scroll_container(div2, "y")).toBe(document.body);
+            done();
+        });
+    });
 });
