@@ -3,6 +3,7 @@
  */
 
 import Base from "../../core/base";
+import dom from "../../core/dom";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";
@@ -42,8 +43,8 @@ export default Base.extend({
     },
 
     _init() {
-        const scroll_container_y = this.findScrollContainer("y");
-        const scroll_container_x = this.findScrollContainer("x");
+        const scroll_container_y = dom.find_scroll_container(this.el.parentElement, "y");
+        const scroll_container_x = dom.find_scroll_container(this.el.parentElement, "x");
 
         const pos = {
             top: dom.get_css_value(this.el, "top", true),
@@ -134,26 +135,5 @@ export default Base.extend({
                 el.classList.remove("bumped-bottom");
             }
         }
-    },
-
-    findScrollContainer(direction = null) {
-        let parent = this.el.parentElement;
-        let overflow;
-        while (parent && parent !== document.body) {
-            if (!direction || direction === "y") {
-                overflow = utils.getCSSValue(parent, "overflow-y");
-                if (overflow === "auto" || overflow === "scroll") {
-                    return parent;
-                }
-            }
-            if (!direction || direction === "x") {
-                overflow = utils.getCSSValue(parent, "overflow-x");
-                if (overflow === "auto" || overflow === "scroll") {
-                    return parent;
-                }
-            }
-            parent = parent.parentElement;
-        }
-        return null;
     },
 });
