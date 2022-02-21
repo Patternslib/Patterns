@@ -122,7 +122,7 @@ describe("pat-scroll", function () {
 
     it("will scroll to bottom with selector:bottom", async () => {
         document.body.innerHTML = `
-            <div id="scroll-container" style="overflow: scroll">
+            <div id="scroll-container" style="overflow-y: scroll">
               <button class="pat-scroll" data-pat-scroll="selector: bottom; trigger: manual">to bottom</button>
             </div>
         `;
@@ -149,7 +149,7 @@ describe("pat-scroll", function () {
         // Testing with `selector: top`, as this just sets scrollTop to 0
 
         document.body.innerHTML = `
-            <div id="scroll-container" style="overflow: scroll">
+            <div id="scroll-container" style="overflow-y: scroll">
               <button class="pat-scroll" data-pat-scroll="selector: top; offset: 40; trigger: manual">to bottom</button>
             </div>
         `;
@@ -173,7 +173,7 @@ describe("pat-scroll", function () {
         // Testing with `selector: top`, as this just sets scrollTop to 0
 
         document.body.innerHTML = `
-            <div id="scroll-container" style="overflow: scroll">
+            <div id="scroll-container" style="overflow-y: scroll">
               <button class="pat-scroll" data-pat-scroll="selector: top; offset: -40; trigger: manual">to bottom</button>
             </div>
         `;

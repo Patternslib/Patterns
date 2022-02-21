@@ -2,6 +2,7 @@ import "regenerator-runtime/runtime"; // needed for ``await`` support
 import "../../core/jquery-ext";
 import $ from "jquery";
 import Base from "../../core/base";
+import dom from "../../core/dom";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";
@@ -123,26 +124,6 @@ export default Base.extend({
         }
     },
 
-    findScrollContainer(el) {
-        const direction = this.options.direction;
-        let scrollable = $(el)
-            .parents()
-            .filter((idx, el) => {
-                return (
-                    ["auto", "scroll"].indexOf($(el).css("overflow")) > -1 ||
-                    (direction === "top" &&
-                        ["auto", "scroll"].indexOf($(el).css("overflow-y")) > -1) ||
-                    (direction === "left" &&
-                        ["auto", "scroll"].indexOf($(el).css("overflow-x")) > -1)
-                );
-            })
-            .first();
-        if (typeof scrollable[0] === "undefined") {
-            scrollable = $("body");
-        }
-        return scrollable;
-    },
-
     _get_selector_target() {
         const selector = this.options.selector;
         if (!selector && this.el.href?.includes("#")) {
@@ -162,11 +143,21 @@ export default Base.extend({
         let scrollable;
         if (this.options.selector === "top") {
             // Just scroll up or left, period.
-            scrollable = this.findScrollContainer(this.$el);
+            scrollable = $(
+                dom.find_scroll_container(
+                    this.el.parentElement,
+                    this.options.direction === "top" ? "y" : "x"
+                )
+            );
             options[scroll] = 0;
         } else if (this.options.selector === "bottom") {
             // Just scroll down or right, period.
-            scrollable = this.findScrollContainer(this.$el);
+            scrollable = $(
+                dom.find_scroll_container(
+                    this.el.parentElement,
+                    this.options.direction === "top" ? "y" : "x"
+                )
+            );
             if (scroll === "scrollTop") {
                 options.scrollTop = scrollable[0].scrollHeight;
             } else {
@@ -184,7 +175,12 @@ export default Base.extend({
                 return;
             }
 
-            scrollable = this.findScrollContainer(target);
+            scrollable = $(
+                dom.find_scroll_container(
+                    target[0].parentElement,
+                    this.options.direction === "top" ? "y" : "x"
+                )
+            );
 
             if (scrollable[0] === document.body) {
                 // positioning context is document
