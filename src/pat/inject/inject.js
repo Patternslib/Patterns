@@ -65,15 +65,16 @@ export default Base.extend({
             // XXX: This is used in only one project for linked
             // fullcalendars, it's sanity is wonky and we should
             // probably solve it differently.
-            if ($el.is("a") && $(cfgs[0].nextHref).length > 0) {
+            if (this.el.nodeName === "A" && $(cfgs[0].nextHref).length > 0) {
                 log.debug(
                     "Skipping as next href is anchor, which already exists",
                     cfgs[0].nextHref
                 );
                 // XXX: reconsider how the injection enters exhausted state
-                return $el.attr({
-                    href: (window.location.href.split("#")[0] || "") + cfgs[0].nextHref,
-                });
+                return this.el.setAttribute(
+                    "href",
+                    (window.location.href.split("#")[0] || "") + cfgs[0].nextHref
+                );
             }
         }
         if (cfgs[0].pushMarker) {
@@ -81,12 +82,12 @@ export default Base.extend({
                 log.debug("received push message: " + data);
                 if (data == cfgs[0].pushMarker) {
                     log.debug("re-injecting " + data);
-                    this.onTrigger({ currentTarget: $el[0] });
+                    this.onTrigger({ currentTarget: this.el });
                 }
             });
         }
         if (cfgs[0].idleTrigger) {
-            this._initIdleTrigger($el, cfgs[0].idleTrigger);
+            this._initIdleTrigger(this.$el, cfgs[0].idleTrigger);
         } else {
             switch (cfgs[0].trigger) {
                 case "default":
@@ -96,27 +97,28 @@ export default Base.extend({
                         }
                     });
                     // setup event handlers
-                    if ($el.is("form")) {
-                        $el.on("submit.pat-inject", this.onTrigger.bind(this))
+                    if (this.el.nodeName === "FORM") {
+                        this.$el
+                            .on("submit.pat-inject", this.onTrigger.bind(this))
                             .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit)
                             .on(
                                 "click.pat-inject",
                                 "[type=submit][formaction], [type=image][formaction]",
                                 this.onFormActionSubmit.bind(this)
                             );
-                    } else if ($el.is(".pat-subform")) {
+                    } else if (this.el.matches(".pat-subform")) {
                         log.debug("Initializing subform with injection");
                     } else {
-                        $el.on("click.pat-inject", this.onTrigger.bind(this));
+                        this.$el.on("click.pat-inject", this.onTrigger.bind(this));
                     }
                     break;
                 case "autoload":
                     if (!cfgs[0].delay) {
-                        this.onTrigger({ currentTarget: $el[0] });
+                        this.onTrigger({ currentTarget: this.el });
                     } else {
                         // generate UID
                         const uid = Math.random().toString(36);
-                        $el.attr("data-pat-inject-uid", uid);
+                        this.el.setAttribute("data-pat-inject-uid", uid);
 
                         // function to trigger the autoload and mark as triggered
                         const delayed_trigger = (uid_) => {
@@ -127,7 +129,7 @@ export default Base.extend({
                             if (still_there.length == 0) return false;
 
                             $el.data("pat-inject-autoloaded", true);
-                            this.onTrigger({ currentTarget: $el[0] });
+                            this.onTrigger({ currentTarget: this.el });
                             return true;
                         };
                         window.setTimeout(
@@ -137,21 +139,20 @@ export default Base.extend({
                     }
                     break;
                 case "autoload-visible":
-                    this._initAutoloadVisible($el, cfgs);
+                    this._initAutoloadVisible(this.$el, cfgs);
                     break;
                 case "idle":
-                    this._initIdleTrigger($el, cfgs[0].delay);
+                    this._initIdleTrigger(this.$el, cfgs[0].delay);
                     break;
             }
         }
 
-        log.debug("initialised:", $el);
-        return $el;
+        log.debug("initialised:", this.el);
+        return this.$el;
     },
 
     destroy($el) {
         $el.off(".pat-inject");
-        $el.data("pat-inject", null);
         return $el;
     },
 
@@ -160,16 +161,15 @@ export default Base.extend({
          * link has been clicked.
          */
         const $el = $(e.currentTarget);
-        const cfgs = $el.data("pat-inject");
         if ($el.is("form")) {
             // store the params of the form in the config, to be used by history
-            for (cfg of cfgs) {
+            for (const cfg of this.cfgs) {
                 cfg.params = $.param($sub.serializeArray());
             }
         }
         e.preventDefault && e.preventDefault();
         $el.trigger("patterns-inject-triggered");
-        this.execute(cfgs, $el);
+        this.execute(this.cfgs, $el);
     },
 
     onFormActionSubmit(e) {
@@ -185,7 +185,7 @@ export default Base.extend({
         const cfgs = this.extractConfig($cfg_node, opts);
 
         // store the params of the form in the config, to be used by history
-        for (cfg of cfgs) {
+        for (const cfg of cfgs) {
             cfg.params = $.param($sub.serializeArray());
         }
 
@@ -201,7 +201,7 @@ export default Base.extend({
         const cfgs = this.extractConfig($sub[0]);
 
         // store the params of the subform in the config, to be used by history
-        for (cfg of cfgs) {
+        for (const cfg of cfgs) {
             cfg.params = $.param($sub.serializeArray());
         }
 
