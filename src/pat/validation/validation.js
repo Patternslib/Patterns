@@ -57,7 +57,7 @@ export default Base.extend({
         for (const [cnt, input] of this.inputs.entries()) {
             // Cancelable debouncer.
             const debouncer = utils.debounce((e) => {
-                this.check_input(input, e);
+                this.check_input({ input: input, event: e });
             }, this.options.delay);
 
             events.add_event_listener(
@@ -82,12 +82,12 @@ export default Base.extend({
                 this.el,
                 "submit",
                 `pat-validation--blur-${input.name}--${cnt}--validator`,
-                (e) => this.check_input(input, e) // immediate check with submit. Otherwise submit is not cancelable.
+                (e) => this.check_input({ input: input, event: e }) // immediate check with submit. Otherwise submit is not cancelable.
             );
         }
     },
 
-    check_input(input, e) {
+    check_input({ input, event, stop = false }) {
         if (input.disabled) {
             // No need to check disabled inputs.
             return;
@@ -97,7 +97,7 @@ export default Base.extend({
         this.set_validity({ input: input, msg: "" });
         const validity_state = input.validity;
 
-        if (e.submitter?.hasAttribute("formnovalidate")) {
+        if (event?.submitter?.hasAttribute("formnovalidate")) {
             // Do not submit when a button with ``formnovalidate`` was used.
             return;
         }
@@ -139,6 +139,8 @@ export default Base.extend({
 
                 let not_after;
                 let not_before;
+                let not_after_el;
+                let not_before_el;
                 const date = new Date(input.value);
                 if (isNaN(date)) {
                     // Should not happen or input only partially typed in.
@@ -149,9 +151,8 @@ export default Base.extend({
                     not_after = new Date(input_options.not.after);
                     if (isNaN(not_after)) {
                         // Handle value as selector
-                        not_after = document.querySelector(
-                            input_options.not.after
-                        )?.value;
+                        not_after_el = document.querySelector(input_options.not.after);
+                        not_after = not_after_el?.value;
                         not_after =
                             not_after &&
                             new Date(
@@ -167,9 +168,8 @@ export default Base.extend({
                     not_before = new Date(input_options.not.before);
                     if (isNaN(not_before)) {
                         // Handle value as selector
-                        not_before = document.querySelector(
-                            input_options.not.before
-                        )?.value;
+                        not_before_el = document.querySelector(input_options.not.before);
+                        not_before = not_before_el?.value;
                         not_before =
                             not_before &&
                             new Date(
@@ -185,6 +185,13 @@ export default Base.extend({
                 } else if (not_before && date < not_before) {
                     this.set_validity({ input: input, msg: msg });
                 }
+                // always check the other input to clear/set errors
+                !stop && // do not re-check when stop is set to avoid infinite loops
+                    not_after_el &&
+                    this.check_input({ input: not_after_el, stop: true });
+                !stop &&
+                    not_before_el &&
+                    this.check_input({ input: not_before_el, stop: true });
             }
 
             if (!validity_state.customError) {
@@ -248,9 +255,9 @@ export default Base.extend({
             }
         }
 
-        if (e.type === "submit") {
+        if (event?.type === "submit") {
             // Do not submit in error case.
-            e.preventDefault();
+            event.preventDefault();
         }
         this.set_error_message(input, input_options);
     },
