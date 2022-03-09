@@ -9,12 +9,7 @@ YARN		?= npx yarn
 SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/lib/*.js)
 GENERATED	= src/lib/depends_parse.js
 
-define get_package_var
-$(shell node -p "require('./package.json').$(1)")
-endef
-PACKAGE_NAME := $(shell node -p "'$(call get_package_var,name)'.replace('@patternslib/', '')")
-PACKAGE_VERSION := $(call get_package_var,version)
-
+PACKAGE_NAME = "patternslib"
 
 all:: bundle css
 
@@ -62,6 +57,7 @@ bundle: stamp-yarn
 	$(YARN) run build
 
 release-zip: clean-dist bundle
+	$(eval PACKAGE_VERSION := $(shell node -p "require('./package.json').version"))
 	@echo name is $(PACKAGE_NAME)
 	@echo version is $(PACKAGE_VERSION)
 	mkdir -p dist/$(PACKAGE_NAME)-bundle-$(PACKAGE_VERSION)
