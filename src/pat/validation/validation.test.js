@@ -824,15 +824,6 @@ describe("pat-validation", function () {
         inp_end.value = "2020-10-05";
         inp_end.dispatchEvent(events.change_event());
         await utils.timeout(1); // wait a tick for async to settle.
-        expect(el.querySelectorAll("em.warning").length).toBe(1);
-        expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-            "The end date must on or before the start date."
-        );
-
-        // Violate the before/after constraint
-        inp_start.value = "2020-10-06";
-        inp_start.dispatchEvent(events.change_event());
-        await utils.timeout(1); // wait a tick for async to settle.
         expect(el.querySelectorAll("em.warning").length).toBe(2);
         expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
             "The start date must on or before the end date."
@@ -848,6 +839,18 @@ describe("pat-validation", function () {
         inp_end.dispatchEvent(events.change_event());
         await utils.timeout(1); // wait a tick for async to settle.
         expect(el.querySelectorAll("em.warning").length).toBe(0);
+
+        // Violate the before/after constraint
+        inp_start.value = "2020-10-11";
+        inp_start.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(2);
+        expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
+            "The start date must on or before the end date."
+        );
+        expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
+            "The end date must on or before the start date."
+        );
 
         // Fulfill the before/after constraint - start before end
         inp_start.value = "2020-10-01";
@@ -947,15 +950,6 @@ describe("pat-validation", function () {
         inp_end.value = "2022-01-05T09:00";
         inp_end.dispatchEvent(events.change_event());
         await utils.timeout(1); // wait a tick for async to settle.
-        expect(el.querySelectorAll("em.warning").length).toBe(1);
-        expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-            "The end date/time must on or before the start date/time."
-        );
-
-        // Violate the before/after constraint
-        inp_start.value = "2022-01-05T11:00";
-        inp_start.dispatchEvent(events.change_event());
-        await utils.timeout(1); // wait a tick for async to settle.
         expect(el.querySelectorAll("em.warning").length).toBe(2);
         expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
             "The start date/time must on or before the end date/time."
@@ -971,6 +965,18 @@ describe("pat-validation", function () {
         inp_end.dispatchEvent(events.change_event());
         await utils.timeout(1); // wait a tick for async to settle.
         expect(el.querySelectorAll("em.warning").length).toBe(0);
+
+        // Violate the before/after constraint
+        inp_start.value = "2022-01-05T11:00";
+        inp_start.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(2);
+        expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
+            "The start date/time must on or before the end date/time."
+        );
+        expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
+            "The end date/time must on or before the start date/time."
+        );
 
         // Fulfill the before/after constraint - start before end
         inp_start.value = "2022-01-04T10:00";
