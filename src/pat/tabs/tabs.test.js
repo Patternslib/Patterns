@@ -325,9 +325,19 @@ describe("pat-tabs", function () {
         el.innerHTML = "<div></div>";
         jest.spyOn(el, "getBoundingClientRect").mockImplementation(() => { return { x: 0, width: 0 }; }); // prettier-ignore
 
-        pattern.init(el.querySelector("div"));
-        await utils.timeout(1);
-        document.body.dispatchEvent(new Event("pat-update"));
-        expect(pattern).not.toThrow(TypeError);
+        let thrown = false;
+        try {
+            pattern.init(el.querySelector("div"));
+            await utils.timeout(1);
+            document.body.dispatchEvent(new Event("pat-update"));
+            await utils.timeout(1);
+        } catch (e) {
+            if (e instanceof TypeError) {
+                thrown = true;
+            } else {
+                throw e;
+            }
+        }
+        expect(thrown).toBe(false);
     });
 });
