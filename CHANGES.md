@@ -1,4 +1,17 @@
-### [7.1.2](https://github.com/Patternslib/patterns/compare/7.1.1...7.1.2) (2022-03-14)
+
+
+### [7.1.3](https://github.com/Patternslib/patterns/compare/7.1.2...7.1.3) (2022-03-14)
+
+
+### Bug Fixes
+
+* **core logging:** Fix invalid use of typeof. ([e2e992d](https://github.com/Patternslib/patterns/commit/e2e992dbb8057f5fde13d521cbbafdc4e9e163ae))
+
+
+
+### Maintenance
+
+* Upgrade dependencies. ([c0206d1](https://github.com/Patternslib/patterns/commit/c0206d18767042d3b29f472fc744eb5c67c655a3))### [7.1.2](https://github.com/Patternslib/patterns/compare/7.1.1...7.1.2) (2022-03-14)
 
 
 ### Bug Fixes
