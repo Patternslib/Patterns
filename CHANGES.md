@@ -1,3 +1,20 @@
+### [7.1.2](https://github.com/Patternslib/patterns/compare/7.1.1...7.1.2) (2022-03-14)
+
+
+### Bug Fixes
+
+* **pat validation:** With depending date validation also validate the dependend date. ([5060fa4](https://github.com/Patternslib/patterns/commit/5060fa4421ed581d5e64717e75eadff8f0c391d7)), closes [#970](https://github.com/Patternslib/patterns/issues/970)
+Fixes: #970
+
+
+### Maintenance
+
+* **Build:** Makefile - Resolve package version for ZIP bundle at target runtime. ([2d799f8](https://github.com/Patternslib/patterns/commit/2d799f8ad2d29870cca8c8f371c6af11c6e2c924))
+
+* **pat tabs:** Fix test for error not thrown. ([c4e00aa](https://github.com/Patternslib/patterns/commit/c4e00aae51df79922893b01a9f593e0f0b1b91e0))
+Fix an ``UnhandledPromiseRejection`` error with an asynchronous test.
+The problem popped up in node version 16 and was passing in node version 14.
+
 ### [7.1.1](https://github.com/Patternslib/patterns/compare/7.1.0...7.1.1) (2022-02-16)
 
 
