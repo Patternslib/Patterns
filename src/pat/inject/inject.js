@@ -540,7 +540,7 @@ const inject = {
                     scroll_target.getBoundingClientRect().left +
                         scroll_container_ref.scrollLeft -
                         scroll_container_ref.getBoundingClientRect().left -
-                        utils.getCSSValue(
+                        dom.get_css_value(
                             scroll_container_ref,
                             "border-left-width",
                             true
@@ -550,7 +550,7 @@ const inject = {
                     scroll_target.getBoundingClientRect().top +
                         scroll_container_ref.scrollTop -
                         scroll_container_ref.getBoundingClientRect().top -
-                        utils.getCSSValue(scroll_container_ref, "border-top-width", true)
+                        dom.get_css_value(scroll_container_ref, "border-top-width", true)
                 );
             }
             if (scroll_container === window) {
