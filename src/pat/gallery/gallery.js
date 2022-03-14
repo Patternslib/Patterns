@@ -156,7 +156,7 @@ export default Base.extend({
 
         gallery.listen("initialZoomInEnd", () => {
             // don't show body scrollbars when overlay is open
-            this.orig_body_overflow = utils.getCSSValue(document.body, "overflow");
+            this.orig_body_overflow = dom.get_css_value(document.body, "overflow");
             document.body.style.overflow = "hidden";
         });
 
