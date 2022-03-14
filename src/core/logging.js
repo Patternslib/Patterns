@@ -54,7 +54,7 @@ IEConsoleWriter.prototype = {
 
         // Under some conditions console.log will be available but the
         // other functions are missing.
-        if (typeof console.info === undefined) {
+        if (typeof console.info === "undefined") {
             var level_name;
             if (level <= Level.DEBUG) level_name = "DEBUG";
             else if (level <= Level.INFO) level_name = "INFO";
