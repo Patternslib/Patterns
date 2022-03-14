@@ -1,5 +1,6 @@
 import "../../core/jquery-ext"; // for :scrollable for autoLoading-visible
 import "regenerator-runtime/runtime"; // needed for ``await`` support
+import Base from "../../core/base";
 import $ from "jquery";
 import _ from "underscore";
 import ajax from "../ajax/ajax";
@@ -41,18 +42,18 @@ parser.addArgument("scroll");
 // to us
 parser.addArgument("url");
 
-const inject = {
+export default Base.extend({
     name: "inject",
     trigger:
         ".raptor-ui .ui-button.pat-inject, a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
     parser: parser,
 
-    init($el, opts) {
-        const cfgs = this.extractConfig($el, opts);
+    init() {
+        const cfgs = this.extractConfig(this.el, this.options);
         if (cfgs.some((e) => e.history === "record") && !("pushState" in history)) {
             // if the injection shall add a history entry and HTML5 pushState
             // is missing, then don't initialize the injection.
-            return $el;
+            return;
         }
         $el.data("pat-inject", cfgs);
 
@@ -64,15 +65,16 @@ const inject = {
             // XXX: This is used in only one project for linked
             // fullcalendars, it's sanity is wonky and we should
             // probably solve it differently.
-            if ($el.is("a") && $(cfgs[0].nextHref).length > 0) {
+            if (this.el.nodeName === "A" && $(cfgs[0].nextHref).length > 0) {
                 log.debug(
                     "Skipping as next href is anchor, which already exists",
                     cfgs[0].nextHref
                 );
                 // XXX: reconsider how the injection enters exhausted state
-                return $el.attr({
-                    href: (window.location.href.split("#")[0] || "") + cfgs[0].nextHref,
-                });
+                return this.el.setAttribute(
+                    "href",
+                    (window.location.href.split("#")[0] || "") + cfgs[0].nextHref
+                );
             }
         }
         if (cfgs[0].pushMarker) {
@@ -80,12 +82,12 @@ const inject = {
                 log.debug("received push message: " + data);
                 if (data == cfgs[0].pushMarker) {
                     log.debug("re-injecting " + data);
-                    this.onTrigger({ currentTarget: $el[0] });
+                    this.onTrigger({ currentTarget: this.el });
                 }
             });
         }
         if (cfgs[0].idleTrigger) {
-            this._initIdleTrigger($el, cfgs[0].idleTrigger);
+            this._initIdleTrigger(this.$el, cfgs[0].idleTrigger);
         } else {
             switch (cfgs[0].trigger) {
                 case "default":
@@ -95,27 +97,28 @@ const inject = {
                         }
                     });
                     // setup event handlers
-                    if ($el.is("form")) {
-                        $el.on("submit.pat-inject", this.onTrigger.bind(this))
+                    if (this.el.nodeName === "FORM") {
+                        this.$el
+                            .on("submit.pat-inject", this.onTrigger.bind(this))
                             .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit)
                             .on(
                                 "click.pat-inject",
                                 "[type=submit][formaction], [type=image][formaction]",
                                 this.onFormActionSubmit.bind(this)
                             );
-                    } else if ($el.is(".pat-subform")) {
+                    } else if (this.el.matches(".pat-subform")) {
                         log.debug("Initializing subform with injection");
                     } else {
-                        $el.on("click.pat-inject", this.onTrigger.bind(this));
+                        this.$el.on("click.pat-inject", this.onTrigger.bind(this));
                     }
                     break;
                 case "autoload":
                     if (!cfgs[0].delay) {
-                        this.onTrigger({ currentTarget: $el[0] });
+                        this.onTrigger({ currentTarget: this.el });
                     } else {
                         // generate UID
                         const uid = Math.random().toString(36);
-                        $el.attr("data-pat-inject-uid", uid);
+                        this.el.setAttribute("data-pat-inject-uid", uid);
 
                         // function to trigger the autoload and mark as triggered
                         const delayed_trigger = (uid_) => {
@@ -126,7 +129,7 @@ const inject = {
                             if (still_there.length == 0) return false;
 
                             $el.data("pat-inject-autoloaded", true);
-                            this.onTrigger({ currentTarget: $el[0] });
+                            this.onTrigger({ currentTarget: this.el });
                             return true;
                         };
                         window.setTimeout(
@@ -136,21 +139,20 @@ const inject = {
                     }
                     break;
                 case "autoload-visible":
-                    this._initAutoloadVisible($el, cfgs);
+                    this._initAutoloadVisible(this.$el, cfgs);
                     break;
                 case "idle":
-                    this._initIdleTrigger($el, cfgs[0].delay);
+                    this._initIdleTrigger(this.$el, cfgs[0].delay);
                     break;
             }
         }
 
-        log.debug("initialised:", $el);
-        return $el;
+        log.debug("initialised:", this.el);
+        return this.$el;
     },
 
     destroy($el) {
         $el.off(".pat-inject");
-        $el.data("pat-inject", null);
         return $el;
     },
 
@@ -159,15 +161,15 @@ const inject = {
          * link has been clicked.
          */
         const $el = $(e.currentTarget);
-        const cfgs = $el.data("pat-inject");
         if ($el.is("form")) {
-            $(cfgs).each((i, v) => {
-                v.params = $.param($el.serializeArray());
-            });
+            // store the params of the form in the config, to be used by history
+            for (const cfg of this.cfgs) {
+                cfg.params = $.param($sub.serializeArray());
+            }
         }
         e.preventDefault && e.preventDefault();
         $el.trigger("patterns-inject-triggered");
-        this.execute(cfgs, $el);
+        this.execute(this.cfgs, $el);
     },
 
     onFormActionSubmit(e) {
@@ -182,9 +184,10 @@ const inject = {
         const $cfg_node = $button.closest("[data-pat-inject]");
         const cfgs = this.extractConfig($cfg_node, opts);
 
-        $(cfgs).each((i, v) => {
-            v.params = $.param($form.serializeArray());
-        });
+        // store the params of the form in the config, to be used by history
+        for (const cfg of cfgs) {
+            cfg.params = $.param($sub.serializeArray());
+        }
 
         e.preventDefault();
         $form.trigger("patterns-inject-triggered");
@@ -194,13 +197,13 @@ const inject = {
     submitSubform($sub) {
         /* This method is called from pat-subform
          */
-        const $el = $sub.parents("form");
-        const cfgs = $sub.data("pat-inject");
+        const $el = $($sub[0].closest("form"));
+        const cfgs = this.extractConfig($sub[0]);
 
         // store the params of the subform in the config, to be used by history
-        $(cfgs).each((i, v) => {
-            v.params = $.param($sub.serializeArray());
-        });
+        for (const cfg of cfgs) {
+            cfg.params = $.param($sub.serializeArray());
+        }
 
         try {
             $el.trigger("patterns-inject-triggered");
@@ -210,19 +213,20 @@ const inject = {
         this.execute(cfgs, $el);
     },
 
-    extractConfig($el, opts) {
-        opts = $.extend({}, opts);
+    extractConfig(el, options = {}) {
+        el = utils.jqToNode(el);
+        options = Object.assign({}, options); // copy
 
-        const cfgs = parser.parse($el, opts, true);
+        const cfgs = parser.parse(el, options, true);
         cfgs.forEach((cfg) => {
-            cfg.$context = $el;
-            // opts and cfg have priority, fall back to href/action
+            cfg.$context = $(el);
+            // options and cfg have priority, fall back to href/action
             cfg.url =
-                opts.url ||
+                options.url ||
                 cfg.url ||
-                $el.attr("href") ||
-                $el.attr("action") ||
-                $el.parents("form").attr("action") ||
+                el.getAttribute("href") ||
+                el.getAttribute("action") ||
+                el.closest("form")?.getAttribute("action") ||
                 "";
 
             // separate selector from url
@@ -960,7 +964,6 @@ const inject = {
         return $html;
     },
 
-    // XXX: hack
     _initAutoloadVisible($el, cfgs) {
         if ($el.data("pat-inject-autoloaded")) {
             // ignore executed autoloads
@@ -980,7 +983,7 @@ const inject = {
         };
         $el.click(trigger);
 
-        // Use case 1: a (heigh-constrained) scrollable parent
+        // Use case 1: a (height-constrained) scrollable parent
         if ($scrollable.length) {
             // if scrollable parent and visible -> trigger it
             // we only look at the closest scrollable parent, no nesting
@@ -1123,7 +1126,7 @@ const inject = {
             },
         },
     },
-};
+});
 
 $(document).on("patterns-injected.inject", (ev, cfg, trigger, injected) => {
     /* Listen for the patterns-injected event.
@@ -1170,6 +1173,3 @@ if ("replaceState" in history) {
         log.debug(e);
     }
 }
-
-registry.register(inject);
-export default inject;
