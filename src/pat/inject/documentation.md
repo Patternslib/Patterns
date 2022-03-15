@@ -254,7 +254,11 @@ After the injection:
 By default injection is triggered on click for anchors and on submit for forms. Further, it can be triggered upon initialisation (`autoload`) and when coming into view (`autoload-visible`). `autoload` injection is useful to deliver a page skeleton, where e.g. header, body, and sidebar load their content in parallel. `autoload-visible` injection is useful
 to build infinite lists, where the injection element replaces itself with the next 10 entries and a new `autoload-visible` injection link.
 
-A `autoload` may be delayed, by providing a `delay` argument in `data-pat-inject`. The delay is specified in milliseconds. This is useful to build a polling loop. Note that using this in combination with other injections may create race conditions with weird effects. This `delay` is only supported for `autoload`, not for `autoload-visible` or for click triggers).
+### Delay
+
+A injection may be delayed, by providing a `delay` argument in `data-pat-inject`.
+The delay is specified in milliseconds.
+This is useful to build a polling loop or to prevent multiple injections happen at once by giving different delays to injections with an ``autoload`` trigger.
 
     <a href="sources.html#id" class="pat-inject"
        data-pat-inject="trigger: autoload">Autoloads as soon as initialised</a>
@@ -264,6 +268,13 @@ A `autoload` may be delayed, by providing a `delay` argument in `data-pat-inject
 
     <a href="sources.html#id" class="pat-inject"
        data-pat-inject="trigger: autoload; delay: 2000">Autoloads 2 seconds after the page is initialised.</a>
+
+
+For ``trigger: autoload-visible`` injections, the default delay is 200ms.
+This allows for long pages to scroll over and past items witn an autoload-visible trigger without loading them.
+If the item with the autoload-visible trigger is within the viewport for 200ms, the item is loaded.
+You can set this to ``0`` or any other delay time by configuring the delay parameter.
+
 
 <!--
 XXX: example infinite list
@@ -356,6 +367,7 @@ You can customise the behaviour of injection through options in the `data-pat-in
 | `next-href`       |                                             |                                         | For anchors, you can specify an href to point to after injection was triggered. If that element exists already during initialisation, the injection is not initialised and the href changed to next-href.                                                                                                                                                                                       |                                              |
 | `trigger`         | `default`                                   | `default` `autoload` `autoload-visible` | Determines when injection happens: on manual click (`default`), directly on page load (`autoload`) or when the trigger becomes visible (`autoload-visible`)                                                                                                                                                                                                                                     | One of the mutually exclusive values.        |
 | `url`             |                                             | _href attribute_                        | URL to load content from.                                                                                                                                                                                                                                                                                                                                                                       | URI string.                                  |
+| `delay`           | `0` (`200` ms for `autoload-visible`)       |                                         | Delay as number in milliseconds for which the ajax request will be deferred.                                                                                                                                                                                                                                                                                                                    | String.                                      |
 | `class`           |                                             |                                         | A class which will be added to the injected content. Multiple classes can be specified (separated with spaces).                                                                                                                                                                                                                                                                                 | String                                       |
 | `loading-class`   | 'injecting'                                 |                                         | A class which will be added to the injection target while content is still being loaded. Multiple classes can be specified (separated with spaces), or leave empty if no class should be added.                                                                                                                                                                                                 | String                                       |
 | `history`         | `record`                                    | `none` `record`                         | If set to `record` (default) then injection will update the URL history and the title tag of the HTML page.                                                                                                                                                                                                                                                                                     | One of the mutually exclusive string values. |

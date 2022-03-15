@@ -1324,7 +1324,7 @@ describe("pat-inject", function () {
             delete global.__patternslib_test_intersection_observers;
         });
 
-        it("Test trigger: autoload-visible", async () => {
+        it("Test trigger: autoload-visible, delay 10ms", async () => {
             // Note, as we are heavily mocking the IntersectionObserver we are
             // actually not testing if a trigger is really run when an element
             // becomes visible.
@@ -1337,6 +1337,7 @@ describe("pat-inject", function () {
                 <a class="pat-inject"
                     href="test.html"
                     data-pat-inject="
+                        delay: 10;
                         target: self;
                         trigger: autoload-visible">test</a>
             `;
@@ -1360,7 +1361,8 @@ describe("pat-inject", function () {
             observer._set_entry(true);
             await utils.timeout(1);
             expect(observer._cnt).toBe(3);
-            await utils.timeout(200); // wait another 200ms for the injection to happen.
+            expect(el.textContent).toBe("test"); // delay time not yet passed
+            await utils.timeout(10); // delay time passed
             expect(el.textContent).toBe("OK");
 
             // Reset text content to something else
@@ -1371,8 +1373,38 @@ describe("pat-inject", function () {
             observer._set_entry(true);
             await utils.timeout(1);
             expect(observer._cnt).toBe(3);
-            await utils.timeout(200); // wait another 200ms for the injection to happen.
+            await utils.timeout(10); // wait for delay-time
             expect(el.textContent).toBe("NOT");
+        });
+
+        it("Test trigger: autoload-visible, default delay time", async () => {
+            jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            answer("<html><body>OK</body></html>");
+
+            document.body.innerHTML = `
+                <a class="pat-inject"
+                    href="test.html"
+                    data-pat-inject="
+                        target: self;
+                        trigger: autoload-visible">test</a>
+            `;
+            const el = document.querySelector(".pat-inject");
+            pattern.init($(el));
+            await utils.timeout(1);
+
+            // Get the observer
+            const observer = global.__patternslib_test_intersection_observers[0];
+
+            // The observer callback is called once by just initializing.
+            expect(observer._cnt).toBe(1);
+
+            observer._set_entry(true);
+            await utils.timeout(1);
+            expect(observer._cnt).toBe(2);
+            await utils.timeout(100);
+            expect(el.textContent).toBe("test"); // delay time not yet passed
+            await utils.timeout(100); // delay time passed, default is 200ms
+            expect(el.textContent).toBe("OK");
         });
     });
 });
