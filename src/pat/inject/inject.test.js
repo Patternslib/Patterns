@@ -1317,4 +1317,62 @@ describe("pat-inject", function () {
             delete global.fetch;
         });
     });
+
+    describe("Test triggers", function () {
+        afterEach(function () {
+            document.body.innerHTML = "";
+            delete global.__patternslib_test_intersection_observers;
+        });
+
+        it("Test trigger: autoload-visible", async () => {
+            // Note, as we are heavily mocking the IntersectionObserver we are
+            // actually not testing if a trigger is really run when an element
+            // becomes visible.
+            // Instead we test the setup, loading, unregistration, etc.
+
+            jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            answer("<html><body>OK</body></html>");
+
+            document.body.innerHTML = `
+                <a class="pat-inject"
+                    href="test.html"
+                    data-pat-inject="
+                        target: self;
+                        trigger: autoload-visible">test</a>
+            `;
+            const el = document.querySelector(".pat-inject");
+            pattern.init($(el));
+            await utils.timeout(1);
+
+            // Get the observer
+            const observer = global.__patternslib_test_intersection_observers[0];
+
+            // The observer callback is called once by just initializing.
+            expect(observer._cnt).toBe(1);
+
+            // Let's pretend the element is not yet visible.
+            observer._set_entry(false);
+            await utils.timeout(1);
+            expect(observer._cnt).toBe(2);
+            expect(el.textContent).toBe("test");
+
+            // Let's pretend the element is now visible.
+            observer._set_entry(true);
+            await utils.timeout(1);
+            expect(observer._cnt).toBe(3);
+            await utils.timeout(200); // wait another 200ms for the injection to happen.
+            expect(el.textContent).toBe("OK");
+
+            // Reset text content to something else
+            el.textContent = "NOT";
+
+            // Let's pretend the element is visible.
+            // Re-setting does not call the intersection observer anymore.
+            observer._set_entry(true);
+            await utils.timeout(1);
+            expect(observer._cnt).toBe(3);
+            await utils.timeout(200); // wait another 200ms for the injection to happen.
+            expect(el.textContent).toBe("NOT");
+        });
+    });
 });
