@@ -10,7 +10,7 @@ import registry from "../../core/registry";
 import utils from "../../core/utils";
 
 const log = logging.getLogger("pat.inject");
-log.setLevel(logging.Level.DEBUG);
+//log.setLevel(logging.Level.DEBUG);
 
 const TEXT_NODE = 3;
 const COMMENT_NODE = 8;
@@ -138,7 +138,7 @@ const inject = {
                     }
                     break;
                 case "autoload-visible":
-                    this._initAutoloadVisible($el);
+                    this._initAutoloadVisible($el, cfgs);
                     break;
                 case "idle":
                     this._initIdleTrigger($el, cfgs[0].delay);
@@ -962,13 +962,17 @@ const inject = {
         return $html;
     },
 
-    _initAutoloadVisible($el) {
+    _initAutoloadVisible($el, cfgs) {
         if ($el.data("pat-inject-autoloaded")) {
             // ignore executed autoloads
             return false;
         }
 
         const el = $el[0];
+
+        // delay: default is 200ms to allow scrolling over and past autoload-visible elements without loading them.
+        const delay = cfgs[0].delay || 200;
+        log.debug(`Delay time: ${delay}`);
 
         // function to trigger the autoload and mark as triggered
         const trigger = (event) => {
@@ -999,7 +1003,7 @@ const inject = {
                     timeout_id = window.setTimeout(() => {
                         observer.disconnect(); // Stop observing loaded elements.
                         trigger();
-                    }, 200);
+                    }, delay);
                     log.debug(`autoload-visible intersecting ${el}`);
                 } else {
                     window.clearTimeout(timeout_id);
