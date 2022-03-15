@@ -10,7 +10,7 @@ import registry from "../../core/registry";
 import utils from "../../core/utils";
 
 const log = logging.getLogger("pat.inject");
-log.setLevel(logging.Level.DEBUG);
+//log.setLevel(logging.Level.DEBUG);
 
 const TEXT_NODE = 3;
 const COMMENT_NODE = 8;
