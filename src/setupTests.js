@@ -35,6 +35,46 @@ global["ResizeObserver"] = function () {
     return { observe: () => {} };
 };
 
+global.IntersectionObserver = class IntersectionObserver {
+    constructor(callback) {
+        this.callback = callback;
+        if (! global.__patternslib_test_intersection_observers) {
+           global.__patternslib_test_intersection_observers = [];
+        }
+        this._el = null;
+        this._do_observe = false;
+        this._cnt = 0;
+        global.__patternslib_test_intersection_observers.push(this);
+    }
+    observe(el) {
+        this._el = el;
+        this._do_observe = true;
+        this._set_entry(false);
+    }
+    unobserve() {
+        this._do_observe = false;
+    }
+    disconnect() {
+        this._do_observe = false;
+    }
+    takeRecords() {}
+    _set_entry(is_intersecting=true) {
+        if (! this._do_observe) {
+            return;
+        }
+        this.callback([{
+            isIntersecting: is_intersecting,
+            target: this._el,
+            // entry.boundingClientRect
+            // entry.intersectionRatio
+            // entry.intersectionRect
+            // entry.rootBounds
+            // entry.time
+        }])
+        this._cnt++;
+    }
+};
+
 // Do not output error messages
 import logging from "./core/logging";
 logging.setLevel(50); // level: FATAL
