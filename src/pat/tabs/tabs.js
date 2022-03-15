@@ -85,10 +85,10 @@ export default Base.extend({
         const bounds = utils.get_bounds(this.el);
         const x = bounds.x;
         const width = bounds.width;
-        const border_left = utils.getCSSValue(this.el, "border-left", true);
-        const padding_left = utils.getCSSValue(this.el, "padding-left", true);
-        const border_right = utils.getCSSValue(this.el, "border-right", true);
-        const padding_right = utils.getCSSValue(this.el, "padding-right", true);
+        const border_left = dom.get_css_value(this.el, "border-left", true);
+        const padding_left = dom.get_css_value(this.el, "padding-left", true);
+        const border_right = dom.get_css_value(this.el, "border-right", true);
+        const padding_right = dom.get_css_value(this.el, "padding-right", true);
         const max_width =
             width - border_left - padding_left - padding_right - border_right;
         const max_x = bounds.x + max_width + border_left + padding_left;
@@ -114,7 +114,7 @@ export default Base.extend({
         logger.debug("Entering _adjust_tabs");
         const children = [...this.el.children].filter(
             (it) =>
-                dom.is_visible(it) && utils.getCSSValue(it, "position") !== "absolute"
+                dom.is_visible(it) && dom.get_css_value(it, "position") !== "absolute"
         ); // remove elements, which do not count against available width.
 
         const children_no_extra = children.filter(
@@ -137,7 +137,7 @@ export default Base.extend({
         for (const it of children) {
             const bounds = utils.get_bounds(it);
             const it_x = bounds.x;
-            const it_w = bounds.width + utils.getCSSValue(this.el, "margin-right", true);
+            const it_w = bounds.width + dom.get_css_value(this.el, "margin-right", true);
 
             logger.debug("Item:");
             logger.debug(it);

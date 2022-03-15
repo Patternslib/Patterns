@@ -10,6 +10,8 @@ import registry from "../../core/registry";
 import utils from "../../core/utils";
 
 const log = logging.getLogger("pat.inject");
+log.setLevel(logging.Level.DEBUG);
+
 const TEXT_NODE = 3;
 const COMMENT_NODE = 8;
 
@@ -136,7 +138,7 @@ const inject = {
                     }
                     break;
                 case "autoload-visible":
-                    this._initAutoloadVisible($el, cfgs);
+                    this._initAutoloadVisible($el);
                     break;
                 case "idle":
                     this._initIdleTrigger($el, cfgs[0].delay);
@@ -540,7 +542,7 @@ const inject = {
                     scroll_target.getBoundingClientRect().left +
                         scroll_container_ref.scrollLeft -
                         scroll_container_ref.getBoundingClientRect().left -
-                        utils.getCSSValue(
+                        dom.get_css_value(
                             scroll_container_ref,
                             "border-left-width",
                             true
@@ -550,7 +552,7 @@ const inject = {
                     scroll_target.getBoundingClientRect().top +
                         scroll_container_ref.scrollTop -
                         scroll_container_ref.getBoundingClientRect().top -
-                        utils.getCSSValue(scroll_container_ref, "border-top-width", true)
+                        dom.get_css_value(scroll_container_ref, "border-top-width", true)
                 );
             }
             if (scroll_container === window) {
@@ -960,102 +962,52 @@ const inject = {
         return $html;
     },
 
-    // XXX: hack
-    _initAutoloadVisible($el, cfgs) {
+    _initAutoloadVisible($el) {
         if ($el.data("pat-inject-autoloaded")) {
             // ignore executed autoloads
             return false;
         }
-        const $scrollable = $el.parents(":scrollable");
+
+        const el = $el[0];
 
         // function to trigger the autoload and mark as triggered
         const trigger = (event) => {
             if ($el.data("pat-inject-autoloaded")) {
+                log.debug(`autoload-visible trigger skipped ${el}`);
                 return false;
             }
             $el.data("pat-inject-autoloaded", true);
-            this.onTrigger({ currentTarget: $el[0] });
+            this.onTrigger({ currentTarget: el });
             event && event.preventDefault();
+            log.debug(`autoload-visible trigger run ${el}`);
             return true;
         };
-        $el.click(trigger);
 
-        // Use case 1: a (heigh-constrained) scrollable parent
-        if ($scrollable.length) {
-            // if scrollable parent and visible -> trigger it
-            // we only look at the closest scrollable parent, no nesting
-            // Check visibility for scrollable
-            const checkVisibility = utils.debounce(() => {
-                if ($el.data("patterns.autoload") || !$.contains(document, $el[0])) {
-                    return false;
-                }
-                if (!$el.is(":visible")) {
-                    return false;
-                }
-                if (!utils.elementInViewport($el[0])) {
-                    return false;
-                }
-                // check if the target element still exists. Otherwise halt and catch fire
-                const target = (
-                    $el.data("pat-inject")[0].target || cfgs[0].defaultSelector
-                ).replace(/::element/, "");
-                if (target && target !== "self" && $(target).length === 0) {
-                    return false;
-                }
+        // Config see: https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
+        const intersection_observer_config = {
+            threshold: 0, // If even one pixel is visible, the callback will be run.
+            root: null, // Root is browser viewport. If the element is visible to the user, the callback will be run.
+            margin: "0px", // No margins. The element is not preloaded.
+        };
 
-                // checkVisibility was possibly installed as a scroll
-                // handler and has now served its purpose -> remove
-                $($scrollable[0]).off("scroll", checkVisibility);
-                $(window).off("resize.pat-autoload", checkVisibility);
-                return trigger();
-            }, 100);
-            if (checkVisibility()) {
-                return true;
+        let timeout_id = null;
+        const observer = new IntersectionObserver((entries) => {
+            for (const entry of entries) {
+                if (entry.isIntersecting) {
+                    // Run the callback after 200ms to prevent loading all
+                    // visible elements when scrolling over.
+                    timeout_id = window.setTimeout(() => {
+                        observer.disconnect(); // Stop observing loaded elements.
+                        trigger();
+                    }, 200);
+                    log.debug(`autoload-visible intersecting ${el}`);
+                } else {
+                    window.clearTimeout(timeout_id);
+                    log.debug(`autoload-visible not intersecting ${el}`);
+                }
             }
-            // wait to become visible - again only immediate scrollable parent
-            $($scrollable[0]).on("scroll", checkVisibility);
-            $(window).on("resize.pat-autoload", checkVisibility);
-        } else {
-            // Use case 2: scrolling the entire page
-            // Check visibility for non-scrollable
-            const checkVisibility = utils.debounce(() => {
-                if ($el.parents(":scrollable").length) {
-                    // Because of a resize the element has now a scrollable parent
-                    // and we should reset the correct event
-                    $(window).off(".pat-autoload", checkVisibility);
-                    return this._initAutoloadVisible($el);
-                }
-                if ($el.data("patterns.autoload")) {
-                    return false;
-                }
-                if (!$el.is(":visible")) {
-                    return false;
-                }
-                if (!utils.elementInViewport($el[0])) {
-                    return false;
-                }
-                // check if the target element still exists. Otherwise halt and catch fire
-                const target = (
-                    $el.data("pat-inject")[0].target || cfgs[0].defaultSelector
-                ).replace(/::element/, "");
-                if (target && target !== "self" && $(target).length === 0) {
-                    return false;
-                }
-                $(window).off(".pat-autoload", checkVisibility);
-                return trigger();
-            }, 100);
-            if (checkVisibility()) {
-                return true;
-            }
-            // https://github.com/w3c/IntersectionObserver/tree/master/polyfill
-            if (IntersectionObserver) {
-                const observer = new IntersectionObserver(checkVisibility);
-                $el.each((idx, el) => observer.observe(el));
-            } else {
-                $(window).on("resize.pat-autoload scroll.pat-autoload", checkVisibility);
-            }
-        }
-        return false;
+        }, intersection_observer_config);
+        observer.observe(el);
     },
 
     _initIdleTrigger($el, delay) {

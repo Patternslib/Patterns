@@ -469,21 +469,6 @@ function findRelatives(el) {
     return $relatives;
 }
 
-function getCSSValue(el, property, as_pixels = false, as_float = false) {
-    /* Return a CSS property value for a given DOM node.
-     * For length-values, relative values are converted to pixels.
-     * Optionally parse as pixels, if applicable.
-     */
-    let value = window.getComputedStyle(el).getPropertyValue(property);
-    if (as_pixels || as_float) {
-        value = parseFloat(value) || 0.0;
-    }
-    if (as_pixels && !as_float) {
-        value = parseInt(Math.round(value), 10);
-    }
-    return value;
-}
-
 function get_bounds(el) {
     // Return bounds of an element with it's values rounded and converted to ints.
     const bounds = el.getBoundingClientRect();
@@ -663,7 +648,6 @@ var utils = {
     hasValue: hasValue,
     parseTime: parseTime,
     findRelatives: findRelatives,
-    getCSSValue: getCSSValue,
     get_bounds: get_bounds,
     checkInputSupport: checkInputSupport,
     checkCSSFeature: checkCSSFeature,
@@ -676,6 +660,7 @@ var utils = {
     localized_isodate: localized_isodate,
     escape_html: escape_html,
     unescape_html: unescape_html,
+    getCSSValue: dom.get_css_value, // BBB: moved to dom. TODO: Remove in upcoming version.
 };
 
 export default utils;

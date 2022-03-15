@@ -143,6 +143,63 @@ const create_from_string = (string) => {
     return document.createRange().createContextualFragment(string.trim());
 };
 
+/**
+ * Return a CSS property value for a given DOM node.
+ * For length-values, relative values are converted to pixels.
+ * Optionally parse as pixels, if applicable.
+ *
+ * Note: The element must be attached to the body to make CSS caluclations work.
+ *
+ * @param {Node} el - DOM node.
+ * @param {String} property - CSS property to query on DOM node.
+ * @param {Boolean} [as_pixels=false] - Convert value to pixels, if applicable.
+ * @param {Boolean} [as_float=false] - Convert value to float, if applicable.
+ *
+ * @returns {(String|Number)} - The CSS value to return.
+ */
+function get_css_value(el, property, as_pixels = false, as_float = false) {
+    let value = window.getComputedStyle(el).getPropertyValue(property);
+    if (as_pixels || as_float) {
+        value = parseFloat(value) || 0.0;
+    }
+    if (as_pixels && !as_float) {
+        value = parseInt(Math.round(value), 10);
+    }
+    return value;
+}
+
+/**
+ * Find a scrollable element up in the DOM tree.
+ *
+ * Note: Setting the ``overflow`` shorthand property also sets the individual overflow-y and overflow-y properties.
+ *
+ * @param {Node} el - The DOM element to start the search on.
+ * @param {String} [direction=] - Not given: Search for any scrollable element up in the DOM tree.
+ *                                ``x``: Search for a horizontally scrollable element.
+ *                                ``y``: Search for a vertically scrollable element.
+ *
+ * @returns {Node} - Return the first scrollable element.
+ *                   If no other element could be found, document.body would be returned.
+ */
+const find_scroll_container = (el, direction) => {
+    while (el && el !== document.body) {
+        if (!direction || direction === "y") {
+            let overflow_y = get_css_value(el, "overflow-y");
+            if (["auto", "scroll"].includes(overflow_y)) {
+                return el;
+            }
+        }
+        if (!direction || direction === "x") {
+            let overflow_x = get_css_value(el, "overflow-x");
+            if (["auto", "scroll"].includes(overflow_x)) {
+                return el;
+            }
+        }
+        el = el.parentElement;
+    }
+    return el;
+};
+
 const dom = {
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
@@ -155,6 +212,8 @@ const dom = {
     acquire_attribute: acquire_attribute,
     is_visible: is_visible,
     create_from_string: create_from_string,
+    get_css_value: get_css_value,
+    find_scroll_container: find_scroll_container,
     add_event_listener: events.add_event_listener, // BBB export. TODO: Remove in an upcoming version.
     remove_event_listener: events.remove_event_listener, // BBB export. TODO: Remove in an upcoming version.
 };
