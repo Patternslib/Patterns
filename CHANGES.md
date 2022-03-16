@@ -1,6 +1,43 @@
 
 
-### [7.1.3](https://github.com/Patternslib/patterns/compare/7.1.2...7.1.3) (2022-03-14)
+## [7.2.0](https://github.com/Patternslib/patterns/compare/7.1.3...7.2.0) (2022-03-16)
+
+
+### Features
+
+* **core dom:** Add ``find_scroll_container`` to find a scrollable element up in the DOM tree. ([d9eef9e](https://github.com/Patternslib/patterns/commit/d9eef9ec9af4e189f6da91d860fa671f8cc4aa92))
+
+* **pat inject:** Rework autoload-visible to use an IntersectionObserver. ([4f26006](https://github.com/Patternslib/patterns/commit/4f260066f9b66a12540e6360d02ab2135870a46b))
+The autoload-visible trigger of pat-inject now uses an IntersectionObserver.
+This simplifies the code and improves performance because there are no more complex position calculations involved.
+
+Fixes: https://github.com/Patternslib/Patterns/issues/955
+* **pat inject:** Support delay time for trigger: autoload-visible. ([d951817](https://github.com/Patternslib/patterns/commit/d951817b7ab165deeea2014c8b353dcbfb9fd9b0))
+
+
+
+### Maintenance
+
+* Upgrade dependencies. ([2590bcf](https://github.com/Patternslib/patterns/commit/2590bcf109e91a7d4f44e3def76b15f4bd3c39e9))
+
+* **core dom:** Move utils.getCSSValue to dom.get_css_value and keep a BBB import. ([25e1846](https://github.com/Patternslib/patterns/commit/25e1846c5f43bc77a51d52ef4b88b744be94147e))
+Move utils.getCSSValue to dom.get_css_value and keep a BBB import in utils.
+This change is made for these reasons:
+- Avoid circular imports (even if supported).
+- Code cleanup - move DOM related methods to dom module.
+* **pat bumper:** Update import for get_css_value. ([ccff688](https://github.com/Patternslib/patterns/commit/ccff688ccf2c3fd06800471a5739a63e949bb482))
+
+* **pat bumper:** Use new core.dom.find_scroll_container instead own implementation. ([ab98985](https://github.com/Patternslib/patterns/commit/ab989851a444cdafcd37c66da6ee189b62cea878))
+
+* **pat gallery:** Update import for get_css_value. ([3268b1e](https://github.com/Patternslib/patterns/commit/3268b1efd2ddca5a26604957d339f4da34389408))
+
+* **pat inject:** Update import for get_css_value. ([e378e51](https://github.com/Patternslib/patterns/commit/e378e51f5afd4d1c237baa27bff560a2e5b547b4))
+
+* **pat scroll:** Use new core.dom.find_scroll_container instead own implementation. ([3872aaf](https://github.com/Patternslib/patterns/commit/3872aaf90c5bd9f0293cb1ea21256414224f4f93))
+
+* **pat tabs:** Update import for get_css_value. ([ce50044](https://github.com/Patternslib/patterns/commit/ce500448d87358f86ee7be9833301afa0577c7cc))
+
+* **tests:** Add an IntersectionObserver mock for testing. ([8e84d0f](https://github.com/Patternslib/patterns/commit/8e84d0fc63e04e1d044e23546543c6cdc67f5927))### [7.1.3](https://github.com/Patternslib/patterns/compare/7.1.2...7.1.3) (2022-03-14)
 
 
 ### Bug Fixes
