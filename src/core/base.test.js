@@ -135,13 +135,33 @@ describe("pat-base: The Base class for patterns", function () {
         new Tmp3($("<div>"), { option: "value" });
     });
 
-    it("has on/emit helpers to prefix events", function () {
+    it("has on/emit helpers to prefix events", function (done) {
         var Tmp = Base.extend({
             name: "tmp",
             trigger: ".pat-tmp",
             init: function () {
                 this.on("something", function (e, arg1) {
                     expect(arg1).toEqual("yaay!");
+                    done();
+                });
+                this.emit("somethingelse", ["yaay!"]);
+            },
+        });
+        new Tmp(
+            $("<div/>").on("somethingelse.tmp.patterns", function (e, arg1) {
+                $(this).trigger("something.tmp.patterns", [arg1]);
+            })
+        );
+    });
+
+    it("has ``one`` helper to prefix events", function (done) {
+        var Tmp = Base.extend({
+            name: "tmp",
+            trigger: ".pat-tmp",
+            init: function () {
+                this.one("something", function (e, arg1) {
+                    expect(arg1).toEqual("yaay!");
+                    done();
                 });
                 this.emit("somethingelse", ["yaay!"]);
             },

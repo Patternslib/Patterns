@@ -61,6 +61,9 @@ Base.prototype = {
     on(eventName, eventCallback) {
         this.$el.on(`${eventName}.${this.name}.patterns`, eventCallback);
     },
+    one(eventName, eventCallback) {
+        this.$el.one(`${eventName}.${this.name}.patterns`, eventCallback);
+    },
     emit(eventName, args) {
         // args should be a list
         if (args === undefined) {

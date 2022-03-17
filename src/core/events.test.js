@@ -1,3 +1,4 @@
+import Base from "./base";
 import events from "./events";
 import utils from "./utils";
 
@@ -46,6 +47,35 @@ describe("core.events tests", () => {
             expect(_el.event_list.length).toBe(0);
 
             done();
+        });
+
+        it("Awaits an event to happen", async () => {
+            const el = document.createElement("div");
+
+            window.setTimeout(() => {
+                el.dispatchEvent(new Event("init"));
+            }, 1);
+
+            await events.await_event(el, "init");
+
+            // If test reaches this expect statement, all is fine.
+            expect(true).toBe(true);
+        });
+
+        it("Awaits a pattern to be initialized", async () => {
+            const pat = Base.extend({
+                name: "tmp",
+                trigger: ".pat-tmp",
+                init: function () {},
+            });
+
+            const el = document.createElement("div");
+            const instance = new pat(el);
+
+            await events.await_pattern_init(instance);
+
+            // If test reaches this expect statement, all is fine.
+            expect(true).toBe(true);
         });
     });
 
