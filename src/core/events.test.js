@@ -1,3 +1,4 @@
+import Base from "./base";
 import events from "./events";
 import utils from "./utils";
 
@@ -56,6 +57,22 @@ describe("core.events tests", () => {
             }, 1);
 
             await events.await_event(el, "init");
+
+            // If test reaches this expect statement, all is fine.
+            expect(true).toBe(true);
+        });
+
+        it("Awaits a pattern to be initialized", async () => {
+            const pat = Base.extend({
+                name: "tmp",
+                trigger: ".pat-tmp",
+                init: function () {},
+            });
+
+            const el = document.createElement("div");
+            const instance = new pat(el);
+
+            await events.await_pattern_init(instance);
 
             // If test reaches this expect statement, all is fine.
             expect(true).toBe(true);

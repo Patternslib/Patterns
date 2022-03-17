@@ -78,6 +78,22 @@ const await_event = (el, event_name) => {
 };
 
 /**
+ * Await pattern init.
+ *
+ * Usage:
+ *     await events.await_pattern_init(PATTERN);
+ *
+ * @param {Pattern instance} pattern - The pattern instance.
+ *
+ * @returns {Promise} - Returns a Promise which can be used for ``await`` and which will be resolved when the event is throwm.
+ *
+ */
+const await_pattern_init = (pattern) => {
+    // See: https://stackoverflow.com/a/44746691/1337474
+    return new Promise((resolve) => pattern.one("init", resolve));
+};
+
+/**
  * Event factories
  */
 
@@ -120,6 +136,7 @@ export default {
     add_event_listener: add_event_listener,
     remove_event_listener: remove_event_listener,
     await_event: await_event,
+    await_pattern_init: await_pattern_init,
     click_event: click_event,
     change_event: change_event,
     input_event: input_event,
