@@ -43,8 +43,16 @@ export default Base.extend({
     },
 
     _init() {
-        const scroll_container_y = dom.find_scroll_container(this.el.parentElement, "y");
-        const scroll_container_x = dom.find_scroll_container(this.el.parentElement, "x");
+        const scroll_container_y = dom.find_scroll_container(
+            this.el.parentElement,
+            "y",
+            null
+        );
+        const scroll_container_x = dom.find_scroll_container(
+            this.el.parentElement,
+            "x",
+            null
+        );
 
         const pos = {
             top: dom.get_css_value(this.el, "top", true),
@@ -52,28 +60,28 @@ export default Base.extend({
             bottom: dom.get_css_value(this.el, "bottom", true),
             left: dom.get_css_value(this.el, "left", true),
         };
-        const intersection_observer_config_y = {
+        const intersection_observer_config = {
             threshold: [1, 0.99, 0.97, 0.96, 0.95, 0.94, 0.93, 0.92, 0.91, 0.9],
-            root: scroll_container_y,
             // add margin as inverted sticky positions.
             rootMargin: `${-pos.top - 1}px ${-pos.right - 1}px ${-pos.bottom - 1}px ${-pos.left - 1}px`, // prettier-ignore
         };
 
         const observer_y = new IntersectionObserver(
             this._intersection_observer_callback.bind(this),
-            intersection_observer_config_y
+            {
+                ...intersection_observer_config,
+                root: scroll_container_y,
+            }
         );
         observer_y.observe(this.el);
 
         if (scroll_container_x !== scroll_container_y) {
-            const intersection_observer_config_x = Object.assign(
-                {},
-                intersection_observer_config_y,
-                { root: scroll_container_x }
-            );
             const observer_x = new IntersectionObserver(
                 this._intersection_observer_callback.bind(this),
-                intersection_observer_config_x
+                {
+                    ...intersection_observer_config,
+                    root: scroll_container_x,
+                }
             );
             observer_x.observe(this.el);
         }
