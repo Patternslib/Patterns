@@ -668,7 +668,7 @@ describe("core.dom tests", () => {
             expect(dom.find_scroll_container(div3, "x")).toBe(div1);
             done();
         });
-        it("returns document.body if nothing else is found", function (done) {
+        it("returns a fallback if given, if nothing else is found", function (done) {
             document.body.innerHTML = `
               <div
                   id="div1"
@@ -679,7 +679,7 @@ describe("core.dom tests", () => {
               </div>
             `;
             const div2 = document.querySelector("#div2");
-            expect(dom.find_scroll_container(div2, "y")).toBe(document.body);
+            expect(dom.find_scroll_container(div2, "y", null)).toBe(null);
             done();
         });
     });

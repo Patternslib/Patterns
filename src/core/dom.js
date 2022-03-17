@@ -177,11 +177,13 @@ function get_css_value(el, property, as_pixels = false, as_float = false) {
  * @param {String} [direction=] - Not given: Search for any scrollable element up in the DOM tree.
  *                                ``x``: Search for a horizontally scrollable element.
  *                                ``y``: Search for a vertically scrollable element.
+ * @param {(DOM Node|null)} [fallback=document.body] - Fallback, if no scroll container can be found.
+ *                                                     The default is to use document.body.
  *
  * @returns {Node} - Return the first scrollable element.
  *                   If no other element could be found, document.body would be returned.
  */
-const find_scroll_container = (el, direction) => {
+const find_scroll_container = (el, direction, fallback = document.body) => {
     while (el && el !== document.body) {
         if (!direction || direction === "y") {
             let overflow_y = get_css_value(el, "overflow-y");
@@ -197,7 +199,7 @@ const find_scroll_container = (el, direction) => {
         }
         el = el.parentElement;
     }
-    return el;
+    return fallback;
 };
 
 const dom = {
