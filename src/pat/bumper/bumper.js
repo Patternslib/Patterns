@@ -43,8 +43,16 @@ export default Base.extend({
     },
 
     _init() {
-        const scroll_container_y = dom.find_scroll_container(this.el.parentElement, "y");
-        const scroll_container_x = dom.find_scroll_container(this.el.parentElement, "x");
+        const scroll_container_y = dom.find_scroll_container(
+            this.el.parentElement,
+            "y",
+            null
+        );
+        const scroll_container_x = dom.find_scroll_container(
+            this.el.parentElement,
+            "x",
+            null
+        );
 
         const pos = {
             top: dom.get_css_value(this.el, "top", true),
