@@ -59,6 +59,25 @@ const remove_event_listener = (el, id) => {
 };
 
 /**
+ * Await an event to be thrown.
+ *
+ * Usage:
+ *     await events.await_event(button, "click");
+ *
+ * @param {DOM Node} el - The element to listen on.
+ * @param {String} event_name - The event name to listen for.
+ *
+ * @returns {Promise} - Returns a Promise which can be used for ``await`` and which will be resolved when the event is throwm.
+ *
+ */
+const await_event = (el, event_name) => {
+    // See: https://stackoverflow.com/a/44746691/1337474
+    return new Promise((resolve) =>
+        el.addEventListener(event_name, resolve, { once: true })
+    );
+};
+
+/**
  * Event factories
  */
 
@@ -100,6 +119,7 @@ const submit_event = () => {
 export default {
     add_event_listener: add_event_listener,
     remove_event_listener: remove_event_listener,
+    await_event: await_event,
     click_event: click_event,
     change_event: change_event,
     input_event: input_event,

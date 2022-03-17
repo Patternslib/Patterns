@@ -47,6 +47,19 @@ describe("core.events tests", () => {
 
             done();
         });
+
+        it("Awaits an event to happen", async () => {
+            const el = document.createElement("div");
+
+            window.setTimeout(() => {
+                el.dispatchEvent(new Event("init"));
+            }, 1);
+
+            await events.await_event(el, "init");
+
+            // If test reaches this expect statement, all is fine.
+            expect(true).toBe(true);
+        });
     });
 
     describe("2 - event factories", () => {
