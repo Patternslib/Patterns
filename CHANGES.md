@@ -1,6 +1,29 @@
 
 
-## [7.2.0](https://github.com/Patternslib/patterns/compare/7.1.3...7.2.0) (2022-03-16)
+## [7.3.0](https://github.com/Patternslib/patterns/compare/7.2.0...7.3.0) (2022-03-17)
+
+
+### Features
+
+* **core base:** Add one event listener to listen for Pattern events only once. ([1028a6d](https://github.com/Patternslib/patterns/commit/1028a6d3a2a15dd72d62b9652e4d39e3c98577e8))
+
+* **core dom:** Add a fallback option to find_scroll_container to return something else than document.body if no other scroll container can be found. ([ac220fd](https://github.com/Patternslib/patterns/commit/ac220fd2a38c50acc27b0abe6f900077d4fa9bbb))
+
+* **core events:** Add await_event for using await statements to wait for an event to happen. ([1e264c1](https://github.com/Patternslib/patterns/commit/1e264c1fe301beb4b9f95614ffc4e3f000cf570f))
+
+* **core events:** Add await_pattern_init helper which can be used to await the event when a pattern instance is initialized. ([ac371e0](https://github.com/Patternslib/patterns/commit/ac371e0ecc57ffd204cfaef1be5b44f266c94fe2))
+
+
+
+### Bug Fixes
+
+* **pat bumper:** Fallback to null if no scroll container can be found. Fixes a problem with initalization of the IntersectionObserver introduced in 7.2.0. ([c04ea75](https://github.com/Patternslib/patterns/commit/c04ea752f47609f06368b73b6ca3783bc108b55f))
+
+
+
+### Maintenance
+
+* **pat bumper:** Minor code cleanup. ([edfec61](https://github.com/Patternslib/patterns/commit/edfec619e7c54786b5a82914dce8efaf7fd2c3c8))## [7.2.0](https://github.com/Patternslib/patterns/compare/7.1.3...7.2.0) (2022-03-16)
 
 
 ### Features
