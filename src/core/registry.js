@@ -38,8 +38,21 @@ while ((match = dont_catch_re.exec(window.location.search)) !== null) {
     log.info("I will not catch init exceptions");
 }
 
+/**
+ * Global pattern registry.
+ *
+ * This is a singleton and shared among any instance of the Patternslib
+ * registry since Patternslib version 8.
+ *
+ * You normally don't need this as the registry handles it for you.
+ */
+if (typeof window.__patternslib_registry === "undefined") {
+    window.__patternslib_registry = {};
+}
+export const PATTERN_REGISTRY = window.__patternslib_registry;
+
 const registry = {
-    patterns: {},
+    patterns: PATTERN_REGISTRY, // reference to global patterns registry
     // as long as the registry is not initialized, pattern
     // registration just registers a pattern. Once init is called,
     // the DOM is scanned. After that registering a new pattern
@@ -57,7 +70,9 @@ const registry = {
     clear() {
         // Removes all patterns from the registry. Currently only being
         // used in tests.
-        this.patterns = {};
+        for (const name in registry.patterns) {
+            delete registry.patterns[name];
+        }
     },
 
     transformPattern(name, content) {
@@ -176,7 +191,7 @@ const registry = {
             return false;
         }
         if (registry.patterns[name]) {
-            log.error("Already have a pattern called: " + name);
+            log.info("Already have a pattern called: " + name);
             return false;
         }
 
