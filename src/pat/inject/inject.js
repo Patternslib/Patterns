@@ -726,7 +726,7 @@ const inject = {
             }
         });
         // Put the execute class on the elem that has pat inject on it
-        cfgs.filter((cfg) => cfg?.loadingClass).forEach((cfg) =>
+        cfgs.filter((cfg) => cfg?.executingClass).forEach((cfg) =>
             $el.addClass(cfg.executingClass)
         );
 
