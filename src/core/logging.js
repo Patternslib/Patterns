@@ -41,39 +41,6 @@ var Level = {
     FATAL: 50,
 };
 
-function IEConsoleWriter() {}
-
-IEConsoleWriter.prototype = {
-    output: function (log_name, level, messages) {
-        // console.log will magically appear in IE8 when the user opens the
-        // F12 Developer Tools, so we have to test for it every time.
-        if (typeof window.console === "undefined" || typeof console.log === "undefined")
-            return;
-        if (log_name) messages.unshift(log_name + ":");
-        var message = messages.join(" ");
-
-        // Under some conditions console.log will be available but the
-        // other functions are missing.
-        if (typeof console.info === "undefined") {
-            var level_name;
-            if (level <= Level.DEBUG) level_name = "DEBUG";
-            else if (level <= Level.INFO) level_name = "INFO";
-            else if (level <= Level.WARN) level_name = "WARN";
-            else if (level <= Level.ERROR) level_name = "ERROR";
-            else level_name = "FATAL";
-            console.log("[" + level_name + "] " + message);
-        } else {
-            if (level <= Level.DEBUG) {
-                // console.debug exists but is deprecated
-                message = "[DEBUG] " + message;
-                console.log(message);
-            } else if (level <= Level.INFO) console.info(message);
-            else if (level <= Level.WARN) console.warn(message);
-            else console.error(message);
-        }
-    },
-};
-
 function ConsoleWriter() {}
 
 ConsoleWriter.prototype = {
@@ -184,15 +151,7 @@ function setWriter(w) {
     writer = w;
 }
 
-if (
-    !window.console ||
-    !window.console.log ||
-    typeof window.console.log.apply !== "function"
-) {
-    setWriter(new IEConsoleWriter());
-} else {
-    setWriter(new ConsoleWriter());
-}
+setWriter(new ConsoleWriter());
 
 root = new Logger();
 

@@ -34,7 +34,6 @@
         "slides": "git+https://github.com/Patternslib/slides.git",
         "spectrum-colorpicker": "^1.8.0",
         "tippy.js": "^6.3.7",
-        "underscore": "^1.13.2",
         "url-polyfill": "^1.1.9",
         "whatwg-fetch": "^3.4.0"
     },

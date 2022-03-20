@@ -2,7 +2,6 @@ import registry from "./registry";
 import $ from "jquery";
 import Base from "./base";
 import utils from "./utils";
-import _ from "underscore";
 import { jest } from "@jest/globals";
 
 describe("pat-base: The Base class for patterns", function () {
@@ -23,7 +22,7 @@ describe("pat-base: The Base class for patterns", function () {
             some: "thing",
             init: function () {
                 expect(this.$el.hasClass("pat-example")).toEqual(true);
-                expect(_.includes(_.keys(this.options), "option")).toBeTruthy();
+                expect(Object.keys(this.options).includes("option")).toBeTruthy();
                 this.extra();
             },
             extra: function () {
@@ -69,7 +68,7 @@ describe("pat-base: The Base class for patterns", function () {
         expect(NewPattern.prototype.name).toEqual("example");
         expect(registry.register).toHaveBeenCalled();
         expect(Object.keys(registry.patterns).length).toEqual(1);
-        expect(_.includes(_.keys(registry.patterns), "example")).toBeTruthy();
+        expect(Object.keys(registry.patterns).includes("example")).toBeTruthy();
     });
 
     it('will not automatically register a pattern without a "name" attribute', function () {
