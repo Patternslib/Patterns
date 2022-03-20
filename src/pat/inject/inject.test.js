@@ -319,7 +319,11 @@ describe("pat-inject", function () {
             const el = document.createElement("div");
             el.innerHTML = res;
 
-            const test1_config = JSON.parse(el.querySelector(".test1").getAttribute("data-pat-inject")); // prettier-ignore
+            const test1_config_text = el
+                .querySelector(".test1")
+                .getAttribute("data-pat-inject");
+            console.log(test1_config_text);
+            const test1_config = JSON.parse(test1_config_text);
             expect(test1_config.url).toEqual("https://example.com/test/./index.html"); // prettier-ignore
 
             const test2_config = JSON.parse(el.querySelector(".test2").getAttribute("data-pat-calendar")); // prettier-ignore
@@ -362,7 +366,11 @@ describe("pat-inject", function () {
             const el = document.createElement("div");
             el.innerHTML = res;
 
-            const test1_config = JSON.parse(el.querySelector(".test1").getAttribute("data-pat-inject")); // prettier-ignore
+            const test1_config_text = el
+                .querySelector(".test1")
+                .getAttribute("data-pat-inject");
+            console.log(test1_config_text);
+            const test1_config = JSON.parse(test1_config_text);
 
             expect(test1_config.length).toBe(3);
             expect(test1_config[0].url).toEqual("https://example.com/test/./index.html");
@@ -386,9 +394,11 @@ describe("pat-inject", function () {
             const el = document.createElement("div");
             el.innerHTML = res;
 
-            const test_config = JSON.parse(
-                el.querySelector("#test").getAttribute("data-pat-calendar")
-            );
+            const test_config_text = el
+                .querySelector("#test")
+                .getAttribute("data-pat-calendar");
+            console.log(test_config_text);
+            const test_config = JSON.parse(test_config_text);
             expect(test_config.url).toEqual("");
             expect(test_config["event-sources"]).toEqual([
                 "https://example.com/test/../calendar2.json",
