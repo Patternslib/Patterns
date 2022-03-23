@@ -225,8 +225,6 @@ describe("Navigation pattern tests - no predefined structure", function () {
         const w11 = nav.querySelector(".w11");
         const a11 = nav.querySelector(".a11");
 
-        console.log(document.body.innerHTML);
-
         expect(w1.classList.contains("current")).toBeFalsy();
         expect(w1.classList.contains("navigation-in-path")).toBeTruthy();
         expect(a1.classList.contains("current")).toBeFalsy();

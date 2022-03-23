@@ -322,7 +322,6 @@ describe("pat-inject", function () {
             const test1_config_text = el
                 .querySelector(".test1")
                 .getAttribute("data-pat-inject");
-            console.log(test1_config_text);
             const test1_config = JSON.parse(test1_config_text);
             expect(test1_config.url).toEqual("https://example.com/test/./index.html"); // prettier-ignore
 
@@ -369,7 +368,6 @@ describe("pat-inject", function () {
             const test1_config_text = el
                 .querySelector(".test1")
                 .getAttribute("data-pat-inject");
-            console.log(test1_config_text);
             const test1_config = JSON.parse(test1_config_text);
 
             expect(test1_config.length).toBe(3);
@@ -397,7 +395,6 @@ describe("pat-inject", function () {
             const test_config_text = el
                 .querySelector("#test")
                 .getAttribute("data-pat-calendar");
-            console.log(test_config_text);
             const test_config = JSON.parse(test_config_text);
             expect(test_config.url).toEqual("");
             expect(test_config["event-sources"]).toEqual([
