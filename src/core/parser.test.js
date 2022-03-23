@@ -782,6 +782,18 @@ describe("The Patterns parser", function () {
                 parser.addArgument("value", false);
                 expect(parser._coerce("value", "unknown")).toBe(false);
             });
+
+            it("String with on", function () {
+                var parser = new ArgumentParser();
+                parser.addArgument("value", false);
+                expect(parser._coerce("value", "on")).toBe(true);
+            });
+
+            it("String with off", function () {
+                var parser = new ArgumentParser();
+                parser.addArgument("value", false);
+                expect(parser._coerce("value", "off")).toBe(false);
+            });
         });
 
         describe("Convert to number", function () {

@@ -161,7 +161,8 @@ class ArgumentParser {
                                     value === "true" ||
                                     value === "y" ||
                                     value === "yes" ||
-                                    value === "y";
+                                    value === "y" ||
+                                    value === "on";
                         } else if (typeof value === "number") {
                             value = !!value;
                         } else {
