@@ -1,6 +1,51 @@
 
 
-## [7.3.0](https://github.com/Patternslib/patterns/compare/7.2.0...7.3.0) (2022-03-17)
+## [7.4.0](https://github.com/Patternslib/patterns/compare/7.3.0...7.4.0) (2022-03-24)
+
+
+### Features
+
+* **core parser:** Also convert on/off values to boolean for boolean arguments. ([985f4e2](https://github.com/Patternslib/patterns/commit/985f4e23716ce1509b2a4217ca046906414ca57f))
+
+* **pat ajax:** Allow caching of ajax requests by using the option cache which can be set to caching or no-caching. ([49dbecf](https://github.com/Patternslib/patterns/commit/49dbecff6a2189092b1d83b0d3d0c8f490e9290f))
+
+* **pat inject:** Allow caching of ajax requests by using the option cache which can be set to caching or no-caching. ([8376c56](https://github.com/Patternslib/patterns/commit/8376c5612464071825cbe380a059363570846685))
+
+
+
+### Bug Fixes
+
+* **pat inject:** Fix logic for adding executing-class to the pat-inject element. ([e8531de](https://github.com/Patternslib/patterns/commit/e8531de0e4bc2a4626d8c8aa702415975f4c58f4))
+
+
+
+### Breaking Changes
+
+* **core pluggable:** Remove unused pluggable module. ([c5c2e1b](https://github.com/Patternslib/patterns/commit/c5c2e1b2f938a1be1e78574a8f7987d224e57088))
+
+
+
+### Maintenance
+
+* **Build:** Upgrade dependencies. ([e5b8fe4](https://github.com/Patternslib/patterns/commit/e5b8fe4bf838f0ff14e279cdf71eb1d23c634b49))
+
+* **Build:** Use node version 16 and upgrade setup-node and checkout actions. ([3c98bfa](https://github.com/Patternslib/patterns/commit/3c98bfa2137b15c6159f56e8c8adecd859992ba8))
+
+* **core base:** Un-underscore core.base tests. ([4a0ad4b](https://github.com/Patternslib/patterns/commit/4a0ad4b5187dcfe6bd3567a4c8917482f0a66d12))
+
+* **core logging:** Cleanup - remove IE8 compatibility code for console.log. ([da0d9d9](https://github.com/Patternslib/patterns/commit/da0d9d92c5f5315b1ea7f1016ea7440c97c8a316))
+
+* **core parser:** Un-underscore core.parser tests. ([5faec93](https://github.com/Patternslib/patterns/commit/5faec93378edab0abc23878c9fbb5204ae144ad5))
+
+* **core utils:** Un-underscore core.utils. ([cd9c00d](https://github.com/Patternslib/patterns/commit/cd9c00d02d0f4a0c42befd1f1090a768c60370c7))
+
+* **Dependencies:** Remove now unused dependency Underscore.js. ([874c6c1](https://github.com/Patternslib/patterns/commit/874c6c15ae54ac8acc2310e9ed0fd82dc4eef3b4))
+
+* **pat inject:** Remove console.log statements from tests. ([3db47fe](https://github.com/Patternslib/patterns/commit/3db47fe6c9367bdf17bb5a47939367ad47a174a6))
+
+* **pat inject:** Un-underscore pat-inject. ([584420c](https://github.com/Patternslib/patterns/commit/584420ce5f77b1afaa0c84cee11d1dc36b133b88))
+
+* **pat navigation:** Remove console.log statement from tests. ([a20fbd4](https://github.com/Patternslib/patterns/commit/a20fbd4c051d6f619f33a5af2d219c560653e7a3))## [7.3.0](https://github.com/Patternslib/patterns/compare/7.2.0...7.3.0) (2022-03-17)
 
 
 ### Features
