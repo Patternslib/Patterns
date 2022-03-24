@@ -27,6 +27,7 @@ parser.addArgument("trigger", "default", [
     "idle",
 ]);
 parser.addArgument("delay"); // only used in autoload
+parser.addArgument("browser-cache", "no-cache", ["cache", "no-cache"]); // Cache ajax requests. Pass to pat-ajax.
 parser.addArgument("confirm", "class", ["never", "always", "form-data", "class"]);
 parser.addArgument("confirm-message", "Are you sure you want to leave this page?");
 parser.addArgument("hooks", [], ["raptor"], true); // After injection, pat-inject will trigger an event for each hook: pat-inject-hook-$(hook)
@@ -740,7 +741,10 @@ const inject = {
         );
 
         if (cfgs[0].url.length) {
-            ajax.request($el, { url: cfgs[0].url });
+            ajax.request($el, {
+                "url": cfgs[0].url,
+                "browser-cache": cfgs[0].browserCache,
+            });
         } else {
             // If there is no url specified, then content is being fetched
             // from the same page.

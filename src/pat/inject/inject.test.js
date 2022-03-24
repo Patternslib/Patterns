@@ -1414,4 +1414,70 @@ describe("pat-inject", function () {
             expect(el.textContent).toBe("OK");
         });
     });
+
+    describe("caching", () => {
+        afterEach(function () {
+            document.body.innerHTML = "";
+        });
+
+        it("does not cache by default", async function () {
+            const spy_ajax = jest.spyOn($, "ajax");
+            document.body.innerHTML = `<a
+                href="hello.html"
+                class="pat-inject"
+                />`;
+            registry.scan(document.body);
+            await utils.timeout(1);
+            document.body.querySelector(".pat-inject").click();
+            const ajaxargs = spy_ajax.mock.calls[spy_ajax.mock.calls.length - 1][0];
+            expect(ajaxargs.cache).toBe(false);
+            spy_ajax.mockRestore();
+        });
+
+        it("does not cache when explicitly set", async function () {
+            const spy_ajax = jest.spyOn($, "ajax");
+            document.body.innerHTML = `<a
+                href="hello.html"
+                class="pat-inject"
+                data-pat-inject="browser-cache: no-cache"
+                />`;
+            registry.scan(document.body);
+            await utils.timeout(1);
+            document.body.querySelector(".pat-inject").click();
+            const ajaxargs = spy_ajax.mock.calls[spy_ajax.mock.calls.length - 1][0];
+            expect(ajaxargs.cache).toBe(false);
+            spy_ajax.mockRestore();
+        });
+
+        it("does cache when explicitly set", async function () {
+            const spy_ajax = jest.spyOn($, "ajax");
+            document.body.innerHTML = `<a
+                href="hello.html"
+                class="pat-inject"
+                data-pat-inject="browser-cache: cache"
+                />`;
+            registry.scan(document.body);
+            await utils.timeout(1);
+            document.body.querySelector(".pat-inject").click();
+            const ajaxargs = spy_ajax.mock.calls[spy_ajax.mock.calls.length - 1][0];
+            expect(ajaxargs.cache).toBe(true);
+            spy_ajax.mockRestore();
+        });
+
+        it("does not cache on POST forms, regardless of the setting", async function () {
+            const spy_ajax = jest.spyOn($, "ajax");
+            document.body.innerHTML = `<form
+                class="pat-inject"
+                action="submit.html"
+                method="POST"
+                data-pat-ajax="browser-cache: cache"
+                />`;
+            registry.scan(document.body);
+            await utils.timeout(1);
+            $(".pat-inject").submit(); // need jquery submit here
+            const ajaxargs = spy_ajax.mock.calls[spy_ajax.mock.calls.length - 1][0];
+            expect(ajaxargs.cache).toBe(false);
+            spy_ajax.mockRestore();
+        });
+    });
 });

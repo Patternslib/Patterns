@@ -154,4 +154,62 @@ describe("pat-ajax", function () {
             expect(ajaxargs.headers).toEqual({ Accept: "*/*" });
         });
     });
+
+    describe("caching", () => {
+        afterEach(function () {
+            document.body.innerHTML = "";
+        });
+
+        it("does not cache by default", function () {
+            const spy_ajax = jest.spyOn($, "ajax");
+            document.body.innerHTML = `<a
+                class="pat-ajax"
+                />`;
+            registry.scan(document.body);
+            document.body.querySelector(".pat-ajax").click();
+            const ajaxargs = spy_ajax.mock.calls[spy_ajax.mock.calls.length - 1][0];
+            expect(ajaxargs.cache).toBe(false);
+            spy_ajax.mockRestore();
+        });
+
+        it("does not cache when explicitly set", function () {
+            const spy_ajax = jest.spyOn($, "ajax");
+            document.body.innerHTML = `<a
+                class="pat-ajax"
+                data-pat-ajax="browser-cache: no-cache"
+                />`;
+            registry.scan(document.body);
+            document.body.querySelector(".pat-ajax").click();
+            const ajaxargs = spy_ajax.mock.calls[spy_ajax.mock.calls.length - 1][0];
+            expect(ajaxargs.cache).toBe(false);
+            spy_ajax.mockRestore();
+        });
+
+        it("does cache when explicitly set", function () {
+            const spy_ajax = jest.spyOn($, "ajax");
+            document.body.innerHTML = `<a
+                class="pat-ajax"
+                data-pat-ajax="browser-cache: cache"
+                />`;
+            registry.scan(document.body);
+            document.body.querySelector(".pat-ajax").click();
+            const ajaxargs = spy_ajax.mock.calls[spy_ajax.mock.calls.length - 1][0];
+            expect(ajaxargs.cache).toBe(true);
+            spy_ajax.mockRestore();
+        });
+
+        it("does not cache on POST forms, regardless of the setting", function () {
+            const spy_ajax = jest.spyOn($, "ajax");
+            document.body.innerHTML = `<form
+                class="pat-ajax"
+                method="POST"
+                data-pat-ajax="browser-cache: cache"
+                />`;
+            registry.scan(document.body);
+            $(".pat-ajax").submit(); // need jquery submit here
+            const ajaxargs = spy_ajax.mock.calls[spy_ajax.mock.calls.length - 1][0];
+            expect(ajaxargs.cache).toBe(false);
+            spy_ajax.mockRestore();
+        });
+    });
 });

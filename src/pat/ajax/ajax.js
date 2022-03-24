@@ -18,11 +18,7 @@ parser.addArgument("url", function ($el) {
         $el.is("a") ? $el.attr("href") : $el.is("form") ? $el.attr("action") : ""
     ).split("#")[0];
 });
-
-$.ajaxSetup({
-    // Disable caching of AJAX responses
-    cache: false,
-});
+parser.addArgument("browser-cache", "no-cache", ["cache", "no-cache"]); // Cache ajax requests
 
 const xhrCount = {};
 xhrCount.get = function (a) {
@@ -104,6 +100,7 @@ const _ = {
             headers: {},
             url: cfg.url,
             method: $el.attr("method") ? $el.attr("method") : "GET",
+            cache: cfg.browserCache === "cache" ? true : false,
         };
 
         if (cfg.accept) {
