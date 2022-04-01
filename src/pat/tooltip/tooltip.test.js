@@ -110,6 +110,8 @@ describe("pat-tooltip", () => {
                 const expected =
                     container[0].querySelector(".tippy-content").textContent;
                 expect(expected).toBe(title);
+
+                spy_show.mockRestore();
             });
 
             it("1.2.2 - and only to the corresponding container", async () => {
@@ -191,6 +193,9 @@ describe("pat-tooltip", () => {
                 expect(expected).toBe(title);
                 const duration = timer["onShow"] - timer["onTrigger"];
                 expect(duration / 500).toBeCloseTo(1, 1);
+
+                spy_show.mockRestore();
+                spy_trigger.mockRestore();
             });
         });
     });
@@ -225,6 +230,9 @@ describe("pat-tooltip", () => {
                 testutils.click($el);
                 await utils.timeout(50);
                 expect(spy_hide).toHaveBeenCalled();
+
+                spy_show.mockRestore();
+                spy_hide.mockRestore();
             });
 
             it("2.1.2 - with `trigger: hover` it will close when hovering outside the tooltip element", async () => {
@@ -239,9 +247,9 @@ describe("pat-tooltip", () => {
                 const spy_hide = jest.spyOn(tp, "onHide");
 
                 // Shortcut any checks for mouse positions and just hide.
-                jest.spyOn(instance.tippy, "hideWithInteractivity").mockImplementation(
-                    instance.tippy.hide
-                );
+                const spy_inter = jest
+                    .spyOn(instance.tippy, "hideWithInteractivity")
+                    .mockImplementation(instance.tippy.hide);
 
                 testutils.mouseenter($el);
                 await utils.timeout(1);
@@ -251,6 +259,10 @@ describe("pat-tooltip", () => {
                 testutils.mouseleave($el);
                 await utils.timeout(1);
                 expect(spy_hide).toHaveBeenCalled();
+
+                spy_show.mockRestore();
+                spy_hide.mockRestore();
+                spy_inter.mockRestore();
             });
         });
 
@@ -283,6 +295,9 @@ describe("pat-tooltip", () => {
                 testutils.click($el);
                 await utils.timeout(50);
                 expect(spy_hide).toHaveBeenCalled();
+
+                spy_show.mockRestore();
+                spy_hide.mockRestore();
             });
 
             it("2.2.2 - with `trigger: hover` the tooltip is only closed when clicking outside", async () => {
@@ -308,6 +323,9 @@ describe("pat-tooltip", () => {
                 testutils.click($el);
                 await utils.timeout(50);
                 expect(spy_hide).toHaveBeenCalled();
+
+                spy_show.mockRestore();
+                spy_hide.mockRestore();
             });
         });
 
@@ -346,6 +364,9 @@ describe("pat-tooltip", () => {
                 closebutton.click();
                 await utils.timeout(50);
                 expect(spy_hide).toHaveBeenCalled();
+
+                spy_show.mockRestore();
+                spy_hide.mockRestore();
             });
 
             it("2.3.2 - with `trigger: hover` the tooltip is only closed when clicking outside", async () => {
@@ -376,6 +397,9 @@ describe("pat-tooltip", () => {
                 closebutton.click();
                 await utils.timeout(50);
                 expect(spy_hide).toHaveBeenCalled();
+
+                spy_show.mockRestore();
+                spy_hide.mockRestore();
             });
 
             it("2.3.3 - a close-panel doesn't prevent a form submit.", async () => {
@@ -463,6 +487,9 @@ describe("pat-tooltip", () => {
             expect(container[1].querySelector(".tippy-content").textContent).toBe(
                 title2
             );
+
+            spy_show1.mockRestore();
+            spy_show2.mockRestore();
         });
     });
 
@@ -666,6 +693,9 @@ describe("pat-tooltip", () => {
                 //expect(containers.length).toEqual(0);
                 expect(el.classList.contains("tooltip-active-click")).toBeFalsy();
                 expect(el.classList.contains("tooltip-inactive")).toBeTruthy();
+
+                spy_show.mockRestore();
+                spy_hide.mockRestore();
             });
             it("5.1.2 - when false, the trigger does not get the active/inactive class", async () => {
                 const $el = testutils.createTooltip({
@@ -704,6 +734,9 @@ describe("pat-tooltip", () => {
                 //expect(containers.length).toEqual(0);
                 expect(el.classList.contains("tooltip-active-click")).toBeFalsy();
                 expect(el.classList.contains("tooltip-inactive")).toBeFalsy();
+
+                spy_show.mockRestore();
+                spy_hide.mockRestore();
             });
             it("5.1.3 - when true and trigger is hover, toggles a different active class on the trigger", async () => {
                 const $el = testutils.createTooltip({
@@ -728,6 +761,8 @@ describe("pat-tooltip", () => {
                 expect(containers.length).toEqual(1);
                 expect(el.classList.contains("tooltip-active-hover")).toBeTruthy();
                 expect(el.classList.contains("tooltip-inactive")).toBeFalsy();
+
+                spy_show.mockRestore();
             });
         });
         describe(`5.2 - if the 'trigger' parameter is 'hover'`, () => {
@@ -758,6 +793,8 @@ describe("pat-tooltip", () => {
                     expect(
                         container[0].querySelector(".tippy-content").textContent
                     ).toBe(title);
+
+                    spy_show.mockRestore();
                 });
                 it("5.2.1.2 - will hide the tooltip on mouseleave", async () => {
                     const $el = testutils.createTooltip({
@@ -770,10 +807,9 @@ describe("pat-tooltip", () => {
                     const spy_hide = jest.spyOn(instance.tippy.props, "onHide");
 
                     // Shortcut any checks for mouse positions and just hide.
-                    jest.spyOn(
-                        instance.tippy,
-                        "hideWithInteractivity"
-                    ).mockImplementation(instance.tippy.hide);
+                    const spy_inter = jest
+                        .spyOn(instance.tippy, "hideWithInteractivity")
+                        .mockImplementation(instance.tippy.hide);
 
                     testutils.mouseenter($el);
                     await utils.timeout(1);
@@ -784,6 +820,9 @@ describe("pat-tooltip", () => {
                     await utils.timeout(1);
                     expect(spy_hide).toHaveBeenCalled();
                     expect(document.querySelectorAll(".tippy-box").length).toEqual(0);
+
+                    spy_hide.mockRestore();
+                    spy_inter.mockRestore();
                 });
             });
             describe(`5.2.2 - if the 'source' parameter is 'content'`, () => {
@@ -806,6 +845,8 @@ describe("pat-tooltip", () => {
                     expect(document.querySelector(".tippy-box").textContent).toBe(
                         content
                     );
+
+                    spy_show.mockRestore();
                 });
             });
         });
@@ -996,7 +1037,9 @@ describe("pat-tooltip", () => {
                 "External content fetched via an HTTP request."
             );
 
-            global.fetch.mockClear();
+            spy_content.mockRestore();
+            spy_show.mockRestore();
+            global.fetch.mockRestore();
             delete global.fetch;
         });
 
@@ -1027,7 +1070,9 @@ describe("pat-tooltip", () => {
                 document.querySelector(".tippy-box .tippy-content .pat-tooltip")
             ).toBeTruthy();
 
-            global.fetch.mockClear();
+            spy_content.mockRestore();
+            spy_show.mockRestore();
+            global.fetch.mockRestore();
             delete global.fetch;
         });
 
@@ -1068,7 +1113,9 @@ describe("pat-tooltip", () => {
                 "External content fetched via an HTTP request."
             );
 
-            global.fetch.mockClear();
+            spy_content.mockRestore();
+            spy_show.mockRestore();
+            global.fetch.mockRestore();
             delete global.fetch;
         });
 
@@ -1110,7 +1157,9 @@ describe("pat-tooltip", () => {
                 "hello."
             );
 
-            global.fetch.mockClear();
+            spy_content.mockRestore();
+            spy_show.mockRestore();
+            global.fetch.mockRestore();
             delete global.fetch;
         });
     });
@@ -1130,12 +1179,12 @@ describe("pat-tooltip", () => {
 
             const call_order = [];
 
-            jest.spyOn(click, "preventDefault").mockImplementation(() =>
-                call_order.push("preventDefault")
-            );
-            jest.spyOn(instance, "_getContent").mockImplementation(() =>
-                call_order.push("_getContent")
-            );
+            const spy_prevent = jest
+                .spyOn(click, "preventDefault")
+                .mockImplementation(() => call_order.push("preventDefault"));
+            const spy_get_content = jest
+                .spyOn(instance, "_getContent")
+                .mockImplementation(() => call_order.push("_getContent"));
 
             $el[0].dispatchEvent(click);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1147,7 +1196,9 @@ describe("pat-tooltip", () => {
             expect(call_order.filter(it => it === "_getContent").length).toEqual(1); // prettier-ignore
             expect(call_order.filter(it => it === "preventDefault").length).toEqual(3); // prettier-ignore
 
-            global.fetch.mockClear();
+            spy_prevent.mockRestore();
+            spy_get_content.mockRestore();
+            global.fetch.mockRestore();
             delete global.fetch;
         });
 
@@ -1178,7 +1229,9 @@ describe("pat-tooltip", () => {
                 "this will be extracted"
             );
 
-            global.fetch.mockClear();
+            spy_ajax.mockRestore();
+            spy_show.mockRestore();
+            global.fetch.mockRestore();
             delete global.fetch;
         });
 
@@ -1204,7 +1257,9 @@ describe("pat-tooltip", () => {
             expect(content).toBeTruthy();
             expect(content.textContent).toBe("hello.");
 
-            global.fetch.mockClear();
+            spy_ajax.mockRestore();
+            spy_show.mockRestore();
+            global.fetch.mockRestore();
             delete global.fetch;
         });
 
@@ -1244,7 +1299,9 @@ this will be extracted.
                 "this will be extracted."
             );
 
-            global.fetch.mockClear();
+            spy_ajax.mockRestore();
+            spy_show.mockRestore();
+            global.fetch.mockRestore();
             delete global.fetch;
         });
 
@@ -1287,7 +1344,10 @@ this will be extracted.
                     document.querySelector(".tippy-box .tippy-content").textContent
                 ).toBe("External content fetched via an HTTP request.");
 
-                global.fetch.mockClear();
+                spy_show.mockRestore();
+                spy_ajax.mockRestore();
+                spy_fetch.mockRestore();
+                global.fetch.mockRestore();
                 delete global.fetch;
             });
 
@@ -1329,7 +1389,10 @@ this will be extracted.
                     document.querySelector(".tippy-box .tippy-content").textContent
                 ).toBe("External content fetched via an HTTP request.");
 
-                global.fetch.mockClear();
+                spy_show.mockRestore();
+                spy_ajax.mockRestore();
+                spy_fetch.mockRestore();
+                global.fetch.mockRestore();
                 delete global.fetch;
             });
         });
@@ -1357,7 +1420,7 @@ this will be extracted.
 
             expect(called).toBeTruthy();
 
-            global.fetch.mockClear();
+            global.fetch.mockRestore();
             delete global.fetch;
         });
 
@@ -1394,7 +1457,9 @@ this will be extracted.
             expect(spy_handler1).toHaveBeenCalled();
             expect(spy_handler2).toHaveBeenCalled();
 
-            global.fetch.mockClear();
+            spy_handler1.mockRestore();
+            spy_handler2.mockRestore();
+            global.fetch.mockRestore();
             delete global.fetch;
         });
 
@@ -1413,6 +1478,8 @@ this will be extracted.
             // Test, if registry.scan isn't invoked twice - another time by
             // pat-inject.
             expect(spy_scan).toHaveBeenCalledTimes(1);
+
+            spy_scan.mockRestore();
         });
     });
 
