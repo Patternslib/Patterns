@@ -655,7 +655,7 @@ const inject = {
 
             // Try to get a suitable error message from pre-configured error pages.
             const error_page_url = document
-                .querySelector(`meta[name^=pat-inject-status-${status}]`)
+                ?.querySelector(`meta[name^=pat-inject-status-${status}]`)
                 ?.getAttribute("content", false);
             error_page_fragment = error_page_url?.split("#")[1];
             error_page_fragment = error_page_fragment ? `#${error_page_fragment}` : null;
