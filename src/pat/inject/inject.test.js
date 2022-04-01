@@ -53,7 +53,7 @@ describe("pat-inject", function () {
 
     describe("The loading-class argument", function () {
         it("has a default value of 'injecting' and gets added to the target while content is still loading", async function () {
-            jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
             var $div = $('<div id="someid" />');
             $("#lab").empty().append($a).append($div);
@@ -73,10 +73,12 @@ describe("pat-inject", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect($div.hasClass("injecting")).toBeFalsy();
             expect(callback).toHaveBeenCalled();
+
+            spy_ajax.mockRestore();
         });
 
         it("can be set to another string value which then gets added to the target while content is still loading'", async function () {
-            jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             var $a = $(
                 '<a class="pat-inject" data-pat-inject="loading-class: other-class;" href="test.html#someid">link</a>'
             );
@@ -94,10 +96,12 @@ describe("pat-inject", function () {
             answer("<html><body>" + '<div id="someid">repl</div>' + "</body></html>");
             await utils.timeout(1); // wait a tick for async to settle.
             expect($div.hasClass("other-class")).toBeFalsy();
+
+            spy_ajax.mockRestore();
         });
 
         it("can be set to an empty string value so that nothing gets added to the target while content is still loading'", function () {
-            jest.spyOn($, "ajax");
+            const spy_ajax = jest.spyOn($, "ajax");
             var $a = $(
                 '<a class="pat-inject" data-pat-inject="loading-class: ;" href="test.html#someid">link</a>'
             );
@@ -108,6 +112,8 @@ describe("pat-inject", function () {
             var cfgs = pattern.extractConfig($a, {});
             expect(cfgs[0].loadingClass).toBe("");
             expect($div[0].className).toBe("");
+
+            spy_ajax.mockRestore();
         });
     });
 
@@ -116,7 +122,7 @@ describe("pat-inject", function () {
             var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
             var $div = $('<div id="someid" />');
             $("#lab").empty().append($a).append($div);
-            jest.spyOn(pattern, "onTrigger");
+            const spy_onTrigger = jest.spyOn(pattern, "onTrigger");
             var spy_confirm = jest
                 .spyOn(window, "confirm")
                 .mockImplementation(() => false);
@@ -133,6 +139,9 @@ describe("pat-inject", function () {
             $div.addClass("is-dirty");
             $a.trigger("click");
             expect(spy_confirm).toHaveBeenCalled();
+
+            spy_onTrigger.mockRestore();
+            spy_confirm.mockRestore();
         });
 
         it("can be set to 'never' to never ask for confirmation", function () {
@@ -155,6 +164,9 @@ describe("pat-inject", function () {
             $a.trigger("click");
             expect(spy_confirm).not.toHaveBeenCalled();
             expect(spy_onTrigger).toHaveBeenCalled();
+
+            spy_onTrigger.mockRestore();
+            spy_confirm.mockRestore();
         });
 
         it("can be set to 'always' to always ask for confirmation before injecting", function () {
@@ -177,6 +189,9 @@ describe("pat-inject", function () {
             $a.trigger("click");
             expect(spy_onTrigger).toHaveBeenCalled();
             expect(spy_confirm).toHaveBeenCalled();
+
+            spy_onTrigger.mockRestore();
+            spy_confirm.mockRestore();
         });
 
         it("can be set to 'form-data' to ask for confirmation before injecting over form fields changed by the user", function () {
@@ -205,6 +220,9 @@ describe("pat-inject", function () {
             $a.trigger("click");
             expect(window.confirm.mock.calls.length).toBe(1);
             expect(spy_onTrigger).toHaveBeenCalled();
+
+            spy_onTrigger.mockRestore();
+            spy_confirm.mockRestore();
         });
 
         describe("The confirm-message argument", function () {
@@ -214,8 +232,8 @@ describe("pat-inject", function () {
                 );
                 var $div = $('<div id="someid" />');
                 $("#lab").empty().append($a).append($div);
-                jest.spyOn(pattern, "onTrigger");
-                var spy_confirm = jest
+                const spy_onTrigger = jest.spyOn(pattern, "onTrigger");
+                const spy_confirm = jest
                     .spyOn(window, "confirm")
                     .mockImplementation(() => false);
 
@@ -228,6 +246,9 @@ describe("pat-inject", function () {
                 $a.trigger("click");
                 expect(spy_confirm).toHaveBeenCalled();
                 expect(spy_confirm).toHaveBeenCalledWith("Hello world");
+
+                spy_onTrigger.mockRestore();
+                spy_confirm.mockRestore();
             });
         });
     });
@@ -260,6 +281,8 @@ describe("pat-inject", function () {
                 "<a>This is a test</a>"
             );
             expect(spy_rebaseURL).not.toHaveBeenCalled();
+
+            spy_rebaseURL.mockRestore();
         });
 
         it("Element with link attribute", function () {
@@ -500,7 +523,7 @@ describe("pat-inject", function () {
         beforeEach(function () {});
 
         it("The pat-inject-success get triggered after successful injection", async function () {
-            jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             document.body.innerHTML = `
                <a class="pat-inject" href="test.html">link</a>
             `;
@@ -512,11 +535,15 @@ describe("pat-inject", function () {
             answer("<html><body><div></div></body></html>");
             await utils.timeout(1); // wait a tick for async to settle.
             expect(callback).toHaveBeenCalled();
+
+            spy_ajax.mockRestore();
         });
 
         describe("The patterns-injected event", function () {
             it("gets triggered after injection has finished'", async function () {
-                jest.spyOn($, "ajax").mockImplementation(() => deferred);
+                const spy_ajax = jest
+                    .spyOn($, "ajax")
+                    .mockImplementation(() => deferred);
                 var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
                 var $div = $('<div id="someid" />');
                 $("#lab").empty().append($a).append($div);
@@ -529,17 +556,24 @@ describe("pat-inject", function () {
                 );
                 await utils.timeout(1); // wait a tick for async to settle.
                 expect(callback).toHaveBeenCalled();
+
+                spy_ajax.mockRestore();
             });
         });
 
         describe("Injection on an anchor element", function () {
             var $a, $div;
+            let spy_ajax;
 
             beforeEach(function () {
-                jest.spyOn($, "ajax").mockImplementation(() => deferred);
+                spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
                 $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
                 $div = $('<div id="someid" />');
                 $("#lab").append($a).append($div);
+            });
+
+            afterEach(function () {
+                spy_ajax.mockRestore();
             });
 
             it("fetches url on click", function () {
@@ -591,7 +625,9 @@ describe("pat-inject", function () {
                 // It is only needed here, because this is the only test case that makes two ajax() calls.
                 deferred = new $.Deferred();
                 $.ajax.mockRestore();
-                jest.spyOn($, "ajax").mockImplementation(() => deferred);
+                const spy_ajax2 = jest
+                    .spyOn($, "ajax")
+                    .mockImplementation(() => deferred);
 
                 $a.trigger("click");
                 answer(
@@ -599,6 +635,8 @@ describe("pat-inject", function () {
                 );
                 await utils.timeout(1); // wait a tick for async to settle.
                 expect($div.html()).toBe("new replacement");
+
+                spy_ajax2.mockRestore();
             });
 
             it("takes multiple source-target pairs", async function () {
@@ -708,12 +746,17 @@ describe("pat-inject", function () {
 
         describe("inject on forms", function () {
             var $form, $div;
+            let spy_ajax;
 
             beforeEach(function () {
-                jest.spyOn($, "ajax").mockImplementation(() => deferred);
+                spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
                 $form = $('<form class="pat-inject" action="test.html#someid" />');
                 $div = $('<div id="someid" />');
                 $("#lab").append($form).append($div);
+            });
+
+            afterEach(function () {
+                spy_ajax.mockRestore();
             });
 
             it("trigger injection on submit", async function () {
@@ -1040,9 +1083,10 @@ describe("pat-inject", function () {
 
     describe("Error handling", () => {
         let $a;
+        let spy_ajax;
 
         beforeEach(() => {
-            jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             document.body.innerhtml = `
               <div id="lab">
                 <a class="pat-inject" href="test.html#someid">link</a>
@@ -1055,6 +1099,7 @@ describe("pat-inject", function () {
         afterEach(() => {
             document.head.innerHTML = "";
             document.body.innerHTML = "";
+            spy_ajax.mockRestore();
         });
 
         it("Adds on error a data-error-message to body in standard case.", async () => {
@@ -1337,7 +1382,7 @@ describe("pat-inject", function () {
             // becomes visible.
             // Instead we test the setup, loading, unregistration, etc.
 
-            jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             answer("<html><body>OK</body></html>");
 
             document.body.innerHTML = `
@@ -1382,10 +1427,12 @@ describe("pat-inject", function () {
             expect(observer._cnt).toBe(3);
             await utils.timeout(10); // wait for delay-time
             expect(el.textContent).toBe("NOT");
+
+            spy_ajax.mockRestore();
         });
 
         it("Test trigger: autoload-visible, default delay time", async () => {
-            jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             answer("<html><body>OK</body></html>");
 
             document.body.innerHTML = `
@@ -1412,6 +1459,8 @@ describe("pat-inject", function () {
             expect(el.textContent).toBe("test"); // delay time not yet passed
             await utils.timeout(100); // delay time passed, default is 200ms
             expect(el.textContent).toBe("OK");
+
+            spy_ajax.mockRestore();
         });
     });
 
