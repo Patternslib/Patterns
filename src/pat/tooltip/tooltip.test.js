@@ -1024,7 +1024,7 @@ describe("pat-tooltip", () => {
             const instance = new pattern($el);
             await utils.timeout(1);
 
-            const spy_content = jest.spyOn(instance, "_getContent");
+            const spy_content = jest.spyOn(instance, "get_content");
             const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
@@ -1057,7 +1057,7 @@ describe("pat-tooltip", () => {
             const instance = new pattern($el);
             await utils.timeout(1);
 
-            const spy_content = jest.spyOn(instance, "_getContent");
+            const spy_content = jest.spyOn(instance, "get_content");
             const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
@@ -1100,7 +1100,7 @@ describe("pat-tooltip", () => {
             const instance = new pattern(el);
             await utils.timeout(1);
 
-            const spy_content = jest.spyOn(instance, "_getContent");
+            const spy_content = jest.spyOn(instance, "get_content");
             const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
             el.click();
@@ -1144,7 +1144,7 @@ describe("pat-tooltip", () => {
             const instance = new pattern(el);
             await utils.timeout(1);
 
-            const spy_content = jest.spyOn(instance, "_getContent");
+            const spy_content = jest.spyOn(instance, "get_content");
             const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
             el.click();
@@ -1155,6 +1155,52 @@ describe("pat-tooltip", () => {
             expect(spy_show).toHaveBeenCalled();
             expect(document.querySelector(".tippy-box .tippy-content").textContent).toBe(
                 "hello."
+            );
+
+            spy_content.mockRestore();
+            spy_show.mockRestore();
+            global.fetch.mockRestore();
+            delete global.fetch;
+        });
+
+        it("6.7 - source: updating the content with ``get_content``.", async () => {
+            global.fetch = jest
+                .fn()
+                .mockImplementation(
+                    mockFetch("External content fetched via an HTTP request.")
+                );
+
+            const $el = testutils.createTooltip({
+                data: "source: ajax",
+                href: "http://test.com",
+            });
+            const instance = new pattern($el);
+            await utils.timeout(1);
+
+            const spy_content = jest.spyOn(instance, "get_content");
+            const spy_show = jest.spyOn(instance.tippy.props, "onShow");
+
+            testutils.click($el);
+            await utils.timeout(1); // wait a tick for async fetch
+
+            expect(global.fetch).toHaveBeenCalled();
+            expect(spy_content).toHaveBeenCalled();
+            expect(spy_show).toHaveBeenCalled();
+            expect(document.querySelector(".tippy-box .tippy-content").textContent).toBe(
+                "External content fetched via an HTTP request."
+            );
+
+            global.fetch.mockRestore();
+            delete global.fetch;
+            global.fetch = jest.fn().mockImplementation(mockFetch("Update!"));
+            instance.get_content("https://ok.com");
+            await utils.timeout(1); // wait a tick for async fetch
+
+            expect(global.fetch).toHaveBeenCalled();
+            expect(spy_content).toHaveBeenCalled();
+            expect(spy_show).toHaveBeenCalled();
+            expect(document.querySelector(".tippy-box .tippy-content").textContent).toBe(
+                "Update!"
             );
 
             spy_content.mockRestore();
@@ -1183,8 +1229,8 @@ describe("pat-tooltip", () => {
                 .spyOn(click, "preventDefault")
                 .mockImplementation(() => call_order.push("preventDefault"));
             const spy_get_content = jest
-                .spyOn(instance, "_getContent")
-                .mockImplementation(() => call_order.push("_getContent"));
+                .spyOn(instance, "get_content")
+                .mockImplementation(() => call_order.push("get_content"));
 
             $el[0].dispatchEvent(click);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1193,7 +1239,7 @@ describe("pat-tooltip", () => {
             $el[0].dispatchEvent(click);
             await utils.timeout(1); // wait a tick for async fetch
 
-            expect(call_order.filter(it => it === "_getContent").length).toEqual(1); // prettier-ignore
+            expect(call_order.filter(it => it === "get_content").length).toEqual(1); // prettier-ignore
             expect(call_order.filter(it => it === "preventDefault").length).toEqual(3); // prettier-ignore
 
             spy_prevent.mockRestore();
@@ -1217,7 +1263,7 @@ describe("pat-tooltip", () => {
             const instance = new pattern($el);
             await utils.timeout(1);
 
-            const spy_ajax = jest.spyOn(instance, "_getContent");
+            const spy_ajax = jest.spyOn(instance, "get_content");
             const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
@@ -1245,7 +1291,7 @@ describe("pat-tooltip", () => {
             const instance = await new pattern($el);
             await utils.timeout(1);
 
-            const spy_ajax = jest.spyOn(instance, "_getContent");
+            const spy_ajax = jest.spyOn(instance, "get_content");
             const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
@@ -1283,7 +1329,7 @@ this will be extracted.
             const instance = new pattern($el);
             await utils.timeout(1);
 
-            const spy_ajax = jest.spyOn(instance, "_getContent");
+            const spy_ajax = jest.spyOn(instance, "get_content");
             const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
@@ -1320,7 +1366,7 @@ this will be extracted.
                 const instance = new pattern($el);
                 await utils.timeout(1);
 
-                const spy_ajax = jest.spyOn(instance, "_getContent");
+                const spy_ajax = jest.spyOn(instance, "get_content");
                 const spy_fetch = jest.spyOn(window, "fetch");
                 const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
@@ -1365,7 +1411,7 @@ this will be extracted.
                 const instance = new pattern($el);
                 await utils.timeout(1);
 
-                const spy_ajax = jest.spyOn(instance, "_getContent");
+                const spy_ajax = jest.spyOn(instance, "get_content");
                 const spy_fetch = jest.spyOn(window, "fetch");
                 const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 

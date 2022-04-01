@@ -251,7 +251,7 @@ export default Base.extend({
 
     async _onMount() {
         if (this.options.source === "ajax") {
-            await this._getContent();
+            await this.get_content();
         }
 
         this._initializeContent();
@@ -310,10 +310,9 @@ export default Base.extend({
         }
     },
 
-    async _getContent() {
-        const { url, selector } = this.get_url_parts(
-            this.options.url || this.el.getAttribute("href")
-        );
+    async get_content(url = this.options.url) {
+        let selector;
+        ({ url, selector } = this.get_url_parts(url || this.el.getAttribute("href")));
         let content;
         if (url) {
             // Tooltip from remote page.
