@@ -63,8 +63,8 @@ describe("pat-tooltip", () => {
         document.body.innerHTML = "";
     });
 
-    describe("A tooltip", () => {
-        it("always gets the ``tooltip-container`` class set", async () => {
+    describe("1 - A tooltip", () => {
+        it("1.1 - always gets the ``tooltip-container`` class set", async () => {
             const $el = testutils.createTooltip({
                 data: "trigger: click",
                 title: "tooltip",
@@ -80,8 +80,8 @@ describe("pat-tooltip", () => {
             ).toBeTruthy();
         });
 
-        describe(`if the 'class' parameter exists`, () => {
-            it("will assign a class to the tooltip container", async () => {
+        describe('1.2 - if the "class" parameter exists', () => {
+            it("1.2.1 - will assign a class to the tooltip container", async () => {
                 const $el = testutils.createTooltip({
                     data: "source: title; trigger: hover; class: wasabi",
                 });
@@ -112,7 +112,7 @@ describe("pat-tooltip", () => {
                 expect(expected).toBe(title);
             });
 
-            it("and only to the corresponding container", async () => {
+            it("1.2.2 - and only to the corresponding container", async () => {
                 const $el1 = testutils.createTooltip({
                     data: "source: title; trigger: click; class: wasabi",
                     id: "tooltip1",
@@ -145,7 +145,7 @@ describe("pat-tooltip", () => {
                 expect(container[1].classList.contains("wasabi")).toBeFalsy();
             });
 
-            it("with multiple values, all will be applied.", async () => {
+            it("1.2.3 - with multiple values, all will be applied.", async () => {
                 const $el = testutils.createTooltip({
                     data: "source: title; trigger: click; class: wasabi kohlrabi",
                 });
@@ -162,8 +162,8 @@ describe("pat-tooltip", () => {
             });
         });
 
-        describe(`if the 'delay' parameter exists`, () => {
-            it("will wait accordingly before showing the tooltip", async () => {
+        describe('1.3 - if the "delay" parameter exists', () => {
+            it("1.3.1 - will wait accordingly before showing the tooltip", async () => {
                 testutils.createTooltip({
                     data: "delay: 500; trigger: hover",
                 });
@@ -195,9 +195,9 @@ describe("pat-tooltip", () => {
         });
     });
 
-    describe("Tooltip closing behavior", () => {
-        describe("with the default `closing: auto`", () => {
-            it("with `trigger: click` it will only close when clicking outside the tooltip element", async () => {
+    describe("2 - Tooltip closing behavior", () => {
+        describe("2.1 - with the default `closing: auto`", () => {
+            it("2.1.1 - with `trigger: click` it will only close when clicking outside the tooltip element", async () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: click; closing: auto",
                 });
@@ -227,7 +227,7 @@ describe("pat-tooltip", () => {
                 expect(spy_hide).toHaveBeenCalled();
             });
 
-            it("with `trigger: hover` it will close when hovering outside the tooltip element", async () => {
+            it("2.1.2 - with `trigger: hover` it will close when hovering outside the tooltip element", async () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: hover; closing: auto",
                 });
@@ -254,8 +254,8 @@ describe("pat-tooltip", () => {
             });
         });
 
-        describe("with `closing: sticky`", () => {
-            it("with `trigger: click` there is no change in the closing behavior", async () => {
+        describe("2.2 - with `closing: sticky`", () => {
+            it("2.2.1 - with `trigger: click` there is no change in the closing behavior", async () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: click; closing: sticky",
                 });
@@ -285,7 +285,7 @@ describe("pat-tooltip", () => {
                 expect(spy_hide).toHaveBeenCalled();
             });
 
-            it("with `trigger: hover` the tooltip is only closed when clicking outside", async () => {
+            it("2.2.2 - with `trigger: hover` the tooltip is only closed when clicking outside", async () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: hover; closing: sticky",
                 });
@@ -311,8 +311,8 @@ describe("pat-tooltip", () => {
             });
         });
 
-        describe("with `closing: close-button`", () => {
-            it("with `trigger: click` the tooltip is only closed when clicking the close button", async () => {
+        describe("2.3 - with `closing: close-button`", () => {
+            it("2.3.1 - with `trigger: click` the tooltip is only closed when clicking the close button", async () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: click; closing: close-button",
                 });
@@ -348,7 +348,7 @@ describe("pat-tooltip", () => {
                 expect(spy_hide).toHaveBeenCalled();
             });
 
-            it("with `trigger: hover` the tooltip is only closed when clicking outside", async () => {
+            it("2.3.2 - with `trigger: hover` the tooltip is only closed when clicking outside", async () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: hover; closing: close-button",
                 });
@@ -378,7 +378,7 @@ describe("pat-tooltip", () => {
                 expect(spy_hide).toHaveBeenCalled();
             });
 
-            it("a close-panel doesn't prevent a form submit.", async () => {
+            it("2.3.3 - a close-panel doesn't prevent a form submit.", async () => {
                 document.body.innerHTML = `
                     <a class="pat-tooltip" href="#form" data-pat-tooltip="source: ajax">open form</a>
 
@@ -415,8 +415,8 @@ describe("pat-tooltip", () => {
         });
     });
 
-    describe(`multiple tooltips...`, () => {
-        it("...no problem", async () => {
+    describe("3 - multiple tooltips...", () => {
+        it("3.1 - ...no problem", async () => {
             const $el1 = testutils.createTooltip({
                 data: "source: title; trigger: click",
                 id: "tooltip1",
@@ -466,8 +466,8 @@ describe("pat-tooltip", () => {
         });
     });
 
-    describe(`if the 'position-list' parameter exists`, () => {
-        it(`'lt' will place the tooltip as 'right-start'`, async () => {
+    describe(`4 - if the 'position-list' parameter exists`, () => {
+        it(`4.1 - 'lt' will place the tooltip as 'right-start'`, async () => {
             const $el = testutils.createTooltip({
                 data: "position-list: lt",
             });
@@ -480,7 +480,7 @@ describe("pat-tooltip", () => {
             const container = document.querySelector(".tippy-box");
             expect(container.getAttribute("data-placement")).toBe("right-start");
         });
-        it(`'lb' will place the tooltip as 'right-end'`, async () => {
+        it(`4.2 - 'lb' will place the tooltip as 'right-end'`, async () => {
             const $el = testutils.createTooltip({
                 data: "position-list: lb",
             });
@@ -493,7 +493,7 @@ describe("pat-tooltip", () => {
             const container = document.querySelector(".tippy-box");
             expect(container.getAttribute("data-placement")).toBe("right-end");
         });
-        it(`'lm' will place the tooltip as 'right'`, async () => {
+        it(`4.3 - 'lm' will place the tooltip as 'right'`, async () => {
             const $el = testutils.createTooltip({
                 data: "position-list: lm",
             });
@@ -506,7 +506,7 @@ describe("pat-tooltip", () => {
             const container = document.querySelector(".tippy-box");
             expect(container.getAttribute("data-placement")).toBe("right");
         });
-        it(`'bl' will place the tooltip as 'top-start'`, async () => {
+        it(`4.4 - 'bl' will place the tooltip as 'top-start'`, async () => {
             const $el = testutils.createTooltip({
                 data: "position-list: bl",
             });
@@ -519,7 +519,7 @@ describe("pat-tooltip", () => {
             const container = document.querySelector(".tippy-box");
             expect(container.getAttribute("data-placement")).toBe("top-start");
         });
-        it(`'br' will place the tooltip as 'top-end'`, async () => {
+        it(`4.5 - 'br' will place the tooltip as 'top-end'`, async () => {
             const $el = testutils.createTooltip({
                 data: "position-list: br",
             });
@@ -532,7 +532,7 @@ describe("pat-tooltip", () => {
             const container = document.querySelector(".tippy-box");
             expect(container.getAttribute("data-placement")).toBe("top-end");
         });
-        it(`'bm' will place the tooltip as 'top'`, async () => {
+        it(`4.6 - 'bm' will place the tooltip as 'top'`, async () => {
             const $el = testutils.createTooltip({
                 data: "position-list: bm",
             });
@@ -545,8 +545,8 @@ describe("pat-tooltip", () => {
             const container = document.querySelector(".tippy-box");
             expect(container.getAttribute("data-placement")).toBe("top");
         });
-        describe(`and 'position-policy' is 'force'`, () => {
-            it(`'tl;force' will place the tooltip as 'bottom-start'`, async () => {
+        describe(`4.7 - and 'position-policy' is 'force'`, () => {
+            it(`4.7.1 - 'tl;force' will place the tooltip as 'bottom-start'`, async () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tl; position-policy: force",
                 });
@@ -559,7 +559,7 @@ describe("pat-tooltip", () => {
                 const container = document.querySelector(".tippy-box");
                 expect(container.getAttribute("data-placement")).toBe("bottom-start");
             });
-            it(`'tr;force' will place the tooltip as 'bottom-end'`, async () => {
+            it(`4.7.2 - 'tr;force' will place the tooltip as 'bottom-end'`, async () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tr; position-policy: force",
                 });
@@ -572,7 +572,7 @@ describe("pat-tooltip", () => {
                 const container = document.querySelector(".tippy-box");
                 expect(container.getAttribute("data-placement")).toBe("bottom-end");
             });
-            it(`'tm;force' will place the tooltip as 'bottom'`, async () => {
+            it(`4.7.3 - 'tm;force' will place the tooltip as 'bottom'`, async () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tm; position-policy: force",
                 });
@@ -585,7 +585,7 @@ describe("pat-tooltip", () => {
                 const container = document.querySelector(".tippy-box");
                 expect(container.getAttribute("data-placement")).toBe("bottom");
             });
-            it(`'rt;force' will place the tooltip as 'left-start'`, async () => {
+            it(`4.7.4 - 'rt;force' will place the tooltip as 'left-start'`, async () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rt; position-policy: force",
                 });
@@ -598,7 +598,7 @@ describe("pat-tooltip", () => {
                 const container = document.querySelector(".tippy-box");
                 expect(container.getAttribute("data-placement")).toBe("left-start");
             });
-            it(`'rb;force' will place the tooltip as 'left-end'`, async () => {
+            it(`4.7.5 - 'rb;force' will place the tooltip as 'left-end'`, async () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rb; position-policy: force",
                 });
@@ -611,7 +611,7 @@ describe("pat-tooltip", () => {
                 const container = document.querySelector(".tippy-box");
                 expect(container.getAttribute("data-placement")).toBe("left-end");
             });
-            it(`'rm;force' will place the tooltip as 'left'`, async () => {
+            it(`4.7.6 - 'rm;force' will place the tooltip as 'left'`, async () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rm; position-policy: force",
                 });
@@ -627,9 +627,9 @@ describe("pat-tooltip", () => {
         });
     });
 
-    describe(`and ...`, () => {
-        describe(`the 'mark-inactive' paramater`, () => {
-            it("when true, toggles the active/inactive class on the trigger", async () => {
+    describe(`5 - and ...`, () => {
+        describe(`5.1 - the 'mark-inactive' paramater`, () => {
+            it("5.1.1 - when true, toggles the active/inactive class on the trigger", async () => {
                 const $el = testutils.createTooltip({
                     data: "mark-inactive: true",
                 });
@@ -667,7 +667,7 @@ describe("pat-tooltip", () => {
                 expect(el.classList.contains("tooltip-active-click")).toBeFalsy();
                 expect(el.classList.contains("tooltip-inactive")).toBeTruthy();
             });
-            it("when false, the trigger does not get the active/inactive class", async () => {
+            it("5.1.2 - when false, the trigger does not get the active/inactive class", async () => {
                 const $el = testutils.createTooltip({
                     data: "mark-inactive: false",
                 });
@@ -705,7 +705,7 @@ describe("pat-tooltip", () => {
                 expect(el.classList.contains("tooltip-active-click")).toBeFalsy();
                 expect(el.classList.contains("tooltip-inactive")).toBeFalsy();
             });
-            it("when true and trigger is hover, toggles a different active class on the trigger", async () => {
+            it("5.1.3 - when true and trigger is hover, toggles a different active class on the trigger", async () => {
                 const $el = testutils.createTooltip({
                     data: "mark-inactive: true; trigger: hover",
                 });
@@ -730,9 +730,9 @@ describe("pat-tooltip", () => {
                 expect(el.classList.contains("tooltip-inactive")).toBeFalsy();
             });
         });
-        describe(`if the 'trigger' parameter is 'hover'`, () => {
-            describe(`if the 'source' parameter is 'title'`, () => {
-                it(`will show the contents of the 'title' attribute`, async () => {
+        describe(`5.2 - if the 'trigger' parameter is 'hover'`, () => {
+            describe(`5.2.1 - if the 'source' parameter is 'title'`, () => {
+                it(`5.2.1.1 - will show the contents of the 'title' attribute`, async () => {
                     const $el = testutils.createTooltip({
                         data: "source: title; trigger: hover",
                     });
@@ -759,7 +759,7 @@ describe("pat-tooltip", () => {
                         container[0].querySelector(".tippy-content").textContent
                     ).toBe(title);
                 });
-                it("will hide the tooltip on mouseleave", async () => {
+                it("5.2.1.2 - will hide the tooltip on mouseleave", async () => {
                     const $el = testutils.createTooltip({
                         data: "source: title; trigger: hover",
                     });
@@ -786,8 +786,8 @@ describe("pat-tooltip", () => {
                     expect(document.querySelectorAll(".tippy-box").length).toEqual(0);
                 });
             });
-            describe(`if the 'source' parameter is 'content'`, () => {
-                it("it will show the content of the link", async () => {
+            describe(`5.2.2 - if the 'source' parameter is 'content'`, () => {
+                it("5.2.2.1 - it will show the content of the link", async () => {
                     const content = "Local content";
                     const $el = testutils.createTooltip({
                         data: "source: content; trigger: hover",
@@ -809,8 +809,8 @@ describe("pat-tooltip", () => {
                 });
             });
         });
-        describe("if the 'trigger' parameter is 'none'", () => {
-            it("does not open or close via click or mousehover", async () => {
+        describe("5.3 - if the 'trigger' parameter is 'none'", () => {
+            it("5.3.1 - does not open or close via click or mousehover", async () => {
                 const el = document.createElement("div");
                 el.setAttribute("title", "hello.");
 
@@ -848,7 +848,7 @@ describe("pat-tooltip", () => {
                 ).toBe("hello.");
             });
 
-            it("does opens / closes via the API", async () => {
+            it("5.3.2 - does opens / closes via the API", async () => {
                 const el = document.createElement("div");
                 el.setAttribute("title", "hello.");
 
@@ -870,8 +870,8 @@ describe("pat-tooltip", () => {
                 expect(document.querySelector(".tippy-box .tippy-content")).toBeFalsy();
             });
         });
-        describe(`if the 'target' parameter is 'body'`, () => {
-            it("will append the .tippy-box to the document.body", async () => {
+        describe(`5.4 - if the 'target' parameter is 'body'`, () => {
+            it("5.4.1 - will append the .tippy-box to the document.body", async () => {
                 const $el = testutils.createTooltip({
                     data: "target: body",
                     href: "#",
@@ -887,8 +887,8 @@ describe("pat-tooltip", () => {
                 ).toEqual(1);
             });
         });
-        describe(`if the 'target' parameter is 'parent'`, () => {
-            it(`will append the .tippy-box to the reference element's parent node`, async () => {
+        describe(`5.5 - if the 'target' parameter is 'parent'`, () => {
+            it(`5.5.1 - will append the .tippy-box to the reference element's parent node`, async () => {
                 const $el = testutils.createTooltip({
                     data: "target: parent",
                     href: "#",
@@ -904,8 +904,8 @@ describe("pat-tooltip", () => {
                 ).toEqual(1);
             });
         });
-        describe(`if the 'target' parameter is a selector`, () => {
-            it("will append the .tippy-box to the selected element", async () => {
+        describe(`5.6 - if the 'target' parameter is a selector`, () => {
+            it("5.6.1 - will append the .tippy-box to the selected element", async () => {
                 const $el = testutils.createTooltip({
                     data: "target: #child3",
                     href: "#",
@@ -934,8 +934,8 @@ describe("pat-tooltip", () => {
         });
     });
 
-    describe("test the different `source` parameters", () => {
-        it("source: title will use the title attribute", async () => {
+    describe("6 - test the different `source` parameters", () => {
+        it("6.1 - source: title will use the title attribute", async () => {
             const $el = testutils.createTooltip({
                 data: "source: title; trigger: click",
             });
@@ -954,7 +954,7 @@ describe("pat-tooltip", () => {
             expect(expected).toBe(title);
         });
 
-        it("source: content use the content of the link", async () => {
+        it("6.2 - source: content use the content of the link", async () => {
             const content = "Local content";
             const $el = testutils.createTooltip({
                 data: "source: content; trigger: click",
@@ -969,7 +969,7 @@ describe("pat-tooltip", () => {
             expect(document.querySelector(".tippy-box").textContent).toBe(content);
         });
 
-        it("source: ajax and an external url will fetch its contents via ajax", async () => {
+        it("6.3 - source: ajax and an external url will fetch its contents via ajax", async () => {
             global.fetch = jest
                 .fn()
                 .mockImplementation(
@@ -1000,7 +1000,7 @@ describe("pat-tooltip", () => {
             delete global.fetch;
         });
 
-        it("source: ajax with a local selector will not use ajax but get the contents from the current DOM", async () => {
+        it("6.4 - source: ajax with a local selector will not use ajax but get the contents from the current DOM", async () => {
             global.fetch = jest
                 .fn()
                 .mockImplementation(
@@ -1031,7 +1031,7 @@ describe("pat-tooltip", () => {
             delete global.fetch;
         });
 
-        it("source: ajax loading via the url parameter.", async () => {
+        it("6.5 - source: ajax loading via the url parameter.", async () => {
             global.fetch = jest
                 .fn()
                 .mockImplementation(
@@ -1072,7 +1072,7 @@ describe("pat-tooltip", () => {
             delete global.fetch;
         });
 
-        it("source: ajax loading from current DOM via the url parameter and a fragment specifier.", async () => {
+        it("6.6 - source: ajax loading from current DOM via the url parameter and a fragment specifier.", async () => {
             global.fetch = jest
                 .fn()
                 .mockImplementation(
@@ -1115,8 +1115,8 @@ describe("pat-tooltip", () => {
         });
     });
 
-    describe(`if the 'source' parameter is 'ajax'`, () => {
-        it("multiple clicks only fetches once AND the default click action is prevented", async () => {
+    describe(`7 - if the 'source' parameter is 'ajax'`, () => {
+        it("7.1 - multiple clicks only fetches once AND the default click action is prevented", async () => {
             global.fetch = jest.fn().mockImplementation(mockFetch());
 
             const $el = testutils.createTooltip({
@@ -1151,7 +1151,7 @@ describe("pat-tooltip", () => {
             delete global.fetch;
         });
 
-        it("will fetch a section via ajax", async () => {
+        it("7.2 - will fetch a section via ajax", async () => {
             global.fetch = jest.fn().mockImplementation(
                 mockFetch(`
 <h1>test fetching a secton</h1>
@@ -1182,7 +1182,7 @@ describe("pat-tooltip", () => {
             delete global.fetch;
         });
 
-        it("will handle markdown content", async () => {
+        it("7.3 - will handle markdown content", async () => {
             global.fetch = jest.fn().mockImplementation(mockFetch("## hello."));
 
             const $el = testutils.createTooltip({
@@ -1208,7 +1208,7 @@ describe("pat-tooltip", () => {
             delete global.fetch;
         });
 
-        it("will extract a section from markdown", async () => {
+        it("7.4 - will extract a section from markdown", async () => {
             global.fetch = jest.fn().mockImplementation(
                 mockFetch(`
 # note a limitation
@@ -1248,8 +1248,8 @@ this will be extracted.
             delete global.fetch;
         });
 
-        describe("will not fetch again until tooltip is hidden", () => {
-            it("with click", async () => {
+        describe("7.5 - will not fetch again until tooltip is hidden", () => {
+            it("7.5.1 - with click", async () => {
                 global.fetch = jest
                     .fn()
                     .mockImplementation(
@@ -1291,7 +1291,7 @@ this will be extracted.
                 delete global.fetch;
             });
 
-            it("with hover", async () => {
+            it("7.5.2 - with hover", async () => {
                 global.fetch = jest
                     .fn()
                     .mockImplementation(
@@ -1335,8 +1335,8 @@ this will be extracted.
         });
     });
 
-    describe("patterns-injected events", () => {
-        it("it throws the ``patterns-injected`` event", async () => {
+    describe("8 - patterns-injected events", () => {
+        it("8.1 - it throws the ``patterns-injected`` event", async () => {
             global.fetch = jest.fn().mockImplementation(mockFetch("External content"));
 
             let called = false;
@@ -1361,7 +1361,7 @@ this will be extracted.
             delete global.fetch;
         });
 
-        it.skip("triggers event handlers in other patterns", async () => {
+        it.skip("8.2 - triggers event handlers in other patterns", async () => {
             // TODO: fix tests
             global.fetch = jest
                 .fn()
@@ -1398,7 +1398,7 @@ this will be extracted.
             delete global.fetch;
         });
 
-        it("only scans the tooltip content once", async () => {
+        it("8.3 - only scans the tooltip content once", async () => {
             const $el = testutils.createTooltip({
                 data: "source: content; trigger: click",
             });
@@ -1416,8 +1416,8 @@ this will be extracted.
         });
     });
 
-    describe("URL splitting", () => {
-        it("it extracts the correct parts from any url", async () => {
+    describe("9 - URL splitting", () => {
+        it("9.1 - it extracts the correct parts from any url", async () => {
             const $el = testutils.createTooltip({});
             const instance = new pattern($el);
             await utils.timeout(1);
