@@ -41,10 +41,6 @@ export default Base.extend({
     trigger: ".pat-tooltip, .pat-tooltip-ng",
 
     tippy: null,
-    ajax_state: {
-        isFetching: false,
-        canFetch: true,
-    },
 
     active_class: "tooltip-active-hover",
     inactive_class: "tooltip-inactive",
@@ -255,7 +251,7 @@ export default Base.extend({
 
     async _onMount() {
         if (this.options.source === "ajax") {
-            await this._getContent();
+            await this.get_content();
         }
 
         this._initializeContent();
@@ -311,25 +307,15 @@ export default Base.extend({
 
         if (this.options.source === "ajax") {
             this.tippy.setContent(document.createElement("progress"));
-            this.ajax_state.canFetch = true;
         }
     },
 
-    async _getContent() {
-        if (this.ajax_state.isFetching || !this.ajax_state.canFetch) {
-            return undefined;
-        }
-
-        const { url, selector } = this.get_url_parts(
-            this.options.url || this.el.getAttribute("href")
-        );
+    async get_content(url = this.options.url) {
+        let selector;
+        ({ url, selector } = this.get_url_parts(url || this.el.getAttribute("href")));
         let content;
         if (url) {
             // Tooltip from remote page.
-            this.ajax_state = {
-                isFetching: true,
-                canFetch: false,
-            };
             const handler = this._ajaxDataTypeHandlers[this.options.ajaxDataType];
             try {
                 // TODO: use pat-inject, once it supports async
@@ -339,7 +325,6 @@ export default Base.extend({
             } catch (e) {
                 log.error(`Error on ajax request ${e}`);
             }
-            this.ajax_state.isFetching = false;
         } else if (selector) {
             // Tooltip content from current DOM tree.
             content = document.querySelector(selector);
