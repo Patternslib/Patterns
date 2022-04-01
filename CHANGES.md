@@ -1,6 +1,33 @@
 
 
-## [7.4.0](https://github.com/Patternslib/patterns/compare/7.3.0...7.4.0) (2022-03-24)
+## [7.5.0](https://github.com/Patternslib/patterns/compare/7.4.0...7.5.0) (2022-04-01)
+
+
+### Features
+
+* **pat tooltip:** Expose get_content API method and allow to reload the tooltip's content. ([16ba9c1](https://github.com/Patternslib/patterns/commit/16ba9c12d6e8683f5e689a61dbc4cf3e585094ee))
+
+
+
+### Bug Fixes
+
+* **pat inject tests:** Fix one failing test in GH actions, where document is null. ([0f8d4aa](https://github.com/Patternslib/patterns/commit/0f8d4aaa1a334c682fce3b1d4703553591d1b4ef))
+
+
+
+### Maintenance
+
+* **Build:** Upgrade dependencies. ([21b911f](https://github.com/Patternslib/patterns/commit/21b911ffab4eff6cbcd765ddcf85eb192d52ad7d))
+
+* **pat inject:** Minor code improvements. ([8f507ab](https://github.com/Patternslib/patterns/commit/8f507ab7c6451d0aaf0622297b8cbd343fac959b))
+
+* **pat inject tests:** Restore all mocks. ([82cc049](https://github.com/Patternslib/patterns/commit/82cc049d12469fda8d7db2d310d1f92fce4c2cee))
+
+* **pat tooltip:** Remove ajax_state. With async/await based loading we do not need to set the ajax_state to avoid multiple ajax calls. ([b5deb4b](https://github.com/Patternslib/patterns/commit/b5deb4becd9f10f7ff948216679abaa18f1f9cf1))
+
+* **pat tooltip tests:** Add numbers to test cases so that they can be esier run selectively by filtering. ([72611af](https://github.com/Patternslib/patterns/commit/72611afe0953939e4ac81bac74a9706628e5c520))
+
+* **pat tooltip tests:** Restore all mocks completly after each test run. ([8edba74](https://github.com/Patternslib/patterns/commit/8edba744c9ece324b83db12ccfb4a429cc56e3e5))## [7.4.0](https://github.com/Patternslib/patterns/compare/7.3.0...7.4.0) (2022-03-24)
 
 
 ### Features
