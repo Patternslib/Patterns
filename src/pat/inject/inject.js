@@ -273,10 +273,14 @@ const inject = {
             let _confirm = false;
             if (cfg.confirm == "always") {
                 _confirm = true;
-            } else if (cfg.confirm === "form-data") {
-                if (cfg.target != "none") _confirm = this.elementIsDirty(cfg.$target);
-            } else if (cfg.confirm === "class") {
-                if (cfg.target != "none") _confirm = cfg.$target.hasClass("is-dirty");
+            } else if (
+                cfg.confirm === "form-data" &&
+                cfg.target &&
+                cfg.target !== "none"
+            ) {
+                _confirm = this.elementIsDirty(cfg.$target);
+            } else if (cfg.confirm === "class" && cfg.target && cfg.target !== "none") {
+                _confirm = cfg.$target.hasClass("is-dirty");
             }
             if (_confirm) {
                 should_confirm = true;
@@ -600,7 +604,7 @@ const inject = {
         }
         cfgs.forEach((cfg, idx1) => {
             const perform_inject = () => {
-                if (cfg.target != "none")
+                if (cfg.target !== "none")
                     cfg.$target.each((idx2, target) => {
                         this._performInjection(
                             target,
@@ -720,16 +724,18 @@ const inject = {
             return;
         }
         $el.data("pat-inject-triggered", true);
-        // possibility for spinners on targets
-        cfgs.filter((cfg) => cfg?.loadingClass).forEach((cfg) => {
-            if (cfg.target != "none") {
+
+        for (const cfg of cfgs) {
+            // Add a execute class on the pat-inject element.
+            if (cfg?.executingClass) {
+                $el[0].classList.add(cfg.executingClass);
+            }
+            // Add a loading class to the target.
+            // Can be used for loading-spinners.
+            if (cfg?.loadingClass && cfg?.target !== "none") {
                 cfg.$target.addClass(cfg.loadingClass);
             }
-        });
-        // Put the execute class on the elem that has pat inject on it
-        cfgs.filter((cfg) => cfg?.executingClass).forEach((cfg) =>
-            $el.addClass(cfg.executingClass)
-        );
+        }
 
         $el.on(
             "pat-ajax-success.pat-inject",
