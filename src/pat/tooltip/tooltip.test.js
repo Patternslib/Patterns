@@ -1536,16 +1536,28 @@ this will be extracted.
             await utils.timeout(1);
 
             let parts = instance.get_url_parts("https://text.com/#selector");
-            expect(parts.url === "https://text.com/").toBeTruthy();
-            expect(parts.selector === "#selector").toBeTruthy();
+            expect(parts.url).toBe("https://text.com/");
+            expect(parts.selector).toBe("#selector");
+
+            parts = instance.get_url_parts("https://text.com#selector");
+            expect(parts.url).toBe("https://text.com");
+            expect(parts.selector).toBe("#selector");
 
             parts = instance.get_url_parts("#selector");
-            expect(typeof parts.url === "undefined").toBeTruthy();
-            expect(parts.selector === "#selector").toBeTruthy();
+            expect(parts.url).toBeFalsy();
+            expect(parts.selector).toBe("#selector");
 
             parts = instance.get_url_parts("https://text.com/");
-            expect(parts.url === "https://text.com/").toBeTruthy();
-            expect(typeof parts.selector === "undefined").toBeTruthy();
+            expect(parts.url).toBe("https://text.com/");
+            expect(parts.selector).toBeFalsy();
+
+            parts = instance.get_url_parts("https://text.com#selector?key=value");
+            expect(parts.url).toBe("https://text.com?key=value");
+            expect(parts.selector).toBe("#selector");
+
+            parts = instance.get_url_parts("https://text.com?key=value");
+            expect(parts.url).toBe("https://text.com?key=value");
+            expect(parts.selector).toBeFalsy();
         });
     });
 });

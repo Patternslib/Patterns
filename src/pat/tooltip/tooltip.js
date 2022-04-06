@@ -323,7 +323,7 @@ export default Base.extend({
                 const text = await response.text();
                 content = await handler(text, url, selector);
             } catch (e) {
-                log.error(`Error on ajax request ${e}`);
+                log.error("Error on ajax request. ${e}");
             }
         } else if (selector) {
             // Tooltip content from current DOM tree.
@@ -339,13 +339,18 @@ export default Base.extend({
 
     get_url_parts(href) {
         // Return the URL and a CSS ID selector.
-        let url, selector;
+        let url, selector, query;
         if (!href) {
             return { url, selector };
         }
-        url = href.split("#")[0] || undefined;
-        selector = href.split("#")[1] || undefined;
-        selector = selector ? `#${selector}` : undefined;
+        [url, selector] = href.split("#");
+        if (selector) {
+            selector = `#${selector}`;
+            [selector, query] = selector.split("?");
+        }
+        if (query) {
+            url = `${url}?${query}`;
+        }
         return { url, selector };
     },
 
