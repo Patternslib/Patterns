@@ -319,7 +319,11 @@ export default Base.extend({
             const handler = this._ajaxDataTypeHandlers[this.options.ajaxDataType];
             try {
                 // TODO: use pat-inject, once it supports async
-                const response = await fetch(url);
+                const response = await fetch(url, {
+                    headers: {
+                        Accept: "text/html,application/xhtml+xml,application/xml",
+                    },
+                });
                 const text = await response.text();
                 content = await handler(text, url, selector);
             } catch (e) {

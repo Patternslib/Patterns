@@ -1208,6 +1208,30 @@ describe("pat-tooltip", () => {
             global.fetch.mockRestore();
             delete global.fetch;
         });
+
+        it("6.8 - fetch requests alse define the accept header.", async () => {
+            global.fetch = jest.fn().mockImplementation(mockFetch("OK"));
+
+            const $el = testutils.createTooltip({
+                data: "source: ajax",
+                href: "http://test.com",
+            });
+            new pattern($el);
+            await utils.timeout(1);
+
+            testutils.click($el);
+            await utils.timeout(1); // wait a tick for async fetch
+
+            expect(global.fetch).toHaveBeenCalled();
+            expect(global.fetch).toHaveBeenCalledWith("http://test.com", {
+                headers: {
+                    Accept: "text/html,application/xhtml+xml,application/xml",
+                },
+            });
+
+            global.fetch.mockRestore();
+            delete global.fetch;
+        });
     });
 
     describe(`7 - if the 'source' parameter is 'ajax'`, () => {
