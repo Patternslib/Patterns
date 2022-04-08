@@ -27,7 +27,10 @@
 
 * **pat tooltip tests:** Add numbers to test cases so that they can be esier run selectively by filtering. ([72611af](https://github.com/Patternslib/patterns/commit/72611afe0953939e4ac81bac74a9706628e5c520))
 
-* **pat tooltip tests:** Restore all mocks completly after each test run. ([8edba74](https://github.com/Patternslib/patterns/commit/8edba744c9ece324b83db12ccfb4a429cc56e3e5))## [7.4.0](https://github.com/Patternslib/patterns/compare/7.3.0...7.4.0) (2022-03-24)
+* **pat tooltip tests:** Restore all mocks completly after each test run. ([8edba74](https://github.com/Patternslib/patterns/commit/8edba744c9ece324b83db12ccfb4a429cc56e3e5))
+
+
+## [7.4.0](https://github.com/Patternslib/patterns/compare/7.3.0...7.4.0) (2022-03-24)
 
 
 ### Features
@@ -72,7 +75,10 @@
 
 * **pat inject:** Un-underscore pat-inject. ([584420c](https://github.com/Patternslib/patterns/commit/584420ce5f77b1afaa0c84cee11d1dc36b133b88))
 
-* **pat navigation:** Remove console.log statement from tests. ([a20fbd4](https://github.com/Patternslib/patterns/commit/a20fbd4c051d6f619f33a5af2d219c560653e7a3))## [7.3.0](https://github.com/Patternslib/patterns/compare/7.2.0...7.3.0) (2022-03-17)
+* **pat navigation:** Remove console.log statement from tests. ([a20fbd4](https://github.com/Patternslib/patterns/commit/a20fbd4c051d6f619f33a5af2d219c560653e7a3))
+
+
+## [7.3.0](https://github.com/Patternslib/patterns/compare/7.2.0...7.3.0) (2022-03-17)
 
 
 ### Features
@@ -95,7 +101,10 @@
 
 ### Maintenance
 
-* **pat bumper:** Minor code cleanup. ([edfec61](https://github.com/Patternslib/patterns/commit/edfec619e7c54786b5a82914dce8efaf7fd2c3c8))## [7.2.0](https://github.com/Patternslib/patterns/compare/7.1.3...7.2.0) (2022-03-16)
+* **pat bumper:** Minor code cleanup. ([edfec61](https://github.com/Patternslib/patterns/commit/edfec619e7c54786b5a82914dce8efaf7fd2c3c8))
+
+
+## [7.2.0](https://github.com/Patternslib/patterns/compare/7.1.3...7.2.0) (2022-03-16)
 
 
 ### Features
@@ -132,7 +141,10 @@ This change is made for these reasons:
 
 * **pat tabs:** Update import for get_css_value. ([ce50044](https://github.com/Patternslib/patterns/commit/ce500448d87358f86ee7be9833301afa0577c7cc))
 
-* **tests:** Add an IntersectionObserver mock for testing. ([8e84d0f](https://github.com/Patternslib/patterns/commit/8e84d0fc63e04e1d044e23546543c6cdc67f5927))### [7.1.3](https://github.com/Patternslib/patterns/compare/7.1.2...7.1.3) (2022-03-14)
+* **tests:** Add an IntersectionObserver mock for testing. ([8e84d0f](https://github.com/Patternslib/patterns/commit/8e84d0fc63e04e1d044e23546543c6cdc67f5927))
+
+
+### [7.1.3](https://github.com/Patternslib/patterns/compare/7.1.2...7.1.3) (2022-03-14)
 
 
 ### Bug Fixes
@@ -143,7 +155,10 @@ This change is made for these reasons:
 
 ### Maintenance
 
-* Upgrade dependencies. ([c0206d1](https://github.com/Patternslib/patterns/commit/c0206d18767042d3b29f472fc744eb5c67c655a3))### [7.1.2](https://github.com/Patternslib/patterns/compare/7.1.1...7.1.2) (2022-03-14)
+* Upgrade dependencies. ([c0206d1](https://github.com/Patternslib/patterns/commit/c0206d18767042d3b29f472fc744eb5c67c655a3))
+
+
+### [7.1.2](https://github.com/Patternslib/patterns/compare/7.1.1...7.1.2) (2022-03-14)
 
 
 ### Bug Fixes
