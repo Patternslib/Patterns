@@ -1208,6 +1208,30 @@ describe("pat-tooltip", () => {
             global.fetch.mockRestore();
             delete global.fetch;
         });
+
+        it("6.8 - fetch requests alse define the accept header.", async () => {
+            global.fetch = jest.fn().mockImplementation(mockFetch("OK"));
+
+            const $el = testutils.createTooltip({
+                data: "source: ajax",
+                href: "http://test.com",
+            });
+            new pattern($el);
+            await utils.timeout(1);
+
+            testutils.click($el);
+            await utils.timeout(1); // wait a tick for async fetch
+
+            expect(global.fetch).toHaveBeenCalled();
+            expect(global.fetch).toHaveBeenCalledWith("http://test.com", {
+                headers: {
+                    Accept: "text/html,application/xhtml+xml,application/xml",
+                },
+            });
+
+            global.fetch.mockRestore();
+            delete global.fetch;
+        });
     });
 
     describe(`7 - if the 'source' parameter is 'ajax'`, () => {
@@ -1536,16 +1560,28 @@ this will be extracted.
             await utils.timeout(1);
 
             let parts = instance.get_url_parts("https://text.com/#selector");
-            expect(parts.url === "https://text.com/").toBeTruthy();
-            expect(parts.selector === "#selector").toBeTruthy();
+            expect(parts.url).toBe("https://text.com/");
+            expect(parts.selector).toBe("#selector");
+
+            parts = instance.get_url_parts("https://text.com#selector");
+            expect(parts.url).toBe("https://text.com");
+            expect(parts.selector).toBe("#selector");
 
             parts = instance.get_url_parts("#selector");
-            expect(typeof parts.url === "undefined").toBeTruthy();
-            expect(parts.selector === "#selector").toBeTruthy();
+            expect(parts.url).toBeFalsy();
+            expect(parts.selector).toBe("#selector");
 
             parts = instance.get_url_parts("https://text.com/");
-            expect(parts.url === "https://text.com/").toBeTruthy();
-            expect(typeof parts.selector === "undefined").toBeTruthy();
+            expect(parts.url).toBe("https://text.com/");
+            expect(parts.selector).toBeFalsy();
+
+            parts = instance.get_url_parts("https://text.com#selector?key=value");
+            expect(parts.url).toBe("https://text.com?key=value");
+            expect(parts.selector).toBe("#selector");
+
+            parts = instance.get_url_parts("https://text.com?key=value");
+            expect(parts.url).toBe("https://text.com?key=value");
+            expect(parts.selector).toBeFalsy();
         });
     });
 });
