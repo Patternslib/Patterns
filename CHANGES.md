@@ -1,6 +1,43 @@
 
 
-## [7.5.0](https://github.com/Patternslib/patterns/compare/7.4.0...7.5.0) (2022-04-01)
+## [7.6.0](https://github.com/Patternslib/patterns/compare/7.5.0...7.6.0) (2022-04-08)
+
+
+### Features
+
+
+<br>
+
+* **pat tooltip:** For ajax requests, define the accept header. ([a65642e](https://github.com/Patternslib/patterns/commit/a65642ebe4d478bf5591ce23b0075712b1087bf9))
+We're expecting HTML or XML as the response.
+This solves a problem with */* or json requests being handled by plone.restapi only.
+
+<br>
+
+* **pat tooltip:** Support query strings in remote tooltip content URLs. ([252ee17](https://github.com/Patternslib/patterns/commit/252ee17a155629b5b6141d708f54a23ae9278276))
+
+
+
+### Bug Fixes
+
+
+<br>
+
+* **Build:** Fix changelog template as per @release-it/conventional-changelog v4.2.0 the header was improperly appended at the end of the new changelog entry. ([276b2d5](https://github.com/Patternslib/patterns/commit/276b2d5253742af7d7d7eef349568a663b2d9aa7))
+
+
+
+### Maintenance
+
+
+<br>
+
+* **Build:** Upgrade dependencies. ([900eedb](https://github.com/Patternslib/patterns/commit/900eedb47112aba2e8b1b96f31888510af066436))
+
+
+
+<br>
+<br>## [7.5.0](https://github.com/Patternslib/patterns/compare/7.4.0...7.5.0) (2022-04-01)
 
 
 ### Features
