@@ -71,8 +71,8 @@ describe("pat-registry: The registry for patterns", function () {
         const tree = document.createElement("div");
         tree.innerHTML = `
             <div class="e1 pat-example"></div>
-            <div class="e2 cant-touch-this pat-example"></div>
-            <div class="cant-touch-this">
+            <div class="e2 disable-patterns pat-example"></div>
+            <div class="disable-patterns">
                 <div class="e3 pat-example"></div>
             </div>
             <pre>
