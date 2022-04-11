@@ -86,10 +86,10 @@ The markup below would have exactly the same effect as the first example, but us
 ### Example with a hidden template which includes a pattern
 
 Patterns in templates are initialized after cloning.
-However, the patterns in the template itself are not initialized if the template has the attribute ``hidden`` or the class ``cant-touch-this``.
+However, the patterns in the template itself are not initialized if the template has the attribute ``hidden`` or the class ``disable-patterns``.
 This is to prevent double-initialization within the template and after being cloned.
 
-    <div id="template" class="cant-touch-this" hidden>
+    <div id="template" class="disable-patterns" hidden>
       <input name="date-1" type="date" class="pat-date-picker" />
     </fieldset>
 

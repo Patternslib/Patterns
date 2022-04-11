@@ -57,7 +57,7 @@ export default Base.extend({
                 : $(this.template).safeClone();
 
         const ids = ($clone.attr("id") || "").split(" ").filter((it) => it);
-        $clone.removeAttr("id").removeClass("cant-touch-this");
+        $clone.removeAttr("id").removeClass("disable-patterns");
         $.each(
             ids,
             function (idx, id) {

@@ -294,7 +294,7 @@ describe("pat-clone", function () {
             ).toBe("initializedinitialized");
         });
 
-        it("will not initialize patterns in the template wrapped in cant-touch-this.", function () {
+        it("will not initialize patterns in the template wrapped in disable-patterns.", function () {
             Base.extend({
                 name: "example",
                 trigger: ".pat-example",
@@ -304,7 +304,7 @@ describe("pat-clone", function () {
             });
 
             document.body.innerHTML = `
-                <div id="template" class="cant-touch-this">
+                <div id="template" class="disable-patterns">
                     <div class="pat-example"></div>
                 </div>
                 <div class="pat-clone" data-pat-clone="template: #template">
