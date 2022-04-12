@@ -1,6 +1,31 @@
 
 
-## [7.6.0](https://github.com/Patternslib/patterns/compare/7.5.0...7.6.0) (2022-04-08)
+## [7.7.0](https://github.com/Patternslib/patterns/compare/7.6.0...7.7.0) (2022-04-12)
+
+
+### Features
+
+
+* Introduce ``disable-patterns`` class to prevent from initializing. ([5f137f0](https://github.com/Patternslib/patterns/commit/5f137f0adc8f254a1904148ce7eae66295b23f93))
+To disable patterns when scanning markup for patterns, use the ``disable-patterns`` CSS class.
+
+Previously we did use the ``dont-touch-this`` class.
+This is deprecated due to a ambiguous name and will be removed in the next major version.
+
+
+### Bug Fixes
+
+
+* **Build:** Fix changelog template. ([96f7bac](https://github.com/Patternslib/patterns/commit/96f7bacfc94c30f132d1b9bd175fd499b1162eac))
+Since conventional-changelog 4.2.0 the previous header is merged to the
+end of the new changelog entry block.
+This is documented here: https://github.com/release-it/conventional-changelog/issues/46
+As long as this issue is not resolved, we're adding a ``#`` at the end
+of the changelog block, intending the previous entry in the heading
+hierarchy, but that's better than a even more messed up changelog file.
+
+
+### [7.6.0](https://github.com/Patternslib/patterns/compare/7.5.0...7.6.0) (2022-04-08)
 
 
 ### Features
