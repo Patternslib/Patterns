@@ -25,7 +25,7 @@ of the changelog block, intending the previous entry in the heading
 hierarchy, but that's better than a even more messed up changelog file.
 
 
-### [7.6.0](https://github.com/Patternslib/patterns/compare/7.5.0...7.6.0) (2022-04-08)
+## [7.6.0](https://github.com/Patternslib/patterns/compare/7.5.0...7.6.0) (2022-04-08)
 
 
 ### Features
