@@ -1,12 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 
-const main_template = fs
-    .readFileSync(
-        path.resolve(__dirname, ".release-it", "conventional-changelog-template.hbs")
-    )
-    .toString();
-
 const commits_template = fs
     .readFileSync(
         path.resolve(__dirname, ".release-it", "conventional-changelog-commit.hbs")
@@ -48,7 +42,6 @@ module.exports = {
                 ],
             },
             writerOpts: {
-                mainTemplate: main_template,
                 commitPartial: commits_template,
             },
         },
