@@ -262,10 +262,10 @@ export default Base.extend({
 
     async _onMount() {
         if (this.options.source === "ajax") {
-            await this.get_content();
+            await this.get_content(); // + _initializeContent
+        } else {
+            this._initializeContent();
         }
-
-        this._initializeContent();
 
         // Notify parent patterns about injected content.
         // Do not call pat-inject's handler, because all necessary
@@ -349,6 +349,7 @@ export default Base.extend({
             this.tippy.setContent(content);
             await utils.timeout(1); // Wait a tick before forceUpdate. Might fail due to unset popperInstance.
             this.tippy.popperInstance.forceUpdate(); // re-position tippy after content is known.
+            this._initializeContent();
         }
     },
 
