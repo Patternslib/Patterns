@@ -1,5 +1,26 @@
 
 
+## [7.8.0](https://github.com/Patternslib/patterns/compare/7.7.0...7.8.0) (2022-04-15)
+
+
+### Features
+
+
+* **pat tooltip:** Initialize the tooltip's content after each refresh via get_content. This re-initializes any patterns after an update to the tooltip's contents. ([665bea5](https://github.com/Patternslib/patterns/commit/665bea5d5656eb913412c9577b886bc6683a6660))
+
+
+
+### Maintenance
+
+
+* **Build:** Remove customized main changelog template as due to conventional-changelog 4.3.0 the previous header's line break is preserved. ([9e8ecbd](https://github.com/Patternslib/patterns/commit/9e8ecbd42e2b029acb67168ad617aad8993ff10d))
+
+
+* **Build:** Upgrade dependencies. ([9ea9c21](https://github.com/Patternslib/patterns/commit/9ea9c215ccd71dd561e6a6c67494f098e5f5201b))
+
+
+* **pat tooltip:** Use add_event_listener from core.events which better handles double registrations and makes it easier to unregister event handlers. ([fe0f0d7](https://github.com/Patternslib/patterns/commit/fe0f0d714a839f3c67b2dfad4b0f8d8fc4b507c3))
+
 ## [7.7.0](https://github.com/Patternslib/patterns/compare/7.6.0...7.7.0) (2022-04-12)
 
 
