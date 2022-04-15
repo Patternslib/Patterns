@@ -3,6 +3,7 @@ import $ from "jquery";
 import Base from "../../core/base";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
+import events from "../../core/events";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 
@@ -80,10 +81,15 @@ export default Base.extend({
 
         if (this.options.trigger === "click" && this.options.source === "ajax") {
             // prevent default action for "click" and "mouseenter click"
-            el.addEventListener("click", (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-            });
+            events.add_event_listener(
+                el,
+                "click",
+                "pat-tooltip--click-prevent-default",
+                (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            );
         }
 
         if (this.options.trigger === "click") {
@@ -236,14 +242,19 @@ export default Base.extend({
             ".pat-tooltip--close-button"
         );
         for (let close_el of close_els) {
-            close_el.addEventListener("click", async () => {
-                await utils.timeout(1); // wait a tick for event being processed by other handlers.
-                for (let close_button of close_buttons) {
-                    // Also remove the close button
-                    close_button.parentNode.removeChild(close_button);
+            events.add_event_listener(
+                close_el,
+                "click",
+                "pat-tooltip--close-tooltip",
+                async () => {
+                    await utils.timeout(1); // wait a tick for event being processed by other handlers.
+                    for (let close_button of close_buttons) {
+                        // Also remove the close button
+                        close_button.parentNode.removeChild(close_button);
+                    }
+                    this.tippy.hide();
                 }
-                this.tippy.hide();
-            });
+            );
         }
         // Initialize any other patterns.
         registry.scan(this.tippy.popper);
