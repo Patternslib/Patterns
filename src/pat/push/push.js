@@ -9,7 +9,7 @@ const logger = logging.getLogger("push");
 export const parser = new Parser("push");
 parser.addArgument("url", null);
 parser.addArgument("push-id", null);
-parser.addArgument("mode", "replace");
+parser.addArgument("mode", "replace", ["replace", "append", "desktop-notification"]);
 
 export default Base.extend({
     name: "push",
@@ -21,7 +21,9 @@ export default Base.extend({
             logger.debug("received push marker");
             const data = e?.detail?.body;
             if (data === this.options.pushId) {
-                if (this.el.tagName === "FORM") {
+                if (this.options.mode === "desktop-notification") {
+                    this.desktop_notification();
+                } else if (this.el.tagName === "FORM") {
                     this.el.submit();
                 } else {
                     this.perform_inject();
@@ -40,6 +42,47 @@ export default Base.extend({
                 this.el.innerHTML = data;
             }
             registry.scan(this.el);
+        } catch (e) {
+            logger.error(
+                `Could not fetch from ${this.options.url} on push-id ${this.options.pushId}.`
+            );
+        }
+    },
+
+    async desktop_notification() {
+        try {
+            const response = await fetch(this.options.url);
+            const data = await response.json();
+
+            if (data.length === 0) {
+                return;
+            }
+
+            // Let's check if the browser supports notifications
+            if (!("Notification" in window)) {
+                logger.error("This browser does not support notifications.");
+                return;
+            }
+
+            // Notifications need to be granted.
+            // Note: Current browsers don't allow an automatic request for
+            //       permission but need an interaction to allow it.
+            //       The following code won't work out of the box in such cases.
+            if (!(Notification.permission in ["denied", "granted"])) {
+                Notification.requestPermission((permission) => {
+                    // Whatever the user answers, we make sure Chrome stores the information
+                    if (!("permission" in Notification)) {
+                        Notification.permission = permission;
+                    }
+                });
+            }
+
+            // Let's check if the user is okay to get some notification
+            if (Notification.permission === "granted") {
+                for (const message of data) {
+                    new Notification(message.title, message);
+                }
+            }
         } catch (e) {
             logger.error(
                 `Could not fetch from ${this.options.url} on push-id ${this.options.pushId}.`
