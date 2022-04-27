@@ -2,6 +2,7 @@ import "regenerator-runtime/runtime"; // needed for ``await`` support
 import Base from "../../core/base";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
+import registry from "../../core/registry";
 
 const logger = logging.getLogger("push");
 
@@ -38,6 +39,7 @@ export default Base.extend({
             } else {
                 this.el.innerHTML = data;
             }
+            registry.scan(this.el);
         } catch (e) {
             logger.error(
                 `Could not fetch from ${this.options.url} on push-id ${this.options.pushId}.`
