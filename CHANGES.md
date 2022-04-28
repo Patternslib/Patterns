@@ -1,5 +1,19 @@
 
 
+## [7.9.0](https://github.com/Patternslib/patterns/compare/7.8.0...7.9.0) (2022-04-28)
+
+
+### Features
+
+
+* **pat push:** Add support for desktop notifications. ([009b7a9](https://github.com/Patternslib/patterns/commit/009b7a9cbf0158ff652a305d15715f4a8f767187))
+
+
+* **pat push:** Added the option to append the fetched content at the end of the pat-push element ([6e3c6dc](https://github.com/Patternslib/patterns/commit/6e3c6dcf296692f3d3d1832638f2fe69ff3d9a78)), closes [#876](https://github.com/Patternslib/patterns/issues/876)
+Fixes #876
+
+* **pat push:** Scan the injected element for patterns. ([8c75fa1](https://github.com/Patternslib/patterns/commit/8c75fa17719afe5c083cdc5db02170ca5f1d6ed6))
+
 ## [7.8.0](https://github.com/Patternslib/patterns/compare/7.7.0...7.8.0) (2022-04-15)
 
 
