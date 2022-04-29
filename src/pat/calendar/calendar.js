@@ -157,7 +157,7 @@ export default Base.extend({
         if (lang !== "en") {
             const locale = await import(`@fullcalendar/core/locales/${lang}.js`);
             config.locale = locale.default;
-            console.log("loaded cal locale for " + lang);
+            log.debug(`Loaded locale for ${lang}`);
         }
         if (this.options.first.day !== null) {
             config.firstDay = this.options.first.day;
