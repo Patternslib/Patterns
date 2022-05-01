@@ -9,7 +9,7 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 
 import jquery from "jquery";
-global["$"] = global["jQuery"] = jquery;
+global.$ = global.jQuery = jquery;
 
 jquery.expr.pseudos.visible = function () {
     // Fix jQuery ":visible" selector always returns false in JSDOM.
@@ -26,7 +26,7 @@ document.fullscreenchange = jest.fn();
 document.fullscreenerror = jest.fn();
 
 // resize-observer
-global["ResizeObserver"] = function () {
+global.ResizeObserver = function () {
     // Just do nothing for now...
     return { observe: () => {} };
 };
@@ -34,8 +34,8 @@ global["ResizeObserver"] = function () {
 global.IntersectionObserver = class IntersectionObserver {
     constructor(callback) {
         this.callback = callback;
-        if (! global.__patternslib_test_intersection_observers) {
-           global.__patternslib_test_intersection_observers = [];
+        if (!global.__patternslib_test_intersection_observers) {
+            global.__patternslib_test_intersection_observers = [];
         }
         this._el = null;
         this._do_observe = false;
@@ -54,19 +54,21 @@ global.IntersectionObserver = class IntersectionObserver {
         this._do_observe = false;
     }
     takeRecords() {}
-    _set_entry(is_intersecting=true) {
-        if (! this._do_observe) {
+    _set_entry(is_intersecting = true) {
+        if (!this._do_observe) {
             return;
         }
-        this.callback([{
-            isIntersecting: is_intersecting,
-            target: this._el,
-            // entry.boundingClientRect
-            // entry.intersectionRatio
-            // entry.intersectionRect
-            // entry.rootBounds
-            // entry.time
-        }])
+        this.callback([
+            {
+                isIntersecting: is_intersecting,
+                target: this._el,
+                // entry.boundingClientRect
+                // entry.intersectionRatio
+                // entry.intersectionRect
+                // entry.rootBounds
+                // entry.time
+            },
+        ]);
         this._cnt++;
     }
 };
