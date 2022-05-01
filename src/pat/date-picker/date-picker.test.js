@@ -561,7 +561,7 @@ describe("pat-date-picker", function () {
 
     it("works with pat-autosubmit", async () => {
         document.body.innerHTML = `
-            <form class="pat-autosubmit">
+            <form class="pat-autosubmit" onsubmit="return false;">
                 <input name="date" type="date" class="pat-date-picker"/>
             </form>
         `;

@@ -273,7 +273,7 @@ describe("pat-validation", function () {
         // Buttons with ``formnovalidate`` should prevent validation.
 
         document.body.innerHTML = `
-          <form class="pat-validation">
+          <form class="pat-validation" onsubmit="return false;">
             <input name="ok" required />
             <button formnovalidate>submit</button>
           </form>

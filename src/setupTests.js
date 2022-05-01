@@ -25,10 +25,6 @@ document.fullscreenEnabled = jest.fn();
 document.fullscreenchange = jest.fn();
 document.fullscreenerror = jest.fn();
 
-// pat-subform
-// See https://github.com/jsdom/jsdom/issues/1937#issuecomment-461810980
-global["HTMLFormElement"].prototype.submit = () => {};
-
 // resize-observer
 global["ResizeObserver"] = function () {
     // Just do nothing for now...
