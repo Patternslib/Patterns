@@ -992,6 +992,34 @@ describe("pat-validation", function () {
         expect(el.querySelectorAll("em.warning").length).toBe(0);
     });
 
+    it("5.9 - Do not interpret ``ok-1`` as a valid date.", async function () {
+        // This issue popped up in Chrome but not in Firefox.
+        // A date like ``ok-1`` was interpreted as ``2000-12-31T23:00:00.000Z``.
+        // Explicitly checking for a valid ISO 8601 date fixes this.
+
+        document.body.innerHTML = `
+          <form class="pat-validation">
+            <input
+                type="date"
+                name="date"
+                data-pat-validation="message-date: Wong date!; not-after: ok-1"
+                />
+          </form>
+        `;
+
+        const el = document.querySelector(".pat-validation");
+        const inp = el.querySelector("[name=date]");
+
+        new Pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        inp.value = "2022-01-01";
+        inp.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.querySelectorAll("em.warning").length).toBe(0);
+    });
+
     it("6.1 - validates radio buttons", async function () {
         document.body.innerHTML = `
           <form class="pat-validation"

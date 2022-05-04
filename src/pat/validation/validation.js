@@ -141,40 +141,40 @@ export default Base.extend({
                 let not_before;
                 let not_after_el;
                 let not_before_el;
+
+                if (!utils.is_iso_date_time(input.value, true)) {
+                    // Not a valid date at all, return.
+                    return;
+                }
                 const date = new Date(input.value);
                 if (isNaN(date)) {
+                    // Not a valid date, return.
                     // Should not happen or input only partially typed in.
                     return;
                 }
                 if (input_options.not.after) {
-                    // Handle value as date.
-                    not_after = new Date(input_options.not.after);
-                    if (isNaN(not_after)) {
+                    if (utils.is_iso_date_time(input_options.not.after, true)) {
+                        not_after = new Date(input_options.not.after);
+                    } else {
                         // Handle value as selector
                         not_after_el = document.querySelector(input_options.not.after);
-                        not_after = not_after_el?.value;
-                        not_after =
-                            not_after &&
-                            new Date(
-                                document.querySelector(input_options.not.after).value
-                            );
+                        not_after = not_after_el?.value
+                            ? new Date(not_after_el?.value)
+                            : undefined;
                     }
 
                     // Use null if no valid date.
                     not_after = isNaN(not_after) ? null : not_after;
                 }
                 if (input_options.not.before) {
-                    // Handle value as date.
-                    not_before = new Date(input_options.not.before);
-                    if (isNaN(not_before)) {
+                    if (utils.is_iso_date_time(input_options.not.before, true)) {
+                        not_before = new Date(input_options.not.before);
+                    } else {
                         // Handle value as selector
                         not_before_el = document.querySelector(input_options.not.before);
-                        not_before = not_before_el?.value;
-                        not_before =
-                            not_before &&
-                            new Date(
-                                document.querySelector(input_options.not.before).value
-                            );
+                        not_before = not_before_el?.value
+                            ? new Date(not_before_el?.value)
+                            : undefined;
                     }
 
                     // Use null if no valid date.
