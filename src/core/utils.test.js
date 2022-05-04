@@ -721,3 +721,31 @@ describe("escape/unescape html ...", function () {
         expect(utils.unescape_html(undefined)).toBe("");
     });
 });
+
+describe("is_iso_date_time ...", function () {
+    it("detects valid date/time objects", () => {
+        expect(utils.is_iso_date_time("2022-05-04T21:00")).toBe(true);
+
+        // We actually do not strictly check for a valid datetime, just if the
+        // format is correct.
+        expect(utils.is_iso_date_time("2222-19-39T29:59")).toBe(true);
+
+        // But some basic constraints are in place
+        expect(utils.is_iso_date_time("2222-20-40T30:60")).toBe(false);
+
+        // And this is for sure no valid date/time
+        expect(utils.is_iso_date_time("not2-ok-40T30:60")).toBe(false);
+
+        // Also, the time component cannot be left out
+        expect(utils.is_iso_date_time("2022-05-04")).toBe(false);
+
+        // Not even partially.
+        expect(utils.is_iso_date_time("2022-05-04T21")).toBe(false);
+
+        // Unless we set optional_time to true.
+        expect(utils.is_iso_date_time("2022-05-04", true)).toBe(true);
+
+        // But still, partial time component does not pass.
+        expect(utils.is_iso_date_time("2022-05-04T21", true)).toBe(false);
+    });
+});
