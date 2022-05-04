@@ -576,7 +576,7 @@ const ensureArray = (it, force_array) => {
 
 const localized_isodate = (date) => {
     // Return a iso date (date only) in the current timezone instead of a
-    // UTC ISO 8602 date+time component which toISOString returns.
+    // UTC ISO 8601 date+time component which toISOString returns.
 
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -628,6 +628,20 @@ const unescape_html = (escaped_html) => {
         .replace(/&quot;/g, '"');
 };
 
+/**
+ * Return true, if the given value is a valid ISO 8601 date/time string with or without an optional time component.
+ *
+ * @param {String} value - The date/time value to be checked.
+ * @param {Boolean} [optional_time=false] - True, if time component is optional.
+ * @return {Boolean} - True, if the given value is a valid Date string. False if not.
+ */
+const is_iso_date_time = (value, optional_time = false) => {
+    const re_date_time = optional_time
+        ? /^\d{4}-[01]\d-[0-3]\d(T[0-2]\d:[0-5]\d)?$/
+        : /^\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d$/;
+    return re_date_time.test(value);
+};
+
 var utils = {
     // pattern pimping - own module?
     jqueryPlugin: jqueryPlugin,
@@ -658,6 +672,7 @@ var utils = {
     localized_isodate: localized_isodate,
     escape_html: escape_html,
     unescape_html: unescape_html,
+    is_iso_date_time: is_iso_date_time,
     getCSSValue: dom.get_css_value, // BBB: moved to dom. TODO: Remove in upcoming version.
 };
 

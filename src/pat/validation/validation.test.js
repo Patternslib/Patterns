@@ -864,6 +864,20 @@ describe("pat-validation", function () {
         inp_start.dispatchEvent(events.change_event());
         await utils.timeout(1); // wait a tick for async to settle.
         expect(el.querySelectorAll("em.warning").length).toBe(0);
+
+        // Violate the constraint again...
+        inp_start.value = "2020-10-11";
+        inp_start.dispatchEvent(events.change_event());
+        inp_end.value = "2020-10-10";
+        inp_end.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(2);
+
+        // Clearing one of the optional values should clear all errors.
+        inp_start.value = "";
+        inp_start.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(0);
     });
 
     it("5.6 - doesn't validate empty optional dates", async function () {
@@ -989,6 +1003,34 @@ describe("pat-validation", function () {
         inp_start.value = "";
         inp_start.dispatchEvent(events.change_event());
         await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(0);
+    });
+
+    it("5.9 - Do not interpret ``ok-1`` as a valid date.", async function () {
+        // This issue popped up in Chrome but not in Firefox.
+        // A date like ``ok-1`` was interpreted as ``2000-12-31T23:00:00.000Z``.
+        // Explicitly checking for a valid ISO 8601 date fixes this.
+
+        document.body.innerHTML = `
+          <form class="pat-validation">
+            <input
+                type="date"
+                name="date"
+                data-pat-validation="message-date: Wong date!; not-after: ok-1"
+                />
+          </form>
+        `;
+
+        const el = document.querySelector(".pat-validation");
+        const inp = el.querySelector("[name=date]");
+
+        new Pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        inp.value = "2022-01-01";
+        inp.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+
         expect(el.querySelectorAll("em.warning").length).toBe(0);
     });
 
