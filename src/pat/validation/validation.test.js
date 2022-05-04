@@ -864,6 +864,20 @@ describe("pat-validation", function () {
         inp_start.dispatchEvent(events.change_event());
         await utils.timeout(1); // wait a tick for async to settle.
         expect(el.querySelectorAll("em.warning").length).toBe(0);
+
+        // Violate the constraint again...
+        inp_start.value = "2020-10-11";
+        inp_start.dispatchEvent(events.change_event());
+        inp_end.value = "2020-10-10";
+        inp_end.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(2);
+
+        // Clearing one of the optional values should clear all errors.
+        inp_start.value = "";
+        inp_start.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(0);
     });
 
     it("5.6 - doesn't validate empty optional dates", async function () {

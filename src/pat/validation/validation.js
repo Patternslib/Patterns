@@ -138,20 +138,7 @@ export default Base.extend({
                 const msg = input_options.message.date || input_options.message.datetime;
 
                 let not_after;
-                let not_before;
                 let not_after_el;
-                let not_before_el;
-
-                if (!utils.is_iso_date_time(input.value, true)) {
-                    // Not a valid date at all, return.
-                    return;
-                }
-                const date = new Date(input.value);
-                if (isNaN(date)) {
-                    // Not a valid date, return.
-                    // Should not happen or input only partially typed in.
-                    return;
-                }
                 if (input_options.not.after) {
                     if (utils.is_iso_date_time(input_options.not.after, true)) {
                         not_after = new Date(input_options.not.after);
@@ -166,6 +153,9 @@ export default Base.extend({
                     // Use null if no valid date.
                     not_after = isNaN(not_after) ? null : not_after;
                 }
+
+                let not_before;
+                let not_before_el;
                 if (input_options.not.before) {
                     if (utils.is_iso_date_time(input_options.not.before, true)) {
                         not_before = new Date(input_options.not.before);
@@ -180,11 +170,22 @@ export default Base.extend({
                     // Use null if no valid date.
                     not_before = isNaN(not_before) ? null : not_before;
                 }
-                if (not_after && date > not_after) {
-                    this.set_validity({ input: input, msg: msg });
-                } else if (not_before && date < not_before) {
-                    this.set_validity({ input: input, msg: msg });
+
+                if (
+                    input.value &&
+                    utils.is_iso_date_time(input.value, true) &&
+                    !isNaN(new Date(input.value))
+                ) {
+                    // That's 1 valid date!
+                    const date = new Date(input.value);
+
+                    if (not_after && date > not_after) {
+                        this.set_validity({ input: input, msg: msg });
+                    } else if (not_before && date < not_before) {
+                        this.set_validity({ input: input, msg: msg });
+                    }
                 }
+
                 // always check the other input to clear/set errors
                 !stop && // do not re-check when stop is set to avoid infinite loops
                     not_after_el &&
