@@ -1,3 +1,4 @@
+# Define the GITHUB_TOKEN in the .env file for usage with release-it.
 -include .env
 export
 
