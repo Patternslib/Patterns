@@ -1,5 +1,23 @@
 
 
+## [7.10.0](https://github.com/Patternslib/patterns/compare/7.9.0...7.10.0) (2022-05-05)
+
+
+### Features
+
+
+* **core utils:** Add is_iso_date_time method to check for valid ISO 8601 date/time strings. ([d9fcfac](https://github.com/Patternslib/patterns/commit/d9fcfac6774561ffbef77c4383dd755d2865ac4a))
+
+
+
+### Bug Fixes
+
+
+* **pat validation:** Also validate date/time inputs when the value is empty. ([39249b2](https://github.com/Patternslib/patterns/commit/39249b23c6511990a1eb6965b9f2f03dfd7dd682))
+This clears eventual validation errors when the date input is cleared.
+
+* **pat validation:** Fix issue where Google Chrome would interpret an invalid date value like "ok-1" as a valid date. ([0fb2359](https://github.com/Patternslib/patterns/commit/0fb2359992ed1fca8574fefb6f6d3f7a275aa270))
+
 ## [7.9.0](https://github.com/Patternslib/patterns/compare/7.8.0...7.9.0) (2022-04-28)
 
 
