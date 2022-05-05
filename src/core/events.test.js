@@ -123,6 +123,24 @@ describe("core.events tests", () => {
             expect(catched).toBe("outer");
         });
 
+        it("mousedown event", async () => {
+            outer.addEventListener("mousedown", () => {
+                catched = "outer";
+            });
+            inner.dispatchEvent(events.mousedown_event());
+            await utils.timeout(1);
+            expect(catched).toBe("outer");
+        });
+
+        it("mouseup event", async () => {
+            outer.addEventListener("mouseup", () => {
+                catched = "outer";
+            });
+            inner.dispatchEvent(events.mouseup_event());
+            await utils.timeout(1);
+            expect(catched).toBe("outer");
+        });
+
         it("scroll event", async () => {
             outer.addEventListener("scroll", () => {
                 catched = "outer";
