@@ -118,6 +118,20 @@ const input_event = () => {
     });
 };
 
+const mousedown_event = () => {
+    return new Event("mousedown", {
+        bubbles: true,
+        cancelable: true,
+    });
+};
+
+const mouseup_event = () => {
+    return new Event("mouseup", {
+        bubbles: true,
+        cancelable: true,
+    });
+};
+
 const scroll_event = () => {
     return new Event("scroll", {
         bubbles: true,
@@ -140,6 +154,8 @@ export default {
     click_event: click_event,
     change_event: change_event,
     input_event: input_event,
+    mousedown_event: mousedown_event,
+    mouseup_event: mouseup_event,
     scroll_event: scroll_event,
     submit_event: submit_event,
 };

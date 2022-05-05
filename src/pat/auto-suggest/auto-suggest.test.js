@@ -1,4 +1,5 @@
 import $ from "jquery";
+import events from "../../core/events";
 import pattern from "./auto-suggest";
 import utils from "../../core/utils";
 import registry from "../../core/registry";
@@ -95,7 +96,7 @@ describe("pat-autosuggest", function () {
     });
 
     describe("2.1 - Selected items", function () {
-        it("4.1 - can be given custom CSS classes", async function () {
+        it("2.1 - can be given custom CSS classes", async function () {
             testutils.createInputElement({
                 data: 'words: apple,orange,pear; pre-fill: orange; selection-classes: {"orange": ["fruit", "orange"]}',
             });
@@ -179,6 +180,62 @@ describe("pat-autosuggest", function () {
             expect(selected[0].textContent.trim()).toBe("apple");
             expect(selected[1].textContent.trim()).toBe("orange");
             expect(input.value).toBe("apple,orange");
+        });
+
+        it("2.5 - items can be pre-filled with json.", async function () {
+            // Check if json pre-filled fields do work as expected.
+            // Version 7.0 introduced a problem where at json pre-filled fields
+            // no items could be deleted or added.
+            // Version 7.11 fixes that problem.
+
+            document.body.innerHTML = `
+                <input
+                    type="text"
+                    class="pat-autosuggest"
+                    data-pat-autosuggest='
+                        words-json: [
+                            {"id": "id-apple", "text":"Apple"},
+                            {"id": "id-orange", "text": "Orange"},
+                            {"id": "id-lemon", "text":"Lemon"}
+                        ];
+                        prefill-json: {
+                            "id-orange": "Orange"
+                        };
+                    ' />
+            `;
+
+            const input = document.querySelector("input");
+            new pattern(input);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            let selected = document.querySelectorAll(".select2-search-choice");
+            expect(selected.length).toBe(1);
+            expect(selected[0].textContent.trim()).toBe("Orange");
+            expect(input.value).toBe("id-orange");
+
+            // NOTE: the keyboard event init key ``which`` is deprecated,
+            //       but that's what select2 3.5.1 is expecting.
+            document
+                .querySelector(".select2-input")
+                .dispatchEvent(new KeyboardEvent("keydown", { which: 8 }));
+            // Need to send two times.
+            document
+                .querySelector(".select2-input")
+                .dispatchEvent(new KeyboardEvent("keydown", { which: 8 }));
+
+            selected = document.querySelectorAll(".select2-search-choice");
+            expect(selected.length).toBe(0);
+
+            document.querySelector(".select2-input").click();
+            document.querySelector(".select2-result").dispatchEvent(events.mouseup_event()); // prettier-ignore
+            document.querySelector(".select2-input").click();
+            document.querySelector(".select2-result").dispatchEvent(events.mouseup_event()); // prettier-ignore
+
+            selected = document.querySelectorAll(".select2-search-choice");
+            expect(selected.length).toBe(2);
+            expect(selected[0].textContent.trim()).toBe("Apple");
+            expect(selected[1].textContent.trim()).toBe("Orange");
+            expect(input.value).toBe("id-apple,id-orange");
         });
     });
 

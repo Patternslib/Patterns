@@ -16,7 +16,7 @@ class ArgumentParser {
 
         this.group_pattern = /([a-z][a-z0-9]*)-([A-Z][a-z0-0\-]*)/i;
         this.json_param_pattern = /^\s*\[?\s*{/i;
-        this.named_param_pattern = /^\s*([a-z][a-z0-9\-]*)\s*:(.*)/i;
+        this.named_param_pattern = /^\s*([a-z][a-z0-9\-]*)\s*:(.*)/is;
         this.token_pattern = /((["']).*?(?!\\)\2)|\s*(\S+)\s*/g;
     }
 
@@ -442,7 +442,6 @@ class ArgumentParser {
                 continue;
             }
             const _parse = this._parse.bind(this);
-
             if (data.match(/&&/)) {
                 frame = data.split(/\s*&&\s*/).map(_parse);
             } else {

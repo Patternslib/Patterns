@@ -102,15 +102,11 @@ export default Base.extend({
             }
         });
 
-        this.$el.on("click", () => {
-            // Work around the situation that a jQuery "change" event,
-            // submitted by select2, isn't caught by pat-validation.
-            // Select2 also triggers a click event, which we will use here to
-            // trigger a standard JS change event.
-            this.el.dispatchEvent(events.change_event());
-            // Also dispatch a ``input`` event for ``input-change-events``
-            // and pat-auto-suggest to pick this up.
-            // TODO: Revisit after ``input-change-events`` is removed.
+        this.$el.on("change", () => {
+            // The jQuery "change" event isn't caught by normal JavaScript
+            // event listeners, e.g. in pat-validation.
+            // Let's re-trigger as input-event, so that pat-validation but also
+            // ``input-change-events`` can pick it up.
             this.el.dispatchEvent(events.input_event());
         });
 

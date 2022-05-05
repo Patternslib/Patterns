@@ -124,6 +124,32 @@ describe("The Patterns parser", function () {
             done();
         });
 
+        it("allows values to span multiple lines", function (done) {
+            const parser = new ArgumentParser("mypattern");
+            parser.addArgument("jayson");
+            parser.addArgument("ob-ject");
+            const content = document.createElement("div");
+            content.innerHTML = `
+                <div data-pat-mypattern='
+                    jayson: [
+                        {"key1": "value 1"},
+                        {"key2": "value 2"}
+                    ];
+                    ob-ject: {"key3": "value 3"}
+                '>
+                </div>
+            `;
+            const opts = parser.parse(content.querySelector("[data-pat-mypattern]"));
+            const jayson = JSON.parse(opts.jayson);
+            const ob_ject = JSON.parse(opts.obJect);
+            expect(jayson.length).toBe(2);
+            expect(jayson[0].key1).toBe("value 1");
+            expect(jayson[1].key2).toBe("value 2");
+            expect(ob_ject.key3).toBe("value 3");
+
+            done();
+        });
+
         it("does a type casting to the default value's type", function (done) {
             const parser = new ArgumentParser("mypattern");
             parser.addArgument("selector");
