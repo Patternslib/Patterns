@@ -1,5 +1,30 @@
 
 
+## [7.11.0](https://github.com/Patternslib/patterns/compare/7.10.0...7.11.0) (2022-05-06)
+
+
+### Features
+
+
+* **core events:** Add mousedown and mouseup event factories. ([62e1978](https://github.com/Patternslib/patterns/commit/62e1978e9e1ad1cc661c87adc83c6b713f1a2f6c))
+
+
+* **core parser:** Allow values to span multiple lines. Can be useful to nicely format bigger JSON values. ([54a10c5](https://github.com/Patternslib/patterns/commit/54a10c51ec46712ee2852715e56f3eca5f8939ce))
+
+
+
+### Bug Fixes
+
+
+* **pat auto suggest:** Fix regression introduced in 7.0 where auto suggest wasn't able to handle pre-filled json items properly. ([4c39332](https://github.com/Patternslib/patterns/commit/4c393324f97823f1c5adc031bbd8b5f08c287016))
+
+
+
+### Maintenance
+
+
+* **docs:** Add note to Makefile about GITHUB_TOKEN in .env file. ([2d10732](https://github.com/Patternslib/patterns/commit/2d107328760fe963a07f77b74592e244f628fdcf))
+
 ## [7.10.0](https://github.com/Patternslib/patterns/compare/7.9.0...7.10.0) (2022-05-05)
 
 
