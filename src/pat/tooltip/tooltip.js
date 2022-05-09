@@ -1,11 +1,15 @@
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Base from "../../core/base";
+import dom from "../../core/dom";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import events from "../../core/events";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
+
+// Initialize close-panel functionality.
+import "../close-panel/close-panel";
 
 const log = logging.getLogger("pat-tooltip");
 
@@ -235,36 +239,14 @@ export default Base.extend({
         return tippy_options;
     },
 
-    _initializeContent() {
-        // Initialize all .close-panel elements
-        const close_els = this.tippy.popper.querySelectorAll(".close-panel");
-        const close_buttons = this.tippy.popper.querySelectorAll(
-            ".pat-tooltip--close-button"
-        );
-        for (let close_el of close_els) {
-            events.add_event_listener(
-                close_el,
-                "click",
-                "pat-tooltip--close-tooltip",
-                async () => {
-                    await utils.timeout(1); // wait a tick for event being processed by other handlers.
-                    for (let close_button of close_buttons) {
-                        // Also remove the close button
-                        close_button.parentNode.removeChild(close_button);
-                    }
-                    this.tippy.hide();
-                }
-            );
-        }
+    _initialize_content() {
         // Initialize any other patterns.
         registry.scan(this.tippy.popper);
     },
 
     async _onMount() {
         if (this.options.source === "ajax") {
-            await this.get_content(); // + _initializeContent
-        } else {
-            this._initializeContent();
+            await this.get_content(); // + _initialize_content
         }
 
         // Notify parent patterns about injected content.
@@ -275,24 +257,21 @@ export default Base.extend({
             this.el,
             this.tippy.popper,
         ]);
-    },
-
-    _onShow() {
-        if (this.options.closing !== "auto" && this.options.trigger === "hover") {
-            // no auto-close when hovering when closing mode is "sticky" or "close-button".
-            this.tippy.setProps({ trigger: "click" });
-        }
 
         if (this.options.closing === "close-button") {
+            // First, remove previously automatically added close buttons.
+            // Otherwise we would end up adding another close button with every
+            // click on it.
+            for (const close_button of this.tippy.popper.querySelectorAll(
+                ".pat-tooltip--close-button"
+            )) {
+                close_button.parentNode.removeChild(close_button);
+            }
+
             const close_button = document.createElement("button");
             close_button.setAttribute("class", "close-panel pat-tooltip--close-button");
             const content = this.tippy.popper.querySelector(".tippy-content");
             content.parentNode.insertBefore(close_button, content);
-        }
-
-        if (this.options.markInactive) {
-            this.el.classList.remove(this.inactive_class);
-            this.el.classList.add(this.active_class);
         }
 
         if (this.options.class) {
@@ -303,6 +282,24 @@ export default Base.extend({
 
         // Add a generic non-tippy related class to identify the tooltip container
         this.tippy.popper.classList.add("tooltip-container");
+
+        // Store reference to method for closing panels on the tooltip element instance.
+        this.tippy.popper.classList.add("has-close-panel");
+        dom.set_data(this.tippy.popper, "close_panel", this.hide.bind(this));
+
+        this._initialize_content();
+    },
+
+    _onShow() {
+        if (this.options.closing !== "auto" && this.options.trigger === "hover") {
+            // no auto-close when hovering when closing mode is "sticky" or "close-button".
+            this.tippy.setProps({ trigger: "click" });
+        }
+
+        if (this.options.markInactive) {
+            this.el.classList.remove(this.inactive_class);
+            this.el.classList.add(this.active_class);
+        }
     },
 
     _onHide() {
@@ -321,7 +318,7 @@ export default Base.extend({
         }
     },
 
-    async get_content(url = this.options.url) {
+    async _get_content(url = this.options.url) {
         let selector;
         ({ url, selector } = this.get_url_parts(url || this.el.getAttribute("href")));
         let content;
@@ -349,8 +346,13 @@ export default Base.extend({
             this.tippy.setContent(content);
             await utils.timeout(1); // Wait a tick before forceUpdate. Might fail due to unset popperInstance.
             this.tippy.popperInstance.forceUpdate(); // re-position tippy after content is known.
-            this._initializeContent();
         }
+    },
+
+    async get_content(url = this.options.url) {
+        // API method: _get_content + _initialize_content
+        await this._get_content(url);
+        this._initialize_content();
     },
 
     get_url_parts(href) {
