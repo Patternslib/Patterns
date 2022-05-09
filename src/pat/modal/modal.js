@@ -2,9 +2,14 @@ import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
+import dom from "../../core/dom";
 import events from "../../core/events";
 import inject from "../inject/inject";
+import registry from "../../core/registry";
 import utils from "../../core/utils";
+
+// Initialize close-panel functionality.
+import "../close-panel/close-panel";
 
 export const parser = new Parser("modal");
 parser.addArgument("class");
@@ -18,8 +23,6 @@ export default Base.extend({
     // div's are turned into modals
     // links, forms and subforms inject modals
     trigger: "div.pat-modal, a.pat-modal, form.pat-modal, .pat-modal.pat-subform",
-    els_close_panel: [],
-    els_close_panel_submit: [],
 
     init($el, opts, trigger) {
         if (window.__patternslib_import_styles) {
@@ -69,13 +72,12 @@ export default Base.extend({
     },
 
     _init_div1() {
-        const $header = $("<div class='header' />");
+        const header = document.createElement("div");
+        header.setAttribute("class", "header");
+
         if (this.options.closing.indexOf("close-button") !== -1) {
-            $(
-                "<button type='button' class='close-panel'>" +
-                    this.options.closeText +
-                    "</button>"
-            ).appendTo($header);
+            header.innerHTML = `<button type="button" class="close-panel">${this.options.closeText}</button>`;
+            registry.scan(header, ["close-panel"]); // initialize close-panel
         }
 
         // We cannot handle text nodes here
@@ -93,8 +95,8 @@ export default Base.extend({
         } else {
             this.$el.append("<div class='panel-content' />");
         }
-        this.$el.children(".panel-content").before($header);
-        this.$el.children(this.options.panelHeaderContent).prependTo($header);
+        this.$el.children(".panel-content").before(header);
+        this.$el.children(this.options.panelHeaderContent).prependTo(header);
 
         // Restore focus in case the active element was a child of $el and
         // the focus was lost during the wrapping.
@@ -114,35 +116,8 @@ export default Base.extend({
     },
 
     _init_handlers() {
-        // All .close-panel buttons which are not submit buttons.
-        this.els_close_panel = this.el.querySelectorAll(
-            ".close-panel:not([type=submit])"
-        );
-
-        // All .close-panel buttons which are submit buttons.
-        this.els_close_panel_submit = this.el.querySelectorAll(
-            ".close-panel[type=submit]"
-        );
-
-        for (const _el of this.els_close_panel) {
-            events.add_event_listener(
-                _el,
-                "click",
-                "pat-modal--destroy--trigger",
-                this.destroy.bind(this),
-                { once: true }
-            );
-        }
-
-        for (const _el of this.els_close_panel_submit) {
-            events.add_event_listener(
-                _el,
-                "click",
-                "pat-modal--destroy-inject--trigger",
-                this.destroy_inject.bind(this),
-                { once: true }
-            );
-        }
+        this.el.classList.add("has-close-panel");
+        dom.set_data(this.el, "close_panel", this._close_handler.bind(this));
 
         $(document).on("keyup.pat-modal", this._onKeyUp.bind(this));
         if (this.options.closing.indexOf("outside") !== -1) {
@@ -181,6 +156,16 @@ export default Base.extend({
         }
     },
 
+    _close_handler(e) {
+        if (e.target.matches("[type=submit], button:not([type=button])")) {
+            // submit + close
+            this.destroy_inject(e);
+        } else {
+            // close only
+            this.destroy();
+        }
+    },
+
     getTallestChild() {
         let $tallest_child;
         for (const child of $("*", this.$el)) {
@@ -214,14 +199,6 @@ export default Base.extend({
 
     async destroy() {
         await utils.timeout(1); // wait a tick for event handlers (e.g. form submit) have a chance to kick in first.
-
-        for (const _el of this.els_close_panel) {
-            events.remove_event_listener(_el, "pat-modal--destroy--trigger");
-        }
-        for (const _el of this.els_close_panel_submit) {
-            events.remove_event_listener(_el, "pat-modal--destroy-inject--trigger");
-        }
-
         $(document).off(".pat-modal");
         this.$el.remove();
         $("body").removeClass("modal-active");
@@ -231,8 +208,9 @@ export default Base.extend({
     destroy_inject(e) {
         const button = e.target;
         const form = button.form;
+
         if (form && form.classList.contains("pat-inject")) {
-            // if the modal contains a for mwith pat-inject, wait for injection
+            // if the modal contains a form with pat-inject, wait for injection
             // to be finished and then destroy the modal.
             const destroy_handler = () => {
                 this.destroy();

@@ -1,5 +1,6 @@
 import $ from "jquery";
 import pattern from "./modal";
+import registry from "../../core/registry";
 import utils from "../../core/utils";
 import { jest } from "@jest/globals";
 
@@ -173,7 +174,6 @@ describe("pat-modal", function () {
 
         it("1.8 - Submit form, do injection and close overlay.", async function () {
             await import("../inject/inject");
-            const registry = (await import("../../core/registry")).default;
 
             jest.spyOn($, "ajax").mockImplementation(() => deferred);
             answer(
@@ -208,7 +208,6 @@ describe("pat-modal", function () {
 
         it("1.9 - Submit form, do injection and close overlay with multiple forms.", async function () {
             await import("../inject/inject");
-            const registry = (await import("../../core/registry")).default;
 
             jest.spyOn($, "ajax").mockImplementation(() => deferred);
             answer(
@@ -252,6 +251,8 @@ describe("pat-modal", function () {
             `;
 
             const instance = new pattern(document.querySelector(".pat-modal"));
+            registry.scan(document.body); // Also need to instantiate close-panel
+
             await utils.timeout(1); // wait a tick for async to settle.
 
             const spy_destroy = jest.spyOn(instance, "destroy");
@@ -284,6 +285,7 @@ describe("pat-modal", function () {
 
             pattern_inject.init($(".pat-inject"));
             const instance = new pattern(document.querySelector(".pat-modal"));
+            registry.scan(document.body); // Also need to instantiate close-panel
             await utils.timeout(1); // wait a tick for async to settle.
 
             const spy_destroy = jest.spyOn(instance, "destroy");
