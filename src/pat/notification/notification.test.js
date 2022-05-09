@@ -19,6 +19,7 @@ describe("pat notification", function () {
 
         expect(el.parentNode).not.toBe(document.body);
         expect(el.parentNode.classList.contains("pat-notification-panel")).toBe(true);
+        expect(el.parentNode.classList.contains("has-close-panel")).toBe(true);
 
         // With jQuery animation, we cannot easily test closing the panel yet.
         // TODO: Fix when jQuery animation was removed.

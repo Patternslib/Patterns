@@ -6,7 +6,11 @@ import events from "../../core/events";
 import inject from "../inject/inject";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
+import registry from "../../core/registry";
 import utils from "../../core/utils";
+
+// Initialize close-panel functionality.
+import "../close-panel/close-panel";
 
 const log = logging.getLogger("notification");
 //log.setLevel(logging.Level.DEBUG);
@@ -85,12 +89,9 @@ export default Base.extend({
         }
 
         if (wrapper.querySelector(".close-panel")) {
-            events.add_event_listener(
-                wrapper.querySelector(".close-panel"),
-                "click",
-                "notification__click",
-                this.onClick.bind(this)
-            );
+            wrapper.classList.add("has-close-panel");
+            dom.set_data(wrapper, "close_panel", this.onClick.bind(this));
+            registry.scan(wrapper, ["close-panel"]);
         } else {
             events.add_event_listener(
                 wrapper,
