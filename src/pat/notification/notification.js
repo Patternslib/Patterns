@@ -1,15 +1,15 @@
-/**
- * Patterns notification - Display (self-healing) notifications.
- *
- * Copyright 2013 Marko Durkovic
- */
+// Patterns notification - Display (self-healing) notifications.
 import $ from "jquery";
 import Base from "../../core/base";
+import dom from "../../core/dom";
+import events from "../../core/events";
 import inject from "../inject/inject";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
+import utils from "../../core/utils";
 
 const log = logging.getLogger("notification");
+//log.setLevel(logging.Level.DEBUG);
 
 export const parser = new Parser("notification");
 parser.addArgument("type", "static", ["static", "banner"]);
@@ -21,68 +21,43 @@ parser.addArgument("close-text", "Close");
 export default Base.extend({
     name: "notification",
     trigger: ".pat-notification",
-
-    // this is generic functionality and should be moved to lib
-    parseUnit(value, unit) {
-        var unitRe = new RegExp(unit + "$"),
-            numericRe = new RegExp("^[0-9.]+");
-
-        if (!unitRe.test(value)) {
-            throw "value " + value + "is not in unit " + unit;
-        }
-
-        var mod = value.replace(numericRe, "");
-        mod = mod.replace(unitRe, "");
-
-        value = parseFloat(value);
-        if (!mod.length) {
-            return value;
-        }
-
-        var factors = {
-            M: 1000000,
-            k: 1000,
-            m: 0.001,
-            u: 0.000001,
-        };
-
-        return value * factors[mod];
-    },
-
-    parseUnitOrOption(value, unit, options) {
-        if (options.indexOf(value) >= 0) {
-            return value;
-        }
-
-        return this.parseUnit(value, unit);
-    },
-
     count: 0,
 
     init($el, opts) {
-        if ($el.is("a,form")) {
+        if (this.el.matches("a, form")) {
             this._init_inject($el, opts);
         } else {
-            this._initNotification($el, opts);
+            this._init_notification($el, opts);
         }
     },
 
-    _initNotification($el, opts) {
+    _init_notification($el, opts) {
         this.count++;
 
-        var options = parser.parse($el, opts);
-        var closetext = options.closeText;
+        const el = $el[0];
+        const options = parser.parse($el, opts);
+        const closetext = options.closeText;
 
-        $el = $el
-            .wrap("<div/>")
-            .parent()
-            .attr("id", "pat-notification-" + this.count)
-            .addClass("pat-notification-panel")
-            .on("mouseenter.pat-notification", this.onMouseEnter.bind(this))
-            .on("mouseleave.pat-notification", this.onMouseLeave.bind(this));
+        const wrapper = document.createElement("div");
+        wrapper.setAttribute("id", `pat-notification-${this.count}`);
+        wrapper.setAttribute("class", "pat-notification-panel");
+        dom.wrap(el, wrapper);
+
+        events.add_event_listener(
+            wrapper,
+            "mouseenter",
+            "notification__mouseenter",
+            this.onMouseEnter.bind(this)
+        );
+        events.add_event_listener(
+            wrapper,
+            "mouseleave",
+            "notification__mouseleave",
+            this.onMouseLeave.bind(this)
+        );
 
         if (options["class"]) {
-            $el.addClass(options["class"]);
+            wrapper.classList.add(options["class"]);
         }
 
         if (!Array.isArray(options.controls)) {
@@ -91,67 +66,81 @@ export default Base.extend({
 
         // add close icon if requested
         if (options.controls.indexOf("icons") >= 0) {
-            $el.append(
-                "<button type='button' class='close-panel'>" + closetext + "</button>"
+            wrapper.append(
+                dom.create_from_string(
+                    `<button type="button" class="close-panel">${closetext}</button>`
+                )
             );
         }
 
         // add close button if requested
         if (options.controls.indexOf("buttons") >= 0) {
-            $el.append(
-                "<div class='button-bar'><button type='button' class='close-panel'>" +
-                    closetext +
-                    "</button></div>"
+            wrapper.append(
+                dom.create_from_string(
+                    `<div class="button-bar">
+                    <button type="button" class="close-panel">${closetext}</button>
+                </div>`
+                )
             );
         }
 
-        if ($el.find(".close-panel").length) {
-            $el.on("click.pat-notification", ".close-panel", this.onClick.bind(this));
+        if (wrapper.querySelector(".close-panel")) {
+            events.add_event_listener(
+                wrapper.querySelector(".close-panel"),
+                "click",
+                "notification__click",
+                this.onClick.bind(this)
+            );
         } else {
-            $el.on("click.pat-notification", this.onClick.bind(this));
+            events.add_event_listener(
+                wrapper,
+                "click",
+                "notification__click",
+                this.onClick.bind(this)
+            );
         }
 
         if (options.type === "banner") {
-            var $container = $("#pat-notification-banners");
-            if (!$container.length) {
-                $container = $("<div/>")
-                    .attr("id", "pat-notification-banners")
-                    .addClass("pat-notification-container")
-                    .appendTo("body");
+            let container = document.querySelector("#pat-notification-banners");
+            if (!container) {
+                container = document.createElement("div");
+                container.setAttribute("id", "pat-notification-banners");
+                container.setAttribute("class", "pat-notification-container");
+                document.body.append(container);
             }
-            $container.append($el);
+            container.append(wrapper);
         }
 
-        var healing = this.parseUnitOrOption(options.healing, "s", ["persistent"]);
+        let healing = options.healing;
+        if (healing !== "persistent") {
+            healing = utils.parseTime(healing);
+        }
 
-        log.debug("Healing value is", healing);
-        $el.data("healing", healing);
+        log.debug(`Healing value is: ${healing}`);
+        dom.set_data(wrapper, "healing", healing);
 
         $el.animate({ opacity: 1 }, "fast", () => {
-            this.initRemoveTimer($el);
+            this.init_remove_timer(wrapper);
         });
     },
 
     _init_inject($el) {
-        var inject_opts = {
-            target: "#pat-notification-temp",
-        };
         $el[0].addEventListener("pat-inject-success", (e) => {
-            var $trigger = $(e.target),
-                cfg = parser.parse($trigger, { type: "banner" });
+            const $trigger = $(e.target);
+            const cfg = parser.parse($trigger, { type: "banner" });
 
-            var $el = $("#pat-notification-temp")
+            const $temp = $("#pat-notification-temp")
                 .contents()
                 .wrapAll("<div/>")
                 .parent()
                 .addClass("pat-notification");
 
             if ($trigger.is("a")) {
-                $trigger.after($el);
+                $trigger.after($temp);
             } else {
-                $el.prependTo($trigger);
+                $temp.prependTo($trigger);
             }
-            this._initNotification($el, cfg);
+            this._init_notification($temp, cfg);
 
             // XXX: Do this later as inject tries to access its target afterwards.
             // This should be fixed in injection.
@@ -159,65 +148,70 @@ export default Base.extend({
                 $("#pat-notification-temp").remove();
             }, 0);
         });
-        inject.init($el, inject_opts);
+        inject.init($el, {
+            target: "#pat-notification-temp",
+        });
     },
 
-    initRemoveTimer($el) {
-        var healing = $el.data("healing");
+    init_remove_timer(panel) {
+        const healing = dom.get_data(panel, "healing");
         if (healing !== "persistent") {
-            clearTimeout($el.data("timer"));
-            $el.data(
+            clearTimeout(dom.get_data(panel, "timer"));
+            dom.set_data(
+                panel,
                 "timer",
                 setTimeout(() => {
-                    this.remove($el);
-                }, healing * 1000)
+                    log.debug("Timeout reached.");
+                    this.remove(panel);
+                }, healing)
             );
         }
     },
 
     onMouseEnter(e) {
-        $(e.target).data("persistent", true);
+        dom.set_data(e.target, "persistent", true);
     },
 
     onMouseLeave(e) {
-        var $this = $(e.target);
-
-        $this.data("persistent", false);
-        this.initRemoveTimer($this);
+        const panel = e.target;
+        dom.set_data(panel, "persistent", false);
+        this.init_remove_timer(panel);
     },
 
     onClick(e) {
-        var $this = $(e.delegateTarget);
-
-        $this.data("persistent", false);
-        this.remove($this);
+        const panel = e.target.closest(".pat-notification-panel");
+        dom.set_data(panel, "persistent", false);
+        this.remove(panel);
     },
 
-    remove($el) {
-        if ($el.data("persistent") || $el.data("removing")) {
+    remove(panel) {
+        if (
+            dom.get_data(panel, "persistent") === true ||
+            dom.get_data(panel, "removing") === true
+        ) {
             return;
         }
+        const $panel = $(panel);
 
-        $el.data("removing", true);
+        dom.set_data(panel, "removing", true);
 
-        $el.stop(true).animate(
+        $panel.stop(true).animate(
             { opacity: 0 },
             {
                 step() {
-                    if ($el.data("persistent")) {
+                    if (dom.get_data(panel, "persistent") === true) {
                         // remove the timer and show notification
-                        clearTimeout($el.data("timer"));
-                        $el.stop(true).animate({ opacity: 1 });
-                        $el.data("removing", false);
+                        clearTimeout(dom.get_data(panel, "timer"));
+                        $panel.stop(true).animate({ opacity: 1 });
+                        dom.set_data(panel, "removing", false);
                         return false;
                     }
                 },
 
                 complete() {
-                    var $this = $(this);
-                    $this.off(".pat-notification");
-                    $this.slideUp("slow", () => {
-                        $this.remove();
+                    $panel.off(".pat-notification");
+                    $panel.slideUp("slow", () => {
+                        $panel.remove();
                     });
                 },
             }
