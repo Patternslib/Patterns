@@ -683,4 +683,25 @@ describe("core.dom tests", () => {
             done();
         });
     });
+
+    describe("set_data, get_data", function () {
+        it("can be used to store and retrieve data on DOM nodes.", function () {
+            const el = document.createElement("div");
+            dom.set_data(el, "test_data", "hello.");
+            expect(dom.get_data(el, "test_data")).toBe("hello.");
+        });
+        it("can be used to store and retrieve arbitrary data on DOM nodes.", function () {
+            const el = document.createElement("div");
+            const data = { okay() {} };
+            dom.set_data(el, "test_data", data);
+            expect(dom.get_data(el, "test_data")).toBe(data);
+        });
+        it("supports default values", function () {
+            const el = document.createElement("div");
+            expect(dom.get_data(el, "test_data", true)).toBe(true);
+            expect(dom.get_data(el, "test_data", false)).toBe(false);
+            expect(dom.get_data(el, "test_data", null)).toBe(null);
+            expect(dom.get_data(el, "test_data")).toBe(undefined);
+        });
+    });
 });
