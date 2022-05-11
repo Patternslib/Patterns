@@ -4689,6 +4689,7 @@ button.pat-button[disabled=disabled], button.pat-button:disabled {
   right: 15px;
 }
 #pat-notification-banners .pat-notification-panel {
+  position: relative;
   padding-right: 108px;
 }
 #pat-notification-banners .close-panel {
