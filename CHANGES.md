@@ -1,5 +1,56 @@
 
 
+## [7.12.0](https://github.com/Patternslib/patterns/compare/7.11.0...7.12.0) (2022-05-13)
+
+
+### Features
+
+
+* **core dom:** Add get_data and set_data methods to get or set data directly on DOM nodes. ([1c21f05](https://github.com/Patternslib/patterns/commit/1c21f05eb1a312d3c8ea4df1c29517b3c3ec5c6d))
+
+
+* **pat close-panel:** New technical/internal pattern to close panels. ([0c9231d](https://github.com/Patternslib/patterns/commit/0c9231d34b438dcc975c050f2c2bb11cc2541621))
+Add new pattern close-panel for internal use to close panels.
+This allows to initialize the close buttons after content injections.
+It also allows for nested panels where a later opened panel doesn't close a previous opened panel.
+
+
+### Bug Fixes
+
+
+* **pat notification demo:** Place close-button in each notification seperately. ([2c57e3c](https://github.com/Patternslib/patterns/commit/2c57e3ccfd9ba9657c347aec4d523a9463f66f7c))
+
+
+
+### Maintenance
+
+
+* **Build:** Supress console log messages in tests where HTMLFormElement.prototype.submit is not implemented. ([a3bdc78](https://github.com/Patternslib/patterns/commit/a3bdc7866a151ddf00344cd1231e1a1e23b4e1a2))
+
+
+* **Build:** Upgrade dependencies. ([22129ea](https://github.com/Patternslib/patterns/commit/22129ea7d76b24d0fa581ae085c8f418fb7fea27))
+
+
+* **pat calendar:** Change console.log statement to a debug statement. ([92a5999](https://github.com/Patternslib/patterns/commit/92a5999ccf9107cc1e44def804433cc99e4c2f83))
+
+
+* **pat modal:** Add numbers to test case names for easier starting individual cases. ([62a38c9](https://github.com/Patternslib/patterns/commit/62a38c9d196a2e6502bdc5a67f265791d19ed78e))
+
+
+* **pat modal:** Use new close-panel pattern for closing modals. ([4a6029d](https://github.com/Patternslib/patterns/commit/4a6029d5f34b22d3895c548c5e34c8be32091620))
+
+
+* **pat notification:** Code simplification and modernization. ([f9d1492](https://github.com/Patternslib/patterns/commit/f9d14923161c3a4937d9c0b1bca9edf61377b269))
+
+
+* **pat notification:** Use new close-panel pattern for closing notifications. ([b186066](https://github.com/Patternslib/patterns/commit/b186066666c60c3bffc4f286b0b2ae4a327faa57))
+
+
+* **pat tooltip:** Fix demo to use the referenced tooltip content. ([6013b4b](https://github.com/Patternslib/patterns/commit/6013b4bfd403e054d813a62c66142d57843f12f5))
+
+
+* **pat tooltip:** Use new close-panel pattern for closing tooltips. ([ca9fc9c](https://github.com/Patternslib/patterns/commit/ca9fc9ceb4cc9eaa6788a53326a7c4dab2d2c27d))
+
 ## [7.11.0](https://github.com/Patternslib/patterns/compare/7.10.0...7.11.0) (2022-05-06)
 
 
