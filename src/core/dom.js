@@ -1,6 +1,7 @@
 /* Utilities for DOM traversal or navigation */
 import events from "./events";
 
+const DATA_PREFIX = "__patternslib__data_prefix__";
 const DATA_STYLE_DISPLAY = "__patternslib__style__display";
 
 const toNodeArray = (nodes) => {
@@ -202,6 +203,33 @@ const find_scroll_container = (el, direction, fallback = document.body) => {
     return fallback;
 };
 
+/**
+ * Get data stored directly on the node instance.
+ * We are using a prefix to make sure the data doesn't collide with other attributes.
+ *
+ * @param el {Node} - The DOM node from which we want to retrieve the data.
+ * @param name {String} - The name of the variable. Note - this is stored on
+ *                        the DOM node prefixed with the DATA_PREFIX.
+ * @param default_value {Any} - Optional default value.
+ * @return {Any} - The value which is stored on the DOM node.
+ */
+const get_data = (el, name, default_value) => {
+    return el[`${DATA_PREFIX}${name}`] || default_value;
+};
+
+/**
+ * Set and store data directly on the node instance.
+ * We are using a prefix to make sure the data doesn't collide with other attributes.
+ *
+ * @param el {Node} - The DOM node which we want to store the data on.
+ * @param name {String} - The name of the variable. Note - this is stored on
+ *                        the DOM node prefixed with the DATA_PREFIX.
+ * @param value {Any} - The value we want to store on the DOM node.
+ */
+const set_data = (el, name, value) => {
+    el[`${DATA_PREFIX}${name}`] = value;
+};
+
 const dom = {
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
@@ -216,6 +244,8 @@ const dom = {
     create_from_string: create_from_string,
     get_css_value: get_css_value,
     find_scroll_container: find_scroll_container,
+    get_data: get_data,
+    set_data: set_data,
     add_event_listener: events.add_event_listener, // BBB export. TODO: Remove in an upcoming version.
     remove_event_listener: events.remove_event_listener, // BBB export. TODO: Remove in an upcoming version.
 };

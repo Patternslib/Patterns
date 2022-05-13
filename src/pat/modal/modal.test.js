@@ -1,5 +1,6 @@
 import $ from "jquery";
 import pattern from "./modal";
+import registry from "../../core/registry";
 import utils from "../../core/utils";
 import { jest } from "@jest/globals";
 
@@ -21,8 +22,8 @@ describe("pat-modal", function () {
         jest.restoreAllMocks();
     });
 
-    describe("init", function () {
-        it("Modal with single element", function () {
+    describe("1 - init", function () {
+        it("1.1 - Modal with single element", function () {
             $("#lab").html(
                 [
                     '<div class="pat-modal" id="modal">',
@@ -41,7 +42,7 @@ describe("pat-modal", function () {
             expect($("body").hasClass("modal-active")).toBeTruthy();
         });
 
-        it("Modal with header ", function () {
+        it("1.2 - Modal with header ", function () {
             $("#lab").html(
                 [
                     '<div class="pat-modal" id="modal">',
@@ -59,7 +60,7 @@ describe("pat-modal", function () {
             expect($("body").hasClass("modal-active")).toBeTruthy();
         });
 
-        it("Modal with multiple content items ", function () {
+        it("1.3 - Modal with multiple content items ", function () {
             $("#lab").html(
                 [
                     '<div class="pat-modal" id="modal">',
@@ -80,7 +81,7 @@ describe("pat-modal", function () {
             expect($("body").hasClass("modal-active")).toBeTruthy();
         });
 
-        it("Modal with a form that has the pat-modal CSS class", function () {
+        it("1.4 - Modal with a form that has the pat-modal CSS class", function () {
             var $modal, // main modal container
                 $modalLink; // link that triggers the modal
 
@@ -115,7 +116,7 @@ describe("pat-modal", function () {
             expect($modal.length).toBeGreaterThan(0);
         });
 
-        it("Modal with single element that specifies a custom close button string", function () {
+        it("1.5 - Modal with single element that specifies a custom close button string", function () {
             $("#lab").html(
                 [
                     '<div class="pat-modal" id="modal" data-pat-modal="close-text: Shutdown">',
@@ -132,7 +133,7 @@ describe("pat-modal", function () {
             expect($("body").hasClass("modal-active")).toBeTruthy();
         });
 
-        it("Dispatch pat-modal-ready with a div-modal.", async function () {
+        it("1.6 - Dispatch pat-modal-ready with a div-modal.", async function () {
             document.body.innerHTML = `
                 <div class="pat-modal" id="modal">
                   <p>Modal content</p>
@@ -149,7 +150,7 @@ describe("pat-modal", function () {
             expect(callback).toHaveBeenCalled();
         });
 
-        it("Dispatch pat-modal-ready with a inject-modal.", async function () {
+        it("1.7 - Dispatch pat-modal-ready with a inject-modal.", async function () {
             jest.spyOn($, "ajax").mockImplementation(() => deferred);
             document.body.innerHTML = `
                 <a
@@ -171,9 +172,8 @@ describe("pat-modal", function () {
             expect(callback).toHaveBeenCalled();
         });
 
-        it("Submit form, do injection and close overlay.", async function () {
+        it("1.8 - Submit form, do injection and close overlay.", async function () {
             await import("../inject/inject");
-            const registry = (await import("../../core/registry")).default;
 
             jest.spyOn($, "ajax").mockImplementation(() => deferred);
             answer(
@@ -206,9 +206,8 @@ describe("pat-modal", function () {
             expect(document.querySelector("#target2").textContent).toBe("there");
         });
 
-        it("Submit form, do injection and close overlay with multiple forms.", async function () {
+        it("1.9 - Submit form, do injection and close overlay with multiple forms.", async function () {
             await import("../inject/inject");
-            const registry = (await import("../../core/registry")).default;
 
             jest.spyOn($, "ajax").mockImplementation(() => deferred);
             answer(
@@ -244,7 +243,7 @@ describe("pat-modal", function () {
             expect(document.querySelector("#target").textContent).toBe("hello.");
         });
 
-        it("Ensure destroy callback isn't called multiple times.", async function () {
+        it("1.10 - Ensure destroy callback isn't called multiple times.", async function () {
             document.body.innerHTML = `
               <div id="pat-modal" class="pat-modal">
                 <button id="close-modal" class="close-panel">close</button>
@@ -252,6 +251,8 @@ describe("pat-modal", function () {
             `;
 
             const instance = new pattern(document.querySelector(".pat-modal"));
+            registry.scan(document.body); // Also need to instantiate close-panel
+
             await utils.timeout(1); // wait a tick for async to settle.
 
             const spy_destroy = jest.spyOn(instance, "destroy");
@@ -266,7 +267,7 @@ describe("pat-modal", function () {
             expect(spy_destroy).toHaveBeenCalledTimes(1);
         });
 
-        it("Ensure destroy callback isn't called multiple times with forms and injection.", async function () {
+        it("1.11 - Ensure destroy callback isn't called multiple times with forms and injection.", async function () {
             const markup = `
               <div id="pat-modal" class="pat-modal">
                 <form action="." class="pat-inject" data-pat-inject="source: body; target: body">
@@ -284,6 +285,7 @@ describe("pat-modal", function () {
 
             pattern_inject.init($(".pat-inject"));
             const instance = new pattern(document.querySelector(".pat-modal"));
+            registry.scan(document.body); // Also need to instantiate close-panel
             await utils.timeout(1); // wait a tick for async to settle.
 
             const spy_destroy = jest.spyOn(instance, "destroy");

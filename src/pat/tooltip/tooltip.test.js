@@ -352,17 +352,17 @@ describe("pat-tooltip", () => {
                 expect(spy_hide).not.toHaveBeenCalled();
 
                 testutils.mouseleave($el);
-                await utils.timeout(50);
+                await utils.timeout(1);
                 expect(spy_hide).not.toHaveBeenCalled();
 
                 testutils.click($el);
-                await utils.timeout(50);
+                await utils.timeout(1);
                 expect(spy_hide).not.toHaveBeenCalled();
 
                 const closebutton = document.querySelector(".close-panel");
                 expect(closebutton).toBeTruthy();
                 closebutton.click();
-                await utils.timeout(50);
+                await utils.timeout(1);
                 expect(spy_hide).toHaveBeenCalled();
 
                 spy_show.mockRestore();
@@ -395,7 +395,7 @@ describe("pat-tooltip", () => {
                 const closebutton = document.querySelector(".close-panel");
                 expect(closebutton).toBeTruthy();
                 closebutton.click();
-                await utils.timeout(50);
+                await utils.timeout(1); // hide is async - wait for it.
                 expect(spy_hide).toHaveBeenCalled();
 
                 spy_show.mockRestore();

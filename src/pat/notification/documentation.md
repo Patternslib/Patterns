@@ -2,7 +2,7 @@
 
 ## Description
 
-Notifications are used in applications to notify the user of status changes that happen within the application. Notifications could appear as inline messages, or projected (temporarily) as an overlay not he screen.
+Notifications are used in applications to notify the user of status changes that happen within the application. Notifications could appear as inline messages, or projected (temporarily) as an overlay to the screen.
 
 ## Documentation
 
