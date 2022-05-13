@@ -7,7 +7,7 @@ describe("subform base tests", function () {
     describe("Triggering of the pattern", function () {
         it("happens when a fieldset has the pat-subform class", function () {
             var $form = $(
-                "<form>" +
+                '<form onsubmit="return false;">' +
                     '  <fieldset class="pat-subform">' +
                     '    <input type="text" name="q" placeholder="Search query"/>' +
                     "  </fieldset>" +
@@ -22,7 +22,7 @@ describe("subform base tests", function () {
     describe("Entering a return", function () {
         it("does nothing if the pat-autosubmit class is missing", function () {
             var $form = $(
-                "<form>" +
+                '<form onsubmit="return false;">' +
                     '  <fieldset class="pat-subform">' +
                     '    <input type="text" name="q" placeholder="Search query"/>' +
                     "  </fieldset>" +
@@ -41,7 +41,7 @@ describe("subform base tests", function () {
         });
         it("submits the subform when the pat-autosubmit class is present", function () {
             var $form = $(
-                "<form>" +
+                '<form onsubmit="return false;">' +
                     '  <fieldset class="pat-subform pat-autosubmit">' +
                     '    <input type="text" name="q" placeholder="Search query"/>' +
                     "  </fieldset>" +
@@ -60,7 +60,7 @@ describe("subform base tests", function () {
         });
         it("does not submit the parent autosubmit form when the pat-autosubmit class is present on both", function () {
             var $form = $(
-                '<form class="pat-autosubmit">' +
+                '<form class="pat-autosubmit" onsubmit="return false;">' +
                     '  <fieldset class="pat-subform pat-autosubmit">' +
                     '    <input type="text" name="q" placeholder="Search query"/>' +
                     "  </fieldset>" +
