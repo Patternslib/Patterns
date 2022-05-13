@@ -110,8 +110,9 @@ export default Base.extend({
         this.tippy.show();
     },
 
-    hide() {
+    async hide() {
         // Hide this tooltip
+        await utils.timeout(1); // wait a tick for event being processed by other handlers.
         this.tippy.hide();
     },
 
