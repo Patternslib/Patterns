@@ -106,7 +106,7 @@ export default Base.extend({
         const fcDayGrid = (await import("@fullcalendar/daygrid")).default;
         const fcInteraction = (await import("@fullcalendar/interaction")).default;
         const fcList = (await import("@fullcalendar/list")).default;
-        const fcLuxon = (await import("@fullcalendar/luxon")).default;
+        const fcLuxon = (await import("@fullcalendar/luxon2")).default;
         const fcTimeGrid = (await import("@fullcalendar/timegrid")).default;
 
         // Save some UI elements for reuse.
