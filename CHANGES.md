@@ -1,5 +1,88 @@
 
 
+## [8.0.0](https://github.com/Patternslib/patterns/compare/7.12.0...8.0.0) (2022-05-17)
+
+
+### Features
+
+
+* **Build:** Dynamic Module Federation. Add config files and helpers. ([7e7a2af](https://github.com/Patternslib/patterns/commit/7e7a2afea57caa6d97dc045e77e001e64c676ab2))
+With module federation you can share dependencies over multiple bundles without
+loading them multiple times.
+
+The dynamic part here allows the host to not know anything about it's remotes.
+This concept can be used for add-ons to a base bundle.
+Thanks @manfredsteyer for the help getting this to work!
+
+Use the webpack/webpack.mf.js to extend your own webpack configuration with
+dynamic module federation support.
+In your main bundle (the "host") use webpack/dynamic_mf.js to configure the
+entry point.
+
+For more information see: docs/developer/module-federation.md.
+For the general concept see: https://webpack.js.org/concepts/module-federation/
+
+Co-authored-by: Johannes Raggam <thetetet@gmail.com>
+Co-authored-by: Manfred Steyer <manfred.steyer@gmx.net>
+
+* **Build:** Register jQuery globally without expose-loader. ([dca0842](https://github.com/Patternslib/patterns/commit/dca08426108a0180500210e9625c8abfc5294fd2))
+Remove the dependency on expose-loader and register jQuery globally in the
+globals.js module.
+
+Import this module early to have jQuery registered for scripts which depend on
+a global jQuery object.
+
+This also fixes an additional request made by the expose-loader for
+asynchronously loading jQuery.
+
+* **core dom:** dom.template engine. ([61ca46f](https://github.com/Patternslib/patterns/commit/61ca46fac5b34a69814617dffe89665fd3506095))
+Add a simple template engine in ``core.dom.template``
+based on JavaScript template literals.
+
+
+### Maintenance
+
+
+* **Build:** Compatibility with Jest 28. ([1795087](https://github.com/Patternslib/patterns/commit/17950874de41ac053b26a5d629434e829a0d74e8))
+Don't transform preact.
+
+* **Build:** Compatibility with Jest 28. ([69b7934](https://github.com/Patternslib/patterns/commit/69b793416f99a7097c91f5f58aeba49495c3c1ea))
+Remove jest-raw-loader dependency and add own loader based on https://github.com/keplersj/jest-raw-loader/pull/239/ for compatibility with Jest 28.
+
+* **Build:** Compatibility with Jest 28. ([5679db0](https://github.com/Patternslib/patterns/commit/5679db0d84eda485737647cac480cc808badd194))
+Add jest-environment-jsdom as of jest 28 that isn't shipped anymore by default.
+
+* **Build:** Upgrade dependencies. ([3260038](https://github.com/Patternslib/patterns/commit/3260038cf2772de50065df20eceec7473625b050))
+
+
+* **Build:** Upgrade fullcalender. ([0b08573](https://github.com/Patternslib/patterns/commit/0b08573b67e65bb6d300c2810d8abe8173954e73))
+
+
+* **Build:** Upgrade luxon to version 2. ([5d12b9e](https://github.com/Patternslib/patterns/commit/5d12b9ec47344efc0dcc8e8126d1d4db3a6e3c6d))
+
+
+* **Bundle:** Upgrade jest to version 28. ([4ac079f](https://github.com/Patternslib/patterns/commit/4ac079f184043225ff78aded9390ae9f995036d0))
+
+
+
+### Breaking Changes
+
+
+* **core registry:** Use a global pattern registry. ([737f3ed](https://github.com/Patternslib/patterns/commit/737f3ed0577550483fa552cf995e39076429bc3b))
+Previously it was possible to use multiple pattern registries when multiple
+instances of the registry were used, e.g. in different bundles.
+
+With this change we do use only one pattern registry storage which is
+shared across instances of ``core.registry`` in multiple bundles.
+
+This is a transparent change - the Patternslib registry API has not
+changed at all. Just keep using ``registry.scan``,
+``registry.register``, etc.
+
+But if necessary, there is a ``PATTERN_REGISTRY`` export in ``core.registry``
+which points to ``window.__patternslib_registry``, a singleton in the global
+namespace which is shared across instances of the registry.
+
 ## [7.12.0](https://github.com/Patternslib/patterns/compare/7.11.0...7.12.0) (2022-05-13)
 
 
