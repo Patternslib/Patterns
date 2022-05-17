@@ -4,8 +4,8 @@
 
 // Import base
 import "./public_path"; // first import
+import "./globals";
 import registry from "./core/registry";
-import jquery from "jquery";
 import "modernizr";
 
 // Import all used patterns for the bundle to be generated
@@ -67,5 +67,4 @@ import "./pat/minimalpattern/minimalpattern";
 // Set to ``true`` to include core styles via JavaScript
 window.__patternslib_import_styles = false;
 
-window.jQuery = jquery;
 registry.init();

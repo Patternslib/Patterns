@@ -704,4 +704,17 @@ describe("core.dom tests", () => {
             expect(dom.get_data(el, "test_data")).toBe(undefined);
         });
     });
+
+    describe("template", () => {
+        it("Expands a template with template variables.", (done) => {
+            const res = dom.template("<h1>${this.message}</h1>", { message: "ok" });
+            expect(res).toBe("<h1>ok</h1>");
+            done();
+        });
+        it("Returns the string when no template variables are given.", (done) => {
+            const res = dom.template(`<h1>hello</h1>`);
+            expect(res).toBe(`<h1>hello</h1>`);
+            done();
+        });
+    });
 });

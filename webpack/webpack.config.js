@@ -25,7 +25,7 @@ module.exports = (env, argv, config, babel_include = []) => {
 
     const base_config = {
         entry: {
-            "bundle.min": path.resolve(__dirname, "../src/patterns.js"),
+            "bundle.min": path.resolve(__dirname, "../src/index.js"),
             "bundle-polyfills.min": path.resolve(__dirname, "../src/polyfills.js"),
         },
         externals: [
@@ -49,17 +49,6 @@ module.exports = (env, argv, config, babel_include = []) => {
                     // Allows for extending this file without needing to override for a successful webpack build.
                     exclude: new RegExp(babel_exclude),
                     loader: "babel-loader",
-                },
-                {
-                    test: require.resolve("jquery"),
-                    loader: "expose-loader",
-                    options: {
-                        exposes: [
-                            // Webpack module federation does load multiple expose-loaders. Just override previous set values.
-                            { globalName: "$", override: true },
-                            { globalName: "jQuery", override: true },
-                        ],
-                    },
                 },
                 {
                     test: /showdown-prettify/,

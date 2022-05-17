@@ -52,7 +52,6 @@
         "css-loader": "^6.7.1",
         "eslint": "^8.15.0",
         "eslint-config-prettier": "^8.5.0",
-        "expose-loader": "^3.0.0",
         "husky": "^8.0.1",
         "identity-obj-proxy": "^3.0.0",
         "imports-loader": "^3.1.0",
