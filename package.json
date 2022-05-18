@@ -114,6 +114,9 @@
             "url": "http://cornae.com"
         }
     ],
+    "keywords": [
+        "patternslib"
+    ],
     "publishConfig": {
         "access": "public"
     }
