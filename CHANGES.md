@@ -1,5 +1,19 @@
 
 
+### [8.0.1](https://github.com/Patternslib/patterns/compare/8.0.0...8.0.1) (2022-05-18)
+
+
+### Maintenance
+
+
+* **Bundle:** Add the keyword "patternslib" to the npm package registry. ([54fe5ba](https://github.com/Patternslib/patterns/commit/54fe5ba83b0e4ba2a958dac2f0740fb207499682))
+
+
+* **Bundle:** Module Federation: Allow to pass the shared dependencies explicitly. When passed package.json dependencies are not automatically added. ([7eba043](https://github.com/Patternslib/patterns/commit/7eba043bf5f9d021c81d0ef65831226f16d025c5))
+
+
+* **Bundle:** Upgrade dependencies. ([d0a546b](https://github.com/Patternslib/patterns/commit/d0a546b6e665d5c6acc90b890e4c57189ab1b217))
+
 ## [8.0.0](https://github.com/Patternslib/patterns/compare/7.12.0...8.0.0) (2022-05-17)
 
 
