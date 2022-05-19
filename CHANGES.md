@@ -1,5 +1,16 @@
 
 
+### [8.0.2](https://github.com/Patternslib/patterns/compare/8.0.1...8.0.2) (2022-05-19)
+
+
+### Bug Fixes
+
+
+* **core base:** Don't initialize a already initialized pattern. ([d943de6](https://github.com/Patternslib/patterns/commit/d943de6fe5cf1d64d1f5042b6281347f71963f55))
+Improve the previous check by setting the var earlier.
+
+* **core registry:** Do not reinitialize and already initialized patterns registry. ([809c119](https://github.com/Patternslib/patterns/commit/809c1192b533f2160f98e16ef0b852267b0c5ea5))
+
 ### [8.0.1](https://github.com/Patternslib/patterns/compare/8.0.0...8.0.1) (2022-05-18)
 
 
