@@ -50,6 +50,9 @@ if (typeof window.__patternslib_registry === "undefined") {
     window.__patternslib_registry = {};
 }
 export const PATTERN_REGISTRY = window.__patternslib_registry;
+if (typeof window.__patternslib_registry_initialized === "undefined") {
+    window.__patternslib_registry_initialized = false;
+}
 
 const registry = {
     patterns: PATTERN_REGISTRY, // reference to global patterns registry
@@ -57,12 +60,15 @@ const registry = {
     // registration just registers a pattern. Once init is called,
     // the DOM is scanned. After that registering a new pattern
     // results in rescanning the DOM only for this pattern.
-    initialized: false,
     init() {
         $(document).ready(function () {
+            if (window.__patternslib_registry_initialized) {
+                // Do not reinitialize a already initialized registry.
+                return;
+            }
+            window.__patternslib_registry_initialized = true;
             log.info("loaded: " + Object.keys(registry.patterns).sort().join(", "));
             registry.scan(document.body);
-            registry.initialized = true;
             log.info("finished initial scan.");
         });
     },
@@ -211,7 +217,9 @@ const registry = {
             $.fn[plugin_name.replace(/^pat/, "pattern")] = $.fn[plugin_name];
         }
         log.debug("Registered pattern:", name, pattern);
-        if (registry.initialized) {
+        if (window.__patternslib_registry_initialized) {
+            // Once the first initialization has been done, do only scan for
+            // newly registered patterns.
             registry.scan(document.body, [name]);
         }
         return true;
