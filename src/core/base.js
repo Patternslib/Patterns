@@ -28,6 +28,7 @@ const initBasePattern = function ($el, options, trigger) {
     let pattern = $el.data(`pattern-${name}`);
     if (pattern === undefined && Registry.patterns[name]) {
         try {
+            $el.data(`pattern-${name}`, "initializing");
             options =
                 this.prototype.parser === "mockup"
                     ? mockupParser.getOptions($el, name, options)
