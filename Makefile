@@ -67,26 +67,23 @@ release-zip: clean-dist bundle
 
 .PHONY: release-major
 release-major: check
-	npx release-it major --dry-run --ci && \
-		npx release-it major --ci && \
+	npx release-it major && \
 		make release-zip && \
-		npx release-it --github.release --github.update --github.assets=dist/*.zip --no-github.draft --no-increment --no-git --no-npm --ci && \
+		npx release-it --github.release --github.update --github.assets=dist/*.zip --no-github.draft --no-increment --no-git --no-npm && \
 		git checkout CHANGES.md
 
 .PHONY: release-minor
 release-minor: check
-	npx release-it minor --dry-run --ci && \
-		npx release-it minor --ci && \
+	npx release-it minor && \
 		make release-zip && \
-		npx release-it --github.release --github.update --github.assets=dist/*.zip --no-github.draft --no-increment --no-git --no-npm --ci && \
+		npx release-it --github.release --github.update --github.assets=dist/*.zip --no-github.draft --no-increment --no-git --no-npm && \
 		git checkout CHANGES.md
 
 .PHONY: release-patch
 release-patch: check
-	npx release-it patch --dry-run --ci && \
-		npx release-it patch --ci && \
+	npx release-it patch && \
 		make release-zip && \
-		npx release-it --github.release --github.update --github.assets=dist/*.zip --no-github.draft --no-increment --no-git --no-npm --ci && \
+		npx release-it --github.release --github.update --github.assets=dist/*.zip --no-github.draft --no-increment --no-git --no-npm && \
 		git checkout CHANGES.md
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-yarn
