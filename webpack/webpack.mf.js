@@ -26,7 +26,7 @@ function shared_from_dependencies(...dependencies) {
             };
             if (name === "underscore") {
                 // Underscore, for some reason, needs to have the version set explicitly
-                shared[name].requiredVersion = "1.13.2";
+                shared[name].requiredVersion = "1.13.3";
             }
         }
     }
