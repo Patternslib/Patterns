@@ -1,5 +1,33 @@
 
 
+### [8.0.3](https://github.com/Patternslib/patterns/compare/8.0.2...8.0.3) (2022-05-23)
+
+
+### Bug Fixes
+
+
+* **Build:** Don't use index.js entry which should be used for module federation and would break chunk loading if used in a non-mf environment. ([ad5381c](https://github.com/Patternslib/patterns/commit/ad5381ce21ab827db133fde3fb56d6497b442c23))
+
+
+
+### Maintenance
+
+
+* **Build:** Support 2FA when releasing. ([e8f02b4](https://github.com/Patternslib/patterns/commit/e8f02b4b6afc1a17afb30c24ba046fab6716e52b))
+Remove non interactive ci-mode from Makefile to allow for OTP prompt and two-factor auth on npm.
+Also remove dry-run as we now have to confirm each step anyways.
+
+* **Build:** Upgrade dependencies. ([f2ac7ad](https://github.com/Patternslib/patterns/commit/f2ac7ad823bdcf675b83b1033e916e1bec584ccd))
+
+
+* **Build:** Use Underscore version 1.13.3 for module federation config. ([403b9c8](https://github.com/Patternslib/patterns/commit/403b9c8615410b4d04f0805634d4420ffa7207bc))
+
+
+* Be less verbose and use more debug log messages. ([b05c03f](https://github.com/Patternslib/patterns/commit/b05c03f2fb2fa29b8bf0a818b106dfb5624bc8e9))
+
+
+* **pat modal:** Update demo, re-activate autoload modal. ([09d0e2b](https://github.com/Patternslib/patterns/commit/09d0e2b09f292d06d19af057710802b14bf05ab2))
+
 ### [8.0.2](https://github.com/Patternslib/patterns/compare/8.0.1...8.0.2) (2022-05-19)
 
 
