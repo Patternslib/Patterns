@@ -25,7 +25,7 @@ module.exports = (env, argv, config, babel_include = []) => {
 
     const base_config = {
         entry: {
-            "bundle.min": path.resolve(__dirname, "../src/index.js"),
+            "bundle.min": path.resolve(__dirname, "../src/patterns.js"),
             "bundle-polyfills.min": path.resolve(__dirname, "../src/polyfills.js"),
         },
         externals: [
