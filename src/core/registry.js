@@ -67,9 +67,9 @@ const registry = {
                 return;
             }
             window.__patternslib_registry_initialized = true;
-            log.info("loaded: " + Object.keys(registry.patterns).sort().join(", "));
+            log.debug("Loaded: " + Object.keys(registry.patterns).sort().join(", "));
             registry.scan(document.body);
-            log.info("finished initial scan.");
+            log.debug("Finished initial scan.");
         });
     },
 
@@ -86,7 +86,7 @@ const registry = {
          * it exists.
          */
         if (disabled[name]) {
-            log.debug("Skipping disabled pattern:", name);
+            log.debug(`Skipping disabled pattern: ${name}.`);
             return;
         }
 
@@ -99,7 +99,7 @@ const registry = {
                 if (dont_catch) {
                     throw e;
                 }
-                log.error("Transform error for pattern" + name, e);
+                log.error(`Transform error for pattern ${name}.`, e);
             }
         }
     },
@@ -111,9 +111,9 @@ const registry = {
         const $el = $(el);
         const pattern = registry.patterns[name];
         if (pattern.init) {
-            const plog = logging.getLogger("pat." + name);
+            const plog = logging.getLogger(`pat.${name}`);
             if ($el.is(pattern.trigger)) {
-                plog.debug("Initialising:", $el);
+                plog.debug("Initialising.", $el);
                 try {
                     pattern.init($el, null, trigger);
                     plog.debug("done.");
@@ -193,14 +193,13 @@ const registry = {
     register(pattern, name) {
         name = name || pattern.name;
         if (!name) {
-            log.error("Pattern lacks a name:", pattern);
+            log.error("Pattern lacks a name.", pattern);
             return false;
         }
         if (registry.patterns[name]) {
-            log.info("Already have a pattern called: " + name);
+            log.debug(`Already have a pattern called ${name}.`);
             return false;
         }
-
         // register pattern to be used for scanning new content
         registry.patterns[name] = pattern;
 
@@ -216,11 +215,12 @@ const registry = {
             // BBB 2012-12-10 and also for Mockup patterns.
             $.fn[plugin_name.replace(/^pat/, "pattern")] = $.fn[plugin_name];
         }
-        log.debug("Registered pattern:", name, pattern);
+        log.debug(`Registered pattern ${name}`, pattern);
         if (window.__patternslib_registry_initialized) {
             // Once the first initialization has been done, do only scan for
             // newly registered patterns.
             registry.scan(document.body, [name]);
+            log.debug(`Re-scanned dom with newly registered pattern ${name}.`);
         }
         return true;
     },

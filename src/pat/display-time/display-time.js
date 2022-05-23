@@ -37,7 +37,7 @@ export default Base.extend({
         } catch {
             Moment.locale("en");
         }
-        log.info("Moment.js language used: " + lang);
+        log.debug(`Moment.js language used: ${lang}.`);
         this.format();
     },
 
