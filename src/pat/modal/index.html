@@ -11,6 +11,7 @@
         ></script>
     </head>
     <body>
+
         <form action="#modal-source"
               method="get"
               class="pat-modal">
@@ -21,11 +22,13 @@
                 </button>
             </fieldset>
         </form>
+
         <p>
             Open a
             <a href="#modal-source"
                class="pat-modal"> Modal panel via AJAX</a>.
         </p>
+
         <p>
             Open a
             <a href="#modal-source-panel"
@@ -34,6 +37,7 @@
                Modal panel with an extra class 'panel' on it</a
             >.
         </p>
+
         <p>
             Open a
             <a href="#modal-source-headerless"
@@ -50,123 +54,122 @@
                Modal with a custom header</a>.
         </p>
 
-        <div id="examples"
-             hidden>
-            <div id="modal-source">
-                <h1>Example modal</h1>
+        <div id="modal-on-load" class="pat-modal">
+            <h1>Modal example with auto load</h1>
+            <article class="pat-rich">
+                <p>Frequent uses of modal windows include:</p>
+                <ul>
+                    <li>
+                        Drawing attention to vital pieces of information. This
+                        use has been criticised as ineffective because users are
+                        bombarded with too many dialog boxes, and habituate to
+                        simply clicking "Close", "Cancel", or "OK" without
+                        reading or understanding the message.
+                    </li>
+                    <li>
+                        Blocking the application flow until information required
+                        to continue is entered, as for example a password in a
+                        login process. Another example are file dialogs to open
+                        and save files in an application.
+                    </li>
+                </ul>
+                <p>*Source: Wikipedia</p>
+            </article>
+        </div>
+
+
+        <!-- TEMPLATES -->
+
+        <template id="modal-source">
+            <h1>Example modal</h1>
+            <div class="container">
+                <p>
+                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                    accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+                    quae ab illo inventore veritatis et quasi architecto beatae
+                    vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia
+                    voluptas sit aspernatur aut odit aut fugit, sed quia
+                    consequuntur magni dolores eos qui ratione voluptatem sequi
+                    nesciunt.
+                </p>
+            </div>
+        </template>
+
+        <template id="modal-source-panel">
+            <h1>Example modal</h1>
+            <div class="panel-body">
                 <div class="container">
                     <p>
                         Sed ut perspiciatis unde omnis iste natus error sit voluptatem
                         accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                        quae ab illo inventore veritatis et quasi architecto beatae
-                        vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia
-                        voluptas sit aspernatur aut odit aut fugit, sed quia
-                        consequuntur magni dolores eos qui ratione voluptatem sequi
-                        nesciunt.
+                        quae ab illo inventore veritatis.
                     </p>
                 </div>
             </div>
-
-            <div id="modal-source-panel" hidden>
-                <h1>Example modal</h1>
-                <div class="panel-body">
-                    <div class="container">
-                        <p>
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                            accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                            quae ab illo inventore veritatis.
-                        </p>
-                    </div>
+            <div class="panel-footer">
+                <div class="container">
+                    <button type="button"
+                            class="close-panel pat-button">Close</button>
                 </div>
-                <div class="panel-footer">
-                    <div class="container">
-                        <button type="button"
-                                class="close-panel pat-button">Close</button>
-                    </div>
+            </div>
+        </template>
+
+        <template id="modal-source-headerless">
+            <h1>Header goes into panel</h1>
+            <div class="panel-body">
+                <div class="container">
+                    <p>
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                        accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+                        quae ab illo inventore veritatis.
+                    </p>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="container">
+                    <button type="button"
+                            class="close-panel pat-button">Close</button>
                 </div>
             </div>
 
-            <div id="modal-source-headerless" hidden>
-                <h1>Header goes into panel</h1>
-                <div class="panel-body">
-                    <div class="container">
-                        <p>
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                            accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                            quae ab illo inventore veritatis.
-                        </p>
-                    </div>
-                </div>
-                <div class="panel-footer">
-                    <div class="container">
-                        <button type="button"
-                                class="close-panel pat-button">Close</button>
-                    </div>
-                </div>
+            <style type="text/css">
+                .pat-modal .panel-content h1 {
+                    margin: 0 0 40px;
+                    padding: 0;
+                    text-align: center;
+                    font-size: 30px;
+                }
+            </style>
+        </template>
 
-                <style type="text/css">
-                    .pat-modal .panel-content h1 {
-                        margin: 0 0 40px;
-                        padding: 0;
-                        text-align: center;
-                        font-size: 30px;
-                    }
-                </style>
+        <template id="modal-source-custom-header">
+            <h1>Use the custom one instead of me</h1>
+            <h1 class="custom-header">Custom header</h1>
+            <div class="panel-body">
+                <div class="container">
+                    <p>
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                        accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+                        quae ab illo inventore veritatis.
+                    </p>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="container">
+                    <button type="button"
+                            class="close-panel pat-button">Close</button>
+                </div>
             </div>
 
-            <div id="modal-source-custom-header" hidden>
-                <h1>Use the custom one instead of me</h1>
-                <h1 class="custom-header">Custom header</h1>
-                <div class="panel-body">
-                    <div class="container">
-                        <p>
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                            accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                            quae ab illo inventore veritatis.
-                        </p>
-                    </div>
-                </div>
-                <div class="panel-footer">
-                    <div class="container">
-                        <button type="button"
-                                class="close-panel pat-button">Close</button>
-                    </div>
-                </div>
-
-                <style type="text/css">
-                    .pat-modal .panel-content h1 {
-                        margin: 0 0 40px;
-                        padding: 0;
-                        text-align: center;
-                        font-size: 30px;
-                    }
-                </style>
-            </div>
-
-            <div id="modal-on-load"
-                 class="pat-modal">
-                <h1>Modal example with auto load</h1>
-                <article class="pat-rich">
-                    <p>Frequent uses of modal windows include:</p>
-                    <ul>
-                        <li>
-                            Drawing attention to vital pieces of information. This
-                            use has been criticised as ineffective because users are
-                            bombarded with too many dialog boxes, and habituate to
-                            simply clicking "Close", "Cancel", or "OK" without
-                            reading or understanding the message.
-                        </li>
-                        <li>
-                            Blocking the application flow until information required
-                            to continue is entered, as for example a password in a
-                            login process. Another example are file dialogs to open
-                            and save files in an application.
-                        </li>
-                    </ul>
-                    <p>*Source: Wikipedia</p>
-                </article>
-            </div>
-        </div>
+            <style type="text/css">
+                .pat-modal .panel-content h1 {
+                    margin: 0 0 40px;
+                    padding: 0;
+                    text-align: center;
+                    font-size: 30px;
+                }
+            </style>
+        </template>
 
     </body>
 </html>
