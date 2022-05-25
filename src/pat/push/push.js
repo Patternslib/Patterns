@@ -51,13 +51,6 @@ export default Base.extend({
 
     async desktop_notification() {
         try {
-            const response = await fetch(this.options.url);
-            const data = await response.json();
-
-            if (data.length === 0) {
-                return;
-            }
-
             // Let's check if the browser supports notifications
             if (!("Notification" in window)) {
                 logger.error("This browser does not support notifications.");
@@ -79,6 +72,13 @@ export default Base.extend({
 
             // Let's check if the user is okay to get some notification
             if (Notification.permission === "granted") {
+                const response = await fetch(this.options.url);
+                const data = await response.json();
+
+                if (data.length === 0) {
+                    return;
+                }
+
                 for (const message of data) {
                     new Notification(message.title, message);
                 }
