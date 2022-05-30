@@ -13,7 +13,7 @@
  */
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
-import Registry from "./registry";
+import Registry, { PATTERN_INSTANCE_REGISTRY } from "./registry";
 import logging from "./logging";
 import mockupParser from "./mockup-parser";
 import utils from "./utils";
@@ -56,6 +56,9 @@ const Base = async function ($el, options, trigger) {
     // Store pattern instance on element
     this.$el.data(`pattern-${this.name}`, this);
     this.el[`pattern-${this.name}`] = this;
+
+    // Add Pattern instance to PATTERN_INSTANCE_REGISTRY
+    PATTERN_INSTANCE_REGISTRY.push(this);
 
     this.emit("init");
 };
