@@ -314,4 +314,93 @@ describe("pat-modal", function () {
             expect(spy_destroy).toHaveBeenCalledTimes(1);
         });
     });
+
+    it("2.1 - Allow to open a modal in a modal", async function () {
+        document.body.innerHTML = `
+            <a class="pat-modal"
+                href="#modal-source"
+            >open modal 1</a>
+            <template id="modal-source">
+              <a class="pat-modal"
+                  href="#modal-modal-source"
+                  data-pat-modal="
+                    target: #pat-modal::element;
+                  "
+              >Open another modal</a>
+            </template>
+            <template id="modal-modal-source">
+              <div class="pat-modal" id="pat-modal">
+                modal in modal.
+              </div>
+            </template>
+        `;
+        const el = document.querySelector(".pat-modal");
+        new pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        el.click();
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(document.querySelectorAll("#pat-modal").length).toBe(1);
+
+        const trigger_sub = document.querySelector("#pat-modal .pat-modal");
+        expect(trigger_sub).toBeTruthy();
+
+        trigger_sub.click();
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(document.querySelectorAll("#pat-modal").length).toBe(1);
+        expect(document.querySelector("#pat-modal").textContent).toMatch(
+            /modal in modal\./
+        );
+    });
+
+    it("2.2 - Allow to open a modal in a modal via ajax", async function () {
+        document.body.innerHTML = `
+            <a class="pat-modal"
+                href="#modal-source"
+            >open modal 1</a>
+            <template id="modal-source">
+              <a class="pat-modal"
+                  href="./modal.html"
+                  data-pat-modal="
+                    source: #pat-modal::element;
+                    target: #pat-modal::element;
+                  "
+              >Open another modal</a>
+            </template>
+        `;
+
+        jest.spyOn($, "ajax").mockImplementation(() => deferred);
+        answer(`
+          <html>
+            <body>
+              <main>
+                <div class="pat-modal" id="pat-modal">
+                  modal in modal.
+                </div>
+              </main>
+            </body>
+          </html>
+        `);
+
+        const el = document.querySelector(".pat-modal");
+        new pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        el.click();
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(document.querySelectorAll("#pat-modal").length).toBe(1);
+
+        const trigger_sub = document.querySelector("#pat-modal .pat-modal");
+        expect(trigger_sub).toBeTruthy();
+
+        trigger_sub.click();
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(document.querySelectorAll("#pat-modal").length).toBe(1);
+        expect(document.querySelector("#pat-modal").textContent).toMatch(
+            /modal in modal\./
+        );
+    });
 });

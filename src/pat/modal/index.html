@@ -54,6 +54,13 @@
                Modal with a custom header</a>.
         </p>
 
+        <p>
+            Open a
+            <a href="#modal-in-modal"
+               class="pat-modal">
+               Modal which contains a link to another modal.</a>.
+        </p>
+
         <div id="modal-on-load" class="pat-modal">
             <h1>Modal example with auto load</h1>
             <article class="pat-rich">
@@ -169,6 +176,10 @@
                     font-size: 30px;
                 }
             </style>
+        </template>
+
+        <template id="modal-in-modal">
+          <a href="./index-modal.html#pat-modal::element" class="pat-modal" data-pat-modal="target: #pat-modal::element">Open a modal</a>
         </template>
 
     </body>

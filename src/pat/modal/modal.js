@@ -16,6 +16,8 @@ parser.addArgument("class");
 parser.addArgument("closing", ["close-button"], ["close-button", "outside"], true);
 parser.addArgument("close-text", "Close");
 parser.addArgument("panel-header-content", ":first:not(.header)");
+parser.addArgument("source", null); // If not given, the href should specify the source via a url fragment.
+parser.addArgument("target", "#pat-modal");
 
 export default Base.extend({
     name: "modal",
@@ -42,7 +44,8 @@ export default Base.extend({
 
     _init_inject1() {
         const opts = {
-            target: "#pat-modal",
+            ...(this.options.source && { source: this.options.source }),
+            target: this.options.target,
             class:
                 "pat-modal" + (this.options["class"] ? " " + this.options["class"] : ""),
         };
