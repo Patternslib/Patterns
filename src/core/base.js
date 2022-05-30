@@ -16,6 +16,7 @@ import $ from "jquery";
 import Registry from "./registry";
 import logging from "./logging";
 import mockupParser from "./mockup-parser";
+import utils from "./utils";
 
 const log = logging.getLogger("Patternslib Base");
 
@@ -49,6 +50,8 @@ const Base = async function ($el, options, trigger) {
     this.el = $el[0];
     this.options = $.extend(true, {}, this.defaults || {}, options || {});
     await this.init($el, options, trigger);
+
+    this.id = utils.unique_id(); // Generate a unique id
 
     // Store pattern instance on element
     this.$el.data(`pattern-${this.name}`, this);
