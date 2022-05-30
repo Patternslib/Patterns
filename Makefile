@@ -86,6 +86,20 @@ release-patch: check
 		npx release-it --github.release --github.update --github.assets=dist/*.zip --no-github.draft --no-increment --no-git --no-npm && \
 		git checkout CHANGES.md
 
+.PHONY: prerelease-alpha
+prerelease-alpha: clean install
+	npx release-it --preRelease=alpha && \
+		make release-zip && \
+		npx release-it --github.preRelease --github.update --github.assets=dist/*.zip --no-github.draft --no-increment --no-git --no-npm && \
+		git checkout CHANGES.md
+
+.PHONY: prerelease-beta
+prerelease-beta: clean install
+	npx release-it --preRelease=beta && \
+		make release-zip && \
+		npx release-it --github.preRelease --github.update --github.assets=dist/*.zip --no-github.draft --no-increment --no-git --no-npm && \
+		git checkout CHANGES.md
+
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-yarn
 	$(PEGJS) $<
 	sed -i~ -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
