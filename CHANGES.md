@@ -1,5 +1,27 @@
 
 
+## [8.1.0-alpha.0](https://github.com/Patternslib/patterns/compare/8.0.3...8.1.0-alpha.0) (2022-05-30)
+
+
+### Features
+
+
+* **pat modal:** Allow to configure a injection source and target to support modals in modals. ([1d27c08](https://github.com/Patternslib/patterns/commit/1d27c08e4379503e052c834239b8b71d61c122c1))
+Add configuration parameter for ``source`` and ``target``.
+This allows to reuse an existing #pat-modal instance and to open modals in modals.
+
+
+### Maintenance
+
+
+* **Build:** Add prerelease-alpha and prerelease-beta as Makefile targets. ([10b9e24](https://github.com/Patternslib/patterns/commit/10b9e243997bc1efeb67422fd9b7158c88fee21c))
+
+
+* Upgrade dependencies. ([71e31cf](https://github.com/Patternslib/patterns/commit/71e31cf3bbf44db42e82e458e2136f67f0d096bc))
+
+
+* **pat modal:** Document panel-header-content. ([ac7000e](https://github.com/Patternslib/patterns/commit/ac7000e9d4f421ba73a5fe049e2f4e1fdda9369e))
+
 ### [8.0.3](https://github.com/Patternslib/patterns/compare/8.0.2...8.0.3) (2022-05-23)
 
 
