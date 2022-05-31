@@ -1,5 +1,23 @@
 
 
+## [8.1.0-alpha.1](https://github.com/Patternslib/patterns/compare/8.1.0-alpha.0...8.1.0-alpha.1) (2022-05-31)
+
+
+### Features
+
+
+* **pat push:** If a notification url is given, open it when clicking on the desktop notification. ([c36e51f](https://github.com/Patternslib/patterns/commit/c36e51f3cc0989e2933d98e7586ba55c147f61cb))
+
+
+
+### Maintenance
+
+
+* **pat push:** Fetch desktop notification data only when desktop notifications are allowed. ([05d443b](https://github.com/Patternslib/patterns/commit/05d443b76b121a59a20266d4c51bf7a8f9ff346f))
+
+
+* **push kit:** Remove unused desktop notification code. Use pat-push instead. ([c702833](https://github.com/Patternslib/patterns/commit/c702833c45eedfe774ff85886e5663a1c7c3f36e))
+
 ## [8.1.0-alpha.0](https://github.com/Patternslib/patterns/compare/8.0.3...8.1.0-alpha.0) (2022-05-30)
 
 
