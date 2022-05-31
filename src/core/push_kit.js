@@ -23,7 +23,7 @@
  *
  * This pattern expects the following meta tags to be available in the page to get the necessary configuration
  * - patterns-push-url containing a url pointing to a message queue server. Eg. ws://127.0.0.1:15674/ws
- * - patterns-push-exchange-base-name containing a text prefix. It will append _event and _notification to that prefix and attempt to contact these two message exchanges.
+ * - patterns-push-exchange containing the exchange nanem to subscribe to.
  * - patterns-push-filter containing a topic filter including dot-seperated namespaces and wildcards. A commonly used filter value would be the currently logged in user. This will subscribe only to updates for this specific user.
  * - patterns-push-login containing the name of a read only user on the message queue server used to connect.
  * - patterns-push-password containing the password of a read only user on the message queue server used to connect.
@@ -37,14 +37,12 @@ const push_kit = {
     async init() {
         const url = document.querySelector("meta[name=patterns-push-url]")?.content;
         const exchange = document.querySelector("meta[name=patterns-push-exchange]")?.content; // prettier-ignore
-        const exchange_notification = document.querySelector("meta[name=patterns-notification-exchange]")?.content; // prettier-ignore
 
-        if (!url || (!exchange && !exchange_notification)) {
+        if (!url || !exchange) {
             return;
         }
 
         const topicfilter = document.querySelector("meta[name=patterns-push-filter]")?.content; // prettier-ignore
-        const topicfilter_notification = document.querySelector("meta[name=patterns-notification-filter]")?.content; // prettier-ignore
         const user_login = document.querySelector("meta[name=patterns-push-login]")?.content; // prettier-ignore
         const user_pass = document.querySelector("meta[name=patterns-push-password]")?.content; // prettier-ignore
 
@@ -70,15 +68,6 @@ const push_kit = {
                     this.on_push_marker.bind(this)
                 );
             }
-            if (exchange_notification) {
-                // TODO: should we distinguish for desktop notifications via routing_key.
-                // TODO: check following:
-                //       Only one subscription per connection is allowed. Otherwise the connection will terminate right away again.
-                client.subscribe(
-                    `/exchange/${exchange_notification}/${topicfilter_notification}.#`,
-                    this.on_desktop_notification.bind(this)
-                );
-            }
         };
 
         client.onStompError = (frame) => {
@@ -98,48 +87,6 @@ const push_kit = {
         document.body.dispatchEvent(
             new CustomEvent("push", { detail: { body: message.body } })
         );
-    },
-
-    on_desktop_notification(message) {
-        logger.debug("Received desktop notification: ", message);
-        if (!message || !message.body) {
-            return;
-        }
-        this.create_notification(message.body);
-    },
-
-    create_notification(text) {
-        const img = document.querySelector("meta[name=desktop-notification-image]")?.content; // prettier-ignore
-
-        // Let's check if the browser supports notifications
-        if (!("Notification" in window)) {
-            logger.error("This browser does not support notifications.");
-            return;
-        }
-
-        // If not yet permitted, we need to ask the user for permission.
-        // Note, Chrome does not implement the permission static property
-        // So we have to check for NOT 'denied' instead of 'default'
-        if (!(Notification.permission in ["denied", "granted"])) {
-            Notification.requestPermission((permission) => {
-                // Whatever the user answers, we make sure Chrome stores the information
-                if (!("permission" in Notification)) {
-                    Notification.permission = permission;
-                }
-            });
-        }
-
-        // Let's check if the user is okay to get some notification
-        if (Notification.permission === "granted") {
-            // If it's okay let's create a notification
-            const message = {
-                body: text,
-            };
-            if (img) {
-                message.icon = img;
-            }
-            new Notification("Update", message);
-        }
     },
 };
 

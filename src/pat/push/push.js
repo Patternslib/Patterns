@@ -51,13 +51,6 @@ export default Base.extend({
 
     async desktop_notification() {
         try {
-            const response = await fetch(this.options.url);
-            const data = await response.json();
-
-            if (data.length === 0) {
-                return;
-            }
-
             // Let's check if the browser supports notifications
             if (!("Notification" in window)) {
                 logger.error("This browser does not support notifications.");
@@ -79,8 +72,42 @@ export default Base.extend({
 
             // Let's check if the user is okay to get some notification
             if (Notification.permission === "granted") {
+                const response = await fetch(this.options.url);
+                const data = await response.json();
+
+                if (data.length === 0) {
+                    return;
+                }
+
                 for (const message of data) {
-                    new Notification(message.title, message);
+                    const notification = new Notification(message.title, message);
+                    if (message.data?.url) {
+                        // If ``message.data`` contains an URL, open it.
+                        // If not, the browser will simply get the focus when
+                        // clicking on the desktop notification.
+                        notification.addEventListener("click", () => {
+                            window.open(message.data.url, "_self");
+
+                            // Opening a URL in a new tab from JavaScript is
+                            // equivalent to opening a popup window which is
+                            // blocked by default.
+                            // Therefore, we open the URL in the same tab and
+                            // rely on other mechanisms that the user's work
+                            // isn't lost (auto-save, form unlod protection.)
+
+                            // Don't focus the originating tab.
+                            //e.preventDefault();
+                            // Open in new window.
+                            //const new_window = window.open(message.data.url, "_blank");
+                            //try {
+                            //    new_window.focus();
+                            //} catch (e) {
+                            //    // Opening of new window (aka "popup") might
+                            //    // have been blocked.
+                            //    window.focus();
+                            //}
+                        });
+                    }
                 }
             }
         } catch (e) {
