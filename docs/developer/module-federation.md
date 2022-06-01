@@ -4,7 +4,7 @@
 
 For a general introduction see: https://webpack.js.org/concepts/module-federation/
 
-Module Federation allows to share dependencies between bundles. 
+Module Federation allows to share dependencies between bundles.
 Each bundle includes the whole set of dependencies.
 However, if multiple bundles have the same dependencies they are only loaded once.
 
@@ -18,7 +18,15 @@ Other bundles are "remotes" which are initialized for module federation by the h
 ## How to use it
 
 - Create a new entry point ``index.js`` which only imports the normal entry point.
-  If your bundle is the host bundle, also import the ``module_federation`` module - importing is enough.
+
+```
+import("./patterns");
+```
+
+If you are creating a host bundle - one which is always present and initializes add-on bundles - then also import the ``module_federation`` module.
+Importing is enough.
+Mockup is such a host bundle.
+Your ``index.js`` will then look like:
 
 ```
 import "@patternslib/patternslib/webpack/module_federation";
