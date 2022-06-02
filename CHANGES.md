@@ -1,5 +1,24 @@
 
 
+## [8.1.0-alpha.2](https://github.com/Patternslib/patterns/compare/8.1.0-alpha.1...8.1.0-alpha.2) (2022-06-02)
+
+
+### Bug Fixes
+
+
+* **pat close panel:** Do not break if no parent .has-close-panel element was found. ([894c05c](https://github.com/Patternslib/patterns/commit/894c05c9995a120cc53305d76d2ac1c69ac30b9e))
+
+
+
+### Maintenance
+
+
+* **Build:** Module Federation - Remove the underscore version fixture. ([87347b7](https://github.com/Patternslib/patterns/commit/87347b73cb3441ef5bd3a26b3156ae9957ba6710))
+Remove the underscore version fixture in webpack.mf.js.
+Since unterscore 1.13.4 this fixture isn't necessary anymore.
+
+* **docs:** Document that you only have to iport module_federation if you are creating a host bundle. ([bccd803](https://github.com/Patternslib/patterns/commit/bccd80391f5c7695bcc439f3c95414d799c72334))
+
 ## [8.1.0-alpha.1](https://github.com/Patternslib/patterns/compare/8.1.0-alpha.0...8.1.0-alpha.1) (2022-05-31)
 
 
