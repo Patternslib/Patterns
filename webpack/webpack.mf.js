@@ -24,10 +24,6 @@ function shared_from_dependencies(...dependencies) {
                 singleton: true,
                 requiredVersion: version,
             };
-            if (name === "underscore") {
-                // Underscore, for some reason, needs to have the version set explicitly
-                shared[name].requiredVersion = "1.13.3";
-            }
         }
     }
     return shared;
