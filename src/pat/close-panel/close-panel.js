@@ -1,12 +1,17 @@
 import Base from "../../core/base";
 import dom from "../../core/dom";
+import utils from "../../core/utils";
 
 export default Base.extend({
     name: "close-panel",
     trigger: ".close-panel",
 
     init() {
-        this.el.addEventListener("click", (e) => {
+        this.el.addEventListener("click", async (e) => {
+            // Wait two ticks to allow other patterns to add the ``.has-close-panel`` class.
+            await utils.timeout(1);
+            await utils.timeout(1);
+
             // Find the first element which has a close-panel.
             // This should the panel-root itself.
             const panel = this.el.closest(".has-close-panel");
