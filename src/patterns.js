@@ -62,6 +62,14 @@ import "./pat/zoom/zoom";
 // example pattern
 import "./pat/minimalpattern/minimalpattern";
 
+// External patterns
+import "@patternslib/pat-content-mirror";
+import "@patternslib/pat-doclock";
+import "@patternslib/pat-shopping-cart";
+import "@patternslib/pat-sortable-table";
+import "@patternslib/pat-tiptap";
+import "@patternslib/pat-upload";
+
 // Importing pattern styles in JavaScript
 // Set to ``true`` to include core styles via JavaScript
 window.__patternslib_import_styles = false;
