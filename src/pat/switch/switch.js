@@ -21,9 +21,6 @@ export default Base.extend({
 
     init() {
         this.options = this._validateOptions(parser.parse(this.el, this.options, true));
-        if (!this.options.length) {
-            log.error("Switch without options cannot be initialized.");
-        }
 
         events.add_event_listener(this.el, "click", "pat-switch--on-click", (e) => {
             if (e.tagName === "A") {
@@ -68,11 +65,24 @@ export default Base.extend({
     _validateOptions: function (options) {
         var correct = [];
 
+        let logged_error = false;
         for (var i = 0; i < options.length; i++) {
             var option = options[i];
-            if (option.selector && (option.remove || option.add)) correct.push(option);
-            else log.error("Switch pattern requires selector and one of add or remove.");
+            if (option.selector && (option.remove || option.add)) {
+                correct.push(option);
+            } else {
+                log.error(
+                    "Switch pattern requires selector and one of add or remove.",
+                    this.el
+                );
+                logged_error = true;
+            }
         }
+
+        if (!correct.length && !logged_error) {
+            log.error("Switch without options cannot be initialized.", this.el);
+        }
+
         return correct;
     },
 
