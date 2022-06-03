@@ -1,5 +1,16 @@
 
 
+## [8.1.0-alpha.3](https://github.com/Patternslib/patterns/compare/8.1.0-alpha.2...8.1.0-alpha.3) (2022-06-03)
+
+
+### Maintenance
+
+
+* **pat inject:** Add developer documentation with inital version method call flow diagram. ([de13186](https://github.com/Patternslib/patterns/commit/de1318621f82b1c9a2f8928127cb52860b8878cf))
+
+
+* **pat switch:** When logging errors, add the failing element for better debugging. Also, do not log an error twice. ([83f3df3](https://github.com/Patternslib/patterns/commit/83f3df3eb1091a2e7077e3cc94dc6770a2fd9e91))
+
 ## [8.1.0-alpha.2](https://github.com/Patternslib/patterns/compare/8.1.0-alpha.1...8.1.0-alpha.2) (2022-06-02)
 
 
