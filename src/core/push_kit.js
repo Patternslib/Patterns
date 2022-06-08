@@ -28,7 +28,6 @@
  * - patterns-push-login containing the name of a read only user on the message queue server used to connect.
  * - patterns-push-password containing the password of a read only user on the message queue server used to connect.
  */
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import logging from "./logging";
 
 const logger = logging.getLogger("core push kit");

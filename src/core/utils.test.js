@@ -1,4 +1,3 @@
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import utils from "./utils";
 import $ from "jquery";
 import { jest } from "@jest/globals";

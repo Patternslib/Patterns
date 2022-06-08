@@ -1,4 +1,3 @@
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import "../../core/jquery-ext";
 import $ from "jquery";
 import Base from "../../core/base";

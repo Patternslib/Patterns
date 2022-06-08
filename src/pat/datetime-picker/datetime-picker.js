@@ -1,5 +1,4 @@
 /* pat-datetime-picker  - Polyfill for input type=datetime-local */
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";

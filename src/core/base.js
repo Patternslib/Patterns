@@ -11,7 +11,6 @@
  * Older Patternslib patterns on the other hand have a single global scope for
  * all DOM elements.
  */
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Registry from "./registry";
 import logging from "./logging";

@@ -1,4 +1,3 @@
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";

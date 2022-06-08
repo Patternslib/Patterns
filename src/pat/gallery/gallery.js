@@ -1,5 +1,4 @@
 // pat-gallery - A gallery pattern.
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
