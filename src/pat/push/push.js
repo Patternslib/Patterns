@@ -1,8 +1,10 @@
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import Base from "../../core/base";
+import events from "../../core/events";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
+import utils from "../../core/utils";
 
 const logger = logging.getLogger("push");
 
@@ -11,12 +13,28 @@ parser.addArgument("url", null);
 parser.addArgument("push-id", null);
 parser.addArgument("mode", "replace", ["replace", "append", "desktop-notification"]);
 
+const rfp_key = "pat-push__desktop-notification__request_for_permission";
+
 export default Base.extend({
     name: "push",
     trigger: ".pat-push",
 
     init() {
         this.options = parser.parse(this.el, this.options);
+
+        if (
+            this.options.mode === "desktop-notification" &&
+            !(Notification.permission in ["denied", "granted"])
+        ) {
+            // Try to get a notification permission on any click.
+            events.add_event_listener(
+                document,
+                "click",
+                rfp_key,
+                this.desktop_notification__request_permission.bind(this)
+            );
+        }
+
         document.body.addEventListener("push", (e) => {
             logger.debug("received push marker");
             const data = e?.detail?.body;
@@ -56,12 +74,9 @@ export default Base.extend({
         registry.scan(this.el);
     },
 
-    async desktop_notification() {
-        // Let's check if the browser supports notifications
-        if (!("Notification" in window)) {
-            logger.error("This browser does not support notifications.");
-            return;
-        }
+    async desktop_notification__request_permission() {
+        // Wait a bit to make the dialog more prominent...
+        await utils.timeout(1000);
 
         // Notifications need to be granted.
         // Note: Current browsers don't allow an automatic request for
@@ -69,11 +84,22 @@ export default Base.extend({
         //       The following code won't work out of the box in such cases.
         if (!(Notification.permission in ["denied", "granted"])) {
             Notification.requestPermission((permission) => {
+                // Unregister the event handler, which should only be necessary once.
+                events.remove_event_listener(document, rfp_key);
+
                 // Whatever the user answers, we make sure Chrome stores the information
                 if (!("permission" in Notification)) {
                     Notification.permission = permission;
                 }
             });
+        }
+    },
+
+    async desktop_notification() {
+        // Let's check if the browser supports notifications
+        if (!("Notification" in window)) {
+            logger.error("This browser does not support notifications.");
+            return;
         }
 
         // Let's check if the user is okay to get some notification
