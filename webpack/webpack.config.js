@@ -6,7 +6,6 @@ const webpack_helpers = require("./webpack-helpers");
 // plugins
 const CopyPlugin = require("copy-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
-// const { DuplicatesPlugin } = require("inspectpack/plugin");
 
 module.exports = (env, argv, config, babel_include = []) => {
     // Webpack config
@@ -100,11 +99,6 @@ module.exports = (env, argv, config, babel_include = []) => {
                 resourceRegExp: /^\.\/locale$/,
                 contextRegExp: /moment$/,
             }),
-            //new DuplicatesPlugin({
-            //    emitErrors: false,
-            //    verbose: true,
-            //    ignoredPackages: [/.css/],
-            //}),
         ],
     };
 
