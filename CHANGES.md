@@ -1,5 +1,22 @@
 
 
+## [8.1.0-alpha.4](https://github.com/Patternslib/patterns/compare/8.1.0-alpha.3...8.1.0-alpha.4) (2022-06-08)
+
+
+### Features
+
+
+* **pat push:** Desktop notifications: Ask for permission. ([ccbf731](https://github.com/Patternslib/patterns/commit/ccbf731c3ea19676bdf4f0b722692894c0f89d69))
+Ask for permission to send desktop notifications after any click on the document.
+This bypasses the browser restrictions on request for permission dialoges that are not shown if there hasn't been a user interaction.
+
+
+### Maintenance
+
+
+* **pat push:** Restructure code. ([2dbe44f](https://github.com/Patternslib/patterns/commit/2dbe44f8eeb2e32becf4efd5394bd3a4522dc442))
+Restructure code and narrow down the error handling for fetching to only the fetch block.
+
 ## [8.1.0-alpha.3](https://github.com/Patternslib/patterns/compare/8.1.0-alpha.2...8.1.0-alpha.3) (2022-06-03)
 
 
