@@ -1,4 +1,3 @@
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import "./autofocus";
 import registry from "../../core/registry";
 import utils from "../../core/utils";

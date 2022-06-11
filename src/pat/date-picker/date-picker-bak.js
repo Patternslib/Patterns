@@ -141,12 +141,24 @@ export default Base.extend({
         }
         const Pikaday = (await import("pikaday")).default;
 
+        // Set the default date to the elements value or today.
+        let default_date = new Date(this.el.value);
+        default_date = isNaN(default_date) ? new Date() : default_date;
+
         const config = {
             field: el,
             trigger: display_el || el,
             format: this.format,
             firstDay: this.options.firstDay,
+            defaultDate: default_date,
+            setDefaultDate: false, // do not initially set the input's date.
             showWeekNumber: this.options.weekNumbers === "show",
+            onOpen: () => {
+                // Set the default date to the elements value or today.
+                let date = new Date(this.el.value);
+                date = isNaN(date) ? new Date() : date;
+                this.pikaday.setDate(date);
+            },
             onSelect: () => this.dispatch_change_event(),
         };
 

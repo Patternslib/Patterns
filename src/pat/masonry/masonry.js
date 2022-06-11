@@ -2,7 +2,6 @@
  * Patternslib pattern for Masonry
  * Copyright 2015 Syslab.com GmBH
  */
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";

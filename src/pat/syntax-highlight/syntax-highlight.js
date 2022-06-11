@@ -1,4 +1,3 @@
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import Base from "../../core/base";
 import utils from "../../core/utils";
 

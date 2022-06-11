@@ -1,5 +1,4 @@
 // Patterns validate - Form vlidation
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import "../../core/polyfills"; // SubmitEvent.submitter for Safari < 15.4 and jsDOM
 import $ from "jquery";
 import Base from "../../core/base";

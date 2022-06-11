@@ -4,7 +4,6 @@
  * Copyright 2014 Marko Durkovic
  * Copyright 2014 Simplon B.V. - Wichert Akkerman
  */
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import registry from "../../core/registry";
 
 var _ = {

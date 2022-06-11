@@ -9,7 +9,6 @@ module.exports = (env) => {
                 },
             ],
         ],
-        plugins: ["@babel/plugin-proposal-optional-chaining"],
     };
 
     // passed via NODE_ENV=development environment variable.

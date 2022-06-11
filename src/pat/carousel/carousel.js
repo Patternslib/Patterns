@@ -3,7 +3,6 @@
  *
  * Copyright 2017 Syslab.com GmbH Alexander Pilz
  */
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Base from "../../core/base";
 import logging from "../../core/logging";

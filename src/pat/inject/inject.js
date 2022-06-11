@@ -1,5 +1,4 @@
 import "../../core/jquery-ext"; // for :scrollable for autoLoading-visible
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import ajax from "../ajax/ajax";
 import dom from "../../core/dom";

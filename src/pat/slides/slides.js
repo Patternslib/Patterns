@@ -3,7 +3,6 @@
  *
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
