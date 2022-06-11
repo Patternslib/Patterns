@@ -1,4 +1,16 @@
+# Changelog
 
+See the [history](./docs/history/index.md) for older changelog entries.
+
+
+
+## [8.1.0](https://github.com/Patternslib/patterns/compare/8.1.0-alpha.4...8.1.0) (2022-06-11)
+
+
+### Maintenance
+
+
+* **docs:** Add history section to docs and move old history from the changelog to this new section. ([7c0e2ff](https://github.com/Patternslib/patterns/commit/7c0e2ffbc2f4c0a1276913b65f0fb5b0ef1119ec))
 
 ## [8.1.0-alpha.4](https://github.com/Patternslib/patterns/compare/8.1.0-alpha.3...8.1.0-alpha.4) (2022-06-08)
 
@@ -225,4 +237,3 @@ changed at all. Just keep using ``registry.scan``,
 But if necessary, there is a ``PATTERN_REGISTRY`` export in ``core.registry``
 which points to ``window.__patternslib_registry``, a singleton in the global
 namespace which is shared across instances of the registry.
-
