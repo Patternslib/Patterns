@@ -19,6 +19,7 @@ module.exports = {
     plugins: {
         "@release-it/conventional-changelog": {
             infile: "CHANGES.md",
+            header: "# Changelog\n\nSee the [history](./docs/history/index.md) for older changelog entries.\n\n",
             ignoreRecommendedBump: true,
             preset: {
                 name: "conventionalcommits",
