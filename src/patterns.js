@@ -3,7 +3,6 @@
  */
 
 // Import base
-import "./public_path"; // first import
 import "./globals";
 import registry from "./core/registry";
 import "modernizr";
