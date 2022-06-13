@@ -8,10 +8,26 @@ import get_container from "./module_federation--dynamic-federation";
 // NOTE: This is also defined in ``webpack.mf.js``.
 export const MF_NAME_PREFIX = "__patternslib_mf__";
 
+if (typeof window.__patternslib_container_map === "undefined") {
+    window.__patternslib_container_map = {};
+}
+const container_map = window.__patternslib_container_map;
+
 export async function initialize_remote({ remote_name, exposed_module = "./main" }) {
+    if (container_map[`${remote_name}-${exposed_module}`]) {
+        // already initialized, return.
+        return;
+    }
     const container = await get_container(remote_name);
     const factory = await container.get(exposed_module);
     const module = factory();
+
+    container_map[`${remote_name}-${exposed_module}`] = true;
+
+    console.debug(
+        `Patternslib Module Federation: Loaded and initialized bundle "${remote_name}".`
+    );
+
     return module;
 }
 
@@ -34,8 +50,5 @@ document_ready(function () {
     for (const bundle_name of bundles) {
         // Now load + initialize each bundle.
         initialize_remote({ remote_name: bundle_name });
-        console.debug(
-            `Patternslib Module Federation: Loaded and initialized bundle "${bundle_name}".`
-        );
     }
 });
