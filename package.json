@@ -44,10 +44,10 @@
     },
     "resolutions": {},
     "scripts": {
-        "start": "NODE_ENV=development webpack serve --config webpack/webpack.dist.js",
-        "build": "NODE_ENV=production webpack --config webpack/webpack.dist.js",
-        "build:dev": "NODE_ENV=development webpack --config webpack/webpack.dist.js",
-        "build:stats": "NODE_ENV=production webpack --config webpack/webpack.dist.js --json > stats.json",
+        "start": "NODE_ENV=development webpack serve --config webpack/webpack.config.js",
+        "build": "NODE_ENV=production webpack --config webpack/webpack.config.js",
+        "build:dev": "NODE_ENV=development webpack --config webpack/webpack.config.js",
+        "build:stats": "NODE_ENV=production webpack --config webpack/webpack.config.js --json > stats.json",
         "test": "jest --watch",
         "testonce": "jest"
     },
