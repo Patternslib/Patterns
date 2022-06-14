@@ -7,9 +7,6 @@ PEGJS		?= npx pegjs
 SASS		?= npx sass
 YARN		?= npx yarn
 
-SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/lib/*.js)
-GENERATED	= src/lib/depends_parse.js
-
 PACKAGE_NAME = "patternslib"
 
 all:: bundle css
