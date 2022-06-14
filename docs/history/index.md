@@ -2,6 +2,7 @@
 
 The changelog of previous Patternslib releases.
 
+- [Changelog of Version 8](8.md)
 - [Changelog of Version 7](7.md)
 - [Changelog of Version 6](6.md)
 - [Changelog of Version 5](5.md)
