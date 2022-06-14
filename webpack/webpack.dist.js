@@ -1,9 +1,10 @@
 // Webpack configuration for the Patternslib bundle distribution.
 process.traceDeprecation = true;
-const mf_config = require("./webpack.mf");
+const CopyPlugin = require("copy-webpack-plugin");
+const mf_config = require("@patternslib/dev/webpack/webpack.mf");
 const package_json = require("../package.json");
 const path = require("path");
-const patternslib_config = require("./webpack.config");
+const patternslib_config = require("@patternslib/dev/webpack/webpack.config");
 
 module.exports = (env, argv) => {
     let config = {
@@ -33,6 +34,20 @@ module.exports = (env, argv) => {
             remote_entry: config.entry["bundle.min"],
         })
     );
+
+    // Polyfills
+    config.plugins.push(
+        // Copy polyfills loader to the output path.
+        new CopyPlugin({
+            patterns: [
+                { from: path.resolve(__dirname, "../src/polyfills-loader.js"), }, // prettier-ignore
+            ],
+        })
+    );
+
+    if (process.env.NODE_ENV === "development") {
+        config.devServer.static.directory = path.resolve(__dirname, "../");
+    }
 
     //console.log(JSON.stringify(config, null, 4));
 
