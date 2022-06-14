@@ -23,10 +23,7 @@ module.exports = (env, argv, config, babel_include = []) => {
     babel_exclude = `node_modules/${babel_exclude}.*`;
 
     const base_config = {
-        entry: {
-            "bundle.min": path.resolve(__dirname, "../src/patterns.js"),
-            "bundle-polyfills.min": path.resolve(__dirname, "../src/polyfills.js"),
-        },
+        entry: {}, // Entry point files for your JavaScript application.
         externals: [
             {
                 window: "window",
@@ -35,7 +32,11 @@ module.exports = (env, argv, config, babel_include = []) => {
         output: {
             filename: "[name].js",
             chunkFilename: "chunks/[name].[contenthash].min.js",
-            path: path.resolve(__dirname, "../dist/"),
+            // output.path: Set default to "dist/" which probably will work in
+            // projects which extend this webpack config.
+            // Note the extendee's webpack config should be in the top-level that
+            // "dist" can be found in the top level too.
+            path: "./dist",
             clean: true, // Clean directory before compiling
             publicPath: "auto",
         },
@@ -78,18 +79,13 @@ module.exports = (env, argv, config, babel_include = []) => {
                     test: /\.(eot|woff|woff2|ttf|png|jpe?g|gif)$/i,
                     type: "asset/resource",
                 },
-                {
-                    test: /\.modernizrrc\.js$/,
-                    loader: "webpack-modernizr-loader",
-                },
             ],
         },
         resolve: {
-            alias: {
-                modernizr$: path.resolve(__dirname, "../.modernizrrc.js"),
-            },
+            alias: {},
         },
         plugins: [
+            // Copy polyfills loader to the output path.
             new CopyPlugin({
                 patterns: [
                     { from: path.resolve(__dirname, "../src/polyfills-loader.js"), }, // prettier-ignore
