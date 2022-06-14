@@ -16,4 +16,6 @@ jobs:
       with:
         node-version: '16'
         cache: 'yarn'
-    - run: make check
+    - run: |
+        make install
+        make check

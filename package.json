@@ -48,8 +48,8 @@
         "build": "NODE_ENV=production webpack --config webpack/webpack.config.js",
         "build:dev": "NODE_ENV=development webpack --config webpack/webpack.config.js",
         "build:stats": "NODE_ENV=production webpack --config webpack/webpack.config.js --json > stats.json",
-        "test": "jest --watch",
-        "testonce": "jest"
+        "test": "jest",
+        "testwatch": "jest --watch"
     },
     "engines": {
         "node": ">=12.20.0"
