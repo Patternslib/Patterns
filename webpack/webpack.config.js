@@ -49,7 +49,16 @@ module.exports = (env, argv) => {
         config.devServer.static.directory = path.resolve(__dirname, "../");
     }
 
-    //console.log(JSON.stringify(config, null, 4));
+    // Add an @patternslib/patternslib alias when building within this repository.
+    // That way, add-on packages referring to @patternslib/patternslib do work.
+    if (process.env.BUILD_ENV === "patternslib") {
+        config.resolve.alias["@patternslib/patternslib"] = path.resolve(
+            __dirname,
+            "../"
+        );
+    }
 
+    //console.log(JSON.stringify(config, null, 4));
+    //
     return config;
 };
