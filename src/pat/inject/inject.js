@@ -449,9 +449,11 @@ const inject = {
             $src = $source.safeClone();
         }
 
-        $src.findInclusive("img").on("load", (e) => {
-            $(e.currentTarget).trigger("pat-inject-content-loaded");
-        });
+        for (const img of dom.querySelectorAllAndMe($src[0], "img")) {
+            $(img).on("load", (e) => {
+                $(e.currentTarget).trigger("pat-inject-content-loaded");
+            });
+        }
 
         const $injected = cfg.$injected || $src;
         // Now the injection actually happens.
