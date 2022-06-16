@@ -6,7 +6,6 @@
 import $ from "jquery";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
-import url from "../../core/url";
 import "../../core/remove";
 
 var slides = {
@@ -24,10 +23,12 @@ var slides = {
         }
         await import("slides/src/slides"); // loads ``Presentation`` globally.
 
-        var parameters = url.parameters();
-        if (parameters.slides !== undefined) {
-            var requested_ids = slides._collapse_ids(parameters.slides);
-            if (requested_ids) slides._remove_slides($el, requested_ids);
+        const slides_filter = new URL(window.location).searchParams.get("slides");
+        if (slides_filter) {
+            const requested_ids = slides._collapse_ids(slides_filter);
+            if (requested_ids) {
+                slides._remove_slides($el, requested_ids);
+            }
         }
         $el.each(function () {
             var presentation = new window.Presentation(this),
@@ -61,17 +62,8 @@ var slides = {
         });
     },
 
-    _collapse_ids: function (params) {
-        var ids = [];
-        params.forEach(function (param) {
-            if (param)
-                ids = ids.concat(
-                    param.split(",").filter(function (id) {
-                        return !!id;
-                    })
-                );
-        });
-        return ids;
+    _collapse_ids: function (id_string) {
+        return (id_string || "").split(",").filter((it) => !!it);
     },
 
     _remove_slides: function ($shows, ids) {
