@@ -18,7 +18,7 @@ var slides = {
     },
 
     async init($el) {
-        if (!this.el.querySelector(".slide")) {
+        if (!$el[0].querySelector(".slide")) {
             // no slides, nothing to do.
             return;
         }
