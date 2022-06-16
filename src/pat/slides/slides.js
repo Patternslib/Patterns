@@ -1,49 +1,38 @@
 /**
  * Patterns slides - Automatic and customised slideshows.
- *
- * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
 import $ from "jquery";
-import registry from "../../core/registry";
+import Base from "../../core/base";
 import utils from "../../core/utils";
 import "../../core/remove";
 
-var slides = {
+export default Base.extend({
     name: "slides",
     trigger: ".pat-slides",
 
-    setup: function () {
-        $(document).on("patterns-injected", utils.debounce(slides._reset, 100));
-    },
-
-    async init($el) {
-        if (!$el[0].querySelector(".slide")) {
-            // no slides, nothing to do.
-            return;
-        }
+    async init() {
         await import("slides/src/slides"); // loads ``Presentation`` globally.
 
         const slides_filter = new URL(window.location).searchParams.get("slides");
         if (slides_filter) {
-            const requested_ids = slides._collapse_ids(slides_filter);
+            const requested_ids = this._collapse_ids(slides_filter);
             if (requested_ids) {
-                slides._remove_slides($el, requested_ids);
+                this._remove_slides(requested_ids);
             }
         }
-        $el.each(function () {
-            var presentation = new window.Presentation(this),
-                $container = $(this);
-            $container
-                .data("pat-slide", presentation)
-                .on("SlideDisplay", slides._onSlideDisplay)
-                .on("SlideHide", slides._onSlideHide);
-        });
-        return slides._hook($el);
+        this.presentation = new window.Presentation(this.el);
+        this.$el
+            .on("SlideDisplay", this._on_slide_display.bind(this))
+            .on("SlideHide", this._on_slide_hide.bind(this));
+
+        $(document).on("patterns-injected", utils.debounce(this._reset.bind(this), 100));
+
+        this._hook();
     },
 
-    _onSlideDisplay: function (event) {
-        var slide = event.originalEvent.detail.slide.element,
-            $videos = $("video", slide);
+    _on_slide_display(event) {
+        const slide = event.originalEvent.detail.slide.element;
+        const $videos = $("video", slide);
 
         $videos.each(function () {
             if (this.paused) {
@@ -53,45 +42,40 @@ var slides = {
         });
     },
 
-    _onSlideHide: function (event) {
-        var slide = event.originalEvent.detail.slide.element,
-            $videos = $("video", slide);
+    _on_slide_hide(event) {
+        const slide = event.originalEvent.detail.slide.element;
+        const $videos = $("video", slide);
 
         $videos.each(function () {
-            if (!this.paused) this.pause();
+            if (!this.paused) {
+                this.pause();
+            }
         });
     },
 
-    _collapse_ids: function (id_string) {
+    _collapse_ids(id_string) {
         return (id_string || "").split(",").filter((it) => !!it);
     },
 
-    _remove_slides: function ($shows, ids) {
-        var has_bad_id = function (idx, el) {
-            return ids.indexOf(el.id) === -1;
-        };
-
-        for (var i = 0; i < $shows.length; i++) {
-            var $show = $shows.eq(i),
-                $bad_slides = $show.find(".slide[id]").filter(has_bad_id);
-            $bad_slides.remove();
+    _remove_slides(keep_ids) {
+        for (const slide of this.el.querySelectorAll(".slide[id]")) {
+            if (keep_ids.indexOf(slide.id) !== -1) {
+                // Not an id to remove
+                continue;
+            }
+            console.log("remove slide", slide);
+            slide.remove();
         }
     },
 
-    _hook: function ($el) {
-        return $el
+    _hook() {
+        this.$el
             .off("destroy.pat-slide")
-            .on("destroy.pat-slide", utils.debounce(slides._reset, 100));
+            .on("destroy.pat-slide", utils.debounce(this._reset.bind(this), 100));
     },
 
-    _reset: function () {
-        var $container = $(this).closest(".pat-slides"),
-            presentation = $container.data("pat-slide");
-        if (presentation) presentation.scan();
-        slides._hook($(this.trigger));
+    _reset() {
+        this.presentation.scan();
+        this._hook();
     },
-};
-
-slides.setup();
-registry.register(slides);
-export default slides;
+});

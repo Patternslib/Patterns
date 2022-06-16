@@ -1,4 +1,4 @@
-import pattern from "./slides";
+import Pattern from "./slides";
 import $ from "jquery";
 import utils from "../../core/utils";
 import { jest } from "@jest/globals";
@@ -8,35 +8,44 @@ describe("pat-slides", function () {
         jest.restoreAllMocks();
     });
 
-    describe("_collapse_ids", function () {
+    describe("1 - _collapse_ids", function () {
         it("Single id", function () {
-            expect(pattern._collapse_ids("foo")).toEqual(["foo"]);
+            const instance = new Pattern(document.createElement("div"));
+            expect(instance._collapse_ids("foo")).toEqual(["foo"]);
         });
 
         it("Comma-separated list of ids", function () {
-            expect(pattern._collapse_ids("foo,bar")).toEqual(["foo", "bar"]);
+            const instance = new Pattern(document.createElement("div"));
+            expect(instance._collapse_ids("foo,bar")).toEqual(["foo", "bar"]);
         });
 
         it("Skip empty ids", function () {
-            expect(pattern._collapse_ids("foo,,bar")).toEqual(["foo", "bar"]);
+            const instance = new Pattern(document.createElement("div"));
+            expect(instance._collapse_ids("foo,,bar")).toEqual(["foo", "bar"]);
         });
 
         it("Parameter without value", function () {
-            expect(pattern._collapse_ids(null)).toEqual([]);
+            const instance = new Pattern(document.createElement("div"));
+            expect(instance._collapse_ids(null)).toEqual([]);
         });
 
         it("Parameter with empty value", function () {
-            expect(pattern._collapse_ids("")).toEqual([]);
+            const instance = new Pattern(document.createElement("div"));
+            expect(instance._collapse_ids("")).toEqual([]);
         });
     });
 
-    describe("_remove_slides", function () {
-        it("Remove slides from DOM", function () {
-            var $show = $("<div/>", { class: "pat-slides" });
-            for (var i = 1; i <= 4; i++)
+    describe("2 - _remove_slides", function () {
+        it("Remove slides from DOM", async function () {
+            const $show = $("<div/>", { class: "pat-slides" });
+            for (let i = 1; i <= 4; i++)
                 $("<div/>", { class: "slide", id: "slide" + i }).appendTo($show);
-            pattern._remove_slides($show, ["slide1", "slide3"]);
-            var ids = $.makeArray(
+
+            const instance = new Pattern($show);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            instance._remove_slides(["slide1", "slide3"]);
+            const ids = $.makeArray(
                 $show.find(".slide").map(function (idx, el) {
                     return el.id;
                 })
@@ -44,26 +53,34 @@ describe("pat-slides", function () {
             expect(ids).toEqual(["slide1", "slide3"]);
         });
 
-        it.skip("Trigger reset when removing slides", function () {
-            var $show = $("<div/>", { class: "pat-slides" });
-            for (var i = 1; i <= 4; i++) {
+        it.skip("Trigger reset when removing slides", async function () {
+            const $show = $("<div/>", { class: "pat-slides" });
+            for (let i = 1; i <= 4; i++) {
                 $("<div/>", { class: "slide", id: "slide" + i }).appendTo($show);
             }
             jest.spyOn(utils, "debounce").mockImplementation((func) => {
                 return func;
             });
-            var spy_reset = jest.spyOn(pattern, "_reset");
-            pattern._hook($show);
-            pattern._remove_slides($show, ["slide1", "slide3"]);
+
+            const instance = new Pattern($show);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            const spy_reset = jest.spyOn(instance, "_reset");
+            instance._hook();
+            instance._remove_slides(["slide1", "slide3"]);
             expect(spy_reset).toHaveBeenCalled();
         });
 
-        it("Do not trigger reset when not doing anything", function () {
-            var $show = $("<div/>", { class: "pat-slides" });
-            for (var i = 1; i <= 2; i++)
+        it("Do not trigger reset when not doing anything", async function () {
+            const $show = $("<div/>", { class: "pat-slides" });
+            for (let i = 1; i <= 2; i++)
                 $("<div/>", { class: "slide", id: "slide" + i }).appendTo($show);
-            var spy_reset = jest.spyOn(pattern, "_reset");
-            pattern._remove_slides($show, ["slide1", "slide2"]);
+
+            const instance = new Pattern($show);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            const spy_reset = jest.spyOn(instance, "_reset");
+            instance._remove_slides(["slide1", "slide2"]);
             expect(spy_reset).not.toHaveBeenCalled();
         });
     });
