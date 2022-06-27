@@ -69,7 +69,27 @@ describe("pat-scroll-box", function () {
         expect(el.classList).not.toContain("scrolling-up");
         expect(el.classList).toContain("scrolling-down");
 
+        el.scrollTop = 250; // overscrolling / elastic scrolling in Safari
+        el.dispatchEvent(events.scroll_event());
+        await utils.animation_frame();
+        expect(el.classList).not.toContain("scroll-position-top");
+        expect(el.classList).toContain("scroll-position-bottom");
+        expect(el.classList).not.toContain("scroll-up");
+        expect(el.classList).toContain("scroll-down");
+        expect(el.classList).not.toContain("scrolling-up");
+        expect(el.classList).toContain("scrolling-down");
+
         el.scrollTop = 0;
+        el.dispatchEvent(events.scroll_event());
+        await utils.animation_frame();
+        expect(el.classList).toContain("scroll-position-top");
+        expect(el.classList).not.toContain("scroll-position-bottom");
+        expect(el.classList).toContain("scroll-up");
+        expect(el.classList).not.toContain("scroll-down");
+        expect(el.classList).toContain("scrolling-up");
+        expect(el.classList).not.toContain("scrolling-down");
+
+        el.scrollTop = -50; // overscrolling / elastic scrolling in Safari
         el.dispatchEvent(events.scroll_event());
         await utils.animation_frame();
         expect(el.classList).toContain("scroll-position-top");

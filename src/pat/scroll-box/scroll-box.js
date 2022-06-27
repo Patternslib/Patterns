@@ -69,7 +69,7 @@ export default Base.extend({
             to_add.push("scrolling-down");
         }
 
-        if (scroll_pos === 0) {
+        if (scroll_pos <= 0) {
             to_add.push("scroll-position-top");
         } else if (
             this.scroll_listener === window &&
