@@ -15,6 +15,15 @@
                 height: 200vh;
             }
 
+            .container {
+                /**
+                 * trick to espatblish a relative containing block
+                 * for position:fixed
+                 * See: https://developer.mozilla.org/en-US/docs/Web/CSS/position#fixed
+                 */
+                transform: rotate(0);
+            }
+
             body .pat-scroll-box {
                 overflow-y: auto;
                 border: 1px solid black;
@@ -49,8 +58,10 @@
         </style>
     </head>
     <body class="pat-scroll-box">
+      <div class="container">
         <div class="pat-scroll-box">
-            <div class="pat-scroll-box--inner">hello.</div>
+          <div class="pat-scroll-box--inner">hello.</div>
         </div>
+      </div>
     </body>
 </html>
