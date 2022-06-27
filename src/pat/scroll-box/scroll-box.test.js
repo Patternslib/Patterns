@@ -80,6 +80,8 @@ describe("pat-scroll-box", function () {
         expect(el.classList).not.toContain("scrolling-down");
 
         // Test for clearing the scrolling classes after a scroll stop
+        // scroll-up and scroll-down are not cleared.
+
         // Still there...
         await utils.timeout(custom_timeout / 2);
         expect(el.classList).toContain("scrolling-up");
