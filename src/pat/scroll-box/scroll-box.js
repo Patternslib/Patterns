@@ -63,14 +63,13 @@ export default Base.extend({
 
         if (scroll_pos < this.last_known_scroll_position) {
             to_add.push("scroll-up");
-            to_add.push("scroll-up");
             to_add.push("scrolling-up");
         } else if (this.last_known_scroll_position < scroll_pos) {
             to_add.push("scroll-down");
             to_add.push("scrolling-down");
         }
 
-        if (scroll_pos === 0) {
+        if (scroll_pos <= 0) {
             to_add.push("scroll-position-top");
         } else if (
             this.scroll_listener === window &&
@@ -101,6 +100,8 @@ export default Base.extend({
     },
 
     clear_scrolling_classes() {
+        // Remove ``scrolling-up`` and ``scrolling-down``
+        // but keep ``scroll-up`` and ``scroll-down``.
         this.el.classList.remove("scrolling-up", "scrolling-down");
     },
 
