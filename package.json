@@ -39,12 +39,12 @@
     },
     "devDependencies": {
         "@patternslib/dev": "^2.2.0",
-        "@patternslib/pat-content-mirror": "^3.0.0-alpha.0",
-        "@patternslib/pat-doclock": "^3.0.0-alpha.0",
-        "@patternslib/pat-shopping-cart": "^3.0.0-alpha.0",
-        "@patternslib/pat-sortable-table": "^3.0.0-alpha.0",
-        "@patternslib/pat-tiptap": "^4.0.0-alpha.1",
-        "@patternslib/pat-upload": "^3.0.0-alpha.0",
+        "@patternslib/pat-content-mirror": "^3.0.0",
+        "@patternslib/pat-doclock": "^3.0.0",
+        "@patternslib/pat-shopping-cart": "^3.0.0",
+        "@patternslib/pat-sortable-table": "^3.0.0",
+        "@patternslib/pat-tiptap": "^4.1.0",
+        "@patternslib/pat-upload": "^3.0.0",
         "copy-webpack-plugin": "^11.0.0",
         "webpack-modernizr-loader": "^5.0.0"
     },
