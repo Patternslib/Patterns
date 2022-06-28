@@ -30,8 +30,8 @@ module.exports = (env, argv) => {
     config.plugins.push(
         mf_config({
             name: "patternslib",
-            package_json: package_json,
             remote_entry: config.entry["bundle.min"],
+            dependencies: package_json.dependencies,
         })
     );
 
@@ -59,6 +59,6 @@ module.exports = (env, argv) => {
     }
 
     //console.log(JSON.stringify(config, null, 4));
-    //
+
     return config;
 };
