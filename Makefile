@@ -37,6 +37,11 @@ stamp-yarn install:
 	touch stamp-yarn
 
 
+.PHONY: watch
+watch: stamp-yarn
+	$(YARN) watch
+
+
 .PHONY: build
 build: bundle css
 

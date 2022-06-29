@@ -55,7 +55,8 @@
         "build:dev": "BUILD_ENV=patternslib NODE_ENV=development webpack --config webpack/webpack.config.js",
         "build:stats": "BUILD_ENV=patternslib NODE_ENV=production webpack --config webpack/webpack.config.js --json > stats.json",
         "test": "jest",
-        "testwatch": "jest --watch"
+        "testwatch": "jest --watch",
+        "watch": "BUILD_ENV=patternslib NODE_ENV=development webpack --config webpack/webpack.config.js --watch"
     },
     "engines": {
         "node": ">=12.20.0"
