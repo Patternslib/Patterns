@@ -82,19 +82,36 @@
                         onions</label
                     >
                 </fieldset>
+                <p>
+                  <strong
+                      class="pat-depends"
+                      data-pat-depends="condition: flavour:list=bacon; transition: fade">
+                    This pizza is bad for your health!
+                  </strong>
+                  <em
+                      class="pat-depends"
+                      data-pat-depends="condition: flavour:list=bacon and gorgonzola">
+                    Bad, but <em>extremely</em> tasty!
+                  </em>
+                </p>
+                <fieldset>
+                  <legend>Choose your satisfaction level</legend>
+                  <select name="satisfaction"multiple size="4">
+                      <option value="4">very much</option>
+                      <option value="3">somehow</option>
+                      <option value="2">a bit</option>
+                      <option value="1">not at all</option>
+                  </select>
+
+                  <p class="pat-depends" data-pat-depends="condition: satisfaction ~= 4">thank you very much</p>
+                  <p class="pat-depends" data-pat-depends="condition: satisfaction ~= 3">thank you somehow</p>
+                  <p class="pat-depends" data-pat-depends="condition: satisfaction ~= 2">thank you a bit</p>
+                  <p class="pat-depends" data-pat-depends="condition: satisfaction ~= 1">thank you not at all</p>
+
+                </fieldset>
+
             </fieldset>
         </form>
-        <strong
-            class="pat-depends"
-            data-pat-depends="condition: flavour:list=bacon; transition: fade"
-            >This pizza is bad for your health!</strong
-        >
-        <p
-            class="pat-depends"
-            data-pat-depends="condition: flavour:list=bacon and gorgonzola"
-        >
-            Bad, but <em>extremely</em> tasty!
-        </p>
       </div>
     </body>
 </html>
