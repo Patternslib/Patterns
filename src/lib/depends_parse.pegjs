@@ -76,9 +76,9 @@ number "number"
   }
 
 _
-  = (WhiteSpace)+ 
+  = (WhiteSpace)+
 
-__ 
+__
   = (WhiteSpace)*
 
 SourceCharacter
