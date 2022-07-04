@@ -46,9 +46,9 @@ watch: stamp-yarn
 build: bundle css
 
 
-src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-yarn
-	$(PEGJS) $<
-	sed -i~ -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
+.PHONY: depends-parser
+depends-parser:  stamp-yarn
+	$(PEGJS) -O size -f es src/lib/depends_parse.pegjs
 
 
 .PHONY: css
