@@ -13,8 +13,9 @@
         ></script>
     </head>
     <body>
-      <div id="pat-depends-demo">
-        <form action="#">
+      <section id="pat-depends-demo">
+        <h2>pat-depends with checkboxes, radiobuttons and multiselects</h2>
+        <form>
             <fieldset class="horizontal">
                 <fieldset class="group checklist radio">
                     <legend>Flavour</legend>
@@ -112,6 +113,32 @@
 
             </fieldset>
         </form>
-      </div>
+      </section>
+
+      <section id="pat-depends-demo-2">
+        <h2>pat-depends with optional date/time inputs</h2>
+        <form>
+          <label>Start
+            <input type="date" name="start-date" />
+            <input type="time" name="start-time"
+                class="pat-depends"
+                data-pat-depends="condition: not whole_day" />
+          </label>
+          <label
+              class="pat-depends"
+              data-pat-depends="condition: not open_end">End
+            <input type="date" name="end-date" />
+            <input type="time" name="end-time"
+                class="pat-depends"
+                data-pat-depends="condition: not whole_day" />
+          </label>
+          <label>Whole day
+            <input type="checkbox" name="whole_day" />
+          </label>
+          <label>Open end
+            <input type="checkbox" name="open_end" />
+          </label>
+        </form>
+      </section>
     </body>
 </html>
