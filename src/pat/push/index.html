@@ -11,7 +11,7 @@
         <title>Injection pattern</title>
         <link rel="stylesheet" href="/style/common.css" type="text/css" />
         <script
-            src="/bundle.min.js"
+            src="/dist/bundle.min.js"
             type="text/javascript"
             charset="utf-8"
         ></script>
@@ -55,5 +55,20 @@
                 <li>Old message</li>
             </ul>
         </div>
+
+        <h2>push-id: desktop_notification; mode: desktop-notification</h2>
+        <div>
+            If a message is sent through RabbitMQ on the "patternslib" exchange on the
+            push_marker topic containing the message "desktop_notification", a
+            desktop notification will be shown.
+            <ul
+                class="pat-push"
+                data-pat-push="push-id: desktop_notification; url: index-push-messages.html; mode: desktop-notification"
+            >
+                <li>Old message</li>
+            </ul>
+        </div>
+
+
     </body>
 </html>

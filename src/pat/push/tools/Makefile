@@ -61,6 +61,14 @@ send-update-1: stamp-python
 send-update-2: stamp-python
 	./bin/python send.py patternslib push_marker message_counter2
 
+.PHONY: send-message-incoming
+send-message-incoming: stamp-python
+	./bin/python send.py patternslib push_marker message_incoming
+
+
+.PHONY: send-desktop-notification
+send-desktop-notification: stamp-python
+	./bin/python send.py patternslib push_marker desktop_notification
 
 
 # MAINTENANCE
