@@ -1,6 +1,17 @@
 # Changelog
 
-## 2.2 - unreleased
+## 2.1.5 - Jul. 7, 2022
+
+- pat-depends: Compile depends_parser.js in amd output format.
+
+
+## 2.1.4 - Jul. 7, 2022
+
+- pat-depends: Add support for ":" in input names.
+- pat-depends: Compile depends_parser.js with pegjs 0.11 and optimize for output size, which makes the file much smaller.
+
+
+## 2.1.3 - May 16, 2018
 
 - pat-masonry:
   - Re-Layout on ``load`` events emitted on ``img`` nodes within the masonry scope.
