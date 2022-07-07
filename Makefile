@@ -64,8 +64,9 @@ build:: bundle
 bundle bundle.js: $(GENERATED) $(SOURCES) build.js stamp-bower
 	node_modules/.bin/r.js -o build.js
 
-src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-npm
-	$(PEGJS) $<
+.PHONY: depends-parser
+depends-parser:  stamp-npm
+	$(PEGJS) -O size -f commonjs src/lib/depends_parse.pegjs
 	sed -i~ -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
 clean::
