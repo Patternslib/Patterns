@@ -8403,6 +8403,11 @@ path-type@^4.0.0:
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
 
+pegjs@0.11.0-master.b7b87ea:
+  version "0.11.0-master.b7b87ea"
+  resolved "https://registry.yarnpkg.com/pegjs/-/pegjs-0.11.0-master.b7b87ea.tgz#dc41190696bc33c8a09210a0bf91e683d4f1d6dc"
+  integrity sha512-fwjzNiYHRUEUe/86Aaslb/ocbbsAupOcsJz+dlPYtgp3feCDRQOLChHO924XGh7fzSJBTdFCQTzmSOQaWjCTew==
+
 photoswipe@^4.1.3:
   version "4.1.3"
   resolved "https://registry.yarnpkg.com/photoswipe/-/photoswipe-4.1.3.tgz#59f49494eeb9ddab5888d03392926a19bc197550"

@@ -72,6 +72,6 @@ import "@patternslib/pat-upload";
 
 // Importing pattern styles in JavaScript
 // Set to ``true`` to include core styles via JavaScript
-window.__patternslib_import_styles = false;
+//window.__patternslib_import_styles = false;
 
 registry.init();
