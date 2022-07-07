@@ -46,9 +46,10 @@ simple_expression
     }
 
 equal_comparison "comparison operator"
-  = "="
+  = "=~"
   / "!="
   / "~="
+  / "="
 
 order_comparison "comparison operator"
   = "<="
@@ -75,9 +76,9 @@ number "number"
   }
 
 _
-  = (WhiteSpace)+ 
+  = (WhiteSpace)+
 
-__ 
+__
   = (WhiteSpace)*
 
 SourceCharacter
@@ -94,6 +95,7 @@ IdentifierPart
   / "_"
   / "-"
   / "."
+  / ":"
   / UnicodeCombiningMark
   / UnicodeDigit
   / UnicodeConnectorPunctuation

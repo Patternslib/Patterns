@@ -70,6 +70,12 @@ define(["pat-depends_parse"], function(parser) {
                                      input: "foo-bar"});
             });
 
+            it("Colons in name", function () {
+                var ast = parser.parse("foo:bar");
+                expect(ast).toEqual({type: "truthy",
+                                     input: "foo:bar"});
+            });
+
             it("Single quoted value", function() {
                 var ast = parser.parse("foo='bar buz'");
                 expect(ast).toEqual({type: "comparison",
