@@ -38,7 +38,7 @@
         "whatwg-fetch": "^3.4.0"
     },
     "devDependencies": {
-        "@patternslib/dev": "^2.2.0",
+        "@patternslib/dev": "^2.3.0",
         "@patternslib/pat-content-mirror": "^3.0.0",
         "@patternslib/pat-doclock": "^3.0.0",
         "@patternslib/pat-shopping-cart": "^3.0.0",
