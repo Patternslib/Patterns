@@ -165,5 +165,230 @@
       </div>
     </section>
 
+    <section>
+      <header>
+        <h2>3 - from-now (relative date) with date only dates.</h2>
+      </header>
+
+      <div>
+        <h3>3.1 - Today</h3>
+
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+&lt;time
+    class="pat-display-time"
+    datetime="2022-07-21"
+    lang="de"
+    data-pat-display-time="from-now: true"
+&gt;
+    heute
+&lt;/time&gt;
+        </pre>
+
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time example-3-1"
+                datetime="2022-07-21"
+                lang="de"
+                data-pat-display-time="from-now: true"
+          >
+          </time>
+        </p>
+
+        <script charset="utf-8">
+          document.querySelector(".example-3-1").setAttribute("datetime", new Date().toISOString().split("T")[0]);
+        </script>
+      </div>
+
+      <div>
+        <h3>3.2 - Tomorrow</h3>
+
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+&lt;time
+    class="pat-display-time"
+    datetime="2022-07-22"
+    lang="de"
+    data-pat-display-time="from-now: true"
+&gt;
+    morgen
+&lt;/time&gt;
+        </pre>
+
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time example-3-2"
+                datetime="2022-07-22"
+                lang="de"
+                data-pat-display-time="from-now: true"
+          >
+          </time>
+        </p>
+
+        <script charset="utf-8">
+          var date = new Date();
+          date.setDate(date.getDate() + 1);
+          document.querySelector(".example-3-2").setAttribute("datetime", date.toISOString().split("T")[0]);
+        </script>
+      </div>
+
+      <div>
+        <h3>3.3 - Yesterday</h3>
+
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+&lt;time
+    class="pat-display-time"
+    datetime="2022-07-20"
+    lang="de"
+    data-pat-display-time="from-now: true"
+&gt;
+    gestern
+&lt;/time&gt;
+        </pre>
+
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time example-3-3"
+                datetime="2022-07-20"
+                lang="de"
+                data-pat-display-time="from-now: true"
+          >
+          </time>
+        </p>
+
+        <script charset="utf-8">
+          var date = new Date();
+          date.setDate(date.getDate() - 1);
+          document.querySelector(".example-3-3").setAttribute("datetime", date.toISOString().split("T")[0]);
+        </script>
+      </div>
+
+      <div>
+        <h3>3.4 - Next week</h3>
+
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+&lt;time
+    class="pat-display-time"
+    datetime="2022-07-25"
+    lang="de"
+    data-pat-display-time="from-now: true"
+&gt;
+&lt;/time&gt;
+        </pre>
+
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time example-3-4"
+                datetime="2022-07-21"
+                lang="de"
+                data-pat-display-time="from-now: true"
+          >
+          </time>
+        </p>
+
+        <script charset="utf-8">
+          var date = new Date();
+          date.setDate(date.getDate() + 4);
+          document.querySelector(".example-3-4").setAttribute("datetime", date.toISOString().split("T")[0]);
+        </script>
+      </div>
+
+      <div>
+        <h3>3.5 - Last week</h3>
+
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+&lt;time
+    class="pat-display-time"
+    datetime="2022-07-17"
+    lang="de"
+    data-pat-display-time="from-now: true"
+&gt;
+&lt;/time&gt;
+        </pre>
+
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time example-3-5"
+                datetime="2022-07-17"
+                lang="de"
+                data-pat-display-time="from-now: true"
+          >
+          </time>
+        </p>
+
+        <script charset="utf-8">
+          var date = new Date();
+          date.setDate(date.getDate() - 4);
+          document.querySelector(".example-3-5").setAttribute("datetime", date.toISOString().split("T")[0]);
+        </script>
+      </div>
+
+      <div>
+        <h3>3.6 - 10 days in the future</h3>
+
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+&lt;time
+    class="pat-display-time"
+    datetime="2022-07-31"
+    lang="de"
+    data-pat-display-time="from-now: true"
+&gt;
+&lt;/time&gt;
+        </pre>
+
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time example-3-6"
+                datetime="2022-07-31"
+                lang="de"
+                data-pat-display-time="from-now: true"
+          >
+          </time>
+        </p>
+
+        <script charset="utf-8">
+          var date = new Date();
+          date.setDate(date.getDate() + 10);
+          document.querySelector(".example-3-6").setAttribute("datetime", date.toISOString().split("T")[0]);
+        </script>
+      </div>
+
+      <div>
+        <h3>3.7 - 10 days in the past</h3>
+
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+&lt;time
+    class="pat-display-time"
+    datetime="2022-07-11"
+    lang="de"
+    data-pat-display-time="from-now: true"
+&gt;
+&lt;/time&gt;
+        </pre>
+
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time example-3-7"
+                datetime="2022-07-11"
+                lang="de"
+                data-pat-display-time="from-now: true"
+          >
+          </time>
+        </p>
+
+        <script charset="utf-8">
+          var date = new Date();
+          date.setDate(date.getDate() - 10);
+          document.querySelector(".example-3-7").setAttribute("datetime", date.toISOString().split("T")[0]);
+        </script>
+      </div>
+
+    </section>
+
   </body>
 </html>
