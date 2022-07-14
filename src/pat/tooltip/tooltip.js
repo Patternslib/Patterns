@@ -69,7 +69,7 @@ export default Base.extend({
             ignoreAttributes: true,
             interactive: true,
             onHide: this._onHide.bind(this),
-            onShow: this._onShow.bind(this),
+            onShow: await this._onShow.bind(this),
             onMount: this._onMount.bind(this),
             trigger: "click",
         };
@@ -106,6 +106,7 @@ export default Base.extend({
 
     show() {
         // Show this tooltip
+        // API method.
         this.tippy.show();
     },
 
@@ -117,6 +118,7 @@ export default Base.extend({
 
     destroy() {
         // Remove this tooltip
+        // API method.
         this.tippy.destroy();
     },
 
@@ -244,11 +246,7 @@ export default Base.extend({
         registry.scan(this.tippy.popper);
     },
 
-    async _onMount() {
-        if (this.options.source === "ajax") {
-            await this.get_content(); // + _initialize_content
-        }
-
+    _onMount() {
         // Notify parent patterns about injected content.
         // Do not call pat-inject's handler, because all necessary
         // initialization after injection is done here.
@@ -290,7 +288,7 @@ export default Base.extend({
         this._initialize_content();
     },
 
-    _onShow() {
+    async _onShow() {
         if (this.options.closing !== "auto" && this.options.trigger === "hover") {
             // no auto-close when hovering when closing mode is "sticky" or "close-button".
             this.tippy.setProps({ trigger: "click" });
@@ -299,6 +297,10 @@ export default Base.extend({
         if (this.options.markInactive) {
             this.el.classList.remove(this.inactive_class);
             this.el.classList.add(this.active_class);
+        }
+
+        if (this.options.source === "ajax") {
+            await this._get_content();
         }
     },
 
