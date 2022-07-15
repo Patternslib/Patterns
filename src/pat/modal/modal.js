@@ -63,13 +63,6 @@ export default Base.extend({
             $("#pat-modal").detach();
         });
 
-        this.el.addEventListener("pat-inject-success", () => {
-            // Dispatch the pat-modal-ready event after injection is done.
-            this.el.dispatchEvent(
-                new Event("pat-modal-ready", { bubbles: true, cancelable: true })
-            );
-        });
-
         inject.init(this.$el, opts);
     },
 

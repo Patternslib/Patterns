@@ -147,7 +147,7 @@ describe("pat-modal", function () {
             await utils.timeout(1); // wait a tick for async to settle.
 
             // Opened immediately
-            expect(callback).toHaveBeenCalled();
+            expect(callback).toHaveBeenCalledTimes(1);
         });
 
         it("1.7 - Dispatch pat-modal-ready with a inject-modal.", async function () {
@@ -159,17 +159,17 @@ describe("pat-modal", function () {
             `;
 
             const callback = jest.fn();
+            document.body.addEventListener("pat-modal-ready", callback);
             const modal_el = document.querySelector(".pat-modal");
-            modal_el.addEventListener("pat-modal-ready", callback);
             pattern.init(modal_el);
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect(callback).not.toHaveBeenCalled();
 
-            answer("<html><body><div></div></body></html>");
+            answer(`<html><body><div></div></body></html>`);
             modal_el.click();
             await utils.timeout(1); // wait a tick for async to settle.
-            expect(callback).toHaveBeenCalled();
+            expect(callback).toHaveBeenCalledTimes(1);
         });
 
         it("1.8 - Submit form, do injection and close overlay.", async function () {
