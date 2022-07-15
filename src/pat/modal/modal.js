@@ -42,6 +42,10 @@ export default Base.extend({
     },
 
     _init_inject1() {
+        // This will get remote content via pat-inject, add the pat-modal class
+        // to the result and pat-inject's pattern scanning will then call
+        // ``_init_div1``.
+
         const opts = {
             ...(this.options.source && { source: this.options.source }),
             target: this.options.target,
@@ -54,6 +58,7 @@ export default Base.extend({
         if (this.options.trigger) {
             opts.trigger = this.options.trigger;
         }
+
         // if $el is already inside a modal, do not detach #pat-modal,
         // because this would unnecessarily close the modal itself
         if (!this.$el.closest("#pat-modal")) {
@@ -67,6 +72,8 @@ export default Base.extend({
     },
 
     _init_div1() {
+        // This is always called and will inject the modal in the page.
+
         const header = document.createElement("div");
         header.setAttribute("class", "header");
 

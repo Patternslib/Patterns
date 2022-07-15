@@ -5,11 +5,33 @@ A modal panel is a panel that requires users to interact with it before they can
 
 ## Documentation
 
-A basic modal example:
+Case 1: Any ``<div class="pat-modal">`` will be displayed as modal immediately:
+
+    <div class="pat-modal">
+        <h2>Modal title</h2>
+        <div>Modal content</div>
+    </div>
+
+
+Case 2a: Anchors, forms and subforms would use pat-inject to retrieve remote (or local) contents and display that as modal.
+The remote content should return a ``div`` but not contain the ``pat-modal`` class - this is set automatically.
 
     <a href="/status/server1#content" class="pat-modal">Show server status</a>
 
 This will load the page at `/status/server1`, extract the element with id `content` and display its content in a panel.
+
+Case 2b: Loading a modal form a local ``<template>`` which is within the current page:
+
+    <a href="#modal-source" class="pat-modal">Open modal</a>
+
+    <template id="modal-source">
+      <h1>Example modal</h1>
+      <p>Hello.</p>
+    </template>
+
+
+For more examples, see the [demo page](./index.html).
+
 
 ### Options reference
 
