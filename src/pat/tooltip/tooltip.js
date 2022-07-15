@@ -40,6 +40,21 @@ parser.addArgument("target", "body");
 parser.addArgument("arrow-padding", null);
 parser.addArgument("url", null);
 
+// Tippy Lifecycle-hooks
+// See: https://tippyjs.bootcss.com/lifecycle-hooks/
+// onCreate
+// onTrigger
+// onShow
+// onMount
+// onShown
+// onUntrigger
+// onHide
+// onHidden
+//
+// onBeforeUpdate
+// onAfterUpdate
+// onDestroy
+
 export default Base.extend({
     name: "tooltip",
     trigger: ".pat-tooltip, .pat-tooltip-ng",
@@ -69,7 +84,7 @@ export default Base.extend({
             ignoreAttributes: true,
             interactive: true,
             onHide: this._onHide.bind(this),
-            onShow: await this._onShow.bind(this),
+            onShow: this._onShow.bind(this),
             onMount: this._onMount.bind(this),
             trigger: "click",
         };
@@ -246,6 +261,26 @@ export default Base.extend({
         registry.scan(this.tippy.popper);
     },
 
+    async _onShow() {
+        if (this.options.closing !== "auto" && this.options.trigger === "hover") {
+            // no auto-close when hovering when closing mode is "sticky" or "close-button".
+            this.tippy.setProps({ trigger: "click" });
+        }
+
+        if (this.options.markInactive) {
+            this.el.classList.remove(this.inactive_class);
+            this.el.classList.add(this.active_class);
+        }
+
+        if (this.options.source === "ajax") {
+            await this._get_content();
+            // Also initialize content.
+            // Due to asynchronous ``_onShow`` the content might not be
+            // available before ``_onMount``.
+            this._initialize_content();
+        }
+    },
+
     _onMount() {
         // Notify parent patterns about injected content.
         // Do not call pat-inject's handler, because all necessary
@@ -286,22 +321,6 @@ export default Base.extend({
         dom.set_data(this.tippy.popper, "close_panel", this.hide.bind(this));
 
         this._initialize_content();
-    },
-
-    async _onShow() {
-        if (this.options.closing !== "auto" && this.options.trigger === "hover") {
-            // no auto-close when hovering when closing mode is "sticky" or "close-button".
-            this.tippy.setProps({ trigger: "click" });
-        }
-
-        if (this.options.markInactive) {
-            this.el.classList.remove(this.inactive_class);
-            this.el.classList.add(this.active_class);
-        }
-
-        if (this.options.source === "ajax") {
-            await this._get_content();
-        }
     },
 
     _onHide() {
