@@ -69,7 +69,7 @@ export default Base.extend({
             ignoreAttributes: true,
             interactive: true,
             onHide: this._onHide.bind(this),
-            onShow: await this._onShow.bind(this),
+            onShow: this._onShow.bind(this),
             onMount: this._onMount.bind(this),
             trigger: "click",
         };
