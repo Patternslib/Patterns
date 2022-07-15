@@ -27,6 +27,11 @@ const initBasePattern = function ($el, options, trigger) {
     let pattern = $el.data(`pattern-${name}`);
     if (pattern === undefined && Registry.patterns[name]) {
         try {
+            // Immediately set the pattern instance to the temporary value
+            // ``initializing`` before the async Base constructor is setting
+            // the value later.
+            // This prevents re-init the pattern on this element on multiple
+            // initialization calls..
             $el.data(`pattern-${name}`, "initializing");
             options =
                 this.prototype.parser === "mockup"
