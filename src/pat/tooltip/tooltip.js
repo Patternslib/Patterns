@@ -301,6 +301,10 @@ export default Base.extend({
 
         if (this.options.source === "ajax") {
             await this._get_content();
+            // Also initialize content.
+            // Due to asynchronous ``_onShow`` the content might not be
+            // available when ``_onMount``, which does also a ``_initialize_content``.
+            this._initialize_content();
         }
     },
 
