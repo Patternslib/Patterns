@@ -51,4 +51,7 @@ document_ready(function () {
         // Now load + initialize each bundle.
         initialize_remote({ remote_name: bundle_name });
     }
+    document.dispatchEvent(
+        new Event("patternslib__mf--loaded", { bubbles: true, cancelable: false })
+    );
 });
