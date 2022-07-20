@@ -2680,6 +2680,11 @@ ajv@^8.0.0, ajv@^8.11.0, ajv@^8.8.0:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
+almond@~0.3.1:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/almond/-/almond-0.3.3.tgz#a0e7c95ac7624d6417b4494b1e68bff693168a20"
+  integrity sha512-Eh5QhyxrKnTI0OuGpwTRvzRrnu1NF3F2kbQJRwpXj/uMy0uycwqw2/RhdDrD1cBTD1JFFHFrxGIU8HQztowR0g==
+
 ansi-align@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/ansi-align/-/ansi-align-3.0.1.tgz#0cdf12e111ace773a86e9a1fad1225c43cb19a59"
@@ -6119,6 +6124,11 @@ jquery-jcrop@^0.9.13:
   resolved "https://registry.yarnpkg.com/jquery-jcrop/-/jquery-jcrop-0.9.15.tgz#490f216f922f77a7e6c9be6c1d5d69582f414964"
   integrity sha512-425X88jEoWojYPS5YhZciEW83z4J/TLPh9gvRfftroUBDr70Er58kerD1kY+cT/z8Ys5/VEkUZ9AA4tFwqgY+w==
 
+jquery-mousewheel@~3.1.13:
+  version "3.1.13"
+  resolved "https://registry.yarnpkg.com/jquery-mousewheel/-/jquery-mousewheel-3.1.13.tgz#06f0335f16e353a695e7206bf50503cb523a6ee5"
+  integrity sha512-GXhSjfOPyDemM005YCEHvzrEALhKDIswtxSHSR2e4K/suHVJKJxxRCGz3skPjNxjJjQa9AVSGGlYjv1M3VLIPg==
+
 jquery@>=1.7, jquery@^3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.0.tgz#c72a09f15c1bdce142f49dbf1170bdf8adac2470"
@@ -8022,10 +8032,13 @@ select-hose@^2.0.0:
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"
   integrity sha512-mEugaLK+YfkijB4fx0e6kImuJdCIt2LxCRcbEYPqRGCs4F2ogyfZU5IAZRdjCP8JPq2AtdNoC/Dux63d9Kiryg==
 
-select2@^3.5.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/select2/-/select2-3.5.1.tgz#f2819489bbc65fd6d328be72bbe2b95dd7e87cfe"
-  integrity sha512-IFX3UFPpPyK1I1Kuw1R1x+upMyNAZbMlkFhiTnRCRR7ii0KU1brmJMLa3GZcrMWCHiQlm0eKqb6i4XO4pqOrGQ==
+select2@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/select2/-/select2-4.0.6.tgz#88697c96e08b65a5963c2806c1d5eefbceec0a7e"
+  integrity sha512-P5NqUcH+FFBwHAbC2mEWMDS446YdIGvXRM9tSGFLuNIFRP/ng0IOtjJ4zkzVyCl43RM/NyXJa6SAPT9MGg634A==
+  dependencies:
+    almond "~0.3.1"
+    jquery-mousewheel "~3.1.13"
 
 selfsigned@^2.0.1:
   version "2.0.1"
