@@ -85,7 +85,6 @@ export default Base.extend({
             interactive: true,
             onHide: this._onHide.bind(this),
             onShow: this._onShow.bind(this),
-            onMount: this._onMount.bind(this),
             trigger: "click",
         };
 
@@ -262,34 +261,16 @@ export default Base.extend({
     },
 
     async _onShow() {
-        if (this.options.closing !== "auto" && this.options.trigger === "hover") {
-            // no auto-close when hovering when closing mode is "sticky" or "close-button".
-            this.tippy.setProps({ trigger: "click" });
+        const tippy_classes = [];
+
+        // Group DOM manipulations
+
+        if (this.options.class) {
+            tippy_classes.push(...this.options.class.split(" "));
         }
 
-        if (this.options.markInactive) {
-            this.el.classList.remove(this.inactive_class);
-            this.el.classList.add(this.active_class);
-        }
-
-        if (this.options.source === "ajax") {
-            await this._get_content();
-            // Also initialize content.
-            // Due to asynchronous ``_onShow`` the content might not be
-            // available before ``_onMount``.
-            this._initialize_content();
-        }
-    },
-
-    _onMount() {
-        // Notify parent patterns about injected content.
-        // Do not call pat-inject's handler, because all necessary
-        // initialization after injection is done here.
-        $(this.tippy.popper).trigger("patterns-injected", [
-            { skipPatInjectHandler: true },
-            this.el,
-            this.tippy.popper,
-        ]);
+        // Add a generic non-tippy related class to identify the tooltip container
+        tippy_classes.push("tooltip-container");
 
         if (this.options.closing === "close-button") {
             // First, remove previously automatically added close buttons.
@@ -298,7 +279,7 @@ export default Base.extend({
             for (const close_button of this.tippy.popper.querySelectorAll(
                 ".pat-tooltip--close-button"
             )) {
-                close_button.parentNode.removeChild(close_button);
+                close_button.remove();
             }
 
             const close_button = document.createElement("button");
@@ -307,18 +288,34 @@ export default Base.extend({
             content.parentNode.insertBefore(close_button, content);
         }
 
-        if (this.options.class) {
-            for (let class_ of this.options.class.split(" ")) {
-                this.tippy.popper.classList.add(class_);
-            }
+        // Store reference to method for closing panels on the tooltip element instance.
+        tippy_classes.push("has-close-panel");
+        dom.set_data(this.tippy.popper, "close_panel", this.hide.bind(this));
+
+        this.tippy.popper.classList.add(...tippy_classes);
+
+        if (this.options.markInactive) {
+            this.el.classList.remove(this.inactive_class);
+            this.el.classList.add(this.active_class);
         }
 
-        // Add a generic non-tippy related class to identify the tooltip container
-        this.tippy.popper.classList.add("tooltip-container");
+        if (this.options.closing !== "auto" && this.options.trigger === "hover") {
+            // no auto-close when hovering when closing mode is "sticky" or "close-button".
+            this.tippy.setProps({ trigger: "click" });
+        }
 
-        // Store reference to method for closing panels on the tooltip element instance.
-        this.tippy.popper.classList.add("has-close-panel");
-        dom.set_data(this.tippy.popper, "close_panel", this.hide.bind(this));
+        if (this.options.source === "ajax") {
+            await this._get_content();
+        }
+
+        // Notify parent patterns about injected content.
+        // Do not call pat-inject's handler, because all necessary
+        // initialization after injection is done here.
+        $(this.tippy.popper).trigger("patterns-injected", [
+            { skipPatInjectHandler: true },
+            this.el,
+            this.tippy.popper,
+        ]);
 
         this._initialize_content();
     },
