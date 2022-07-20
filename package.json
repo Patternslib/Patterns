@@ -19,7 +19,7 @@
         "intersection-observer": "^0.12.2",
         "jquery": "^3.6.0",
         "jquery-jcrop": "^0.9.13",
-        "luxon": "^2.3.2",
+        "luxon": "2.4.0",
         "masonry-layout": "^4.2.2",
         "moment": "^2.29.4",
         "moment-timezone": "^0.5.34",
