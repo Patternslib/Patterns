@@ -4,6 +4,18 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.0.1](https://github.com/Patternslib/patterns/compare/9.0.0...9.0.1) (2022-07-20)
+
+
+### Bug Fixes
+
+
+* **Build:** Fix luxon to 2.4.0 to avoid webpack MF error due to non standard package.json setup. ([784f036](https://github.com/Patternslib/patterns/commit/784f036e34b5cae6f5480a02082d985b6b270760))
+
+* **pat tooltip:** Avoid repositioning of the tooltip arrow. ([880ebdb](https://github.com/Patternslib/patterns/commit/880ebdb9587dfb66b4d0191aa1df9a68f9fe1791))- Setting the tooltip-container class before async calls.
+- Avoid unnecessary repaints by grouping dom manipulations together.
+- Merge onMount and onShow into onShow method.
+
 ## [9.0.0](https://github.com/Patternslib/patterns/compare/9.0.0-beta.1...9.0.0) (2022-07-17)
 
 
