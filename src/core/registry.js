@@ -54,8 +54,23 @@ if (typeof window.__patternslib_registry_initialized === "undefined") {
     window.__patternslib_registry_initialized = false;
 }
 
+/**
+ * Global pattern instance registry.
+ *
+ * If your Pattern uses the base pattern base class, any concrete instance of
+ * the pattern will be stored in this registry.
+ * When the element on which the pattern is defined is removed, we call the
+ * ``destroy`` method on the pattern instance and remove the pattern instance
+ * from this registry.
+ */
+if (typeof window.__patternslib_instance_registry === "undefined") {
+    window.__patternslib_instance_registry = [];
+}
+export const PATTERN_INSTANCE_REGISTRY = window.__patternslib_instance_registry;
+
 const registry = {
     patterns: PATTERN_REGISTRY, // reference to global patterns registry
+    patterns_instances: PATTERN_INSTANCE_REGISTRY, // reference to global pattern instance registry
     // as long as the registry is not initialized, pattern
     // registration just registers a pattern. Once init is called,
     // the DOM is scanned. After that registering a new pattern
@@ -69,6 +84,19 @@ const registry = {
             window.__patternslib_registry_initialized = true;
             log.debug("Loaded: " + Object.keys(registry.patterns).sort().join(", "));
             registry.scan(document.body);
+
+            // Call the Pattern instance's destroy method when a Pattern element
+            // is removed.
+            const remove_observer = new MutationObserver((mutations, observer) => {
+                registry.pattern_instances.forEach((instance, idx) => {
+                    if (!document.body.contains(instance.el)) {
+                        instance?.destroy();
+                        delete registry.pattern_instances[idx];
+                    }
+                });
+            });
+            remove_observer.observe(document.body, { childList: true });
+
             log.debug("Finished initial scan.");
         });
     },
@@ -79,6 +107,9 @@ const registry = {
         for (const name in registry.patterns) {
             delete registry.patterns[name];
         }
+        registry.pattern_instances.forEach((instance, idx) => {
+            delete registry.pattern_instances[idx];
+        });
     },
 
     transformPattern(name, content) {

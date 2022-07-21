@@ -642,6 +642,15 @@ const is_iso_date_time = (value, optional_time = false) => {
     return re_date_time.test(value);
 };
 
+/**
+ * Generate a unique id.
+ *
+ * @return {String} - A unique string.
+ */
+const unique_id = () => {
+    return Math.floor((1 + Math.random()) * 0x1000000000000).toString(16);
+};
+
 var utils = {
     // pattern pimping - own module?
     jqueryPlugin: jqueryPlugin,
@@ -673,6 +682,7 @@ var utils = {
     escape_html: escape_html,
     unescape_html: unescape_html,
     is_iso_date_time: is_iso_date_time,
+    unique_id: unique_id,
     getCSSValue: dom.get_css_value, // BBB: moved to dom. TODO: Remove in upcoming version.
 };
 

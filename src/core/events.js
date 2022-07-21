@@ -14,9 +14,19 @@ const event_listener_map = {};
  * @param {string} id - A unique id under which the event is registered.
  * @param {function} cb - The event handler / callback function.
  * @param {Object} opts - Options for the addEventListener API.
- *
+ * @param {Function} remove_condition - If this function evaluates to true,
+ *      the event listener will be deregistered and not called.
+ *      Defaults to always return ``false``, so no check is actually done.
+ *      Can be used to unregister event handlers automatically.
  */
-const add_event_listener = (el, event_type, id, cb, opts = {}) => {
+const add_event_listener = (
+    el,
+    event_type,
+    id,
+    cb,
+    opts = {},
+    remove_condition = () => false
+) => {
     if (!el?.addEventListener) {
         return; // nothing to do.
     }
@@ -26,7 +36,15 @@ const add_event_listener = (el, event_type, id, cb, opts = {}) => {
         event_listener_map[el] = {};
     }
     event_listener_map[el][id] = [event_type, cb, opts.capture ? opts : undefined]; // prettier-ignore
-    el.addEventListener(event_type, cb, opts);
+    const _cb = () => {
+        if (remove_condition()) {
+            remove_event_listener(el, id);
+        } else {
+            cb();
+        }
+    };
+
+    el.addEventListener(event_type, _cb, opts);
 };
 
 /**
