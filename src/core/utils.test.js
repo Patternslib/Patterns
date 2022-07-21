@@ -748,3 +748,26 @@ describe("is_iso_date_time ...", function () {
         expect(utils.is_iso_date_time("2022-05-04T21", true)).toBe(false);
     });
 });
+
+describe("is_iso_date ...", function () {
+    it("detects valid date objects", () => {
+        // Return true on a valid ISO 8601 date.
+        expect(utils.is_iso_date("2022-05-04")).toBe(true);
+
+        // A time component is not allowed.
+        expect(utils.is_iso_date("2022-05-04T21:00")).toBe(false);
+
+        // We actually do not strictly check for a valid datetime, just if the
+        // format is correct.
+        expect(utils.is_iso_date("2222-19-39")).toBe(true);
+
+        // But some basic constraints are in place
+        expect(utils.is_iso_date("2222-20-40")).toBe(false);
+
+        // And this is for sure no valid date/time
+        expect(utils.is_iso_date("not2-ok-40")).toBe(false);
+
+        // This neigher
+        expect(utils.is_iso_date("2022-05-04ok")).toBe(false);
+    });
+});
