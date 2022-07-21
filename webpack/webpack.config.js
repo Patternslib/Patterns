@@ -41,6 +41,8 @@ module.exports = (env, argv) => {
         new CopyPlugin({
             patterns: [
                 { from: path.resolve(__dirname, "../src/polyfills-loader.js"), }, // prettier-ignore
+                { from: path.resolve(__dirname, "../src/core/push_worker.js"), }, // prettier-ignore
+                { from: path.resolve(__dirname, "../node_modules/@stomp/stompjs/bundles/stomp.umd.js"), }, // prettier-ignore
             ],
         })
     );

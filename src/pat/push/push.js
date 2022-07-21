@@ -20,6 +20,7 @@ export default Base.extend({
 
     init() {
         this.options = parser.parse(this.el, this.options);
+        debugger;
 
         if (
             this.options.mode === "desktop-notification" &&

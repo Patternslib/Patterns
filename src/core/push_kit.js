@@ -29,6 +29,7 @@
  * - patterns-push-password containing the password of a read only user on the message queue server used to connect.
  */
 import logging from "./logging";
+import utils from "./utils";
 
 const logger = logging.getLogger("core push kit");
 
@@ -45,37 +46,51 @@ const push_kit = {
         const user_login = document.querySelector("meta[name=patterns-push-login]")?.content; // prettier-ignore
         const user_pass = document.querySelector("meta[name=patterns-push-password]")?.content; // prettier-ignore
 
-        const StompJS = await import("@stomp/stompjs");
-        const client = new StompJS.Client({
-            brokerURL: url,
-            connectHeaders: {
-                login: user_login,
-                passcode: user_pass,
-            },
-            debug: function (str) {
-                logger.debug(str);
-            },
-            reconnectDelay: 5000,
-            heartbeatIncoming: 0,
-            heartbeatOutgoing: 20000,
-        });
+        debugger;
 
-        client.onConnect = () => {
-            if (exchange) {
-                client.subscribe(
-                    `/exchange/${exchange}/${topicfilter}.#`,
-                    this.on_push_marker.bind(this)
-                );
-            }
-        };
+        const service_worker = await navigator.serviceWorker.register(
+            utils.base_url() + "../push_worker.js"
+        );
 
-        client.onStompError = (frame) => {
-            logger.error("Broker reported error: " + frame.headers["message"]);
-            logger.debug("Additional details: " + frame.body);
-        };
+        //service_worker.postMessage({
+        //    type: "initialize",
+        //    url: url,
+        //    exchange: exchange,
+        //    user_login: user_login,
+        //    user_pass: user_pass,
+        //});
 
-        client.activate();
-        logger.debug("StompJS push support initialised on " + url);
+        // const StompJS = await import("@stomp/stompjs");
+        // const client = new StompJS.Client({
+        //     brokerURL: url,
+        //     connectHeaders: {
+        //         login: user_login,
+        //         passcode: user_pass,
+        //     },
+        //     debug: function (str) {
+        //         logger.debug(str);
+        //     },
+        //     reconnectDelay: 5000,
+        //     heartbeatIncoming: 0,
+        //     heartbeatOutgoing: 20000,
+        // });
+
+        // client.onConnect = () => {
+        //     if (exchange) {
+        //         client.subscribe(
+        //             `/exchange/${exchange}/${topicfilter}.#`,
+        //             this.on_push_marker.bind(this)
+        //         );
+        //     }
+        // };
+
+        // client.onStompError = (frame) => {
+        //     logger.error("Broker reported error: " + frame.headers["message"]);
+        //     logger.debug("Additional details: " + frame.body);
+        // };
+
+        // client.activate();
+        // logger.debug("StompJS push support initialised on " + url);
     },
 
     on_push_marker(message) {

@@ -642,6 +642,20 @@ const is_iso_date_time = (value, optional_time = false) => {
     return re_date_time.test(value);
 };
 
+/**
+ * Get the base url without the file name from a given URL or the current script.
+ *
+ * @param {String} url - The URL to a resource from which we want to get the base URL from. If not given, ``document.currentScript.src`` will be used.
+ * @return {String} - The path-only base URL without the file name.
+ */
+function base_url(url) {
+    // Get base url from given url or current script.
+    let src = url || document.currentScript?.src;
+    src = src.split("/");
+    src.pop();
+    return src.join("/") + "/";
+}
+
 var utils = {
     // pattern pimping - own module?
     jqueryPlugin: jqueryPlugin,
@@ -673,6 +687,7 @@ var utils = {
     escape_html: escape_html,
     unescape_html: unescape_html,
     is_iso_date_time: is_iso_date_time,
+    base_url: base_url,
     getCSSValue: dom.get_css_value, // BBB: moved to dom. TODO: Remove in upcoming version.
 };
 

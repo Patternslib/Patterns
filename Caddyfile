@@ -1,0 +1,9 @@
+localhost {
+    file_server browse
+
+    @websockets {
+        header Connection *Upgrade*
+        header Upgrade    websocket
+    }
+    reverse_proxy @websockets localhost:15674
+}
