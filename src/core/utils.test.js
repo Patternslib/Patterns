@@ -771,3 +771,28 @@ describe("is_iso_date ...", function () {
         expect(utils.is_iso_date("2022-05-04ok")).toBe(false);
     });
 });
+
+describe("date_diff ...", function () {
+    it("4 days ago...", () => {
+        const date_1 = new Date();
+        date_1.setDate(date_1.getDate() - 4);
+        const date_2 = new Date();
+        expect(utils.date_diff(date_1, date_2)).toBe(-4);
+    });
+    it("4 days up...", () => {
+        const date_1 = new Date();
+        date_1.setDate(date_1.getDate() + 4);
+        const date_2 = new Date();
+        expect(utils.date_diff(date_1, date_2)).toBe(4);
+    });
+    it("1 day ago over DST change...", () => {
+        const date_1 = new Date("Sun Oct 29 2022 10:00:00 GMT+0200"); // Before DST change
+        const date_2 = new Date("Sun Oct 30 2022 10:00:00 GMT+0100"); // After DST change
+        expect(utils.date_diff(date_1, date_2)).toBe(-1);
+    });
+    it("1 day up over DST change...", () => {
+        const date_1 = new Date("Sun Oct 30 2022 10:00:00 GMT+0100"); // After DST change
+        const date_2 = new Date("Sun Oct 29 2022 10:00:00 GMT+0200"); // Before DST change
+        expect(utils.date_diff(date_1, date_2)).toBe(1);
+    });
+});
