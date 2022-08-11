@@ -1,164 +1,148 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <title>pat-display-time demo</title>
-        <link rel="stylesheet" href="/style/common.css" type="text/css" />
-        <script
+  <head>
+    <meta http-equiv="content-type"
+          content="text/html; charset=utf-8"
+    />
+    <title>pat-display-time demo</title>
+    <link href="/style/common.css"
+          rel="stylesheet"
+          type="text/css"
+    />
+    <script charset="utf-8"
             src="/bundle.min.js"
             type="text/javascript"
-            charset="utf-8"
-        ></script>
-    </head>
+    ></script>
+  </head>
 
-    <body
-        role="document">
-        <div
-            class="pat-rich">
-            <h2>Example of default</h2>
-            <h3>Code</h3>
-        </div>
+  <body role="document">
 
-<pre
-    class="pat-syntax-highlight">
-&lt;time
-    class="pat-display-time"
-    datetime="2015-01-20T08:00Z"&gt;
-    20 January 2015, 08:00
-&lt;/time&gt;
-</pre>
+    <section>
+      <header><h2>1 - Basic examples</h2></header>
 
-        <div
-            class="pat-rich">
-            <h3>Output</h3>
-            <p>
-                <time class="pat-display-time" datetime="2015-01-20T08:00Z">
-                    20 January 2015, 08:00
-                </time>
-            </p>
+      <div>
+        <h3>1.1 - Default</h3>
 
-            <hr />
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+  &lt;time
+      class="pat-display-time"
+      datetime="2015-01-20T08:00Z"&gt;
+      20 January 2015, 08:00
+  &lt;/time&gt;
+      </pre>
 
-            <h2>Example setting the output format explicitly</h2>
-            <h3>Code</h3>
-        </div>
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time"
+                datetime="2015-01-20T08:00Z"
+          >
+          </time>
+        </p>
+      </div>
 
-<pre
-    class="pat-syntax-highlight">
-&lt;time
-    class="pat-display-time"
-    datetime="2015-01-20T08:00Z"
-    data-pat-display-time="output-format: MMMM dddd Do YYYY, h:mm:ss a"&gt;
-    20 January 2015, 08:00
-&lt;/time&gt;
-</pre>
+      <div>
+        <h3>1.2 - Example setting the output format explicitly</h3>
 
-        <div
-            class="pat-rich">
-            <h3>Output</h3>
-            <p>
-                <time
-                    class="pat-display-time"
-                    datetime="2015-01-20T08:00Z"
-                    data-pat-display-time="output-format: MMMM dddd Do YYYY, h:mm:ss a"
-                >
-                    20 January 2015, 08:00
-                </time>
-            </p>
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+  &lt;time
+      class="pat-display-time"
+      datetime="2015-01-20T08:00Z"
+      data-pat-display-time="output-format: MMMM dddd Do YYYY, h:mm:ss a"&gt;
+      20 January 2015, 08:00
+  &lt;/time&gt;
+      </pre>
 
-            <hr />
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time"
+                datetime="2015-01-20T08:00Z"
+                data-pat-display-time="output-format: MMMM dddd Do YYYY, h:mm:ss a"
+          >
+          </time>
+        </p>
+      </div>
 
-            <h2>Output formatted as local</h2>
-            <h3>Code</h3>
-        </div>
+      <div>
+        <h3>1.3 - Output formatted as local</h3>
 
-<pre
-    class="pat-syntax-highlight">
-&lt;time
-    class="pat-display-time"
-    datetime="2015-01-20T08:00Z"
-    data-pat-display-time="output-format: L"&gt;
-    20 January 2015, 08:00
-&lt;/time&gt;
-</pre>
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+  &lt;time
+      class="pat-display-time"
+      datetime="2015-01-20T08:00Z"
+      data-pat-display-time="output-format: L"&gt;
+      20 January 2015, 08:00
+  &lt;/time&gt;
+      </pre>
 
-        <div
-            class="pat-rich">
-            <h3>Output</h3>
-            <p>
-                <time
-                    class="pat-display-time"
-                    datetime="2015-01-20T08:00Z"
-                    data-pat-display-time="output-format: L"
-                >
-                    20 January 2015, 08:00
-                </time>
-            </p>
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time"
+                datetime="2015-01-20T08:00Z"
+                data-pat-display-time="output-format: L"
+          >
+          </time>
+        </p>
+      </div>
 
-            <hr />
+    </section>
 
-            <h2>Output formatted as 'from now'</h2>
-            <h3>Code</h3>
-        </div>
+    <section>
+      <header><h2>2 - From now examples</h2></header>
 
-<pre
-    class="pat-syntax-highlight">
+      <div>
+        <h3>2.1 - Output formatted as 'from now'</h3>
+
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
 &lt;time
     class="pat-display-time"
     datetime="2015-01-20T08:00Z"
     data-pat-display-time="from-now: true"&gt;
     20 January 2015, 08:00
 &lt;/time&gt;
-</pre>
+      </pre>
 
-        <div
-            class="pat-rich">
-            <h3>Output</h3>
-            <p>
-                <time
-                    class="pat-display-time"
-                    datetime="2015-01-20T08:00Z"
-                    data-pat-display-time="from-now: true"
-                >
-                    20 January 2015, 08:00
-                </time>
-            </p>
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time"
+                datetime="2015-01-20T08:00Z"
+                data-pat-display-time="from-now: true"
+          >
+          </time>
+        </p>
+      </div>
 
-            <hr />
+      <div>
+        <h3>2.2 - Output formatted as 'from now' with no suffix</h3>
 
-            <h2>Output formatted as 'from now' with no suffix</h2>
-            <h3>Code</h3>
-        </div>
-
-<pre
-    class="pat-syntax-highlight">
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
 &lt;time
     class="pat-display-time"
     datetime="2015-01-20T08:00Z"
     data-pat-display-time="from-now: true; no-suffix: true"&gt;
     20 January 2015, 08:00
 &lt;/time&gt;
-</pre>
+      </pre>
 
-        <div
-            class="pat-rich">
-            <h3>Output</h3>
-            <p>
-                <time
-                    class="pat-display-time"
-                    datetime="2015-01-20T08:00Z"
-                    data-pat-display-time="from-now: true; no-suffix: true"
-                >
-                    20 January 2015, 08:00
-                </time>
-            </p>
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time"
+                datetime="2015-01-20T08:00Z"
+                data-pat-display-time="from-now: true; no-suffix: true"
+          >
+          </time>
+        </p>
+      </div>
 
-            <h2>Output formatted as 'from now' with no suffix in german</h2>
-            <h3>Code</h3>
-        </div>
+      <div>
+        <h3>2.3 - Output formatted as 'from now' with no suffix in german</h3>
 
-<pre
-    class="pat-syntax-highlight">
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
 &lt;time
     class="pat-display-time"
     datetime="2015-01-20T08:00Z"
@@ -167,20 +151,244 @@
 &gt;
     20 January 2015, 08:00
 &lt;/time&gt;
-</pre>
+      </pre>
 
-        <div class="pat-rich">
-            <h3>Output</h3>
-            <p>
-                <time
-                    class="pat-display-time"
-                    datetime="2015-01-20T08:00Z"
-                    lang="de"
-                    data-pat-display-time="from-now: true; no-suffix: true"
-                >
-                    20 January 2015, 08:00
-                </time>
-            </p>
-        </div>
-    </body>
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time"
+                datetime="2015-01-20T08:00Z"
+                lang="de"
+                data-pat-display-time="from-now: true; no-suffix: true"
+          >
+          </time>
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <header>
+        <h2>3 - from-now (relative date) with date only dates.</h2>
+      </header>
+
+      <div>
+        <h3>3.1 - Today</h3>
+
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+&lt;time
+    class="pat-display-time"
+    datetime="2022-07-21"
+    lang="de"
+    data-pat-display-time="from-now: true"
+&gt;
+    heute
+&lt;/time&gt;
+        </pre>
+
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time example-3-1"
+                datetime="2022-07-21"
+                lang="de"
+                data-pat-display-time="from-now: true"
+          >
+          </time>
+        </p>
+
+        <script charset="utf-8">
+          document.querySelector(".example-3-1").setAttribute("datetime", new Date().toISOString().split("T")[0]);
+        </script>
+      </div>
+
+      <div>
+        <h3>3.2 - Tomorrow</h3>
+
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+&lt;time
+    class="pat-display-time"
+    datetime="2022-07-22"
+    lang="de"
+    data-pat-display-time="from-now: true"
+&gt;
+    morgen
+&lt;/time&gt;
+        </pre>
+
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time example-3-2"
+                datetime="2022-07-22"
+                lang="de"
+                data-pat-display-time="from-now: true"
+          >
+          </time>
+        </p>
+
+        <script charset="utf-8">
+          var date = new Date();
+          date.setDate(date.getDate() + 1);
+          document.querySelector(".example-3-2").setAttribute("datetime", date.toISOString().split("T")[0]);
+        </script>
+      </div>
+
+      <div>
+        <h3>3.3 - Yesterday</h3>
+
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+&lt;time
+    class="pat-display-time"
+    datetime="2022-07-20"
+    lang="de"
+    data-pat-display-time="from-now: true"
+&gt;
+    gestern
+&lt;/time&gt;
+        </pre>
+
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time example-3-3"
+                datetime="2022-07-20"
+                lang="de"
+                data-pat-display-time="from-now: true"
+          >
+          </time>
+        </p>
+
+        <script charset="utf-8">
+          var date = new Date();
+          date.setDate(date.getDate() - 1);
+          document.querySelector(".example-3-3").setAttribute("datetime", date.toISOString().split("T")[0]);
+        </script>
+      </div>
+
+      <div>
+        <h3>3.4 - Next week</h3>
+
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+&lt;time
+    class="pat-display-time"
+    datetime="2022-07-25"
+    lang="de"
+    data-pat-display-time="from-now: true"
+&gt;
+&lt;/time&gt;
+        </pre>
+
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time example-3-4"
+                datetime="2022-07-21"
+                lang="de"
+                data-pat-display-time="from-now: true"
+          >
+          </time>
+        </p>
+
+        <script charset="utf-8">
+          var date = new Date();
+          date.setDate(date.getDate() + 4);
+          document.querySelector(".example-3-4").setAttribute("datetime", date.toISOString().split("T")[0]);
+        </script>
+      </div>
+
+      <div>
+        <h3>3.5 - Last week</h3>
+
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+&lt;time
+    class="pat-display-time"
+    datetime="2022-07-17"
+    lang="de"
+    data-pat-display-time="from-now: true"
+&gt;
+&lt;/time&gt;
+        </pre>
+
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time example-3-5"
+                datetime="2022-07-17"
+                lang="de"
+                data-pat-display-time="from-now: true"
+          >
+          </time>
+        </p>
+
+        <script charset="utf-8">
+          var date = new Date();
+          date.setDate(date.getDate() - 4);
+          document.querySelector(".example-3-5").setAttribute("datetime", date.toISOString().split("T")[0]);
+        </script>
+      </div>
+
+      <div>
+        <h3>3.6 - 10 days in the future</h3>
+
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+&lt;time
+    class="pat-display-time"
+    datetime="2022-07-31"
+    lang="de"
+    data-pat-display-time="from-now: true"
+&gt;
+&lt;/time&gt;
+        </pre>
+
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time example-3-6"
+                datetime="2022-07-31"
+                lang="de"
+                data-pat-display-time="from-now: true"
+          >
+          </time>
+        </p>
+
+        <script charset="utf-8">
+          var date = new Date();
+          date.setDate(date.getDate() + 10);
+          document.querySelector(".example-3-6").setAttribute("datetime", date.toISOString().split("T")[0]);
+        </script>
+      </div>
+
+      <div>
+        <h3>3.7 - 10 days in the past</h3>
+
+        <strong>Code</strong>
+        <pre class="pat-syntax-highlight">
+&lt;time
+    class="pat-display-time"
+    datetime="2022-07-11"
+    lang="de"
+    data-pat-display-time="from-now: true"
+&gt;
+&lt;/time&gt;
+        </pre>
+
+        <strong>Output</strong>
+        <p>
+          <time class="pat-display-time example-3-7"
+                datetime="2022-07-11"
+                lang="de"
+                data-pat-display-time="from-now: true"
+          >
+          </time>
+        </p>
+
+        <script charset="utf-8">
+          var date = new Date();
+          date.setDate(date.getDate() - 10);
+          document.querySelector(".example-3-7").setAttribute("datetime", date.toISOString().split("T")[0]);
+        </script>
+      </div>
+
+    </section>
+
+  </body>
 </html>

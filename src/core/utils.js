@@ -1,6 +1,8 @@
 import $ from "jquery";
 import dom from "./dom";
 
+const _MS_PER_DAY = 1000 * 60 * 60 * 24; // Milliseconds per day.
+
 $.fn.safeClone = function () {
     var $clone = this.clone();
     // IE BUG : Placeholder text becomes actual value after deep clone on textarea
@@ -431,6 +433,12 @@ function isElementInViewport(el, partial = false, offset = 0) {
     }
 }
 
+/* parseTime - Parse a duration from a string and return the parsed time in milliseconds.
+ *
+ * @param {String} time - A duration/time string like ``1ms``, ``1s`` or ``1m``.
+ *
+ * @returns {Number} - A integer which represents the parsed time in milliseconds.
+ */
 function parseTime(time) {
     var m = /^(\d+(?:\.\d+)?)\s*(\w*)/.exec(time);
     if (!m) {
@@ -642,6 +650,33 @@ const is_iso_date_time = (value, optional_time = false) => {
     return re_date_time.test(value);
 };
 
+/**
+ * Return true, if the given value is a valid ISO 8601 date string and without a time component.
+ *
+ * @param {String} value - The date value to be checked.
+ * @return {Boolean} - True, if the given value is a valid ISO 8601 date string without a time component. False if not.
+ */
+const is_iso_date = (value) => {
+    const re_date_time = /^\d{4}-[01]\d-[0-3]\d$/;
+    return re_date_time.test(value);
+};
+
+/**
+ * Return the number of days between two dates.
+ * Based on: https://stackoverflow.com/a/15289883/1337474
+ *
+ * @param {Date} date_1 - First date to compare. We will substract date_2 from date_1.
+ * @param {Date} date_2 - Second date to compare.
+ * @return {Number} - The number of days between the two dates.
+ */
+const date_diff = (date_1, date_2) => {
+    // Discard the time and time-zone information.
+    const utc_1 = Date.UTC(date_1.getFullYear(), date_1.getMonth(), date_1.getDate());
+    const utc_2 = Date.UTC(date_2.getFullYear(), date_2.getMonth(), date_2.getDate());
+
+    return Math.floor((utc_1 - utc_2) / _MS_PER_DAY);
+};
+
 var utils = {
     // pattern pimping - own module?
     jqueryPlugin: jqueryPlugin,
@@ -673,6 +708,8 @@ var utils = {
     escape_html: escape_html,
     unescape_html: unescape_html,
     is_iso_date_time: is_iso_date_time,
+    is_iso_date: is_iso_date,
+    date_diff: date_diff,
     getCSSValue: dom.get_css_value, // BBB: moved to dom. TODO: Remove in upcoming version.
 };
 

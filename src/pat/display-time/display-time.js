@@ -2,6 +2,7 @@ import Base from "../../core/base";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
 import logging from "../../core/logging";
+import utils from "../../core/utils";
 
 // Lazy loading modules.
 let Moment;
@@ -33,8 +34,10 @@ export default Base.extend({
         try {
             await import(`moment/locale/${lang}.js`);
             Moment.locale(lang);
+            this.lang = lang;
         } catch {
             Moment.locale("en");
+            this.lang = "en";
         }
         log.debug(`Moment.js language used: ${lang}.`);
         this.format();
@@ -46,7 +49,28 @@ export default Base.extend({
         if (datetime) {
             const date = Moment(datetime, this.options.format, this.options.strict);
             if (this.options.fromNow === true) {
-                out = date.fromNow(this.options.noSuffix);
+                if (utils.is_iso_date(datetime)) {
+                    // date-only case.
+                    const rtf = new Intl.RelativeTimeFormat(this.lang, {
+                        numeric: "auto",
+                    });
+                    const date_diff = utils.date_diff(date.toDate(), new Date());
+                    out = date.calendar(null, {
+                        // when the date is closer, specify custom values
+                        lastWeek: `[${rtf.format(date_diff, "day")}]`, // translates to "x days ago"
+                        lastDay: `[${rtf.format(-1, "day")}]`, // translates to "yesterday"
+                        sameDay: `[${rtf.format(0, "day")}]`, // translates to "today"
+                        nextDay: `[${rtf.format(1, "day")}]`, // translates to "tomorrow"
+                        nextWeek: "dddd",
+                        // when the date is further away, use from-now functionality
+                        sameElse: () => {
+                            return `[${date.fromNow(this.options.noSuffix)}]`;
+                        },
+                    });
+                } else {
+                    // datetime case.
+                    out = date.fromNow(this.options.noSuffix);
+                }
             } else {
                 out = date.format(this.options.outputFormat || undefined);
             }
