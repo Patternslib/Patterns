@@ -71,6 +71,18 @@ describe("pat-base: The Base class for patterns", function () {
         expect(Object.keys(registry.patterns).includes("example")).toBeTruthy();
     });
 
+    it('will not automatically register a pattern when "autoregister" is set to false', function () {
+        jest.spyOn(registry, "register");
+        var NewPattern = Base.extend({
+            name: "example",
+            trigger: ".pat-example",
+            autoregister: false,
+        });
+        expect(NewPattern.prototype.name).toEqual("example");
+        expect(registry.register).not.toHaveBeenCalled();
+        expect(Object.keys(registry.patterns).length).toEqual(0);
+    });
+
     it('will not automatically register a pattern without a "name" attribute', function () {
         jest.spyOn(registry, "register");
         var NewPattern = Base.extend({ trigger: ".pat-example" });
