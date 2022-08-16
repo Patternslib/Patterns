@@ -51,6 +51,18 @@ depends-parser:  stamp-yarn
 	$(PEGJS) -O size -f es src/lib/depends_parse.pegjs
 
 
+# Unlink any linked dependencies before building a bundle.
+bundle-pre:
+	-$(YARN) unlink @patternslib/dev
+	-$(YARN) unlink @patternslib/pat-content-mirror
+	-$(YARN) unlink @patternslib/pat-doclock
+	-$(YARN) unlink @patternslib/pat-shopping-cart
+	-$(YARN) unlink @patternslib/pat-sortable-table
+	-$(YARN) unlink @patternslib/pat-tiptap
+	-$(YARN) unlink @patternslib/pat-upload
+	$(YARN) install --force
+
+
 .PHONY: css
 css:
 	@$(SASS) -I style -I _sass -I . _sass/_patterns.scss style/patterns.css
