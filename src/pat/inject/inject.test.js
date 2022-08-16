@@ -559,11 +559,45 @@ describe("pat-inject", function () {
             var $div = $('<div id="someid" />');
             $("#lab").empty().append($a).append($div);
             var callback = jest.fn();
-            $(document).on("patterns-injected", callback);
+            $(document).on("patterns-injected-scanned", callback);
             pattern.init($a);
             $a.trigger("click");
-            answer("<html><body>" + '<div id="someid">repl</div>' + "</body></html>");
+            answer(`
+              <html>
+                <body>
+                  <div id="someid">
+                    <div>repl</div>
+                  </div>
+                </body>
+              </html>
+            `);
             await utils.timeout(1); // wait a tick for async to settle.
+            expect(callback).toHaveBeenCalled();
+
+            spy_ajax.mockRestore();
+        });
+
+        it("triggers the patterns-injected-delayed event 10ms after the injected content has been scanned", async function () {
+            const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
+            var $div = $('<div id="someid" />');
+            $("#lab").empty().append($a).append($div);
+            var callback = jest.fn();
+            $(document.body).on("patterns-injected-delayed", callback);
+            pattern.init($a);
+            $a.trigger("click");
+            answer(`
+              <html>
+                <body>
+                  <div id="someid">
+                    <div>repl</div>
+                  </div>
+                </body>
+              </html>
+            `);
+            await utils.timeout(1); // wait a tick for async to settle.
+            expect(callback).not.toHaveBeenCalled();
+            await utils.timeout(10); // wait a tick for async to settle.
             expect(callback).toHaveBeenCalled();
 
             spy_ajax.mockRestore();

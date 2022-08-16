@@ -1089,7 +1089,7 @@ const inject = {
     },
 };
 
-$(document).on("patterns-injected.inject", (ev, cfg, trigger, injected) => {
+$(document).on("patterns-injected.inject", async (ev, cfg, trigger, injected) => {
     /* Listen for the patterns-injected event.
      *
      * Remove the "loading-class" classes from all injection targets and
@@ -1108,6 +1108,17 @@ $(document).on("patterns-injected.inject", (ev, cfg, trigger, injected) => {
     if (injected.nodeType !== TEXT_NODE && injected !== COMMENT_NODE) {
         registry.scan(injected, null, { type: "injection", element: trigger });
         $(injected).trigger("patterns-injected-scanned");
+
+        await utils.timeout(10); // Wait a bit before dispatching next event.
+        injected.dispatchEvent(
+            new CustomEvent("patterns-injected-delayed", {
+                bubbles: true,
+                cancelable: true,
+                detail: {
+                    injected: injected,
+                },
+            })
+        );
     }
 });
 
