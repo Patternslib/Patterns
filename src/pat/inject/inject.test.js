@@ -519,10 +519,8 @@ describe("pat-inject", function () {
         });
     });
 
-    describe("DOM tests", function () {
-        beforeEach(function () {});
-
-        it("The pat-inject-success get triggered after successful injection", async function () {
+    describe("Injection events tests", function () {
+        it("triggers the pat-inject-success event after successful injection", async function () {
             const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             document.body.innerHTML = `
                <a class="pat-inject" href="test.html">link</a>
@@ -539,27 +537,41 @@ describe("pat-inject", function () {
             spy_ajax.mockRestore();
         });
 
-        describe("The patterns-injected event", function () {
-            it("gets triggered after injection has finished'", async function () {
-                const spy_ajax = jest
-                    .spyOn($, "ajax")
-                    .mockImplementation(() => deferred);
-                var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
-                var $div = $('<div id="someid" />');
-                $("#lab").empty().append($a).append($div);
-                var callback = jest.fn();
-                $(document).on("patterns-injected", callback);
-                pattern.init($a);
-                $a.trigger("click");
-                answer(
-                    "<html><body>" + '<div id="someid">repl</div>' + "</body></html>"
-                );
-                await utils.timeout(1); // wait a tick for async to settle.
-                expect(callback).toHaveBeenCalled();
+        it("triggers the patterns-injected event after injection has finished'", async function () {
+            const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
+            var $div = $('<div id="someid" />');
+            $("#lab").empty().append($a).append($div);
+            var callback = jest.fn();
+            $(document).on("patterns-injected", callback);
+            pattern.init($a);
+            $a.trigger("click");
+            answer("<html><body>" + '<div id="someid">repl</div>' + "</body></html>");
+            await utils.timeout(1); // wait a tick for async to settle.
+            expect(callback).toHaveBeenCalled();
 
-                spy_ajax.mockRestore();
-            });
+            spy_ajax.mockRestore();
         });
+
+        it("triggers the patterns-injected-scanned event after the injected content has been scanned", async function () {
+            const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
+            var $div = $('<div id="someid" />');
+            $("#lab").empty().append($a).append($div);
+            var callback = jest.fn();
+            $(document).on("patterns-injected", callback);
+            pattern.init($a);
+            $a.trigger("click");
+            answer("<html><body>" + '<div id="someid">repl</div>' + "</body></html>");
+            await utils.timeout(1); // wait a tick for async to settle.
+            expect(callback).toHaveBeenCalled();
+
+            spy_ajax.mockRestore();
+        });
+    });
+
+    describe("DOM tests", function () {
+        beforeEach(function () {});
 
         describe("Injection on an anchor element", function () {
             var $a, $div;
