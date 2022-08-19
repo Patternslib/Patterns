@@ -1,6 +1,5 @@
 // Patterns validate - Form vlidation
 import "../../core/polyfills"; // SubmitEvent.submitter for Safari < 15.4 and jsDOM
-import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
@@ -342,6 +341,5 @@ export default Base.extend({
                 it.classList.add("disabled");
             }
         }
-        $(input).trigger("pat-update", { pattern: "validation" });
     },
 });

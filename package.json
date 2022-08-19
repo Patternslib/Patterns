@@ -12,7 +12,7 @@
         "@fullcalendar/list": "^5.11.2",
         "@fullcalendar/luxon2": "^5.11.2",
         "@fullcalendar/timegrid": "^5.11.2",
-        "@juggle/resize-observer": "^3.3.1",
+        "@juggle/resize-observer": "^3.4.0",
         "@stomp/stompjs": "^6.1.2",
         "google-code-prettify": "^1.0.5",
         "imagesloaded": "^4.1.4",
@@ -38,7 +38,7 @@
         "whatwg-fetch": "^3.4.0"
     },
     "devDependencies": {
-        "@patternslib/dev": "^2.4.0",
+        "@patternslib/dev": "^2.5.0",
         "@patternslib/pat-content-mirror": "^3.0.0",
         "@patternslib/pat-doclock": "^3.0.0",
         "@patternslib/pat-shopping-cart": "^3.0.0",

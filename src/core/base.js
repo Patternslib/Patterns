@@ -133,7 +133,7 @@ Base.extend = function (patternProps) {
         log.warn(
             `The pattern ${patternProps.name} does not have a trigger attribute, it will not be registered.`
         );
-    } else {
+    } else if (patternProps.autoregister !== false) {
         Registry.register(child, patternProps.name);
     }
     return child;
