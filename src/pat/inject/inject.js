@@ -1105,7 +1105,7 @@ $(document).on("patterns-injected.inject", async (ev, cfg, trigger, injected) =>
         // Remove the executing class, add the executed class to the element with pat.inject on it.
         $(trigger).removeClass(cfg.executingClass).addClass(cfg.executedClass);
     }
-    if (injected.nodeType !== TEXT_NODE && injected !== COMMENT_NODE) {
+    if (injected.nodeType !== TEXT_NODE && injected.nodeType !== COMMENT_NODE) {
         registry.scan(injected, null, { type: "injection", element: trigger });
         $(injected).trigger("patterns-injected-scanned");
 

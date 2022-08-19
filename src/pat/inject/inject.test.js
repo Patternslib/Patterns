@@ -602,6 +602,54 @@ describe("pat-inject", function () {
 
             spy_ajax.mockRestore();
         });
+
+        it("does not trigger the patterns-injected-scanned event for text nodes", async function () {
+            const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
+            var $div = $('<div id="someid" />');
+            $("#lab").empty().append($a).append($div);
+            var callback = jest.fn();
+            $(document).on("patterns-injected-scanned", callback);
+            pattern.init($a);
+            $a.trigger("click");
+            answer(`
+              <html>
+                <body>
+                  <div id="someid">
+                    repl
+                  </div>
+                </body>
+              </html>
+            `);
+            await utils.timeout(1); // wait a tick for async to settle.
+            expect(callback).not.toHaveBeenCalled();
+
+            spy_ajax.mockRestore();
+        });
+
+        it("does not trigger the patterns-injected-scanned event for comment nodes", async function () {
+            const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
+            var $div = $('<div id="someid" />');
+            $("#lab").empty().append($a).append($div);
+            var callback = jest.fn();
+            $(document).on("patterns-injected-scanned", callback);
+            pattern.init($a);
+            $a.trigger("click");
+            answer(`
+              <html>
+                <body>
+                  <div id="someid">
+                    <!-- repl -->
+                  </div>
+                </body>
+              </html>
+            `);
+            await utils.timeout(1); // wait a tick for async to settle.
+            expect(callback).not.toHaveBeenCalled();
+
+            spy_ajax.mockRestore();
+        });
     });
 
     describe("DOM tests", function () {
