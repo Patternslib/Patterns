@@ -1813,10 +1813,10 @@
     datatables.net-dt "^1.12.1"
     jquery "^3.6.0"
 
-"@patternslib/pat-tiptap@^4.4.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@patternslib/pat-tiptap/-/pat-tiptap-4.4.0.tgz#628a1d2bc45cbcb1fd1a724e4c10a8d47b17c7a3"
-  integrity sha512-ugRxKUx3a3dSEe6fXTc2bSEwJaxPOBJWGzIAQ42+fmaiCpOQ8Q7KHQpVBdBnHEzxzpDCkVg4o8jSLL5hRHG84Q==
+"@patternslib/pat-tiptap@^4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@patternslib/pat-tiptap/-/pat-tiptap-4.5.0.tgz#21baa1ccd257192c2a9ebd5a1ced2da507398d62"
+  integrity sha512-8IhYCSgd92CriDl2aPHX82NysQI9WRqA1bMWGQMuF3kofXduFeo7nndy8m0InjUlXJ7v+UzNgDgAW+Y2ZCdHKQ==
   dependencies:
     "@tiptap/core" "2.0.0-beta.182"
     "@tiptap/extension-blockquote" "^2.0.0-beta.29"
