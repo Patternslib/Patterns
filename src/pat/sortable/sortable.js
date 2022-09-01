@@ -102,6 +102,12 @@ export default Base.extend({
         if (this.options.drop) {
             this.options.drop($dragged, change);
         }
+        // Inform other patterns about sorting changes
+        $dragged.trigger("pat-update", {
+            pattern: "sortable",
+            action: "dragend",
+            $el: $dragged,
+        });
     },
 
     submitChangedAmount: function ($dragged) {
