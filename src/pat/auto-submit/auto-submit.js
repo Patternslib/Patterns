@@ -36,6 +36,22 @@ export default Base.extend({
         );
         this.registerSubformListeners();
         this.$el.on("patterns-injected", this.refreshListeners.bind(this));
+        this.$el.on("pat-update", (e, data) => {
+            // Refresh on some pat-update events.
+            if (
+                (data?.pattern === "clone" && data?.action === "remove") ||
+                data?.pattern === "sortable"
+            ) {
+                // Directly submit when removing a clone or changing the sorting.
+                this.$el.submit();
+                log.debug(
+                    `triggered by pat-update, pattern: ${data.pattern}, action: ${data.action}`
+                );
+            } else if (data?.pattern === "clone") {
+                // Refresh listeners on cloning.
+                this.refreshListeners(e, null, null, data.$el);
+            }
+        });
     },
 
     registerSubformListeners(ev) {

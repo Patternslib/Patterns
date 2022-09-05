@@ -1,3 +1,4 @@
+import $ from "jquery";
 import Pattern from "./auto-submit";
 import events from "../../core/events";
 import registry from "../../core/registry";
@@ -53,6 +54,18 @@ describe("pat-autosubmit", function () {
             registry.scan(document.body);
             expect(spy_init).toHaveBeenCalled();
         });
+
+        it("calls refreshListeners when pat-clone adds an element", function () {
+            document.body.innerHTML = `
+              <form class="pat-autosubmit">
+              </form>
+            `;
+            const el = document.querySelector(".pat-autosubmit");
+            const instance = new Pattern(el);
+            const spy = jest.spyOn(instance, "refreshListeners");
+            $(el).trigger("pat-update", { pattern: "clone" });
+            expect(spy).toHaveBeenCalled();
+        });
     });
 
     describe("2 - Trigger a submit", function () {
@@ -72,6 +85,30 @@ describe("pat-autosubmit", function () {
             const spy = jest.spyOn(instance.$el, "submit");
             input.dispatchEvent(events.input_event());
             await utils.timeout(1);
+            expect(spy).toHaveBeenCalled();
+        });
+
+        it("when pat-clone removes an element", function () {
+            document.body.innerHTML = `
+              <form class="pat-autosubmit">
+              </form>
+            `;
+            const el = document.querySelector(".pat-autosubmit");
+            const instance = new Pattern(el);
+            const spy = jest.spyOn(instance.$el, "submit");
+            $(el).trigger("pat-update", { pattern: "clone", action: "remove" });
+            expect(spy).toHaveBeenCalled();
+        });
+
+        it("when pat-sortable changes the sorting", function () {
+            document.body.innerHTML = `
+              <form class="pat-autosubmit">
+              </form>
+            `;
+            const el = document.querySelector(".pat-autosubmit");
+            const instance = new Pattern(el);
+            const spy = jest.spyOn(instance.$el, "submit");
+            $(el).trigger("pat-update", { pattern: "sortable" });
             expect(spy).toHaveBeenCalled();
         });
     });

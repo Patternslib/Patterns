@@ -88,4 +88,28 @@ describe("pat-sortable", function () {
         expect($(".sortable-amount").attr("value")).toEqual("2");
         expect(submitCallback).toHaveBeenCalled();
     });
+
+    it("Triggers pat-update on drag end", function () {
+        document.body.innerHTML = `
+          <ul class="pat-sortable">
+            <li>One</li>
+            <li>Two</li>
+            <li>Three</li>
+          </ul>
+        `;
+        const el = document.querySelector(".pat-sortable");
+        new Sortable(el);
+        const dragging_element = el.querySelector("li");
+        const handle = dragging_element.querySelector("a.sortable-handle");
+
+        let data = null;
+        $(el).on("pat-update", (e, d) => {
+            data = d;
+        });
+
+        $(handle).trigger("dragend");
+
+        expect(data.pattern).toBe("sortable");
+        expect(data.action).toBe("dragend");
+    });
 });
