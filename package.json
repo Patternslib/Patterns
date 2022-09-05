@@ -49,7 +49,9 @@
         "pegjs": "0.11.0-master.b7b87ea",
         "webpack-modernizr-loader": "^5.0.0"
     },
-    "resolutions": {},
+    "resolutions": {
+        "jquery": "3.6.1"
+    },
     "scripts": {
         "start": "BUILD_ENV=patternslib NODE_ENV=development webpack serve --config webpack/webpack.config.js",
         "build": "BUILD_ENV=patternslib NODE_ENV=production webpack --config webpack/webpack.config.js",
