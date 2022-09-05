@@ -4,6 +4,14 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.1.0-beta.4](https://github.com/Patternslib/patterns/compare/9.1.0-beta.3...9.1.0-beta.4) (2022-09-05)
+
+
+### Bug Fixes
+
+
+* **Build:** Resolve to jquery 3.6.1 to not include mutliple jquery versions. ([e1c7d01](https://github.com/Patternslib/patterns/commit/e1c7d017d9ae5a6252db9f0f57b13543273f0002))
+
 ## [9.1.0-beta.3](https://github.com/Patternslib/patterns/compare/9.1.0-beta.2...9.1.0-beta.3) (2022-09-05)
 
 
