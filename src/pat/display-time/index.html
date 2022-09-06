@@ -17,6 +17,20 @@
 
   <body role="document">
 
+    <script>
+      // From core/utils
+      const localized_isodate = (date) => {
+          // Return a iso date (date only) in the current timezone instead of a
+          // UTC ISO 8601 date+time component which toISOString returns.
+
+          const day = date.getDate().toString().padStart(2, "0");
+          const month = (date.getMonth() + 1).toString().padStart(2, "0");
+          const year = date.getFullYear().toString();
+
+          return `${year}-${month}-${day}`;
+      };
+    </script>
+
     <section>
       <header><h2>1 - Basic examples</h2></header>
 
@@ -196,7 +210,7 @@
         </p>
 
         <script charset="utf-8">
-          document.querySelector(".example-3-1").setAttribute("datetime", new Date().toISOString().split("T")[0]);
+          document.querySelector(".example-3-1").setAttribute("datetime", localized_isodate(new Date()));
         </script>
       </div>
 
@@ -228,7 +242,7 @@
         <script charset="utf-8">
           var date = new Date();
           date.setDate(date.getDate() + 1);
-          document.querySelector(".example-3-2").setAttribute("datetime", date.toISOString().split("T")[0]);
+          document.querySelector(".example-3-2").setAttribute("datetime", localized_isodate(date));
         </script>
       </div>
 
@@ -260,7 +274,7 @@
         <script charset="utf-8">
           var date = new Date();
           date.setDate(date.getDate() - 1);
-          document.querySelector(".example-3-3").setAttribute("datetime", date.toISOString().split("T")[0]);
+          document.querySelector(".example-3-3").setAttribute("datetime", localized_isodate(date));
         </script>
       </div>
 
@@ -291,7 +305,7 @@
         <script charset="utf-8">
           var date = new Date();
           date.setDate(date.getDate() + 4);
-          document.querySelector(".example-3-4").setAttribute("datetime", date.toISOString().split("T")[0]);
+          document.querySelector(".example-3-4").setAttribute("datetime", localized_isodate(date));
         </script>
       </div>
 
@@ -322,7 +336,7 @@
         <script charset="utf-8">
           var date = new Date();
           date.setDate(date.getDate() - 4);
-          document.querySelector(".example-3-5").setAttribute("datetime", date.toISOString().split("T")[0]);
+          document.querySelector(".example-3-5").setAttribute("datetime", localized_isodate(date));
         </script>
       </div>
 
@@ -353,7 +367,7 @@
         <script charset="utf-8">
           var date = new Date();
           date.setDate(date.getDate() + 10);
-          document.querySelector(".example-3-6").setAttribute("datetime", date.toISOString().split("T")[0]);
+          document.querySelector(".example-3-6").setAttribute("datetime", localized_isodate(date));
         </script>
       </div>
 
@@ -384,7 +398,7 @@
         <script charset="utf-8">
           var date = new Date();
           date.setDate(date.getDate() - 10);
-          document.querySelector(".example-3-7").setAttribute("datetime", date.toISOString().split("T")[0]);
+          document.querySelector(".example-3-7").setAttribute("datetime", localized_isodate(date));
         </script>
       </div>
 
