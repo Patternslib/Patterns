@@ -185,149 +185,153 @@ describe("pat-display-time tests", () => {
 
         expect(el.textContent).toBe("");
     });
+});
 
-    describe("3 - from-now (relative date) with date only dates", () => {
-        it("3.1 - Today", async () => {
-            const date = new Date();
-            const iso_date = date.toISOString().split("T")[0];
+describe("from-now (relative date) with date only dates", () => {
+    afterEach(function () {
+        document.body.innerHTML = "";
+    });
 
-            document.body.innerHTML = `
+    it("3.1 - Today", async () => {
+        const date = new Date();
+        const iso_date = utils.localized_isodate(date);
+
+        document.body.innerHTML = `
               <time
                   class="pat-display-time"
                   datetime="${iso_date}"
                   data-pat-display-time="from-now: true">
               </time>
             `;
-            const el = document.querySelector(".pat-display-time");
+        const el = document.querySelector(".pat-display-time");
 
-            Pattern.init(el);
-            await utils.timeout(1); // wait a tick for async to settle.
+        Pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
 
-            expect(el.textContent).toBe("today");
-        });
+        expect(el.textContent).toBe("today");
+    });
 
-        it("3.2 - Tomorrow", async () => {
-            const date = new Date();
-            date.setDate(date.getDate() + 1);
-            const iso_date = date.toISOString().split("T")[0];
+    it("3.2 - Tomorrow", async () => {
+        const date = new Date();
+        date.setDate(date.getDate() + 1);
+        const iso_date = utils.localized_isodate(date);
 
-            document.body.innerHTML = `
+        document.body.innerHTML = `
               <time
                   class="pat-display-time"
                   datetime="${iso_date}"
                   data-pat-display-time="from-now: true">
               </time>
             `;
-            const el = document.querySelector(".pat-display-time");
+        const el = document.querySelector(".pat-display-time");
 
-            Pattern.init(el);
-            await utils.timeout(1); // wait a tick for async to settle.
+        Pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
 
-            expect(el.textContent).toBe("tomorrow");
-        });
+        expect(el.textContent).toBe("tomorrow");
+    });
 
-        it("3.3 - Yesterday", async () => {
-            const date = new Date();
-            date.setDate(date.getDate() - 1);
-            const iso_date = date.toISOString().split("T")[0];
+    it("3.3 - Yesterday", async () => {
+        const date = new Date();
+        date.setDate(date.getDate() - 1);
+        const iso_date = utils.localized_isodate(date);
 
-            document.body.innerHTML = `
+        document.body.innerHTML = `
               <time
                   class="pat-display-time"
                   datetime="${iso_date}"
                   data-pat-display-time="from-now: true">
               </time>
             `;
-            const el = document.querySelector(".pat-display-time");
+        const el = document.querySelector(".pat-display-time");
 
-            Pattern.init(el);
-            await utils.timeout(1); // wait a tick for async to settle.
+        Pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
 
-            expect(el.textContent).toBe("yesterday");
-        });
+        expect(el.textContent).toBe("yesterday");
+    });
 
-        it("3.4 - Next week", async () => {
-            const date = new Date(); // Use the system date.
-            date.setDate(date.getDate() + 4);
-            const iso_date = date.toISOString().split("T")[0];
+    it("3.4 - Next week", async () => {
+        const date = new Date(); // Use the system date.
+        date.setDate(date.getDate() + 4);
+        const iso_date = utils.localized_isodate(date);
 
-            document.body.innerHTML = `
+        document.body.innerHTML = `
               <time
                   class="pat-display-time"
                   datetime="${iso_date}"
                   data-pat-display-time="from-now: true">
               </time>
             `;
-            const el = document.querySelector(".pat-display-time");
+        const el = document.querySelector(".pat-display-time");
 
-            Pattern.init(el);
-            await utils.timeout(1); // wait a tick for async to settle.
+        Pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
 
-            // Match any of these as we did not mock the system date.
-            expect(el.textContent).toMatch(
-                /Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday/
-            );
-        });
+        // Match any of these as we did not mock the system date.
+        expect(el.textContent).toMatch(
+            /Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday/
+        );
+    });
 
-        it("3.5 - Last week", async () => {
-            const date = new Date(); // Use the system date.
-            date.setDate(date.getDate() - 4);
-            const iso_date = date.toISOString().split("T")[0];
+    it("3.5 - Last week", async () => {
+        const date = new Date(); // Use the system date.
+        date.setDate(date.getDate() - 4);
+        const iso_date = utils.localized_isodate(date);
 
-            document.body.innerHTML = `
+        document.body.innerHTML = `
               <time
                   class="pat-display-time"
                   datetime="${iso_date}"
                   data-pat-display-time="from-now: true">
               </time>
             `;
-            const el = document.querySelector(".pat-display-time");
+        const el = document.querySelector(".pat-display-time");
 
-            Pattern.init(el);
-            await utils.timeout(1); // wait a tick for async to settle.
+        Pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
 
-            // Match any of these as we did not mock the system date.
-            expect(el.textContent).toBe("4 days ago");
-        });
+        // Match any of these as we did not mock the system date.
+        expect(el.textContent).toBe("4 days ago");
+    });
 
-        it("3.6 - 10 days in the future", async () => {
-            const date = new Date();
-            date.setDate(date.getDate() + 10);
-            const iso_date = date.toISOString().split("T")[0];
+    it("3.6 - 10 days in the future", async () => {
+        const date = new Date();
+        date.setDate(date.getDate() + 10);
+        const iso_date = utils.localized_isodate(date);
 
-            document.body.innerHTML = `
+        document.body.innerHTML = `
               <time
                   class="pat-display-time"
                   datetime="${iso_date}"
                   data-pat-display-time="from-now: true">
               </time>
             `;
-            const el = document.querySelector(".pat-display-time");
+        const el = document.querySelector(".pat-display-time");
 
-            Pattern.init(el);
-            await utils.timeout(1); // wait a tick for async to settle.
+        Pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
 
-            expect(el.textContent).toBe("in 10 days");
-        });
+        expect(el.textContent).toBe("in 10 days");
+    });
 
-        it("3.7 - 10 days in the past", async () => {
-            const date = new Date();
-            date.setDate(date.getDate() - 10);
-            const iso_date = date.toISOString().split("T")[0];
+    it("3.7 - 10 days in the past", async () => {
+        const date = new Date();
+        date.setDate(date.getDate() - 10);
+        const iso_date = utils.localized_isodate(date);
 
-            document.body.innerHTML = `
+        document.body.innerHTML = `
               <time
                   class="pat-display-time"
                   datetime="${iso_date}"
                   data-pat-display-time="from-now: true">
               </time>
             `;
-            const el = document.querySelector(".pat-display-time");
+        const el = document.querySelector(".pat-display-time");
 
-            Pattern.init(el);
-            await utils.timeout(1); // wait a tick for async to settle.
+        Pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
 
-            expect(el.textContent).toBe("10 days ago");
-        });
+        expect(el.textContent).toBe("10 days ago");
     });
 });
