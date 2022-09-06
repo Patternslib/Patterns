@@ -4,6 +4,20 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.1.0](https://github.com/Patternslib/patterns/compare/9.1.0-beta.4...9.1.0) (2022-09-06)
+
+
+### Bug Fixes
+
+
+* **pat sortable:** Fix sorting functionality when sort item has any other class than .sortable. ([75815a6](https://github.com/Patternslib/patterns/commit/75815a6659b4385c1301f1947424861bcacb08c2))
+
+
+### Maintenance
+
+
+* **pat display time:** Fix tests and demo which failed due to timezone offsets around midnight. ([a5d0695](https://github.com/Patternslib/patterns/commit/a5d06958811173445fa6033a2b8a44eb11756a91))
+
 ## [9.1.0-beta.4](https://github.com/Patternslib/patterns/compare/9.1.0-beta.3...9.1.0-beta.4) (2022-09-05)
 
 
