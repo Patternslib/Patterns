@@ -97,7 +97,9 @@ export default Base.extend({
         this.$sortables.off(".pat-sortable");
         this.$el.off(".pat-sortable");
         $("#pat-scroll-up, #pat-scroll-dn").detach();
-        var change = this.submitChangedAmount($(ev.target).closest(".sortable"));
+        var change = this.submitChangedAmount(
+            $(ev.target).closest(this.options.selector)
+        );
         // Call the optionally passed-in callback function
         if (this.options.drop) {
             this.options.drop($dragged, change);
