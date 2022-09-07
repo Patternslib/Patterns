@@ -61,10 +61,10 @@ export default Base.extend({
                         lastDay: `[${rtf.format(-1, "day")}]`, // translates to "yesterday"
                         sameDay: `[${rtf.format(0, "day")}]`, // translates to "today"
                         nextDay: `[${rtf.format(1, "day")}]`, // translates to "tomorrow"
-                        nextWeek: "dddd",
-                        // when the date is further away, use from-now functionality
+                        nextWeek: "dddd", // translates to week day name
+                        // otherwise, just use Intl.RelativeTimeFormat.
                         sameElse: () => {
-                            return `[${date.fromNow(this.options.noSuffix)}]`;
+                            return `[${rtf.format(date_diff, "day")}]`;
                         },
                     });
                 } else {
