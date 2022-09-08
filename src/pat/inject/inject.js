@@ -861,6 +861,14 @@ const inject = {
         "inject": ["url"],
     },
 
+    _rebaseURL(base, url) {
+        if (url.indexOf("://") !== -1 || url[0] === "/" || url.indexOf("data:") === 0) {
+            return url;
+        }
+        base = new URL(base, window.location).href; // If base is relative make it absolute.
+        return base.slice(0, base.lastIndexOf("/") + 1) + url;
+    },
+
     _rebaseHTML(base, html) {
         if (html === "") {
             // Special case, source is none
@@ -889,7 +897,7 @@ const inject = {
                 value.slice(0, 6) !== "teams:" &&
                 value.slice(0, 11) !== "javascript:"
             ) {
-                value = utils.rebaseURL(base, value);
+                value = this._rebaseURL(base, value);
                 $el_.attr(attrName, value);
             }
         });
@@ -915,9 +923,9 @@ const inject = {
                         }
                         changed = true;
                         if (Array.isArray(val)) {
-                            config[opt] = val.map((it) => utils.rebaseURL(base, it));
+                            config[opt] = val.map((it) => this._rebaseURL(base, it));
                         } else {
-                            config[opt] = utils.rebaseURL(base, val);
+                            config[opt] = this._rebaseURL(base, val);
                         }
                     }
                 }
@@ -945,9 +953,7 @@ const inject = {
             .trim();
     },
 
-    _parseRawHtml(html, url) {
-        url = url || "";
-
+    _parseRawHtml(html, url = "") {
         // remove script tags and head and replace body by a div
         const title = html.match(/\<title\>(.*)\<\/title\>/);
         let clean_html = html

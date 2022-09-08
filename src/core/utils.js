@@ -156,14 +156,6 @@ function extend(obj) {
 }
 // END: Taken from Underscore.js until here.
 
-function rebaseURL(base, url) {
-    base = new URL(base, window.location).href; // If base is relative make it absolute.
-    if (url.indexOf("://") !== -1 || url[0] === "/" || url.indexOf("data:") === 0) {
-        return url;
-    }
-    return base.slice(0, base.lastIndexOf("/") + 1) + url;
-}
-
 function findLabel(input) {
     var $label;
     for (
@@ -683,7 +675,6 @@ var utils = {
     escapeRegExp: escapeRegExp,
     isObject: isObject,
     extend: extend,
-    rebaseURL: rebaseURL,
     findLabel: findLabel,
     elementInViewport: elementInViewport,
     removeWildcardClass: removeWildcardClass,

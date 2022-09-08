@@ -3,50 +3,6 @@ import $ from "jquery";
 import { jest } from "@jest/globals";
 
 describe("basic tests", function () {
-    describe("rebaseURL", function () {
-        it("Keep URL with scheme", function () {
-            expect(
-                utils.rebaseURL("http://example.com/foo/", "http://other.com/me")
-            ).toBe("http://other.com/me");
-        });
-
-        it("Keep URL with absolute path", function () {
-            expect(utils.rebaseURL("http://example.com/foo/", "/me")).toBe("/me");
-        });
-
-        it("Rebase to base with filename", function () {
-            expect(
-                utils.rebaseURL("http://example.com/foo/index.html", "me/page.html")
-            ).toBe("http://example.com/foo/me/page.html");
-        });
-
-        it("Rebase to base with directory path", function () {
-            expect(utils.rebaseURL("http://example.com/foo/", "me/page.html")).toBe(
-                "http://example.com/foo/me/page.html"
-            );
-        });
-
-        it("Rebase with absolute base url", function () {
-            expect(
-                utils.rebaseURL("/foo/", "me/page.html").indexOf("/foo/me/page.html") > 0
-            ).toBe(true);
-        });
-
-        it("Rebase with relative base url", function () {
-            expect(
-                utils
-                    .rebaseURL("example.com/foo/", "me/page.html")
-                    .indexOf("example.com/foo/me/page.html") > 0
-            ).toBe(true);
-        });
-
-        it("Doesn't rebase data: urls", function () {
-            expect(
-                utils.rebaseURL("http://example.com/foo/", "data:image-base64gibberish")
-            ).toBe("data:image-base64gibberish");
-        });
-    });
-
     describe("removeDuplicateObjects", function () {
         it("removes removes duplicates inside an array of objects", function () {
             var objs = [];
