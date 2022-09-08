@@ -4,6 +4,28 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.1.1](https://github.com/Patternslib/patterns/compare/9.1.0...9.1.1) (2022-09-08)
+
+
+### Bug Fixes
+
+
+* **pat display time:** Fix relative time for timezone corner cases. ([3c62c65](https://github.com/Patternslib/patterns/commit/3c62c658099be5ef155069cac943bffc3959bf4e))For date-only from-now, just use Intl.RelativeTimeFormat to avoid any
+timezone calculation mistakes. This prevents a case where in days in the
+future or past were shown as 9 days due to timezone differences in some
+circumstances.
+
+
+### Maintenance
+
+
+* **pat display time:** Extend the demo. ([2bd1ff6](https://github.com/Patternslib/patterns/commit/2bd1ff6f970c602a84c4e65548e977ddd9b75f1a))
+
+* **pat inject:** Correct docs that the history parameter does not have record set as default. ([7f06eda](https://github.com/Patternslib/patterns/commit/7f06edaa873d67c1105838c989ed9011e73c9cfd))
+
+* **pat inject:** Re-organize the demos. ([3d3e8c3](https://github.com/Patternslib/patterns/commit/3d3e8c356d9156757719a75c2b452a2d3ac44703))- Create dedicated ``demo`` folder and move demo files in there.
+- Remove inject-history folder and move demo into inject.
+
 ## [9.1.0](https://github.com/Patternslib/patterns/compare/9.1.0-beta.4...9.1.0) (2022-09-06)
 
 
