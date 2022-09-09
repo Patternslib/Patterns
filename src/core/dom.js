@@ -94,10 +94,10 @@ const show = (el) => {
  */
 const find_parents = (el, selector) => {
     const ret = [];
-    let parent = el?.parentNode?.closest?.(selector);
+    let parent = el;
     while (parent) {
-        ret.push(parent);
         parent = parent.parentNode?.closest?.(selector);
+        if (parent) ret.push(parent);
     }
     return ret;
 };
