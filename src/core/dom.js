@@ -4,8 +4,14 @@ import events from "./events";
 const DATA_PREFIX = "__patternslib__data_prefix__";
 const DATA_STYLE_DISPLAY = "__patternslib__style__display";
 
+/**
+ * Return an array of DOM nodes.
+ *
+ * @param {Node|NodeList|jQuery} nodes - The DOM node to start the search from.
+ *
+ * @returns {Array} - An array of DOM nodes.
+ */
 const toNodeArray = (nodes) => {
-    // Return an array of DOM nodes
     if (nodes.jquery || nodes instanceof NodeList) {
         // jQuery or document.querySelectorAll
         nodes = [...nodes];
@@ -15,10 +21,15 @@ const toNodeArray = (nodes) => {
     return nodes;
 };
 
+/**
+ * Like querySelectorAll but including the element where it starts from.
+ * Returns an Array, not a NodeList
+ *
+ * @param {Node} el - The DOM node to start the search from.
+ *
+ * @returns {Array} - The DOM nodes found.
+ */
 const querySelectorAllAndMe = (el, selector) => {
-    // Like querySelectorAll but including the element where it starts from.
-    // Returns an Array, not a NodeList
-
     if (!el) {
         return [];
     }
@@ -30,16 +41,23 @@ const querySelectorAllAndMe = (el, selector) => {
     return all;
 };
 
+/**
+ * Wrap a element with a wrapper element.
+ *
+ * @param {Node} el - The DOM node to wrap.
+ */
 const wrap = (el, wrapper) => {
-    // Wrap a element with a wrapper element.
     // See: https://stackoverflow.com/a/13169465/1337474
-
     el.parentNode.insertBefore(wrapper, el);
     wrapper.appendChild(el);
 };
 
+/**
+ * Hides the element with ``display: none`` and stores the current display value.
+ *
+ * @param {Node} el - The DOM node to hide.
+ */
 const hide = (el) => {
-    // Hides the element with ``display: none``
     if (el.style.display === "none") {
         // Nothing to do.
         return;
@@ -51,20 +69,30 @@ const hide = (el) => {
     el.setAttribute("hidden", "");
 };
 
+/**
+ * Shows element by removing ``display: none`` and restoring the display value
+ * to whatever it was before.
+ *
+ * @param {Node} el - The DOM node to show.
+ */
 const show = (el) => {
-    // Shows element by removing ``display: none`` and restoring the display
-    // value to whatever it was before.
     const val = el[DATA_STYLE_DISPLAY] || null;
     el.style.display = val;
     delete el[DATA_STYLE_DISPLAY];
     el.removeAttribute("hidden", "");
 };
 
+/**
+ * Return all direct parents of ``el`` matching ``selector``.
+ * This matches against all parents but not the element itself.
+ * The order of elements is from the search starting point up to higher
+ * DOM levels.
+ *
+ * @param {Node} el - The DOM node to start the search from.
+ * @param {String} selector - CSS selector to match against.
+ * @returns {Array} - List of matching DOM nodes.
+ */
 const find_parents = (el, selector) => {
-    // Return all direct parents of ``el`` matching ``selector``.
-    // This matches against all parents but not the element itself.
-    // The order of elements is from the search starting point up to higher
-    // DOM levels.
     const ret = [];
     let parent = el?.parentNode?.closest?.(selector);
     while (parent) {
@@ -74,15 +102,32 @@ const find_parents = (el, selector) => {
     return ret;
 };
 
+/**
+ * Find an element in the whole DOM tree if the selector is an ID selector,
+ * otherwise use the given element as the starting point.
+ *
+ * @param {Node} el - The DOM node to start the search from.
+ * @param {String} selector - The CSS selector to search for.
+ *
+ * @returns {NodeList} - The DOM nodes found.
+ *
+ */
 const find_scoped = (el, selector) => {
     // If the selector starts with an object id do a global search,
     // otherwise do a local search.
     return (selector.indexOf("#") === 0 ? document : el).querySelectorAll(selector);
 };
 
+/**
+ * Return all HTMLElement parents of el, starting from the direct parent of el.
+ * The document itself is excluded because it's not a real DOM node.
+ *
+ * @param {Node} el - The DOM node to start the search from.
+ *
+ * @returns {Array} - The DOM nodes found.
+ */
 const get_parents = (el) => {
     // Return all HTMLElement parents of el, starting from the direct parent of el.
-    // The document itself is excluded because it's not a real DOM node.
     const parents = [];
     let parent = el?.parentNode;
     while (parent) {
@@ -211,7 +256,7 @@ const find_scroll_container = (el, direction, fallback = document.body) => {
  * @param name {String} - The name of the variable. Note - this is stored on
  *                        the DOM node prefixed with the DATA_PREFIX.
  * @param default_value {Any} - Optional default value.
- * @return {Any} - The value which is stored on the DOM node.
+ * @returns {Any} - The value which is stored on the DOM node.
  */
 const get_data = (el, name, default_value) => {
     return el[`${DATA_PREFIX}${name}`] || default_value;
