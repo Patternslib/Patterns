@@ -5,38 +5,38 @@ import utils from "../../core/utils";
 
 describe("Navigation pattern tests", function () {
     beforeEach(function () {
-        var page_wrapper = document.createElement("div");
+        const page_wrapper = document.createElement("div");
         page_wrapper.setAttribute("id", "page_wrapper");
 
-        var injection_content = document.createElement("article");
+        const injection_content = document.createElement("article");
         injection_content.setAttribute("id", "injection_content");
         injection_content.appendChild(document.createTextNode("test content"));
         page_wrapper.appendChild(injection_content);
 
-        var injection_area = document.createElement("div");
+        const injection_area = document.createElement("div");
         injection_area.setAttribute("id", "injection_area");
         page_wrapper.appendChild(injection_area);
 
         // Nav 1
-        var nav1 = document.createElement("ul");
+        const nav1 = document.createElement("ul");
         nav1.setAttribute("class", "pat-navigation nav1");
 
-        var w1 = document.createElement("li");
+        const w1 = document.createElement("li");
         w1.setAttribute("class", "w1");
         nav1.appendChild(w1);
 
-        var a1 = document.createElement("a");
+        const a1 = document.createElement("a");
         a1.setAttribute("href", "#injection_content");
         a1.setAttribute("class", "pat-inject a1");
         a1.setAttribute("data-pat-inject", "target: #injection_area");
         a1.appendChild(document.createTextNode("link a1"));
         w1.appendChild(a1);
 
-        var w11 = document.createElement("li");
+        const w11 = document.createElement("li");
         w11.setAttribute("class", "w11");
         w1.appendChild(w11);
 
-        var a11 = document.createElement("a");
+        const a11 = document.createElement("a");
         a11.setAttribute("href", "#injection_content");
         a11.setAttribute("class", "pat-inject a11");
         a11.setAttribute("data-pat-inject", "target: #injection_area");
@@ -46,29 +46,29 @@ describe("Navigation pattern tests", function () {
         page_wrapper.appendChild(nav1);
 
         // Nav 2
-        var nav2 = document.createElement("nav");
+        const nav2 = document.createElement("nav");
         nav2.setAttribute("class", "pat-navigation nav2");
         nav2.setAttribute(
             "data-pat-navigation",
             "item-wrapper: div; in-path-class: in-path; current-class: active"
         );
 
-        var w2 = document.createElement("div");
+        const w2 = document.createElement("div");
         w2.setAttribute("class", "w2");
         nav2.appendChild(w2);
 
-        var a2 = document.createElement("a");
+        const a2 = document.createElement("a");
         a2.setAttribute("href", "#injection_content");
         a2.setAttribute("class", "pat-inject a2");
         a2.setAttribute("data-pat-inject", "target: #injection_area");
         a2.appendChild(document.createTextNode("link a2"));
         w2.appendChild(a2);
 
-        var w21 = document.createElement("div");
+        const w21 = document.createElement("div");
         w21.setAttribute("class", "w21");
         w2.appendChild(w21);
 
-        var a21 = document.createElement("a");
+        const a21 = document.createElement("a");
         a21.setAttribute("href", "#injection_content");
         a21.setAttribute("class", "pat-inject a21");
         a21.setAttribute("data-pat-inject", "target: #injection_area");
@@ -84,19 +84,19 @@ describe("Navigation pattern tests", function () {
     });
 
     it("Test 1: Test roundtrip", async () => {
-        var injection_area = document.querySelector("#injection_area");
+        const injection_area = document.querySelector("#injection_area");
 
-        var nav1 = document.querySelector(".nav1");
-        var w1 = nav1.querySelector(".w1");
-        var a1 = nav1.querySelector(".a1");
-        var w11 = nav1.querySelector(".w11");
-        var a11 = nav1.querySelector(".a11");
+        const nav1 = document.querySelector(".nav1");
+        const w1 = nav1.querySelector(".w1");
+        const a1 = nav1.querySelector(".a1");
+        const w11 = nav1.querySelector(".w11");
+        const a11 = nav1.querySelector(".a11");
 
-        var nav2 = document.querySelector(".nav2");
-        var w2 = nav2.querySelector(".w2");
-        var a2 = nav2.querySelector(".a2");
-        var w21 = nav2.querySelector(".w21");
-        var a21 = nav2.querySelector(".a21");
+        const nav2 = document.querySelector(".nav2");
+        const w2 = nav2.querySelector(".w2");
+        const a2 = nav2.querySelector(".a2");
+        const w21 = nav2.querySelector(".w21");
+        const a21 = nav2.querySelector(".a21");
 
         Registry.scan("body");
         await utils.timeout(1); // wait a tick for async to settle.
@@ -161,15 +161,15 @@ describe("Navigation pattern tests", function () {
     });
 
     it("Test 2: Auto load current", async () => {
-        var injection_area = document.querySelector("#injection_area");
+        const injection_area = document.querySelector("#injection_area");
 
-        var nav2 = document.querySelector(".nav2");
+        const nav2 = document.querySelector(".nav2");
         nav2.classList.add("navigation-load-current");
 
-        var w2 = nav2.querySelector(".w2");
-        var a2 = nav2.querySelector(".a2");
-        var w21 = nav2.querySelector(".w21");
-        var a21 = nav2.querySelector(".a21");
+        const w2 = nav2.querySelector(".w2");
+        const a2 = nav2.querySelector(".a2");
+        const w21 = nav2.querySelector(".w21");
+        const a21 = nav2.querySelector(".a21");
         a21.classList.add("active");
 
         Registry.scan("body");

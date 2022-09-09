@@ -93,15 +93,10 @@
             <div id="content-tab-2">Example 2 Content will appear here</div>
         </section>
 
-        <section class="injection_content">
-            <div id="inject-tab-1">Content for tab 1</div>
-
-            <div id="inject-tab-2">Content for tab 2</div>
-
-            <div id="inject-tab-1-1">Content for tab 1.1</div>
-
-            <div id="inject-tab-1-2">Content for tab 1.2</div>
-        </section>
+        <template id="inject-tab-1">Content for tab 1</template>
+        <template id="inject-tab-2">Content for tab 2</template>
+        <template id="inject-tab-1-1">Content for tab 1.1</template>
+        <template id="inject-tab-1-2">Content for tab 1.2</template>
 
         <style>
             /* example 1 styles */
@@ -139,9 +134,6 @@
                 font-size: 2em;
                 display: inline-block;
                 vertical-align: top;
-            }
-            .injection_content {
-                display: none;
             }
         </style>
     </body>

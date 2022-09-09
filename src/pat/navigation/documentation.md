@@ -1,11 +1,14 @@
 ## Description
 
-Marks navigation paths with "in-path" and "current" classes and allows of auto-injecting content when menu item was marked with the "current" class.
+Marks navigation paths with "in-path" and "current" classes.
+
 
 ## Documentation
 
 The "in-path" and "current" classes and the "item-wrapper" are configurable.
-Use the "navigation-load-current" class on the navigation wrapper element to content from menu items marked with the "current" class.
+
+You can automatically load the navigation item marked with the `current` class by adding the class `navigation-load-current` along with `pat-navigation` on the pattern element.
+This would invoke a `click` event on the current navigation item and that can be used to load content via `pat-inject`.
 
 For examples see index.html.
 
