@@ -18,7 +18,13 @@ export default Base.extend({
 
         this.init_listeners();
 
-        this.mark_current();
+        if (this.el.querySelector(this.options.currentClass)) {
+            log.debug("Mark navigation items based on existing current class");
+            this.mark_current();
+        } else {
+            log.debug("Mark navigation items based on URL pattern.");
+            this.mark_items_url();
+        }
     },
 
     /**
@@ -50,7 +56,14 @@ export default Base.extend({
         // Re-init when navigation changes.
         const observer = new MutationObserver(() => {
             this.init_listeners();
-            this.mark_current();
+
+            if (this.el.querySelector(this.options.currentClass)) {
+                log.debug("Mark navigation items based on existing current class");
+                this.mark_current();
+            } else {
+                log.debug("Mark navigation items based on URL pattern.");
+                this.mark_items_url();
+            }
         });
         observer.observe(this.el, {
             childList: true,
@@ -124,6 +137,59 @@ export default Base.extend({
     },
 
     /**
+     * Mark all navigation items that are in the path of the current url.
+     *
+     * @param {String} [url] - The url to check against.
+     *                         If not given, the current url will be used.
+     */
+    mark_items_url(url) {
+        const current_url = url || this.base_url();
+        const current_url_prepared = this.prepare_url(current_url);
+
+        const portal_url = this.prepare_url(document.body.dataset?.portalUrl);
+        const nav_items = this.el.querySelectorAll("a");
+
+        for (const nav_item of nav_items) {
+            // Get the nav item's url and rebase it against the current url to
+            // make absolute or relative URLs FQDN URLs.
+            const nav_url = this.prepare_url(
+                new URL(nav_item.getAttribute("href", ""), current_url)?.href
+            );
+
+            const wrapper = this.options.itemWrapper
+                ? nav_item.closest(this.options.itemWrapper)
+                : nav_item.parentNode;
+
+            if (nav_url === current_url_prepared) {
+                nav_item.classList.add(this.options.currentClass);
+                wrapper.classList.add(this.options.currentClass);
+            } else if (
+                // Compare the current navigation item url with a slash at the
+                // end - if it is "inPath" it must have a slash in it.
+                current_url_prepared.indexOf(`${nav_url}/`) === 0 &&
+                // Do not set inPath for the "Home" url, as this would always
+                // be in the path.
+                nav_url !== portal_url
+            ) {
+                nav_item.classList.add(this.options.inPathClass);
+                wrapper.classList.add(this.options.inPathClass);
+            } else {
+                // Not even in path.
+                continue;
+            }
+
+            // The path was at least found in the current url, so we need to
+            // check the input-openers within the path
+            // Find the first input which is the correct one, even if this
+            // navigation item has many children.
+            // These hidden checkboxes are used to open the navigation item for
+            // mobile navigation.
+            const check = wrapper.querySelector("input");
+            if (check) check.checked = true;
+        }
+    },
+
+    /**
      * Clear all navigation items from the inPath and current classes
      */
     clear_items() {
@@ -134,5 +200,32 @@ export default Base.extend({
             item.classList.remove(this.options.inPathClass);
             item.classList.remove(this.options.currentClass);
         }
+    },
+
+    /**
+     * Prepare a URL for comparison.
+     * Plone-specific "/view" and "@@" will be removed as well as a trailing slash.
+     *
+     * @param {String} url - The url to prepare.
+     *
+     * @returns {String} - The prepared url.
+     */
+    prepare_url(url) {
+        return url?.replace("/view", "").replaceAll("@@", "").replace(/\/$/, "");
+    },
+
+    /**
+     * Get the URL of the current page.
+     * If a ``canonical`` meta tag is found, return this.
+     * Otherwise return the window.location URL.
+     * Already prepare the URL for comparison.
+     *
+     * @returns {String} - The current URL.
+     */
+    base_url() {
+        return this.prepare_url(
+            document.querySelector('head link[rel="canonical"]')?.href ||
+                window.location.href
+        );
     },
 });
