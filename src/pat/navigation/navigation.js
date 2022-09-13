@@ -114,6 +114,9 @@ export default Base.extend({
         while (path_el) {
             if (!path_el.matches(`.${this.options.currentClass}`)) {
                 path_el.classList.add(this.options.inPathClass);
+                for (const it of [...path_el.children].filter((it) => it.matches("a"))) {
+                    it.classList.add(this.options.inPathClass);
+                }
                 log.debug("Marked item as in-path", path_el);
             }
             path_el = this.get_parent(path_el, this.options.itemWrapper, this.el);

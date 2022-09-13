@@ -88,7 +88,7 @@ describe("Navigation pattern tests", function () {
         expect(w1.classList.contains("current")).toBeFalsy();
         expect(w1.classList.contains("navigation-in-path")).toBeTruthy();
         expect(a1.classList.contains("current")).toBeFalsy();
-        expect(a1.classList.contains("navigation-in-path")).toBeFalsy();
+        expect(a1.classList.contains("navigation-in-path")).toBeTruthy();
         expect(w11.classList.contains("current")).toBeTruthy();
         expect(w11.classList.contains("navigation-in-path")).toBeFalsy();
         expect(a11.classList.contains("current")).toBeTruthy();
@@ -118,7 +118,7 @@ describe("Navigation pattern tests", function () {
         expect(w2.classList.contains("active")).toBeFalsy();
         expect(w2.classList.contains("in-path")).toBeTruthy();
         expect(a2.classList.contains("active")).toBeFalsy();
-        expect(a2.classList.contains("in-path")).toBeFalsy();
+        expect(a2.classList.contains("in-path")).toBeTruthy();
         expect(w21.classList.contains("active")).toBeTruthy();
         expect(w21.classList.contains("in-path")).toBeFalsy();
         expect(a21.classList.contains("active")).toBeTruthy();
@@ -144,7 +144,7 @@ describe("Navigation pattern tests", function () {
         expect(w2.classList.contains("active")).toBeFalsy();
         expect(w2.classList.contains("in-path")).toBeTruthy();
         expect(a2.classList.contains("active")).toBeFalsy();
-        expect(a2.classList.contains("in-path")).toBeFalsy();
+        expect(a2.classList.contains("in-path")).toBeTruthy();
         expect(w21.classList.contains("active")).toBeTruthy();
         expect(w21.classList.contains("in-path")).toBeFalsy();
         expect(a21.classList.contains("active")).toBeTruthy();
@@ -193,7 +193,7 @@ describe("Navigation pattern tests - no predefined structure", function () {
         expect(w1.classList.contains("current")).toBeFalsy();
         expect(w1.classList.contains("navigation-in-path")).toBeTruthy();
         expect(a1.classList.contains("current")).toBeFalsy();
-        expect(a1.classList.contains("navigation-in-path")).toBeFalsy();
+        expect(a1.classList.contains("navigation-in-path")).toBeTruthy();
         expect(w11.classList.contains("current")).toBeTruthy();
         expect(w11.classList.contains("navigation-in-path")).toBeFalsy();
         expect(a11.classList.contains("current")).toBeTruthy();
