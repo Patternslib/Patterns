@@ -1,86 +1,51 @@
-import "./navigation";
 import "../inject/inject";
+import Pattern from "./navigation";
 import Registry from "../../core/registry";
 import utils from "../../core/utils";
 
 describe("Navigation pattern tests", function () {
     beforeEach(function () {
-        const page_wrapper = document.createElement("div");
-        page_wrapper.setAttribute("id", "page_wrapper");
-
-        const injection_content = document.createElement("article");
-        injection_content.setAttribute("id", "injection_content");
-        injection_content.appendChild(document.createTextNode("test content"));
-        page_wrapper.appendChild(injection_content);
-
-        const injection_area = document.createElement("div");
-        injection_area.setAttribute("id", "injection_area");
-        page_wrapper.appendChild(injection_area);
-
-        // Nav 1
-        const nav1 = document.createElement("ul");
-        nav1.setAttribute("class", "pat-navigation nav1");
-
-        const w1 = document.createElement("li");
-        w1.setAttribute("class", "w1");
-        nav1.appendChild(w1);
-
-        const a1 = document.createElement("a");
-        a1.setAttribute("href", "#injection_content");
-        a1.setAttribute("class", "pat-inject a1");
-        a1.setAttribute("data-pat-inject", "target: #injection_area");
-        a1.appendChild(document.createTextNode("link a1"));
-        w1.appendChild(a1);
-
-        const w11 = document.createElement("li");
-        w11.setAttribute("class", "w11");
-        w1.appendChild(w11);
-
-        const a11 = document.createElement("a");
-        a11.setAttribute("href", "#injection_content");
-        a11.setAttribute("class", "pat-inject a11");
-        a11.setAttribute("data-pat-inject", "target: #injection_area");
-        a11.appendChild(document.createTextNode("link a11"));
-        w11.appendChild(a11);
-
-        page_wrapper.appendChild(nav1);
-
-        // Nav 2
-        const nav2 = document.createElement("nav");
-        nav2.setAttribute("class", "pat-navigation nav2");
-        nav2.setAttribute(
-            "data-pat-navigation",
-            "item-wrapper: div; in-path-class: in-path; current-class: active"
-        );
-
-        const w2 = document.createElement("div");
-        w2.setAttribute("class", "w2");
-        nav2.appendChild(w2);
-
-        const a2 = document.createElement("a");
-        a2.setAttribute("href", "#injection_content");
-        a2.setAttribute("class", "pat-inject a2");
-        a2.setAttribute("data-pat-inject", "target: #injection_area");
-        a2.appendChild(document.createTextNode("link a2"));
-        w2.appendChild(a2);
-
-        const w21 = document.createElement("div");
-        w21.setAttribute("class", "w21");
-        w2.appendChild(w21);
-
-        const a21 = document.createElement("a");
-        a21.setAttribute("href", "#injection_content");
-        a21.setAttribute("class", "pat-inject a21");
-        a21.setAttribute("data-pat-inject", "target: #injection_area");
-        a21.appendChild(document.createTextNode("link a21"));
-        w21.appendChild(a21);
-
-        page_wrapper.appendChild(nav2);
-
-        document.body.appendChild(page_wrapper);
+        document.body.innerHTML = `
+            <div id="page_wrapper">
+                <article id="injection_content">test content</article>
+                <div id="injection_area"></div>
+                <ul class="pat-navigation nav1">
+                    <li class="w1">
+                        <a
+                            href="#injection_content"
+                            class="pat-inject a1"
+                            data-pat-inject="target: #injection_area">link a1</a>
+                        <ul class="nav11">
+                            <li class="w11">
+                                <a
+                                    href="#injection_content"
+                                    class="pat-inject a11"
+                                    data-pat-inject="target: #injection_area">link a11</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <nav
+                    class="pat-navigation nav2"
+                    data-pat-navigation="item-wrapper: div; in-path-class: in-path; current-class: active">
+                    <div class="w2">
+                        <a
+                            href="#injection_content"
+                            class="pat-inject a2"
+                            data-pat-inject="target: #injection_area">link a2</a>
+                        <div class="w21">
+                            <a
+                                href="#injection_content"
+                                class="pat-inject a21"
+                                data-pat-inject="target: #injection_area">link a21</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        `;
     });
     afterEach(function () {
-        document.body.removeChild(document.querySelector("#page_wrapper"));
+        document.body.innerHTML = "";
     });
 
     it("Test 1: Test roundtrip", async () => {

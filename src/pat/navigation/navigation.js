@@ -15,133 +15,121 @@ export default Base.extend({
 
     init() {
         this.options = parser.parse(this.el, this.options);
+
+        this.init_listeners();
+
+        this.mark_current();
+    },
+
+    /**
+     * Initialize listeners for the navigation.
+     */
+    init_listeners() {
         const current = this.options.currentClass;
 
-        // Automatically load the ``.current`` item.
+        // Mark the navigation items after pat-inject triggered within this navigation menu.
+        this.$el.on("patterns-inject-triggered", "a", (ev) => {
+            // Remove all set current classes
+            this.clear_items();
+
+            // Mark the current item
+            this.mark_current(ev.target);
+        });
+
+        // Automatically and recursively load the ``.current`` item.
         if (this.el.classList.contains("navigation-load-current")) {
+            // Check for current elements injected here.
+            this.$el.on("patterns-injected-scanned", (ev) => {
+                const target = ev.target;
+                if (target.matches(`a.${current}`)) target.click();
+                else if (target.matches(`.${current}`)) target.querySelector("a")?.click(); // prettier-ignore
+            });
             this.el.querySelector(`a.${current}, .${current} a`)?.click();
-            // check for current elements injected here
-            this.$el.on(
-                "patterns-injected-scanned",
-                function (ev) {
-                    const target = ev.target;
-                    if (target.matches(`a.${current}`)) target.click();
-                    if (target.matches(`.${current}`))
-                        target.querySelector("a")?.click();
-                    this._updatenavpath();
-                }.bind(this)
-            );
         }
 
-        // Mark the navigation items after pat-inject triggered within this navigation menu.
-        this.$el.on(
-            "patterns-inject-triggered",
-            "a",
-            function (ev) {
-                const target = ev.target;
-                // Remove all set current classes
-                this.el.querySelectorAll(`.${current}`).forEach((it) => {
-                    it.classList.remove(current);
-                });
-                // Set current class on target
-                target.classList.add(current);
-                // Also set the current class on the item wrapper.
-                target.closest(this.options.itemWrapper)?.classList.add(current);
-                this._updatenavpath();
-            }.bind(this)
-        );
-
         // Re-init when navigation changes.
-        const observer = new MutationObserver(this._initialSet.bind(this));
+        const observer = new MutationObserver(() => {
+            this.init_listeners();
+            this.mark_current();
+        });
         observer.observe(this.el, {
             childList: true,
             subtree: true,
             attributes: false,
             characterData: false,
         });
-
-        // Initialize.
-        this._initialSet();
     },
 
-    _initialSet() {
-        const current = this.options.currentClass;
-
-        // Set current class if it is not set
-        if (this.el.querySelectorAll(`.${current}`).length === 0) {
-            const a_els = this.el.querySelectorAll("a");
-            for (const a_el of a_els) {
-                const li = a_el.closest(this.options.itemWrapper);
-                const url = a_el.getAttribute("href");
-                if (typeof url === "undefined") {
-                    return;
-                }
-                const path = this._pathfromurl(url);
-                log.debug(`checking url: ${url}, extracted path: ${path}`);
-                if (this._match(window.location.pathname, path)) {
-                    log.debug("found match", li);
-                    a_el.classList.add(current);
-                    li.classList.add(current);
-                }
+    /**
+     * Get a matching parent or stop at stop_el.
+     *
+     * @param {Node} item - The item to start with.
+     * @param {String} selector - The CSS selector to search parent elements for.
+     * @param {Node} stop_el - The element to stop at.
+     *
+     * @returns {Node} - The matching parent or null.
+     */
+    get_parent(item, selector, stop_el) {
+        let matching_parent = item.parentNode;
+        while (matching_parent) {
+            if (matching_parent === stop_el || matching_parent === document) {
+                return null;
             }
+            if (matching_parent.matches(selector)) {
+                return matching_parent;
+            }
+            matching_parent = matching_parent.parentNode;
         }
-
-        // Set current class on item-wrapper, if not set.
-        if (
-            this.options.itemWrapper &&
-            this.el.querySelectorAll(`.${current}`).length > 0 &&
-            this.el.querySelectorAll(`${this.options.itemWrapper}.${current}`).length ===
-                0
-        ) {
-            this.el
-                .querySelector(`a.${current}`)
-                .closest(this.options.itemWrapper)
-                ?.classList.add(current);
-        }
-
-        this._updatenavpath();
     },
 
-    _updatenavpath() {
-        const in_path = this.options.inPathClass;
-        if (!in_path) {
-            return;
+    /**
+     * Mark an item and it's wrapper as current.
+     *
+     * @param {Node} [current_el] - The item to mark as current.
+     *                              If not given, the element's tree will be searched for an existing current item.
+     *                              This is to also mark the wrapper and it's path appropriately.
+     */
+    mark_current(current_el) {
+        const current_els = current_el
+            ? [current_el]
+            : document.querySelectorAll(`.current > a, a.current`);
+
+        for (const item of current_els) {
+            item.classList.add(this.options.currentClass);
+            const wrapper = item.closest(this.options.itemWrapper);
+            wrapper?.classList.add(this.options.currentClass);
+            this.mark_in_path(wrapper || item);
+            log.debug("Statically set current item marked as current", item);
         }
-        this.el.querySelectorAll(`.${in_path}`).forEach((it) => {
-            it.classList.remove(in_path);
-        });
-        this.el
-            .querySelectorAll(
-                `${this.options.itemWrapper}:not(.${this.options.currentClass})`
-            )
-            .forEach((it) => {
-                if (it.querySelector(`.${this.options.currentClass}`)) {
-                    it.classList.add(in_path);
-                }
-            });
     },
 
-    _match(curpath, path) {
-        if (!path) {
-            log.debug("path empty");
-            return false;
+    /**
+     * Mark all parent navigation elements as in path.
+     *
+     * @param {Node} start_el - The element to start with.
+     *
+     */
+    mark_in_path(start_el) {
+        let path_el = this.get_parent(start_el, this.options.itemWrapper, this.el);
+        while (path_el) {
+            if (!path_el.matches(`.${this.options.currentClass}`)) {
+                path_el.classList.add(this.options.inPathClass);
+                log.debug("Marked item as in-path", path_el);
+            }
+            path_el = this.get_parent(path_el, this.options.itemWrapper, this.el);
         }
-        // current path needs to end in the anchor's path
-        if (path !== curpath.slice(-path.length)) {
-            log.debug(`Current path ${curpath} does not end in ${path}`);
-            return false;
-        }
-        // XXX: we might need more exclusion tests
-        return true;
     },
 
-    _pathfromurl(url) {
-        const path = url.split("#")[0].split("://");
-        if (path.length > 2) {
-            log.error("weird url", url);
-            return "";
+    /**
+     * Clear all navigation items from the inPath and current classes
+     */
+    clear_items() {
+        const items = this.el.querySelectorAll(
+            `.${this.options.inPathClass}, .${this.options.currentClass}`
+        );
+        for (const item of items) {
+            item.classList.remove(this.options.inPathClass);
+            item.classList.remove(this.options.currentClass);
         }
-        if (path.length === 1) return path[0];
-        return path[1].split("/").slice(1).join("/");
     },
 });
