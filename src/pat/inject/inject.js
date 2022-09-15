@@ -34,7 +34,7 @@ parser.addArgument("loading-class", "injecting"); // Add a class to the target w
 parser.addArgument("executing-class", "executing"); // Add a class to the element while content is still loading.
 parser.addArgument("executed-class", "executed"); // Add a class to the element when content is loaded.
 parser.addArgument("class"); // Add a class to the injected content.
-parser.addArgument("history");
+parser.addArgument("history", "none", ["none", "record"]);
 parser.addArgument("push-marker");
 parser.addArgument("scroll");
 // XXX: this should not be here but the parser would bail on
