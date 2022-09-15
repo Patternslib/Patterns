@@ -1,6 +1,7 @@
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 import logging from "../../core/logging";
+import events from "../../core/events";
 
 const log = logging.getLogger("navigation");
 
@@ -41,6 +42,17 @@ export default Base.extend({
             // Mark the current item
             this.mark_current(ev.target);
         });
+
+        const items_non_inject = this.el.querySelectorAll("a:not(.pat-inject)");
+        for (const it of items_non_inject) {
+            events.add_event_listener(it, "click", "pat_nav_item_non_inject", (ev) => {
+                // Remove all set current classes
+                this.clear_items();
+
+                // Mark the current item
+                this.mark_current(ev.target);
+            });
+        }
 
         // Automatically and recursively load the ``.current`` item.
         if (this.el.classList.contains("navigation-load-current")) {
