@@ -35,6 +35,13 @@ module.exports = () => {
             name: "patternslib",
             remote_entry: config.entry["bundle.min"],
             dependencies: package_json.dependencies,
+            shared: {
+                jquery: {
+                    singleton: true,
+                    requiredVersion: package_json.dependencies["jquery"],
+                    eager: true,
+                },
+            },
         })
     );
 
