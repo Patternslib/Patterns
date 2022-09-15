@@ -12,7 +12,7 @@ parser.addArgument("current-class", "current");
 
 export default Base.extend({
     name: "navigation",
-    trigger: "nav, .navigation, .pat-navigation",
+    trigger: ".pat-navigation",
 
     init() {
         this.options = parser.parse(this.el, this.options);
