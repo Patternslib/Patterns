@@ -7,20 +7,23 @@ export default Base.extend({
 
     init() {
         this.el.addEventListener("click", (e) => {
-            // Find the first element which has a close-panel.
+            // Find the first element which has a close-panel or is a dialog.
             // This should the panel-root itself.
-            const panel = this.el.closest(".has-close-panel");
+            const panel = this.el.closest(".has-close-panel, dialog");
 
             if (!panel) {
-                // No ``.has-close-panel``. Exiting.
+                // Nothing to do. Exiting.
                 return;
+            } else if (panel.tagName === "DIALOG") {
+                // Close the dialog.
+                panel.close();
+            } else if (panel.classList.contains("has-close-panel")) {
+                // Get the close panel method.
+                const close_method = dom.get_data(panel, "close_panel");
+
+                // Now execute the method and close the panel.
+                close_method && close_method(e);
             }
-
-            // Get the close panel method.
-            const close_method = dom.get_data(panel, "close_panel");
-
-            // Now execute the method and close the panel.
-            close_method && close_method(e);
         });
     },
 });

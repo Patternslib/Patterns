@@ -40,4 +40,22 @@ describe("pat close-panel", function () {
         await utils.timeout(1); // wait a tick async to settle.
         expect(document.querySelectorAll(".pat-modal").length).toBe(0);
     });
+
+    it("Closes a dialog's panel.", function () {
+        document.body.innerHTML = `
+              <dialog open>
+                <button class="close-panel">close</button>
+              </div>
+            `;
+
+        registry.scan(document.body); // Also need to instantiate close-panel
+
+        const dialog = document.querySelector("dialog");
+
+        expect(dialog.open).toBe(true);
+
+        document.querySelector(".close-panel").click();
+
+        expect(dialog.open).toBe(false);
+    });
 });
