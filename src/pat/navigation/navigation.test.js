@@ -1,102 +1,67 @@
-import "./navigation";
 import "../inject/inject";
+import Pattern from "./navigation";
 import Registry from "../../core/registry";
 import utils from "../../core/utils";
 
 describe("Navigation pattern tests", function () {
     beforeEach(function () {
-        var page_wrapper = document.createElement("div");
-        page_wrapper.setAttribute("id", "page_wrapper");
-
-        var injection_content = document.createElement("article");
-        injection_content.setAttribute("id", "injection_content");
-        injection_content.appendChild(document.createTextNode("test content"));
-        page_wrapper.appendChild(injection_content);
-
-        var injection_area = document.createElement("div");
-        injection_area.setAttribute("id", "injection_area");
-        page_wrapper.appendChild(injection_area);
-
-        // Nav 1
-        var nav1 = document.createElement("ul");
-        nav1.setAttribute("class", "pat-navigation nav1");
-
-        var w1 = document.createElement("li");
-        w1.setAttribute("class", "w1");
-        nav1.appendChild(w1);
-
-        var a1 = document.createElement("a");
-        a1.setAttribute("href", "#injection_content");
-        a1.setAttribute("class", "pat-inject a1");
-        a1.setAttribute("data-pat-inject", "target: #injection_area");
-        a1.appendChild(document.createTextNode("link a1"));
-        w1.appendChild(a1);
-
-        var w11 = document.createElement("li");
-        w11.setAttribute("class", "w11");
-        w1.appendChild(w11);
-
-        var a11 = document.createElement("a");
-        a11.setAttribute("href", "#injection_content");
-        a11.setAttribute("class", "pat-inject a11");
-        a11.setAttribute("data-pat-inject", "target: #injection_area");
-        a11.appendChild(document.createTextNode("link a11"));
-        w11.appendChild(a11);
-
-        page_wrapper.appendChild(nav1);
-
-        // Nav 2
-        var nav2 = document.createElement("nav");
-        nav2.setAttribute("class", "pat-navigation nav2");
-        nav2.setAttribute(
-            "data-pat-navigation",
-            "item-wrapper: div; in-path-class: in-path; current-class: active"
-        );
-
-        var w2 = document.createElement("div");
-        w2.setAttribute("class", "w2");
-        nav2.appendChild(w2);
-
-        var a2 = document.createElement("a");
-        a2.setAttribute("href", "#injection_content");
-        a2.setAttribute("class", "pat-inject a2");
-        a2.setAttribute("data-pat-inject", "target: #injection_area");
-        a2.appendChild(document.createTextNode("link a2"));
-        w2.appendChild(a2);
-
-        var w21 = document.createElement("div");
-        w21.setAttribute("class", "w21");
-        w2.appendChild(w21);
-
-        var a21 = document.createElement("a");
-        a21.setAttribute("href", "#injection_content");
-        a21.setAttribute("class", "pat-inject a21");
-        a21.setAttribute("data-pat-inject", "target: #injection_area");
-        a21.appendChild(document.createTextNode("link a21"));
-        w21.appendChild(a21);
-
-        page_wrapper.appendChild(nav2);
-
-        document.body.appendChild(page_wrapper);
+        document.body.innerHTML = `
+            <div id="page_wrapper">
+                <article id="injection_content">test content</article>
+                <div id="injection_area"></div>
+                <ul class="pat-navigation nav1">
+                    <li class="w1">
+                        <a
+                            href="#injection_content"
+                            class="pat-inject a1"
+                            data-pat-inject="target: #injection_area">link a1</a>
+                        <ul class="nav11">
+                            <li class="w11">
+                                <a
+                                    href="#injection_content"
+                                    class="pat-inject a11"
+                                    data-pat-inject="target: #injection_area">link a11</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <nav
+                    class="pat-navigation nav2"
+                    data-pat-navigation="item-wrapper: div; in-path-class: in-path; current-class: active">
+                    <div class="w2">
+                        <a
+                            href="#injection_content"
+                            class="pat-inject a2"
+                            data-pat-inject="target: #injection_area">link a2</a>
+                        <div class="w21">
+                            <a
+                                href="#injection_content"
+                                class="pat-inject a21"
+                                data-pat-inject="target: #injection_area">link a21</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        `;
     });
     afterEach(function () {
-        document.body.removeChild(document.querySelector("#page_wrapper"));
+        document.body.innerHTML = "";
     });
 
     it("Test 1: Test roundtrip", async () => {
-        var injection_area = document.querySelector("#injection_area");
+        const injection_area = document.querySelector("#injection_area");
 
-        var nav1 = document.querySelector(".nav1");
-        var w1 = nav1.querySelector(".w1");
-        var a1 = nav1.querySelector(".a1");
-        var w11 = nav1.querySelector(".w11");
-        var a11 = nav1.querySelector(".a11");
+        const nav1 = document.querySelector(".nav1");
+        const w1 = nav1.querySelector(".w1");
+        const a1 = nav1.querySelector(".a1");
+        const w11 = nav1.querySelector(".w11");
+        const a11 = nav1.querySelector(".a11");
 
-        var nav2 = document.querySelector(".nav2");
-        var w2 = nav2.querySelector(".w2");
-        var a2 = nav2.querySelector(".a2");
-        var w21 = nav2.querySelector(".w21");
-        var a21 = nav2.querySelector(".a21");
+        const nav2 = document.querySelector(".nav2");
+        const w2 = nav2.querySelector(".w2");
+        const a2 = nav2.querySelector(".a2");
+        const w21 = nav2.querySelector(".w21");
+        const a21 = nav2.querySelector(".a21");
 
         Registry.scan("body");
         await utils.timeout(1); // wait a tick for async to settle.
@@ -123,7 +88,7 @@ describe("Navigation pattern tests", function () {
         expect(w1.classList.contains("current")).toBeFalsy();
         expect(w1.classList.contains("navigation-in-path")).toBeTruthy();
         expect(a1.classList.contains("current")).toBeFalsy();
-        expect(a1.classList.contains("navigation-in-path")).toBeFalsy();
+        expect(a1.classList.contains("navigation-in-path")).toBeTruthy();
         expect(w11.classList.contains("current")).toBeTruthy();
         expect(w11.classList.contains("navigation-in-path")).toBeFalsy();
         expect(a11.classList.contains("current")).toBeTruthy();
@@ -153,7 +118,7 @@ describe("Navigation pattern tests", function () {
         expect(w2.classList.contains("active")).toBeFalsy();
         expect(w2.classList.contains("in-path")).toBeTruthy();
         expect(a2.classList.contains("active")).toBeFalsy();
-        expect(a2.classList.contains("in-path")).toBeFalsy();
+        expect(a2.classList.contains("in-path")).toBeTruthy();
         expect(w21.classList.contains("active")).toBeTruthy();
         expect(w21.classList.contains("in-path")).toBeFalsy();
         expect(a21.classList.contains("active")).toBeTruthy();
@@ -161,15 +126,15 @@ describe("Navigation pattern tests", function () {
     });
 
     it("Test 2: Auto load current", async () => {
-        var injection_area = document.querySelector("#injection_area");
+        const injection_area = document.querySelector("#injection_area");
 
-        var nav2 = document.querySelector(".nav2");
+        const nav2 = document.querySelector(".nav2");
         nav2.classList.add("navigation-load-current");
 
-        var w2 = nav2.querySelector(".w2");
-        var a2 = nav2.querySelector(".a2");
-        var w21 = nav2.querySelector(".w21");
-        var a21 = nav2.querySelector(".a21");
+        const w2 = nav2.querySelector(".w2");
+        const a2 = nav2.querySelector(".a2");
+        const w21 = nav2.querySelector(".w21");
+        const a21 = nav2.querySelector(".a21");
         a21.classList.add("active");
 
         Registry.scan("body");
@@ -179,7 +144,7 @@ describe("Navigation pattern tests", function () {
         expect(w2.classList.contains("active")).toBeFalsy();
         expect(w2.classList.contains("in-path")).toBeTruthy();
         expect(a2.classList.contains("active")).toBeFalsy();
-        expect(a2.classList.contains("in-path")).toBeFalsy();
+        expect(a2.classList.contains("in-path")).toBeTruthy();
         expect(w21.classList.contains("active")).toBeTruthy();
         expect(w21.classList.contains("in-path")).toBeFalsy();
         expect(a21.classList.contains("active")).toBeTruthy();
@@ -228,10 +193,263 @@ describe("Navigation pattern tests - no predefined structure", function () {
         expect(w1.classList.contains("current")).toBeFalsy();
         expect(w1.classList.contains("navigation-in-path")).toBeTruthy();
         expect(a1.classList.contains("current")).toBeFalsy();
-        expect(a1.classList.contains("navigation-in-path")).toBeFalsy();
+        expect(a1.classList.contains("navigation-in-path")).toBeTruthy();
         expect(w11.classList.contains("current")).toBeTruthy();
         expect(w11.classList.contains("navigation-in-path")).toBeFalsy();
         expect(a11.classList.contains("current")).toBeTruthy();
         expect(a11.classList.contains("navigation-in-path")).toBeFalsy();
+    });
+});
+
+describe("Navigation pattern tests - Mark items based on URL", () => {
+    let _window_location;
+
+    beforeEach(() => {
+        _window_location = global.window.location;
+        delete global.window.location;
+        document.body.innerHTML = "";
+    });
+
+    afterEach(() => {
+        global.window.location = _window_location;
+    });
+
+    const set_url = (url, portal_url) => {
+        global.window.location = {
+            href: url,
+        };
+
+        portal_url = portal_url || url;
+
+        document.body.dataset.portalUrl = portal_url;
+    };
+
+    it("navigation roundtrip", () => {
+        document.body.innerHTML = `
+          <nav class="pat-navigation"
+               data-pat-navigation="in-path-class: inPath">
+            <ul>
+              <li>
+                <a href="/">Home</a>
+              </li>
+              <li>
+                <a href="/path1">p1</a>
+              </li>
+              <li>
+                <a href="/path2">p2</a>
+                <ul>
+                  <li>
+                    <a href="/path2/path2.1">p2.1</a>
+                  </li>
+                  <li>
+                    <a href="/path2/path2.2">p2.2</a>
+                    <ul>
+                      <li>
+                        <a href="/path2/path2.2/path2.2.1">p2.2.1</a>
+                      </li>
+                      <li>
+                        <a href="/path2/path2.2/path2.2.2">p2.2.2</a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="/i-do-not-math-the-url-path-hierachy">p2n</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href="../../path3">p1</a>
+              </li>
+              <li>
+                <a href="https://patternslib.com/path4">p1</a>
+              </li>
+            </ul>
+          </nav>
+        `;
+
+        set_url("https://patternslib.com/");
+
+        const instance = new Pattern(document.querySelector(".pat-navigation"));
+
+        const it0 = document.querySelector("a[href='/']");
+        const it1 = document.querySelector("a[href='/path1']");
+        const it2 = document.querySelector("a[href='/path2']");
+        const it21 = document.querySelector("a[href='/path2/path2.1']");
+        const it22 = document.querySelector("a[href='/path2/path2.2']");
+        const it221 = document.querySelector("a[href='/path2/path2.2/path2.2.1']");
+        const it222 = document.querySelector("a[href='/path2/path2.2/path2.2.2']");
+        const it2n = document.querySelector("a[href='/i-do-not-math-the-url-path-hierachy']"); // prettier-ignore
+        const it3 = document.querySelector("a[href='../../path3']");
+        const it4 = document.querySelector("a[href='https://patternslib.com/path4']");
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(0);
+        expect(document.querySelector(".current a")).toBe(it0);
+
+        instance.clear_items();
+        instance.mark_items_url("https://patternslib.com/path1");
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(0);
+        expect(document.querySelector(".current a")).toBe(it1);
+
+        instance.clear_items();
+        instance.mark_items_url("https://patternslib.com/path2");
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(0);
+        expect(document.querySelector(".current a")).toBe(it2);
+
+        instance.clear_items();
+        instance.mark_items_url("https://patternslib.com/path2/path2.1");
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(2);
+        expect(document.querySelector(".current a")).toBe(it21);
+
+        instance.clear_items();
+        instance.mark_items_url("https://patternslib.com/path2/path2.2");
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(2);
+        expect(document.querySelector(".current a")).toBe(it22);
+
+        instance.clear_items();
+        instance.mark_items_url("https://patternslib.com/path2/path2.2/path2.2.1");
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(4);
+        expect(document.querySelector(".current a")).toBe(it221);
+
+        instance.clear_items();
+        instance.mark_items_url("https://patternslib.com/path2/path2.2/path2.2.2");
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(4);
+        expect(document.querySelector(".current a")).toBe(it222);
+
+        instance.clear_items();
+        instance.mark_items_url(
+            "https://patternslib.com/i-do-not-math-the-url-path-hierachy"
+        );
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(2);
+        expect(document.querySelector(".current a")).toBe(it2n);
+
+        instance.clear_items();
+        instance.mark_items_url("https://patternslib.com/path3");
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(0);
+        expect(document.querySelector(".current a")).toBe(it3);
+
+        instance.clear_items();
+        instance.mark_items_url("https://patternslib.com/path4");
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(0);
+        expect(document.querySelector(".current a")).toBe(it4);
+    });
+});
+
+describe("Navigation pattern tests - Mark items based based clicking without pat-inject.", () => {
+    beforeEach(() => {
+        document.body.innerHTML = "";
+    });
+
+    afterEach(() => {
+        document.body.innerHTML = "";
+    });
+
+    it("navigation roundtrip", () => {
+        document.body.innerHTML = `
+          <nav class="pat-navigation"
+               data-pat-navigation="in-path-class: inPath">
+            <ul>
+              <li class="current">
+                <a class="current" href="/home">Home</a>
+              </li>
+              <li>
+                <a href="/path1">p1</a>
+              </li>
+              <li>
+                <a href="/path2">p2</a>
+                <ul>
+                  <li>
+                    <a href="/path2/path2.1">p2.1</a>
+                  </li>
+                  <li>
+                    <a href="/path2/path2.2">p2.2</a>
+                    <ul>
+                      <li>
+                        <a href="/path2/path2.2/path2.2.1">p2.2.1</a>
+                      </li>
+                      <li>
+                        <a href="/path2/path2.2/path2.2.2">p2.2.2</a>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
+        `;
+
+        const instance = new Pattern(document.querySelector(".pat-navigation"));
+
+        const it0 = document.querySelector("a[href='/home']");
+        const it1 = document.querySelector("a[href='/path1']");
+        const it2 = document.querySelector("a[href='/path2']");
+        const it21 = document.querySelector("a[href='/path2/path2.1']");
+        const it22 = document.querySelector("a[href='/path2/path2.2']");
+        const it221 = document.querySelector("a[href='/path2/path2.2/path2.2.1']");
+        const it222 = document.querySelector("a[href='/path2/path2.2/path2.2.2']");
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(0);
+        expect(document.querySelector(".current a")).toBe(it0);
+
+        instance.clear_items();
+        it1.click();
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(0);
+        expect(document.querySelector(".current a")).toBe(it1);
+
+        instance.clear_items();
+        it2.click();
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(0);
+        expect(document.querySelector(".current a")).toBe(it2);
+
+        instance.clear_items();
+        it21.click();
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(2);
+        expect(document.querySelector(".current a")).toBe(it21);
+
+        instance.clear_items();
+        it22.click();
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(2);
+        expect(document.querySelector(".current a")).toBe(it22);
+
+        instance.clear_items();
+        it221.click();
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(4);
+        expect(document.querySelector(".current a")).toBe(it221);
+
+        instance.clear_items();
+        it222.click();
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(4);
+        expect(document.querySelector(".current a")).toBe(it222);
     });
 });

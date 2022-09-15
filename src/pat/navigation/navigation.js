@@ -1,7 +1,7 @@
-import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 import logging from "../../core/logging";
+import events from "../../core/events";
 
 const log = logging.getLogger("navigation");
 
@@ -12,125 +12,233 @@ parser.addArgument("current-class", "current");
 
 export default Base.extend({
     name: "navigation",
-    trigger: "nav, .navigation, .pat-navigation",
-    init: function ($el, opts) {
-        this.options = parser.parse($el, opts);
-        var current = this.options.currentClass;
-        // check whether to load
-        if ($el.hasClass("navigation-load-current")) {
-            $el.find("a." + current, "." + current + " a").click();
-            // check for current elements injected here
-            $el.on(
-                "patterns-injected-scanned",
-                function (ev) {
-                    var $target = $(ev.target);
-                    if ($target.is("a." + current)) $target.click();
-                    if ($target.is("." + current)) $target.find("a").click();
-                    this._updatenavpath($el);
-                }.bind(this)
-            );
+    trigger: ".pat-navigation",
+
+    init() {
+        this.options = parser.parse(this.el, this.options);
+
+        this.init_listeners();
+
+        if (this.el.querySelector(this.options.currentClass)) {
+            log.debug("Mark navigation items based on existing current class");
+            this.mark_current();
+        } else {
+            log.debug("Mark navigation items based on URL pattern.");
+            this.mark_items_url();
+        }
+    },
+
+    /**
+     * Initialize listeners for the navigation.
+     */
+    init_listeners() {
+        const current = this.options.currentClass;
+
+        // Mark the navigation items after pat-inject triggered within this navigation menu.
+        this.$el.on("patterns-inject-triggered", "a", (ev) => {
+            // Remove all set current classes
+            this.clear_items();
+
+            // Mark the current item
+            this.mark_current(ev.target);
+        });
+
+        const items_non_inject = this.el.querySelectorAll("a:not(.pat-inject)");
+        for (const it of items_non_inject) {
+            events.add_event_listener(it, "click", "pat_nav_item_non_inject", (ev) => {
+                // Remove all set current classes
+                this.clear_items();
+
+                // Mark the current item
+                this.mark_current(ev.target);
+            });
         }
 
-        // An anchor within this navigation triggered injection
-        $el.on(
-            "patterns-inject-triggered",
-            "a",
-            function (ev) {
-                var $target = $(ev.target);
-                // remove all set current classes
-                $el.find("." + current).removeClass(current);
-                // set current class on target
-                $target.addClass(current);
-                // If target's parent is an LI, also set current class there
-                $target.parents(this.options.itemWrapper).first().addClass(current);
-                this._updatenavpath($el);
-            }.bind(this)
-        );
+        // Automatically and recursively load the ``.current`` item.
+        if (this.el.classList.contains("navigation-load-current")) {
+            // Check for current elements injected here.
+            this.$el.on("patterns-injected-scanned", (ev) => {
+                const target = ev.target;
+                if (target.matches(`a.${current}`)) target.click();
+                else if (target.matches(`.${current}`)) target.querySelector("a")?.click(); // prettier-ignore
+            });
+            this.el.querySelector(`a.${current}, .${current} a`)?.click();
+        }
 
-        var observer = new MutationObserver(this._initialSet.bind(this));
-        observer.observe($el[0], {
+        // Re-init when navigation changes.
+        const observer = new MutationObserver(() => {
+            this.init_listeners();
+
+            if (this.el.querySelector(this.options.currentClass)) {
+                log.debug("Mark navigation items based on existing current class");
+                this.mark_current();
+            } else {
+                log.debug("Mark navigation items based on URL pattern.");
+                this.mark_items_url();
+            }
+        });
+        observer.observe(this.el, {
             childList: true,
             subtree: true,
             attributes: false,
             characterData: false,
         });
-
-        this._initialSet();
     },
-    _initialSet: function () {
-        var $el = this.$el;
-        var current = this.options.currentClass;
-        // Set current class if it is not set
-        if ($el[0].querySelectorAll("." + current).length === 0) {
-            var ael = $el[0].querySelectorAll("a");
-            for (var cnt = 0; cnt < ael.length; cnt++) {
-                var $a = $(ael[cnt]),
-                    $li = $a.parents(this.options.itemWrapper).first(),
-                    url = $a.attr("href"),
-                    path;
-                if (typeof url === "undefined") {
-                    return;
-                }
-                path = this._pathfromurl(url);
-                log.debug("checking url:", url, "extracted path:", path);
-                if (this._match(window.location.pathname, path)) {
-                    log.debug("found match", $li);
-                    $a.addClass(current);
-                    $li.addClass(current);
-                }
+
+    /**
+     * Get a matching parent or stop at stop_el.
+     *
+     * @param {Node} item - The item to start with.
+     * @param {String} selector - The CSS selector to search parent elements for.
+     * @param {Node} stop_el - The element to stop at.
+     *
+     * @returns {Node} - The matching parent or null.
+     */
+    get_parent(item, selector, stop_el) {
+        let matching_parent = item.parentNode;
+        while (matching_parent) {
+            if (matching_parent === stop_el || matching_parent === document) {
+                return null;
             }
+            if (matching_parent.matches(selector)) {
+                return matching_parent;
+            }
+            matching_parent = matching_parent.parentNode;
         }
+    },
 
-        // Set current class on item-wrapper, if not set.
-        if (
-            this.options.itemWrapper &&
-            $el[0].querySelectorAll("." + current).length > 0 &&
-            $el[0].querySelectorAll(this.options.itemWrapper + "." + current).length ===
-                0
-        ) {
-            $("." + current, $el)
-                .parents(this.options.itemWrapper)
-                .first()
-                .addClass(current);
-        }
+    /**
+     * Mark an item and it's wrapper as current.
+     *
+     * @param {Node} [current_el] - The item to mark as current.
+     *                              If not given, the element's tree will be searched for an existing current item.
+     *                              This is to also mark the wrapper and it's path appropriately.
+     */
+    mark_current(current_el) {
+        const current_els = current_el
+            ? [current_el]
+            : document.querySelectorAll(`.current > a, a.current`);
 
-        this._updatenavpath($el);
+        for (const item of current_els) {
+            item.classList.add(this.options.currentClass);
+            const wrapper = item.closest(this.options.itemWrapper);
+            wrapper?.classList.add(this.options.currentClass);
+            this.mark_in_path(wrapper || item);
+            log.debug("Statically set current item marked as current", item);
+        }
     },
-    _updatenavpath: function ($el) {
-        var in_path = this.options.inPathClass;
-        if (!in_path) {
-            return;
+
+    /**
+     * Mark all parent navigation elements as in path.
+     *
+     * @param {Node} start_el - The element to start with.
+     *
+     */
+    mark_in_path(start_el) {
+        let path_el = this.get_parent(start_el, this.options.itemWrapper, this.el);
+        while (path_el) {
+            if (!path_el.matches(`.${this.options.currentClass}`)) {
+                path_el.classList.add(this.options.inPathClass);
+                for (const it of [...path_el.children].filter((it) => it.matches("a"))) {
+                    it.classList.add(this.options.inPathClass);
+                }
+                log.debug("Marked item as in-path", path_el);
+            }
+            path_el = this.get_parent(path_el, this.options.itemWrapper, this.el);
         }
-        $el.find("." + in_path).removeClass(in_path);
-        $el.find(
-            this.options.itemWrapper +
-                ":not(." +
-                this.options.currentClass +
-                "):has(." +
-                this.options.currentClass +
-                ")"
-        ).addClass(in_path);
     },
-    _match: function (curpath, path) {
-        if (!path) {
-            log.debug("path empty");
-            return false;
+
+    /**
+     * Mark all navigation items that are in the path of the current url.
+     *
+     * @param {String} [url] - The url to check against.
+     *                         If not given, the current url will be used.
+     */
+    mark_items_url(url) {
+        const current_url = url || this.base_url();
+        const current_url_prepared = this.prepare_url(current_url);
+
+        const portal_url = this.prepare_url(document.body.dataset?.portalUrl);
+        const nav_items = this.el.querySelectorAll("a");
+
+        for (const nav_item of nav_items) {
+            // Get the nav item's url and rebase it against the current url to
+            // make absolute or relative URLs FQDN URLs.
+            const nav_url = this.prepare_url(
+                new URL(nav_item.getAttribute("href", ""), current_url)?.href
+            );
+
+            const wrapper = this.options.itemWrapper
+                ? nav_item.closest(this.options.itemWrapper)
+                : nav_item.parentNode;
+
+            if (nav_url === current_url_prepared) {
+                nav_item.classList.add(this.options.currentClass);
+                wrapper.classList.add(this.options.currentClass);
+                this.mark_in_path(nav_item);
+            } else if (
+                // Compare the current navigation item url with a slash at the
+                // end - if it is "inPath" it must have a slash in it.
+                current_url_prepared.indexOf(`${nav_url}/`) === 0 &&
+                // Do not set inPath for the "Home" url, as this would always
+                // be in the path.
+                nav_url !== portal_url
+            ) {
+                nav_item.classList.add(this.options.inPathClass);
+                wrapper.classList.add(this.options.inPathClass);
+            } else {
+                // Not even in path.
+                continue;
+            }
+
+            // The path was at least found in the current url, so we need to
+            // check the input-openers within the path
+            // Find the first input which is the correct one, even if this
+            // navigation item has many children.
+            // These hidden checkboxes are used to open the navigation item for
+            // mobile navigation.
+            const check = wrapper.querySelector("input");
+            if (check) check.checked = true;
         }
-        // current path needs to end in the anchor's path
-        if (path !== curpath.slice(-path.length)) {
-            log.debug(curpath, "does not end in", path);
-            return false;
-        }
-        // XXX: we might need more exclusion tests
-        return true;
     },
-    _pathfromurl: function (url) {
-        var path = url.split("#")[0].split("://");
-        if (path.length > 2) {
-            log.error("weird url", url);
-            return "";
+
+    /**
+     * Clear all navigation items from the inPath and current classes
+     */
+    clear_items() {
+        const items = this.el.querySelectorAll(
+            `.${this.options.inPathClass}, .${this.options.currentClass}`
+        );
+        for (const item of items) {
+            item.classList.remove(this.options.inPathClass);
+            item.classList.remove(this.options.currentClass);
         }
-        if (path.length === 1) return path[0];
-        return path[1].split("/").slice(1).join("/");
+    },
+
+    /**
+     * Prepare a URL for comparison.
+     * Plone-specific "/view" and "@@" will be removed as well as a trailing slash.
+     *
+     * @param {String} url - The url to prepare.
+     *
+     * @returns {String} - The prepared url.
+     */
+    prepare_url(url) {
+        return url?.replace("/view", "").replaceAll("@@", "").replace(/\/$/, "");
+    },
+
+    /**
+     * Get the URL of the current page.
+     * If a ``canonical`` meta tag is found, return this.
+     * Otherwise return the window.location URL.
+     * Already prepare the URL for comparison.
+     *
+     * @returns {String} - The current URL.
+     */
+    base_url() {
+        return this.prepare_url(
+            document.querySelector('head link[rel="canonical"]')?.href ||
+                window.location.href
+        );
     },
 });
