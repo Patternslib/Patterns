@@ -163,6 +163,7 @@ export default Base.extend({
             if (nav_url === current_url_prepared) {
                 nav_item.classList.add(this.options.currentClass);
                 wrapper.classList.add(this.options.currentClass);
+                this.mark_in_path(nav_item);
             } else if (
                 // Compare the current navigation item url with a slash at the
                 // end - if it is "inPath" it must have a slash in it.

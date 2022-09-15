@@ -252,6 +252,9 @@ describe("Navigation pattern tests - Mark items based on URL", () => {
                       </li>
                     </ul>
                   </li>
+                  <li>
+                    <a href="/i-do-not-math-the-url-path-hierachy">p2n</a>
+                  </li>
                 </ul>
               </li>
               <li>
@@ -275,6 +278,7 @@ describe("Navigation pattern tests - Mark items based on URL", () => {
         const it22 = document.querySelector("a[href='/path2/path2.2']");
         const it221 = document.querySelector("a[href='/path2/path2.2/path2.2.1']");
         const it222 = document.querySelector("a[href='/path2/path2.2/path2.2.2']");
+        const it2n = document.querySelector("a[href='/i-do-not-math-the-url-path-hierachy']"); // prettier-ignore
         const it3 = document.querySelector("a[href='../../path3']");
         const it4 = document.querySelector("a[href='https://patternslib.com/path4']");
 
@@ -323,6 +327,15 @@ describe("Navigation pattern tests - Mark items based on URL", () => {
         expect(document.querySelectorAll(".current").length).toBe(2);
         expect(document.querySelectorAll(".inPath").length).toBe(4);
         expect(document.querySelector(".current a")).toBe(it222);
+
+        instance.clear_items();
+        instance.mark_items_url(
+            "https://patternslib.com/i-do-not-math-the-url-path-hierachy"
+        );
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(2);
+        expect(document.querySelector(".current a")).toBe(it2n);
 
         instance.clear_items();
         instance.mark_items_url("https://patternslib.com/path3");
