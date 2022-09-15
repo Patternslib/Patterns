@@ -14,7 +14,3 @@ import dom from "./core/dom";
 dom.is_visible = (el) => {
     return !el.hidden;
 };
-
-HTMLDialogElement.prototype.close = jest.fn().mockImplementation(function () {
-    this.open = false;
-});
