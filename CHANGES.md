@@ -4,6 +4,62 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.2.0](https://github.com/Patternslib/patterns/compare/9.1.1...9.2.0) (2022-09-15)
+
+
+### Features
+
+
+* **pat close panel:** Support for closing dialog panels. ([7593048](https://github.com/Patternslib/patterns/commit/7593048044126153d7868b36128ac4ec2e3c7564))
+
+* **pat navigation:** Add URL-based navigation markers. ([9a0f7a3](https://github.com/Patternslib/patterns/commit/9a0f7a3dc4684361a3dc6c1c8663f9cb139e6e72))That feature was also present in the old implementation but is now improved.
+
+* **pat navigation:** Always set in-path classes. ([16bc8a2](https://github.com/Patternslib/patterns/commit/16bc8a26733771e7ea184ec7ada018a3a3422043))When doing URL based checkings do always set the in-path classes for an active submenu item, even if it does not match the URL path hierachy.
+
+* **pat navigation:** Support click-only markings. ([904e54f](https://github.com/Patternslib/patterns/commit/904e54fabedf3a128857a45dccf13974e61f7916))Mark the navigation items also on clicks on anchors without pat-inject.
+
+* **pat navigation:** When a navigation wrapper is in-path, also mark the corresponding anchor as in-path. ([e9da003](https://github.com/Patternslib/patterns/commit/e9da00330f2f6a866d1e1b7e688e3fca6f3eeecf))
+
+
+### Bug Fixes
+
+
+* **Build:** Register jQuery globally. ([e72f41a](https://github.com/Patternslib/patterns/commit/e72f41aedf1ca45a1c1ac785b726ca9180621231))Since the module federation support jQuery was registered globally too late for some scripts.
+Now jQuery is registered as soon as the index.js is loaded.
+This allows for following scripts to use jQuery.
+
+* **core base:** Do not break when initialized with no element. ([cd16107](https://github.com/Patternslib/patterns/commit/cd1610732d47a48a2a2d5ba25f56ef8dc5a74458))
+
+
+### Breaking Changes
+
+
+* **pat navigation:** Set explicit pattern trigger. ([968edca](https://github.com/Patternslib/patterns/commit/968edca2c677359115ff0687b1174ba1d2307c33))Do only trigger the pattern on the ``.pat-navigation`` class and remove the trigger for ``.navigation`` classes and ``<nav>`` elements.
+
+
+### Maintenance
+
+
+* **core dom:** Code optimization for dom.find_parents. ([de1fb71](https://github.com/Patternslib/patterns/commit/de1fb718e794b26ba03fe2c18cec13e560589965))
+
+* **core dom:** Update documentation. ([4ac25cc](https://github.com/Patternslib/patterns/commit/4ac25cc146a7f4dcb3767f8541fe02881714bd87))
+
+* HTMLDialogElement support not in @patternslib/dev 2.7.0. ([d2c279f](https://github.com/Patternslib/patterns/commit/d2c279f22b2db60828014cbe4646c7a76e5876db))
+
+* Modernize header markup in demo files. ([2f366e9](https://github.com/Patternslib/patterns/commit/2f366e9b84caa937db0d9ceb520f49d159933b82))
+
+* **pat inject:** Move core.utils.rebaseURL to inject patterns. ([144240d](https://github.com/Patternslib/patterns/commit/144240de790d6b4e9d6e73f8fef7cd02d8fb66d7))core.utils.rebaseURL was only used by the inject pattern and is in this form not useful for broader use.
+If you need to rebase an relative or absolute URL against a base url, use:
+new URL(url, base_url)
+
+* **pat inject:** Specify allowed values for the history parameter. ([e36c58c](https://github.com/Patternslib/patterns/commit/e36c58cf147551f77c11e55d2dcf0f16ae024cd4))
+
+* **pat navigation:** Modernize code. ([f5269de](https://github.com/Patternslib/patterns/commit/f5269de5666be68ba0e38989fe22ebb2b63dd5a3))
+
+* **pat navigation:** Refactor implementation for more stability. ([458e76b](https://github.com/Patternslib/patterns/commit/458e76bf47e4ea2ad6ac1741a5872b574862280a))
+
+* Upgrade dependencies. ([806fc24](https://github.com/Patternslib/patterns/commit/806fc24f8bc032df5042e9b76d6fb0da490941e4))
+
 ## [9.1.1](https://github.com/Patternslib/patterns/compare/9.1.0...9.1.1) (2022-09-08)
 
 
