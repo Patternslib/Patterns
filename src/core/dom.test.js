@@ -177,12 +177,14 @@ describe("core.dom tests", () => {
 
             done();
         });
+
         it("don't break with no element.", (done) => {
             const res = dom.find_parents(null, ".findme");
             expect(res.length).toEqual(0);
 
             done();
         });
+
         it("don't break with DocumentFragment without a parent.", (done) => {
             const el = new DocumentFragment();
             el.innerHTML = `<div class="starthere"></div>`;

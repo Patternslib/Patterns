@@ -58,6 +58,18 @@ describe("pat-base: The Base class for patterns", function () {
         expect(tmp.el).toBe(node);
     });
 
+    it("Does nothing when initialized with no DOM node", function () {
+        const Tmp = Base.extend({
+            name: "example",
+            init: () => {},
+        });
+        const tmp = new Tmp(null);
+        console.log(tmp);
+        expect(tmp instanceof Tmp).toBeTruthy();
+        expect(tmp.$el).toBeFalsy();
+        expect(tmp.el).toBeFalsy();
+    });
+
     it("will automatically register a pattern in the registry when extended", function () {
         jest.spyOn(registry, "register");
         var NewPattern = Base.extend({

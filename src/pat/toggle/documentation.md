@@ -1,6 +1,7 @@
 ## Description
 
-Toggle allows for toggling between 2 different attribute values. For instance to show or hide a sidebar with a CSS class on the body tag.
+Toggle allows for toggling between 2 different attribute values.
+For instance to show or hide a sidebar with a CSS class on the body tag.
 
 ## Documentation
 
