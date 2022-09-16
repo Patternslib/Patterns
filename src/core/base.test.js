@@ -64,7 +64,6 @@ describe("pat-base: The Base class for patterns", function () {
             init: () => {},
         });
         const tmp = new Tmp(null);
-        console.log(tmp);
         expect(tmp instanceof Tmp).toBeTruthy();
         expect(tmp.$el).toBeFalsy();
         expect(tmp.el).toBeFalsy();

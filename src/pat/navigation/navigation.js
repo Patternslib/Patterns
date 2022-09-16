@@ -2,7 +2,6 @@ import Base from "../../core/base";
 import Parser from "../../core/parser";
 import logging from "../../core/logging";
 import events from "../../core/events";
-import utils from "../../core/utils";
 
 const log = logging.getLogger("navigation");
 
@@ -61,21 +60,6 @@ export default Base.extend({
             });
             this.el.querySelector(`a.${current}, .${current} a`)?.click();
         }
-
-        const debounced_init_markings = utils.debounce(
-            this.init_markings.bind(this),
-            100
-        );
-        // Re-init when navigation changes.
-        const observer = new MutationObserver(() => {
-            debounced_init_markings();
-        });
-        observer.observe(this.el, {
-            childList: true,
-            subtree: true,
-            attributes: false,
-            characterData: false,
-        });
     },
 
     /**
