@@ -4,6 +4,24 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.2.1](https://github.com/Patternslib/patterns/compare/9.2.0...9.2.1) (2022-09-16)
+
+
+### Bug Fixes
+
+
+* **pat navigation:** Do not break when no item wrapper is found. ([6c84a41](https://github.com/Patternslib/patterns/commit/6c84a414215f8cfb589a02666a567895a543c4b8))
+
+* **pat navigation:** Improve the performance when the navigation elements change. ([a6ec32b](https://github.com/Patternslib/patterns/commit/a6ec32ba74340b567b8e36e5a2687b1072731f55))Debounce the mutation observer callback which initialized the markings for 100ms for better performance.
+
+* **pat navigation:** Initialize the click handler on the element directly. ([0b099cc](https://github.com/Patternslib/patterns/commit/0b099cc4c170f93d895d6ef536a017e47d8e4150))This way it needs to be initialized only once, even if the subtree changes.
+Remove the init_listeners from the mutation observer for better
+performance.
+
+* **pat navigation:** Only search within the current element. ([417085e](https://github.com/Patternslib/patterns/commit/417085e7837285a46420ee1ac28ff1e7ee14745f))
+
+* **pat navigation:** Remove mockup-related checking of input fields. ([1e5afe7](https://github.com/Patternslib/patterns/commit/1e5afe7a8a4de67c556d70ad30c4f2feed3ba4a5))
+
 ## [9.2.0](https://github.com/Patternslib/patterns/compare/9.1.1...9.2.0) (2022-09-15)
 
 
