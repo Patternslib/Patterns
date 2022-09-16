@@ -168,13 +168,11 @@ export default Base.extend({
                 new URL(nav_item.getAttribute("href", ""), current_url)?.href
             );
 
-            const wrapper = this.options.itemWrapper
-                ? nav_item.closest(this.options.itemWrapper)
-                : nav_item.parentNode;
+            const wrapper = nav_item.closest(this.options.itemWrapper);
 
             if (nav_url === current_url_prepared) {
                 nav_item.classList.add(this.options.currentClass);
-                wrapper.classList.add(this.options.currentClass);
+                wrapper?.classList.add(this.options.currentClass);
                 this.mark_in_path(nav_item);
             } else if (
                 // Compare the current navigation item url with a slash at the
@@ -185,7 +183,7 @@ export default Base.extend({
                 nav_url !== portal_url
             ) {
                 nav_item.classList.add(this.options.inPathClass);
-                wrapper.classList.add(this.options.inPathClass);
+                wrapper?.classList.add(this.options.inPathClass);
             } else {
                 // Not even in path.
                 continue;
