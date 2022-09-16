@@ -183,7 +183,7 @@ describe("Navigation pattern tests - no predefined structure", function () {
         const load_nav = document.querySelector(".load-nav");
         load_nav.click();
 
-        await utils.timeout(1); // wait for MutationObserver
+        await utils.timeout(120); // wait for MutationObserver
 
         const w1 = nav.querySelector(".w1");
         const a1 = nav.querySelector(".a1");

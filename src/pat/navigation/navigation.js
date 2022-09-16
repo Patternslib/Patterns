@@ -2,6 +2,7 @@ import Base from "../../core/base";
 import Parser from "../../core/parser";
 import logging from "../../core/logging";
 import events from "../../core/events";
+import utils from "../../core/utils";
 
 const log = logging.getLogger("navigation");
 
@@ -18,14 +19,7 @@ export default Base.extend({
         this.options = parser.parse(this.el, this.options);
 
         this.init_listeners();
-
-        if (this.el.querySelector(this.options.currentClass)) {
-            log.debug("Mark navigation items based on existing current class");
-            this.mark_current();
-        } else {
-            log.debug("Mark navigation items based on URL pattern.");
-            this.mark_items_url();
-        }
+        this.init_markings();
     },
 
     /**
@@ -33,6 +27,20 @@ export default Base.extend({
      */
     init_listeners() {
         const current = this.options.currentClass;
+
+        events.add_event_listener(
+            this.el,
+            "click",
+            "pat_navigation_click_handler",
+            (ev) => {
+                if (ev.target.matches("a:not(.pat-inject)")) {
+                    // Remove all set current classes
+                    this.clear_items();
+                    // Mark the current item
+                    this.mark_current(ev.target);
+                }
+            }
+        );
 
         // Mark the navigation items after pat-inject triggered within this navigation menu.
         this.$el.on("patterns-inject-triggered", "a", (ev) => {
@@ -42,17 +50,6 @@ export default Base.extend({
             // Mark the current item
             this.mark_current(ev.target);
         });
-
-        const items_non_inject = this.el.querySelectorAll("a:not(.pat-inject)");
-        for (const it of items_non_inject) {
-            events.add_event_listener(it, "click", "pat_nav_item_non_inject", (ev) => {
-                // Remove all set current classes
-                this.clear_items();
-
-                // Mark the current item
-                this.mark_current(ev.target);
-            });
-        }
 
         // Automatically and recursively load the ``.current`` item.
         if (this.el.classList.contains("navigation-load-current")) {
@@ -65,17 +62,13 @@ export default Base.extend({
             this.el.querySelector(`a.${current}, .${current} a`)?.click();
         }
 
+        const debounced_init_markings = utils.debounce(
+            this.init_markings.bind(this),
+            100
+        );
         // Re-init when navigation changes.
         const observer = new MutationObserver(() => {
-            this.init_listeners();
-
-            if (this.el.querySelector(this.options.currentClass)) {
-                log.debug("Mark navigation items based on existing current class");
-                this.mark_current();
-            } else {
-                log.debug("Mark navigation items based on URL pattern.");
-                this.mark_items_url();
-            }
+            debounced_init_markings();
         });
         observer.observe(this.el, {
             childList: true,
@@ -83,6 +76,19 @@ export default Base.extend({
             attributes: false,
             characterData: false,
         });
+    },
+
+    /**
+     * Initial run to mark the current item and its parents.
+     */
+    init_markings() {
+        if (this.el.querySelector(this.options.currentClass)) {
+            log.debug("Mark navigation items based on existing current class");
+            this.mark_current();
+        } else {
+            log.debug("Mark navigation items based on URL pattern.");
+            this.mark_items_url();
+        }
     },
 
     /**
@@ -117,7 +123,7 @@ export default Base.extend({
     mark_current(current_el) {
         const current_els = current_el
             ? [current_el]
-            : document.querySelectorAll(`.current > a, a.current`);
+            : this.el.querySelectorAll(`.current > a, a.current`);
 
         for (const item of current_els) {
             item.classList.add(this.options.currentClass);
@@ -168,13 +174,11 @@ export default Base.extend({
                 new URL(nav_item.getAttribute("href", ""), current_url)?.href
             );
 
-            const wrapper = this.options.itemWrapper
-                ? nav_item.closest(this.options.itemWrapper)
-                : nav_item.parentNode;
+            const wrapper = nav_item.closest(this.options.itemWrapper);
 
             if (nav_url === current_url_prepared) {
                 nav_item.classList.add(this.options.currentClass);
-                wrapper.classList.add(this.options.currentClass);
+                wrapper?.classList.add(this.options.currentClass);
                 this.mark_in_path(nav_item);
             } else if (
                 // Compare the current navigation item url with a slash at the
@@ -185,20 +189,11 @@ export default Base.extend({
                 nav_url !== portal_url
             ) {
                 nav_item.classList.add(this.options.inPathClass);
-                wrapper.classList.add(this.options.inPathClass);
+                wrapper?.classList.add(this.options.inPathClass);
             } else {
                 // Not even in path.
                 continue;
             }
-
-            // The path was at least found in the current url, so we need to
-            // check the input-openers within the path
-            // Find the first input which is the correct one, even if this
-            // navigation item has many children.
-            // These hidden checkboxes are used to open the navigation item for
-            // mobile navigation.
-            const check = wrapper.querySelector("input");
-            if (check) check.checked = true;
         }
     },
 
