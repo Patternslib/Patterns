@@ -4,6 +4,26 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.3.0-beta.0](https://github.com/Patternslib/patterns/compare/9.2.1...9.3.0-beta.0) (2022-09-16)
+
+
+### Maintenance
+
+
+* **core base:** Remove console.log statement from tests. ([09d533e](https://github.com/Patternslib/patterns/commit/09d533e3d8995eb5e72fec374a7a7410a8a7f707))
+
+
+### Breaking Changes
+
+
+* **pat navigation:** Improve performance by removing the unnecessary mutation observer. ([7c28913](https://github.com/Patternslib/patterns/commit/7c289134205042f358e458c47a2a695d8e6192a8))Since we're almost always using pat-inject for replacing or adding DOM nodes
+and we already have support for pat-inject here, the mutation observer is not
+necessary. Removing it improves the performance in situations where the
+navigation structure is updated - for example off-canvas navigation updates
+with pat-tabs would invoke many mutation observer callback hits. The previous
+performance improvement solved the performance penalty by deferring the
+callback for 10ms, but this is taking that further by avoiding it at all.
+
 ## [9.2.1](https://github.com/Patternslib/patterns/compare/9.2.0...9.2.1) (2022-09-16)
 
 
