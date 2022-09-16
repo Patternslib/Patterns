@@ -152,55 +152,6 @@ describe("Navigation pattern tests", function () {
     });
 });
 
-describe("Navigation pattern tests - no predefined structure", function () {
-    it("Reacts on DOM change", async function () {
-        document.body.innerHTML = `
-          <div id="injected_nav">
-            <div class="w1">
-              <a href="/path/to" class="a1">link a1</a>
-              <div class="w11">
-                <a href="/path/to/test" class="a11">link a11</a>
-              </div>
-            </div>
-          </div>
-          <a
-              href="#injected_nav"
-              class="pat-inject load-nav"
-              data-pat-inject="target: #injection_target">load navigation</a>
-          <nav
-              id="injection_target"
-              class="pat-navigation nav"
-              data-pat-navigation="item-wrapper: div">
-          </nav>
-        `;
-
-        // TODO: change when using Jest: https://remarkablemark.org/blog/2018/11/17/mock-window-location/
-        history.pushState(null, "", "/path/to/test");
-
-        Registry.scan(document.body);
-
-        const nav = document.querySelector("nav");
-        const load_nav = document.querySelector(".load-nav");
-        load_nav.click();
-
-        await utils.timeout(120); // wait for MutationObserver
-
-        const w1 = nav.querySelector(".w1");
-        const a1 = nav.querySelector(".a1");
-        const w11 = nav.querySelector(".w11");
-        const a11 = nav.querySelector(".a11");
-
-        expect(w1.classList.contains("current")).toBeFalsy();
-        expect(w1.classList.contains("navigation-in-path")).toBeTruthy();
-        expect(a1.classList.contains("current")).toBeFalsy();
-        expect(a1.classList.contains("navigation-in-path")).toBeTruthy();
-        expect(w11.classList.contains("current")).toBeTruthy();
-        expect(w11.classList.contains("navigation-in-path")).toBeFalsy();
-        expect(a11.classList.contains("current")).toBeTruthy();
-        expect(a11.classList.contains("navigation-in-path")).toBeFalsy();
-    });
-});
-
 describe("Navigation pattern tests - Mark items based on URL", () => {
     let _window_location;
 
