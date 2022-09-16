@@ -117,7 +117,7 @@ export default Base.extend({
     mark_current(current_el) {
         const current_els = current_el
             ? [current_el]
-            : document.querySelectorAll(`.current > a, a.current`);
+            : this.el.querySelectorAll(`.current > a, a.current`);
 
         for (const item of current_els) {
             item.classList.add(this.options.currentClass);
