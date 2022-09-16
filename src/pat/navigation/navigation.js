@@ -188,15 +188,6 @@ export default Base.extend({
                 // Not even in path.
                 continue;
             }
-
-            // The path was at least found in the current url, so we need to
-            // check the input-openers within the path
-            // Find the first input which is the correct one, even if this
-            // navigation item has many children.
-            // These hidden checkboxes are used to open the navigation item for
-            // mobile navigation.
-            const check = wrapper.querySelector("input");
-            if (check) check.checked = true;
         }
     },
 
