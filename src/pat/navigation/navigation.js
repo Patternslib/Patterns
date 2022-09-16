@@ -34,6 +34,20 @@ export default Base.extend({
     init_listeners() {
         const current = this.options.currentClass;
 
+        events.add_event_listener(
+            this.el,
+            "click",
+            "pat_navigation_click_handler",
+            (ev) => {
+                if (ev.target.matches("a:not(.pat-inject)")) {
+                    // Remove all set current classes
+                    this.clear_items();
+                    // Mark the current item
+                    this.mark_current(ev.target);
+                }
+            }
+        );
+
         // Mark the navigation items after pat-inject triggered within this navigation menu.
         this.$el.on("patterns-inject-triggered", "a", (ev) => {
             // Remove all set current classes
@@ -42,17 +56,6 @@ export default Base.extend({
             // Mark the current item
             this.mark_current(ev.target);
         });
-
-        const items_non_inject = this.el.querySelectorAll("a:not(.pat-inject)");
-        for (const it of items_non_inject) {
-            events.add_event_listener(it, "click", "pat_nav_item_non_inject", (ev) => {
-                // Remove all set current classes
-                this.clear_items();
-
-                // Mark the current item
-                this.mark_current(ev.target);
-            });
-        }
 
         // Automatically and recursively load the ``.current`` item.
         if (this.el.classList.contains("navigation-load-current")) {
@@ -67,8 +70,6 @@ export default Base.extend({
 
         // Re-init when navigation changes.
         const observer = new MutationObserver(() => {
-            this.init_listeners();
-
             if (this.el.querySelector(this.options.currentClass)) {
                 log.debug("Mark navigation items based on existing current class");
                 this.mark_current();
