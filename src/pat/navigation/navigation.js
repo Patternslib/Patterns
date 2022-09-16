@@ -2,6 +2,7 @@ import Base from "../../core/base";
 import Parser from "../../core/parser";
 import logging from "../../core/logging";
 import events from "../../core/events";
+import utils from "../../core/utils";
 
 const log = logging.getLogger("navigation");
 
@@ -18,14 +19,7 @@ export default Base.extend({
         this.options = parser.parse(this.el, this.options);
 
         this.init_listeners();
-
-        if (this.el.querySelector(this.options.currentClass)) {
-            log.debug("Mark navigation items based on existing current class");
-            this.mark_current();
-        } else {
-            log.debug("Mark navigation items based on URL pattern.");
-            this.mark_items_url();
-        }
+        this.init_markings();
     },
 
     /**
@@ -68,15 +62,13 @@ export default Base.extend({
             this.el.querySelector(`a.${current}, .${current} a`)?.click();
         }
 
+        const debounced_init_markings = utils.debounce(
+            this.init_markings.bind(this),
+            100
+        );
         // Re-init when navigation changes.
         const observer = new MutationObserver(() => {
-            if (this.el.querySelector(this.options.currentClass)) {
-                log.debug("Mark navigation items based on existing current class");
-                this.mark_current();
-            } else {
-                log.debug("Mark navigation items based on URL pattern.");
-                this.mark_items_url();
-            }
+            debounced_init_markings();
         });
         observer.observe(this.el, {
             childList: true,
@@ -84,6 +76,19 @@ export default Base.extend({
             attributes: false,
             characterData: false,
         });
+    },
+
+    /**
+     * Initial run to mark the current item and its parents.
+     */
+    init_markings() {
+        if (this.el.querySelector(this.options.currentClass)) {
+            log.debug("Mark navigation items based on existing current class");
+            this.mark_current();
+        } else {
+            log.debug("Mark navigation items based on URL pattern.");
+            this.mark_items_url();
+        }
     },
 
     /**
