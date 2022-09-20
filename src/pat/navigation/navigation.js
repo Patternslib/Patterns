@@ -45,9 +45,13 @@ export default Base.extend({
         this.$el.on("patterns-inject-triggered", "a", (ev) => {
             // Remove all set current classes
             this.clear_items();
-
             // Mark the current item
             this.mark_current(ev.target);
+        });
+
+        // Mark the navigation items after pat-inject injected into this navigation menu.
+        this.$el.on("patterns-injected-scanned", () => {
+            this.init_markings();
         });
 
         // Automatically and recursively load the ``.current`` item.
