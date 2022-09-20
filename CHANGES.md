@@ -4,6 +4,21 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.3.0](https://github.com/Patternslib/patterns/compare/9.3.0-beta.0...9.3.0) (2022-09-20)
+
+
+### Features
+
+
+* **pat navigation:** Mark the navigation items after injection. ([ec2a795](https://github.com/Patternslib/patterns/commit/ec2a7957da8bfca9e96f8b1aea6a81002aa79b30))After a pat-inject has updated the navigation, re-mark all navigation items.
+This is an alternative and approach to the previous mutation observer based one.
+
+
+### Maintenance
+
+
+* **Build:** Upgrade dependencies. ([60b4e2e](https://github.com/Patternslib/patterns/commit/60b4e2e1693dcfbe34e8bf7a3d46de9ddef05f6f))
+
 ## [9.3.0-beta.0](https://github.com/Patternslib/patterns/compare/9.2.1...9.3.0-beta.0) (2022-09-16)
 
 
