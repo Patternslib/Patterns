@@ -38,13 +38,13 @@
         "whatwg-fetch": "^3.4.0"
     },
     "devDependencies": {
-        "@patternslib/dev": "^2.7.0",
+        "@patternslib/dev": "^2.7.1",
         "@patternslib/pat-content-mirror": "^3.0.0",
         "@patternslib/pat-doclock": "^3.0.0",
         "@patternslib/pat-shopping-cart": "^3.0.0",
         "@patternslib/pat-sortable-table": "^3.1.0",
-        "@patternslib/pat-tiptap": "^4.6.0",
-        "@patternslib/pat-upload": "^3.0.0",
+        "@patternslib/pat-tiptap": "^4.6.1",
+        "@patternslib/pat-upload": "^3.1.0",
         "copy-webpack-plugin": "^11.0.0",
         "pegjs": "0.11.0-master.b7b87ea",
         "webpack-modernizr-loader": "^5.0.0"
