@@ -38,26 +38,47 @@ while ((match = dont_catch_re.exec(window.location.search)) !== null) {
     log.info("I will not catch init exceptions");
 }
 
+/**
+ * Global pattern registry.
+ *
+ * This is a singleton and shared among any instance of the Patternslib
+ * registry since Patternslib version 8.
+ *
+ * You normally don't need this as the registry handles it for you.
+ */
+if (typeof window.__patternslib_registry === "undefined") {
+    window.__patternslib_registry = {};
+}
+export const PATTERN_REGISTRY = window.__patternslib_registry;
+if (typeof window.__patternslib_registry_initialized === "undefined") {
+    window.__patternslib_registry_initialized = false;
+}
+
 const registry = {
-    patterns: {},
+    patterns: PATTERN_REGISTRY, // reference to global patterns registry
     // as long as the registry is not initialized, pattern
     // registration just registers a pattern. Once init is called,
     // the DOM is scanned. After that registering a new pattern
     // results in rescanning the DOM only for this pattern.
-    initialized: false,
     init() {
         $(document).ready(function () {
-            log.info("loaded: " + Object.keys(registry.patterns).sort().join(", "));
+            if (window.__patternslib_registry_initialized) {
+                // Do not reinitialize a already initialized registry.
+                return;
+            }
+            window.__patternslib_registry_initialized = true;
+            log.debug("Loaded: " + Object.keys(registry.patterns).sort().join(", "));
             registry.scan(document.body);
-            registry.initialized = true;
-            log.info("finished initial scan.");
+            log.debug("Finished initial scan.");
         });
     },
 
     clear() {
         // Removes all patterns from the registry. Currently only being
         // used in tests.
-        this.patterns = {};
+        for (const name in registry.patterns) {
+            delete registry.patterns[name];
+        }
     },
 
     transformPattern(name, content) {
@@ -65,7 +86,7 @@ const registry = {
          * it exists.
          */
         if (disabled[name]) {
-            log.debug("Skipping disabled pattern:", name);
+            log.debug(`Skipping disabled pattern: ${name}.`);
             return;
         }
 
@@ -78,7 +99,7 @@ const registry = {
                 if (dont_catch) {
                     throw e;
                 }
-                log.error("Transform error for pattern" + name, e);
+                log.error(`Transform error for pattern ${name}.`, e);
             }
         }
     },
@@ -90,9 +111,9 @@ const registry = {
         const $el = $(el);
         const pattern = registry.patterns[name];
         if (pattern) {
-            const plog = logging.getLogger("pat." + name);
+            const plog = logging.getLogger(`pat.${name}`);
             if ($el.is(pattern.trigger)) {
-                plog.debug("Initialising:", $el);
+                plog.debug("Initialising.", $el);
                 try {
                     new pattern($el, null, trigger);
                     plog.debug("done.");
@@ -146,15 +167,17 @@ const registry = {
         );
         matches = matches.filter((el) => {
             // Filter out patterns:
-            // - with class ``.cant-touch-this``
-            // - wrapped in ``.cant-touch-this`` elements
+            // - with class ``.disable-patterns``
+            // - wrapped in ``.disable-patterns`` elements
             // - wrapped in ``<pre>`` elements
             // - wrapped in ``<template>`` elements
             return (
-                !el.matches(".cant-touch-this") &&
-                !el?.parentNode?.closest?.(".cant-touch-this") &&
+                !el.matches(".disable-patterns") &&
+                !el?.parentNode?.closest?.(".disable-patterns") &&
                 !el?.parentNode?.closest?.("pre") &&
-                !el?.parentNode?.closest?.("template") // NOTE: not strictly necessary. Template is a DocumentFragment and not reachable except for IE.
+                !el?.parentNode?.closest?.("template") && // NOTE: not strictly necessary. Template is a DocumentFragment and not reachable except for IE.
+                !el.matches(".cant-touch-this") && // BBB. TODO: Remove with next major version.
+                !el?.parentNode?.closest?.(".cant-touch-this") // BBB. TODO: Remove with next major version.
             );
         });
 
@@ -169,7 +192,6 @@ const registry = {
 
     register(pattern, name) {
         name = name || pattern.name;
-
         if (!name) {
             log.warn(
                 "This pattern without a name attribute cannot be registered.",
@@ -205,9 +227,12 @@ const registry = {
             // BBB 2012-12-10 and also for Mockup patterns.
             $.fn[plugin_name.replace(/^pat/, "pattern")] = $.fn[plugin_name];
         }
-        log.debug("Registered pattern:", name, pattern);
-        if (registry.initialized) {
+        log.debug(`Registered pattern ${name}`, pattern);
+        if (window.__patternslib_registry_initialized) {
+            // Once the first initialization has been done, do only scan for
+            // newly registered patterns.
             registry.scan(document.body, [name]);
+            log.debug(`Re-scanned dom with newly registered pattern ${name}.`);
         }
         return true;
     },
