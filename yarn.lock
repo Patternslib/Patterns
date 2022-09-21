@@ -1954,13 +1954,13 @@
     "@tiptap/extension-text" "^2.0.0-beta.195"
     "@tiptap/suggestion" "^2.0.0-beta.195"
 
-"@patternslib/pat-upload@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@patternslib/pat-upload/-/pat-upload-3.1.0.tgz#d703435021f4aeb602a8a1151f94e6091e0b5671"
-  integrity sha512-MDkBp3ktSJXZOPIKAKRrOLQ7LJkQMd2LVYS9LfEXW2ampXvMlH1VFTYq1bq0RaMXnqYlwTluxJ7iFY1VNH6+bA==
+"@patternslib/pat-upload@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@patternslib/pat-upload/-/pat-upload-3.1.1.tgz#51015259138ccc255e1b1911e88cf0d4d7e80915"
+  integrity sha512-rr6r5EcbloV7jCUMObPW/G7VaI41VGWB6Kfi1hnUXZ0wg15giqCMT416nd7NBj3CgWf1xOA5GlrhRo9x49WlEg==
   dependencies:
     dropzone "^5.9.3"
-    jquery "^3.6.0"
+    jquery "^3.6.1"
     underscore "^1.13.4"
 
 "@pnpm/network.ca-file@^1.0.1":
