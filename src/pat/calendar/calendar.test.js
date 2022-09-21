@@ -438,7 +438,7 @@ describe("1 - Calendar tests", () => {
     it("Loads correct locale if set", async () => {
         const el = document.querySelector(".pat-calendar");
         el.setAttribute("data-pat-calendar", "initial-date: 2020-03-01; lang: de");
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         const title_el = el.querySelector(".cal-title");
@@ -450,7 +450,7 @@ describe("1 - Calendar tests", () => {
         document.querySelector(".root-element").setAttribute("lang", "de");
         const el = document.querySelector(".pat-calendar");
         el.setAttribute("data-pat-calendar", "initial-date: 2020-03-01");
-        pattern.init(el);
+        new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         const title_el = el.querySelector(".cal-title");

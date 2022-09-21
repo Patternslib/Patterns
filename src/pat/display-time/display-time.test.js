@@ -70,7 +70,7 @@ describe("pat-display-time tests", () => {
         `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("April Donnerstag 22. 2021, 4:00:00");
@@ -88,7 +88,7 @@ describe("pat-display-time tests", () => {
         `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("April Donnerstag 22. 2021, 4:00:00");
@@ -167,7 +167,7 @@ describe("pat-display-time tests", () => {
         `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent.indexOf("Jahre") >= 0).toBe(true);
@@ -205,7 +205,7 @@ describe("from-now (relative date) with date only dates", () => {
             `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("today");
@@ -225,7 +225,7 @@ describe("from-now (relative date) with date only dates", () => {
             `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("tomorrow");
@@ -245,7 +245,7 @@ describe("from-now (relative date) with date only dates", () => {
             `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("yesterday");
@@ -265,7 +265,7 @@ describe("from-now (relative date) with date only dates", () => {
             `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         // Match any of these as we did not mock the system date.
@@ -288,7 +288,7 @@ describe("from-now (relative date) with date only dates", () => {
             `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         // Match any of these as we did not mock the system date.
@@ -309,7 +309,7 @@ describe("from-now (relative date) with date only dates", () => {
             `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("in 10 days");
@@ -329,7 +329,7 @@ describe("from-now (relative date) with date only dates", () => {
             `;
         const el = document.querySelector(".pat-display-time");
 
-        Pattern.init(el);
+        new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.textContent).toBe("10 days ago");

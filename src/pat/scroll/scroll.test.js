@@ -17,6 +17,7 @@ describe("pat-scroll", function () {
         const spy_animate = jest.spyOn($.fn, "animate");
 
         new pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
         await utils.timeout(10); // wait some ticks for async to settle.
 
         expect(spy_animate).toHaveBeenCalledTimes(1);
@@ -193,7 +194,7 @@ describe("pat-scroll", function () {
         expect(arg_1.scrollTop).toBe(40); // the offset is substracted from the scroll position, so a negative offset is added to the scroll position and stops AFTER the target position.
     });
 
-    it("handles different selector options.", () => {
+    it("handles different selector options.", async () => {
         document.body.innerHTML = `
             <a href="#el3" class="pat-scroll" />
             <div id="#el1" />
@@ -207,6 +208,7 @@ describe("pat-scroll", function () {
         const el_3 = document.querySelector("#el3");
 
         const pat = new pattern(el_pat);
+        await utils.timeout(1); // wait a tick for async to settle.
 
         pat.options.selector = "self";
         expect(pat._get_selector_target()).toBe(el_pat);
