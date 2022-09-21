@@ -16,14 +16,25 @@ export default Base.extend({
     name: "subform",
     trigger: ".pat-subform",
 
-    init($el) {
-        $el.submit(this.submit.bind(this));
-        $el.find("input").on("keyup keypress keydown", this.keyboard_handler.bind(this));
-        $el.find("button[type=submit]").on("click", this.submitClicked.bind(this));
+    init() {
+        this.$el
+            .find("input")
+            .on("keyup keypress keydown", this.keyboard_handler.bind(this));
+        events.add_event_listener(this.el, "submit", "pat-subform--submit", (e) => {
+            log.debug("Handle submit event.");
+            this.submit(e);
+        });
+        events.add_event_listener(this.el, "click", "pat-subform--click", (e) => {
+            if (e.target.matches("button[type=submit]")) {
+                log.debug("Submit button pressed");
+                this.submitClicked(e);
+            }
+        });
     },
 
-    destroy($el) {
-        $el.off("submit");
+    destroy() {
+        events.remove_event_listener(this.el, "pat-subform--submit");
+        events.remove_event_listener(this.el, "pat-subform--click");
     },
 
     scopedSubmit($el) {
