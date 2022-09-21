@@ -1,4 +1,3 @@
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Base, { BasePattern } from "./base";
 import registry from "./registry";
@@ -86,6 +85,36 @@ describe("pat-base: The Base class for patterns", function () {
         expect(pattern3 instanceof Tmp2).toBeTruthy();
     });
 
+    it("can be extended multiple times the old way", function () {
+        var Tmp1 = Base.extend({
+            name: "thing",
+            something: "else",
+            init: function () {
+                expect(this.some).toEqual("thing3");
+                expect(this.something).toEqual("else");
+            },
+        });
+        var Tmp2 = Tmp1.extend({
+            name: "thing",
+            some: "thing2",
+            init: function () {
+                expect(this.some).toEqual("thing3");
+                expect(this.something).toEqual("else");
+                this.constructor.__super__.constructor.__super__.init.call(this);
+            },
+        });
+        var Tmp3 = Tmp2.extend({
+            name: "thing",
+            some: "thing3",
+            init: function () {
+                expect(this.some).toEqual("thing3");
+                expect(this.something).toEqual("else");
+                this.constructor.__super__.init.call(this);
+            },
+        });
+        new Tmp3($("<div>"), { option: "value" });
+    });
+
     it("Accepts jQuery objects on initialization", function () {
         const Tmp = Base.extend({
             name: "example",
@@ -111,6 +140,17 @@ describe("pat-base: The Base class for patterns", function () {
         expect(tmp.el).toBe(node);
     });
 
+    it("Does nothing when initialized with no DOM node", function () {
+        const Tmp = Base.extend({
+            name: "example",
+            init: () => {},
+        });
+        const tmp = new Tmp(null);
+        expect(tmp instanceof Tmp).toBeTruthy();
+        expect(tmp.$el).toBeFalsy();
+        expect(tmp.el).toBeFalsy();
+    });
+
     it("will automatically register a pattern in the registry when extended", function () {
         jest.spyOn(registry, "register");
         var NewPattern = Base.extend({
@@ -118,9 +158,22 @@ describe("pat-base: The Base class for patterns", function () {
             trigger: ".pat-example",
         });
         expect(NewPattern.trigger).toEqual(".pat-example");
+        //expect(NewPattern.prototype.name).toEqual("example");
         expect(registry.register).toHaveBeenCalled();
         expect(Object.keys(registry.patterns).length).toEqual(1);
         expect(registry.patterns["example"]).toBeTruthy();
+    });
+
+    it('will not automatically register a pattern when "autoregister" is set to false', function () {
+        jest.spyOn(registry, "register");
+        var NewPattern = Base.extend({
+            name: "example",
+            trigger: ".pat-example",
+            autoregister: false,
+        });
+        expect(NewPattern.prototype.name).toEqual("example");
+        expect(registry.register).not.toHaveBeenCalled();
+        expect(Object.keys(registry.patterns).length).toEqual(0);
     });
 
     it('will not automatically register a pattern without a "name" attribute', function () {
@@ -134,6 +187,7 @@ describe("pat-base: The Base class for patterns", function () {
     it('will not automatically register a pattern without a "trigger" attribute', function () {
         jest.spyOn(registry, "register");
         var NewPattern = Base.extend({ name: "example" });
+        //expect(NewPattern.prototype.name).toEqual("example");
         expect(registry.register).toHaveBeenCalled();
         expect(registry.patterns["example"]).toBeFalsy();
     });
@@ -155,6 +209,44 @@ describe("pat-base: The Base class for patterns", function () {
     it("requires that patterns that extend it provide an object of properties", function () {
         expect(Base.extend).toThrowError(
             "Pattern configuration properties required when calling Base.extend"
+        );
+    });
+
+    it("has on/emit helpers to prefix events", function (done) {
+        var Tmp = Base.extend({
+            name: "tmp",
+            trigger: ".pat-tmp",
+            init: function () {
+                this.on("something", function (e, arg1) {
+                    expect(arg1).toEqual("yaay!");
+                    done();
+                });
+                this.emit("somethingelse", ["yaay!"]);
+            },
+        });
+        new Tmp(
+            $("<div/>").on("somethingelse.tmp.patterns", function (e, arg1) {
+                $(this).trigger("something.tmp.patterns", [arg1]);
+            })
+        );
+    });
+
+    it("has ``one`` helper to prefix events", function (done) {
+        var Tmp = Base.extend({
+            name: "tmp",
+            trigger: ".pat-tmp",
+            init: function () {
+                this.one("something", function (e, arg1) {
+                    expect(arg1).toEqual("yaay!");
+                    done();
+                });
+                this.emit("somethingelse", ["yaay!"]);
+            },
+        });
+        new Tmp(
+            $("<div/>").on("somethingelse.tmp.patterns", function (e, arg1) {
+                $(this).trigger("something.tmp.patterns", [arg1]);
+            })
         );
     });
 
