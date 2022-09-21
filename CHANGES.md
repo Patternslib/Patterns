@@ -4,6 +4,14 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.3.1](https://github.com/Patternslib/patterns/compare/9.3.0...9.3.1) (2022-09-21)
+
+
+### Maintenance
+
+
+* **Build:** Upgrade pat-upload to 3.1.1 to fix the previous pat-upload brown bag release. ([030b801](https://github.com/Patternslib/patterns/commit/030b801ac233188ecbd454e3e84285c764143011))pat-upload 3.1.0 did not include the advertised changes and was basically the same as 3.0.0.
+
 ## [9.3.0](https://github.com/Patternslib/patterns/compare/9.3.0-beta.0...9.3.0) (2022-09-20)
 
 
