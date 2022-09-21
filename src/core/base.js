@@ -11,7 +11,6 @@
  * Older Patternslib patterns on the other hand have a single global scope for
  * all DOM elements.
  */
-import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Registry from "./registry";
 import logging from "./logging";
@@ -24,6 +23,10 @@ export class BasePattern {
     static trigger; // trigger as CSS selector used in Registry.
 
     constructor(el, options, trigger) {
+        if (!el) {
+            log.warn("No element given to pattern.");
+            return;
+        }
         if (el.jquery) {
             this.$el = el;
             this.el = el[0];
@@ -39,14 +42,17 @@ export class BasePattern {
         // 2) ``this`` isn't fully available because instance isn't created.
         // Both limitations are gone in next tick.
         window.setTimeout(async () => {
-            //if (! this.el[`pattern-${this.name}`]) {
-            //    // Do not reinstantiate
-            //    return;
-            //}
-            await this.init(el, options, trigger); // ?? TODO: remove arguments
+            if (!this.el[`pattern-${this.name}`]) {
+                // Do not reinstantiate
+                return;
+            }
+
             // Store pattern instance on element
             this.$el.data(`pattern-${this.name}`, this); // TODO: remove this
             this.el[`pattern-${this.name}`] = this;
+
+            await this.init(el, options, trigger); // ?? TODO: remove arguments
+
             this.el.dispatchEvent(new Event(`init.${this.name}.patterns`)); // TODO: changed to JS event // TODO: should bubble?
         }, 1);
     }
@@ -82,12 +88,16 @@ const Base = {
         // implementation passed to this extend method.
         Object.assign(Pattern.prototype, options);
 
-        // Register pattern in global registry.
-        Registry.register(Pattern, name);
+        if (options.autoregister !== false) {
+            // Register pattern in global registry.
+            Registry.register(Pattern, name);
+        }
 
         return Pattern;
     },
 };
+
+// rm .one
 
 // const initBasePattern = function ($el, options, trigger) {
 //     if (!$el.jquery) {
