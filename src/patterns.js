@@ -74,4 +74,7 @@ import "@patternslib/pat-upload";
 // Set to ``true`` to include core styles via JavaScript
 //window.__patternslib_import_styles = false;
 
+// import logging from "./core/logging";
+// logging.setLevel(logging.Level.DEBUG);
+
 registry.init();
