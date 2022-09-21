@@ -44,7 +44,7 @@
         "@patternslib/pat-shopping-cart": "^3.0.0",
         "@patternslib/pat-sortable-table": "^3.1.0",
         "@patternslib/pat-tiptap": "^4.6.1",
-        "@patternslib/pat-upload": "^3.1.0",
+        "@patternslib/pat-upload": "^3.1.1",
         "copy-webpack-plugin": "^11.0.0",
         "pegjs": "0.11.0-master.b7b87ea",
         "webpack-modernizr-loader": "^5.0.0"
