@@ -1,6 +1,7 @@
 import "../../core/jquery-ext";
 import $ from "jquery";
 import Base from "../../core/base";
+import events from "../../core/events";
 import input_change_events from "../../lib/input-change-events";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
@@ -43,7 +44,7 @@ export default Base.extend({
                 data?.pattern === "sortable"
             ) {
                 // Directly submit when removing a clone or changing the sorting.
-                this.$el.submit();
+                this.el.dispatchEvent(events.submit_event());
                 log.debug(
                     `triggered by pat-update, pattern: ${data.pattern}, action: ${data.action}`
                 );
@@ -119,7 +120,7 @@ export default Base.extend({
 
     onInputChange(e) {
         e.stopPropagation();
-        this.$el.submit();
+        this.el.dispatchEvent(events.submit_event());
         log.debug("triggered by " + e.type);
     },
 });

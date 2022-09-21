@@ -292,13 +292,17 @@ describe("pat-autosuggest", function () {
             const input = document.querySelector("input");
             new pattern(input);
             const instance_autosubmit = new pattern_autosubmit(input);
-            const spy = jest.spyOn(instance_autosubmit.$el, "submit");
+            let called = false;
+            instance_autosubmit.el.addEventListener("submit", (e) => {
+                e.preventDefault();
+                called = true;
+            });
             await utils.timeout(1); // wait a tick for async to settle.
 
             $(".select2-input").click();
             $(document.querySelector(".select2-result")).mouseup();
 
-            expect(spy).toHaveBeenCalled();
+            expect(called).toBe(true);
         });
     });
 });

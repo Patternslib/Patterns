@@ -69,7 +69,7 @@ describe("pat-autosubmit", function () {
     });
 
     describe("2 - Trigger a submit", function () {
-        it("when a change on a single input happens", async function () {
+        it("when a change on a single input happens", function () {
             document.body.innerHTML = `
               <form>
                 <input
@@ -82,10 +82,13 @@ describe("pat-autosubmit", function () {
             `;
             const input = document.querySelector(".pat-autosubmit");
             const instance = new Pattern(input);
-            const spy = jest.spyOn(instance.$el, "submit");
+            let called = false;
+            instance.el.addEventListener("submit", (e) => {
+                e.preventDefault();
+                called = true;
+            });
             input.dispatchEvent(events.input_event());
-            await utils.timeout(1);
-            expect(spy).toHaveBeenCalled();
+            expect(called).toBe(true);
         });
 
         it("when pat-clone removes an element", function () {
@@ -95,9 +98,13 @@ describe("pat-autosubmit", function () {
             `;
             const el = document.querySelector(".pat-autosubmit");
             const instance = new Pattern(el);
-            const spy = jest.spyOn(instance.$el, "submit");
+            let called = false;
+            instance.el.addEventListener("submit", (e) => {
+                e.preventDefault();
+                called = true;
+            });
             $(el).trigger("pat-update", { pattern: "clone", action: "remove" });
-            expect(spy).toHaveBeenCalled();
+            expect(called).toBe(true);
         });
 
         it("when pat-sortable changes the sorting", function () {
@@ -107,9 +114,13 @@ describe("pat-autosubmit", function () {
             `;
             const el = document.querySelector(".pat-autosubmit");
             const instance = new Pattern(el);
-            const spy = jest.spyOn(instance.$el, "submit");
+            let called = false;
+            instance.el.addEventListener("submit", (e) => {
+                e.preventDefault();
+                called = true;
+            });
             $(el).trigger("pat-update", { pattern: "sortable" });
-            expect(spy).toHaveBeenCalled();
+            expect(called).toBe(true);
         });
     });
 
