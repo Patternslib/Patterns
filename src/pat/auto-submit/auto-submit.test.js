@@ -2,7 +2,6 @@ import $ from "jquery";
 import Pattern from "./auto-submit";
 import events from "../../core/events";
 import registry from "../../core/registry";
-import utils from "../../core/utils";
 import { jest } from "@jest/globals";
 
 describe("pat-autosubmit", function () {

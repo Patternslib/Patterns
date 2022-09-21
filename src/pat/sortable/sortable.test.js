@@ -78,12 +78,14 @@ describe("pat-sortable", function () {
         registry.scan($lab);
         var $handles = $("li a.sortable-handle");
         expect($handles.length).toBe(3);
-        var $form = $("form");
 
         $("#item3").prependTo($("ol")); // Simulate dragging it to the top.
-        var submitCallback = jest.fn();
+
+        const submitCallback = jest.fn();
         submitCallback.mockReturnValue(false);
-        $form.submit(submitCallback);
+        const form = document.querySelector("form");
+        form.addEventListener("submit", submitCallback);
+
         $("#item3 a.sortable-handle").trigger("dragend");
         expect($(".sortable-amount").attr("value")).toEqual("2");
         expect(submitCallback).toHaveBeenCalled();
