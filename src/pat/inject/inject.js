@@ -97,13 +97,22 @@ const inject = {
                     });
                     // setup event handlers
                     if ($el.is("form")) {
-                        $el.on("submit.pat-inject", this.onTrigger.bind(this))
-                            .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit)
-                            .on(
-                                "click.pat-inject",
-                                "[type=submit][formaction], [type=image][formaction]",
-                                this.onFormActionSubmit.bind(this)
-                            );
+                        $el.on("submit.pat-inject", (e) => {
+                            log.debug("Form submit triggered.");
+                            this.onTrigger(e);
+                        }).on("click.pat-inject", (e) => {
+                            if (
+                                e.target.matches(
+                                    "[type=submit][formaction], [type=image][formaction]"
+                                )
+                            ) {
+                                log.debug("Submit button with formaction triggered.");
+                                this.onFormActionSubmit(e);
+                            } else if (e.target.matches("[type=submit]")) {
+                                log.debug("Submit button triggered.");
+                                ajax.onClickSubmit(e);
+                            }
+                        });
                     } else if ($el.is(".pat-subform")) {
                         log.debug("Initializing subform with injection");
                     } else {
