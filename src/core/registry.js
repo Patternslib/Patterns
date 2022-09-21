@@ -104,18 +104,19 @@ const registry = {
         }
     },
 
-    initPattern(name, el, trigger) {
+    async initPattern(name, el, trigger) {
         /* Initialize the pattern with the provided name and in the context
          * of the passed in DOM element.
          */
         const $el = $(el);
         const pattern = registry.patterns[name];
-        if (pattern.init) {
+        if (pattern) {
             const plog = logging.getLogger(`pat.${name}`);
             if ($el.is(pattern.trigger)) {
                 plog.debug("Initialising.", $el);
                 try {
-                    pattern.init($el, null, trigger);
+                    new pattern($el, null, trigger);
+                    await utils.timeout(1);
                     plog.debug("done.");
                 } catch (e) {
                     if (dont_catch) {
@@ -193,13 +194,25 @@ const registry = {
     register(pattern, name) {
         name = name || pattern.name;
         if (!name) {
-            log.error("Pattern lacks a name.", pattern);
-            return false;
+            log.warn(
+                "This pattern without a name attribute cannot be registered.",
+                pattern
+            );
+            return;
         }
+
+        if (!pattern.trigger) {
+            log.warn(
+                `The pattern "${name}" without a trigger attribute will not be registered.`
+            );
+            return;
+        }
+
         if (registry.patterns[name]) {
-            log.debug(`Already have a pattern called ${name}.`);
-            return false;
+            log.error(`A pattern with the name "${name}" is already registered.`);
+            return;
         }
+
         // register pattern to be used for scanning new content
         registry.patterns[name] = pattern;
 
