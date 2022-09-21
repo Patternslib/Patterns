@@ -19,6 +19,7 @@ describe("pat-checklist", () => {
             </fieldset>
         `;
         new Pattern(document.querySelector(".pat-checklist"));
+        await utils.timeout(1); // wait a tick for async to settle.
 
         const [f1] = document.querySelectorAll("fieldset");
         const [b1, b2] = document.querySelectorAll("button");
@@ -536,6 +537,7 @@ describe("pat-checklist", () => {
             </fieldset>
         `;
         new Pattern(document.querySelector(".pat-checklist"));
+        await utils.timeout(1); // wait a tick for async to settle.
 
         const [f1] = document.querySelectorAll("fieldset");
         const [l1, l2, l3] = document.querySelectorAll("label");

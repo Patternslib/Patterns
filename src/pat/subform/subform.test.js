@@ -1,6 +1,7 @@
-import registry from "../../core/registry";
 import $ from "jquery";
 import pattern from "./subform";
+import registry from "../../core/registry";
+import utils from "../../core/utils";
 import { jest } from "@jest/globals";
 
 describe("subform base tests", function () {
@@ -20,7 +21,7 @@ describe("subform base tests", function () {
     });
 
     describe("Entering a return", function () {
-        it("does nothing if the pat-autosubmit class is missing", function () {
+        it("does nothing if the pat-autosubmit class is missing", async function () {
             var $form = $(
                 '<form onsubmit="return false;">' +
                     '  <fieldset class="pat-subform">' +
@@ -29,6 +30,8 @@ describe("subform base tests", function () {
                     "</form>"
             );
             const pat = new pattern($(".pat-subform", $form));
+            await utils.timeout(1);
+
             const spy_keyboard_handler = jest.spyOn(pat.__proto__, "keyboard_handler");
             const spy_submit = jest.spyOn(pat.__proto__, "submit");
             registry.scan($form);
@@ -39,7 +42,7 @@ describe("subform base tests", function () {
             expect(spy_keyboard_handler).toHaveBeenCalled();
             expect(spy_submit).not.toHaveBeenCalled();
         });
-        it("submits the subform when the pat-autosubmit class is present", function () {
+        it("submits the subform when the pat-autosubmit class is present", async function () {
             var $form = $(
                 '<form onsubmit="return false;">' +
                     '  <fieldset class="pat-subform pat-autosubmit">' +
@@ -48,6 +51,8 @@ describe("subform base tests", function () {
                     "</form>"
             );
             const pat = new pattern($(".pat-subform", $form));
+            await utils.timeout(1);
+
             const spy_keyboard_handler = jest.spyOn(pat.__proto__, "keyboard_handler");
             const spy_submit = jest.spyOn(pat.__proto__, "submit");
             registry.scan($form);
@@ -58,7 +63,7 @@ describe("subform base tests", function () {
             expect(spy_keyboard_handler).toHaveBeenCalled();
             expect(spy_submit).toHaveBeenCalled();
         });
-        it("does not submit the parent autosubmit form when the pat-autosubmit class is present on both", function () {
+        it("does not submit the parent autosubmit form when the pat-autosubmit class is present on both", async function () {
             var $form = $(
                 '<form class="pat-autosubmit" onsubmit="return false;">' +
                     '  <fieldset class="pat-subform pat-autosubmit">' +
@@ -68,6 +73,8 @@ describe("subform base tests", function () {
                     "</form>"
             );
             const pat = new pattern($(".pat-subform", $form));
+            await utils.timeout(1);
+
             const spy_keyboard_handler = jest.spyOn(pat.__proto__, "keyboard_handler");
             const spy_submit = jest.spyOn(pat.__proto__, "submit");
             const spy_formsubmit = jest.spyOn($form, "submit");

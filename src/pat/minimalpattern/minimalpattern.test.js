@@ -1,4 +1,5 @@
 import Pattern from "./minimalpattern";
+import utils from "../../core/utils";
 
 describe("Minimalpattern tests", function () {
     beforeEach(function () {
@@ -10,12 +11,13 @@ describe("Minimalpattern tests", function () {
         document.body.removeChild(document.querySelector("#lab"));
     });
 
-    it("Changes the color on click.", function (done) {
+    it("Changes the color on click.", async function (done) {
         const el = document.createElement("div");
         el.setAttribute("class", "pat-minimalpattern");
         document.body.appendChild(el);
 
         new Pattern(el);
+        await utils.timeout(1);
 
         expect(el.getAttribute("style")).toBeFalsy();
         el.click();
@@ -25,13 +27,14 @@ describe("Minimalpattern tests", function () {
         done();
     });
 
-    it("Changes the color to the one specified on click.", function (done) {
+    it("Changes the color to the one specified on click.", async function (done) {
         const el = document.createElement("div");
         el.setAttribute("class", "pat-minimalpattern");
         el.setAttribute("data-pat-minimalpattern", "background-color: red;");
         document.body.appendChild(el);
 
         new Pattern(el);
+        await utils.timeout(1);
 
         expect(el.getAttribute("style")).toBeFalsy();
         el.click();

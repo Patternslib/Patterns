@@ -1,11 +1,12 @@
 import Pattern from "./notification";
+import utils from "../../core/utils";
 
 describe("pat notification", function () {
     afterEach(() => {
         document.body.innerHTML = "";
     });
 
-    it("Gets initialized and will disappear as per default settings.", function () {
+    it("Gets initialized and will disappear as per default settings.", async function () {
         document.body.innerHTML = `
           <p class="pat-notification">
               okay
@@ -16,6 +17,7 @@ describe("pat notification", function () {
         expect(el.parentNode).toBe(document.body);
 
         new Pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.parentNode).not.toBe(document.body);
         expect(el.parentNode.classList.contains("pat-notification-panel")).toBe(true);

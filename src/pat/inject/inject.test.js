@@ -62,6 +62,8 @@ describe("pat-inject", function () {
             $(document).on("patterns-injected", callback);
 
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
+
             $a.trigger("click");
 
             var cfgs = pattern.extractConfig($a, {});
@@ -86,6 +88,8 @@ describe("pat-inject", function () {
             $("#lab").empty().append($a).append($div);
 
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
+
             $a.trigger("click");
 
             var cfgs = pattern.extractConfig($a, {});
@@ -100,7 +104,7 @@ describe("pat-inject", function () {
             spy_ajax.mockRestore();
         });
 
-        it("can be set to an empty string value so that nothing gets added to the target while content is still loading'", function () {
+        it("can be set to an empty string value so that nothing gets added to the target while content is still loading'", async function () {
             const spy_ajax = jest.spyOn($, "ajax");
             var $a = $(
                 '<a class="pat-inject" data-pat-inject="loading-class: ;" href="test.html#someid">link</a>'
@@ -108,6 +112,8 @@ describe("pat-inject", function () {
             var $div = $('<div id="someid" />');
             $("#lab").empty().append($a).append($div);
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
+
             $a.trigger("click");
             var cfgs = pattern.extractConfig($a, {});
             expect(cfgs[0].loadingClass).toBe("");
@@ -118,7 +124,7 @@ describe("pat-inject", function () {
     });
 
     describe("The confirm argument", function () {
-        it("is by default set to 'class', which means it asks for confirmation based on a class on the target", function () {
+        it("is by default set to 'class', which means it asks for confirmation based on a class on the target", async function () {
             var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
             var $div = $('<div id="someid" />');
             $("#lab").empty().append($a).append($div);
@@ -133,6 +139,8 @@ describe("pat-inject", function () {
 
             // Test that confirm doesn't get called
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
+
             $a.trigger("click");
             expect(spy_confirm).not.toHaveBeenCalled();
 
@@ -144,7 +152,7 @@ describe("pat-inject", function () {
             spy_confirm.mockRestore();
         });
 
-        it("can be set to 'never' to never ask for confirmation", function () {
+        it("can be set to 'never' to never ask for confirmation", async function () {
             var $a = $(
                 '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: never">link</a>'
             );
@@ -161,6 +169,8 @@ describe("pat-inject", function () {
 
             // Test that confirm doesn't get called
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
+
             $a.trigger("click");
             expect(spy_confirm).not.toHaveBeenCalled();
             expect(spy_onTrigger).toHaveBeenCalled();
@@ -169,7 +179,7 @@ describe("pat-inject", function () {
             spy_confirm.mockRestore();
         });
 
-        it("can be set to 'always' to always ask for confirmation before injecting", function () {
+        it("can be set to 'always' to always ask for confirmation before injecting", async function () {
             var $a = $(
                 '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: always">link</a>'
             );
@@ -186,6 +196,8 @@ describe("pat-inject", function () {
 
             // Test that confirm does get called
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
+
             $a.trigger("click");
             expect(spy_onTrigger).toHaveBeenCalled();
             expect(spy_confirm).toHaveBeenCalled();
@@ -194,7 +206,7 @@ describe("pat-inject", function () {
             spy_confirm.mockRestore();
         });
 
-        it("can be set to 'form-data' to ask for confirmation before injecting over form fields changed by the user", function () {
+        it("can be set to 'form-data' to ask for confirmation before injecting over form fields changed by the user", async function () {
             var $a = $(
                 '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: form-data">link</a>'
             );
@@ -213,6 +225,8 @@ describe("pat-inject", function () {
 
             // Test that confirm does get called
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
+
             $a.trigger("click");
             expect(spy_confirm).toHaveBeenCalled();
 
@@ -226,7 +240,7 @@ describe("pat-inject", function () {
         });
 
         describe("The confirm-message argument", function () {
-            it("can be used to provide a custom confirmation prompt message", function () {
+            it("can be used to provide a custom confirmation prompt message", async function () {
                 var $a = $(
                     '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: always; confirm-message: Hello world">link</a>'
                 );
@@ -243,6 +257,8 @@ describe("pat-inject", function () {
 
                 // Test that confirm doesn't get called
                 new pattern($a);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 $a.trigger("click");
                 expect(spy_confirm).toHaveBeenCalled();
                 expect(spy_confirm).toHaveBeenCalledWith("Hello world");
@@ -594,6 +610,8 @@ describe("pat-inject", function () {
             var callback = jest.fn();
             $(document).on("patterns-injected", callback);
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
+
             $a.trigger("click");
             answer("<html><body>" + '<div id="someid">repl</div>' + "</body></html>");
             await utils.timeout(1); // wait a tick for async to settle.
@@ -610,6 +628,8 @@ describe("pat-inject", function () {
             var callback = jest.fn();
             $(document).on("patterns-injected-scanned", callback);
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
+
             $a.trigger("click");
             answer(`
               <html>
@@ -634,6 +654,8 @@ describe("pat-inject", function () {
             var callback = jest.fn();
             $(document.body).on("patterns-injected-delayed", callback);
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
+
             $a.trigger("click");
             answer(`
               <html>
@@ -660,6 +682,8 @@ describe("pat-inject", function () {
             var callback = jest.fn();
             $(document).on("patterns-injected-scanned", callback);
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
+
             $a.trigger("click");
             answer(`
               <html>
@@ -684,6 +708,8 @@ describe("pat-inject", function () {
             var callback = jest.fn();
             $(document).on("patterns-injected-scanned", callback);
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
+
             $a.trigger("click");
             answer(`
               <html>
@@ -719,30 +745,38 @@ describe("pat-inject", function () {
                 spy_ajax.mockRestore();
             });
 
-            it("fetches url on click", function () {
+            it("fetches url on click", async function () {
                 new pattern($a);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 $a.trigger("click");
                 expect($.ajax).toHaveBeenCalled();
                 expect($.ajax.mock.calls.pop()[0].url).toBe("test.html");
             });
 
-            it("fetches url on autoload", function () {
+            it("fetches url on autoload", async function () {
                 $a.attr("data-pat-inject", "autoload");
                 new pattern($a);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 expect($.ajax).toHaveBeenCalled();
                 expect($.ajax.mock.calls.pop()[0].url).toBe("test.html");
             });
 
-            it("fetches url on autoload-delayed", function () {
+            it("fetches url on autoload-delayed", async function () {
                 $a.attr("data-pat-inject", "autoload-delayed");
                 new pattern($a);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 // this needs to be checked async - is beyond me
                 // expect($.ajax).toHaveBeenCalled();
                 // expect($.ajax.mock.calls.pop()[0].url).toBe("test.html");
             });
-            it("fetches url on push_marker sent", function () {
+            it("fetches url on push_marker sent", async function () {
                 $a.attr("data-pat-inject", "push-marker: content-updated");
                 new pattern($a);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 $("body").trigger("push", ["content-updated"]);
                 expect($.ajax).toHaveBeenCalled();
                 expect($.ajax.mock.calls.pop()[0].url).toBe("test.html");
@@ -750,6 +784,8 @@ describe("pat-inject", function () {
 
             it("injects into existing div", async function () {
                 new pattern($a);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 $a.trigger("click");
                 answer('<html><body><div id="someid">replacement</div></body></html>');
                 await utils.timeout(1); // wait a tick for async to settle.
@@ -758,6 +794,8 @@ describe("pat-inject", function () {
 
             it("injects multiple times", async function () {
                 new pattern($a);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 $a.trigger("click");
                 answer('<html><body><div id="someid">replacement</div></body></html>');
                 await utils.timeout(1); // wait a tick for async to settle.
@@ -789,6 +827,8 @@ describe("pat-inject", function () {
                 $div.append($target1).append($target2);
 
                 new pattern($a);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 $a.trigger("click");
                 answer(
                     "<html><body>" +
@@ -809,6 +849,8 @@ describe("pat-inject", function () {
                 $div.append($target1).append($target2);
 
                 new pattern($a);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 $a.trigger("click");
                 answer(
                     "<html><body>" + '<div id="someid">repl</div>' + "</body></html>"
@@ -823,6 +865,8 @@ describe("pat-inject", function () {
                 $a.attr("data-pat-inject", "#otherid::element #someid");
 
                 new pattern($a);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 $a.trigger("click");
                 answer(
                     "<html><body>" +
@@ -840,6 +884,8 @@ describe("pat-inject", function () {
                 $div.append($('<div id="otherid" />'));
 
                 new pattern($a);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 $a.trigger("click");
                 answer(
                     "<html><body>" +
@@ -862,6 +908,8 @@ describe("pat-inject", function () {
                 $div.append($target1).append($target2);
 
                 new pattern($a);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 $a.trigger("click");
                 answer(
                     "<html><body>" + '<div id="someid">repl</div>' + "</body></html>"
@@ -877,6 +925,8 @@ describe("pat-inject", function () {
                 $div.append($('<div id="otherid" />'));
 
                 new pattern($a);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 $a.trigger("click");
                 answer(
                     "<html><body>" + '<div id="someid">repl</div>' + "</body></html>"
@@ -904,6 +954,8 @@ describe("pat-inject", function () {
 
             it("trigger injection on submit", async function () {
                 new pattern($form);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 $form.trigger("submit");
                 answer(
                     "<html><body>" + '<div id="someid">repl</div>' + "</body></html>"
@@ -913,11 +965,13 @@ describe("pat-inject", function () {
                 expect($div.html()).toBe("repl");
             });
 
-            it("pass get form parameters in ajax call as data", function () {
+            it("pass get form parameters in ajax call as data", async function () {
                 $form.attr("method", "get");
                 $form.append($('<input type="text" name="param" value="somevalue" />'));
 
                 new pattern($form);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 $form.trigger("submit");
 
                 var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
@@ -925,24 +979,28 @@ describe("pat-inject", function () {
                 expect(ajaxargs.data).toContain("param=somevalue");
             });
 
-            it("pass post form parameters in ajax call as data", function () {
+            it("pass post form parameters in ajax call as data", async function () {
                 $form.attr("method", "post");
                 $form.append($('<input type="text" name="param" value="somevalue" />'));
 
                 new pattern($form);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 $form.trigger("submit");
 
                 var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
                 expect($.ajax).toHaveBeenCalled();
                 expect(ajaxargs.data.get("param")).toContain("somevalue");
             });
-            it("pass submit button value in ajax call as data", function () {
+            it("pass submit button value in ajax call as data", async function () {
                 var $submit = $('<input type="submit" name="submit" value="label" />');
 
                 $form.attr("method", "post");
                 $form.append($submit);
 
                 new pattern($form);
+                await utils.timeout(1); // wait a tick for async to settle.
+
                 $submit.trigger("click");
 
                 var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
@@ -951,7 +1009,7 @@ describe("pat-inject", function () {
             });
 
             describe("formaction attribute on submit buttons", function () {
-                it("use submit button formaction value as action URL", function () {
+                it("use submit button formaction value as action URL", async function () {
                     var $submit1 = $(
                             '<input type="submit" name="submit" value="default" />'
                         ),
@@ -963,6 +1021,8 @@ describe("pat-inject", function () {
                     $form.append($submit1).append($submit2);
 
                     new pattern($form);
+                    await utils.timeout(1); // wait a tick for async to settle.
+
                     $submit2.trigger("click");
 
                     var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
@@ -971,7 +1031,7 @@ describe("pat-inject", function () {
                     expect(ajaxargs.data).toBe("submit=special");
                 });
 
-                it("use an image submit with a formaction value as action URL", function () {
+                it("use an image submit with a formaction value as action URL", async function () {
                     var $submit1 = $(
                             '<input type="submit" name="submit" value="default" />'
                         ),
@@ -983,6 +1043,8 @@ describe("pat-inject", function () {
                     $form.append($submit1).append($submit2);
 
                     new pattern($form);
+                    await utils.timeout(1); // wait a tick for async to settle.
+
                     $submit2.trigger("click");
 
                     var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
@@ -1005,6 +1067,8 @@ describe("pat-inject", function () {
                     $div.append($target);
 
                     new pattern($form);
+                    await utils.timeout(1); // wait a tick for async to settle.
+
                     $submit2.trigger("click");
                     answer(
                         "<html><body>" +
@@ -1035,6 +1099,8 @@ describe("pat-inject", function () {
                     $div.append($target);
 
                     new pattern($form);
+                    await utils.timeout(1); // wait a tick for async to settle.
+
                     $submit2.trigger("click");
                     answer(
                         "<html><body>" +
@@ -1069,6 +1135,8 @@ describe("pat-inject", function () {
                     $div.append($target1).append($target2);
 
                     new pattern($form);
+                    await utils.timeout(1); // wait a tick for async to settle.
+
                     $submit2.trigger("click");
                     answer(
                         "<html><body>" +
@@ -1104,6 +1172,8 @@ describe("pat-inject", function () {
                     $div.append($target1).append($target2);
 
                     new pattern($form);
+                    await utils.timeout(1); // wait a tick for async to settle.
+
                     $submit2.trigger("click");
                     answer(
                         "<html><body>" +
@@ -1140,6 +1210,8 @@ describe("pat-inject", function () {
                     $div.append($target1).append($target2);
 
                     new pattern($form);
+                    await utils.timeout(1); // wait a tick for async to settle.
+
                     $submit2.trigger("click");
                     answer(
                         "<html><body>" +
@@ -1247,6 +1319,7 @@ describe("pat-inject", function () {
 
         it("Adds on error a data-error-message to body in standard case.", async () => {
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
 
             // Invoke error case
             pattern._onInjectError($a, [], {
@@ -1280,6 +1353,7 @@ describe("pat-inject", function () {
             `;
 
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
 
             // Invoke error case
             pattern._onInjectError($a, [], {
@@ -1304,6 +1378,7 @@ describe("pat-inject", function () {
 
             $a = $(".pat-inject");
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
 
             // Invoke error case
             pattern._onInjectError(
@@ -1352,6 +1427,7 @@ describe("pat-inject", function () {
             `;
 
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
 
             // Invoke error case
             pattern._onInjectError($a, [], {
@@ -1386,6 +1462,7 @@ describe("pat-inject", function () {
             $a = $(".pat-inject");
 
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
 
             // Invoke error case
             pattern._onInjectError($a, [], {
@@ -1445,6 +1522,7 @@ describe("pat-inject", function () {
             $a = $(".pat-inject");
 
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
 
             // Invoke error case
             pattern._onInjectError($a, [], {
@@ -1492,6 +1570,7 @@ describe("pat-inject", function () {
             $a = $(".pat-inject");
 
             new pattern($a);
+            await utils.timeout(1); // wait a tick for async to settle.
 
             // Invoke error case
             pattern._onInjectError($a, [], {

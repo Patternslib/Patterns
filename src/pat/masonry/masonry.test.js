@@ -1,5 +1,6 @@
-import pattern from "./masonry";
 import $ from "jquery";
+import pattern from "./masonry";
+import utils from "../../core/utils";
 
 describe("pat-masonry", function () {
     beforeEach(function () {
@@ -9,7 +10,7 @@ describe("pat-masonry", function () {
         $("#lab").remove();
     });
 
-    it("Sets class masonry-ready on the element after masonry has finished", function () {
+    it("Sets class masonry-ready on the element after masonry has finished", async function () {
         var $msnry;
         $("#lab").html(
             "<div class='pat-masonry'>" +
@@ -24,9 +25,9 @@ describe("pat-masonry", function () {
         $msnry = $("#lab .pat-masonry");
         expect($msnry.hasClass("masonry-ready")).toBeFalsy();
         new pattern($msnry);
-        setTimeout(function () {
-            // XXX: Reenable when pattern.init returns a promise
-            // expect($msnry.hasClass("masonry-ready")).toBeTruthy();
-        }, 2000);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        await utils.timeout(2000); // wait a tick for async to settle.
+        expect($msnry.hasClass("masonry-ready")).toBeTruthy();
     });
 });
