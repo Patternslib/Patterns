@@ -6,6 +6,7 @@
 import $ from "jquery";
 import ajax from "../ajax/ajax";
 import Base from "../../core/base";
+import events from "../../core/events";
 import inject from "../inject/inject";
 import logging from "../../core/logging";
 
@@ -44,7 +45,7 @@ export default Base.extend({
         } else {
             // use the native handler, since there could be event handlers
             // redirecting to inject/ajax.
-            $form[0].submit();
+            $form[0].dispatchEvent(events.submit_event());
         }
         // reenable everything
         log.debug("Restoring previous state.");
@@ -72,11 +73,12 @@ export default Base.extend({
         if (ev.keyCode != 13) {
             return;
         }
-        var $subform = $(ev.target).parents(".pat-subform");
-        if (!$subform.is(".pat-autosubmit")) {
+
+        var subform = ev.target.closest(".pat-subform");
+        if (!subform.matches(".pat-autosubmit")) {
             return;
         }
-        return $subform.submit();
+        subform.dispatchEvent(events.submit_event());
     },
 
     submitClicked(ev) {
