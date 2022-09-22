@@ -34,7 +34,6 @@ export default Base.extend({
             return;
         }
         event.preventDefault();
-        event.stopPropagation();
         if (this.options.delay) {
             await utils.timeout(this.options.delay);
         }
