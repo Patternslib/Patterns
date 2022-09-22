@@ -249,5 +249,34 @@
         </fieldset>
       </fieldset>
     </form>
+
+    <div class="pat-modal">
+      <form class="pat-validation vertical pat-inject"
+            action="."
+            method="get"
+            data-pat-validation="disable-selector: [type=submit], button:not([type=button])"
+      >
+        <fieldset class="horizontal">
+          <label>First of all!
+            <input autocomplete="off"
+                   name="first"
+                   required
+                   type="text"
+            /></label>
+
+          <label>Optional subtext
+            <input autocomplete="off"
+                   name="optional"
+                   type="text"
+            /></label>
+
+        </fieldset>
+        <fieldset class="buttons">
+          <button class="close-panel" type="submit">Submit</button>
+          <button class="close-panel" type="button" formnovalidate>Cancel</button>
+        </fieldset>
+      </form>
+    </div>
+
   </body>
 </html>
