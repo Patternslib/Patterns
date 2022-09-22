@@ -115,7 +115,7 @@ const registry = {
             if ($el.is(pattern.trigger)) {
                 plog.debug("Initialising.", $el);
                 try {
-                    new pattern($el, null, trigger);
+                    new pattern(el, null, trigger);
                     await utils.timeout(1);
                     plog.debug("done.");
                 } catch (e) {
