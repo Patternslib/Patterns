@@ -124,5 +124,43 @@ describe("pat-forward", function () {
             await utils.timeout(300);
             expect(window.location.href.indexOf("#oh") > -1).toBe(true);
         });
+
+        it("does not steal the click event but let it bubble up.", function () {
+            document.body.innerHTML = `
+
+                <div class="pat-forward" data-pat-forward="#target1">
+                  <button class="pat-forward" type="button" data-pat-forward="#target2">Button 2</button>
+                </div>
+
+                <div id="target1">Target 1</div>
+                <div id="target2">Target 2</div>
+            `;
+
+            const source1 = document.querySelector("div.pat-forward");
+            const source2 = document.querySelector("button.pat-forward");
+
+            const target1 = document.querySelector("#target1");
+            const target2 = document.querySelector("#target2");
+
+            let target1_clicks = 0;
+            target1.addEventListener("click", () => {
+                target1_clicks++;
+            });
+
+            let target2_clicks = 0;
+            target2.addEventListener("click", () => {
+                target2_clicks++;
+            });
+
+            new pattern(source1);
+            new pattern(source2);
+
+            source1.click();
+            expect(target1_clicks).toBe(1);
+
+            source2.click();
+            expect(target2_clicks).toBe(1);
+            expect(target1_clicks).toBe(2);
+        });
     });
 });
