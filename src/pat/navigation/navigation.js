@@ -70,7 +70,7 @@ export default Base.extend({
      * Initial run to mark the current item and its parents.
      */
     init_markings() {
-        if (this.el.querySelector(this.options.currentClass)) {
+        if (this.el.querySelector(`.${this.options.currentClass}`)) {
             log.debug("Mark navigation items based on existing current class");
             this.mark_current();
         } else {

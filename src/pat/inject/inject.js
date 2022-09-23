@@ -456,8 +456,14 @@ const inject = {
         const $injected = cfg.$injected || $src;
         // Now the injection actually happens.
         if (this._inject(trigger, $src, $(target), cfg)) {
+            // Update history
+            this._update_history(cfg, trigger, title);
+            // Post-injection
             this._afterInjection($el, $injected, cfg);
         }
+    },
+
+    _update_history(cfg, trigger, title) {
         // History support. if subform is submitted, append form params
         const glue = cfg.url.indexOf("?") > -1 ? "&" : "?";
         if (cfg.history === "record" && "pushState" in history) {
