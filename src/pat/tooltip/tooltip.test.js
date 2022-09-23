@@ -1587,4 +1587,47 @@ this will be extracted.
             expect(parts.selector).toBeFalsy();
         });
     });
+
+    describe("10 - Strip the title attribute ...", () => {
+        it("... only if the tooltip has source-title", async () => {
+            document.body.innerHTML = `
+                <a class="pat-tooltip"
+                    data-pat-tooltip="source: title"
+                    title="This is the title attribute"
+                >test</a>
+            `;
+            new pattern(document.querySelector(".pat-tooltip"));
+            await utils.timeout(1);
+
+            expect(document.querySelector(".pat-tooltip").title).toBeFalsy();
+        });
+        it("... not for source-content", async () => {
+            document.body.innerHTML = `
+                <a class="pat-tooltip"
+                    data-pat-tooltip="source: content"
+                    title="This is the title attribute"
+                >test</a>
+            `;
+            new pattern(document.querySelector(".pat-tooltip"));
+            await utils.timeout(1);
+
+            expect(document.querySelector(".pat-tooltip").title).toBe(
+                "This is the title attribute"
+            );
+        });
+        it("... not for source-ajax", async () => {
+            document.body.innerHTML = `
+                <a class="pat-tooltip"
+                    data-pat-tooltip="source: ajax"
+                    title="This is the title attribute"
+                >test</a>
+            `;
+            new pattern(document.querySelector(".pat-tooltip"));
+            await utils.timeout(1);
+
+            expect(document.querySelector(".pat-tooltip").title).toBe(
+                "This is the title attribute"
+            );
+        });
+    });
 });

@@ -91,8 +91,9 @@ export default Base.extend({
         Tippy.setDefaultProps(defaultProps);
         this.tippy = new Tippy(el, this.tippy_options);
 
-        if (el.getAttribute("title")) {
-            // Remove title attribute to disable browser's built-in tooltip feature
+        if (this.options.source === "title") {
+            // Remove ``title`` attribute when source is set to ``title`` to
+            // disable the browser's built-in tooltip feature
             el.removeAttribute("title");
         }
 
