@@ -4,6 +4,28 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.4.0](https://github.com/Patternslib/patterns/compare/9.3.1...9.4.0) (2022-09-23)
+
+
+### Features
+
+
+* **pat forward:** Do not steal the click event. ([7755aa8](https://github.com/Patternslib/patterns/commit/7755aa841b395579894c576d978b0d21cf5a91ce))When a pat-forward element is clicked, allow to propagate the click event so that other handlers can also react.
+Fixes: https://github.com/Patternslib/Patterns/issues/1063
+
+* **pat tooltip:** Keep the title attribute for source ajax and content. ([fa6bff7](https://github.com/Patternslib/patterns/commit/fa6bff78b3f14a226d60a7bfaff12d82597a15fa))The tooltip element's title attribute is only stripped if the source is set to title (the default) and kept otherwise.
+Fixes: https://github.com/Patternslib/Patterns/issues/945
+
+
+### Bug Fixes
+
+
+* **pat inject:** Update the URL earlier ([a02488d](https://github.com/Patternslib/patterns/commit/a02488d546666e04d3ac605f5d44fb77683229aa))Update the history/URL after the injection has been done and before post
+processing - e.g. scanning for new patterns - is happening.
+Other patterns like pat-navigation are depending on an updated URL state.
+
+* **pat navigation:** Fix selector for checking existing current classes. ([3091a29](https://github.com/Patternslib/patterns/commit/3091a2984b05c32633e2af855a629422ce4a5305))
+
 ## [9.3.1](https://github.com/Patternslib/patterns/compare/9.3.0...9.3.1) (2022-09-21)
 
 
