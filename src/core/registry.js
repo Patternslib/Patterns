@@ -128,12 +128,10 @@ const registry = {
     },
 
     orderPatterns(patterns) {
-        // XXX: Bit of a hack. We need the validation pattern to be
-        // parsed and initiated before the inject pattern. So we make
-        // sure here, that it appears first. Not sure what would be
-        // the best solution. Perhaps some kind of way to register
-        // patterns "before" or "after" other patterns.
-        if (patterns.includes("validation") && patterns.includes("inject")) {
+        // Always add pat-validation as first pattern, so that it can prevent
+        // other patterns from reacting to submit events if form validation
+        // fails.
+        if (patterns.includes("validation")) {
             patterns.splice(patterns.indexOf("validation"), 1);
             patterns.unshift("validation");
         }
