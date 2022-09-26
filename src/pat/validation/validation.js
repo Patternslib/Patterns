@@ -255,8 +255,10 @@ export default Base.extend({
         }
 
         if (event?.type === "submit") {
-            // Do not submit in error case.
+            // Do not submit in error case and prevent other handlers to take action.
             event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
         }
         this.set_error_message(input, input_options);
     },

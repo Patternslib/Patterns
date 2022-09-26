@@ -1,6 +1,7 @@
 import Pattern, { parser } from "./validation";
-import utils from "../../core/utils";
 import events from "../../core/events";
+import utils from "../../core/utils";
+import { jest } from "@jest/globals";
 
 describe("pat-validation", function () {
     let orig_delay;
@@ -285,6 +286,153 @@ describe("pat-validation", function () {
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.querySelectorAll("em.warning").length).toBe(0);
+    });
+
+    it("1.13 - Prevents other event handlers when invalid.", async function () {
+        document.body.innerHTML = `
+          <form class="pat-validation">
+            <input name="ok" required />
+            <button>submit</button>
+          </form>
+        `;
+        const el = document.querySelector(".pat-validation");
+
+        new Pattern(el);
+
+        let submit_called = false;
+        let click_called = false;
+
+        // Note: the handlers must be registered after Pattern initialization.
+        // Otherwise the pattern will not be able to prevent the event.
+        // In case of other patterns, the validation pattern will be reordered
+        // first and submit prevention does work.
+        el.addEventListener("submit", () => (submit_called = true));
+        el.addEventListener("click", () => (click_called = true));
+
+        el.querySelector("button").click();
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.querySelectorAll("em.warning").length).toBe(1);
+        expect(submit_called).toBe(false);
+        expect(click_called).toBe(true);
+    });
+
+    it("1.14 - Prevents pat-inject form submission when invalid.", async function () {
+        const pat_inject = (await import("../inject/inject")).default;
+        const registry = (await import("../../core/registry")).default;
+
+        document.body.innerHTML = `
+          <form action="." class="pat-inject pat-validation">
+            <input name="ok" required />
+            <button>submit</button>
+          </form>
+        `;
+        const el = document.querySelector(".pat-validation");
+
+        const spy_inject_submit = jest.spyOn(pat_inject, "onTrigger");
+
+        registry.scan(document.body);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        el.querySelector("button").click();
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.querySelectorAll("em.warning").length).toBe(1);
+        expect(spy_inject_submit).not.toHaveBeenCalled();
+    });
+
+    it("1.15 - Prevents pat-modal closing with a pat-inject when invalid.", async function () {
+        await import("../close-panel/close-panel");
+        const pat_inject = (await import("../inject/inject")).default;
+        const pat_modal = (await import("../modal/modal")).default;
+        const registry = (await import("../../core/registry")).default;
+
+        document.body.innerHTML = `
+          <div class="pat-modal">
+            <form action="." class="pat-inject pat-validation">
+              <input name="ok" required />
+              <button class="close-panel">submit</button>
+            </form>
+          </div>
+        `;
+        const el = document.querySelector("form");
+
+        const spy_inject_submit = jest.spyOn(pat_inject, "onTrigger");
+        const spy_destroy_modal = jest.spyOn(pat_modal.prototype, "destroy");
+
+        registry.scan(document.body);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        el.querySelector("button").click();
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.querySelectorAll("em.warning").length).toBe(1);
+        expect(spy_inject_submit).not.toHaveBeenCalled();
+        expect(spy_destroy_modal).not.toHaveBeenCalled();
+    });
+
+    it("1.16 - Prevents pat-modal closing when invalid.", async function () {
+        await import("../close-panel/close-panel");
+        const pat_modal = (await import("../modal/modal")).default;
+        const registry = (await import("../../core/registry")).default;
+
+        document.body.innerHTML = `
+          <div class="pat-modal">
+            <form action="." class="pat-validation">
+              <input name="ok" required />
+              <button class="close-panel">submit</button>
+            </form>
+          </div>
+        `;
+        const el = document.querySelector("form");
+
+        const spy_destroy_modal = jest.spyOn(pat_modal.prototype, "destroy");
+
+        registry.scan(document.body);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        el.querySelector("button").click();
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.querySelectorAll("em.warning").length).toBe(1);
+        expect(spy_destroy_modal).not.toHaveBeenCalled();
+    });
+
+    it("1.17 - Prevents pat-modal closing when invalid with custom validation rule.", async function () {
+        await import("../close-panel/close-panel");
+        const pat_modal = (await import("../modal/modal")).default;
+        const registry = (await import("../../core/registry")).default;
+
+        const spy_destroy_modal = jest.spyOn(pat_modal.prototype, "destroy");
+
+        document.body.innerHTML = `
+          <div class="pat-modal">
+            <form action="." class="pat-validation">
+              <input name="ok" />
+              <input name="nok" data-pat-validation="equality: ok" />
+              <button class="close-panel submit">submit</button>
+              <button class="close-panel cancel" type="button">cancel</button>
+            </form>
+          </div>
+        `;
+        const el = document.querySelector("form");
+        const inp_ok = document.querySelector("input[name=ok]");
+        inp_ok.value = "foo";
+
+        registry.scan(document.body);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        el.querySelector("button.submit").click();
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.querySelectorAll("em.warning").length).toBe(1);
+        expect(spy_destroy_modal).not.toHaveBeenCalled();
+
+        // A non-submit close-panel button does not check for validity.
+        el.querySelector("button.cancel").click();
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(spy_destroy_modal).toHaveBeenCalled();
     });
 
     it("2.1 - validates required inputs", async function () {
