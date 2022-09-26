@@ -2,6 +2,7 @@ import "../../core/jquery-ext"; // for :scrollable for autoLoading-visible
 import $ from "jquery";
 import ajax from "../ajax/ajax";
 import dom from "../../core/dom";
+import events from "../../core/events";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
@@ -578,7 +579,7 @@ const inject = {
     },
 
     async _onInjectSuccess($el, cfgs, ev) {
-        let data = ev && ev.jqxhr && ev.jqxhr.responseText;
+        let data = ev?.jqxhr?.responseText;
         if (!data) {
             log.warn("No response content, aborting", ev);
             return;
@@ -750,6 +751,34 @@ const inject = {
         $el.on("pat-ajax-success.pat-inject pat-ajax-error.pat-inject", () =>
             $el.removeData("pat-inject-triggered")
         );
+
+        // Prevent closing the panel while injection is in progress.
+        let do_close_panel = false;
+        events.add_event_listener(
+            $el[0],
+            "close-panel",
+            "pat-inject--close-panel",
+            (e) => {
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                do_close_panel = true;
+            }
+        );
+        $el.on("pat-ajax-success.pat-inject", async () => {
+            // Wait for the next tick to ensure that the close-panel listener
+            // is called before this one, even for non-async local injects.
+            await utils.timeout(1);
+            // Only close the panel if a close-panel event was catched previously.
+            if (do_close_panel) {
+                do_close_panel = false;
+                // Remove the close-panel event listener.
+                events.remove_event_listener($el[0], "pat-inject--close-panel");
+                // Re-trigger close-panel event if it was caught while injection was in progress.
+                $el[0].dispatchEvent(
+                    new Event("close-panel", { bubbles: true, cancelable: true })
+                );
+            }
+        });
 
         if (cfgs[0].url.length) {
             ajax.request($el, {

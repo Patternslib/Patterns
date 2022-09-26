@@ -89,8 +89,12 @@ export default Base.extend({
         }
 
         if (wrapper.querySelector(".close-panel")) {
-            wrapper.classList.add("has-close-panel");
-            dom.set_data(wrapper, "close_panel", this.onClick.bind(this));
+            events.add_event_listener(
+                wrapper,
+                "close-panel",
+                "pat-notification--close-panel",
+                this.onClick.bind(this)
+            );
             registry.scan(wrapper, ["close-panel"]);
         } else {
             events.add_event_listener(

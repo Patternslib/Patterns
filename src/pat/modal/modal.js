@@ -1,7 +1,6 @@
 import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
-import dom from "../../core/dom";
 import events from "../../core/events";
 import inject from "../inject/inject";
 import registry from "../../core/registry";
@@ -118,8 +117,9 @@ export default Base.extend({
     },
 
     _init_handlers() {
-        this.el.classList.add("has-close-panel");
-        dom.set_data(this.el, "close_panel", this._close_handler.bind(this));
+        events.add_event_listener(this.el, "close-panel", "pat-modal--close-panel", () =>
+            this.destroy()
+        );
 
         $(document).on("keyup.pat-modal", this._onKeyUp.bind(this));
         if (this.options.closing.indexOf("outside") !== -1) {
@@ -154,16 +154,6 @@ export default Base.extend({
 
     _onKeyUp(ev) {
         if (ev.which === 27) {
-            this.destroy();
-        }
-    },
-
-    _close_handler(e) {
-        if (e.target.matches("[type=submit], button:not([type=button])")) {
-            // submit + close
-            this.destroy_inject(e);
-        } else {
-            // close only
             this.destroy();
         }
     },
@@ -205,28 +195,5 @@ export default Base.extend({
         this.$el.remove();
         $("body").removeClass("modal-active");
         $("body").removeClass("modal-panel");
-    },
-
-    destroy_inject(e) {
-        const button = e.target;
-        const form = button.form;
-
-        if (form && form.classList.contains("pat-inject")) {
-            // if the modal contains a form with pat-inject, wait for injection
-            // to be finished and then destroy the modal.
-            const destroy_handler = () => {
-                this.destroy();
-                events.remove_event_listener(form, "pat-modal--destroy-inject");
-            };
-            events.add_event_listener(
-                form,
-                "pat-inject-success",
-                "pat-modal--destroy-inject",
-                destroy_handler.bind(this)
-            );
-        } else {
-            // if working without form injection, just destroy.
-            this.destroy();
-        }
     },
 });
