@@ -160,7 +160,7 @@ const submit_event = () => {
     });
 };
 
-export default {
+const events = {
     add_event_listener: add_event_listener,
     remove_event_listener: remove_event_listener,
     await_event: await_event,
@@ -175,3 +175,6 @@ export default {
     scroll_event: scroll_event,
     submit_event: submit_event,
 };
+
+export default events;
+export { events };

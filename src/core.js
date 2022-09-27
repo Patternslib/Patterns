@@ -1,18 +1,18 @@
 // @patternslib/core exports
 
-export * as base from "./core/base";
-export * as dom from "./core/dom";
-export * as events from "./core/events";
-export * as i18n from "./core/i18n";
-export * as jquery_ext from "./core/jquery-ext";
-export * as logging from "./core/logging";
-export * as mockup_parser from "./core/mockup-parser";
-export * as parser from "./core/parser";
-export * as polyfills from "./core/polyfills";
-export * as push_kit from "./core/push_kit";
-export * as registry from "./core/registry";
-export * as remove from "./core/remove";
-export * as store from "./core/store";
-export * as url from "./core/url";
-export * as utils from "./core/utils";
-export { PATTERN_REGISTRY } from "./core/registry";
+export * from "./core/polyfills";
+export { Base } from "./core/base";
+export { Parser } from "./core/parser";
+export { PushKit } from "./core/push_kit";
+export { Registry, PATTERN_REGISTRY } from "./core/registry";
+export { dom } from "./core/dom";
+export { events } from "./core/events";
+export { logging } from "./core/logging";
+export { utils } from "./core/utils";
+
+//export * as i18n from "./core/i18n";
+//export * as jquery_ext from "./core/jquery-ext";
+//export * as mockup_parser from "./core/mockup-parser";
+//export * as remove from "./core/remove";
+//export * as store from "./core/store";
+//export * as url from "./core/url";

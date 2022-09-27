@@ -180,3 +180,4 @@ var api = {
 };
 
 export default api;
+export { api as logging };

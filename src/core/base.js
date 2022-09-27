@@ -144,3 +144,4 @@ Base.extend = function (patternProps) {
 };
 
 export default Base;
+export { Base };
