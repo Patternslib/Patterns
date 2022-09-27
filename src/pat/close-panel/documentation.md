@@ -1,12 +1,12 @@
 ## Description
 
-Closes a previously opened panel on which a ``close_panel`` method as been set.
+Closes a previously opened panels when clicking on elements with a ``close-panel`` class on it.
 
-For modals, tooltips or notifications use the class ``close-panel`` on elements to close the panel they are in.
+The element with the ``close-panel`` class must be a child element of the panel which should be closed.
 
-This is a technical pattern which works together with these other patterns:
+This pattern works together with:
 
-- pat-modal,
-- pat-tooltip,
-- pat-notification.
-
+- panels which are ``<dialog>`` elements
+- ``pat-modal`` panels,
+- ``pat-tooltip`` panels,
+- ``pat-notification`` panels.
