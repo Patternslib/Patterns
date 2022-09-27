@@ -1,29 +1,40 @@
 import Base from "../../core/base";
-import dom from "../../core/dom";
+import events from "../../core/events";
+import utils from "../../core/utils";
 
 export default Base.extend({
     name: "close-panel",
     trigger: ".close-panel",
 
     init() {
-        this.el.addEventListener("click", (e) => {
-            // Find the first element which has a close-panel or is a dialog.
-            // This should the panel-root itself.
-            const panel = this.el.closest(".has-close-panel, dialog");
+        // Close panel support for dialog panels
+        // Other modals are handled in pat-modal.
+        const dialog_panel = this.el.closest("dialog");
+        if (dialog_panel) {
+            events.add_event_listener(
+                dialog_panel,
+                "close-panel",
+                "close-panel--dialog",
+                () => {
+                    dialog_panel.close();
+                }
+            );
+        }
 
-            if (!panel) {
-                // Nothing to do. Exiting.
+        this.el.addEventListener("click", async (e) => {
+            await utils.timeout(0); // Wait for other patterns, like pat-validation.
+
+            if (
+                e.target.matches("[type=submit], button:not([type=button])") &&
+                this.el.closest("form")?.checkValidity() === false
+            ) {
+                // Prevent closing an invalid form when submitting.
                 return;
-            } else if (panel.tagName === "DIALOG") {
-                // Close the dialog.
-                panel.close();
-            } else if (panel.classList.contains("has-close-panel")) {
-                // Get the close panel method.
-                const close_method = dom.get_data(panel, "close_panel");
-
-                // Now execute the method and close the panel.
-                close_method && close_method(e);
             }
+
+            this.el.dispatchEvent(
+                new Event("close-panel", { bubbles: true, cancelable: true })
+            );
         });
     },
 });

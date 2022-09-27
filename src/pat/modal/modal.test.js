@@ -198,6 +198,7 @@ describe("pat-modal", function () {
             await utils.timeout(1); // wait a tick for async to settle.
 
             document.querySelector("button.close-panel[type=submit]").click();
+            await utils.timeout(1); // close-button is async - wait for it.
             await utils.timeout(1); // wait a tick for pat-inject to settle.
             await utils.timeout(1); // wait a tick for pat-modal destroy to settle.
 
@@ -236,6 +237,7 @@ describe("pat-modal", function () {
             await utils.timeout(1); // wait a tick for async to settle.
 
             document.querySelector(".form2 button.close-panel[type=submit]").click();
+            await utils.timeout(1); // close-button is async - wait for it.
             await utils.timeout(1); // wait a tick for pat-inject to settle.
             await utils.timeout(1); // wait a tick for pat-modal destroy to settle.
 
@@ -289,16 +291,15 @@ describe("pat-modal", function () {
             await utils.timeout(1); // wait a tick for async to settle.
 
             const spy_destroy = jest.spyOn(instance, "destroy");
-            const spy_destroy_inject = jest.spyOn(instance, "destroy_inject");
 
             // ``destroy`` was already initialized with instantiating the pattern above.
             // Call init again for new instantiation.
             instance.init($(".pat-modal"));
 
             document.querySelector("#close-modal").click();
+            await utils.timeout(1); // close-button is async - wait for it.
             await utils.timeout(1); // wait a tick for pat-inject to settle.
 
-            expect(spy_destroy_inject).toHaveBeenCalledTimes(1);
             expect(spy_destroy).toHaveBeenCalledTimes(1);
 
             // re-attach and re-initialize. Event handler should only be active once.
@@ -307,10 +308,10 @@ describe("pat-modal", function () {
             new pattern(document.querySelector(".pat-modal"));
             await utils.timeout(1); // wait a tick for async to settle.
             document.querySelector("#close-modal").click();
+            await utils.timeout(1); // close-button is async - wait for it.
             await utils.timeout(1); // wait a tick for pat-inject to settle.
             // Previous mocks still active.
             // Handlers executed exactly once.
-            expect(spy_destroy_inject).toHaveBeenCalledTimes(1);
             expect(spy_destroy).toHaveBeenCalledTimes(1);
         });
     });

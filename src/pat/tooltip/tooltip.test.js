@@ -362,7 +362,8 @@ describe("pat-tooltip", () => {
                 const closebutton = document.querySelector(".close-panel");
                 expect(closebutton).toBeTruthy();
                 closebutton.click();
-                await utils.timeout(1);
+                await utils.timeout(1); // close-button is async - wait for it.
+                await utils.timeout(1); // hide is async - wait for it.
                 expect(spy_hide).toHaveBeenCalled();
 
                 spy_show.mockRestore();
@@ -395,6 +396,7 @@ describe("pat-tooltip", () => {
                 const closebutton = document.querySelector(".close-panel");
                 expect(closebutton).toBeTruthy();
                 closebutton.click();
+                await utils.timeout(1); // close-button is async - wait for it.
                 await utils.timeout(1); // hide is async - wait for it.
                 expect(spy_hide).toHaveBeenCalled();
 
@@ -431,7 +433,8 @@ describe("pat-tooltip", () => {
                 const btn_submit = form.querySelector("button.close-panel");
 
                 btn_submit.click();
-                await utils.timeout(1);
+                await utils.timeout(1); // close-button is async - wait for it.
+                await utils.timeout(1); // hide is async - wait for it.
 
                 expect(mock_listener).toHaveBeenCalledTimes(1);
                 expect(document.querySelectorAll(".tooltip-container").length).toBe(0);

@@ -1,6 +1,5 @@
 import $ from "jquery";
 import Base from "../../core/base";
-import dom from "../../core/dom";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import events from "../../core/events";
@@ -290,8 +289,12 @@ export default Base.extend({
         }
 
         // Store reference to method for closing panels on the tooltip element instance.
-        tippy_classes.push("has-close-panel");
-        dom.set_data(this.tippy.popper, "close_panel", this.hide.bind(this));
+        events.add_event_listener(
+            this.tippy.popper,
+            "close-panel",
+            "pat-tooltip--close-panel",
+            () => this.hide()
+        );
 
         this.tippy.popper.classList.add(...tippy_classes);
 

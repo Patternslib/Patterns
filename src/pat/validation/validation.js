@@ -11,7 +11,7 @@ const log = logging.getLogger("pat-validation");
 //log.setLevel(logging.Level.DEBUG);
 
 export const parser = new Parser("validation");
-parser.addArgument("disable-selector", null); // Elements which must be disabled if there are errors
+parser.addArgument("disable-selector", "[type=submit], button:not([type=button])"); // Elements which must be disabled if there are errors
 parser.addArgument("message-date", ""); // "This value must be a valid date");
 parser.addArgument("message-datetime", ""); // "This value must be a valid date and time");
 parser.addArgument("message-email", ""); // "This value must be a valid email address");
@@ -255,8 +255,10 @@ export default Base.extend({
         }
 
         if (event?.type === "submit") {
-            // Do not submit in error case.
+            // Do not submit in error case and prevent other handlers to take action.
             event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
         }
         this.set_error_message(input, input_options);
     },
