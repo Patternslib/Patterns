@@ -17,6 +17,7 @@ import "promise-polyfill/src/polyfill";
 import "url-polyfill";
 import "whatwg-fetch";
 import { ResizeObserver as ResizeObserverPolyfill } from "@juggle/resize-observer";
+import "./core/polyfills";
 
 if ("ResizeObserver" in window === false) {
     window.ResizeObserver = ResizeObserverPolyfill;

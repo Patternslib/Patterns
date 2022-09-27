@@ -9,7 +9,7 @@
     "license": "BSD-3-Clause",
     "main": "./core.js",
     "files": [
-        "core"
+        "core/*"
     ],
     "dependencies": {
         "@patternslib/dev": "^2.7.1"
