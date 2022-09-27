@@ -4,6 +4,37 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.5.0](https://github.com/Patternslib/patterns/compare/9.4.0...9.5.0) (2022-09-27)
+
+
+### Features
+
+
+* **pat close panel:** Better close-panel support. ([fbc20a8](https://github.com/Patternslib/patterns/commit/fbc20a8616e29af2f783788c8c302b0529917cd6))- Do not close panels when the form is invalid and submitted.
+- Simplify the close panel logic by switching to event based triggering.
+- Allow to postpone close panel events by pat-inject until successful
+  injection.
+- Simplify pat-modal's close-panel logic.
+
+* **pat validation:** Add submit buttons to disable selector per default. ([e6f8ba3](https://github.com/Patternslib/patterns/commit/e6f8ba3afcee69cf68198a8b0ce9630c721c0144))
+
+
+### Bug Fixes
+
+
+* **core registry:** Always put pat-validation first in the pattern execution chain. ([27fb575](https://github.com/Patternslib/patterns/commit/27fb5755b86561f31ee50c2004bcc80a570d1bb4))
+
+* **pat validation:** Fix problem with submitting invalid forms with pat-inject. ([b01819a](https://github.com/Patternslib/patterns/commit/b01819a294cfbc199f225a2cd3a40e2cbdb44b96))Stop submit event propagation if the form is invalid.
+This fixes a problem where a invalid form could be submitted via pat-inject.
+
+
+### Maintenance
+
+
+* **pat navigation:** Remove console.log debug message from tests. ([4529761](https://github.com/Patternslib/patterns/commit/4529761f72a7c47b218b9258b2b1f2ee645429a6))
+
+* **pat validation:** Add modal use case to demo. ([aa99e2e](https://github.com/Patternslib/patterns/commit/aa99e2e31d70d9a375135863d04c215362bec2e8))
+
 ## [9.4.0](https://github.com/Patternslib/patterns/compare/9.3.1...9.4.0) (2022-09-23)
 
 
