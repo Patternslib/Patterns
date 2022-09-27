@@ -79,7 +79,7 @@ const show = (el) => {
     const val = el[DATA_STYLE_DISPLAY] || null;
     el.style.display = val;
     delete el[DATA_STYLE_DISPLAY];
-    el.removeAttribute("hidden", "");
+    el.removeAttribute("hidden");
 };
 
 /**
