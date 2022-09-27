@@ -151,6 +151,13 @@ export default Base.extend({
             firstDay: this.options.firstDay,
             showWeekNumber: this.options.weekNumbers === "show",
             onSelect: () => this.dispatch_change_event(),
+            onClose: () => {
+                if (this.options.behavior === "styled") {
+                    // blur the input field so that pat-validate can kick in when
+                    // nothing was selected.
+                    el.dispatchEvent(events.blur_event());
+                }
+            },
         };
 
         if (el.getAttribute("min")) {
