@@ -44,9 +44,12 @@ export default Base.extend({
 
     init() {
         this.options = parser.parse(this.el, this.options);
-        this.inputs = this.el.querySelectorAll(
-            "input[name], select[name], textarea[name]"
-        );
+        this.inputs = [
+            ...this.el.querySelectorAll("input[name], select[name], textarea[name]"),
+        ];
+        this.disabled_elements = [
+            ...this.el.querySelectorAll(this.options.disableSelector),
+        ];
 
         // Set ``novalidate`` attribute to disable the browser's validation
         // bubbles but not disable the validation API.
@@ -56,6 +59,16 @@ export default Base.extend({
             // Cancelable debouncer.
             const debouncer = utils.debounce((e) => {
                 this.check_input({ input: input, event: e });
+                if (this.disabled_elements.some((it) => it.disabled)) {
+                    // If there are already any disabled elements, do a check
+                    // for the whole form.
+                    // This is necessary otherwise the submit button is already
+                    // disabled and no other errors would be shown.
+                    // This is debounced, so it should not disturb too much while typing.
+                    for (const _input of this.inputs.filter((it) => it !== input)) {
+                        this.check_input({ input: _input });
+                    }
+                }
             }, this.options.delay);
 
             events.add_event_listener(
@@ -76,13 +89,21 @@ export default Base.extend({
                 `pat-validation--blur-${input.name}--${cnt}--validator`,
                 (e) => debouncer(e)
             );
-            events.add_event_listener(
-                this.el,
-                "submit",
-                `pat-validation--blur-${input.name}--${cnt}--validator`,
-                (e) => this.check_input({ input: input, event: e }) // immediate check with submit. Otherwise submit is not cancelable.
-            );
         }
+
+        events.add_event_listener(
+            this.el,
+            "submit",
+            `pat-validation--submit--validator`,
+            (e) => {
+                // On submit, check all.
+                // Immediate, non-debounced check with submit. Otherwise submit
+                // is not cancelable.
+                for (const input of this.inputs) {
+                    this.check_input({ input: input, event: e });
+                }
+            }
+        );
     },
 
     check_input({ input, event, stop = false }) {
@@ -289,7 +310,7 @@ export default Base.extend({
         let inputs = [input];
         if (all_of_group) {
             // Get all inputs with the same name - e.g. radio buttons, checkboxes.
-            inputs = [...this.inputs].filter((it) => it.name === input.name);
+            inputs = this.inputs.filter((it) => it.name === input.name);
         }
         for (const it of inputs) {
             const error_node = it[KEY_ERROR_EL];
@@ -298,11 +319,12 @@ export default Base.extend({
         }
 
         // disable selector
-        if (this.options.disableSelector && this.el.checkValidity()) {
-            const disabled = document.querySelectorAll(this.options.disableSelector);
-            for (const it of disabled) {
-                it.removeAttribute("disabled");
-                it.classList.remove("disabled");
+        if (this.el.checkValidity()) {
+            for (const it of this.disabled_elements) {
+                if (it.disabled) {
+                    it.removeAttribute("disabled");
+                    it.classList.remove("disabled");
+                }
             }
         }
     },
@@ -312,7 +334,7 @@ export default Base.extend({
 
         // Do not set a error message for a input group like radio buttons or
         // checkboxes where one has already been set.
-        const inputs = [...this.inputs].filter((it) => it.name === input.name);
+        const inputs = this.inputs.filter((it) => it.name === input.name);
         if (inputs.length > 1 && inputs.some((it) => !!it[KEY_ERROR_EL])) {
             // error message for input group already set.
             return;
@@ -336,10 +358,9 @@ export default Base.extend({
         }
         input[KEY_ERROR_EL] = error_node;
 
-        if (options.disableSelector) {
-            const disabled = document.querySelectorAll(options.disableSelector);
-            for (const it of disabled) {
-                it.setAttribute("disabled", "");
+        for (const it of this.disabled_elements) {
+            if (!it.disabled) {
+                it.setAttribute("disabled", "disabled");
                 it.classList.add("disabled");
             }
         }

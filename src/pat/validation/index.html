@@ -258,17 +258,45 @@
       >
         <fieldset class="horizontal">
           <label>First of all!
-            <input autocomplete="off"
-                   name="first"
+            <input name="first"
                    required
-                   type="text"
+                   autocomplete="off"
             /></label>
 
           <label>Optional subtext
-            <input autocomplete="off"
-                   name="optional"
-                   type="text"
+            <input name="optional"
+                   autocomplete="off"
             /></label>
+
+          <label>Start
+            <input class="pat-date-picker"
+                   name="mod-3"
+                   type="date"
+                   required
+                   autocomplete="off"
+                   data-pat-validation="not-after: [name=mod-4]"
+            />
+          </label>
+
+          <label>End
+            <input class="pat-date-picker"
+                   name="mod-4"
+                   type="date"
+                   required
+                   autocomplete="off"
+                   data-pat-date-picker="after: [name=mod-3]"
+                   data-pat-validation="not-before: [name=mod-3]"
+            />
+          </label>
+
+          <label>Preference
+            <input class="pat-autosuggest"
+                   name="mod-5"
+                   required
+                   autocomplete="off"
+                   data-pat-autosuggest="words: Gibson, Fender, Washburn, Strandberg"
+            />
+          </label>
 
         </fieldset>
         <fieldset class="buttons">
