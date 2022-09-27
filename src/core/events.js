@@ -97,6 +97,13 @@ const await_pattern_init = (pattern) => {
  * Event factories
  */
 
+const blur_event = () => {
+    return new Event("blur", {
+        bubbles: false,
+        cancelable: false,
+    });
+};
+
 const click_event = () => {
     return new Event("click", {
         bubbles: true,
@@ -107,6 +114,13 @@ const click_event = () => {
 const change_event = () => {
     return new Event("change", {
         bubbles: true,
+        cancelable: false,
+    });
+};
+
+const focus_event = () => {
+    return new Event("focus", {
+        bubbles: false,
         cancelable: false,
     });
 };
@@ -151,8 +165,10 @@ export default {
     remove_event_listener: remove_event_listener,
     await_event: await_event,
     await_pattern_init: await_pattern_init,
+    blur_event: blur_event,
     click_event: click_event,
     change_event: change_event,
+    focus_event: focus_event,
     input_event: input_event,
     mousedown_event: mousedown_event,
     mouseup_event: mouseup_event,
