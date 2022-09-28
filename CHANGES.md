@@ -4,6 +4,16 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.6.1](https://github.com/Patternslib/patterns/compare/9.6.0...9.6.1) (2022-09-28)
+
+
+### Bug Fixes
+
+
+* **core dom:** show/hide - do not set the hidden attribute. ([af24138](https://github.com/Patternslib/patterns/commit/af241382947f5fe9d2e4108baa34329fe9cdd610))In Chrome and Safari hidden but required input fields (e.g. hidden automatically by pat-autosuggest or pat-date-picker) cannot be submitted if they fail the browser's native validation.
+The browser tries to set a validation message but fails because the element is not focusable.
+See: https://stackoverflow.com/a/28340579/1337474
+
 ## [9.6.0](https://github.com/Patternslib/patterns/compare/9.5.0...9.6.0) (2022-09-28)
 
 
