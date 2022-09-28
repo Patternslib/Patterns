@@ -4,6 +4,39 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.6.0](https://github.com/Patternslib/patterns/compare/9.5.0...9.6.0) (2022-09-28)
+
+
+### Features
+
+
+* **core events:** Add blur and focus event factories. ([c5942d2](https://github.com/Patternslib/patterns/commit/c5942d2a784d116656913df73d681dfc48ff65c8))
+
+* **pat auto suggest:** Improve pat-validation integration. ([11e9a0b](https://github.com/Patternslib/patterns/commit/11e9a0b981ad1614fb700081c0de0c05d5181dff))Allow pat-validate to check for validity when select2 was interacted with but
+no value selected.
+
+* **pat date picker:** Improve pat-validation integration. ([57c974b](https://github.com/Patternslib/patterns/commit/57c974bd01e426bd6b8b1c69aaeffee8ee27c6cb))Allow pat-validate to check for validity when date picker was interacted with
+but no value selected.
+
+* **pat validation:** Validate whole form on submit or single error. ([bc27e41](https://github.com/Patternslib/patterns/commit/bc27e41cbd5586713cda8f1e7ae4cc2d69dc9f67))Validate the whole form when a single error happens and some elements were
+disabled or when a form submit is done.
+This gives the user a better feedback about any data problems in the
+form and allows the user to see any other errors at all since the submit
+elements could have been disabled and form validation would eventually
+not be triggered.
+
+
+### Maintenance
+
+
+* **Build:** Upgrade dependencies. ([b3f4f0a](https://github.com/Patternslib/patterns/commit/b3f4f0a1bdcbb2f5647f6001a85bd29cbc60dac6))
+
+* **core dom:** Fix signature of removeAttribute in show method. ([58ddc8e](https://github.com/Patternslib/patterns/commit/58ddc8ebbfd8e290d438e971c8305064ebe035fe))
+
+* **pat date picker:** Use logging framework instead of console.log. ([e35932f](https://github.com/Patternslib/patterns/commit/e35932f2232e4cd3b319861edd9ba284206157ea))
+
+* Update close-panel documentation. ([4a4cd49](https://github.com/Patternslib/patterns/commit/4a4cd4943fec5332d103dbf3923681cb6f9a2576))
+
 ## [9.5.0](https://github.com/Patternslib/patterns/compare/9.4.0...9.5.0) (2022-09-27)
 
 
