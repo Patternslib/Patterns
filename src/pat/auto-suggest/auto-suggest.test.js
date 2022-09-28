@@ -66,7 +66,7 @@ describe("pat-autosuggest", function () {
             testutils.removeSelect2();
 
             expect($el[0].getAttribute("type")).toBe("text");
-            expect($el[0].hasAttribute("hidden")).toBe(true);
+            expect($el[0].style.display).toBe("none");
         });
 
         it("1.1 - An <input> element with an ajax option keeps the ajax option when turning into a select2 widget", async function () {

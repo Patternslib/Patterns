@@ -122,7 +122,6 @@ describe("core.dom tests", () => {
             expect(el.style.marginTop).toBe("4em");
             expect(el.style.display).toBe("none");
             expect(el.getAttribute("style").indexOf("display") >= -1).toBeTruthy();
-            expect(el.hasAttribute("hidden")).toBe(true);
 
             dom.show(el);
 
@@ -130,7 +129,6 @@ describe("core.dom tests", () => {
             expect(el.style.marginTop).toBe("4em");
             expect(el.style.display).toBeFalsy();
             expect(el.getAttribute("style").indexOf("display") === -1).toBeTruthy();
-            expect(el.hasAttribute("hidden")).toBe(false);
 
             el.style.display = "inline";
             dom.hide(el);
@@ -139,7 +137,6 @@ describe("core.dom tests", () => {
             expect(el.style.marginTop).toBe("4em");
             expect(el.style.display).toBe("none");
             expect(el.getAttribute("style").indexOf("display") >= -1).toBeTruthy();
-            expect(el.hasAttribute("hidden")).toBe(true);
 
             dom.show(el);
 
@@ -147,6 +144,19 @@ describe("core.dom tests", () => {
             expect(el.style.marginTop).toBe("4em");
             expect(el.style.display).toBe("inline");
             expect(el.getAttribute("style").indexOf("display") >= -1).toBeTruthy();
+
+            done();
+        });
+
+        it("most not set the hidden attribute", (done) => {
+            // dom.hide must not set the hidden attribute due to,
+            // https://stackoverflow.com/a/28340579/1337474
+            // otherwise hidden input elements might not be able to be
+            // submitted in Chrome and Safari.
+
+            const el = document.createElement("div");
+            dom.hide(el);
+
             expect(el.hasAttribute("hidden")).toBe(false);
 
             done();
