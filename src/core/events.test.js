@@ -96,6 +96,18 @@ describe("core.events tests", () => {
             inner = el.querySelector("#inner");
         });
 
+        it("blur event", async () => {
+            outer.addEventListener("blur", () => {
+                catched = "outer";
+            });
+            inner.addEventListener("blur", () => {
+                catched = "inner";
+            });
+            inner.dispatchEvent(events.blur_event());
+            await utils.timeout(1);
+            expect(catched).toBe("inner");
+        });
+
         it("click event", async () => {
             outer.addEventListener("click", () => {
                 catched = "outer";
@@ -112,6 +124,18 @@ describe("core.events tests", () => {
             inner.dispatchEvent(events.change_event());
             await utils.timeout(1);
             expect(catched).toBe("outer");
+        });
+
+        it("focus event", async () => {
+            outer.addEventListener("focus", () => {
+                catched = "outer";
+            });
+            inner.addEventListener("focus", () => {
+                catched = "inner";
+            });
+            inner.dispatchEvent(events.focus_event());
+            await utils.timeout(1);
+            expect(catched).toBe("inner");
         });
 
         it("input event", async () => {

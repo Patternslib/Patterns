@@ -88,7 +88,8 @@ export default Base.extend({
         if (this.el.tagName === "INPUT") {
             config = this.create_input_config(config);
         }
-        this.$el.select2(config);
+        const $sel2 = this.$el.select2(config);
+
         dom.hide(this.el); // hide input, but keep active (e.g. for validation)
 
         this.$el.on("pat-update", (e, data) => {
@@ -100,6 +101,20 @@ export default Base.extend({
                 }
             }
         });
+
+        // Allow pat-validate to check for validity when select2 was interacted
+        // with but no value selected.
+        const initiate_empty_check = () => {
+            const val = $sel2.select2("val");
+            if (val?.length === 0) {
+                // catches "" and []
+                // blur the input field so that pat-validate can kick in when
+                // nothing was selected.
+                this.el.dispatchEvent(events.blur_event());
+            }
+        };
+        this.$el.on("select2-close", initiate_empty_check.bind(this));
+        this.$el.on("select2-blur", initiate_empty_check.bind(this));
 
         this.$el.on("change", () => {
             // The jQuery "change" event isn't caught by normal JavaScript

@@ -435,6 +435,61 @@ describe("pat-validation", function () {
         expect(spy_destroy_modal).toHaveBeenCalled();
     });
 
+    it("1.18 - validates all inputs after submit", async function () {
+        document.body.innerHTML = `
+          <form class="pat-validation">
+            <input name="i1" required>
+            <input name="i2" required>
+            <button>submit</button>
+          </form>
+        `;
+        const el = document.querySelector(".pat-validation");
+
+        new Pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        document.querySelector("button").click();
+
+        expect(el.querySelectorAll("em.warning").length).toBe(2);
+    });
+
+    it("1.19 - validates all inputs after one failed check and disabled button", async function () {
+        document.body.innerHTML = `
+          <form class="pat-validation">
+            <input name="i1" required>
+            <input name="i2" required>
+            <button>submit</button> <!-- button will be disabled -->
+          </form>
+        `;
+        const el = document.querySelector(".pat-validation");
+
+        new Pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        document.querySelector("[name=i1]").dispatchEvent(events.blur_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.querySelectorAll("em.warning").length).toBe(2);
+    });
+
+    it("1.20 - does not validate all inputs after one failed check and no disabled button", async function () {
+        document.body.innerHTML = `
+          <form class="pat-validation">
+            <input name="i1" required>
+            <input name="i2" required>
+          </form>
+        `;
+        const el = document.querySelector(".pat-validation");
+
+        new Pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        document.querySelector("[name=i1]").dispatchEvent(events.blur_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.querySelectorAll("em.warning").length).toBe(1);
+    });
+
     it("2.1 - validates required inputs", async function () {
         document.body.innerHTML = `
           <form class="pat-validation">

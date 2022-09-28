@@ -43,7 +43,7 @@ describe("pat-date-picker", function () {
         jest.restoreAllMocks();
     });
 
-    it("Default date picker.", async () => {
+    it("1 - Default date picker.", async () => {
         document.body.innerHTML = '<input type="date" class="pat-date-picker"/>';
         const el = document.querySelector("input[type=date]");
 
@@ -85,7 +85,7 @@ describe("pat-date-picker", function () {
         expect(el.value).toBe(isodate);
     });
 
-    it("Date picker starts at Monday.", async () => {
+    it("2 - Date picker starts at Monday.", async () => {
         document.body.innerHTML =
             '<input type="date" class="pat-date-picker" data-pat-date-picker="first-day: 1" />';
         const el = document.querySelector("input[type=date]");
@@ -98,7 +98,7 @@ describe("pat-date-picker", function () {
         expect(first_day.textContent).toBe("Mon");
     });
 
-    it("Date picker with pre-set value.", async () => {
+    it("3 - Date picker with pre-set value.", async () => {
         document.body.innerHTML =
             '<input type="date" class="pat-date-picker" value="1900-01-01"/>';
         const el = document.querySelector("input[type=date]");
@@ -120,7 +120,7 @@ describe("pat-date-picker", function () {
         expect(display_el.textContent).toBe("1900-01-01");
     });
 
-    it("Date picker with week numbers.", async () => {
+    it("4 - Date picker with week numbers.", async () => {
         document.body.innerHTML =
             '<input type="date" class="pat-date-picker" data-pat-date-picker="week-numbers: show" value="2017-09-18"/>';
         const el = document.querySelector("input[type=date]");
@@ -133,7 +133,7 @@ describe("pat-date-picker", function () {
         expect(week_num.textContent).toBe("35");
     });
 
-    describe("Date picker with i18n", function () {
+    describe("5 - Date picker with i18n", function () {
         describe("with proper json URL", function () {
             it("properly localizes the months and weekdays", async () => {
                 global.fetch = jest.fn().mockImplementation(mock_fetch_i18n);
@@ -177,7 +177,7 @@ describe("pat-date-picker", function () {
         });
     });
 
-    describe("Update one input depending on the other.", function () {
+    describe("6 - Update one input depending on the other.", function () {
         it("Updates with default offset-days", async () => {
             const wrapper = document.createElement("div");
             wrapper.innerHTML = `
@@ -324,7 +324,7 @@ describe("pat-date-picker", function () {
         });
     });
 
-    it("Formatted date.", async () => {
+    it("7 - Formatted date.", async () => {
         document.body.innerHTML =
             '<input type="date" class="pat-date-picker" value="2021-03-09" data-pat-date-picker="output-format: Do MMMM YYYY; locale: de"/>';
         const el = document.querySelector("input[type=date]");
@@ -346,7 +346,7 @@ describe("pat-date-picker", function () {
         expect(el.value).toBe("2021-03-12");
     });
 
-    it("Styled behavior with clear button.", async () => {
+    it("8 - Styled behavior with clear button.", async () => {
         document.body.innerHTML =
             '<input type="date" class="pat-date-picker" value="2021-03-09"/>';
         const el = document.querySelector("input[type=date]");
@@ -400,7 +400,7 @@ describe("pat-date-picker", function () {
         expect(clear_button).toBeFalsy();
     });
 
-    it("Formatted date with clear button.", async () => {
+    it("9 - Formatted date with clear button.", async () => {
         document.body.innerHTML =
             '<input type="date" class="pat-date-picker" value="2021-03-09" data-pat-date-picker="output-format: DD.MM.YYYY"/>';
         const el = document.querySelector("input[type=date]");
@@ -454,7 +454,7 @@ describe("pat-date-picker", function () {
         expect(clear_button).toBeFalsy();
     });
 
-    it("Required formatted date - no clear button available.", async () => {
+    it("10 - Required formatted date - no clear button available.", async () => {
         document.body.innerHTML =
             '<input type="date" class="pat-date-picker" value="2021-03-01" required/>';
         const el = document.querySelector("input[type=date]");
@@ -486,7 +486,7 @@ describe("pat-date-picker", function () {
         expect(clear_button).toBeFalsy();
     });
 
-    it("Native behavior with fallback to pika", async () => {
+    it("11 - Native behavior with fallback to pika", async () => {
         // We mocking as if we're not supporting input type date.
         jest.spyOn(utils, "checkInputSupport").mockImplementation(() => false);
 
@@ -528,7 +528,7 @@ describe("pat-date-picker", function () {
         expect(el.value).toBe(isodate);
     });
 
-    it("does not initialize the date picker in styled behavior when disabled", async () => {
+    it("12 - does not initialize the date picker in styled behavior when disabled", async () => {
         document.body.innerHTML = `
             <input
                 type="date"
@@ -559,7 +559,7 @@ describe("pat-date-picker", function () {
         expect(document.querySelector(".pika-lendar")).toBeFalsy();
     });
 
-    it("works with pat-autosubmit", async () => {
+    it("13 - works with pat-autosubmit", async () => {
         document.body.innerHTML = `
             <form class="pat-autosubmit" onsubmit="return false;">
                 <input name="date" type="date" class="pat-date-picker"/>
@@ -580,5 +580,42 @@ describe("pat-date-picker", function () {
 
         await utils.timeout(500); // wait for delay
         expect(handle_submit).toHaveBeenCalled();
+    });
+
+    it("14 - Selecting nothing in styled behavior triggers pat-validation.", async () => {
+        document.body.innerHTML = `
+          <form class="pat-validation" data-pat-validation="delay: 0">
+            <input
+                type="date"
+                name="date"
+                class="pat-date-picker"
+                required
+                />
+          </form>
+        `;
+        const form = document.querySelector("form");
+        const el = document.querySelector("input[type=date]");
+
+        const pattern_validation = (await import("../validation/validation")).default;
+
+        new pattern_validation(form);
+        new pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        // Open the date picker
+        document.querySelector("time").click();
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        // Date picker is opened
+        expect(document.querySelector(".pika-lendar")).toBeTruthy();
+
+        // Close the date picker without selecting a date.
+        document.body.click();
+
+        // Wait for validation to run.
+        await utils.timeout(1);
+
+        // There should be a error message from pat-validation.
+        expect(form.querySelectorAll("em.warning").length).toBe(1);
     });
 });

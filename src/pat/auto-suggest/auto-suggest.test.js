@@ -300,5 +300,66 @@ describe("pat-autosuggest", function () {
 
             expect(spy).toHaveBeenCalled();
         });
+
+        it("4.2 - Works with pat-validate on an empty selection.", async function () {
+            const pattern_validation = (await import("../validation/validation")).default; // prettier-ignore
+
+            document.body.innerHTML = `
+                <form class="pat-validation" data-pat-validation="delay: 0">
+                  <input
+                      name="words"
+                      class="pat-autosuggest"
+                      required
+                      data-pat-autosuggest="words: apple, orange, pear" />
+                </form>
+            `;
+
+            const form = document.querySelector("form");
+            const input = document.querySelector("input");
+
+            new pattern_validation(form);
+            new pattern(input);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // Open the select2 dropdown
+            $(".select2-input").click();
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // Close it without selecting something.
+            $(input).select2("close");
+
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // There should be a error message from pat-validation.
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+        });
+
+        it("4.3 - Works with pat-validate when empty and focus moves away.", async function () {
+            const pattern_validation = (await import("../validation/validation")).default; // prettier-ignore
+
+            document.body.innerHTML = `
+                <form class="pat-validation" data-pat-validation="delay: 0">
+                  <input
+                      name="words"
+                      class="pat-autosuggest"
+                      required
+                      data-pat-autosuggest="words: apple, orange, pear" />
+                </form>
+            `;
+
+            const form = document.querySelector("form");
+            const input = document.querySelector("input");
+
+            new pattern_validation(form);
+            new pattern(input);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // Move focus away from select2
+            $(".select2-input")[0].dispatchEvent(events.blur_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // There should be a error message from pat-validation.
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+        });
     });
 });
