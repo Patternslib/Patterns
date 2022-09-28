@@ -1,10 +1,13 @@
 /* pat-date-picker  - Polyfill for input type=date */
 import $ from "jquery";
 import Base from "../../core/base";
+import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
 import events from "../../core/events";
 import utils from "../../core/utils";
+
+const log = logging.getLogger("date-picker");
 
 export const parser = new Parser("date-picker");
 parser.addArgument("behavior", "styled", ["native", "styled"]);
@@ -162,9 +165,7 @@ export default Base.extend({
                 const response = await fetch(this.options.i18n);
                 config.i18n = await response.json();
             } catch {
-                console.error(
-                    `date-picker could not load i18n for ${this.options.i18n}`
-                );
+                log.error(`date-picker could not load i18n for ${this.options.i18n}`);
             }
         }
         this.pikaday = new Pikaday(config);
