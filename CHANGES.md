@@ -4,6 +4,25 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.7.0-alpha.0](https://github.com/Patternslib/patterns/compare/9.6.1...9.7.0-alpha.0) (2022-09-28)
+
+
+### Features
+
+
+* Add class based base pattern. ([5933a35](https://github.com/Patternslib/patterns/commit/5933a35bb2e511642d64fd53709d74492e41ad57))This is a new way to define Patterns by extending the BasePattern class and instantiating it on an element.
+This is additionally to the old Base pattern approach or even the very old approach of just defining a Pattern following the specs.
+The BasePattern class in core/basepattern uses JavaScript classes with all the object oriented benefits.
+Yes, that might be syntactic sugar, but then again not.
+
+For usage see: src/core/basepattern.md
+
+
+### Maintenance
+
+
+* **core registry:** Support class based pattern initialization. ([2c9e9dd](https://github.com/Patternslib/patterns/commit/2c9e9dde5c90a0a1a7cc0c490aaf4c29deb7a0c5))
+
 ## [9.6.1](https://github.com/Patternslib/patterns/compare/9.6.0...9.6.1) (2022-09-28)
 
 
