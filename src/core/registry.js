@@ -110,19 +110,24 @@ const registry = {
          */
         const $el = $(el);
         const pattern = registry.patterns[name];
-        if (pattern.init) {
-            const plog = logging.getLogger(`pat.${name}`);
-            if ($el.is(pattern.trigger)) {
-                plog.debug("Initialising.", $el);
-                try {
+        const plog = logging.getLogger(`pat.${name}`);
+        if (el.matches(pattern.trigger)) {
+            plog.debug("Initialising.", el);
+            try {
+                if (pattern.init) {
+                    // old style initialisation
                     pattern.init($el, null, trigger);
-                    plog.debug("done.");
-                } catch (e) {
-                    if (dont_catch) {
-                        throw e;
-                    }
-                    plog.error("Caught error:", e);
+                } else {
+                    // class based pattern initialisation
+                    new pattern($el, null, trigger);
                 }
+
+                plog.debug("done.");
+            } catch (e) {
+                if (dont_catch) {
+                    throw e;
+                }
+                plog.error("Caught error:", e);
             }
         }
     },
