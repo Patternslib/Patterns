@@ -15,3 +15,21 @@ Felis dui porttitor eros, ac imperdiet magna orci quis quam. Morbi dapibus lacin
 | Felis | dui       | porttitor |
 | ----- | --------- | --------- |
 | dui   | porttitor | eros      |
+
+
+Some code:
+
+```javascript
+const pattern = registry.patterns[name];
+if (pattern.transform) {
+    try {
+        pattern.transform($content);
+    } catch (e) {
+        if (dont_catch) {
+          throw(e);
+        }
+        log.error("Transform error for pattern" + name, e);
+    }
+}
+```
+

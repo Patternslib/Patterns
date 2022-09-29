@@ -4,10 +4,10 @@ import utils from "../../core/utils";
 import Base from "../../core/base";
 import inject from "../inject/inject";
 
-var log = logging.getLogger("pat.markdown");
-var is_markdown_resource = /\.md$/;
+const log = logging.getLogger("pat.markdown");
+const is_markdown_resource = /\.md$/;
 
-var Markdown = Base.extend({
+const Markdown = Base.extend({
     name: "markdown",
     trigger: ".pat-markdown",
 
@@ -17,9 +17,12 @@ var Markdown = Base.extend({
              * to pat-inject. The following only applies to standalone, when
              * $el is explicitly configured with the pat-markdown trigger.
              */
-            var source = this.$el.is(":input") ? this.$el.val() : this.$el.text();
+            const source = this.$el.is(":input")
+                ? this.$el.val()
+                : this.$el[0].innerHTML;
             let rendered = await this.render(source);
-            rendered.replaceAll(this.$el);
+            this.el.innerHTML = "";
+            this.el.append(...rendered[0].childNodes);
         }
     },
 
@@ -44,18 +47,19 @@ var Markdown = Base.extend({
             ];
         };
 
-        const $rendering = $("<div/>");
+        const wrapper = document.createElement("div");
         const converter = new Showdown.Converter({
             tables: true,
             extensions: ["prettify"],
         });
-        $rendering.html(converter.makeHtml(text));
-        return $rendering;
+        const html = converter.makeHtml(text);
+        wrapper.innerHTML = html;
+        return $(wrapper);
     },
 
     async renderForInjection(cfg, data) {
-        var header,
-            source = data;
+        let header;
+        let source = data;
         if (cfg.source && (header = /^#+\s*(.*)/.exec(cfg.source)) !== null) {
             source = this.extractSection(source, header[1]);
             if (source === null) {
@@ -69,21 +73,18 @@ var Markdown = Base.extend({
     },
 
     extractSection(text, header) {
-        var pattern, level;
+        let pattern;
         header = utils.escapeRegExp(header);
-        var matcher = new RegExp(
-                "^((#+)\\s*@TEXT@\\s*|@TEXT@\\s*\\n([=-])+\\s*)$".replace(
-                    /@TEXT@/g,
-                    header
-                ),
-                "m"
-            ),
-            match = matcher.exec(text);
+        let matcher = new RegExp(
+            "^((#+)\\s*@TEXT@\\s*|@TEXT@\\s*\\n([=-])+\\s*)$".replace(/@TEXT@/g, header),
+            "m"
+        );
+        let match = matcher.exec(text);
         if (match === null) {
             return null;
         } else if (match[2]) {
             // We have a ##-style header.
-            level = match[2].length;
+            const level = match[2].length;
             pattern =
                 "^#{@LEVEL@}\\s*@TEXT@\\s*$\\n+((?:.|\\n)*?(?=^#{1,@LEVEL@}\\s)|.*(?:.|\\n)*)";
             pattern = pattern.replace(/@LEVEL@/g, level);
@@ -117,7 +118,7 @@ $(document).ready(function () {
             /* Identify injected URLs which point to markdown files and set their
              * datatype so that we can register a type handler for them.
              */
-            var cfgs = $(this).data("pat-inject");
+            const cfgs = $(this).data("pat-inject");
             cfgs.forEach(function (cfg) {
                 if (is_markdown_resource.test(cfg.url)) {
                     cfg.dataType = "markdown";
@@ -131,7 +132,7 @@ inject.registerTypeHandler("markdown", {
     async sources(cfgs, data) {
         return await Promise.all(
             cfgs.map(async function (cfg) {
-                var pat = Markdown.init(cfg.$target);
+                const pat = new Markdown(cfg.$target[0]);
                 const rendered = await pat.renderForInjection(cfg, data);
                 return rendered;
             })

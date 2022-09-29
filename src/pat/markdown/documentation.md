@@ -11,7 +11,7 @@ The markdown pattern can render [Markdown](http://en.wikipedia.org/wiki/Markdown
 
        1. Number one.
        2. Number two.
-    </div>
+    </pre>
 
 The text inside the element will be rendered using the
 [PageDown](http://code.google.com/p/pagedown/) renderer. The original
