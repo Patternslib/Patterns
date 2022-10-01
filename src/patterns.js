@@ -5,7 +5,6 @@
 // Import base
 import "./globals";
 import registry from "./core/registry";
-import "modernizr";
 
 // Import all used patterns for the bundle to be generated
 import "./core/push_kit";
@@ -73,5 +72,13 @@ import "@patternslib/pat-upload";
 // Importing pattern styles in JavaScript
 // Set to ``true`` to include core styles via JavaScript
 //window.__patternslib_import_styles = false;
+
+// Include modernizr per default.
+// Most of our styles depend on it.
+// You might want to disable it for your project by setting:
+// window.__patternslib_disable_modernizr = true;
+if (!window.__patternslib_disable_modernizr) {
+    import("modernizr");
+}
 
 registry.init();
