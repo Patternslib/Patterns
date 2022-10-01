@@ -5,8 +5,11 @@ const _MS_PER_DAY = 1000 * 60 * 60 * 24; // Milliseconds per day.
 
 $.fn.safeClone = function () {
     var $clone = this.clone();
-    // IE BUG : Placeholder text becomes actual value after deep clone on textarea
+    // IE 9-11 BUG : Placeholder text becomes actual value after deep clone on textarea
     // https://connect.microsoft.com/IE/feedback/details/781612/placeholder-text-becomes-actual-value-after-deep-clone-on-textarea
+    // Ref:
+    //     https://github.com/Patternslib/Patterns/issues/412
+    //     https://github.com/Patternslib/Patterns/pull/410
     if (window.document.documentMode) {
         $clone.findInclusive(":input[placeholder]").each(function (i, item) {
             var $item = $(item);
