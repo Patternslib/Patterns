@@ -1949,10 +1949,10 @@
     colorette "^2.0.16"
     ora "^5.4.1"
 
-"@patternslib/core@./src":
+"@patternslib/core@file:./src/core":
   version "1.0.0"
   dependencies:
-    "@patternslib/dev" "^2.7.1"
+    "@patternslib/dev" "^2.7.2"
 
 "@patternslib/dev@^2.7.2":
   version "2.7.2"
