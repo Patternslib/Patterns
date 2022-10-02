@@ -589,7 +589,9 @@ const localized_isodate = (date) => {
  * Replace HTML reserved characters with html entities to add HTML for user
  * editing to e.g. a textarea or a contenteditable.
  *
- * See: https://developer.mozilla.org/en-US/docs/Glossary/Entity#reserved_characters
+ * See:
+ *  https://stackoverflow.com/a/22706073/1337474
+ *  https://developer.mozilla.org/en-US/docs/Glossary/Entity#reserved_characters
  *
  * @param {string} html - The HTML string to encode.
  *
@@ -600,17 +602,21 @@ const localized_isodate = (date) => {
  *                     ``"`` will be replaced with ``&quot;``.
  */
 const escape_html = (html) => {
-    return (html || "")
-        .replace(/&/g, "&amp;") // needs to be first!
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
+    if (!html) {
+        return "";
+    }
+    const el = document.createElement("div");
+    el.appendChild(document.createTextNode(html));
+    // Return escaped html and also replace quotes.
+    return el.innerHTML.replace(/"/g, "&quot;");
 };
 
 /**
  * Return unescaped, raw HTML from an escaped HTML  string.
  *
- * See: https://developer.mozilla.org/en-US/docs/Glossary/Entity#reserved_characters
+ * See:
+ *  https://stackoverflow.com/a/34064434/1337474
+ *  https://developer.mozilla.org/en-US/docs/Glossary/Entity#reserved_characters
  *
  * @param {string} escaped_html - The HTML string to decode.
  *
@@ -621,11 +627,12 @@ const escape_html = (html) => {
  *                     ``&quot;`` will be replaced with ``"``.
  */
 const unescape_html = (escaped_html) => {
-    return (escaped_html || "")
-        .replace(/&amp;/g, "&")
-        .replace(/&lt;/g, "<")
-        .replace(/&gt;/g, ">")
-        .replace(/&quot;/g, '"');
+    if (!escaped_html) {
+        return "";
+    }
+    const doc = new DOMParser().parseFromString(escaped_html, "text/html");
+    // Return unescaped html and also unescape quote named entities.
+    return doc.documentElement.textContent.replace(/&quot;/g, '"');
 };
 
 /**
