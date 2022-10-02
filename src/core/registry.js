@@ -49,7 +49,7 @@ while ((match = dont_catch_re.exec(window.location.search)) !== null) {
 if (typeof window.__patternslib_registry === "undefined") {
     window.__patternslib_registry = {};
 }
-export const PATTERN_REGISTRY = window.__patternslib_registry;
+const PATTERN_REGISTRY = window.__patternslib_registry;
 if (typeof window.__patternslib_registry_initialized === "undefined") {
     window.__patternslib_registry_initialized = false;
 }
@@ -230,3 +230,4 @@ const registry = {
 };
 
 export default registry;
+export { registry as Registry, PATTERN_REGISTRY };

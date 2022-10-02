@@ -315,3 +315,4 @@ const dom = {
 };
 
 export default dom;
+export { dom };

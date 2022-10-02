@@ -476,3 +476,4 @@ class ArgumentParser {
 ArgumentParser.prototype.add_argument = ArgumentParser.prototype.addArgument;
 
 export default ArgumentParser;
+export { ArgumentParser as Parser };

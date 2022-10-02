@@ -92,3 +92,4 @@ const push_kit = {
 push_kit.init();
 
 export default push_kit;
+export { push_kit as PushKit };

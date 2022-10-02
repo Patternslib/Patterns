@@ -130,3 +130,4 @@ try {
 }
 
 export default store;
+export { store as Store };

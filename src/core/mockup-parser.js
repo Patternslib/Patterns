@@ -42,3 +42,4 @@ var parser = {
 };
 
 export default parser;
+export { parser as Parser };

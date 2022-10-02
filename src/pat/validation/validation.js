@@ -1,11 +1,6 @@
 // Patterns validate - Form vlidation
-import "../../core/polyfills"; // SubmitEvent.submitter for Safari < 15.4 and jsDOM
-import Base from "../../core/base";
-import Parser from "../../core/parser";
-import dom from "../../core/dom";
-import events from "../../core/events";
-import logging from "../../core/logging";
-import utils from "../../core/utils";
+import "@patternslib/core/polyfills"; // SubmitEvent.submitter for Safari < 15.4 and jsDOM
+import { Base, Parser, dom, events, logging, utils } from "@patternslib/core";
 
 const log = logging.getLogger("pat-validation");
 //log.setLevel(logging.Level.DEBUG);

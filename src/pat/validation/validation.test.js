@@ -1,6 +1,6 @@
 import Pattern, { parser } from "./validation";
-import events from "../../core/events";
-import utils from "../../core/utils";
+import events from "@patternslib/core/events";
+import utils from "@patternslib/core/utils";
 import { jest } from "@jest/globals";
 
 describe("pat-validation", function () {

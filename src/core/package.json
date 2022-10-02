@@ -1,0 +1,19 @@
+{
+    "name": "@patternslib/core",
+    "description": "Patternslib core library",
+    "version": "1.0.0",
+    "homepage": "https://patternslib.com",
+    "keywords": [
+        "patternslib"
+    ],
+    "license": "BSD-3-Clause",
+    "main": "./index.js",
+    "dependencies": {
+        "@patternslib/dev": "^2.7.2"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/patternslib/patterns.git",
+        "directory": "src"
+    }
+}

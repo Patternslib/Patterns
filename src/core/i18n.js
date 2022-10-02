@@ -10,3 +10,5 @@
 export default function translate(str) {
     return str;
 }
+
+export { translate };
