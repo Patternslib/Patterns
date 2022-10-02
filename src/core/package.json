@@ -7,12 +7,9 @@
         "patternslib"
     ],
     "license": "BSD-3-Clause",
-    "main": "./core.js",
-    "files": [
-        "core/*"
-    ],
+    "main": "./index.js",
     "dependencies": {
-        "@patternslib/dev": "^2.7.1"
+        "@patternslib/dev": "^2.7.2"
     },
     "repository": {
         "type": "git",
