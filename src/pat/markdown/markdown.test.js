@@ -176,11 +176,12 @@ some content
             new pattern(document.querySelector(".pat-markdown"));
             await utils.timeout(1); // wait a tick for async to settle.
             await utils.timeout(1); // wait a tick for async to settle.
+
             expect(document.body.querySelector(".pat-markdown > h1").textContent).toBe("Title"); // prettier-ignore
             expect(document.body.querySelector(".pat-markdown > p").textContent).toBe("some content"); // prettier-ignore
             expect(document.body.querySelector(".pat-markdown > pre code")).toBeTruthy(); // prettier-ignore
             expect(document.body.querySelector(".pat-markdown > pre.language-javascript code.language-javascript")).toBeTruthy(); // prettier-ignore
-            expect(document.body.querySelector(".pat-markdown > pre code .token").textContent).toBeTruthy(); // prettier-ignore
+            expect(document.body.querySelector(".pat-markdown > pre code .hljs-keyword")).toBeTruthy(); // prettier-ignore
         });
     });
 });

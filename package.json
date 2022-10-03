@@ -16,6 +16,7 @@
         "@stomp/stompjs": "^6.1.2",
         "dompurify": "^2.4.0",
         "google-code-prettify": "^1.0.5",
+        "highlight.js": "^11.6.0",
         "imagesloaded": "^4.1.4",
         "intersection-observer": "^0.12.2",
         "jquery": "^3.6.1",

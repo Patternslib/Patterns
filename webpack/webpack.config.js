@@ -36,10 +36,14 @@ module.exports = () => {
             remote_entry: config.entry["bundle.min"],
             dependencies: package_json.dependencies,
             shared: {
-                jquery: {
+                "jquery": {
                     singleton: true,
                     requiredVersion: package_json.dependencies["jquery"],
                     eager: true,
+                },
+                "highlight.js": {
+                    singleton: true,
+                    version: package_json.dependencies["highlight.js"],
                 },
             },
         })

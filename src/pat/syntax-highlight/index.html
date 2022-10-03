@@ -33,24 +33,14 @@ if (pattern.transform) {
       </code>
     </pre>
 
-    <h2>Syntax highlight for JavaScript with line-numbers</h2>
-    <pre class="pat-syntax-highlight"
-         data-pat-syntax-highlight="features: line-numbers, line-highlight"
-         data-line="1-2, 4"
-    >
-      <code class="language-javascript">
-const pattern = registry.patterns[name];
-if (pattern.transform) {
-    try {
-        pattern.transform($content);
-    } catch (e) {
-        if (dont_catch) {
-          throw(e);
-        }
-        log.error("Transform error for pattern" + name, e);
-    }
-}
+    <h2>Syntax highlight for Python</h2>
+    <pre class="pat-syntax-highlight">
+      <code class="language-python">
+def foo():
+    if not bar:
+          return True
       </code>
     </pre>
+
   </body>
 </html>
