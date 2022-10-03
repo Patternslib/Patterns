@@ -1,18 +1,18 @@
-import Base from "../../core/base";
+import { BasePattern } from "../../core/basepattern";
 import Parser from "../../core/parser";
+import registry from "../../core/registry";
 
 export const parser = new Parser("syntax-highlight");
 parser.addArgument("language", "html");
 parser.addArgument("theme", "dark", ["dark", "light"]);
 parser.addArgument("features", null, ["line-highlight", "line-numbers"], true);
 
-export default Base.extend({
-    name: "syntax-highlight",
-    trigger: ".pat-syntax-highlight",
+class Pattern extends BasePattern {
+    static name = "syntax-highlight";
+    static trigger = ".pat-syntax-highlight";
+    parser = parser;
 
     async init() {
-        this.options = parser.parse(this.el, this.options);
-
         let theme;
         if (this.options.theme === "light") {
             theme = "";
@@ -58,5 +58,9 @@ export default Base.extend({
         _el.classList.add(`language-${language}`);
 
         Prism.highlightElement(_el);
-    },
-});
+    }
+}
+
+registry.register(Pattern);
+export default Pattern;
+export { Pattern };
