@@ -27,33 +27,13 @@ const Markdown = Base.extend({
     },
 
     async render(text) {
-        const Showdown = (await import("showdown")).default;
-
-        // Add support for syntax highlighting via pat-syntax-highlight
-        Showdown.extensions.prettify = function () {
-            return [
-                {
-                    type: "output",
-                    filter: function (source) {
-                        return source.replace(/(<pre>)?<code>/gi, function (match, pre) {
-                            if (pre) {
-                                return '<pre class="pat-syntax-highlight" tabIndex="0"><code data-inner="1">';
-                            } else {
-                                return '<code class="pat-syntax-highlight">';
-                            }
-                        });
-                    },
-                },
-            ];
-        };
+        const marked = (await import("marked")).marked;
+        const DOMPurify = (await import("dompurify")).default;
+        await import("../syntax-highlight/syntax-highlight").default;
 
         const wrapper = document.createElement("div");
-        const converter = new Showdown.Converter({
-            tables: true,
-            extensions: ["prettify"],
-        });
-        const html = converter.makeHtml(text);
-        wrapper.innerHTML = html;
+        const parsed = DOMPurify.sanitize(marked.parse(text));
+        wrapper.innerHTML = parsed;
         return $(wrapper);
     },
 
