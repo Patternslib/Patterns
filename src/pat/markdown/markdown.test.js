@@ -159,4 +159,28 @@ describe("pat-markdown", function () {
             ).toBe("My title\n-------\nContent\n\n");
         });
     });
+
+    describe("Code blocks", function () {
+        it("It correctly renders code blocks", async function () {
+            document.body.innerHTML = `<div class="pat-markdown">
+# Title
+
+some content
+
+\`\`\`javascript
+    const foo = "bar";
+\`\`\`
+</div>
+`;
+
+            new pattern(document.querySelector(".pat-markdown"));
+            await utils.timeout(1); // wait a tick for async to settle.
+            await utils.timeout(1); // wait a tick for async to settle.
+            expect(document.body.querySelector(".pat-markdown > h1").textContent).toBe("Title"); // prettier-ignore
+            expect(document.body.querySelector(".pat-markdown > p").textContent).toBe("some content"); // prettier-ignore
+            expect(document.body.querySelector(".pat-markdown > pre code")).toBeTruthy(); // prettier-ignore
+            expect(document.body.querySelector(".pat-markdown > pre.language-javascript code.language-javascript")).toBeTruthy(); // prettier-ignore
+            expect(document.body.querySelector(".pat-markdown > pre code .token").textContent).toBeTruthy(); // prettier-ignore
+        });
+    });
 });

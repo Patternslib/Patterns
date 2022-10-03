@@ -2,6 +2,7 @@ import $ from "jquery";
 import logging from "../../core/logging";
 import utils from "../../core/utils";
 import Base from "../../core/base";
+import events from "../../core/events";
 import inject from "../inject/inject";
 
 const log = logging.getLogger("pat.markdown");
@@ -29,11 +30,20 @@ const Markdown = Base.extend({
     async render(text) {
         const marked = (await import("marked")).marked;
         const DOMPurify = (await import("dompurify")).default;
-        await import("../syntax-highlight/syntax-highlight").default;
+        const SyntaxHighlight = (await import("../syntax-highlight/syntax-highlight")).default; // prettier-ignore
 
         const wrapper = document.createElement("div");
         const parsed = DOMPurify.sanitize(marked.parse(text));
         wrapper.innerHTML = parsed;
+        for (const item of wrapper.querySelectorAll("pre > code")) {
+            const pre = item.parentElement;
+            pre.classList.add("pat-syntax-highlight");
+            // If the code block language was set in a fenced code block,
+            // marked has already set the language as a class on the code tag.
+            // pat-syntax-highlight will understand this.
+            new SyntaxHighlight(pre);
+            await events.await_event(pre, "init.syntax-highlight.patterns");
+        }
         return $(wrapper);
     },
 
