@@ -175,6 +175,16 @@ describe("Pattern implementation", function () {
                 store: "none",
             });
         });
+
+        it("1.6 - Accept attribute as an alias to attr.", function () {
+            const instance = new Pattern(document.createElement("div"));
+            const validated = instance._validateOptions([
+                { attribute: "disabled", selector: "input" },
+            ]);
+            expect(validated.length).toEqual(1);
+            expect(validated[0].attribute).toEqual("disabled");
+            expect(validated[0].selector).toEqual("input");
+        });
     });
 
     describe("2 - When clicking on a toggle", function () {
@@ -218,6 +228,18 @@ describe("Pattern implementation", function () {
         it("2.2 - attributes are updated", async function () {
             var $trigger = $(trigger);
             trigger.dataset.patToggle = ".victim; attr: disabled";
+            new Pattern($trigger);
+            $trigger.click();
+            await utils.timeout(1);
+            expect(victims[0].disabled).toBe(true);
+            $trigger.click();
+            await utils.timeout(1);
+            expect(victims[0].disabled).toBe(false);
+        });
+
+        it("2.3 - attributes are updated - use the alias", async function () {
+            var $trigger = $(trigger);
+            trigger.dataset.patToggle = ".victim; attribute: disabled";
             new Pattern($trigger);
             $trigger.click();
             await utils.timeout(1);

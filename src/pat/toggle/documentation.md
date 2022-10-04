@@ -8,7 +8,12 @@ For instance to show or hide a sidebar with a CSS class on the body tag.
 The _toggle_ pattern can be used to toggle attribute values for objects.
 It is most commonly used to toggle a CSS class.
 
-    <a href="#" class="pat-toggle" data-pat-toggle="selector: #work; attr: class; value: active">Start working</a>
+    <a href="#"
+        class="pat-toggle"
+        data-pat-toggle="
+            selector: #work;
+            attribute: class;
+            value: active">Start working</a>
     <div id="work">
       Working…
     </div>
@@ -67,3 +72,18 @@ The possible values for the `store` parameter are:
 -   `none`: do not remember the toggle state (default).
 -   `local`: remember the state as part of the local storage.
 -   `session`: remember the status as part of the session storage.
+
+
+### Options reference
+
+You can customise the behaviour of a switches through options in the
+`data-pat-toggle` attribute.
+
+| Property   | Default value | Values                   | Description                                                                                                                                                                                          | Type               |
+| ---------- | ------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| `selector` |               |                          | CSS selector matching elements where a class or an attribute should be toggled.                                                                                                                      | String             |
+| `value`    |               |                          | One or more space seperated CSS class names to toggle on the element. Can only be used with `attr` set to class, which is the default.                                                               | String             |
+| `event`    | `click`       |                          | A JavaScript event which triggers the toggler. The default is to listen to `click` events.                                                                                                           | String             |
+| `attr`     | `class`       |                          | The attribute which should be toggled. In case of the default `class`, class names are added or removed. In case of any other attribute the attribute as added or removed.                           | String             |
+| `store`    | `none`        | `none` `session` `local` | How to store the state of a toggle. `none` does not remember the toggle state, `local` stores the state as part of the local storage and `session` stores the status as part of the session storage. | Mutually exclusive |
+
