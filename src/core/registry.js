@@ -150,6 +150,9 @@ const registry = {
 
         if (typeof content === "string") {
             content = document.querySelector(content);
+        } else if (content instanceof Text) {
+            // No need to scan a TextNode.
+            return;
         } else if (content.jquery) {
             content = content[0];
         }
