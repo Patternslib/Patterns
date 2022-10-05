@@ -7,8 +7,8 @@ import events from "../../core/events";
 import logging from "../../core/logging";
 import utils from "../../core/utils";
 
-const log = logging.getLogger("pat-validation");
-//log.setLevel(logging.Level.DEBUG);
+const logger = logging.getLogger("pat-validation");
+//logger.setLevel(logging.Level.DEBUG);
 
 export const parser = new Parser("validation");
 parser.addArgument("disable-selector", "[type=submit], button:not([type=button])"); // Elements which must be disabled if there are errors
@@ -121,7 +121,7 @@ export default Base.extend({
             return;
         }
 
-        log.debug(`
+        logger.debug(`
             validity_state.badInput ${validity_state.badInput}
             validity_state.customError ${validity_state.customError}
             validity_state.patternMismatch ${validity_state.patternMismatch}
