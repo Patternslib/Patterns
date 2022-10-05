@@ -1,5 +1,6 @@
 // Patterns validate - Form vlidation
 import "../../core/polyfills"; // SubmitEvent.submitter for Safari < 15.4 and jsDOM
+import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
@@ -44,16 +45,38 @@ export default Base.extend({
 
     init() {
         this.options = parser.parse(this.el, this.options);
+        events.add_event_listener(
+            this.el,
+            "submit",
+            `pat-validation--submit--validator`,
+            (e) => {
+                // On submit, check all.
+                // Immediate, non-debounced check with submit. Otherwise submit
+                // is not cancelable.
+                for (const input of this.inputs) {
+                    logger.debug("Checking input for submit", input, e);
+                    this.check_input({ input: input, event: e });
+                }
+            }
+        );
+
+        this.initialize_inputs();
+        $(this.el).on("pat-update", () => {
+            this.initialize_inputs();
+        });
+
+        // Set ``novalidate`` attribute to disable the browser's validation
+        // bubbles but not disable the validation API.
+        this.el.setAttribute("novalidate", "");
+    },
+
+    initialize_inputs() {
         this.inputs = [
             ...this.el.querySelectorAll("input[name], select[name], textarea[name]"),
         ];
         this.disabled_elements = [
             ...this.el.querySelectorAll(this.options.disableSelector),
         ];
-
-        // Set ``novalidate`` attribute to disable the browser's validation
-        // bubbles but not disable the validation API.
-        this.el.setAttribute("novalidate", "");
 
         for (const [cnt, input] of this.inputs.entries()) {
             // Cancelable debouncer.
@@ -81,21 +104,6 @@ export default Base.extend({
                 (e) => debouncer(e)
             );
         }
-
-        events.add_event_listener(
-            this.el,
-            "submit",
-            `pat-validation--submit--validator`,
-            (e) => {
-                // On submit, check all.
-                // Immediate, non-debounced check with submit. Otherwise submit
-                // is not cancelable.
-                for (const input of this.inputs) {
-                    logger.debug("Checking input for submit", input, e);
-                    this.check_input({ input: input, event: e });
-                }
-            }
-        );
     },
 
     check_input({ input, event, stop = false }) {
