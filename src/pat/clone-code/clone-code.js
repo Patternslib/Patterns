@@ -7,23 +7,24 @@ import utils from "../../core/utils";
 
 export const parser = new Parser("clone-code");
 parser.addArgument("source", ":first-child");
+parser.addArgument("features", null, ["format"]);
 
 class Pattern extends BasePattern {
     static name = "clone-code";
     static trigger = ".pat-clone-code";
     parser = parser;
 
-    init() {
+    async init() {
         // Source
         if (this.options.source.lastIndexOf(":", 0) === 0) {
             this.source = this.el.querySelector(this.options.source);
         } else {
             this.source = document.querySelector(this.options.source);
         }
-        this.clone();
+        await this.clone();
     }
 
-    clone() {
+    async clone() {
         // Clone the template.
         let markup =
             this.source.nodeName === "TEMPLATE"
@@ -51,6 +52,16 @@ class Pattern extends BasePattern {
             tmp_wrapper instanceof HTMLDocument
                 ? tmp_wrapper.documentElement.outerHTML
                 : tmp_wrapper.innerHTML;
+
+        if (this.options.features?.includes("format")) {
+            // Format the markup.
+            const prettier = (await import("prettier/standalone")).default;
+            const parser_html = (await import("prettier/parser-html")).default;
+            markup = prettier.format(markup, {
+                parser: "html",
+                plugins: [parser_html],
+            });
+        }
 
         markup = utils.escape_html(markup);
         const pre_code_markup = dom.template(code_wrapper_template, { markup: markup });

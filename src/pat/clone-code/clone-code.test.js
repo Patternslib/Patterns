@@ -73,4 +73,35 @@ describe("pat-clone-code", () => {
 <div>3</div>
 </div>`);
     });
+
+    it("pretty prints output", async () => {
+        document.body.innerHTML = `
+<div class="pat-clone-code" data-pat-clone-code="features: format">
+                                        <div>
+        <div>1</div>
+<div
+
+
+>2</div>
+
+<div>3</div>
+ </div>
+</div>
+        `;
+        const el = document.querySelector(".pat-clone-code");
+
+        new Pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        const _el = document.body.querySelector(
+            ".pat-clone-code pre code.language-html"
+        );
+        expect(_el).toBeTruthy();
+        expect(_el.textContent.trim()).toBe(`<div>
+  <div>1</div>
+  <div>2</div>
+
+  <div>3</div>
+</div>`);
+    });
 });
