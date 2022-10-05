@@ -157,6 +157,8 @@ export default Base.extend({
                 });
             } else if (input_options.not.after || input_options.not.before) {
                 const msg = input_options.message.date || input_options.message.datetime;
+                const msg_default_not_before = "The date must be after %{attribute}";
+                const msg_default_not_after = "The date must be before %{attribute}";
 
                 let not_after;
                 let not_after_el;
@@ -201,9 +203,47 @@ export default Base.extend({
                     const date = new Date(input.value);
 
                     if (not_after && date > not_after) {
-                        this.set_validity({ input: input, msg: msg });
+                        let msg_attr;
+                        // Try to construct a meaningfull error message
+                        if (!not_after_el && input_options.not.after) {
+                            // fixed date case
+                            msg_attr = input_options.not.after;
+                        } else {
+                            // Get the label + other text content within the
+                            // label and replace all whitespace and newlines
+                            // with a single space.
+                            msg_attr = not_after_el?.labels?.[0]?.textContent.replace(
+                                /\s\s+/g, // replace all whitespace
+                                " " // with a single space
+                            );
+                            msg_attr = msg_attr || not_after_el.name;
+                        }
+                        this.set_validity({
+                            input: input,
+                            msg: msg || msg_default_not_after,
+                            attribute: msg_attr.trim(),
+                        });
                     } else if (not_before && date < not_before) {
-                        this.set_validity({ input: input, msg: msg });
+                        let msg_attr;
+                        // Try to construct a meaningfull error message
+                        if (!not_before_el && input_options.not.before) {
+                            // fixed date case
+                            msg_attr = input_options.not.before;
+                        } else {
+                            // Get the label + other text content within the
+                            // label and replace all whitespace and newlines
+                            // with a single space.
+                            msg_attr = not_before_el?.labels?.[0]?.textContent.replace(
+                                /\s\s+/g, // replace all whitespace
+                                " " // with a single space
+                            );
+                            msg_attr = msg_attr || not_before_el.name;
+                        }
+                        this.set_validity({
+                            input: input,
+                            msg: msg || msg_default_not_before,
+                            attribute: msg_attr.trim(),
+                        });
                     }
                 }
 
