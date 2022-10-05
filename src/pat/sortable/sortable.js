@@ -20,7 +20,7 @@ export default Base.extend({
         }
         this.$form = this.$el.closest("form");
         this.options = parser.parse(this.$el, false);
-        this.recordPositions().addHandles().initScrolling();
+        this.recordPositions().initScrolling();
         this.$el.on("pat-update", this.onPatternUpdate.bind(this));
     },
 
@@ -44,6 +44,7 @@ export default Base.extend({
             // Add `.sortable-item` class to each sortable.
             this.classList.add("sortable-item");
         });
+        this.addHandles();
         return this;
     },
 
