@@ -60,16 +60,6 @@ export default Base.extend({
             const debouncer = utils.debounce((e) => {
                 logger.debug("Checking input for event", input, e);
                 this.check_input({ input: input, event: e });
-                if (this.disabled_elements.some((it) => it.disabled)) {
-                    // If there are already any disabled elements, do a check
-                    // for the whole form.
-                    // This is necessary otherwise the submit button is already
-                    // disabled and no other errors would be shown.
-                    // This is debounced, so it should not disturb too much while typing.
-                    for (const _input of this.inputs.filter((it) => it !== input)) {
-                        this.check_input({ input: _input });
-                    }
-                }
             }, this.options.delay);
 
             events.add_event_listener(
@@ -403,11 +393,25 @@ export default Base.extend({
         }
         input[KEY_ERROR_EL] = error_node;
 
+        let did_disable = false;
         for (const it of this.disabled_elements) {
             if (!it.disabled) {
+                did_disable = true;
                 it.setAttribute("disabled", "disabled");
                 it.classList.add("disabled");
                 logger.debug("Disable element", it);
+            }
+        }
+
+        // Do an initial check of the whole form when a form element (e.g. the
+        // submit button) was disabled. We want to show the user all possible
+        // errors at once and after the submit button is disabled there is no
+        // way to check the whole form at once. ... well we also do not want to
+        // check the whole form when one input was changed....
+        if (did_disable) {
+            logger.debug("Checking whole form after element was disabled.");
+            for (const _input of this.inputs.filter((it) => it !== input)) {
+                this.check_input({ input: _input, stop: true });
             }
         }
     },
