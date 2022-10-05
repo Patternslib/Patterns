@@ -168,7 +168,7 @@ export default Base.extend({
             showWeekNumber: this.options.weekNumbers === "show",
             onSelect: () => this.dispatch_change_event(),
             onClose: () => {
-                if (this.options.behavior === "styled") {
+                if (this.options.behavior === "styled" && !this.el.value) {
                     // blur the input field so that pat-validate can kick in when
                     // nothing was selected.
                     el.dispatchEvent(events.blur_event());
