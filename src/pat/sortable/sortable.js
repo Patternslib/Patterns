@@ -15,6 +15,9 @@ export default Base.extend({
     trigger: ".pat-sortable",
 
     init: function () {
+        if (window.__patternslib_import_styles) {
+            import("./_sortable.scss");
+        }
         this.$form = this.$el.closest("form");
         this.options = parser.parse(this.$el, false);
         this.recordPositions().addHandles().initScrolling();
