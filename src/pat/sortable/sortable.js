@@ -41,6 +41,8 @@ export default Base.extend({
         this.$sortables = this.$el.children().filter(this.options.selector);
         this.$sortables.each(function (idx) {
             $(this).data("patterns.sortable", { position: idx });
+            // Add `.sortable-item` class to each sortable.
+            this.classList.add("sortable-item");
         });
         return this;
     },
