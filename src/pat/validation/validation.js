@@ -58,6 +58,7 @@ export default Base.extend({
         for (const [cnt, input] of this.inputs.entries()) {
             // Cancelable debouncer.
             const debouncer = utils.debounce((e) => {
+                logger.debug("Checking input for event", input, e);
                 this.check_input({ input: input, event: e });
                 if (this.disabled_elements.some((it) => it.disabled)) {
                     // If there are already any disabled elements, do a check
@@ -100,6 +101,7 @@ export default Base.extend({
                 // Immediate, non-debounced check with submit. Otherwise submit
                 // is not cancelable.
                 for (const input of this.inputs) {
+                    logger.debug("Checking input for submit", input, e);
                     this.check_input({ input: input, event: e });
                 }
             }
@@ -206,12 +208,15 @@ export default Base.extend({
                 }
 
                 // always check the other input to clear/set errors
-                !stop && // do not re-check when stop is set to avoid infinite loops
-                    not_after_el &&
+                // do not re-check when stop is set to avoid infinite loops
+                if (!stop && not_after_el) {
+                    logger.debug("Check `not-after` input.", not_after_el);
                     this.check_input({ input: not_after_el, stop: true });
-                !stop &&
-                    not_before_el &&
+                }
+                if (!stop && not_before_el) {
+                    logger.debug("Check `no-before` input.", not_after_el);
                     this.check_input({ input: not_before_el, stop: true });
+                }
             }
 
             if (!validity_state.customError) {
@@ -362,6 +367,7 @@ export default Base.extend({
             if (!it.disabled) {
                 it.setAttribute("disabled", "disabled");
                 it.classList.add("disabled");
+                logger.debug("Disable element", it);
             }
         }
     },
