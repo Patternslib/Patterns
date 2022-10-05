@@ -95,7 +95,7 @@ export default Base.extend({
                 );
             }
 
-            let display_el_pat;
+            let pat_display_time;
             if (this.options.outputFormat) {
                 const PatDisplayTime = (await import("../display-time/display-time")).default; // prettier-ignore
                 const display_time_config = { format: this.format };
@@ -105,23 +105,39 @@ export default Base.extend({
                 if (this.options.locale) {
                     display_time_config.locale = this.options.locale;
                 }
-                display_el_pat = new PatDisplayTime(display_el, display_time_config);
-            } else {
+                pat_display_time = new PatDisplayTime(display_el, display_time_config);
+            } else if (this.el.value) {
                 display_el.textContent = el.value;
             }
 
-            $(display_el).on("init.display-time.patterns", () =>
-                this.add_clear_button(display_el)
-            );
+            // Add the additional elements "clear button" and placeholder to
+            // the `<time>` element.
+            const _add_additional = () => {
+                this.add_clear_button(display_el);
+                if (!this.el.value && this.el.placeholder) {
+                    display_el.innerHTML = `<span class="placeholder">${this.el.placeholder}</span>`;
+                }
+            };
+            if (pat_display_time) {
+                // Add the additional elements after display time has
+                // eventually cleared the contents or done any other changes.
+                $(display_el).on("init.display-time.patterns", () => {
+                    _add_additional();
+                });
+            } else {
+                // If no `pat-display-time` was used, add immediately.
+                _add_additional();
+            }
 
             this.el.addEventListener("change", () => {
                 display_el.setAttribute("datetime", this.el.value);
-                if (display_el_pat) {
-                    display_el_pat.format();
+                if (pat_display_time && this.el.value) {
+                    pat_display_time.format();
                 } else {
+                    //} else if (this.el.value) {
                     display_el.textContent = this.el.value;
                 }
-                this.add_clear_button(display_el);
+                _add_additional();
             });
 
             if (disabled) {
