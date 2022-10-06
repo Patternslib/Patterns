@@ -140,6 +140,13 @@ const registry = {
             patterns.splice(patterns.indexOf("validation"), 1);
             patterns.unshift("validation");
         }
+        // Add clone-code to the very beginning - we want to copy the markup
+        // before any other patterns changed the markup.
+        if (patterns.includes("clone-code")) {
+            patterns.splice(patterns.indexOf("clone-code"), 1);
+            patterns.unshift("clone-code");
+        }
+
         return patterns;
     },
 
