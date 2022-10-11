@@ -16,7 +16,7 @@ describe("pat-markdown", function () {
         afterEach(() => {
             jest.restoreAllMocks();
         });
-        it("replaces the DOM element with the rendered Markdown content.", async function () {
+        it("It renders content for elements with the pattern trigger.", async function () {
             var $el = $('<p class="pat-markdown"></p>');
             $el.appendTo("#lab");
             jest.spyOn(pattern.prototype, "render").mockImplementation(() => {
@@ -24,10 +24,10 @@ describe("pat-markdown", function () {
             });
             pattern.init($el);
             await utils.timeout(1); // wait a tick for async to settle.
-            expect($("#lab").html()).toBe("<p>Rendering</p>");
+            expect($("#lab").html()).toBe('<p class="pat-markdown">Rendering</p>');
         });
 
-        it("does not replace the DOM element if it doesn't have the pattern trigger", function () {
+        it("It does not render when the DOM element doesn't have the pattern trigger", function () {
             var $el = $("<p></p>");
             $el.appendTo("#lab");
             jest.spyOn(pattern.prototype, "render").mockImplementation(() => {
@@ -70,7 +70,7 @@ describe("pat-markdown", function () {
 
         it("converts markdown into HTML", async function () {
             const $rendering = await pattern.prototype.render("*This is markdown*");
-            expect($rendering.html()).toBe("<p><em>This is markdown</em></p>");
+            expect($rendering.html()).toBe(`<p><em>This is markdown</em></p>\n`);
         });
     });
 
@@ -157,6 +157,31 @@ describe("pat-markdown", function () {
                     "My title"
                 )
             ).toBe("My title\n-------\nContent\n\n");
+        });
+    });
+
+    describe("Code blocks", function () {
+        it("It correctly renders code blocks", async function () {
+            document.body.innerHTML = `<div class="pat-markdown">
+# Title
+
+some content
+
+\`\`\`javascript
+    const foo = "bar";
+\`\`\`
+</div>
+`;
+
+            new pattern(document.querySelector(".pat-markdown"));
+            await utils.timeout(1); // wait a tick for async to settle.
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.body.querySelector(".pat-markdown > h1").textContent).toBe("Title"); // prettier-ignore
+            expect(document.body.querySelector(".pat-markdown > p").textContent).toBe("some content"); // prettier-ignore
+            expect(document.body.querySelector(".pat-markdown > pre code")).toBeTruthy(); // prettier-ignore
+            expect(document.body.querySelector(".pat-markdown > pre.language-javascript code.language-javascript")).toBeTruthy(); // prettier-ignore
+            expect(document.body.querySelector(".pat-markdown > pre code .hljs-keyword")).toBeTruthy(); // prettier-ignore
         });
     });
 });

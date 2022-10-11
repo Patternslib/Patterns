@@ -1,23 +1,46 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>pat-syntax-highlight demo page</title>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="/style/common.css" />
-        <script src="/bundle.min.js"></script>
-    </head>
-    <body>
-        <h2>Sample output:</h2>
-        <pre class="pat-syntax-highlight light-bg">
-var pattern = registry.patterns[name];
+  <head>
+    <title>pat-syntax-highlight demo page</title>
+    <meta charset="utf-8" />
+    <link href="/style/common.css"
+          rel="stylesheet"
+    />
+    <script src="/bundle.min.js"></script>
+  </head>
+  <body>
+    <h2>Syntax highlight for JavaScript</h2>
+    <pre class="pat-syntax-highlight">
+      <code class="language-javascript">
+const pattern = registry.patterns[name];
 if (pattern.transform) {
     try {
         pattern.transform($content);
     } catch (e) {
-        if (dont_catch) { throw(e); }
+        if (dont_catch) {
+          throw(e);
+        }
         log.error("Transform error for pattern" + name, e);
     }
-    </pre
-        >
-    </body>
+}
+      </code>
+    </pre>
+
+    <h2>Syntax highlight for HTML</h2>
+    <pre class="pat-syntax-highlight">
+      <code class="language-html">
+&lt;h1&gt;hello&lt;/h1&gt;
+      </code>
+    </pre>
+
+    <h2>Syntax highlight for Python</h2>
+    <pre class="pat-syntax-highlight">
+      <code class="language-python">
+def foo():
+    if not bar:
+          return True
+      </code>
+    </pre>
+
+  </body>
 </html>

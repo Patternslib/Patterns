@@ -37,6 +37,31 @@ const mock_fetch_i18n = () =>
             }),
     });
 
+const select_date = (el, date) => {
+    // Attention! Just select today.
+    // Scrolling calendar pages forward and backwards is not supported yet.
+    el.click();
+
+    const day = date.getDate().toString();
+    const month = date.getMonth().toString(); // remember, month-count starts from 0
+    const year = date.getFullYear().toString();
+
+    const cur_year = document.querySelector('.pika-lendar .pika-select-year option[selected="selected"]'); // prettier-ignore
+    expect(cur_year.textContent).toBe(year);
+
+    const cur_month = document.querySelector('.pika-lendar .pika-select-month option[selected="selected"]'); // prettier-ignore
+    expect(cur_month.value).toBe(month);
+
+    const cur_day = document.querySelector(".pika-lendar td.is-today button"); // prettier-ignore
+    expect(cur_day.getAttribute("data-pika-day")).toBe(day);
+
+    const cur_wkday = document.querySelector(".pika-lendar th:first-child abbr"); // prettier-ignore
+    expect(cur_wkday.textContent).toBe("Sun");
+
+    // select current day.
+    cur_day.dispatchEvent(new Event("mousedown"));
+};
+
 describe("pat-date-picker", function () {
     afterEach(function () {
         document.body.innerHTML = "";
@@ -57,28 +82,10 @@ describe("pat-date-picker", function () {
         expect(el.getAttribute("type")).toBe("date");
         expect(el.style.display).toBe("none");
 
-        display_el.click();
-
         const date = new Date();
-        const day = date.getDate().toString();
-        const month = date.getMonth().toString(); // remember, month-count starts from 0
-        const year = date.getFullYear().toString();
         const isodate = utils.localized_isodate(date);
+        select_date(display_el, date);
 
-        const cur_year = document.querySelector('.pika-lendar .pika-select-year option[selected="selected"]'); // prettier-ignore
-        expect(cur_year.textContent).toBe(year);
-
-        const cur_month = document.querySelector('.pika-lendar .pika-select-month option[selected="selected"]'); // prettier-ignore
-        expect(cur_month.value).toBe(month);
-
-        const cur_day = document.querySelector(".pika-lendar td.is-today button"); // prettier-ignore
-        expect(cur_day.getAttribute("data-pika-day")).toBe(day);
-
-        const cur_wkday = document.querySelector(".pika-lendar th:first-child abbr"); // prettier-ignore
-        expect(cur_wkday.textContent).toBe("Sun");
-
-        // select current day.
-        cur_day.dispatchEvent(new Event("mousedown"));
         // <time> element should contains the current date in iso format
         expect(display_el.textContent).toBe(isodate);
         // input element contains iso date
@@ -617,5 +624,42 @@ describe("pat-date-picker", function () {
 
         // There should be a error message from pat-validation.
         expect(form.querySelectorAll("em.warning").length).toBe(1);
+    });
+
+    it("15 - Placeholder support.", async () => {
+        document.body.innerHTML = `
+            <input
+                type="date"
+                class="pat-date-picker"
+                placeholder="Select a date"
+                />`;
+        const el = document.querySelector("input[type=date]");
+        new pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        const display_el = document.querySelector("time");
+        expect(display_el).toBeTruthy();
+        expect(display_el.textContent).toBe("Select a date");
+        expect(el.value).toBe("");
+
+        const date = new Date();
+        const isodate = utils.localized_isodate(date);
+        select_date(display_el, date);
+
+        // <time> element should contains the current date in iso format
+        expect(display_el.textContent).toBe(isodate);
+        // input element contains iso date
+        expect(el.value).toBe(isodate);
+
+        // Clear button is availale
+        let clear_button = display_el.querySelector(".cancel-button");
+        expect(clear_button).toBeTruthy();
+
+        clear_button.click();
+
+        // <time> element should contain the placeholder again
+        expect(display_el.textContent).toBe("Select a date");
+        // input element should be empty
+        expect(el.value).toBe("");
     });
 });

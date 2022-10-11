@@ -15,9 +15,12 @@ export default Base.extend({
     trigger: ".pat-sortable",
 
     init: function () {
+        if (window.__patternslib_import_styles) {
+            import("./_sortable.scss");
+        }
         this.$form = this.$el.closest("form");
         this.options = parser.parse(this.$el, false);
-        this.recordPositions().addHandles().initScrolling();
+        this.recordPositions().initScrolling();
         this.$el.on("pat-update", this.onPatternUpdate.bind(this));
     },
 
@@ -38,7 +41,10 @@ export default Base.extend({
         this.$sortables = this.$el.children().filter(this.options.selector);
         this.$sortables.each(function (idx) {
             $(this).data("patterns.sortable", { position: idx });
+            // Add `.sortable-item` class to each sortable.
+            this.classList.add("sortable-item");
         });
+        this.addHandles();
         return this;
     },
 

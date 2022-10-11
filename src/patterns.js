@@ -19,6 +19,7 @@ import "./pat/calendar/calendar";
 import "./pat/carousel/carousel";
 import "./pat/checklist/checklist";
 import "./pat/clone/clone";
+import "./pat/clone-code/clone-code";
 import "./pat/collapsible/collapsible";
 import "./pat/colour-picker/colour-picker";
 import "./pat/date-picker/date-picker";

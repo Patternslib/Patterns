@@ -19,6 +19,8 @@ parser.addArgument("attr", "class");
 parser.addArgument("value");
 parser.addArgument("store", "none", ["none", "session", "local"]);
 
+parser.addAlias("attribute", "attr");
+
 export function ClassToggler(values) {
     this.values = values.slice(0);
     if (this.values.length > 1) this.values.push(values[0]);

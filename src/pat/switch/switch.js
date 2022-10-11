@@ -23,6 +23,7 @@ export default Base.extend({
         this.options = this._validateOptions(parser.parse(this.el, this.options, true));
 
         events.add_event_listener(this.el, "click", "pat-switch--on-click", (e) => {
+            // TODO: e.target.tagName
             if (e.tagName === "A") {
                 e.preventDefault();
             }

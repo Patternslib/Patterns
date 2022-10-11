@@ -945,7 +945,7 @@ describe("pat-validation", function () {
         expect(el.querySelectorAll("em.warning").length).toBe(0);
     });
 
-    it("5.4 - validates dates with before/after as pattern config attributes with custom error message.", async function () {
+    it("5.4.1 - validates dates with before/after as pattern config attributes with custom error message.", async function () {
         document.body.innerHTML = `
           <form class="pat-validation">
             <input
@@ -985,6 +985,142 @@ describe("pat-validation", function () {
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.querySelectorAll("em.warning").length).toBe(0);
+    });
+
+    it("5.4.2 - validates dates with before/after as pattern config attributes with NO custom error message, using fixed dates.", async function () {
+        document.body.innerHTML = `
+          <form class="pat-validation">
+            <input
+                type="date"
+                name="date"
+                data-pat-validation="
+                    not-before: 2011-11-11;
+                    not-after: 2022-02-22;
+                " />
+          </form>
+        `;
+
+        const el = document.querySelector(".pat-validation");
+        const inp = el.querySelector("[name=date]");
+
+        new Pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        // No error when left empty and not required.
+        inp.value = "";
+        inp.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(0);
+
+        inp.value = "2010-10-10";
+        inp.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(1);
+        expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
+            "The date must be after 2011-11-11"
+        );
+
+        inp.value = "2023-02-23";
+        inp.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(1);
+        expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
+            "The date must be before 2022-02-22"
+        );
+
+        inp.value = "2022-01-01";
+        inp.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.querySelectorAll("em.warning").length).toBe(0);
+    });
+
+    it("5.4.3 - validates dates with before/after as pattern config attributes with NO custom error message, using labels.", async function () {
+        document.body.innerHTML = `
+          <form class="pat-validation">
+            <label>ye date
+                <input
+                    type="date"
+                    name="date1"
+                    data-pat-validation="
+                        not-after: [name=date2];
+                    " />
+            </label>
+            <label>woo date
+                <input
+                    type="date"
+                    name="date2"
+                    data-pat-validation="
+                        not-before: [name=date1];
+                    " />
+            </label>
+          </form>
+        `;
+
+        const el = document.querySelector(".pat-validation");
+        const inp1 = el.querySelector("[name=date1]");
+        const inp2 = el.querySelector("[name=date2]");
+
+        new Pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        inp1.value = "2010-10-10";
+        inp2.value = "2001-01-01";
+
+        inp1.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(2);
+
+        console.log(document.body.innerHTML);
+        expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
+            "The date must be before woo date"
+        );
+
+        expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
+            "The date must be after ye date"
+        );
+    });
+
+    it("5.4.4 - validates dates with before/after as pattern config attributes with NO custom error message, using input names.", async function () {
+        document.body.innerHTML = `
+          <form class="pat-validation">
+            <input
+                type="date"
+                name="date1"
+                data-pat-validation="
+                    not-after: [name=date2];
+                " />
+            <input
+                type="date"
+                name="date2"
+                data-pat-validation="
+                    not-before: [name=date1];
+                " />
+          </form>
+        `;
+
+        const el = document.querySelector(".pat-validation");
+        const inp1 = el.querySelector("[name=date1]");
+        const inp2 = el.querySelector("[name=date2]");
+
+        new Pattern(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        inp1.value = "2010-10-10";
+        inp2.value = "2001-01-01";
+
+        inp1.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(el.querySelectorAll("em.warning").length).toBe(2);
+
+        console.log(document.body.innerHTML);
+        expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
+            "The date must be before date2"
+        );
+
+        expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
+            "The date must be after date1"
+        );
     });
 
     it("5.5 - validates dates with before/after constraints", async function () {

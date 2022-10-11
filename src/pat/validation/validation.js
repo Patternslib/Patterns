@@ -1,5 +1,6 @@
 // Patterns validate - Form vlidation
 import "../../core/polyfills"; // SubmitEvent.submitter for Safari < 15.4 and jsDOM
+import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
@@ -7,8 +8,8 @@ import events from "../../core/events";
 import logging from "../../core/logging";
 import utils from "../../core/utils";
 
-const log = logging.getLogger("pat-validation");
-//log.setLevel(logging.Level.DEBUG);
+const logger = logging.getLogger("pat-validation");
+//logger.setLevel(logging.Level.DEBUG);
 
 export const parser = new Parser("validation");
 parser.addArgument("disable-selector", "[type=submit], button:not([type=button])"); // Elements which must be disabled if there are errors
@@ -44,6 +45,32 @@ export default Base.extend({
 
     init() {
         this.options = parser.parse(this.el, this.options);
+        events.add_event_listener(
+            this.el,
+            "submit",
+            `pat-validation--submit--validator`,
+            (e) => {
+                // On submit, check all.
+                // Immediate, non-debounced check with submit. Otherwise submit
+                // is not cancelable.
+                for (const input of this.inputs) {
+                    logger.debug("Checking input for submit", input, e);
+                    this.check_input({ input: input, event: e });
+                }
+            }
+        );
+
+        this.initialize_inputs();
+        $(this.el).on("pat-update", () => {
+            this.initialize_inputs();
+        });
+
+        // Set ``novalidate`` attribute to disable the browser's validation
+        // bubbles but not disable the validation API.
+        this.el.setAttribute("novalidate", "");
+    },
+
+    initialize_inputs() {
         this.inputs = [
             ...this.el.querySelectorAll("input[name], select[name], textarea[name]"),
         ];
@@ -51,24 +78,11 @@ export default Base.extend({
             ...this.el.querySelectorAll(this.options.disableSelector),
         ];
 
-        // Set ``novalidate`` attribute to disable the browser's validation
-        // bubbles but not disable the validation API.
-        this.el.setAttribute("novalidate", "");
-
         for (const [cnt, input] of this.inputs.entries()) {
             // Cancelable debouncer.
             const debouncer = utils.debounce((e) => {
+                logger.debug("Checking input for event", input, e);
                 this.check_input({ input: input, event: e });
-                if (this.disabled_elements.some((it) => it.disabled)) {
-                    // If there are already any disabled elements, do a check
-                    // for the whole form.
-                    // This is necessary otherwise the submit button is already
-                    // disabled and no other errors would be shown.
-                    // This is debounced, so it should not disturb too much while typing.
-                    for (const _input of this.inputs.filter((it) => it !== input)) {
-                        this.check_input({ input: _input });
-                    }
-                }
             }, this.options.delay);
 
             events.add_event_listener(
@@ -90,20 +104,6 @@ export default Base.extend({
                 (e) => debouncer(e)
             );
         }
-
-        events.add_event_listener(
-            this.el,
-            "submit",
-            `pat-validation--submit--validator`,
-            (e) => {
-                // On submit, check all.
-                // Immediate, non-debounced check with submit. Otherwise submit
-                // is not cancelable.
-                for (const input of this.inputs) {
-                    this.check_input({ input: input, event: e });
-                }
-            }
-        );
     },
 
     check_input({ input, event, stop = false }) {
@@ -121,7 +121,7 @@ export default Base.extend({
             return;
         }
 
-        log.debug(`
+        logger.debug(`
             validity_state.badInput ${validity_state.badInput}
             validity_state.customError ${validity_state.customError}
             validity_state.patternMismatch ${validity_state.patternMismatch}
@@ -155,6 +155,8 @@ export default Base.extend({
                 });
             } else if (input_options.not.after || input_options.not.before) {
                 const msg = input_options.message.date || input_options.message.datetime;
+                const msg_default_not_before = "The date must be after %{attribute}";
+                const msg_default_not_after = "The date must be before %{attribute}";
 
                 let not_after;
                 let not_after_el;
@@ -199,19 +201,60 @@ export default Base.extend({
                     const date = new Date(input.value);
 
                     if (not_after && date > not_after) {
-                        this.set_validity({ input: input, msg: msg });
+                        let msg_attr;
+                        // Try to construct a meaningfull error message
+                        if (!not_after_el && input_options.not.after) {
+                            // fixed date case
+                            msg_attr = input_options.not.after;
+                        } else {
+                            // Get the label + other text content within the
+                            // label and replace all whitespace and newlines
+                            // with a single space.
+                            msg_attr = not_after_el?.labels?.[0]?.textContent.replace(
+                                /\s\s+/g, // replace all whitespace
+                                " " // with a single space
+                            );
+                            msg_attr = msg_attr || not_after_el.name;
+                        }
+                        this.set_validity({
+                            input: input,
+                            msg: msg || msg_default_not_after,
+                            attribute: msg_attr.trim(),
+                        });
                     } else if (not_before && date < not_before) {
-                        this.set_validity({ input: input, msg: msg });
+                        let msg_attr;
+                        // Try to construct a meaningfull error message
+                        if (!not_before_el && input_options.not.before) {
+                            // fixed date case
+                            msg_attr = input_options.not.before;
+                        } else {
+                            // Get the label + other text content within the
+                            // label and replace all whitespace and newlines
+                            // with a single space.
+                            msg_attr = not_before_el?.labels?.[0]?.textContent.replace(
+                                /\s\s+/g, // replace all whitespace
+                                " " // with a single space
+                            );
+                            msg_attr = msg_attr || not_before_el.name;
+                        }
+                        this.set_validity({
+                            input: input,
+                            msg: msg || msg_default_not_before,
+                            attribute: msg_attr.trim(),
+                        });
                     }
                 }
 
                 // always check the other input to clear/set errors
-                !stop && // do not re-check when stop is set to avoid infinite loops
-                    not_after_el &&
+                // do not re-check when stop is set to avoid infinite loops
+                if (!stop && not_after_el) {
+                    logger.debug("Check `not-after` input.", not_after_el);
                     this.check_input({ input: not_after_el, stop: true });
-                !stop &&
-                    not_before_el &&
+                }
+                if (!stop && not_before_el) {
+                    logger.debug("Check `no-before` input.", not_after_el);
                     this.check_input({ input: not_before_el, stop: true });
+                }
             }
 
             if (!validity_state.customError) {
@@ -358,10 +401,25 @@ export default Base.extend({
         }
         input[KEY_ERROR_EL] = error_node;
 
+        let did_disable = false;
         for (const it of this.disabled_elements) {
             if (!it.disabled) {
+                did_disable = true;
                 it.setAttribute("disabled", "disabled");
                 it.classList.add("disabled");
+                logger.debug("Disable element", it);
+            }
+        }
+
+        // Do an initial check of the whole form when a form element (e.g. the
+        // submit button) was disabled. We want to show the user all possible
+        // errors at once and after the submit button is disabled there is no
+        // way to check the whole form at once. ... well we also do not want to
+        // check the whole form when one input was changed....
+        if (did_disable) {
+            logger.debug("Checking whole form after element was disabled.");
+            for (const _input of this.inputs.filter((it) => it !== input)) {
+                this.check_input({ input: _input, stop: true });
             }
         }
     },
