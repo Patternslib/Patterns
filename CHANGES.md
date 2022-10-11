@@ -4,6 +4,99 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.7.0-alpha.1](https://github.com/Patternslib/patterns/compare/9.7.0-alpha.0...9.7.0-alpha.1) (2022-10-11)
+
+
+### Features
+
+
+* **Build:** Add global switch window.__patternslib_disable_modernizr to optionally disable modernizr. ([2a0ec96](https://github.com/Patternslib/patterns/commit/2a0ec9641639f2f2fb77c1e565d2a109fbda6224))While this is convenient to quickly disable modernizr and also splits modernizr out from the main bundle entry file it was necessary for the clone-code pattern to get a clean code example for the whole html tree.
+
+* **core registry:** Move clone-code Pattern to the beginning. ([9f7f5ef](https://github.com/Patternslib/patterns/commit/9f7f5efeedec1cb79d7a1e69a1c01ebd927ce6ef))We want clone-code to clone the markup before any other patterns are
+modifying it.
+
+* **pat-date-picker:** Add placeholder support for styled behavior. ([752036f](https://github.com/Patternslib/patterns/commit/752036f9848172a2b74f6070c5be71e12a0ca046))/cc @cornae
+This fixes the following two issues:
+
+Fixes: https://github.com/Patternslib/Patterns/issues/837
+Fixes: https://github.com/quaive/ploneintranet.prototype/issues/1289
+
+* **pat-markdown:** Initialize syntax highlight when parsing markup. ([8fd88c0](https://github.com/Patternslib/patterns/commit/8fd88c01dfb21ab970d0e8679988ec805cba147c))
+
+* **pat-markdown:** Switch to marked as markdown library to support better syntax highlight libraries. ([3739935](https://github.com/Patternslib/patterns/commit/3739935a53315f0a1f0ad63b1626df4c5bcea62c))
+
+* **pat-sortable:** Add the sortable-item class to each sortable element. ([0513102](https://github.com/Patternslib/patterns/commit/051310242928b7bc283827f49816178a3e0f3531))The current situation requires the integrator to add the `sortable-item` class
+on all sortables manually. If that is not done there can be styling problems
+like a missing insert marker which makes it hard to use the pattern. As the
+pattern already defines what should be a sortable it we also let the pattern
+assign the class "sortable-item".
+
+* **pat-sortable:** Optionally import the sortable styles. ([fe90c73](https://github.com/Patternslib/patterns/commit/fe90c731093f4b84baef2e7359cb0829a9377bd3))Import the sortable styles when the global variable
+`__patternslib_import_styles` is set to `true` (the default is `false`).
+This allows to show the sortable marker without having to separately
+load all the styles.
+
+* **pat-sortable:** Support dynamic sortable lists. ([5f3076c](https://github.com/Patternslib/patterns/commit/5f3076c99e00e3012380c2eb927e616f22c27427))When new items were added to a sortable list e.g. via pat-clone or
+pat-inject, those items could not be sorted. We are now re-initializing
+the sortable pattern after a `pat-update` event and make new elements
+sortable.
+
+* **pat-syntax-highlight:** Switch to highlight.js. ([85212ba](https://github.com/Patternslib/patterns/commit/85212ba338ce488f737185553fdd3cd6444ac035))highlight.js allows to dyamically load languages in a webpack
+environment (almost, see next commit). Prism.js is mainly a Node.js
+library and currently not suited to load languages dynamically.
+
+* **pat-validation:** Validate also newly added form elements. ([8838da0](https://github.com/Patternslib/patterns/commit/8838da03a6ac9784a71d16358fc674265e9dd6ae))When form elements were added via user interaction - e.g. by using
+pat-clone or pat-inject - those elements were not validated. Now the
+form validation is re-initialized after a `pat-update` event and this
+problem is fixed.
+
+
+### Bug Fixes
+
+
+* **core registry:** Do not scan TextNode content for patterns. ([76a83c5](https://github.com/Patternslib/patterns/commit/76a83c53c70643a77be2af045c1060823c0a4701))TextNode cannot hold markup, so there is also no needto scan those
+elements for patterns.
+
+* **pat-date-picker:** Do not throw a blur event after selecting a date. ([a20a883](https://github.com/Patternslib/patterns/commit/a20a883434c6010babd702f86df07ff5f53d7445))When a date was selected with the date picker a `blur` and `changed`
+event was thrown. Now we only throw a `changed` event if da date was
+selected. If no date was selected we throw a `blur` event allow
+pat-validation do validate required date input fields when no value was
+given.
+
+* **pat-syntax-highlight:** Depend on highlight.js <11. ([0f00d8c](https://github.com/Patternslib/patterns/commit/0f00d8c58d0b9f349e7214c7132bde87a449f010))highlight.js version 11 does not allow dynamic imports of languages and
+styles with webpack due to an exports field in package.json.
+
+See: https://github.com/highlightjs/highlight.js/issues/3634
+
+* **pat-validation:** Fallback error messages for not-before and not-after. ([831ee60](https://github.com/Patternslib/patterns/commit/831ee60c5741c0b4dba6c3c2d7ba5beda1c71bf1))If no error messages were provided for the not-before and not-after
+constraints on date fields no error messages were shown even when those inputs
+had form validation errors.
+Now we are always providing a fallback error message based on the label
+or input name.
+
+* **pat-validation:** Fix problem with multiple form validation runs. ([a8b7981](https://github.com/Patternslib/patterns/commit/a8b7981de8138b7fe5ce5d7ca3c81517381afc89))Due to some event listers calling each other multiple times, the form
+was validated up to 5 times in one validation run. This commit fixes
+multiple validation runs when a form element was disabled, e.g. when the
+submit button was disabled after validation errors.
+
+
+### Maintenance
+
+
+* **core utils:** Improve escape/unescape for safer version which makes use use of browser features. ([97ca0b1](https://github.com/Patternslib/patterns/commit/97ca0b11a36c17e46d949f6204a7094c07a25332))
+
+* **core utils:** safeClone - document which versions of IE are affected. ([8bec57a](https://github.com/Patternslib/patterns/commit/8bec57af7a5722bfd6070b2cb039749b427f5d6e))
+
+* **pat-markdown:** Modernize code. ([81c4e14](https://github.com/Patternslib/patterns/commit/81c4e14c035164007592523647a58807d8b2a899))
+
+* **pat-syntax-highlight:** Switch to class based pattern. ([8fb23e1](https://github.com/Patternslib/patterns/commit/8fb23e1f339de8260a3ad221af0302d149064b27))
+
+* **pat-toggle:** Add alias attribute for attr to toggle an attribute. ([fcfdb84](https://github.com/Patternslib/patterns/commit/fcfdb8481a14f4add1b4de120c9feb1b1400e6df))
+
+* **pat-validation:** Rename log to logger for better naming. ([9ed77c8](https://github.com/Patternslib/patterns/commit/9ed77c8b074b126cf32a4bca248273002426c426))
+
+* **pat-validation:** Use more debug messages. ([c8c656a](https://github.com/Patternslib/patterns/commit/c8c656a1d50a5388f81739b8888b604b9b4d26ca))
+
 ## [9.7.0-alpha.0](https://github.com/Patternslib/patterns/compare/9.6.1...9.7.0-alpha.0) (2022-09-28)
 
 
