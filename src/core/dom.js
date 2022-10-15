@@ -81,6 +81,18 @@ const show = (el) => {
 };
 
 /**
+ * Test, if a element is visible or not.
+ *
+ * @param {Node} el - The DOM node to test.
+ * @returns {Boolean} - True if the element is visible.
+ */
+const is_visible = (el) => {
+    // Check, if element is visible in DOM.
+    // https://stackoverflow.com/a/19808107/1337474
+    return el.offsetWidth > 0 && el.offsetHeight > 0;
+};
+
+/**
  * Return all direct parents of ``el`` matching ``selector``.
  * This matches against all parents but not the element itself.
  * The order of elements is from the search starting point up to higher
@@ -167,12 +179,6 @@ const acquire_attribute = (
     if (include_all) {
         return ret;
     }
-};
-
-const is_visible = (el) => {
-    // Check, if element is visible in DOM.
-    // https://stackoverflow.com/a/19808107/1337474
-    return el.offsetWidth > 0 && el.offsetHeight > 0;
 };
 
 /**
