@@ -4,6 +4,37 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.7.0-alpha.2](https://github.com/Patternslib/patterns/compare/9.7.0-alpha.1...9.7.0-alpha.2) (2022-10-15)
+
+
+### Features
+
+
+* **Build:** Add distribution files to npm. ([a6e10a3](https://github.com/Patternslib/patterns/commit/a6e10a360f678317abbaa5f448180d4552576882))By adding the build to the npm package you can include Patternslib via CDN like:
+https://cdn.jsdelivr.net/npm/@patternslib/patternslib@9.7.0-alpha.2/dist/bundle.min.js
+or
+https://unpkg.com/@patternslib/patternslib@9.7.0-alpha.2/dist/bundle.min.js
+
+* **Tests:** Add $(":visible") pseudo selector for jQuery. ([7e8ccf4](https://github.com/Patternslib/patterns/commit/7e8ccf45733780b07d3e0985c5067454248b8312))
+
+
+### Maintenance
+
+
+* **Build:** Move webpack Module Federation config from here to @patternslib/dev but keep backwards compatible exports in here. ([a0f7c07](https://github.com/Patternslib/patterns/commit/a0f7c0736e219be08744ce01cc675dd6f1d24ea5))
+
+* **Build:** Upgrade dependencies. ([d6c34ac](https://github.com/Patternslib/patterns/commit/d6c34ac4923fab5fa1a5917a8990948d66d16943))
+
+* **Docs:** Document core.dom.is_visible. ([e4f7bfe](https://github.com/Patternslib/patterns/commit/e4f7bfe02d8014169186d3fab19b4850a946eec8))
+
+* **Tests:** Remove unnecessary console.log from pat-validation tests. ([fdaea14](https://github.com/Patternslib/patterns/commit/fdaea14b53dc092b87044039fed0435a2f5597ed))
+
+* **Tests:** Remove unnecessary console.log statements from pat-clone-code tests. ([19843ad](https://github.com/Patternslib/patterns/commit/19843ad9a73b36485edcce4efb248c1a66a710a2))
+
+* **Tests:** Update is_visible mock to latest code changes - hidden is not set anymore due to form validation incompatibilities with Chrome. ([41e56e0](https://github.com/Patternslib/patterns/commit/41e56e0075ae53707667f1e92559ebe01e8bb74c))
+
+* **Tests:** Use real path for @patternslib/patternslib module mapping. When extending this config elsewhere the path would not be right. ([37520b7](https://github.com/Patternslib/patterns/commit/37520b72bd2c8c407659db5613b9ce79013bb0ff))
+
 ## [9.7.0-alpha.1](https://github.com/Patternslib/patterns/compare/9.7.0-alpha.0...9.7.0-alpha.1) (2022-10-11)
 
 
