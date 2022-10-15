@@ -1071,7 +1071,6 @@ describe("pat-validation", function () {
         await utils.timeout(1); // wait a tick for async to settle.
         expect(el.querySelectorAll("em.warning").length).toBe(2);
 
-        console.log(document.body.innerHTML);
         expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
             "The date must be before woo date"
         );
@@ -1113,7 +1112,6 @@ describe("pat-validation", function () {
         await utils.timeout(1); // wait a tick for async to settle.
         expect(el.querySelectorAll("em.warning").length).toBe(2);
 
-        console.log(document.body.innerHTML);
         expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
             "The date must be before date2"
         );

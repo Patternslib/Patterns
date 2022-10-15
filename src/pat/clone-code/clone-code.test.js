@@ -37,7 +37,6 @@ describe("pat-clone-code", () => {
         new Pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
-        console.log(document.body.innerHTML);
         const _el = document.body.querySelector(
             ".pat-clone-code pre code.language-html"
         );
@@ -66,7 +65,6 @@ describe("pat-clone-code", () => {
             ".pat-clone-code pre code.language-html"
         );
         expect(_el).toBeTruthy();
-        console.log(document.body.innerHTML);
         expect(_el.textContent.trim()).toBe(`<div>
 <div>1</div>
 

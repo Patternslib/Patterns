@@ -69,7 +69,7 @@ describe("pat-inject", function () {
 
             expect($div.hasClass("injecting")).toBeTruthy();
 
-            answer("<html><body>" + '<div id="someid">repl</div>' + "</body></html>");
+            answer(`<html><body><div id="someid">repl</div></body></html>`);
             await utils.timeout(1); // wait a tick for async to settle.
             expect($div.hasClass("injecting")).toBeFalsy();
             expect(callback).toHaveBeenCalled();
