@@ -12,5 +12,5 @@ logging.setLevel(50);
 // simply on el.hidden.
 import dom from "./core/dom";
 dom.is_visible = (el) => {
-    return !el.hidden;
+    return !el.hidden && el.style.display !== "none";
 };
