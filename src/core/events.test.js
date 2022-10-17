@@ -1,4 +1,5 @@
 import Base from "./base";
+import { BasePattern } from "./basepattern";
 import events from "./events";
 import utils from "./utils";
 
@@ -71,6 +72,22 @@ describe("core.events tests", () => {
 
             const el = document.createElement("div");
             const instance = new pat(el);
+
+            await events.await_pattern_init(instance);
+
+            // If test reaches this expect statement, all is fine.
+            expect(true).toBe(true);
+        });
+
+        it("Awaits a class based pattern to be initialized", async () => {
+            class Pat extends BasePattern {
+                static name = "tmp";
+                static trigger = ".pat-tmp";
+                init() {}
+            }
+
+            const el = document.createElement("div");
+            const instance = new Pat(el);
 
             await events.await_pattern_init(instance);
 

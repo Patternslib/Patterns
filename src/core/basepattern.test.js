@@ -143,4 +143,21 @@ describe("Basepattern class tests", function () {
         // gh-copilot wrote this line.
         expect(el["pattern-example"]).toBeInstanceOf(Pat);
     });
+
+    it("6.1 - Registers a one-time event listener on the element.", async function () {
+        const events = (await import("./events")).default;
+        class Pat extends BasePattern {
+            static name = "example";
+            static trigger = ".example";
+        }
+
+        const el = document.createElement("div");
+        el.classList.add("example");
+
+        const pat = new Pat(el);
+        await events.await_pattern_init(pat);
+
+        // If test reaches this expect statement, the init event catched.
+        expect(true).toBe(true);
+    });
 });

@@ -71,6 +71,18 @@ class BasePattern {
     init() {
         // Extend this method in your pattern.
     }
+
+    /**
+     * Listen to an event on the element only once.
+     *
+     * @param {string} event_name - Name of the event to listen to.
+     * @param {function} callback - Callback to call when the event is thrown.
+     */
+    one(event_name, event_callback) {
+        this.el.addEventListener(`${event_name}.${this.name}.patterns`, event_callback, {
+            once: true,
+        });
+    }
 }
 
 export default BasePattern;
