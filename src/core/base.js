@@ -46,7 +46,7 @@ const initBasePattern = function ($el, options, trigger) {
 };
 
 const Base = async function ($el, options, trigger) {
-    if (!$el) {
+    if (($el?.jquery && $el.length === 0) || !$el) {
         log.warn("No element given to pattern.");
         return;
     }
