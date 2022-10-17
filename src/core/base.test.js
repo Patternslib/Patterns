@@ -69,6 +69,17 @@ describe("pat-base: The Base class for patterns", function () {
         expect(tmp.el).toBeFalsy();
     });
 
+    it("Does nothing when initialized with an empty jQuery object", function () {
+        const Tmp = Base.extend({
+            name: "example",
+            init: () => {},
+        });
+        const tmp = new Tmp($());
+        expect(tmp instanceof Tmp).toBeTruthy();
+        expect(tmp.$el).toBeFalsy();
+        expect(tmp.el).toBeFalsy();
+    });
+
     it("will automatically register a pattern in the registry when extended", function () {
         jest.spyOn(registry, "register");
         var NewPattern = Base.extend({
