@@ -4,6 +4,21 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.7.0-alpha.3](https://github.com/Patternslib/patterns/compare/9.7.0-alpha.2...9.7.0-alpha.3) (2022-10-17)
+
+
+### Features
+
+
+* **core basepattern:** Add one-time event listener registration method. ([7df79e7](https://github.com/Patternslib/patterns/commit/7df79e7018b884cba3210e37b888530aa5898282))This implements the one-time listener from the Base pattern.
+The  listener helper is used in  to wait for the pattern initialization to be finished.
+
+
+### Bug Fixes
+
+
+* **core base:** Do not fail if initialized with an empty jQuery object. ([34b14b4](https://github.com/Patternslib/patterns/commit/34b14b48f039352eadf3912b514900e050f1ff10))
+
 ## [9.7.0-alpha.2](https://github.com/Patternslib/patterns/compare/9.7.0-alpha.1...9.7.0-alpha.2) (2022-10-15)
 
 
