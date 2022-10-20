@@ -27,8 +27,8 @@ Additionally we do support Microsoft Internet Explorer 11 until a certain extend
 
 ## Using polyfills
 
-For Internet Explorer 11 support we have included a ``src/polyfills.js`` module.
-You can inlcude it optionally via ``src/polyfills-loader.js`` which injects the polyfills bundle only if the current browser is Internet Explorer.
+For Internet Explorer 11 support we have included a `src/polyfills.js` module.
+You can inlcude it optionally via `src/polyfills-loader.js` which injects the polyfills bundle only if the current browser is Internet Explorer.
 For this to work, include the following in BEFORE you load the patternslib bundle:
 
 ```
@@ -48,8 +48,8 @@ Make sure, you have these requirements installed:
     - make
     - git
 
-On OSX you need ``gnu-tar`` instead of tar (GNU tar supports the ``--transform`` option).
-Please install it with e.g. ``brew install gnu-tar``.
+On OSX you need `gnu-tar` instead of tar (GNU tar supports the `--transform` option).
+Please install it with e.g. `brew install gnu-tar`.
 
 
 ## Development installation
@@ -140,11 +140,11 @@ You can pass Jest any parameter it accepts, like `-t TESTPATTERN`::
 
 ### Enabling log messages
 
-To facilitate debugging you can change the default log level through the URL query string by adding ``loglevel`` options.
+To facilitate debugging you can change the default log level through the URL query string by adding `loglevel` options.
 
-- ``http://www.example.com/?loglevel=DEBUG`` changes the default log level to ``DEBUG``.
-- ``http://www.example.com/?loglevel-inject=DEBUG`` changes the log level for just the inject pattern to ``DEBUG``.
-- ``http://www.example.com/?loglevel=ERROR&loglevel-inject=INFO`` changes the standard log level error, but enables messages at the ``INFO`` level for the inject pattern.
+- `http://www.example.com/?loglevel=DEBUG` changes the default log level to `DEBUG`.
+- `http://www.example.com/?loglevel-inject=DEBUG` changes the log level for just the inject pattern to `DEBUG`.
+- `http://www.example.com/?loglevel=ERROR&loglevel-inject=INFO` changes the standard log level error, but enables messages at the `INFO` level for the inject pattern.
 
 
 ### Bundle build analyzation
