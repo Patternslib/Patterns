@@ -11,7 +11,7 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 * **core basepattern:** Add one-time event listener registration method. ([7df79e7](https://github.com/Patternslib/patterns/commit/7df79e7018b884cba3210e37b888530aa5898282))This implements the one-time listener from the Base pattern.
-The  listener helper is used in  to wait for the pattern initialization to be finished.
+The "one" listener helper is used in "core.events.await_pattern_init" to wait for the pattern initialization to be finished.
 
 
 ### Bug Fixes
