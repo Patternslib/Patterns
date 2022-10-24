@@ -280,6 +280,18 @@ const set_data = (el, name, value) => {
 };
 
 /**
+ * Delete a variable from the node instance.
+ * We are using a prefix to make sure the data doesn't collide with other attributes.
+ *
+ * @param el {Node} - The DOM node which we want to delete the variable from.
+ * @param name {String} - The name of the variable. Note - this is stored on
+ *                        the DOM node prefixed with the DATA_PREFIX.
+ */
+const delete_data = (el, name) => {
+    delete el[`${DATA_PREFIX}${name}`];
+};
+
+/**
  * Simple template engine, based on JS template literal
  *
  * Please note: You cannot pass a template literal as template_string.
@@ -315,6 +327,7 @@ const dom = {
     find_scroll_container: find_scroll_container,
     get_data: get_data,
     set_data: set_data,
+    delete_data: delete_data,
     template: template,
     add_event_listener: events.add_event_listener, // BBB export. TODO: Remove in an upcoming version.
     remove_event_listener: events.remove_event_listener, // BBB export. TODO: Remove in an upcoming version.

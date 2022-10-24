@@ -696,7 +696,7 @@ describe("core.dom tests", () => {
         });
     });
 
-    describe("set_data, get_data", function () {
+    describe("set_data, get_data, delete_data", function () {
         it("can be used to store and retrieve data on DOM nodes.", function () {
             const el = document.createElement("div");
             dom.set_data(el, "test_data", "hello.");
@@ -713,6 +713,13 @@ describe("core.dom tests", () => {
             expect(dom.get_data(el, "test_data", true)).toBe(true);
             expect(dom.get_data(el, "test_data", false)).toBe(false);
             expect(dom.get_data(el, "test_data", null)).toBe(null);
+            expect(dom.get_data(el, "test_data")).toBe(undefined);
+        });
+        it("can also delete the data from dom nodes.", function () {
+            const el = document.createElement("div");
+            dom.set_data(el, "test_data", "hello.");
+            expect(dom.get_data(el, "test_data")).toBe("hello.");
+            dom.delete_data(el, "test_data");
             expect(dom.get_data(el, "test_data")).toBe(undefined);
         });
     });
