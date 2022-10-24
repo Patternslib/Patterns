@@ -4,6 +4,21 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.7.0-alpha.4](https://github.com/Patternslib/patterns/compare/9.7.0-alpha.3...9.7.0-alpha.4) (2022-10-24)
+
+
+### Features
+
+
+* **core dom:** Add "delete_data" to remove a previously set variable on a DOM element. ([6b128bf](https://github.com/Patternslib/patterns/commit/6b128bf3ccfbecd49ac5267505d734bb2bb45db4))
+
+
+### Bug Fixes
+
+
+* **pat inject:** Fix closing of panels after successful inject. ([3ff3b60](https://github.com/Patternslib/patterns/commit/3ff3b60d293cc04af36189db15719cfa8810c450))Fix case where close-panel event was suppressed while injection is in progress but suppressing was never released.
+This prevented any other close-panel events from being handled properly.
+
 ## [9.7.0-alpha.3](https://github.com/Patternslib/patterns/compare/9.7.0-alpha.2...9.7.0-alpha.3) (2022-10-17)
 
 
