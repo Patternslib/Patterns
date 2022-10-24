@@ -768,11 +768,11 @@ const inject = {
             // Wait for the next tick to ensure that the close-panel listener
             // is called before this one, even for non-async local injects.
             await utils.timeout(1);
+            // Remove the close-panel event listener.
+            events.remove_event_listener($el[0], "pat-inject--close-panel");
             // Only close the panel if a close-panel event was catched previously.
             if (do_close_panel) {
                 do_close_panel = false;
-                // Remove the close-panel event listener.
-                events.remove_event_listener($el[0], "pat-inject--close-panel");
                 // Re-trigger close-panel event if it was caught while injection was in progress.
                 $el[0].dispatchEvent(
                     new Event("close-panel", { bubbles: true, cancelable: true })
