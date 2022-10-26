@@ -4,6 +4,14 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.7.0-alpha.5](https://github.com/Patternslib/patterns/compare/9.7.0-alpha.4...9.7.0-alpha.5) (2022-10-26)
+
+
+### Bug Fixes
+
+
+* **pat markdown:** Restore old behavior where the trigger element was replaced with the rendered content wrapped in a div. ([ecb0330](https://github.com/Patternslib/patterns/commit/ecb0330e5a7c3909d1b7e3bf7c7dbf7dc90c5223))
+
 ## [9.7.0-alpha.4](https://github.com/Patternslib/patterns/compare/9.7.0-alpha.3...9.7.0-alpha.4) (2022-10-24)
 
 
