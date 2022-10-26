@@ -22,8 +22,7 @@ const Markdown = Base.extend({
                 ? this.$el.val()
                 : this.$el[0].innerHTML;
             let rendered = await this.render(source);
-            this.el.innerHTML = "";
-            this.el.append(...rendered[0].childNodes);
+            this.el.replaceWith(...rendered);
         }
     },
 
