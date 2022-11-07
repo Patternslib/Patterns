@@ -207,7 +207,12 @@ export default Base.extend({
      * @returns {String} - The prepared url.
      */
     prepare_url(url) {
-        return url?.replace("/view", "").replaceAll("@@", "").replace(/\/$/, "");
+        return url
+            ?.replace("/view", "") // Remove Plone-specific default view.
+            .replaceAll("@@", "") // Remove Plone-specific @@ identifier of views.
+            .split("?")[0] // Remove query string.
+            .split("#")[0] // Remove hash.
+            .replace(/\/$/, ""); // Remove trailing slash.
     },
 
     /**

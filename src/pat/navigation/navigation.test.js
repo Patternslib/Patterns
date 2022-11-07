@@ -289,7 +289,7 @@ describe("3 - Navigation pattern tests - Mark items based on URL", () => {
           </nav>
         `;
 
-        set_url("https://patternslib.com/");
+        set_url("https://patternslib.com/?a=1&b=2#hash");
 
         const instance = new Pattern(document.querySelector(".pat-navigation"));
 
@@ -310,6 +310,30 @@ describe("3 - Navigation pattern tests - Mark items based on URL", () => {
 
         instance.clear_items();
         instance.mark_items_url("https://patternslib.com/path1");
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(0);
+        expect(document.querySelector(".current a")).toBe(it1);
+
+        // Check query string
+        instance.clear_items();
+        instance.mark_items_url("https://patternslib.com/path1?a=1&b=2");
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(0);
+        expect(document.querySelector(".current a")).toBe(it1);
+
+        // Check hash
+        instance.clear_items();
+        instance.mark_items_url("https://patternslib.com/path1/#hash");
+
+        expect(document.querySelectorAll(".current").length).toBe(2);
+        expect(document.querySelectorAll(".inPath").length).toBe(0);
+        expect(document.querySelector(".current a")).toBe(it1);
+
+        // Check query string and hash
+        instance.clear_items();
+        instance.mark_items_url("https://patternslib.com/path1?a=1&b=2#hash");
 
         expect(document.querySelectorAll(".current").length).toBe(2);
         expect(document.querySelectorAll(".inPath").length).toBe(0);
