@@ -14,8 +14,7 @@ import logging from "./core/logging";
 logging.setLevel(50);
 // level: FATAL
 
-// patch dom.is_visible to not rely on jest-unavailable offsetWidth/Height but
-// simply on el.hidden.
+// patch dom.is_visible to not rely on jest-unavailable offsetWidth/Height
 import dom from "./core/dom";
 dom.is_visible = (el) => {
     return !el.hidden && el.style.display !== "none";
