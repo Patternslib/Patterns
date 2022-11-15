@@ -4,6 +4,14 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.7.0](https://github.com/Patternslib/patterns/compare/9.7.0-alpha.5...9.7.0) (2022-11-15)
+
+
+### Maintenance
+
+
+* **Build:** Upgrade dependencies. ([9258dff](https://github.com/Patternslib/patterns/commit/9258dffacb9e088d9d4bc7a9831e508bb1394a76))
+
 ## [9.7.0-alpha.5](https://github.com/Patternslib/patterns/compare/9.7.0-alpha.4...9.7.0-alpha.5) (2022-10-26)
 
 
