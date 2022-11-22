@@ -34,7 +34,7 @@ class Pattern extends BasePattern {
         }
 
         import(`highlight.js/styles/${theme}.css`);
-        const hljs = (await import("highlight.js")).default;
+        const hljs = (await import("highlight.js/lib/core")).default;
 
         // Get the language
         let language = [..._el.classList, ...this.el.classList]
