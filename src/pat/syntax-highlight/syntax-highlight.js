@@ -71,7 +71,7 @@ class Pattern extends BasePattern {
                 const hljs_language = (
                     await import(`highlight.js/lib/languages/${lang_file}`)
                 ).default;
-                hljs.registerLanguage("javascript", hljs_language);
+                hljs.registerLanguage(language, hljs_language);
                 high = hljs.highlight(value, { language: language }).value;
             } catch {
                 high = hljs.highlightAuto(value).value;
