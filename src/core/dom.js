@@ -93,6 +93,21 @@ const is_visible = (el) => {
 };
 
 /**
+ * Test, if a element is a input-type element.
+ *
+ * This is taken from Sizzle/jQuery at:
+ * https://github.com/jquery/sizzle/blob/f2a2412e5e8a5d9edf168ae3b6633ac8e6bd9f2e/src/sizzle.js#L139
+ * https://github.com/jquery/sizzle/blob/f2a2412e5e8a5d9edf168ae3b6633ac8e6bd9f2e/src/sizzle.js#L1773
+ *
+ * @param {Node} el - The DOM node to test.
+ * @returns {Boolean} - True if the element is a input-type element.
+ */
+const is_input = (el) => {
+    const re_input = /^(?:input|select|textarea|button)$/i;
+    return re_input.test(el.nodeName);
+};
+
+/**
  * Return all direct parents of ``el`` matching ``selector``.
  * This matches against all parents but not the element itself.
  * The order of elements is from the search starting point up to higher
@@ -322,6 +337,7 @@ const dom = {
     get_parents: get_parents,
     acquire_attribute: acquire_attribute,
     is_visible: is_visible,
+    is_input: is_input,
     create_from_string: create_from_string,
     get_css_value: get_css_value,
     find_scroll_container: find_scroll_container,
