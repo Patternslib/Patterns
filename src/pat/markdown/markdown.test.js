@@ -1,6 +1,6 @@
 import $ from "jquery";
-import pattern from "./markdown";
-import utils from "../../core/utils";
+import events from "../../core/events";
+import Pattern from "./markdown";
 import { jest } from "@jest/globals";
 
 describe("pat-markdown", function () {
@@ -19,57 +19,65 @@ describe("pat-markdown", function () {
         it("Replaces the DOM element with the rendered Markdown content.", async function () {
             var $el = $('<p class="pat-markdown"></p>');
             $el.appendTo("#lab");
-            jest.spyOn(pattern.prototype, "render").mockImplementation(() => {
+            jest.spyOn(Pattern.prototype, "render").mockImplementation(() => {
                 return $("<p>Rendering</p>");
             });
-            pattern.init($el);
-            await utils.timeout(1); // wait a tick for async to settle.
+
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
+
             expect($("#lab").html()).toBe("<p>Rendering</p>");
         });
 
-        it("It does not render when the DOM element doesn't have the pattern trigger", function () {
+        it("It does not render when the DOM element doesn't have the pattern trigger", async function () {
             var $el = $("<p></p>");
             $el.appendTo("#lab");
-            jest.spyOn(pattern.prototype, "render").mockImplementation(() => {
+            jest.spyOn(Pattern.prototype, "render").mockImplementation(() => {
                 return $("<p>Rendering</p>");
             });
-            pattern.init($el);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
+
             expect($("#lab").html()).toBe("<p></p>");
         });
 
-        it("uses content for non-input elements", function () {
+        it("uses content for non-input elements", async function () {
             var $el = $('<p class="pat-markdown"/>').text("This is markdown");
             $el.appendTo("#lab");
             const spy_render = jest
-                .spyOn(pattern.prototype, "render")
+                .spyOn(Pattern.prototype, "render")
                 .mockImplementation(() => {
                     return $("<p/>");
                 });
-            pattern.init($el);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
+
             expect(spy_render).toHaveBeenCalledWith("This is markdown");
         });
 
-        it("uses value for input elements", function () {
+        it("uses value for input elements", async function () {
             var $el = $('<textarea class="pat-markdown"/>').val("This is markdown");
             $el.appendTo("#lab");
             const spy_render = jest
-                .spyOn(pattern.prototype, "render")
+                .spyOn(Pattern.prototype, "render")
                 .mockImplementation(() => {
                     return $("<p/>");
                 });
-            pattern.init($el);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
+
             expect(spy_render).toHaveBeenCalledWith("This is markdown");
         });
     });
 
     describe("when rendering", function () {
         it("wraps rendering in a div", async function () {
-            const $rendering = await pattern.prototype.render("*This is markdown*");
+            const $rendering = await Pattern.prototype.render("*This is markdown*");
             expect($rendering[0].tagName).toBe("DIV");
         });
 
         it("converts markdown into HTML", async function () {
-            const $rendering = await pattern.prototype.render("*This is markdown*");
+            const $rendering = await Pattern.prototype.render("*This is markdown*");
             expect($rendering.html()).toBe(`<p><em>This is markdown</em></p>\n`);
         });
     });
@@ -77,19 +85,19 @@ describe("pat-markdown", function () {
     describe("Session extraction", function () {
         it("Unknown section", function () {
             expect(
-                pattern.prototype.extractSection("## My title\n\nContent", "Other title")
+                Pattern.prototype.extractSection("## My title\n\nContent", "Other title")
             ).toBe(null);
         });
 
         it("Last hash-section", function () {
             expect(
-                pattern.prototype.extractSection("## My title\n\nContent", "My title")
+                Pattern.prototype.extractSection("## My title\n\nContent", "My title")
             ).toBe("## My title\n\nContent");
         });
 
         it("Hash-section with following section at same level ", function () {
             expect(
-                pattern.prototype.extractSection(
+                Pattern.prototype.extractSection(
                     "## My title\n\nContent\n## Next section\n",
                     "My title"
                 )
@@ -98,7 +106,7 @@ describe("pat-markdown", function () {
 
         it("Hash-section with following section at lower level ", function () {
             expect(
-                pattern.prototype.extractSection(
+                Pattern.prototype.extractSection(
                     "## My title\n\nContent\n### Next section\n",
                     "My title"
                 )
@@ -107,7 +115,7 @@ describe("pat-markdown", function () {
 
         it("Double underscore section", function () {
             expect(
-                pattern.prototype.extractSection(
+                Pattern.prototype.extractSection(
                     "My title\n=======\nContent",
                     "My title"
                 )
@@ -116,7 +124,7 @@ describe("pat-markdown", function () {
 
         it("Double underscore section with following section at same level", function () {
             expect(
-                pattern.prototype.extractSection(
+                Pattern.prototype.extractSection(
                     "My title\n=======\nContent\n\nNext\n====\n",
                     "My title"
                 )
@@ -125,7 +133,7 @@ describe("pat-markdown", function () {
 
         it("Double underscore section with following section at lower level", function () {
             expect(
-                pattern.prototype.extractSection(
+                Pattern.prototype.extractSection(
                     "My title\n=======\nContent\n\nNext\n----\n",
                     "My title"
                 )
@@ -134,7 +142,7 @@ describe("pat-markdown", function () {
 
         it("Single underscore section", function () {
             expect(
-                pattern.prototype.extractSection(
+                Pattern.prototype.extractSection(
                     "My title\n-------\nContent",
                     "My title"
                 )
@@ -143,7 +151,7 @@ describe("pat-markdown", function () {
 
         it("Single underscore section with following section at same level", function () {
             expect(
-                pattern.prototype.extractSection(
+                Pattern.prototype.extractSection(
                     "My title\n-------\nContent\n\nNext\n----\n",
                     "My title"
                 )
@@ -152,7 +160,7 @@ describe("pat-markdown", function () {
 
         it("Single underscore section with following section at higher level", function () {
             expect(
-                pattern.prototype.extractSection(
+                Pattern.prototype.extractSection(
                     "My title\n-------\nContent\n\nNext\n====\n",
                     "My title"
                 )
@@ -177,8 +185,8 @@ some content
                 </main>
                 `;
 
-            new pattern(document.querySelector(".pat-markdown"));
-            await utils.timeout(1); // wait a tick for async to settle.
+            const instance = new Pattern(document.querySelector(".pat-markdown"));
+            await events.await_pattern_init(instance);
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect(document.body.querySelector("main > div > h1").textContent).toBe("Title"); // prettier-ignore
