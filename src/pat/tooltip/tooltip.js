@@ -1,5 +1,5 @@
 import $ from "jquery";
-import Base from "../../core/base";
+import { BasePattern } from "../../core/basepattern";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import events from "../../core/events";
@@ -54,14 +54,15 @@ parser.addArgument("url", null);
 // onAfterUpdate
 // onDestroy
 
-export default Base.extend({
-    name: "tooltip",
-    trigger: ".pat-tooltip, .pat-tooltip-ng",
+class Pattern extends BasePattern {
+    static name = "tooltip";
+    static trigger = ".pat-tooltip, .pat-tooltip-ng";
+    static parser = parser;
 
-    tippy: null,
+    tippy = null;
 
-    active_class: "tooltip-active-hover",
-    inactive_class: "tooltip-inactive",
+    active_class = "tooltip-active-hover";
+    inactive_class = "tooltip-inactive";
 
     async init() {
         const el = this.el;
@@ -70,8 +71,6 @@ export default Base.extend({
             import("tippy.js/dist/tippy.css");
         }
         const Tippy = (await import("tippy.js")).default;
-
-        this.options = parser.parse(el, this.options);
         this.tippy_options = this.parseOptionsForTippy(this.options);
 
         const defaultProps = {
@@ -116,25 +115,25 @@ export default Base.extend({
             // Initially mark as inactive
             el.classList.add(this.inactive_class);
         }
-    },
+    }
 
     show() {
         // Show this tooltip
         // API method.
         this.tippy.show();
-    },
+    }
 
     async hide() {
         // Hide this tooltip
         await utils.timeout(1); // wait a tick for event being processed by other handlers.
         this.tippy.hide();
-    },
+    }
 
     destroy() {
         // Remove this tooltip
         // API method.
         this.tippy.destroy();
-    },
+    }
 
     parseOptionsForTippy(opts) {
         const placement = (pos) => {
@@ -253,12 +252,12 @@ export default Base.extend({
         }
 
         return tippy_options;
-    },
+    }
 
     _initialize_content() {
         // Initialize any other patterns.
         registry.scan(this.tippy.popper);
-    },
+    }
 
     async _onShow() {
         const tippy_classes = [];
@@ -322,7 +321,7 @@ export default Base.extend({
         ]);
 
         this._initialize_content();
-    },
+    }
 
     _onHide() {
         if (this.options.markInactive) {
@@ -338,7 +337,7 @@ export default Base.extend({
         if (this.options.source === "ajax") {
             this.tippy.setContent(document.createElement("progress"));
         }
-    },
+    }
 
     async _get_content(url = this.options.url) {
         let selector;
@@ -369,13 +368,13 @@ export default Base.extend({
             await utils.timeout(1); // Wait a tick before forceUpdate. Might fail due to unset popperInstance.
             this.tippy.popperInstance.forceUpdate(); // re-position tippy after content is known.
         }
-    },
+    }
 
     async get_content(url = this.options.url) {
         // API method: _get_content + _initialize_content
         await this._get_content(url);
         this._initialize_content();
-    },
+    }
 
     get_url_parts(href) {
         // Return the URL and a CSS ID selector.
@@ -392,9 +391,9 @@ export default Base.extend({
             url = `${url}?${query}`;
         }
         return { url, selector };
-    },
+    }
 
-    _ajaxDataTypeHandlers: {
+    _ajaxDataTypeHandlers = {
         html(text, url, selector) {
             let tmp = document.createElement("div");
             tmp.innerHTML = text;
@@ -414,5 +413,9 @@ export default Base.extend({
             const ret = await pat.renderForInjection(cfg, text);
             return ret[0];
         },
-    },
-});
+    };
+}
+
+registry.register(Pattern);
+export default Pattern;
+export { Pattern };

@@ -1,6 +1,7 @@
 import $ from "jquery";
 import autosubmit from "../auto-submit/auto-submit";
-import pattern from "./tooltip";
+import events from "../../core/events";
+import Pattern from "./tooltip";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 import { jest } from "@jest/globals";
@@ -69,8 +70,8 @@ describe("pat-tooltip", () => {
                 data: "trigger: click",
                 title: "tooltip",
             });
-            const instance = new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -88,8 +89,8 @@ describe("pat-tooltip", () => {
                 const el = $el[0];
                 const title = el.title;
 
-                const instance = new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 // NOTE 1:
                 // spy on tippy instance's "onShow", which holds the reference
@@ -126,9 +127,10 @@ describe("pat-tooltip", () => {
                     title: "tooltip2",
                 });
 
-                new pattern($el1);
-                new pattern($el2);
-                await utils.timeout(1);
+                const instance1 = new Pattern($el1);
+                await events.await_pattern_init(instance1);
+                const instance2 = new Pattern($el2);
+                await events.await_pattern_init(instance2);
 
                 let container;
 
@@ -151,8 +153,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "source: title; trigger: click; class: wasabi kohlrabi",
                 });
-                new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -172,8 +174,8 @@ describe("pat-tooltip", () => {
                 const el = document.querySelector("a.pat-tooltip");
                 const $el = $(el);
                 const title = el.title;
-                const instance = new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 const timer = {};
 
@@ -206,8 +208,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: click; closing: auto",
                 });
-                const instance = new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 const tp = instance.tippy.props;
                 const spy_show = jest.spyOn(tp, "onShow");
@@ -239,8 +241,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: hover; closing: auto",
                 });
-                const instance = new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 const tp = instance.tippy.props;
                 const spy_show = jest.spyOn(tp, "onShow");
@@ -271,8 +273,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: click; closing: sticky",
                 });
-                const instance = new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 const tp = instance.tippy.props;
                 const spy_show = jest.spyOn(tp, "onShow");
@@ -304,8 +306,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: hover; closing: sticky",
                 });
-                const instance = new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 const tp = instance.tippy.props;
                 const spy_show = jest.spyOn(tp, "onShow");
@@ -334,8 +336,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: click; closing: close-button",
                 });
-                const instance = new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 const tp = instance.tippy.props;
                 const spy_show = jest.spyOn(tp, "onShow");
@@ -374,8 +376,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "trigger: hover; closing: close-button",
                 });
-                const instance = new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
                 const tp = instance.tippy.props;
                 const spy_show = jest.spyOn(tp, "onShow");
                 const spy_hide = jest.spyOn(tp, "onHide");
@@ -416,8 +418,8 @@ describe("pat-tooltip", () => {
                 `;
 
                 const el = document.querySelector(".pat-tooltip");
-                new pattern(el);
-                await utils.timeout(1);
+                const instance = new Pattern(el);
+                await events.await_pattern_init(instance);
 
                 el.click();
                 await utils.timeout(1);
@@ -457,8 +459,10 @@ describe("pat-tooltip", () => {
             const title1 = $el1.attr("title");
             const title2 = $el2.attr("title");
 
-            const instance1 = new pattern($el1);
-            const instance2 = new pattern($el2);
+            const instance1 = new Pattern($el1);
+            await events.await_pattern_init(instance1);
+            const instance2 = new Pattern($el2);
+            await events.await_pattern_init(instance2);
             await utils.timeout(1);
 
             const spy_show1 = jest.spyOn(instance1.tippy.props, "onShow");
@@ -501,8 +505,8 @@ describe("pat-tooltip", () => {
             const $el = testutils.createTooltip({
                 data: "position-list: lt",
             });
-            new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -514,8 +518,8 @@ describe("pat-tooltip", () => {
             const $el = testutils.createTooltip({
                 data: "position-list: lb",
             });
-            new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -527,8 +531,8 @@ describe("pat-tooltip", () => {
             const $el = testutils.createTooltip({
                 data: "position-list: lm",
             });
-            new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -540,8 +544,8 @@ describe("pat-tooltip", () => {
             const $el = testutils.createTooltip({
                 data: "position-list: bl",
             });
-            new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -553,8 +557,8 @@ describe("pat-tooltip", () => {
             const $el = testutils.createTooltip({
                 data: "position-list: br",
             });
-            new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -566,8 +570,8 @@ describe("pat-tooltip", () => {
             const $el = testutils.createTooltip({
                 data: "position-list: bm",
             });
-            new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -580,8 +584,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tl; position-policy: force",
                 });
-                new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -593,8 +597,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tr; position-policy: force",
                 });
-                new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -606,8 +610,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tm; position-policy: force",
                 });
-                new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -619,8 +623,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rt; position-policy: force",
                 });
-                new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -632,8 +636,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rb; position-policy: force",
                 });
-                new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -645,8 +649,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rm; position-policy: force",
                 });
-                new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -664,8 +668,8 @@ describe("pat-tooltip", () => {
                     data: "mark-inactive: true",
                 });
                 const el = $el[0];
-                const instance = new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 const spy_show = jest.spyOn(instance.tippy.props, "onShow");
                 const spy_hide = jest.spyOn(instance.tippy.props, "onHide");
@@ -705,8 +709,8 @@ describe("pat-tooltip", () => {
                     data: "mark-inactive: false",
                 });
                 const el = $el[0];
-                const instance = new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 const spy_show = jest.spyOn(instance.tippy.props, "onShow");
                 const spy_hide = jest.spyOn(instance.tippy.props, "onHide");
@@ -746,8 +750,8 @@ describe("pat-tooltip", () => {
                     data: "mark-inactive: true; trigger: hover",
                 });
                 const el = $el[0];
-                const instance = new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
@@ -777,8 +781,8 @@ describe("pat-tooltip", () => {
                     const el = $el[0];
                     const title = el.title;
 
-                    const instance = new pattern($el);
-                    await utils.timeout(1);
+                    const instance = new Pattern($el);
+                    await events.await_pattern_init(instance);
 
                     const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
@@ -804,8 +808,8 @@ describe("pat-tooltip", () => {
                         data: "source: title; trigger: hover",
                     });
 
-                    const instance = new pattern($el);
-                    await utils.timeout(1);
+                    const instance = new Pattern($el);
+                    await events.await_pattern_init(instance);
 
                     const spy_hide = jest.spyOn(instance.tippy.props, "onHide");
 
@@ -836,8 +840,8 @@ describe("pat-tooltip", () => {
                         href: "#lab",
                         content: content,
                     });
-                    const instance = new pattern($el);
-                    await utils.timeout(1);
+                    const instance = new Pattern($el);
+                    await events.await_pattern_init(instance);
 
                     const spy_show = jest.spyOn(instance.tippy.props, "onShow");
 
@@ -858,8 +862,8 @@ describe("pat-tooltip", () => {
                 const el = document.createElement("div");
                 el.setAttribute("title", "hello.");
 
-                const instance = new pattern(el, { trigger: "none" });
-                await utils.timeout(1);
+                const instance = new Pattern(el, { trigger: "none" });
+                await events.await_pattern_init(instance);
 
                 // normal trigger shouldn't open
                 el.click();
@@ -896,8 +900,8 @@ describe("pat-tooltip", () => {
                 const el = document.createElement("div");
                 el.setAttribute("title", "hello.");
 
-                const instance = new pattern(el, { trigger: "none" });
-                await utils.timeout(1);
+                const instance = new Pattern(el, { trigger: "none" });
+                await events.await_pattern_init(instance);
 
                 expect(document.querySelector(".tippy-box .tippy-content")).toBeFalsy();
 
@@ -920,8 +924,8 @@ describe("pat-tooltip", () => {
                     data: "target: body",
                     href: "#",
                 });
-                new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -937,8 +941,8 @@ describe("pat-tooltip", () => {
                     data: "target: parent",
                     href: "#",
                 });
-                new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -965,8 +969,8 @@ describe("pat-tooltip", () => {
                 `;
                 document.body.appendChild(container);
 
-                new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -984,8 +988,8 @@ describe("pat-tooltip", () => {
                 data: "source: title; trigger: click",
             });
             const title = $el[0].title;
-            new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             await utils.timeout(1);
 
@@ -1004,8 +1008,8 @@ describe("pat-tooltip", () => {
                 data: "source: content; trigger: click",
                 content: content,
             });
-            new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -1024,8 +1028,8 @@ describe("pat-tooltip", () => {
                 data: "source: ajax",
                 href: "http://test.com",
             });
-            const instance = new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             const spy_content = jest.spyOn(instance, "_get_content");
             const spy_show = jest.spyOn(instance.tippy.props, "onShow");
@@ -1057,8 +1061,8 @@ describe("pat-tooltip", () => {
                 data: "source: ajax",
                 href: "#lab",
             });
-            const instance = new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             const spy_content = jest.spyOn(instance, "_get_content");
             const spy_show = jest.spyOn(instance.tippy.props, "onShow");
@@ -1100,7 +1104,8 @@ describe("pat-tooltip", () => {
 
             const el = document.body.querySelector(".pat-tooltip");
 
-            const instance = new pattern(el);
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
             await utils.timeout(1);
 
             const spy_content = jest.spyOn(instance, "_get_content");
@@ -1144,8 +1149,8 @@ describe("pat-tooltip", () => {
 
             const el = document.body.querySelector(".pat-tooltip");
 
-            const instance = new pattern(el);
-            await utils.timeout(1);
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
 
             const spy_content = jest.spyOn(instance, "_get_content");
             const spy_show = jest.spyOn(instance.tippy.props, "onShow");
@@ -1177,8 +1182,8 @@ describe("pat-tooltip", () => {
                 data: "source: ajax",
                 href: "http://test.com",
             });
-            const instance = new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             const spy_content = jest.spyOn(instance, "_get_content");
             const spy_get_content = jest.spyOn(instance, "get_content");
@@ -1222,8 +1227,8 @@ describe("pat-tooltip", () => {
                 data: "source: ajax",
                 href: "http://test.com",
             });
-            new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1248,8 +1253,8 @@ describe("pat-tooltip", () => {
                 data: "source: ajax",
                 href: "tests/content.html#content",
             });
-            const instance = new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             const click = new Event("click");
 
@@ -1290,8 +1295,8 @@ describe("pat-tooltip", () => {
                 data: "source: ajax",
                 href: "http://test.com#content",
             });
-            const instance = new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             const spy_ajax = jest.spyOn(instance, "_get_content");
             const spy_show = jest.spyOn(instance.tippy.props, "onShow");
@@ -1318,8 +1323,8 @@ describe("pat-tooltip", () => {
                 data: "source: ajax; ajax-data-type: markdown",
                 href: "http://test.com",
             });
-            const instance = await new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             const spy_ajax = jest.spyOn(instance, "_get_content");
             const spy_show = jest.spyOn(instance.tippy.props, "onShow");
@@ -1356,8 +1361,8 @@ this will be extracted.
                 data: "source: ajax; ajax-data-type: markdown",
                 href: "http://test.com/#hello",
             });
-            const instance = new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             const spy_ajax = jest.spyOn(instance, "_get_content");
             const spy_show = jest.spyOn(instance.tippy.props, "onShow");
@@ -1393,8 +1398,8 @@ this will be extracted.
                     data: "source: ajax; trigger: click",
                     href: "http://test.com",
                 });
-                const instance = new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 const spy_ajax = jest.spyOn(instance, "_get_content");
                 const spy_fetch = jest.spyOn(window, "fetch");
@@ -1438,8 +1443,8 @@ this will be extracted.
                     data: "source: ajax; trigger: hover",
                     href: "http://test.com",
                 });
-                const instance = new pattern($el);
-                await utils.timeout(1);
+                const instance = new Pattern($el);
+                await events.await_pattern_init(instance);
 
                 const spy_ajax = jest.spyOn(instance, "_get_content");
                 const spy_fetch = jest.spyOn(window, "fetch");
@@ -1487,8 +1492,8 @@ this will be extracted.
                 data: "source: ajax; trigger: click",
                 href: "http://test.com",
             });
-            new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1515,8 +1520,8 @@ this will be extracted.
                 data: "source: ajax; trigger: click; target: form",
                 href: "http://test.com",
             });
-            new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             const instance2 = new autosubmit($(form));
             const spy_handler1 = jest.spyOn(instance2, "refreshListeners");
@@ -1543,8 +1548,8 @@ this will be extracted.
             const $el = testutils.createTooltip({
                 data: "source: content; trigger: click",
             });
-            new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             const spy_scan = jest.spyOn(registry, "scan");
 
@@ -1562,8 +1567,8 @@ this will be extracted.
     describe("9 - URL splitting", () => {
         it("9.1 - it extracts the correct parts from any url", async () => {
             const $el = testutils.createTooltip({});
-            const instance = new pattern($el);
-            await utils.timeout(1);
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
 
             let parts = instance.get_url_parts("https://text.com/#selector");
             expect(parts.url).toBe("https://text.com/");
@@ -1599,8 +1604,8 @@ this will be extracted.
                     title="This is the title attribute"
                 >test</a>
             `;
-            new pattern(document.querySelector(".pat-tooltip"));
-            await utils.timeout(1);
+            const instance = new Pattern(document.querySelector(".pat-tooltip"));
+            await events.await_pattern_init(instance);
 
             expect(document.querySelector(".pat-tooltip").title).toBeFalsy();
         });
@@ -1611,8 +1616,8 @@ this will be extracted.
                     title="This is the title attribute"
                 >test</a>
             `;
-            new pattern(document.querySelector(".pat-tooltip"));
-            await utils.timeout(1);
+            const instance = new Pattern(document.querySelector(".pat-tooltip"));
+            await events.await_pattern_init(instance);
 
             expect(document.querySelector(".pat-tooltip").title).toBe(
                 "This is the title attribute"
@@ -1625,8 +1630,8 @@ this will be extracted.
                     title="This is the title attribute"
                 >test</a>
             `;
-            new pattern(document.querySelector(".pat-tooltip"));
-            await utils.timeout(1);
+            const instance = new Pattern(document.querySelector(".pat-tooltip"));
+            await events.await_pattern_init(instance);
 
             expect(document.querySelector(".pat-tooltip").title).toBe(
                 "This is the title attribute"
