@@ -361,6 +361,29 @@ describe("pat-autosuggest", function () {
             expect(selected[1].textContent.trim()).toBe("id-lemon");
             expect(input.value).toBe("id-orange;id-lemon");
         });
+
+        it("2.7.5 - use a custom separator and pre-fill with the value attribute.", async function () {
+            document.body.innerHTML = `
+                <input
+                    type="text"
+                    class="pat-autosuggest"
+                    data-pat-autosuggest="
+                        separator: ;;
+                    "
+                    value="id-orange;id-lemon"
+                    />
+            `;
+
+            const input = document.querySelector("input");
+            new pattern(input);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            let selected = document.querySelectorAll(".select2-search-choice");
+            expect(selected.length).toBe(2);
+            expect(selected[0].textContent.trim()).toBe("id-orange");
+            expect(selected[1].textContent.trim()).toBe("id-lemon");
+            expect(input.value).toBe("id-orange;id-lemon");
+        });
     });
 
     describe("3 - Placeholder tests", function () {
