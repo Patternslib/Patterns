@@ -1317,6 +1317,7 @@ describe("pat-tooltip", () => {
         });
 
         it("7.3 - will handle markdown content", async () => {
+            await import("../markdown/markdown");
             global.fetch = jest.fn().mockImplementation(mockFetch("## hello."));
 
             const $el = testutils.createTooltip({
@@ -1331,6 +1332,7 @@ describe("pat-tooltip", () => {
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
+            await utils.timeout(1);
 
             expect(spy_ajax).toHaveBeenCalled();
             expect(spy_show).toHaveBeenCalled();
@@ -1345,6 +1347,7 @@ describe("pat-tooltip", () => {
         });
 
         it("7.4 - will extract a section from markdown", async () => {
+            await import("../markdown/markdown");
             global.fetch = jest.fn().mockImplementation(
                 mockFetch(`
 # note a limitation
@@ -1369,6 +1372,7 @@ this will be extracted.
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
+            await utils.timeout(1);
 
             expect(spy_ajax).toHaveBeenCalled();
             expect(spy_show).toHaveBeenCalled();

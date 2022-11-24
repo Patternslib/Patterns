@@ -345,7 +345,7 @@ class Pattern extends BasePattern {
         let content;
         if (url) {
             // Tooltip from remote page.
-            const handler = this._ajaxDataTypeHandlers[this.options.ajaxDataType];
+            const handler = this.data_type_handlers[this.options.ajaxDataType];
             try {
                 // TODO: use pat-inject, once it supports async
                 const response = await fetch(url, {
@@ -393,7 +393,7 @@ class Pattern extends BasePattern {
         return { url, selector };
     }
 
-    _ajaxDataTypeHandlers = {
+    static data_type_handlers = {
         html(text, url, selector) {
             let tmp = document.createElement("div");
             tmp.innerHTML = text;
@@ -404,16 +404,34 @@ class Pattern extends BasePattern {
         },
 
         async markdown(text, url, selector) {
-            const pat_markdown = await import("../markdown/markdown");
-            const pat = pat_markdown.default.init($("<div/>"));
+            const Markdown = registry.patterns.markdown;
+            if (!Markdown) {
+                return text;
+            }
+
+            const instance = new Markdown($("<div/>"));
+            await events.await_pattern_init(instance);
+
             const cfg = { url };
             if (selector) {
                 cfg.source = selector;
             }
-            const ret = await pat.renderForInjection(cfg, text);
+
+            const ret = await instance.renderForInjection(cfg, text);
             return ret[0];
         },
     };
+
+    static register_type_handler(type, handler) {
+        Pattern.data_type_handlers[type] = handler;
+    }
+
+    constructor(...args) {
+        super(...args);
+
+        this.register_type_handler = this.constructor.register_type_handler;
+        this.data_type_handlers = this.constructor.data_type_handlers;
+    }
 }
 
 registry.register(Pattern);
