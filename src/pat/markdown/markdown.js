@@ -2,7 +2,6 @@ import $ from "jquery";
 import { BasePattern } from "../../core/basepattern";
 import dom from "../../core/dom";
 import events from "../../core/events";
-import inject from "../inject/inject";
 import logging from "../../core/logging";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
@@ -118,17 +117,25 @@ $(document).ready(function () {
     );
 });
 
-inject.registerTypeHandler("markdown", {
-    async sources(cfgs, data) {
-        return await Promise.all(
-            cfgs.map(async function (cfg) {
-                const pat = new Pattern(cfg.$target[0]);
-                const rendered = await pat.renderForInjection(cfg, data);
-                return rendered;
-            })
-        );
-    },
-});
+async function register_external_handlers() {
+    await utils.timeout(1);
+
+    const inject = registry.patterns.inject;
+    if (inject) {
+        inject.registerTypeHandler("markdown", {
+            async sources(cfgs, data) {
+                return await Promise.all(
+                    cfgs.map(async function (cfg) {
+                        const pat = new Pattern(cfg.$target[0]);
+                        const rendered = await pat.renderForInjection(cfg, data);
+                        return rendered;
+                    })
+                );
+            },
+        });
+    }
+}
+register_external_handlers();
 
 registry.register(Pattern);
 export default Pattern;
