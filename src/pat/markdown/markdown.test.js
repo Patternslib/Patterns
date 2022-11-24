@@ -170,6 +170,8 @@ describe("pat-markdown", function () {
 
     describe("Code blocks", function () {
         it("It correctly renders code blocks", async function () {
+            await import("../syntax-highlight/syntax-highlight");
+
             document.body.innerHTML = `
                 <main>
                     <div class="pat-markdown">
@@ -187,7 +189,6 @@ some content
 
             const instance = new Pattern(document.querySelector(".pat-markdown"));
             await events.await_pattern_init(instance);
-            await utils.timeout(1); // wait a tick for async to settle.
 
             expect(document.body.querySelector("main > div > h1").textContent).toBe("Title"); // prettier-ignore
             expect(document.body.querySelector("main > div > p").textContent).toBe("some content"); // prettier-ignore
