@@ -95,7 +95,7 @@ describe("pat-autosuggest", function () {
         });
     });
 
-    describe("2.1 - Selected items", function () {
+    describe("2 - Selected items", function () {
         it("2.1 - can be given custom CSS classes", async function () {
             testutils.createInputElement({
                 data: 'words: apple,orange,pear; pre-fill: orange; selection-classes: {"orange": ["fruit", "orange"]}',
@@ -199,7 +199,8 @@ describe("pat-autosuggest", function () {
                             {"id": "id-lemon", "text":"Lemon"}
                         ];
                         prefill-json: {
-                            "id-orange": "Orange"
+                            "id-orange": "Orange",
+                            "id-lemon": "Lemon"
                         };
                     ' />
             `;
@@ -209,9 +210,10 @@ describe("pat-autosuggest", function () {
             await utils.timeout(1); // wait a tick for async to settle.
 
             let selected = document.querySelectorAll(".select2-search-choice");
-            expect(selected.length).toBe(1);
+            expect(selected.length).toBe(2);
             expect(selected[0].textContent.trim()).toBe("Orange");
-            expect(input.value).toBe("id-orange");
+            expect(selected[1].textContent.trim()).toBe("Lemon");
+            expect(input.value).toBe("id-orange,id-lemon");
 
             // NOTE: the keyboard event init key ``which`` is deprecated,
             //       but that's what select2 3.5.1 is expecting.
@@ -224,7 +226,8 @@ describe("pat-autosuggest", function () {
                 .dispatchEvent(new KeyboardEvent("keydown", { which: 8 }));
 
             selected = document.querySelectorAll(".select2-search-choice");
-            expect(selected.length).toBe(0);
+            expect(selected.length).toBe(1);
+            expect(selected[0].textContent.trim()).toBe("Orange");
 
             document.querySelector(".select2-input").click();
             document.querySelector(".select2-result").dispatchEvent(events.mouseup_event()); // prettier-ignore
@@ -232,10 +235,131 @@ describe("pat-autosuggest", function () {
             document.querySelector(".select2-result").dispatchEvent(events.mouseup_event()); // prettier-ignore
 
             selected = document.querySelectorAll(".select2-search-choice");
+            expect(selected.length).toBe(3);
+            expect(selected[0].textContent.trim()).toBe("Orange");
+            expect(selected[1].textContent.trim()).toBe("Apple");
+            expect(selected[2].textContent.trim()).toBe("Lemon");
+            expect(input.value).toBe("id-orange,id-apple,id-lemon");
+        });
+
+        it("2.6 - items can be pre-filled without json.", async function () {
+            document.body.innerHTML = `
+                <input
+                    type="text"
+                    class="pat-autosuggest"
+                    data-pat-autosuggest="
+                        prefill: id-orange, id-lemon;
+                    " />
+            `;
+
+            const input = document.querySelector("input");
+            new pattern(input);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            let selected = document.querySelectorAll(".select2-search-choice");
             expect(selected.length).toBe(2);
-            expect(selected[0].textContent.trim()).toBe("Apple");
-            expect(selected[1].textContent.trim()).toBe("Orange");
-            expect(input.value).toBe("id-apple,id-orange");
+            expect(selected[0].textContent.trim()).toBe("id-orange");
+            expect(selected[1].textContent.trim()).toBe("id-lemon");
+            expect(input.value).toBe("id-orange,id-lemon");
+        });
+
+        it("2.7.1 - use a custom separator for multiple items.", async function () {
+            document.body.innerHTML = `
+                <input
+                    type="text"
+                    class="pat-autosuggest"
+                    data-pat-autosuggest="
+                        words: apple, orange, pear;
+                        separator: |" />
+                    " />
+            `;
+
+            const input = document.querySelector("input");
+            new pattern(input);
+            await utils.timeout(1); // wait a tick for async to settle.
+            $(".select2-input").click();
+            $(document.querySelector(".select2-result")).mouseup();
+            $(".select2-input").click();
+            $(document.querySelector(".select2-result")).mouseup();
+
+            const selected = document.querySelectorAll(".select2-search-choice");
+            expect(selected.length).toBe(2);
+            expect(selected[0].textContent.trim()).toBe("apple");
+            expect(selected[1].textContent.trim()).toBe("orange");
+            expect(input.value).toBe("apple|orange");
+        });
+
+        it("2.7.2 - use another custom separator for multiple items.", async function () {
+            document.body.innerHTML = `
+                <input
+                    type="text"
+                    class="pat-autosuggest"
+                    data-pat-autosuggest="
+                        words: apple, orange, pear;
+                        separator: ;;" />
+                    " />
+            `;
+
+            const input = document.querySelector("input");
+            new pattern(input);
+            await utils.timeout(1); // wait a tick for async to settle.
+            $(".select2-input").click();
+            $(document.querySelector(".select2-result")).mouseup();
+            $(".select2-input").click();
+            $(document.querySelector(".select2-result")).mouseup();
+
+            const selected = document.querySelectorAll(".select2-search-choice");
+            expect(selected.length).toBe(2);
+            expect(selected[0].textContent.trim()).toBe("apple");
+            expect(selected[1].textContent.trim()).toBe("orange");
+            expect(input.value).toBe("apple;orange");
+        });
+
+        it("2.7.3 - use a custom separator and pre-fill with json.", async function () {
+            document.body.innerHTML = `
+                <input
+                    type="text"
+                    class="pat-autosuggest"
+                    data-pat-autosuggest='
+                        prefill-json: {
+                            "id-orange": "Orange",
+                            "id-lemon": "Lemon"
+                        };
+                        separator: ;;
+                    ' />
+            `;
+
+            const input = document.querySelector("input");
+            new pattern(input);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            let selected = document.querySelectorAll(".select2-search-choice");
+            expect(selected.length).toBe(2);
+            expect(selected[0].textContent.trim()).toBe("Orange");
+            expect(selected[1].textContent.trim()).toBe("Lemon");
+            expect(input.value).toBe("id-orange;id-lemon");
+        });
+
+        it("2.7.4 - use a custom separator and pre-fill.", async function () {
+            document.body.innerHTML = `
+                <input
+                    type="text"
+                    class="pat-autosuggest"
+                    data-pat-autosuggest="
+                        prefill: id-orange, id-lemon;
+                        separator: ;;
+                    " />
+            `;
+
+            const input = document.querySelector("input");
+            new pattern(input);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            let selected = document.querySelectorAll(".select2-search-choice");
+            expect(selected.length).toBe(2);
+            expect(selected[0].textContent.trim()).toBe("id-orange");
+            expect(selected[1].textContent.trim()).toBe("id-lemon");
+            expect(input.value).toBe("id-orange;id-lemon");
         });
     });
 
@@ -360,6 +484,32 @@ describe("pat-autosuggest", function () {
 
             // There should be a error message from pat-validation.
             expect(form.querySelectorAll("em.warning").length).toBe(1);
+        });
+    });
+
+    describe("5 - Pittfalls...", function () {
+        it("5.1 - BEWARE! JSON structures must be valid JSON!", async function () {
+            // The following contains invalid JSON. Note the comma after the last prefill item.
+            document.body.innerHTML = `
+                <input
+                    type="text"
+                    class="pat-autosuggest"
+                    data-pat-autosuggest='
+                        prefill-json: {
+                            "id-orange": "Orange",
+                            "id-lemon": "Lemon",
+                        };
+                    ' />
+            `;
+
+            const input = document.querySelector("input");
+            new pattern(input);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            let selected = document.querySelectorAll(".select2-search-choice");
+
+            // INVALID JSON! No prefilling should happen.
+            expect(selected.length).toBe(0);
         });
     });
 });

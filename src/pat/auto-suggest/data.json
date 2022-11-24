@@ -1,4 +1,6 @@
 [
     { "id": "john-snow", "text": "John Snow" },
-    { "id": "tywin-lannister", "text": "Tywin Lannister" }
+    { "id": "tywin-lannister", "text": "Tywin Lannister" },
+    { "id": "mary-rose", "text": "Mary Rose" },
+    { "id": "joe-black", "text": "Joe Black" }
 ]
