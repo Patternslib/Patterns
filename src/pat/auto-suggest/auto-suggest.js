@@ -24,7 +24,7 @@ parser.addArgument("prefill", function ($el) {
 parser.addArgument("prefill-json", ""); // JSON format for pre-filling
 parser.addArgument("words", "");
 parser.addArgument("words-json");
-parser.addArgument("separator", ","); // Separator for multiple values
+parser.addArgument("value-separator", ","); // Separator for multiple values
 
 // "selection-classes" allows you to add custom CSS classes to currently
 // selected elements.
@@ -51,7 +51,7 @@ export default Base.extend({
         this.options = parser.parse(this.el, this.options);
 
         let config = {
-            separator: this.options.separator,
+            separator: this.options.valueSeparator,
             tokenSeparators: [","],
             openOnEnter: false,
             maximumSelectionSize: this.options.maxSelectionSize,
@@ -187,10 +187,10 @@ export default Base.extend({
             this.el.value = this.options.prefill
                 .split(",")
                 .map((it) => it.trim())
-                .join(this.options.separator);
+                .join(this.options.valueSeparator);
             config.initSelection = (element, callback) => {
                 let data = [];
-                const values = element[0].value.split(this.options.separator);
+                const values = element[0].value.split(this.options.valueSeparator);
                 for (const value of values) {
                     data.push({ id: value, text: value });
                 }
@@ -220,7 +220,7 @@ export default Base.extend({
                         ids.push(d);
                     }
                 }
-                this.el.value = ids.join(this.options.separator);
+                this.el.value = ids.join(this.options.valueSeparator);
                 config.initSelection = (element, callback) => {
                     let _data = [];
                     for (const d in data) {

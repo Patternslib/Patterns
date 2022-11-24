@@ -270,7 +270,7 @@ describe("pat-autosuggest", function () {
                     class="pat-autosuggest"
                     data-pat-autosuggest="
                         words: apple, orange, pear;
-                        separator: |" />
+                        value-separator: |" />
                     " />
             `;
 
@@ -296,7 +296,7 @@ describe("pat-autosuggest", function () {
                     class="pat-autosuggest"
                     data-pat-autosuggest="
                         words: apple, orange, pear;
-                        separator: ;;" />
+                        value-separator: ;;" />
                     " />
             `;
 
@@ -325,7 +325,7 @@ describe("pat-autosuggest", function () {
                             "id-orange": "Orange",
                             "id-lemon": "Lemon"
                         };
-                        separator: ;;
+                        value-separator: ;;
                     ' />
             `;
 
@@ -347,7 +347,7 @@ describe("pat-autosuggest", function () {
                     class="pat-autosuggest"
                     data-pat-autosuggest="
                         prefill: id-orange, id-lemon;
-                        separator: ;;
+                        value-separator: ;;
                     " />
             `;
 
@@ -368,7 +368,7 @@ describe("pat-autosuggest", function () {
                     type="text"
                     class="pat-autosuggest"
                     data-pat-autosuggest="
-                        separator: ;;
+                        value-separator: ;;
                     "
                     value="id-orange;id-lemon"
                     />
