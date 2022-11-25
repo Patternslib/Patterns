@@ -18,7 +18,11 @@
                         id="a1"
                         class="pat-autosuggest"
                         placeholder="Pick some fruit"
-                        data-pat-autosuggest="words: Apples, Oranges, Pears, Bananas; pre-fill: Oranges;maximum-selection-size: 1"
+                        data-pat-autosuggest="
+                            words: Apples, Oranges, Pears, Bananas;
+                            prefill: Oranges;
+                            maximum-selection-size: 1;
+                        "
                         type="text"
                     />
                 </label>
@@ -29,8 +33,10 @@
                         id="a1a"
                         class="pat-autosuggest"
                         placeholder="Pick some fruit"
-                        data-pat-autosuggest="ajax-url: datagroup.json;
-                                                allow-new-words: false;"
+                        data-pat-autosuggest="
+                            ajax-url: datagroup.json;
+                            allow-new-words: false;
+                        "
                         type="text"
                     />
                 </label>
@@ -41,8 +47,11 @@
                         id="a2"
                         class="pat-autosuggest"
                         placeholder="Pick a car"
-                        data-pat-autosuggest="words: Toyota, Volkswagen, Honda, Chevrolet, BMW, Mercedes, Volvo, Citröen, Audi;
-                                                allow-new-words: false; max-selection-size: 1;"
+                        data-pat-autosuggest="
+                            words: Toyota, Volkswagen, Honda, Chevrolet, BMW, Mercedes, Volvo, Citröen, Audi;
+                            allow-new-words: false;
+                            max-selection-size: 1;
+                        "
                         type="text"
                     />
                 </label>
@@ -53,9 +62,11 @@
                         id="a3"
                         class="pat-autosuggest"
                         placeholder="Pick a car"
-                        data-pat-autosuggest="pre-fill: Toyota;
-                                                words: Toyota, Volkswagen, Honda, Chevrolet, BMW, Mercedes, Volvo, Citröen, Audi;
-                                                allow-new-words: false;"
+                        data-pat-autosuggest="
+                            prefill: Toyota, Honda;
+                            words: Toyota, Volkswagen, Honda, Chevrolet, BMW, Mercedes, Volvo, Citröen, Audi;
+                            allow-new-words: false;
+                        "
                         type="text"
                     />
                 </label>
@@ -66,9 +77,11 @@
                         id="a4"
                         class="pat-autosuggest"
                         placeholder="Pick a character"
-                        data-pat-autosuggest='words-json: [{"id": "john-snow", "text": "John Snow"}, {"id": "tywin-lannister", "text":"Tywin Lannister"}, {"id": "goofy", "text":"Goofy"}];
-                        prefill-json: {"john-snow":"John Snow", "tywin-lannister": "Tywin Lannister"};
-                        allow-new-words: false;'
+                        data-pat-autosuggest='
+                            words-json: [{"id": "john-snow", "text": "John Snow"}, {"id": "tywin-lannister", "text":"Tywin Lannister"}, {"id": "goofy", "text":"Goofy"}];
+                            prefill-json: {"john-snow": "John Snow", "tywin-lannister": "Tywin Lannister"};
+                            allow-new-words: false;
+                        '
                         type="text"
                     />
                 </label>
@@ -80,10 +93,12 @@
                         id="a4"
                         class="pat-autosuggest"
                         placeholder="Pick a character"
-                        data-pat-autosuggest='words-json: [{"id": "john-snow", "text": "John Snow"}, {"id": "tywin-lannister", "text":"Tywin Lannister"}];
-                        max-selection-size: 1;
-                        prefill-json: {"john-snow":"John Snow"};
-                        allow-new-words: false;'
+                        data-pat-autosuggest='
+                            words-json: [{"id": "john-snow", "text": "John Snow"}, {"id": "tywin-lannister", "text":"Tywin Lannister"}];
+                            max-selection-size: 1;
+                            prefill-json: {"john-snow":"John Snow"};
+                            allow-new-words: false;
+                        '
                         type="text"
                     />
                 </label>
@@ -94,8 +109,10 @@
                         id="a5"
                         class="pat-autosuggest"
                         placeholder="Pick a character"
-                        data-pat-autosuggest="ajax-url: data.json; max-selection-size: 1;
-                                                allow-new-words: false;"
+                        data-pat-autosuggest="
+                            ajax-url: data.json; max-selection-size: 1;
+                            allow-new-words: false;
+                        "
                         type="text"
                     />
                 </label>
@@ -105,22 +122,29 @@
                         id="a6"
                         class="pat-autosuggest"
                         placeholder="Pick a character"
-                        data-pat-autosuggest="ajax-url: data.json;
-                                                allow-new-words: false;"
+                        data-pat-autosuggest="
+                            ajax-url: data.json;
+                            allow-new-words: false;
+                        "
                         type="text"
                     />
                 </label>
 
                 <label>
-                    If no placeholder is given, don't add one automatically
+                    Use a custom separator:
                     <input
-                        id="a1a"
+                        id="a8"
                         class="pat-autosuggest"
-                        data-pat-autosuggest="ajax-url: datagroup.json;
-                                                allow-new-words: false;"
+                        placeholder="Pick a character"
+                        autocomplete="off"
+                        data-pat-autosuggest='ajax-url: data.json;
+                                              allow-new-words: false;
+                                              prefill-json: {"john-snow": "John Snow", "tywin-lannister": "Tywin Lannister"};
+                                              value-separator: ;;'
                         type="text"
                     />
                 </label>
+
             </fieldset>
         </form>
     </body>
