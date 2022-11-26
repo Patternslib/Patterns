@@ -71,7 +71,6 @@
     },
     "browserslist": [
         ">0.2%",
-        "ie >= 11",
         "not dead"
     ],
     "author": {
