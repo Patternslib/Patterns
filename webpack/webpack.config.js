@@ -10,7 +10,6 @@ module.exports = () => {
     let config = {
         entry: {
             "bundle.min": path.resolve(__dirname, "../src/index.js"),
-            "bundle-polyfills.min": path.resolve(__dirname, "../src/polyfills.js"),
         },
     };
 
