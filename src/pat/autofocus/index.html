@@ -29,6 +29,19 @@
                  type="text"
           />
         </label>
+
+        <h3>Input 4 - should get focus when collapsible is opened.</h3>
+        <div class="pat-collapsible closed">
+            <h4>Open collapsible.</h4>
+
+            <input class="pat-autofocus" />
+        </div>
+
+        <h3>Input 5 - inject element with autofocus.</h3>
+        <a href="#autofocus-demo-input"
+           class="pat-inject"
+           data-pat-inject="target: self::after">inject autofocus input here</a>
+
       </fieldset>
     </form>
 
@@ -37,5 +50,9 @@
             src="./index-iframed.html"
             style="width: 400px; height: 300px; border: 1px solid black"
     ></iframe>
+
+    <template id="autofocus-demo-input">
+      <input class="pat-autofocus" />
+    </template>
   </body>
 </html>
