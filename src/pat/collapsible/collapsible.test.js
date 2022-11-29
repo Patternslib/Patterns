@@ -1,7 +1,7 @@
-import registry from "../../core/registry";
-import pattern from "./collapsible";
-import utils from "../../core/utils";
 import $ from "jquery";
+import events from "../../core/events";
+import Pattern from "./collapsible";
+import utils from "../../core/utils";
 import { jest } from "@jest/globals";
 
 describe("pat-collapsible", function () {
@@ -10,7 +10,7 @@ describe("pat-collapsible", function () {
         jest.restoreAllMocks();
     });
 
-    it("1- wraps the collapsible within a div.panel-content", function () {
+    it("1- wraps the collapsible within a div.panel-content", async function () {
         document.body.innerHTML = `
             <div class="pat-collapsible">
                 <h3>Trigger header</h3>
@@ -19,11 +19,12 @@ describe("pat-collapsible", function () {
         `;
 
         const $collapsible = $(".pat-collapsible");
-        pattern.init($collapsible);
+        const instance = new Pattern($collapsible[0]);
+        await events.await_pattern_init(instance);
         expect($collapsible.find(".panel-content").length).toBe(1);
     });
 
-    it("2 - is open by default", function () {
+    it("2 - is open by default", async function () {
         document.body.innerHTML = `
             <div class="pat-collapsible">
                 <h3>Trigger header</h3>
@@ -32,11 +33,12 @@ describe("pat-collapsible", function () {
         `;
 
         const $collapsible = $(".pat-collapsible");
-        pattern.init($collapsible);
+        const instance = new Pattern($collapsible[0]);
+        await events.await_pattern_init(instance);
         expect($collapsible.hasClass("open")).toBeTruthy();
     });
 
-    it("3 - can be explicitly closed by adding the class 'closed'", function () {
+    it("3 - can be explicitly closed by adding the class 'closed'", async function () {
         document.body.innerHTML = `
             <div class="pat-collapsible closed">
                 <h3>Trigger header</h3>
@@ -45,11 +47,12 @@ describe("pat-collapsible", function () {
         `;
 
         const $collapsible = $(".pat-collapsible");
-        pattern.init($collapsible);
+        const instance = new Pattern($collapsible[0]);
+        await events.await_pattern_init(instance);
         expect($collapsible.hasClass("open")).toBeFalsy();
     });
 
-    it("4 - can be toggled closed if it's open", function () {
+    it("4 - can be toggled closed if it's open", async function () {
         document.body.innerHTML = `
             <div class="pat-collapsible">
                 <h3>Trigger header</h3>
@@ -58,8 +61,9 @@ describe("pat-collapsible", function () {
         `;
 
         const $collapsible = $(".pat-collapsible");
-        const pat = pattern.init($collapsible, { transition: "none" });
-        pat.toggle($collapsible);
+        const instance = new Pattern($collapsible[0], { transition: "none" });
+        await events.await_pattern_init(instance);
+        instance.toggle($collapsible);
         expect($collapsible.hasClass("open")).toBe(false);
         expect($collapsible.hasClass("closed")).toBe(true);
         const $trigger = $("h3");
@@ -67,7 +71,7 @@ describe("pat-collapsible", function () {
         expect($trigger.hasClass("collapsible-closed")).toBe(true);
     });
 
-    it("5 - can be toggled open if it's closed", function () {
+    it("5 - can be toggled open if it's closed", async function () {
         document.body.innerHTML = `
             <div class="pat-collapsible closed">
                 <h3>Trigger header</h3>
@@ -75,8 +79,9 @@ describe("pat-collapsible", function () {
             </div>
         `;
         const $collapsible = $(".pat-collapsible");
-        const pat = pattern.init($collapsible, { transition: "none" });
-        pat.toggle($collapsible);
+        const instance = new Pattern($collapsible[0], { transition: "none" });
+        await events.await_pattern_init(instance);
+        instance.toggle($collapsible);
         expect($collapsible.hasClass("open")).toBe(true);
         expect($collapsible.hasClass("closed")).toBe(false);
         const $trigger = $("h3");
@@ -93,7 +98,8 @@ describe("pat-collapsible", function () {
             </div>
         `;
         const $collapsible = $(".pat-collapsible");
-        registry.scan($collapsible);
+        const instance = new Pattern($collapsible[0], { transition: "none" });
+        await events.await_pattern_init(instance);
         expect($collapsible.hasClass("open")).toBe(false);
         expect($collapsible.hasClass("closed")).toBe(true);
         $("#open").click();
@@ -111,7 +117,8 @@ describe("pat-collapsible", function () {
             </div>
         `;
         const $collapsible = $(".pat-collapsible");
-        registry.scan($collapsible);
+        const instance = new Pattern($collapsible[0], { transition: "none" });
+        await events.await_pattern_init(instance);
         expect($collapsible.hasClass("closed")).toBe(false);
         expect($collapsible.hasClass("open")).toBe(true);
         $("#close").click();
@@ -128,10 +135,11 @@ describe("pat-collapsible", function () {
             </div>
         `;
             const collapsible = document.querySelector(".pat-collapsible");
-            const pat = pattern.init(collapsible);
-            const spy_scroll = jest.spyOn(pat, "_scroll");
+            const instance = new Pattern(collapsible, { transition: "none" });
+            await events.await_pattern_init(instance);
+            const spy_scroll = jest.spyOn(instance, "_scroll");
 
-            pat.toggle();
+            instance.toggle();
             await utils.timeout(10);
 
             expect(spy_scroll).toHaveBeenCalledTimes(1);
@@ -144,10 +152,11 @@ describe("pat-collapsible", function () {
             </div>
         `;
             const collapsible = document.querySelector(".pat-collapsible");
-            const pat = pattern.init(collapsible);
-            const spy_scroll = jest.spyOn(pat, "_scroll");
+            const instance = new Pattern(collapsible, { transition: "none" });
+            await events.await_pattern_init(instance);
+            const spy_scroll = jest.spyOn(instance, "_scroll");
 
-            pat.toggle();
+            instance.toggle();
             await utils.timeout(10);
 
             expect(spy_scroll).not.toHaveBeenCalled();
@@ -167,7 +176,12 @@ describe("pat-collapsible", function () {
                 </div>
             `;
 
-            registry.scan(document.body);
+            const instance1 = new Pattern(document.querySelector(".c1"));
+            await events.await_pattern_init(instance1);
+            const instance2 = new Pattern(document.querySelector(".c2"));
+            await events.await_pattern_init(instance2);
+            const instance3 = new Pattern(document.querySelector(".c3"));
+            await events.await_pattern_init(instance3);
             const spy_animate = jest.spyOn($.fn, "animate");
 
             document.querySelector("#open").click();
@@ -188,10 +202,11 @@ describe("pat-collapsible", function () {
                 </div>
             `;
             const collapsible = document.querySelector(".pat-collapsible");
-            const pat = pattern.init(collapsible);
+            const instance = new Pattern(collapsible);
+            await events.await_pattern_init(instance);
             const spy_animate = jest.spyOn($.fn, "animate");
 
-            pat.toggle();
+            instance.toggle();
             await utils.timeout(10);
 
             const arg_1 = spy_animate.mock.calls[0][0];
@@ -205,10 +220,11 @@ describe("pat-collapsible", function () {
                 </div>
             `;
             const collapsible = document.querySelector(".pat-collapsible");
-            const pat = pattern.init(collapsible);
+            const instance = new Pattern(collapsible);
+            await events.await_pattern_init(instance);
             const spy_animate = jest.spyOn($.fn, "animate");
 
-            pat.toggle();
+            instance.toggle();
             await utils.timeout(10);
 
             const arg_1 = spy_animate.mock.calls[0][0];

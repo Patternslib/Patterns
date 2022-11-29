@@ -1,10 +1,11 @@
 import $ from "jquery";
 import "../../core/jquery-ext";
+import { BasePattern } from "../../core/basepattern";
 import inject from "../inject/inject";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
+import registry from "../../core/registry";
 import store from "../../core/store";
-import Base from "../../core/base";
 import utils from "../../core/utils";
 
 const log = logging.getLogger("pat.collapsible");
@@ -31,22 +32,23 @@ parser.addArgument("scroll-offset", 0);
 
 const debounce_scroll_timer = { timer: null };
 
-export default Base.extend({
-    name: "collapsible",
-    trigger: ".pat-collapsible",
-    jquery_plugin: true,
-    parser: parser,
+class Pattern extends BasePattern {
+    static name = "collapsible";
+    static trigger = ".pat-collapsible";
+    static parser = parser;
+    jquery_plugin = true;
 
-    transitions: {
+    transitions = {
         "none": { closed: "hide", open: "show" },
         "fade": { closed: "fadeOut", open: "fadeIn" },
         "slide": { closed: "slideUp", open: "slideDown" },
         "slide-horizontal": { closed: "slideOut", open: "slideIn" },
-    },
+    };
 
-    init($el, opts) {
+    init() {
+        const $el = (this.$el = $(this.el));
+
         let $content;
-        this.options = store.updateOptions($el[0], parser.parse($el, opts));
 
         if (this.options.trigger === "::first") {
             this.$trigger = $el.children(":first");
@@ -110,26 +112,26 @@ export default Base.extend({
         ); // scroll debouncer for later use.
 
         return $el;
-    },
+    }
 
     open() {
         if (!this.$el.hasClass("open")) this.toggle();
         return this.$el;
-    },
+    }
 
     close() {
         if (!this.$el.hasClass("closed")) this.toggle();
         return this.$el;
-    },
+    }
 
     _onClick(event) {
         this.toggle(event.data);
-    },
+    }
 
     _onKeyPress(event) {
         const keycode = event.keyCode ? event.keyCode : event.which;
         if (keycode === 13) this.toggle();
-    },
+    }
 
     _loadContent($el, url, $target) {
         const components = url.split("#");
@@ -144,7 +146,7 @@ export default Base.extend({
             },
         ];
         inject.execute(opts, $el);
-    },
+    }
 
     // jQuery method to force loading of content.
     loadContent($el) {
@@ -154,7 +156,7 @@ export default Base.extend({
                     this._loadContent($(el), this.options.loadContent, this.$panel);
             }.bind(this)
         );
-    },
+    }
 
     toggle() {
         const new_state = this.$el.hasClass("closed") ? "open" : "closed";
@@ -173,7 +175,7 @@ export default Base.extend({
             this._transit(this.$el, "open", "closed");
         }
         return this.$el; // allow chaining
-    },
+    }
 
     async _scroll() {
         const scroll_selector = this.options.scroll?.selector;
@@ -186,7 +188,7 @@ export default Base.extend({
             });
             await scroll.smoothScroll();
         }
-    },
+    }
 
     async _transit($el, from_cls, to_cls) {
         if (to_cls === "open" && this.options.loadContent) {
@@ -229,5 +231,10 @@ export default Base.extend({
                 }.bind(this)
             ).promise();
         }
-    },
-});
+    }
+}
+
+registry.register(Pattern);
+
+export default Pattern;
+export { Pattern };
