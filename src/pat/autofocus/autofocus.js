@@ -1,11 +1,12 @@
-import Base from "../../core/base";
+import { BasePattern } from "../../core/basepattern";
 import dom from "../../core/dom";
+import registry from "../../core/registry";
 
 let scheduled_task = null;
 
-export default Base.extend({
-    name: "autofocus",
-    trigger: `
+class Pattern extends BasePattern {
+    static name = "autofocus";
+    static trigger = `
         input.pat-autofocus,
         input[autofocus],
         select.pat-autofocus,
@@ -14,7 +15,7 @@ export default Base.extend({
         textarea[autofocus],
         button.pat-autofocus,
         button[autofocus]
-    `,
+    `;
 
     init() {
         if (window.self !== window.top) {
@@ -22,7 +23,7 @@ export default Base.extend({
             return;
         }
         this.set_focus();
-    },
+    }
 
     set_focus() {
         if (dom.is_visible(this.el) && this.el.value === "") {
@@ -41,5 +42,10 @@ export default Base.extend({
                 scheduled_task = null;
             }, 100);
         }
-    },
-});
+    }
+}
+
+registry.register(Pattern);
+
+export default Pattern;
+export { Pattern };
