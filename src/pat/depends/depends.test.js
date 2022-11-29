@@ -3,7 +3,7 @@ import pattern from "./depends";
 import utils from "../../core/utils";
 
 describe("pat-depends", function () {
-    describe("init", function () {
+    describe("1 - init", function () {
         beforeEach(function () {
             $("<div/>", { id: "lab" }).appendTo(document.body);
         });
@@ -40,7 +40,7 @@ describe("pat-depends", function () {
         });
     });
 
-    describe("disable", function () {
+    describe("2 - disable", function () {
         beforeEach(function () {
             $("<div/>", { id: "lab" }).appendTo(document.body);
         });
@@ -84,7 +84,7 @@ describe("pat-depends", function () {
         });
     });
 
-    describe("enable", function () {
+    describe("3 - enable", function () {
         beforeEach(function () {
             $("<div/>", { id: "lab" }).appendTo(document.body);
         });
@@ -126,6 +126,65 @@ describe("pat-depends", function () {
             pat.enable();
             expect($dependent.hasClass("disabled")).toBe(false);
             expect($._data($dependent[0]).events).toBe(undefined);
+        });
+    });
+
+    describe("4 - pat-update", function () {
+        it("4.1 - Throw pat-update on enabling", async function () {
+            document.body.innerHTML = `
+                <input
+                    type="checkbox"
+                    id="control"
+                    value="yes"
+                    checked="checked"/>
+                <button
+                    id="dependent"
+                    type="button"
+                    class="pat-depends"
+                    data-pat-depends="condition: control"
+                    >Click me</button>
+            `;
+            const el = document.querySelector(".pat-depends");
+            const instance = new pattern(el);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            let data;
+            $(el).on("pat-update", (e, d) => {
+                data = d;
+            });
+            instance.enable();
+            expect(data.pattern).toBe("depends");
+            expect(data.action).toBe("attribute-changed");
+            expect(data.dom).toBe(el);
+            expect(data.enabled).toBe(true);
+        });
+        it("4.2 - Throw pat-update on disabling", async function () {
+            document.body.innerHTML = `
+                <input
+                    type="checkbox"
+                    id="control"
+                    value="yes"
+                    checked="checked"/>
+                <button
+                    id="dependent"
+                    type="button"
+                    class="pat-depends"
+                    data-pat-depends="condition: control"
+                    >Click me</button>
+            `;
+            const el = document.querySelector(".pat-depends");
+            const instance = new pattern(el);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            let data;
+            $(el).on("pat-update", (e, d) => {
+                data = d;
+            });
+            instance.disable();
+            expect(data.pattern).toBe("depends");
+            expect(data.action).toBe("attribute-changed");
+            expect(data.dom).toBe(el);
+            expect(data.enabled).toBe(false);
         });
     });
 });
