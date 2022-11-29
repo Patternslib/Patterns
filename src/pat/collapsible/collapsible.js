@@ -204,12 +204,16 @@ class Pattern extends BasePattern {
                 .addClass("collapsible-" + to_cls);
             $el.removeClass(from_cls).addClass(to_cls).trigger("pat-update", {
                 pattern: "collapsible",
+                action: "attribute-changed",
+                dom: $el[0],
                 transition: "complete",
             });
         } else {
             const t = this.transitions[this.options.transition];
             $el.addClass("in-progress").trigger("pat-update", {
                 pattern: "collapsible",
+                action: "attribute-changed",
+                dom: $el[0],
                 transition: "start",
             });
             this.$trigger.addClass("collapsible-in-progress");
@@ -226,6 +230,8 @@ class Pattern extends BasePattern {
                         .addClass(to_cls)
                         .trigger("pat-update", {
                             pattern: "collapsible",
+                            action: "attribute-changed",
+                            dom: $el[0],
                             transition: "complete",
                         });
                 }.bind(this)

@@ -231,4 +231,27 @@ describe("pat-collapsible", function () {
             expect(arg_1.scrollTop).toBe(40); // the offset is substracted from the scroll position, so a negative offset is added to the scroll position and stops AFTER the target position.
         });
     });
+
+    it("9 - triggers the pat-update event.", async function () {
+        document.body.innerHTML = `
+            <div class="pat-collapsible closed">
+                <h3>Trigger header</h3>
+                <p>Collapsible content</p>
+            </div>
+        `;
+        const $collapsible = $(".pat-collapsible");
+        const instance = new Pattern($collapsible[0], { transition: "none" });
+        await events.await_pattern_init(instance);
+        const spy_trigger = jest.spyOn($.fn, "trigger");
+        instance.toggle($collapsible);
+        expect(spy_trigger).toHaveBeenCalledWith(
+            "pat-update",
+            expect.objectContaining({
+                pattern: "collapsible",
+                action: "attribute-changed",
+                dom: document.body.querySelector(".pat-collapsible"),
+                transition: "complete",
+            })
+        );
+    });
 });
