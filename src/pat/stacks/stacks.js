@@ -28,7 +28,7 @@ class Pattern extends BasePattern {
     _setupStack() {
         let selected = this._currentFragment();
         const $sheets = this.$el.find(this.options.selector);
-        let $visible = [];
+        this.$active = [];
 
         if ($sheets.length < 2) {
             log.warn("Stacks pattern: must have more than one sheet.", this.$el[0]);
@@ -37,18 +37,18 @@ class Pattern extends BasePattern {
 
         if (selected) {
             try {
-                $visible = $sheets.filter("#" + selected);
+                this.$active = $sheets.filter("#" + selected);
             } catch (e) {
                 selected = undefined;
             }
         }
 
-        if (!$visible.length) {
-            $visible = $sheets.first();
-            selected = $visible[0].id;
+        if (!this.$active.length) {
+            this.$active = $sheets.first();
+            selected = this.$active[0].id;
         }
-        const $invisible = $sheets.not($visible);
-        utils.hideOrShow($visible, true, { transition: "none" }, this.name);
+        const $invisible = $sheets.not(this.$active);
+        utils.hideOrShow(this.$active, true, { transition: "none" }, this.name);
         utils.hideOrShow($invisible, false, { transition: "none" }, this.name);
         this._updateAnchors(selected);
     }
@@ -80,6 +80,8 @@ class Pattern extends BasePattern {
         this._switch(href_parts[1]);
         $(e.target).trigger("pat-update", {
             pattern: "stacks",
+            action: "attribute-changed",
+            dom: this.$active[0],
             originalEvent: e,
         });
     }
@@ -104,13 +106,13 @@ class Pattern extends BasePattern {
     }
 
     _switch(sheet_id) {
-        const $sheet = this.$el.find("#" + sheet_id);
-        if (!$sheet.length || $sheet.hasClass("visible")) {
+        this.$active = this.$el.find("#" + sheet_id);
+        if (!this.$active.length || this.$active.hasClass("visible")) {
             return;
         }
-        const $invisible = this.$el.find(this.options.selector).not($sheet);
+        const $invisible = this.$el.find(this.options.selector).not(this.$active);
         utils.hideOrShow($invisible, false, this.options, this.name);
-        utils.hideOrShow($sheet, true, this.options, this.name);
+        utils.hideOrShow(this.$active, true, this.options, this.name);
     }
 }
 

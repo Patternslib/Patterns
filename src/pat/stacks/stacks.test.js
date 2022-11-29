@@ -117,7 +117,12 @@ describe("pat-stacks", function () {
             await events.await_pattern_init(pattern);
             pattern.document = { URL: document.URL };
             pattern.document.URL = "http://www.example.com";
-            const spy_trigger = jest.spyOn($.fn, "trigger");
+
+            let data = null;
+            $el.on("pat-update", (e, d) => {
+                data = d;
+            });
+
             const e = {
                 target: $el,
                 type: "click",
@@ -125,10 +130,10 @@ describe("pat-stacks", function () {
                 currentTarget: { href: "http://www.example.com#s1" },
             };
             pattern._onClick(e);
-            expect(spy_trigger).toHaveBeenCalledWith(
-                "pat-update",
-                expect.objectContaining({ pattern: "stacks" })
-            );
+
+            expect(data.pattern).toBe("stacks");
+            expect(data.action).toBe("attribute-changed");
+            expect(data.dom).toBe($el[0].querySelector("#s1"));
         });
     });
 
