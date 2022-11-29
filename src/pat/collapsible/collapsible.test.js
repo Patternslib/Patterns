@@ -10,7 +10,7 @@ describe("pat-collapsible", function () {
         jest.restoreAllMocks();
     });
 
-    it("wraps the collapsible within a div.panel-content", function () {
+    it("1- wraps the collapsible within a div.panel-content", function () {
         document.body.innerHTML = `
             <div class="pat-collapsible">
                 <h3>Trigger header</h3>
@@ -18,12 +18,12 @@ describe("pat-collapsible", function () {
             </div>
         `;
 
-        var $collapsible = $(".pat-collapsible");
+        const $collapsible = $(".pat-collapsible");
         pattern.init($collapsible);
         expect($collapsible.find(".panel-content").length).toBe(1);
     });
 
-    it("is open by default", function () {
+    it("2 - is open by default", function () {
         document.body.innerHTML = `
             <div class="pat-collapsible">
                 <h3>Trigger header</h3>
@@ -31,12 +31,12 @@ describe("pat-collapsible", function () {
             </div>
         `;
 
-        var $collapsible = $(".pat-collapsible");
+        const $collapsible = $(".pat-collapsible");
         pattern.init($collapsible);
         expect($collapsible.hasClass("open")).toBeTruthy();
     });
 
-    it("can be explicitly closed by adding the class 'closed'", function () {
+    it("3 - can be explicitly closed by adding the class 'closed'", function () {
         document.body.innerHTML = `
             <div class="pat-collapsible closed">
                 <h3>Trigger header</h3>
@@ -44,12 +44,12 @@ describe("pat-collapsible", function () {
             </div>"
         `;
 
-        var $collapsible = $(".pat-collapsible");
+        const $collapsible = $(".pat-collapsible");
         pattern.init($collapsible);
         expect($collapsible.hasClass("open")).toBeFalsy();
     });
 
-    it("can be toggled closed if it's open", function () {
+    it("4 - can be toggled closed if it's open", function () {
         document.body.innerHTML = `
             <div class="pat-collapsible">
                 <h3>Trigger header</h3>
@@ -57,34 +57,34 @@ describe("pat-collapsible", function () {
             </div>
         `;
 
-        var $collapsible = $(".pat-collapsible");
-        var pat = pattern.init($collapsible, { transition: "none" });
+        const $collapsible = $(".pat-collapsible");
+        const pat = pattern.init($collapsible, { transition: "none" });
         pat.toggle($collapsible);
         expect($collapsible.hasClass("open")).toBe(false);
         expect($collapsible.hasClass("closed")).toBe(true);
-        var $trigger = $("h3");
+        const $trigger = $("h3");
         expect($trigger.hasClass("collapsible-open")).toBe(false);
         expect($trigger.hasClass("collapsible-closed")).toBe(true);
     });
 
-    it("can be toggled open if it's closed", function () {
+    it("5 - can be toggled open if it's closed", function () {
         document.body.innerHTML = `
             <div class="pat-collapsible closed">
                 <h3>Trigger header</h3>
                 <p>Collapsible content</p>
             </div>
         `;
-        var $collapsible = $(".pat-collapsible");
-        var pat = pattern.init($collapsible, { transition: "none" });
+        const $collapsible = $(".pat-collapsible");
+        const pat = pattern.init($collapsible, { transition: "none" });
         pat.toggle($collapsible);
         expect($collapsible.hasClass("open")).toBe(true);
         expect($collapsible.hasClass("closed")).toBe(false);
-        var $trigger = $("h3");
+        const $trigger = $("h3");
         expect($trigger.hasClass("collapsible-open")).toBe(true);
         expect($trigger.hasClass("collapsible-closed")).toBe(false);
     });
 
-    it("can be configured to have trigger which only opens it", async function () {
+    it("6 - can be configured to have trigger which only opens it", async function () {
         document.body.innerHTML = `
             <div class="closed pat-collapsible" data-pat-collapsible="open-trigger: #open">
                 <button>toggle</button>
@@ -102,7 +102,7 @@ describe("pat-collapsible", function () {
         expect($collapsible.hasClass("closed")).toBe(false);
     });
 
-    it("can be configured to have trigger which only closes it", async function () {
+    it("7 - can be configured to have trigger which only closes it", async function () {
         document.body.innerHTML = `
             <div class="pat-collapsible" data-pat-collapsible="close-trigger: #close">
                 <button>toggle</button>
@@ -120,8 +120,8 @@ describe("pat-collapsible", function () {
         expect($collapsible.hasClass("open")).toBe(false);
     });
 
-    describe("scrolling", function () {
-        it("can scroll to itself when opened.", async function () {
+    describe("8 - scrolling", function () {
+        it("8.1 - can scroll to itself when opened.", async function () {
             document.body.innerHTML = `
             <div class="pat-collapsible closed" data-pat-collapsible="scroll-selector: self">
                 <p>Collapsible content</p>
@@ -137,7 +137,7 @@ describe("pat-collapsible", function () {
             expect(spy_scroll).toHaveBeenCalledTimes(1);
         });
 
-        it("does not scroll when being closed.", async function () {
+        it("8.2 - does not scroll when being closed.", async function () {
             document.body.innerHTML = `
             <div class="pat-collapsible opened" data-pat-collapsible="scroll-selector: self">
                 <p>Collapsible content</p>
@@ -153,19 +153,19 @@ describe("pat-collapsible", function () {
             expect(spy_scroll).not.toHaveBeenCalled();
         });
 
-        it("only scrolls once even if multiple collapsible are opened at once.", async function () {
+        it("8.3 - only scrolls once even if multiple collapsible are opened at once.", async function () {
             document.body.innerHTML = `
-            <button class="pat-button" id="open">Open All</button>
-            <div class="pat-collapsible closed c1" data-pat-collapsible="scroll-selector: self; open-trigger: #open; transition: none">
-                <p>Collapsible content</p>
-            </div>
-            <div class="pat-collapsible closed c2" data-pat-collapsible="scroll-selector: self; open-trigger: #open; transition: none">
-                <p>Collapsible content</p>
-            </div>
-            <div class="pat-collapsible closed c3" data-pat-collapsible="scroll-selector: self; open-trigger: #open; transition: none">
-                <p>Collapsible content</p>
-            </div>
-        `;
+                <button class="pat-button" id="open">Open All</button>
+                <div class="pat-collapsible closed c1" data-pat-collapsible="scroll-selector: self; open-trigger: #open; transition: none">
+                    <p>Collapsible content</p>
+                </div>
+                <div class="pat-collapsible closed c2" data-pat-collapsible="scroll-selector: self; open-trigger: #open; transition: none">
+                    <p>Collapsible content</p>
+                </div>
+                <div class="pat-collapsible closed c3" data-pat-collapsible="scroll-selector: self; open-trigger: #open; transition: none">
+                    <p>Collapsible content</p>
+                </div>
+            `;
 
             registry.scan(document.body);
             const spy_animate = jest.spyOn($.fn, "animate");
@@ -181,12 +181,12 @@ describe("pat-collapsible", function () {
             expect(spy_animate).toHaveBeenCalledTimes(1);
         });
 
-        it("can scroll to itself when opened with an offset.", async function () {
+        it("8.4 - can scroll to itself when opened with an offset.", async function () {
             document.body.innerHTML = `
-            <div class="pat-collapsible closed" data-pat-collapsible="scroll-selector: self; scroll-offset: 40; transition: none">
-                <p>Collapsible content</p>
-            </div>
-        `;
+                <div class="pat-collapsible closed" data-pat-collapsible="scroll-selector: self; scroll-offset: 40; transition: none">
+                    <p>Collapsible content</p>
+                </div>
+            `;
             const collapsible = document.querySelector(".pat-collapsible");
             const pat = pattern.init(collapsible);
             const spy_animate = jest.spyOn($.fn, "animate");
@@ -198,12 +198,12 @@ describe("pat-collapsible", function () {
             expect(arg_1.scrollTop).toBe(-40); // the offset is substracted from the scroll position to stop BEFORE the target position.
         });
 
-        it("can scroll to itself when opened with a negative offset.", async function () {
+        it("8.5 - can scroll to itself when opened with a negative offset.", async function () {
             document.body.innerHTML = `
-            <div class="pat-collapsible closed" data-pat-collapsible="scroll-selector: self; scroll-offset: -40; transition: none">
-                <p>Collapsible content</p>
-            </div>
-        `;
+                <div class="pat-collapsible closed" data-pat-collapsible="scroll-selector: self; scroll-offset: -40; transition: none">
+                    <p>Collapsible content</p>
+                </div>
+            `;
             const collapsible = document.querySelector(".pat-collapsible");
             const pat = pattern.init(collapsible);
             const spy_animate = jest.spyOn($.fn, "animate");

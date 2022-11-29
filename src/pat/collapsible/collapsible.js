@@ -1,13 +1,3 @@
-/**
- * Patterns collapsible - Collapsible content
- *
- * Copyright 2012-2013 Florian Friesdorf
- * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
- * Copyright 2012 Markus Maier
- * Copyright 2013 Peter Lamut
- * Copyright 2012 Jonas Hoersch
- */
-
 import $ from "jquery";
 import "../../core/jquery-ext";
 import inject from "../inject/inject";
@@ -54,8 +44,8 @@ export default Base.extend({
         "slide-horizontal": { closed: "slideOut", open: "slideIn" },
     },
 
-    init: function ($el, opts) {
-        var $content, state, storage;
+    init($el, opts) {
+        let $content;
         this.options = store.updateOptions($el[0], parser.parse($el, opts));
 
         if (this.options.trigger === "::first") {
@@ -81,11 +71,11 @@ export default Base.extend({
             }
         }
 
-        state = this.options.closed || $el.hasClass("closed") ? "closed" : "open";
+        let state = this.options.closed || $el.hasClass("closed") ? "closed" : "open";
         if (this.options.store !== "none") {
-            storage = (this.options.store === "local" ? store.local : store.session)(
-                this.name
-            );
+            const storage = (
+                this.options.store === "local" ? store.local : store.session
+            )(this.name);
             state = storage.get($el.attr("id")) || state;
         }
 
@@ -122,42 +112,42 @@ export default Base.extend({
         return $el;
     },
 
-    open: function () {
+    open() {
         if (!this.$el.hasClass("open")) this.toggle();
         return this.$el;
     },
 
-    close: function () {
+    close() {
         if (!this.$el.hasClass("closed")) this.toggle();
         return this.$el;
     },
 
-    _onClick: function (event) {
+    _onClick(event) {
         this.toggle(event.data);
     },
 
-    _onKeyPress: function (event) {
-        var keycode = event.keyCode ? event.keyCode : event.which;
+    _onKeyPress(event) {
+        const keycode = event.keyCode ? event.keyCode : event.which;
         if (keycode === 13) this.toggle();
     },
 
-    _loadContent: function ($el, url, $target) {
-        var components = url.split("#"),
-            base_url = components[0],
-            id = components[1] ? "#" + components[1] : "body",
-            opts = [
-                {
-                    url: base_url,
-                    source: id,
-                    $target: $target,
-                    dataType: "html",
-                },
-            ];
+    _loadContent($el, url, $target) {
+        const components = url.split("#");
+        const base_url = components[0];
+        const id = components[1] ? "#" + components[1] : "body";
+        const opts = [
+            {
+                url: base_url,
+                source: id,
+                $target: $target,
+                dataType: "html",
+            },
+        ];
         inject.execute(opts, $el);
     },
 
     // jQuery method to force loading of content.
-    loadContent: function ($el) {
+    loadContent($el) {
         return $el.each(
             function (idx, el) {
                 if (this.options.loadContent)
@@ -166,12 +156,12 @@ export default Base.extend({
         );
     },
 
-    toggle: function () {
-        var new_state = this.$el.hasClass("closed") ? "open" : "closed";
+    toggle() {
+        const new_state = this.$el.hasClass("closed") ? "open" : "closed";
         if (this.options.store !== "none") {
-            var storage = (this.options.store === "local" ? store.local : store.session)(
-                this.name
-            );
+            const storage = (
+                this.options.store === "local" ? store.local : store.session
+            )(this.name);
             storage.set(this.$el.attr("id"), new_state);
         }
         if (new_state === "open") {
@@ -198,11 +188,11 @@ export default Base.extend({
         }
     },
 
-    _transit: async function ($el, from_cls, to_cls) {
+    async _transit($el, from_cls, to_cls) {
         if (to_cls === "open" && this.options.loadContent) {
             this._loadContent($el, this.options.loadContent, this.$panel);
         }
-        var duration =
+        const duration =
             this.options.transition === "css" || this.options.transition === "none"
                 ? null
                 : this.options.effect.duration;
@@ -215,7 +205,7 @@ export default Base.extend({
                 transition: "complete",
             });
         } else {
-            var t = this.transitions[this.options.transition];
+            const t = this.transitions[this.options.transition];
             $el.addClass("in-progress").trigger("pat-update", {
                 pattern: "collapsible",
                 transition: "start",
