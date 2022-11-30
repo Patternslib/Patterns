@@ -394,4 +394,43 @@ describe("pat-clone", function () {
             expect(document.querySelectorAll(".pat-clone label").length).toBe(0); // prettier-ignore
         });
     });
+
+    describe("3 - pat-update event support", function () {
+        it("throws pat-update when clones are added.", async function () {
+            document.body.innerHTML = `
+                <div class="pat-clone"
+                     data-pat-clone="remove-behaviour: none;">
+                    <div class="item">
+                        Clone Me
+                        <button class="remove-clone" type="button">remove</button>
+                    </div>
+                    <button class="add-clone" type="button">Clone!</button>
+                </div>
+            `;
+
+            const el = document.querySelector(".pat-clone");
+            new Clone(el);
+
+            let data;
+            $(el).on("pat-update", (e, d) => {
+                data = d;
+            });
+
+            expect(document.querySelectorAll(".item").length).toBe(1);
+
+            document.querySelector(".add-clone").click();
+            expect(document.querySelectorAll(".item").length).toBe(2);
+
+            const cloned = document.querySelectorAll(".item")[1];
+            expect(data.pattern).toBe("clone");
+            expect(data.action).toBe("added");
+            expect(data.dom).toBe(cloned);
+
+            cloned.querySelector(".remove-clone").click();
+            expect(document.querySelectorAll(".item").length).toBe(1);
+            expect(data.pattern).toBe("clone");
+            expect(data.action).toBe("removed");
+            expect(data.dom).toBe(cloned);
+        });
+    });
 });

@@ -90,8 +90,8 @@ export default Base.extend({
 
         $clone.trigger("pat-update", {
             pattern: "clone",
-            action: "clone",
-            $el: $clone,
+            action: "added",
+            dom: $clone[0],
         });
         if (this.num_clones >= this.options.max) {
             for (const el_ of this.clone_triggers) {
@@ -159,8 +159,8 @@ export default Base.extend({
             node.remove();
             this.$el.trigger("pat-update", {
                 pattern: "clone",
-                action: "remove",
-                $el: $(node), // used by pat-sortable only.
+                action: "removed",
+                dom: node,
             });
         }
         this.num_clones -= 1;
