@@ -277,27 +277,6 @@ describe("hideOrShow", function () {
         expect(Array.prototype.slice.call($el[0].classList)).toEqual(["visible"]);
     });
 
-    it("Single pat-update event without a transition", function () {
-        $("#lab").append('<div style="display: none"/>');
-        var $el = $("#lab div");
-        jest.spyOn($.fn, "trigger");
-        utils.hideOrShow(
-            $el,
-            true,
-            {
-                transition: "none",
-                effect: { duration: "fast", easing: "swing" },
-            },
-            "depends"
-        );
-        expect($.fn.trigger.mock.calls.length).toEqual(1);
-        expect($.fn.trigger).toHaveBeenCalledWith("pat-update", {
-            pattern: "depends",
-            transition: "complete",
-        });
-        $.fn.trigger.mockRestore();
-    });
-
     it("Fadeout with 0 duration", function () {
         $("#lab").append("<div/>");
         var $el = $("#lab div");
@@ -321,6 +300,29 @@ describe("hideOrShow", function () {
         expect(Array.prototype.slice.call($el[0].classList)).toEqual(["hidden"]);
     });
 
+    it("Single pat-update event without a transition", function () {
+        $("#lab").append('<div style="display: none"/>');
+        var $el = $("#lab div");
+        jest.spyOn($.fn, "trigger");
+        utils.hideOrShow(
+            $el,
+            true,
+            {
+                transition: "none",
+                effect: { duration: "fast", easing: "swing" },
+            },
+            "depends"
+        );
+        expect($.fn.trigger.mock.calls.length).toEqual(1);
+        expect($.fn.trigger).toHaveBeenCalledWith("pat-update", {
+            pattern: "depends",
+            action: "attribute-changed",
+            dom: $el[0],
+            transition: "complete",
+        });
+        $.fn.trigger.mockRestore();
+    });
+
     it("pat-update event with a transition", async function () {
         $("#lab").append("<div/>");
         var $el = $("#lab div");
@@ -338,10 +340,14 @@ describe("hideOrShow", function () {
         expect($.fn.trigger.mock.calls.length).toEqual(2);
         expect($.fn.trigger).toHaveBeenCalledWith("pat-update", {
             pattern: "depends",
+            action: "attribute-changed",
+            dom: $el[0],
             transition: "start",
         });
         expect($.fn.trigger).toHaveBeenCalledWith("pat-update", {
             pattern: "depends",
+            action: "attribute-changed",
+            dom: $el[0],
             transition: "complete",
         });
         $.fn.trigger.mockRestore();
