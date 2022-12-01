@@ -12,7 +12,7 @@ parser.addArgument("features", null, ["format"]);
 class Pattern extends BasePattern {
     static name = "clone-code";
     static trigger = ".pat-clone-code";
-    parser = parser;
+    static parser = parser;
 
     async init() {
         // Source
