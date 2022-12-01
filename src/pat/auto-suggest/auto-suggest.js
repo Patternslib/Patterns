@@ -94,15 +94,19 @@ export default Base.extend({
 
         dom.hide(this.el); // hide input, but keep active (e.g. for validation)
 
-        this.$el.on("pat-update", (e, data) => {
-            if (data?.pattern === "depends") {
-                if (data?.enabled === true) {
-                    this.$el.select2("enable", true);
-                } else if (data?.enabled === false) {
-                    this.$el.select2("disable", true);
+        // Handle case of pat-depends, where select2 might not be visible initially
+        const pat_depends = this.el.closest(".pat-depends");
+        if (pat_depends) {
+            $(pat_depends).on("pat-update", (e, data) => {
+                if (data?.pattern === "depends") {
+                    if (data?.enabled === true) {
+                        this.$el.select2("enable", true);
+                    } else if (data?.enabled === false) {
+                        this.$el.select2("disable", true);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         // Allow pat-validate to check for validity when select2 was interacted
         // with but no value selected.
