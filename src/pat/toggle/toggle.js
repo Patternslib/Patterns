@@ -52,7 +52,11 @@ ClassToggler.prototype = {
             classes.push(value);
         }
         el.className = classes.join(" ");
-        $(el).trigger("pat-update", { pattern: "toggle" });
+        $(el).trigger("pat-update", {
+            pattern: "toggle",
+            action: "attribute-changed",
+            dom: el,
+        });
     },
 
     next(current) {
@@ -194,27 +198,19 @@ export default Base.extend({
     },
 
     _onClick() {
-        let updated = false;
-
         for (const option of this.options) {
-            const victims = $(option.selector);
-            if (!victims.length) {
+            const targets = $(option.selector);
+            if (!targets.length) {
                 continue;
             }
             const toggler = option.toggler;
-            const next_state = toggler.toggle(victims[0]);
-            for (let j = 1; j < victims.length; j++) {
-                toggler.set(victims[j], next_state);
+            const next_state = toggler.toggle(targets[0]);
+            for (const target of targets) {
+                toggler.set(target, next_state);
             }
             if (option.value_storage) {
                 option.value_storage.set(next_state);
             }
-            updated = true;
-        }
-        if (updated) {
-            // XXX: Is this necessary? pat-update gets called on changed
-            // element above.
-            this.$el.trigger("pat-update", { pattern: "toggle" });
         }
     },
 

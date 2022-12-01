@@ -57,6 +57,24 @@ describe("pat-toggle", function () {
                 toggler.set(el, null);
                 expect(el.className).toBe("");
             });
+
+            it("triggers the pat-update event", function () {
+                const el = document.createElement("div");
+                const toggler = new ClassToggler(["active"]);
+                el.className = "active";
+
+                let data = null;
+                $(el).on("pat-update", (e, d) => {
+                    data = d;
+                });
+
+                toggler.set(el, null);
+
+                expect(el.className).toBe("");
+                expect(data.pattern).toBe("toggle");
+                expect(data.action).toBe("attribute-changed");
+                expect(data.dom).toBe(el);
+            });
         });
 
         describe("Check if ClassToggler.next()", function () {
