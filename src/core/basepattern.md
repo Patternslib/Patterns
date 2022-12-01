@@ -21,7 +21,7 @@ Also see: https://github.com/Patternslib/pat-PATTERN_TEMPLATE
     class Pattern extends BasePattern {
         static name = "test-pattern";
         static trigger = ".pat-test-pattern";
-        parser = parser;
+        static parser = parser;
 
         async init() {
             import("./test-pattern.scss");

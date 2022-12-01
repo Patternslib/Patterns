@@ -15,15 +15,17 @@ describe("Basepattern class tests", function () {
         jest.restoreAllMocks();
     });
 
-    it("1 - Trigger and name are statically available on the class.", async function () {
+    it("1 - Trigger, name and parser are statically available on the class.", async function () {
         class Pat extends BasePattern {
             static name = "example";
             static trigger = ".example";
+            static parser = { parse: () => {} }; // dummy parser
         }
 
         // trigger and name are static and available on the class itself
-        expect(Pat.trigger).toBe(".example");
         expect(Pat.name).toBe("example");
+        expect(Pat.trigger).toBe(".example");
+        expect(typeof Pat.parser.parse).toEqual("function");
 
         const el = document.createElement("div");
 
@@ -32,6 +34,7 @@ describe("Basepattern class tests", function () {
 
         expect(pat.name).toEqual("example");
         expect(pat.trigger).toEqual(".example");
+        expect(typeof pat.parser.parse).toEqual("function");
     });
 
     it("2 - Base pattern is class based and does inheritance, polymorphism, encapsulation, ... pt1", async function () {

@@ -13,12 +13,13 @@ const log = logging.getLogger("Patternslib Base");
 class BasePattern {
     static name; // name of pattern used in Registry.
     static trigger; // A CSS selector to match elements that should trigger the pattern instantiation.
-    parser; // Options parser.
+    static parser; // Options parser.
 
     constructor(el, options = {}) {
-        // Make static ``name`` and ``trigger`` available on instance.
+        // Make static variables available on instance.
         this.name = this.constructor.name;
         this.trigger = this.constructor.trigger;
+        this.parser = this.constructor.parser;
 
         if (!el) {
             log.warn(`No element given to pattern ${this.name}.`);
@@ -49,7 +50,7 @@ class BasePattern {
             }
 
             // Create the options object by parsing the element and using the
-            // optional optios as default.
+            // optional options as default.
             this.options = this.parser?.parse(this.el, options) ?? options;
 
             // Store pattern instance on element
