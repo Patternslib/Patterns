@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { BasePattern } from "../../core/basepattern";
 import dom from "../../core/dom";
 import registry from "../../core/registry";
@@ -22,6 +23,16 @@ class Pattern extends BasePattern {
             // Do not autofocus in iframes.
             return;
         }
+
+        // Re-focus after relevant DOM changes.
+        $(document).on("pat-update", (e, data) => {
+            const updated = data?.dom;
+            if (updated?.contains(this.el)) {
+                // Only focus if the updated element is a parent of this autofocus element.
+                this.set_focus();
+            }
+        });
+
         this.set_focus();
     }
 

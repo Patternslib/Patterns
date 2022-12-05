@@ -113,8 +113,8 @@ export default Base.extend({
         // Inform other patterns about sorting changes
         $dragged.trigger("pat-update", {
             pattern: "sortable",
-            action: "dragend",
-            $el: $dragged,
+            action: "changed",
+            dom: $dragged[0],
         });
     },
 

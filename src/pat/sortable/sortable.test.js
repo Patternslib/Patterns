@@ -110,6 +110,7 @@ describe("pat-sortable", function () {
         $(handle).trigger("dragend");
 
         expect(data.pattern).toBe("sortable");
-        expect(data.action).toBe("dragend");
+        expect(data.action).toBe("changed");
+        expect(data.dom).toBe(dragging_element);
     });
 });

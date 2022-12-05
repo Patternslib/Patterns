@@ -103,10 +103,10 @@ describe("pat-scroll-box", function () {
         // scroll-up and scroll-down are not cleared.
 
         // Still there...
-        await utils.timeout(custom_timeout / 2);
+        await utils.timeout(1);
         expect(el.classList).toContain("scrolling-up");
         // Now gone
-        await utils.timeout(custom_timeout / 2 + 1);
+        await utils.timeout(custom_timeout + 1);
         expect(el.classList).not.toContain("scrolling-up");
 
         el.scrollTop = 100;
@@ -121,10 +121,10 @@ describe("pat-scroll-box", function () {
 
         // Test for clearing the scrolling classes after a scroll stop
         // Still there...
-        await utils.timeout(custom_timeout / 2);
+        await utils.timeout(1);
         expect(el.classList).toContain("scrolling-down");
         // Now gone
-        await utils.timeout(custom_timeout / 2 + 1);
+        await utils.timeout(custom_timeout + 1);
         expect(el.classList).not.toContain("scrolling-down");
     });
 });

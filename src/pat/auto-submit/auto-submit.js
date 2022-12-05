@@ -39,7 +39,7 @@ export default Base.extend({
         this.$el.on("pat-update", (e, data) => {
             // Refresh on some pat-update events.
             if (
-                (data?.pattern === "clone" && data?.action === "remove") ||
+                (data?.pattern === "clone" && data?.action === "removed") ||
                 data?.pattern === "sortable"
             ) {
                 // Directly submit when removing a clone or changing the sorting.

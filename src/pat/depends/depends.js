@@ -99,13 +99,13 @@ export default Base.extend({
         } else if (this.$el.is("a")) {
             this.$el.off("click.patternDepends");
         }
-        if (this.$el.hasClass("pat-autosuggest")) {
-            this.$el.findInclusive("input.pat-autosuggest").trigger("pat-update", {
-                pattern: "depends",
-                enabled: true,
-            });
-        }
         this.$el.removeClass("disabled");
+        this.$el.trigger("pat-update", {
+            pattern: "depends",
+            action: "attribute-changed",
+            dom: this.$el[0],
+            enabled: true,
+        });
     },
 
     disable() {
@@ -114,13 +114,13 @@ export default Base.extend({
         } else if (this.$el.is("a")) {
             this.$el.on("click.patternDepends", (e) => e.preventDefault());
         }
-        if (this.$el.hasClass("pat-autosuggest")) {
-            this.$el.findInclusive("input.pat-autosuggest").trigger("pat-update", {
-                pattern: "depends",
-                enabled: false,
-            });
-        }
         this.$el.addClass("disabled");
+        this.$el.trigger("pat-update", {
+            pattern: "depends",
+            action: "attribute-changed",
+            dom: this.$el[0],
+            enabled: false,
+        });
     },
 
     onChange(event) {

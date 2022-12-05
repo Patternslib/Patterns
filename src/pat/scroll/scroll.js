@@ -90,8 +90,12 @@ export default Base.extend({
                         // if so, mark both the anchor and the target element
                         $target.addClass("current");
                         this.$el.addClass("current");
+                        this.$el.trigger("pat-update", {
+                            pattern: "scroll",
+                            action: "attribute-changed",
+                            dom: $target[0],
+                        });
                     }
-                    $(this.$el).trigger("pat-update", { pattern: "scroll" });
                 }
             }
         }

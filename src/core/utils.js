@@ -272,6 +272,8 @@ const hideOrShow = (nodes, visible, options, pattern_name) => {
         el.classList.add(visible ? "visible" : "hidden");
         $(el).trigger("pat-update", {
             pattern: pattern_name,
+            action: "attribute-changed",
+            dom: el,
             transition: "complete",
         });
     };
@@ -286,6 +288,8 @@ const hideOrShow = (nodes, visible, options, pattern_name) => {
             el.classList.add("in-progress");
             $(el).trigger("pat-update", {
                 pattern: pattern_name,
+                action: "attribute-changed",
+                dom: el,
                 transition: "start",
             });
             $(el)[visible ? t.show : t.hide]({

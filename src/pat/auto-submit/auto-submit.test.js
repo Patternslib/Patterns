@@ -96,7 +96,7 @@ describe("pat-autosubmit", function () {
             const el = document.querySelector(".pat-autosubmit");
             const instance = new Pattern(el);
             const spy = jest.spyOn(instance.$el, "submit");
-            $(el).trigger("pat-update", { pattern: "clone", action: "remove" });
+            $(el).trigger("pat-update", { pattern: "clone", action: "removed" });
             expect(spy).toHaveBeenCalled();
         });
 

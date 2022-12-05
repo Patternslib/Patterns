@@ -53,5 +53,28 @@ describe("pat-equaliser", function () {
             expect($container.find(".small").height()).toBe(100);
             expect($container.find(".large").height()).toBe(100);
         });
+
+        it("Triggers pat-update after equalisation.", function () {
+            document.body.innerHTML = `
+                <div class="pat-equaliser"
+                     data-pat-equaliser="transition: none">
+                    <div class="small"></div>
+                    <div class="large"></div>
+                </div>
+            `;
+
+            const $container = $(".pat-equaliser");
+
+            let data = null;
+            $container.on("pat-update", (e, d) => {
+                data = d;
+            });
+
+            pattern._update($container[0]);
+
+            expect(data.pattern).toBe("equaliser");
+            expect(data.action).toBe("attribute-changed");
+            expect(data.dom).toBe($container[0]);
+        });
     });
 });

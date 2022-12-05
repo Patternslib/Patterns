@@ -81,7 +81,11 @@ var equaliser = {
                 );
                 break;
         }
-        $container.trigger("pat-update", { pattern: "equaliser" });
+        $container.trigger("pat-update", {
+            pattern: "equaliser",
+            action: "attribute-changed",
+            dom: container,
+        });
     },
 
     _onEvent: function (event) {

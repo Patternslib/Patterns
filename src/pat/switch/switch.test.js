@@ -116,14 +116,15 @@ describe("pat-switch", function () {
 
         it("Send pat-update event", function () {
             document.body.innerHTML = "<div></div>";
+            const target = document.querySelector("body div");
             const instance = new pattern(document.createElement("div"));
             const spy_trigger = jest.spyOn($.fn, "trigger");
             instance._update("body div", null, "icon-alert");
-            expect(
-                document.querySelector("body div").classList.contains("icon-alert")
-            ).toBe(true);
+            expect(target.classList.contains("icon-alert")).toBe(true);
             expect(spy_trigger).toHaveBeenCalledWith("pat-update", {
                 pattern: "switch",
+                action: "attribute-changed",
+                dom: target,
             });
         });
     });

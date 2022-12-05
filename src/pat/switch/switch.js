@@ -98,7 +98,11 @@ export default Base.extend({
                 target.classList.add(add);
             }
 
-            $(target).trigger("pat-update", { pattern: "switch" });
+            $(target).trigger("pat-update", {
+                pattern: "switch",
+                action: "attribute-changed",
+                dom: target,
+            });
         }
     },
 });

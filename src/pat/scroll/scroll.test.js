@@ -220,4 +220,35 @@ describe("pat-scroll", function () {
         pat.options.selector = null; // Using href target
         expect(pat._get_selector_target()).toBe(el_3);
     });
+
+    it("triggers pat-update event.", async () => {
+        document.body.innerHTML = `
+            <a href="#el1" class="pat-scroll">scroll to</a>
+            <div id="el1" />
+        `;
+
+        const spy = jest
+            .spyOn(utils, "isElementInViewport")
+            .mockImplementation(() => true);
+
+        const el = document.querySelector(".pat-scroll");
+        const target = document.querySelector("#el1");
+
+        new pattern(el);
+
+        let data = null;
+        $(el).on("pat-update", (e, d) => {
+            data = d;
+        });
+
+        $(window).scroll();
+        await utils.timeout(50); // wait for debounce.
+
+        expect(data).not.toBeNull();
+        expect(data.pattern).toBe("scroll");
+        expect(data.action).toBe("attribute-changed");
+        expect(data.dom).toBe(target);
+
+        spy.mockRestore();
+    });
 });
