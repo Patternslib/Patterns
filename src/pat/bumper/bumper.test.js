@@ -58,7 +58,6 @@ describe("pat-bumper", function () {
             // Scroll to top-right, update getBoundingClientRect.
             Object.assign(el_bounds, { top: 0, right: 100, bottom: 80, left: 80 });
 
-            console.log("xxx", el.getBoundingClientRect());
             el.dispatchEvent(events.scroll_event());
             await utils.animation_frame();
 
