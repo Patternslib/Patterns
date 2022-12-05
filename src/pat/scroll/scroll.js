@@ -78,12 +78,10 @@ export default Base.extend({
             // this section is triggered when the scrolling is a result of the animate function
             // ie. automatic scrolling as opposed to the user manually scrolling
             this.$el.removeClass("pat-scroll-animated");
-        } else if (this.$el[0].nodeName === "A") {
-            const href = this.$el[0].href;
-            const fragment =
-                (href.indexOf("#") !== -1 && href.split("#").pop()) || undefined;
+        } else if (this.el.href) {
+            const fragment = this.el.href.split("#")?.[1];
             if (fragment) {
-                const $target = $("#" + fragment);
+                const $target = $(`#${fragment}`);
                 if ($target.length) {
                     if (
                         utils.isElementInViewport($target[0], true, this.options.offset)

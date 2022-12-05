@@ -195,10 +195,10 @@ describe("pat-scroll", function () {
 
     it("handles different selector options.", () => {
         document.body.innerHTML = `
-            <a href="#el3" class="pat-scroll" />
-            <div id="#el1" />
-            <div class=".el2 />
-            <div id="#el3" />
+            <a href="#el3" class="pat-scroll">scroll</a>
+            <div id="el1"></div>
+            <div class="el2"></div>
+            <div id="el3"></div>
         `;
 
         const el_pat = document.querySelector(".pat-scroll");
