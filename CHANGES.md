@@ -4,6 +4,90 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.8.0-alpha.0](https://github.com/Patternslib/patterns/compare/9.7.0...9.8.0-alpha.0) (2022-12-05)
+
+
+### Features
+
+
+* **core basepattern:** Provide the parser as static attribute. ([49db677](https://github.com/Patternslib/patterns/commit/49db6776199aea5860ab9074ddacb06869dbc705))This change is backwards compatible Change the parser attribute to a
+static attribute and provide it also on the object. This change was
+necessary because pat-inject was using the parser on a registered
+Pattern class to rebase URL configurations in the rebaseHTML method.
+There was no access to the parser attribute on non-instatiated objects
+before, now it is.
+
+* **pat-autosuggest:** Add a configurable separator for multiple values. ([21cbe8f](https://github.com/Patternslib/patterns/commit/21cbe8fd6d2dd142abacc752073f6e41e4d73058))
+
+
+### Bug Fixes
+
+
+* **pat-auto-suggest:** Adapt to changes from pat-depends where the event is called on the pat-depends element itself. ([926de33](https://github.com/Patternslib/patterns/commit/926de3383901bd9e7808d9ee05e4e56171c9c9aa))
+
+* **pat-autofocus:** Refocus on DOM updates by other Patterns. ([4dc2963](https://github.com/Patternslib/patterns/commit/4dc2963faca04c39caf9a1c2ac954045f1ff37db)), closes [#1092](https://github.com/Patternslib/patterns/issues/1092)Set the focus if appropriate when the DOM has changed and a pat-update
+event has thrown. Please note, this does not use an IntersectionObserver
+but relies on other Patterns using the pat-update event. This behavior
+got lost in Patternslib 6.1 and is now restored.Fixes: #1092
+
+* **pat-bumper:** Correctly set the bumpuing classes. ([e66b987](https://github.com/Patternslib/patterns/commit/e66b9872c796672a95e24d9557d2c028030b4c29)), closes [#1083](https://github.com/Patternslib/patterns/issues/1083)The bumping classes are now set correctly on any bumping direction.
+
+The logic is adapted to work with any top, right, bottom, left, margin, border
+and padding setting on a wrapping container, two different containers for x and
+y scrolling and on the window viewport as container.Fixes: #1083
+
+* **pat-scroll-box:** Fix failing tests due to timing inconsitencies. ([7a03ef8](https://github.com/Patternslib/patterns/commit/7a03ef8b9d129e1129dc09722b7bda158aff9534))
+
+
+### Maintenance
+
+
+* **core utils:** utils.hideOrShow: add updated dom to pat-update event data. ([0b5f92f](https://github.com/Patternslib/patterns/commit/0b5f92f5b42cd4b206443ffd01b21dd865c8b887))
+
+* **pat stacks:** Modernize code. ([7928880](https://github.com/Patternslib/patterns/commit/7928880b2a76c458789d123cc6b5f515c55996b5))
+
+* **pat-autofocus:** Switch to class based patterns. ([4302d6c](https://github.com/Patternslib/patterns/commit/4302d6c98de16394d593ef9785273fd37e1078b2))
+
+* **pat-bumper:** Correct documentation. ([fa0254c](https://github.com/Patternslib/patterns/commit/fa0254cc3ac7a5c6f820057c93668c2a638cc1b4))
+
+* **pat-bumper:** No IE11 support anymore. ([bae3f55](https://github.com/Patternslib/patterns/commit/bae3f55235847500cffda290108bc99ca786b1e0))
+
+* **pat-bumper:** Switch to class based patterns. ([2b04cbc](https://github.com/Patternslib/patterns/commit/2b04cbc832c8f3d219fb60e0616fd3b9f0d52f57))
+
+* **pat-clone-code:** Make parser attribute a static attribute. ([eb70b84](https://github.com/Patternslib/patterns/commit/eb70b84b1bfbd7516a387c17f12ebc29f1fac0d8))
+
+* **pat-clone:** Add updated dom to pat-update event data. ([18375fe](https://github.com/Patternslib/patterns/commit/18375fe6732e38740e5a7546852e20f784d60f51)), closes [#1092](https://github.com/Patternslib/patterns/issues/1092)Related: #1092
+
+* **pat-clone:** Modernize code. ([f0d8d5b](https://github.com/Patternslib/patterns/commit/f0d8d5b5e3048c295d7a69bb40235f274e15d7a6))
+
+* **pat-collapsible:** Add updated dom to pat-update event data. ([fde478c](https://github.com/Patternslib/patterns/commit/fde478ccbc98e6c51998bd332d8d5880269459a0)), closes [#1092](https://github.com/Patternslib/patterns/issues/1092)Related: #1092
+
+* **pat-collapsible:** Modernize code. ([870f6dc](https://github.com/Patternslib/patterns/commit/870f6dcdbadd9f58a534bf8c9675ea047c34ab8a))
+
+* **pat-collapsible:** Switch to class based pattern. ([417b0d6](https://github.com/Patternslib/patterns/commit/417b0d6332ee9adb0c7f99407a7dc5d9e7998f45))
+
+* **pat-depends:** Always throw update event and add changed dom structure. ([6152afd](https://github.com/Patternslib/patterns/commit/6152afd289f837d036edfb9947059217974696bb)), closes [#1092](https://github.com/Patternslib/patterns/issues/1092)Trigger pat-update on pat-depends itself and add updated dom structure to pat-update event data.
+This allows other patterns to also listen to changes in pat-depends.
+Goes together with the previous change on pat-autofocus.Related: #1092
+
+* **pat-equaliser:** Add updated dom to pat-update event data. ([c66a431](https://github.com/Patternslib/patterns/commit/c66a43124d76f501bfdeb2ee09bcd39c5f2d550d))
+
+* **pat-scroll:** Add updated dom to pat-update event data. ([fc23966](https://github.com/Patternslib/patterns/commit/fc23966c8415d7d6e6fe31ae7ecb78bb7d2f8c65))
+
+* **pat-scroll:** Code cleanup. ([4f27b99](https://github.com/Patternslib/patterns/commit/4f27b99a34d982a203f889ff157ebd0e9d7addb2))
+
+* **pat-scroll:** Fix test markup. ([9b788a0](https://github.com/Patternslib/patterns/commit/9b788a0c19cce9592691ce7446b35ef1d4cd3c87))
+
+* **pat-sortable:** Add updated dom to pat-update event data. ([18711eb](https://github.com/Patternslib/patterns/commit/18711eb95a85152aea8eff7ba708117bee71d658))
+
+* **pat-stacks:** Add updated dom to pat-update event data. ([41f8bb3](https://github.com/Patternslib/patterns/commit/41f8bb354b212ce560c279ae0724ae2f37501c04))
+
+* **pat-stacks:** Switch to class based pattern. ([6065eae](https://github.com/Patternslib/patterns/commit/6065eae3db68a62f7f1c7326ba87320e86236c41))
+
+* **pat-switch:** Add updated dom to pat-update event data. ([7434236](https://github.com/Patternslib/patterns/commit/7434236c7ea51aafc04dfeaaa08bd9fb1e2f2ed8))
+
+* **pat-toggle:** Add updated dom to pat-update event data. ([56a0073](https://github.com/Patternslib/patterns/commit/56a00730461c7d9481f9862afc2a009fb75ac0ae))
+
 ## [9.7.0](https://github.com/Patternslib/patterns/compare/9.7.0-alpha.5...9.7.0) (2022-11-15)
 
 
