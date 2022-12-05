@@ -1,14 +1,8 @@
-/**
- * Patterns bumper - Add bumping classes for sticky elements.
- */
-
-import Base from "../../core/base";
+import { BasePattern } from "@patternslib/patternslib/src/core/basepattern";
 import dom from "../../core/dom";
-import logging from "../../core/logging";
 import Parser from "../../core/parser";
+import registry from "@patternslib/patternslib/src/core/registry";
 import utils from "../../core/utils";
-
-const logger = logging.getLogger("tabs");
 
 export const parser = new Parser("bumper");
 parser.addArgument("selector");
@@ -17,20 +11,13 @@ parser.addArgument("bump-remove");
 parser.addArgument("unbump-add");
 parser.addArgument("unbump-remove", "bumped");
 
-export default Base.extend({
-    name: "bumper",
-    trigger: ".pat-bumper",
+class Pattern extends BasePattern {
+    static name = "bumper";
+    static trigger = ".pat-bumper";
+    static parser = parser;
 
     async init() {
         // Based on: https://davidwalsh.name/detect-sticky
-
-        if (!utils.checkCSSFeature("position", "sticky")) {
-            // IE11
-            logger.warn("No position sticky support.");
-            return;
-        }
-
-        this.options = parser.parse(this.el, this.options);
 
         this.target_element = this.options.selector
             ? document.querySelector(this.options.selector)
@@ -40,7 +27,7 @@ export default Base.extend({
         // e.g. CSS applied for injected content.
         await utils.timeout(1);
         this._init();
-    },
+    }
 
     _init() {
         const scroll_container_y = dom.find_scroll_container(
@@ -85,7 +72,7 @@ export default Base.extend({
             );
             observer_x.observe(this.el);
         }
-    },
+    }
 
     _intersection_observer_callback(entries) {
         const el = this.target_element;
@@ -143,5 +130,10 @@ export default Base.extend({
                 el.classList.remove("bumped-bottom");
             }
         }
-    },
-});
+    }
+}
+
+registry.register(Pattern);
+
+export default Pattern;
+export { Pattern };

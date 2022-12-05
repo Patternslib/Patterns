@@ -680,7 +680,6 @@ const date_diff = (date_1, date_2) => {
 };
 
 var utils = {
-    // pattern pimping - own module?
     jqueryPlugin: jqueryPlugin,
     escapeRegExp: escapeRegExp,
     isObject: isObject,

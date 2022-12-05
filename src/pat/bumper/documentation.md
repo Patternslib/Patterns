@@ -1,5 +1,7 @@
 ## Description
 
+Pumber Pattern - Add bumping classes for sticky elements.
+
 A bumper is an element that, when the user starts scrolling, stays within view when a viewport border touches it.
 
 ## Documentation
@@ -10,9 +12,14 @@ Below is a simple example of a bumper.
        Bumper content
     </div>
 
-When the user starts scrolling the page and the top edge of the above div reaches the top
-edge of the viewport, a `bumped` class will be added. For this to work the pattern
-will automatically set the `position` of the div to `relative`.
+When the user starts scrolling the page and the top edge of the above div
+reaches the top edge of the viewport, a `bumped` class and - depending on the
+bumping edges - `bumped-top`, `bumped-right`, `bumped-botton` or `bumped-left`
+classes will be added.
+
+It's up to you to style the element with the help of these classes. You might
+also want to set the element to `position: sticky`, so that it keeps it's
+position relative to the viewport while scrolling.
 
 ### Bumpers in scrolling containers
 
@@ -23,13 +30,10 @@ You can also put a bumper in a scrolling container. Here is an example:
       <p>...</p>
     </div>
 
-If the container has its overflow style set to `auto` or `scroll` and its
-contents do not fit in the available space the browser will automatically
-add scrollbars. The bumper pattern will detect this and _stick_ the bumped
-element so it is always visible in its container.
-
-To implement this the bumper pattern will set the `position` of both the
-bumper and its scrolling container to `relative`.
+If the container has its `overflow` style set to `auto` or `scroll` and its
+contents do not fit in the available space the browser will automatically add
+scrollbars. When the `pat-bumper` element touches any edge of the scrolling
+container the bumper classes will be added.
 
 ### Class specification
 
@@ -61,4 +65,3 @@ The available options are:
 | `bump-remove`   | _unset_       | CSS class(es) to removed when an element is bumped.                                                                       | String       |
 | `unbump-add`    | _unset_       | CSS class(es) to add when an element is no longer bumped.                                                                 | String       |
 | `unbump-remove` | `bumped`      | CSS class(es) to removed when an element is no longer bumped.                                                             | String       |
-| `side`          | `top`         | The side which should bump. A combination of `all top right bottom left`. `all` is equivalent to `top right bottom left`. | String       |
