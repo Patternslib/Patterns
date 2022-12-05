@@ -14,13 +14,12 @@
             right: 1em;
             border: 3px solid transparent;
           }
-
-          .bumper-1 {
+          #bumper-1 {
             padding: 0.5em;
             background: green;
             color: white;
           }
-          .bumper-2 {
+          #bumper-2 {
             padding: 0.5em;
             width: 100px;
             background: pink;
@@ -38,19 +37,26 @@
           .bumped-right {
               border-right: 3px solid blue;
           }
-          #spacer {
+          .spacer {
             width: 100px;
+          }
+          #scroll-to-examples {
+            display: block;
+            margin-bottom: 100vh;
           }
 
           body {
-            min-height: 200vh;
+            min-height: 300vh;
+            margin: 0;
+            padding: 20px;
           }
           .sticky_container {
               height: 200px;
               width: 200px;
               overflow: auto;
               border: 1px solid silver;
-              /*padding: 10px;*/
+              padding: 10px;
+              margin: 20px 0;
           }
           .sticky_container p {
             width: 600px;
@@ -58,9 +64,24 @@
         </style>
     </head>
     <body>
-        <div class="pat-bumper bumper-1">
+        <p>
+          <a class="pat-inject"
+             href="./index.html">
+             Reload via injection
+          </a>
+        </p>
+        <p>
+          <a id="scroll-to-examples"
+             class="pat-scroll"
+             href="#bumper-1">
+             Jump down to the examples
+          </a>
+        </p>
+
+        <div id="bumper-1" class="pat-bumper">
             This bar will stick to the top of the screen when you scroll.
         </div>
+
         <article class="sticky_container">
             <p>
                 Sed ut perspiciatis unde omnis iste natus error sit voluptatem
@@ -81,10 +102,10 @@
                 molestiae consequatur, vel illum qui dolorem eum fugiat quo
                 voluptas nulla pariatur?
             </p>
-            <div id="spacer">
+            <div class="spacer">
                 Making some space to the left
             </div>
-            <div class="pat-bumper bumper-2">
+            <div id="bumper-2" class="pat-bumper">
                 Sticky bar.
             </div>
             <p>
