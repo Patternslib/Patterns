@@ -4,6 +4,35 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.8.0-alpha.1](https://github.com/Patternslib/patterns/compare/9.8.0-alpha.0...9.8.0-alpha.1) (2022-12-06)
+
+
+### Bug Fixes
+
+
+* **pat-bumper:** Do not calculate padding/margin on viewport. ([baae37c](https://github.com/Patternslib/patterns/commit/baae37c1f287ec204146b4a99fb508f19234c223))On the viewport as scrolling container paddings and margins are not
+influencing the sticky element's position. This is contrary to other
+scrolling containers within the document. The position calculation is
+easier and only consists of the clientWidth/Height to respect scrollbar
+widths.
+
+* **pat-bumper:** Fix position calculation for sticky elements. ([4da8d70](https://github.com/Patternslib/patterns/commit/4da8d7023acb5b430d172bca3a226dad7a5f3b2e))Following the sticky position specification only top, right, bottom and
+left values are used to compute the position relative to the scrolling
+container.
+
+* **pat-bumper:** Support dynamic position values. ([b70fad2](https://github.com/Patternslib/patterns/commit/b70fad2c8e8662ef0af8a3e628ee154bd95beb7b))The container and element positions need to be calculated every time, as
+they are likely to be changed by dynamically assigned classes. This can
+be the case for different position values based on the scrolling
+direction classes set by pat-scroll-box.
+
+
+### Maintenance
+
+
+* **Build:** Upgrade dependencies. ([5e5b54d](https://github.com/Patternslib/patterns/commit/5e5b54d1cd40fe2069dd7b5ef38674dc0afb6988))
+
+* **pat-autofocus:** Fix sporadic autofocus test failures. ([9c13c56](https://github.com/Patternslib/patterns/commit/9c13c567f46677576664140d183c69982f48d3e8))
+
 ## [9.8.0-alpha.0](https://github.com/Patternslib/patterns/compare/9.7.0...9.8.0-alpha.0) (2022-12-05)
 
 
