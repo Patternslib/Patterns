@@ -31,44 +31,6 @@ class Pattern extends BasePattern {
         this.container_x = dom.find_scroll_container(parent_el, "x", null);
         this.container_y = dom.find_scroll_container(parent_el, "y", null);
 
-        // Viewport dimensions
-        this.dim_viewport = {
-            top: 0,
-            right: document.documentElement.clientWidth,
-            bottom: document.documentElement.clientHeight,
-            left: 0,
-        };
-
-        // Element dimensions
-        this.dim_element = {
-            top: dom.get_css_value(this.el, "top", true),
-            right: dom.get_css_value(this.el, "right", true),
-            bottom: dom.get_css_value(this.el, "bottom", true),
-            left: dom.get_css_value(this.el, "left", true),
-        };
-
-        this.dim_container_x = this.container_x
-            ? {
-                  border_top_width: dom.get_css_value(this.container_x, "border-top-width", true), // prettier-ignore
-                  border_left_width: dom.get_css_value(this.container_x, "border-left-width", true), // prettier-ignore
-                  padding_top: dom.get_css_value(this.container_x, "padding-top", true), // prettier-ignore
-                  padding_right: dom.get_css_value(this.container_x, "padding-right", true), // prettier-ignore
-                  padding_bottom: dom.get_css_value(this.container_x, "padding-bottom", true), // prettier-ignore
-                  padding_left: dom.get_css_value(this.container_x, "padding-left", true), // prettier-ignore
-              }
-            : {};
-
-        this.dim_container_y = this.container_y
-            ? {
-                  border_top_width: dom.get_css_value(this.container_y, "border-top-width", true), // prettier-ignore
-                  border_left_width: dom.get_css_value(this.container_y, "border-left-width", true), // prettier-ignore
-                  padding_top: dom.get_css_value(this.container_y, "padding-top", true), // prettier-ignore
-                  padding_right: dom.get_css_value(this.container_y, "padding-right", true), // prettier-ignore
-                  padding_bottom: dom.get_css_value(this.container_y, "padding-bottom", true), // prettier-ignore
-                  padding_left: dom.get_css_value(this.container_y, "padding-left", true), // prettier-ignore
-              }
-            : {};
-
         const containers = new Set([this.container_x, this.container_y]);
         for (const container of containers) {
             events.add_event_listener(
@@ -97,14 +59,29 @@ class Pattern extends BasePattern {
      *
      * @returns {Object} The position values.
      */
-    _get_container_positions(container, dimensions) {
+    _get_container_positions(container) {
         if (!container) {
-            // No container = document.body
-            return this.dim_viewport;
+            // No container = viewport as scrolling container
+            return {
+                top: 0,
+                right: document.documentElement.clientWidth,
+                bottom: document.documentElement.clientHeight,
+                left: 0,
+            };
         }
 
         // Bounds are dynamic, so we cannot cache them.
         const bounds = container.getBoundingClientRect();
+
+        // Container dimensions
+        const dimensions = {
+            border_top_width: dom.get_css_value(this.container_x, "border-top-width", true), // prettier-ignore
+            border_left_width: dom.get_css_value(this.container_x, "border-left-width", true), // prettier-ignore
+            padding_top: dom.get_css_value(this.container_x, "padding-top", true), // prettier-ignore
+            padding_right: dom.get_css_value(this.container_x, "padding-right", true), // prettier-ignore
+            padding_bottom: dom.get_css_value(this.container_x, "padding-bottom", true), // prettier-ignore
+            padding_left: dom.get_css_value(this.container_x, "padding-left", true), // prettier-ignore
+        };
 
         const left =
             bounds.left +
@@ -142,11 +119,20 @@ class Pattern extends BasePattern {
      */
     _get_element_positions() {
         const bounds = this.el.getBoundingClientRect();
+
+        // Element positions
+        const positions = {
+            top: dom.get_css_value(this.el, "top", true),
+            right: dom.get_css_value(this.el, "right", true),
+            bottom: dom.get_css_value(this.el, "bottom", true),
+            left: dom.get_css_value(this.el, "left", true),
+        };
+
         return {
-            top: Math.round(bounds.top - this.dim_element.top),
-            right: Math.round(bounds.right + this.dim_element.right),
-            bottom: Math.round(bounds.bottom + this.dim_element.bottom),
-            left: Math.round(bounds.left - this.dim_element.left),
+            top: Math.round(bounds.top - positions.top),
+            right: Math.round(bounds.right + positions.right),
+            bottom: Math.round(bounds.bottom + positions.bottom),
+            left: Math.round(bounds.left - positions.left),
         };
     }
 
@@ -157,8 +143,11 @@ class Pattern extends BasePattern {
      */
     get_bumping_state() {
         const pos_el = this._get_element_positions();
-        const pos_x = this._get_container_positions(this.container_x, this.dim_container_x); // prettier-ignore
-        const pos_y = this._get_container_positions(this.container_y, this.dim_container_y); // prettier-ignore
+        const pos_x = this._get_container_positions(this.container_x);
+        const pos_y =
+            this.container_x === this.container_y
+                ? pos_x
+                : this._get_container_positions(this.container_y);
 
         const bump_top = pos_el.top <= pos_y.top && pos_el.bottom >= pos_y.top;
         const bump_right = pos_el.right >= pos_x.right && pos_el.left <= pos_x.right;
