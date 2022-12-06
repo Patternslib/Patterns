@@ -16,7 +16,7 @@ parser.addArgument("effect-easing", "swing");
 class Pattern extends BasePattern {
     static name = "stacks";
     static trigger = ".pat-stacks";
-    parser = parser;
+    static parser = parser;
     document = document;
 
     init() {
