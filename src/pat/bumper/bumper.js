@@ -75,12 +75,12 @@ class Pattern extends BasePattern {
 
         // Container dimensions
         const dimensions = {
-            border_top_width: dom.get_css_value(this.container_x, "border-top-width", true), // prettier-ignore
-            border_left_width: dom.get_css_value(this.container_x, "border-left-width", true), // prettier-ignore
-            padding_top: dom.get_css_value(this.container_x, "padding-top", true), // prettier-ignore
-            padding_right: dom.get_css_value(this.container_x, "padding-right", true), // prettier-ignore
-            padding_bottom: dom.get_css_value(this.container_x, "padding-bottom", true), // prettier-ignore
-            padding_left: dom.get_css_value(this.container_x, "padding-left", true), // prettier-ignore
+            border_top_width: dom.get_css_value(container, "border-top-width", true),
+            border_left_width: dom.get_css_value(container, "border-left-width", true),
+            padding_top: dom.get_css_value(container, "padding-top", true),
+            padding_right: dom.get_css_value(container, "padding-right", true),
+            padding_bottom: dom.get_css_value(container, "padding-bottom", true),
+            padding_left: dom.get_css_value(container, "padding-left", true),
         };
 
         const left =
