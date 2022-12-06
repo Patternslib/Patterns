@@ -11,7 +11,7 @@ parser.addArgument("features", null, ["line-highlight", "line-numbers"], true);
 class Pattern extends BasePattern {
     static name = "syntax-highlight";
     static trigger = ".pat-syntax-highlight";
-    parser = parser;
+    static parser = parser;
 
     async init() {
         let _el = this.el;
