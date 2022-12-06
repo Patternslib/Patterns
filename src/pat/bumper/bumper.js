@@ -33,23 +33,11 @@ class Pattern extends BasePattern {
 
         // Viewport dimensions
         this.dim_viewport = {
-            top:
-                0 +
-                dom.get_css_value(document.body, "margin-top", true) +
-                dom.get_css_value(document.body, "padding-top", true),
-            left:
-                0 +
-                dom.get_css_value(document.body, "margin-left", true) +
-                dom.get_css_value(document.body, "padding-left", true),
+            top: 0,
+            right: document.documentElement.clientWidth,
+            bottom: document.documentElement.clientHeight,
+            left: 0,
         };
-        this.dim_viewport.right =
-            document.documentElement.clientWidth -
-            dom.get_css_value(document.body, "margin-right", true) -
-            dom.get_css_value(document.body, "padding-right", true);
-        this.dim_viewport.bottom =
-            document.documentElement.clientHeight -
-            dom.get_css_value(document.body, "margin-bottom", true) -
-            dom.get_css_value(document.body, "padding-bottom", true);
 
         this.dim_element = {
             top: dom.get_css_value(this.el, "top", true),
