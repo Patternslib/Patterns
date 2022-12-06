@@ -69,7 +69,7 @@ class BasePattern {
         }, 0);
     }
 
-    init() {
+    async init() {
         // Extend this method in your pattern.
     }
 

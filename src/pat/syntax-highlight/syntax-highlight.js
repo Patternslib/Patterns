@@ -11,7 +11,7 @@ parser.addArgument("features", null, ["line-highlight", "line-numbers"], true);
 class Pattern extends BasePattern {
     static name = "syntax-highlight";
     static trigger = ".pat-syntax-highlight";
-    parser = parser;
+    static parser = parser;
 
     async init() {
         let _el = this.el;
@@ -34,7 +34,7 @@ class Pattern extends BasePattern {
         }
 
         import(`highlight.js/styles/${theme}.css`);
-        const hljs = (await import("highlight.js")).default;
+        const hljs = (await import("highlight.js/lib/core")).default;
 
         // Get the language
         let language = [..._el.classList, ...this.el.classList]
@@ -71,7 +71,7 @@ class Pattern extends BasePattern {
                 const hljs_language = (
                     await import(`highlight.js/lib/languages/${lang_file}`)
                 ).default;
-                hljs.registerLanguage("javascript", hljs_language);
+                hljs.registerLanguage(language, hljs_language);
                 high = hljs.highlight(value, { language: language }).value;
             } catch {
                 high = hljs.highlightAuto(value).value;

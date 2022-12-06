@@ -1,5 +1,5 @@
 import $ from "jquery";
-import Base from "../../core/base";
+import { BasePattern } from "../../core/basepattern";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import events from "../../core/events";
@@ -54,14 +54,15 @@ parser.addArgument("url", null);
 // onAfterUpdate
 // onDestroy
 
-export default Base.extend({
-    name: "tooltip",
-    trigger: ".pat-tooltip, .pat-tooltip-ng",
+class Pattern extends BasePattern {
+    static name = "tooltip";
+    static trigger = ".pat-tooltip, .pat-tooltip-ng";
+    static parser = parser;
 
-    tippy: null,
+    tippy = null;
 
-    active_class: "tooltip-active-hover",
-    inactive_class: "tooltip-inactive",
+    active_class = "tooltip-active-hover";
+    inactive_class = "tooltip-inactive";
 
     async init() {
         const el = this.el;
@@ -70,8 +71,6 @@ export default Base.extend({
             import("tippy.js/dist/tippy.css");
         }
         const Tippy = (await import("tippy.js")).default;
-
-        this.options = parser.parse(el, this.options);
         this.tippy_options = this.parseOptionsForTippy(this.options);
 
         const defaultProps = {
@@ -116,25 +115,25 @@ export default Base.extend({
             // Initially mark as inactive
             el.classList.add(this.inactive_class);
         }
-    },
+    }
 
     show() {
         // Show this tooltip
         // API method.
         this.tippy.show();
-    },
+    }
 
     async hide() {
         // Hide this tooltip
         await utils.timeout(1); // wait a tick for event being processed by other handlers.
         this.tippy.hide();
-    },
+    }
 
     destroy() {
         // Remove this tooltip
         // API method.
         this.tippy.destroy();
-    },
+    }
 
     parseOptionsForTippy(opts) {
         const placement = (pos) => {
@@ -253,12 +252,12 @@ export default Base.extend({
         }
 
         return tippy_options;
-    },
+    }
 
     _initialize_content() {
         // Initialize any other patterns.
         registry.scan(this.tippy.popper);
-    },
+    }
 
     async _onShow() {
         const tippy_classes = [];
@@ -322,7 +321,7 @@ export default Base.extend({
         ]);
 
         this._initialize_content();
-    },
+    }
 
     _onHide() {
         if (this.options.markInactive) {
@@ -338,7 +337,7 @@ export default Base.extend({
         if (this.options.source === "ajax") {
             this.tippy.setContent(document.createElement("progress"));
         }
-    },
+    }
 
     async _get_content(url = this.options.url) {
         let selector;
@@ -346,7 +345,7 @@ export default Base.extend({
         let content;
         if (url) {
             // Tooltip from remote page.
-            const handler = this._ajaxDataTypeHandlers[this.options.ajaxDataType];
+            const handler = this.data_type_handlers[this.options.ajaxDataType];
             try {
                 // TODO: use pat-inject, once it supports async
                 const response = await fetch(url, {
@@ -369,13 +368,13 @@ export default Base.extend({
             await utils.timeout(1); // Wait a tick before forceUpdate. Might fail due to unset popperInstance.
             this.tippy.popperInstance.forceUpdate(); // re-position tippy after content is known.
         }
-    },
+    }
 
     async get_content(url = this.options.url) {
         // API method: _get_content + _initialize_content
         await this._get_content(url);
         this._initialize_content();
-    },
+    }
 
     get_url_parts(href) {
         // Return the URL and a CSS ID selector.
@@ -392,9 +391,9 @@ export default Base.extend({
             url = `${url}?${query}`;
         }
         return { url, selector };
-    },
+    }
 
-    _ajaxDataTypeHandlers: {
+    static data_type_handlers = {
         html(text, url, selector) {
             let tmp = document.createElement("div");
             tmp.innerHTML = text;
@@ -405,14 +404,36 @@ export default Base.extend({
         },
 
         async markdown(text, url, selector) {
-            const pat_markdown = await import("../markdown/markdown");
-            const pat = pat_markdown.default.init($("<div/>"));
+            const Markdown = registry.patterns.markdown;
+            if (!Markdown) {
+                return text;
+            }
+
+            const instance = new Markdown($("<div/>"));
+            await events.await_pattern_init(instance);
+
             const cfg = { url };
             if (selector) {
                 cfg.source = selector;
             }
-            const ret = await pat.renderForInjection(cfg, text);
+
+            const ret = await instance.renderForInjection(cfg, text);
             return ret[0];
         },
-    },
-});
+    };
+
+    static register_type_handler(type, handler) {
+        Pattern.data_type_handlers[type] = handler;
+    }
+
+    constructor(...args) {
+        super(...args);
+
+        this.register_type_handler = this.constructor.register_type_handler;
+        this.data_type_handlers = this.constructor.data_type_handlers;
+    }
+}
+
+registry.register(Pattern);
+export default Pattern;
+export { Pattern };

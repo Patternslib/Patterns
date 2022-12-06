@@ -444,6 +444,20 @@ describe("core.dom tests", () => {
         });
     });
 
+    describe("is_input", () => {
+        it("checks, if an element is of type input or not.", (done) => {
+            expect(dom.is_input(document.createElement("input"))).toBe(true);
+            expect(dom.is_input(document.createElement("select"))).toBe(true);
+            expect(dom.is_input(document.createElement("textarea"))).toBe(true);
+            expect(dom.is_input(document.createElement("button"))).toBe(true);
+
+            expect(dom.is_input(document.createElement("form"))).toBe(false);
+            expect(dom.is_input(document.createElement("div"))).toBe(false);
+
+            done();
+        });
+    });
+
     describe("create_from_string", () => {
         it("Creates a DOM element from a string", (done) => {
             const res = dom.create_from_string(`

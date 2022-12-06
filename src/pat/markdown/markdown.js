@@ -1,50 +1,55 @@
 import $ from "jquery";
-import logging from "../../core/logging";
-import utils from "../../core/utils";
-import Base from "../../core/base";
+import { BasePattern } from "../../core/basepattern";
+import dom from "../../core/dom";
 import events from "../../core/events";
-import inject from "../inject/inject";
+import logging from "../../core/logging";
+import registry from "../../core/registry";
+import utils from "../../core/utils";
 
 const log = logging.getLogger("pat.markdown");
 const is_markdown_resource = /\.md$/;
 
-const Markdown = Base.extend({
-    name: "markdown",
-    trigger: ".pat-markdown",
+class Pattern extends BasePattern {
+    static name = "markdown";
+    static trigger = ".pat-markdown";
 
     async init() {
-        if (this.$el.is(this.trigger)) {
+        if (this.el.matches(this.trigger)) {
             /* This pattern can either be used standalone or as an enhancement
              * to pat-inject. The following only applies to standalone, when
-             * $el is explicitly configured with the pat-markdown trigger.
+             * the element is explicitly configured with the pat-markdown
+             * trigger.
              */
-            const source = this.$el.is(":input")
-                ? this.$el.val()
-                : this.$el[0].innerHTML;
-            let rendered = await this.render(source);
+            const source = dom.is_input(this.el) ? this.el.value : this.el.innerHTML;
+            const rendered = await this.render(source);
             this.el.replaceWith(...rendered);
         }
-    },
+    }
 
     async render(text) {
         const marked = (await import("marked")).marked;
         const DOMPurify = (await import("dompurify")).default;
-        const SyntaxHighlight = (await import("../syntax-highlight/syntax-highlight")).default; // prettier-ignore
 
         const wrapper = document.createElement("div");
         const parsed = DOMPurify.sanitize(marked.parse(text));
         wrapper.innerHTML = parsed;
-        for (const item of wrapper.querySelectorAll("pre > code")) {
-            const pre = item.parentElement;
-            pre.classList.add("pat-syntax-highlight");
-            // If the code block language was set in a fenced code block,
-            // marked has already set the language as a class on the code tag.
-            // pat-syntax-highlight will understand this.
-            new SyntaxHighlight(pre);
-            await events.await_event(pre, "init.syntax-highlight.patterns");
+
+        // If pat-syntax-highlight is available, highlight code blocks.
+        const SyntaxHighlight = registry.patterns["syntax-highlight"];
+        if (SyntaxHighlight) {
+            for (const item of wrapper.querySelectorAll("pre > code")) {
+                const pre = item.parentElement;
+                pre.classList.add("pat-syntax-highlight");
+                // If the code block language was set in a fenced code block,
+                // marked has already set the language as a class on the code tag.
+                // pat-syntax-highlight will understand this.
+                new SyntaxHighlight(pre);
+                await events.await_event(pre, "init.syntax-highlight.patterns");
+            }
         }
+
         return $(wrapper);
-    },
+    }
 
     async renderForInjection(cfg, data) {
         let header;
@@ -59,7 +64,7 @@ const Markdown = Base.extend({
         }
         const rendered = await this.render(source);
         return rendered.attr("data-src", cfg.source ? cfg.url + cfg.source : cfg.url);
-    },
+    }
 
     extractSection(text, header) {
         let pattern;
@@ -96,8 +101,8 @@ const Markdown = Base.extend({
             log.error("Failed to find section with known present header?");
         }
         return match !== null ? match[0] : null;
-    },
-});
+    }
+}
 
 $(document).ready(function () {
     $(document.body).on(
@@ -117,16 +122,26 @@ $(document).ready(function () {
     );
 });
 
-inject.registerTypeHandler("markdown", {
-    async sources(cfgs, data) {
-        return await Promise.all(
-            cfgs.map(async function (cfg) {
-                const pat = new Markdown(cfg.$target[0]);
-                const rendered = await pat.renderForInjection(cfg, data);
-                return rendered;
-            })
-        );
-    },
-});
+async function register_external_handlers() {
+    await utils.timeout(1);
 
-export default Markdown;
+    const inject = registry.patterns.inject;
+    if (inject) {
+        inject.registerTypeHandler("markdown", {
+            async sources(cfgs, data) {
+                return await Promise.all(
+                    cfgs.map(async function (cfg) {
+                        const pat = new Pattern(cfg.$target[0]);
+                        const rendered = await pat.renderForInjection(cfg, data);
+                        return rendered;
+                    })
+                );
+            },
+        });
+    }
+}
+register_external_handlers();
+
+registry.register(Pattern);
+export default Pattern;
+export { Pattern };
