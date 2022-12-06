@@ -36,7 +36,6 @@ class Pattern extends BasePattern {
     static name = "collapsible";
     static trigger = ".pat-collapsible";
     static parser = parser;
-    jquery_plugin = true;
 
     transitions = {
         "none": { closed: "hide", open: "show" },
