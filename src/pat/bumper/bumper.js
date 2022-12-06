@@ -39,15 +39,12 @@ class Pattern extends BasePattern {
             left: 0,
         };
 
+        // Element dimensions
         this.dim_element = {
             top: dom.get_css_value(this.el, "top", true),
             right: dom.get_css_value(this.el, "right", true),
             bottom: dom.get_css_value(this.el, "bottom", true),
             left: dom.get_css_value(this.el, "left", true),
-            margin_top: dom.get_css_value(this.el, "margin-top", true),
-            margin_bottom: dom.get_css_value(this.el, "margin-bottom", true),
-            margin_right: dom.get_css_value(this.el, "margin-right", true),
-            margin_left: dom.get_css_value(this.el, "margin-left", true),
         };
 
         this.dim_container_x = this.container_x
@@ -146,26 +143,10 @@ class Pattern extends BasePattern {
     _get_element_positions() {
         const bounds = this.el.getBoundingClientRect();
         return {
-            top: Math.round(
-                bounds.top -
-                this.dim_element.top -
-                this.dim_element.margin_top // prettier-ignore
-            ),
-            right: Math.round(
-                bounds.right +
-                this.dim_element.right +
-                this.dim_element.margin_right // prettier-ignore
-            ),
-            bottom: Math.round(
-                bounds.bottom +
-                this.dim_element.bottom +
-                this.dim_element.margin_bottom // prettier-ignore
-            ),
-            left: Math.round(
-                bounds.left -
-                this.dim_element.left -
-                this.dim_element.margin_left // prettier-ignore
-            ),
+            top: Math.round(bounds.top - this.dim_element.top),
+            right: Math.round(bounds.right + this.dim_element.right),
+            bottom: Math.round(bounds.bottom + this.dim_element.bottom),
+            left: Math.round(bounds.left - this.dim_element.left),
         };
     }
 
