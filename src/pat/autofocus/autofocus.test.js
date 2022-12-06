@@ -1,5 +1,6 @@
 import $ from "jquery";
 import "./autofocus";
+import events from "../../core/events";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 
@@ -120,8 +121,10 @@ describe("pat-autofocus", function () {
                 document.querySelector("input[name=i1]")
             );
 
-            document.querySelector("a.pat-inject").click();
-            await utils.timeout(2); // Wait for inject.
+            const el_inject = document.querySelector("a.pat-inject");
+            el_inject.click();
+            await events.await_event(el_inject, "pat-inject-success");
+            await utils.timeout(2); // Wait even more.
             await utils.timeout(100); // Wait for autofocus timeout.
 
             expect(document.activeElement).toBe(
