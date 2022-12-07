@@ -12,13 +12,10 @@
         "@fullcalendar/list": "^5.11.3",
         "@fullcalendar/luxon2": "^5.11.3",
         "@fullcalendar/timegrid": "^5.11.3",
-        "@juggle/resize-observer": "^3.4.0",
         "@stomp/stompjs": "^6.1.2",
         "dompurify": "^2.4.1",
-        "google-code-prettify": "^1.0.5",
         "highlight.js": "<11",
         "imagesloaded": "^4.1.4",
-        "intersection-observer": "^0.12.2",
         "jquery": "^3.6.1",
         "jquery-jcrop": "^0.9.13",
         "luxon": "2.4.0",
@@ -29,8 +26,6 @@
         "photoswipe": "^4.1.3",
         "pikaday": "^1.8.0",
         "prettier": "^2.8.0",
-        "prismjs": "^1.29.0",
-        "promise-polyfill": "^8.2.3",
         "screenfull": "^6.0.2",
         "select2": "^3.5.1",
         "showdown": "^2.1.0",
@@ -38,12 +33,10 @@
         "slick-carousel": "^1.8.1",
         "slides": "git+https://github.com/Patternslib/slides.git",
         "spectrum-colorpicker": "^1.8.0",
-        "tippy.js": "^6.3.7",
-        "url-polyfill": "^1.1.9",
-        "whatwg-fetch": "^3.4.0"
+        "tippy.js": "^6.3.7"
     },
     "devDependencies": {
-        "@patternslib/dev": "^3.1.5",
+        "@patternslib/dev": "^3.1.6",
         "@patternslib/pat-content-mirror": "^3.0.0",
         "@patternslib/pat-doclock": "^3.0.0",
         "@patternslib/pat-shopping-cart": "^3.0.0",
@@ -71,7 +64,6 @@
     },
     "browserslist": [
         ">0.2%",
-        "ie >= 11",
         "not dead"
     ],
     "author": {
