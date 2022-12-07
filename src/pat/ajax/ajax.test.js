@@ -27,10 +27,6 @@ describe("pat-ajax", function () {
         });
     });
 
-    //
-    // ATTENTION: These might fail on IE8 due to different code
-    // path in jquery.form that does not use $.ajax
-    //
     describe("form", function () {
         var $form, $button, spy_ajax;
 

@@ -57,28 +57,10 @@ var _ = {
             }
         }
         if (isText || isNumber) {
-            if ("oninput" in window) {
-                $el.on("input." + namespace, function () {
-                    log.debug("translating input");
-                    $el.trigger("input-change");
-                });
-            } else {
-                // this is the legacy code path for IE8
-                // Work around buggy placeholder polyfill.
-                if ($el.attr("placeholder")) {
-                    $el.on("keyup." + namespace, function () {
-                        log.debug("translating keyup");
-                        $el.trigger("input-change");
-                    });
-                } else {
-                    $el.on("propertychange." + namespace, function (ev) {
-                        if (ev.originalEvent.propertyName === "value") {
-                            log.debug("translating propertychange");
-                            $el.trigger("input-change");
-                        }
-                    });
-                }
-            }
+            $el.on("input." + namespace, function () {
+                log.debug("translating input");
+                $el.trigger("input-change");
+            });
         } else {
             $el.on("change." + namespace, function () {
                 log.debug("translating change");

@@ -49,9 +49,6 @@ export default Base.extend({
     },
 
     addHandles: function () {
-        /* Add handles and make them draggable for HTML5 and IE8/9
-         * it has to be an "a" tag (or img) to make it draggable in IE8/9
-         */
         var $sortables_without_handles = this.$sortables.filter(function () {
             return $(this).find(".sortable-handle").length === 0;
         });
