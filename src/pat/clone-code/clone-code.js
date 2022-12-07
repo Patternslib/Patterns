@@ -1,6 +1,4 @@
 import { BasePattern } from "../../core/basepattern";
-import code_wrapper_template from "./templates/code-wrapper.html";
-import dom from "../../core/dom";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
@@ -63,16 +61,23 @@ class Pattern extends BasePattern {
             });
         }
 
-        markup = utils.escape_html(markup);
-        const pre_code_markup = dom.template(code_wrapper_template, { markup: markup });
-
         // Now we need to wrap the contents in any case in a div.
         tmp_wrapper = document.createElement("div");
-        tmp_wrapper.innerHTML = pre_code_markup;
+        tmp_wrapper.innerHTML = this.wrapper_template(utils.escape_html(markup));
         const pre_code_el = tmp_wrapper.children[0];
 
         this.el.appendChild(pre_code_el);
         registry.scan(pre_code_el);
+    }
+
+    wrapper_template(markup) {
+        return `
+<pre class="pat-syntax-highlight">
+  <code class="language-html">
+${markup}
+  </code>
+</pre>
+        `;
     }
 }
 
