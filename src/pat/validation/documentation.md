@@ -79,5 +79,3 @@ Error messages can also be overridden on a per-field basis, for example:
 | message-required | The error message for required fields.                                                                                     | This field is required.                              | String                                 |
 | not-after        | Field-specific. A lower time limit restriction for date and datetime fields.                                               |                                                      | CSS Selector or a ISO8601 date string. |
 | not-before       | Field-specific. An upper time limit restriction for date and datetime fields.                                              |                                                      | CSS Selector or a ISO8601 date string. |
-| error-template   | The template to be used to render the error message.                                                                       | &lt;em class="validation warning message"&gt;${this.message}&lt;/em&gt; | String              |
-

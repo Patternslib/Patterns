@@ -11,14 +11,29 @@
     </head>
     <body>
 
-        <h1>Example - clone-code</h1>
+        <h1>Clone Code</h1>
 
-        <p class="clone-ignore">Demo on how to use pat-clone together with pat-syntax-highlight to show the source of any html snippet</p>
+        <h2>Example 1</h2>
+
+        <p class="clone-ignore">
+          Clone the next block and ignore this paragraph which has the `clone-ignore` class.
+        </p>
+
+        <div class="pat-clone-code">
+          <p>Hello.</p>
+        </div>
+
+        <h2>Example 2</h2>
+
+        <p class="clone-ignore">
+          Clone the whole HTML page but ignore this paragraph which has the `clone-ignore` class.
+        </p>
 
         <div class="pat-clone-code"
             data-pat-clone-code="source: html">
           <p>Test paragraph</p>
         </div>
+
 
     </body>
 </html>

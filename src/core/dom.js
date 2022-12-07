@@ -1,5 +1,8 @@
 /* Utilities for DOM traversal or navigation */
 import events from "./events";
+import logging from "./logging";
+
+const logger = logging.getLogger("core dom");
 
 const DATA_PREFIX = "__patternslib__data_prefix__";
 const DATA_STYLE_DISPLAY = "__patternslib__style__display";
@@ -309,6 +312,10 @@ const delete_data = (el, name) => {
 /**
  * Simple template engine, based on JS template literal
  *
+ * NOTE: This uses eval and would break if Content-Security-Policy does not
+ *       allow 'unsafe-eval'.
+ *       Because of this CSR problem the use of this method is not recommended.
+ *
  * Please note: You cannot pass a template literal as template_string.
  * JavaScript itself would try to expand it and would fail.
  *
@@ -323,6 +330,9 @@ const delete_data = (el, name) => {
  * @returns {String} - Returns the a string as template expanded with the template_variables.
  */
 const template = (template_string, template_variables = {}) => {
+    logger.warn(
+        "Using dom.template is not recommended due to a problem with Content-Security-Policy."
+    );
     return new Function("return `" + template_string + "`;").call(template_variables);
 };
 
