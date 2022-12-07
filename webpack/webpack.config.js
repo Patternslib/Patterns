@@ -5,6 +5,7 @@ const mf_config = require("@patternslib/dev/webpack/webpack.mf");
 const package_json = require("../package.json");
 const path = require("path");
 const webpack_config = require("@patternslib/dev/webpack/webpack.config").config;
+const modernizr_config = require("../.modernizrrc.js");
 
 module.exports = () => {
     let config = {
@@ -22,12 +23,14 @@ module.exports = () => {
 
     // Modernizr
     config.module.rules.push({
-        test: /\.modernizrrc\.js$/,
-        loader: "webpack-modernizr-loader",
+        test: path.resolve(__dirname, "../src/modernizr.js"),
+        use: [
+            {
+                loader: "val-loader",
+                options: modernizr_config,
+            },
+        ],
     });
-    config.resolve.alias = {
-        modernizr$: path.resolve(__dirname, "../.modernizrrc.js"),
-    };
 
     // Module federation
     config.plugins.push(
