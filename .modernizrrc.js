@@ -1,5 +1,7 @@
 module.exports = {
     "classPrefix": "",
+    "enableClasses": true,
+    "enableJSClass": true,
     "options": [
         "addTest",
         "atRule",
