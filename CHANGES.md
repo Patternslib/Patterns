@@ -4,6 +4,44 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.8.0-alpha.3](https://github.com/Patternslib/patterns/compare/9.8.0-alpha.2...9.8.0-alpha.3) (2022-12-07)
+
+
+### Bug Fixes
+
+
+* **pat-clone-code:** Fix a Content-Security-Policy problem. ([e38f987](https://github.com/Patternslib/patterns/commit/e38f987d968a641552079f4ffe9afbcf02663eeb))Do not use dom.template for the wrapper template to not get caught by
+the browser's Content-Security-Policy. If set, a unsafe-eval error would
+be thrown and the pattern refuse to run.
+
+
+### Breaking Changes
+
+
+* **pat-validation:** Remove error-template option. ([78c544b](https://github.com/Patternslib/patterns/commit/78c544b47267720b358246e717091789fe079d14))This is a breaking change.
+
+Due to a Content-Security-Policy problem with dom.template when
+unsafe-eval is not set - which you wouldn't set if possible - we had to
+remove the error-template parameter. Instead the template is now defined
+in a error_template method on the Patten class and can be customized by
+subclassing and extending the pat-validation pattern or by patching it
+via Pattern.prototype.
+
+
+### Maintenance
+
+
+* **Build:** Upgrade dependencies. ([fed2716](https://github.com/Patternslib/patterns/commit/fed27168ba605372de807c4af13fdb28e7e53437))
+
+* **core dom template:** Warn about using dom.template due to a CSR probmel. ([989fa9f](https://github.com/Patternslib/patterns/commit/989fa9fd9d1eb3c3b24df28a9fe529b8875689a9))Warn about a problem of dom.template with a Content-Security-Policy set.
+If a CSR rule is set then dom.template would break the code unless
+'unsafe-eval' is allowed (which you wouldn't normally allow when using a CSR).
+Therefore it is not recommended to use this template function.
+
+* **pat-clone-code:** Better example, correct documentation. ([028ba07](https://github.com/Patternslib/patterns/commit/028ba07ef89f118bc317ed7bcb11c58835e22568))
+
+* Remove IE related code paths. ([9de0d95](https://github.com/Patternslib/patterns/commit/9de0d9521511b2c037d9c290f153ae9745585693))
+
 ## [9.8.0-alpha.2](https://github.com/Patternslib/patterns/compare/9.8.0-alpha.1...9.8.0-alpha.2) (2022-12-07)
 
 
