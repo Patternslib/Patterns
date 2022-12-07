@@ -4,6 +4,93 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.8.0-alpha.2](https://github.com/Patternslib/patterns/compare/9.8.0-alpha.1...9.8.0-alpha.2) (2022-12-07)
+
+
+### Features
+
+
+* **Build:** Include the build in the npm package. ([544b589](https://github.com/Patternslib/patterns/commit/544b58993af72e02872efcb9564a54af60b64ba8))The compiled build is now included in npm packages by including the dist
+directory in .npmignore. To not increase the package size too much the
+JavaScript map files are not included. Now you can include Patternslib
+by using unpkg or jsDelivr like so:
+
+https://unpkg.com/@patternslib/patternslib@9.8.0-alpha.2/dist/bundle.min.js
+or
+https://cdn.jsdelivr.net/npm/@patternslib/patternslib@9.8.0-alpha.2/dist/bundle.min.js
+
+* **core dom:** Add is_input method. ([554e32e](https://github.com/Patternslib/patterns/commit/554e32e08b825e6799df47f23ac643349be2de5a))Add "is_input" to test if a element is of input type.
+This is basically the same as $(":input") from Sizzle/jQuery.
+
+* **pat-markdown:** Soft-depend on pat-syntax-highlight. ([cf0f6e3](https://github.com/Patternslib/patterns/commit/cf0f6e31d99eac3b4ee925f0ee3f0194c85c6b0b))Only highlight code blocks when the pattern is available.
+
+Not hard-depending and importing pat-syntax-highlight fixes a problem
+where only including pat-markup also included pat-syntax-highlight and
+it's big highlight.js library.
+
+This can reduce the generated bundle size significantly.
+
+* **pat-tooltip:** Soft-depend on pat-markdown. ([1f81238](https://github.com/Patternslib/patterns/commit/1f81238d7cb0e838dba4cbd085b7c0369623be0b))Only register the markdown data type handler when the pattern is available.
+
+Not hard-depending and importing pat-markdown fixes a problem where only
+including pat-tooltip also included pat-markdown and
+pat-syntax-highlight with it's big highlight.js library.
+
+This can reduce the generated bundle size significantly.
+
+
+### Bug Fixes
+
+
+* **pat-bumper:** Fix runtime error due to reference to wrong container. ([893d392](https://github.com/Patternslib/patterns/commit/893d392738be0b98d2e5b2cf19e89714dc92965c))
+
+* **pat-collapsible:** Class-based patterns cannot be jQuery plugins. ([eedcc47](https://github.com/Patternslib/patterns/commit/eedcc474130244cdb3a5944a910af60e69d707ba))
+
+* **pat-syntax-highlight:** Do not load all languages. ([c34d4a0](https://github.com/Patternslib/patterns/commit/c34d4a0e65739c4f00752fef77e98e8d8cdf74c1))Change the import so that no language is included by default.
+Instead import the languages dynamically.
+
+This reduces the download size when pat-syntaax-highlight is used
+significantly.
+
+* **pat-syntax-highlight:** Fix language registration. ([19bbb53](https://github.com/Patternslib/patterns/commit/19bbb53d11d46a9a183c64454930f70d603dca18))Fix a typo where all languages were registered as "javascript".
+
+
+### Maintenance
+
+
+* Add deprecation note for public_path. ([f6d8124](https://github.com/Patternslib/patterns/commit/f6d8124a84d744f217a8eec2d5b7b184d210439d))
+
+* **Build:** Remove the IE11 polyfills-loader. ([6eaddec](https://github.com/Patternslib/patterns/commit/6eaddecd4fa6dcdb0670ee4cc4e8658f7cad7b68))Clear out the polyfills-loader script but keep the module for backwards
+compatibility. No IE11 compatibility polyfills are included anymore as
+support for IE11 has recently really and finally dropped. The
+polyfills-loader.js file is still shipped but empty for compatibility
+with projects including the polyfills loader.
+
+* **Build:** Remove unused prismljs and google-code-prettify modules. ([ed808e5](https://github.com/Patternslib/patterns/commit/ed808e5cb4b6a1adbebf3609bf1ff65b69557561))
+
+* **Build:** Update browserslist setting. ([a29b9e8](https://github.com/Patternslib/patterns/commit/a29b9e8edcfd87326b5a9c18b35733ebf0afa58a))Explicitly remove ie11 from browserslist.
+It wasn't used due to the "not dead" setting anyways.
+
+* **Build:** Upgrade @patternslib/dev. ([ed8d13a](https://github.com/Patternslib/patterns/commit/ed8d13aaa3e696ff7534ae91ba79bab91376d8f4))
+
+* **Build:** Upgrade pat-tiptap to 4.7.0. ([ad0be10](https://github.com/Patternslib/patterns/commit/ad0be10f070b3a23057f957aad036eb97b594baf))
+
+* **core basepattern:** Avoid code linting problem. ([d2836bd](https://github.com/Patternslib/patterns/commit/d2836bdd0ec5dc63ca1a96711fd34d6d6efd5f1a))Avoid code linting problem and make clear the init method is/can be
+asynchronous.
+
+* **pat-markdown:** Improve registering the markdown handler for pat-inject. ([3f17e99](https://github.com/Patternslib/patterns/commit/3f17e9989de092da5b95480a6dd7334912933799))Wait a tick before registering the markdown type handler for pat-inject.
+
+With that there is no need for pat-inject to be imported before
+pat-markdown, as long as it is imported side by side with pat-markdown.
+
+* **pat-markdown:** Switch to class based pattern. ([c6dc8b0](https://github.com/Patternslib/patterns/commit/c6dc8b093f252d94b69a2e57812f9ca5b8070c30))
+
+* **pat-stacks:** The trigger should be a static property. ([4f0bb0f](https://github.com/Patternslib/patterns/commit/4f0bb0f0efa32975480c3d755a09dfe79390f8c9))
+
+* **pat-syntax-highlight:** The trigger should be a static property. ([e341681](https://github.com/Patternslib/patterns/commit/e341681c27575e99e5a6d1fb90277bf9d75b0046))
+
+* **pat-tooltip:** Switch to class based pattern. ([4fdb12a](https://github.com/Patternslib/patterns/commit/4fdb12a751e5fa798dcdc810f461383c334ee7fb))
+
 ## [9.8.0-alpha.1](https://github.com/Patternslib/patterns/compare/9.8.0-alpha.0...9.8.0-alpha.1) (2022-12-06)
 
 
