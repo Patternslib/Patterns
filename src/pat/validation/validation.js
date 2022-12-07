@@ -26,15 +26,10 @@ parser.addArgument("not-before", null);
 parser.addArgument("equality", null);
 parser.addArgument("delay", 100); // Delay before validation is done to avoid validating while typing.
 
-// Template for the validation message
-parser.addArgument(
-    "error-template",
-    '<em class="validation warning message">${this.message}</em>'
-);
-
 // BBB
 // TODO: deprecated. Will be removed with next major version.
 parser.addAlias("message-integer", "message-number");
+parser.addArgument("error-template");
 
 const KEY_ERROR_EL = "__patternslib__input__error__el";
 const KEY_ERROR_MSG = "__patternslib__input__error__msg";
@@ -324,7 +319,7 @@ export default Base.extend({
             event.stopPropagation();
             event.stopImmediatePropagation();
         }
-        this.set_error_message(input, input_options);
+        this.set_error_message(input);
     },
 
     set_validity({ input, msg, attribute = null, min = null, max = null }) {
@@ -372,7 +367,7 @@ export default Base.extend({
         }
     },
 
-    set_error_message(input, options) {
+    set_error_message(input) {
         this.remove_error(input);
 
         // Do not set a error message for a input group like radio buttons or
@@ -385,10 +380,9 @@ export default Base.extend({
 
         // Create the validation error DOM node from the template
         const validation_message = input.validationMessage || input[KEY_ERROR_MSG];
-        const error_template = dom.template(options.errorTemplate, {
-            message: validation_message,
-        });
-        const error_node = dom.create_from_string(error_template).firstChild;
+        const error_node = dom.create_from_string(
+            this.error_template(validation_message)
+        ).firstChild;
 
         let fieldset;
         if (input.type === "radio" || input.type === "checkbox") {
@@ -422,5 +416,10 @@ export default Base.extend({
                 this.check_input({ input: _input, stop: true });
             }
         }
+    },
+
+    error_template(message) {
+        // Template for the validation message
+        return `<em class="validation warning message">${message}</em>`;
     },
 });

@@ -60,6 +60,8 @@ module.exports = () => {
 
     if (process.env.NODE_ENV === "development") {
         config.devServer.static.directory = path.resolve(__dirname, "../");
+        config.devServer.headers["Content-Security-Policy"] =
+            "default-src https: http: data: 'self' 'unsafe-inline'; script-src https: http: data: 'self' 'unsafe-inline';";
     }
 
     // Add an @patternslib/patternslib alias when building within this repository.
