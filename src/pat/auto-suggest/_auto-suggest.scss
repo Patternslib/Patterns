@@ -11,7 +11,6 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
     margin: 0;
     position: relative;
     display: inline-block;
-    /* inline-block for ie7 */
     zoom: 1;
     *display: inline;
     vertical-align: middle;
@@ -421,9 +420,6 @@ disabled look for disabled choices in the results dropdown
 }
 
 .select2-container-multi {
-    .select2-choices {
-        /*min-height: 26px;*/
-    }
     &.select2-container-active .select2-choices {
         border: 1px solid #5897fb;
         outline: none;
@@ -440,7 +436,6 @@ disabled look for disabled choices in the results dropdown
             padding: 0 0 0 0.5em;
             white-space: nowrap;
             height: 1.6em;
-            /*The following line is a patch to make IE8 show the actual input field that's within this LI element*/
             min-width: 200px;
             input {
                 padding: 0;

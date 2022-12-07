@@ -9,23 +9,13 @@ describe("Core / store", function () {
         it("localStorage accessor", function () {
             var storage = store.local("mypattern");
             expect(storage.prefix).toBe("mypattern");
-            try {
-                expect(storage.backend).toBe(window.localStorage);
-            } catch (e) {
-                // IE8 throws an exception if you try to do something as
-                // simple as window.localStorage===window.localStorage
-            }
+            expect(storage.backend).toBe(window.localStorage);
         });
 
         it("sessionStorage accessor", function () {
             var storage = store.session("mypattern");
             expect(storage.prefix).toBe("mypattern");
-            try {
-                expect(storage.backend).toBe(window.sessionStorage);
-            } catch (e) {
-                // IE8 throws an exception if you try to do something as
-                // simple as window.localStorage===window.localStorage
-            }
+            expect(storage.backend).toBe(window.sessionStorage);
         });
     });
 

@@ -416,25 +416,6 @@ const inject = {
         return $target;
     },
 
-    stopBubblingFromRemovedElement($el, cfgs, ev) {
-        /* IE8 fix. Stop event from propagating IF $el will be removed
-         * from the DOM. With pat-inject, often $el is the target that
-         * will itself be replaced with injected content.
-         *
-         * IE8 cannot handle events bubbling up from an element removed
-         * from the DOM.
-         *
-         * See: http://stackoverflow.com/questions/7114368/why-is-jquery-remove-throwing-attr-exception-in-ie8
-         */
-        for (const cfg of cfgs) {
-            const sel = cfg.target;
-            if ($el.parents(sel).addBack(sel) && !ev.isPropagationStopped()) {
-                ev.stopPropagation();
-                return;
-            }
-        }
-    },
-
     _performInjection(target, $el, $source, cfg, trigger, title) {
         /* Called after the XHR has succeeded and we have a new $source
          * element to inject.
@@ -443,13 +424,7 @@ const inject = {
             $source = $source.contents();
         }
         let $src;
-        // $source.clone() does not work with shived elements in IE8
-        if (document.all && document.querySelector && !document.addEventListener) {
-            $src = $source.map((idx, el) => $(el.outerHTML)[0]);
-        } else {
-            $src = $source.safeClone();
-        }
-
+        $src = $source.safeClone();
         $src.findInclusive("img").on("load", (e) => {
             $(e.currentTarget).trigger("pat-inject-content-loaded");
         });
@@ -491,7 +466,6 @@ const inject = {
          */
         $injected
             .filter((idx, el_) => {
-                // setting data on textnode fails in IE8
                 return el_.nodeType !== TEXT_NODE;
             })
             .data("pat-injected", { origin: cfg.url });
@@ -591,7 +565,6 @@ const inject = {
         $.each(cfgs[0].hooks || [], (idx, hook) =>
             $el.trigger("pat-inject-hook-" + hook)
         );
-        this.stopBubblingFromRemovedElement($el, cfgs, ev);
         const sources$ = await this.callTypeHandler(cfgs[0].dataType, "sources", $el, [
             cfgs,
             data,
@@ -972,15 +945,6 @@ const inject = {
                 }
             }
         }
-
-        // XXX: IE8 changes the order of attributes in html. The following
-        // lines move data-pat-inject-rebase-src to src.
-        $page.find("[data-pat-inject-rebase-src]").each((id, el_) => {
-            const $el = $(el_);
-            $el.attr("src", $el.attr("data-pat-inject-rebase-src")).removeAttr(
-                "data-pat-inject-rebase-src"
-            );
-        });
 
         return $page
             .html()

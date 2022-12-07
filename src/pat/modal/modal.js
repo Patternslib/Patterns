@@ -101,10 +101,7 @@ export default Base.extend({
 
         // Restore focus in case the active element was a child of $el and
         // the focus was lost during the wrapping.
-        // Only if we have an activeElement, as IE10/11 can have undefined as activeElement
-        if (document.activeElement) {
-            document.activeElement.focus();
-        }
+        document.activeElement?.focus();
 
         this._init_handlers();
         this.resize();
