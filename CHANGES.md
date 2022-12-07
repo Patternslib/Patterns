@@ -4,6 +4,16 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.8.0-beta.0](https://github.com/Patternslib/patterns/compare/9.8.0-alpha.3...9.8.0-beta.0) (2022-12-07)
+
+
+### Bug Fixes
+
+
+* **Build:** Fix tiptap error. ([6e67655](https://github.com/Patternslib/patterns/commit/6e676550550b3b68aab266fc41b3c61622b00321))Fix tiptap "Unhandled Promise Rejection" error due to multiple versions
+of a tiptap dependency installed. Removing yarn.lock in re-installing
+solves this.
+
 ## [9.8.0-alpha.3](https://github.com/Patternslib/patterns/compare/9.8.0-alpha.2...9.8.0-alpha.3) (2022-12-07)
 
 
