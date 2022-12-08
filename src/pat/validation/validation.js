@@ -53,7 +53,11 @@ class Pattern extends BasePattern {
                     logger.debug("Checking input for submit", input, e);
                     this.check_input({ input: input, event: e });
                 }
-            }
+            },
+            // Make sure this event handler is run early, in the capturing
+            // phase in order to be able to cancel later non-capturing submit
+            // events.
+            { capture: true }
         );
 
         this.initialize_inputs();
