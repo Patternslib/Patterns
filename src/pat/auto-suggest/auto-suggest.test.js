@@ -464,7 +464,8 @@ describe("pat-autosuggest", function () {
             const form = document.querySelector("form");
             const input = document.querySelector("input");
 
-            new pattern_validation(form);
+            const instance_validation = new pattern_validation(form);
+            await events.await_pattern_init(instance_validation);
             new pattern(input);
             await utils.timeout(1); // wait a tick for async to settle.
 
@@ -497,7 +498,8 @@ describe("pat-autosuggest", function () {
             const form = document.querySelector("form");
             const input = document.querySelector("input");
 
-            new pattern_validation(form);
+            const instance_validation = new pattern_validation(form);
+            await events.await_pattern_init(instance_validation);
             new pattern(input);
             await utils.timeout(1); // wait a tick for async to settle.
 

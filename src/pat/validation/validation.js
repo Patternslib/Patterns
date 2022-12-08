@@ -1,12 +1,13 @@
 // Patterns validate - Form vlidation
 import "../../core/polyfills"; // SubmitEvent.submitter for Safari < 15.4 and jsDOM
 import $ from "jquery";
-import Base from "../../core/base";
+import { BasePattern } from "../../core/basepattern";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
 import events from "../../core/events";
 import logging from "../../core/logging";
 import utils from "../../core/utils";
+import registry from "../../core/registry";
 
 const logger = logging.getLogger("pat-validation");
 //logger.setLevel(logging.Level.DEBUG);
@@ -34,12 +35,12 @@ parser.addArgument("error-template");
 const KEY_ERROR_EL = "__patternslib__input__error__el";
 const KEY_ERROR_MSG = "__patternslib__input__error__msg";
 
-export default Base.extend({
-    name: "validation",
-    trigger: "form.pat-validation",
+class Pattern extends BasePattern {
+    static name = "validation";
+    static trigger = "form.pat-validation";
+    static parser = parser;
 
     init() {
-        this.options = parser.parse(this.el, this.options);
         events.add_event_listener(
             this.el,
             "submit",
@@ -52,7 +53,11 @@ export default Base.extend({
                     logger.debug("Checking input for submit", input, e);
                     this.check_input({ input: input, event: e });
                 }
-            }
+            },
+            // Make sure this event handler is run early, in the capturing
+            // phase in order to be able to cancel later non-capturing submit
+            // events.
+            { capture: true }
         );
 
         this.initialize_inputs();
@@ -63,7 +68,7 @@ export default Base.extend({
         // Set ``novalidate`` attribute to disable the browser's validation
         // bubbles but not disable the validation API.
         this.el.setAttribute("novalidate", "");
-    },
+    }
 
     initialize_inputs() {
         this.inputs = [
@@ -99,7 +104,7 @@ export default Base.extend({
                 (e) => debouncer(e)
             );
         }
-    },
+    }
 
     check_input({ input, event, stop = false }) {
         if (input.disabled) {
@@ -320,7 +325,7 @@ export default Base.extend({
             event.stopImmediatePropagation();
         }
         this.set_error_message(input);
-    },
+    }
 
     set_validity({ input, msg, attribute = null, min = null, max = null }) {
         // Replace some variables, as like validate.js
@@ -340,7 +345,7 @@ export default Base.extend({
         // Hidden inputs do not participate in validation but we need this
         // (e.g. styled date input).
         input[KEY_ERROR_MSG] = msg;
-    },
+    }
 
     remove_error(input, all_of_group = false) {
         // Remove error message and related referencesfrom input.
@@ -365,7 +370,7 @@ export default Base.extend({
                 }
             }
         }
-    },
+    }
 
     set_error_message(input) {
         this.remove_error(input);
@@ -416,10 +421,15 @@ export default Base.extend({
                 this.check_input({ input: _input, stop: true });
             }
         }
-    },
+    }
 
     error_template(message) {
         // Template for the validation message
         return `<em class="validation warning message">${message}</em>`;
-    },
-});
+    }
+}
+
+registry.register(Pattern);
+
+export default Pattern;
+export { Pattern };
