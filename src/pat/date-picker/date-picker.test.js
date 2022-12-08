@@ -1,4 +1,5 @@
 import $ from "jquery";
+import events from "../../core/events";
 import pattern from "./date-picker";
 import pattern_auto_submit from "../auto-submit/auto-submit";
 import utils from "../../core/utils";
@@ -604,8 +605,9 @@ describe("pat-date-picker", function () {
         const el = document.querySelector("input[type=date]");
 
         const pattern_validation = (await import("../validation/validation")).default;
+        const instance_validation = new pattern_validation(form);
+        await events.await_pattern_init(instance_validation);
 
-        new pattern_validation(form);
         new pattern(el);
         await utils.timeout(1); // wait a tick for async to settle.
 

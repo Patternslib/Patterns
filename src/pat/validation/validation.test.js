@@ -27,8 +27,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=name]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.dispatchEvent(events.change_event());
         await utils.timeout(1); // wait a tick for async to settle.
@@ -45,8 +45,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=name]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.value = "";
         inp.dispatchEvent(events.change_event());
@@ -64,8 +64,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=name]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.value = "";
         inp.dispatchEvent(events.change_event());
@@ -91,8 +91,8 @@ describe("pat-validation", function () {
         const inp1 = el.querySelector("[name=name1]");
         const inp2 = el.querySelector("[name=name2]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp1.value = "";
         inp1.dispatchEvent(events.change_event());
@@ -114,8 +114,8 @@ describe("pat-validation", function () {
         const inp1 = el.querySelector("[name=name1]");
         const inp2 = el.querySelector("[name=name2]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp1.value = "";
         inp1.dispatchEvent(events.change_event());
@@ -147,8 +147,8 @@ describe("pat-validation", function () {
         const inp1 = el.querySelector("[name=name1]");
         const inp2 = el.querySelector("[name=name2]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp1.value = "";
         inp1.dispatchEvent(events.change_event());
@@ -170,8 +170,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=input]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.value = "";
         inp.dispatchEvent(events.change_event());
@@ -196,8 +196,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=input]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.value = 4.5;
         inp.dispatchEvent(events.change_event());
@@ -231,8 +231,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=name]");
 
-        new CustomValidation(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new CustomValidation(el);
+        await events.await_pattern_init(instance);
 
         inp.value = "";
         inp.dispatchEvent(events.change_event());
@@ -243,7 +243,7 @@ describe("pat-validation", function () {
         );
     });
 
-    it("1.10 - Adds a novalidate attribute to not show the browsers validation bubbles.", function () {
+    it("1.10 - Adds a novalidate attribute to not show the browsers validation bubbles.", async function () {
         // See: https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation#a_more_detailed_example
         // The ``novalidate`` attribute does not deactivate the validation API
         // but prevents the browser from showing validation messages by itself.
@@ -252,7 +252,8 @@ describe("pat-validation", function () {
           </form>
         `;
         const el = document.querySelector(".pat-validation");
-        new Pattern(el);
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         expect(el.hasAttribute("novalidate")).toBe(true);
     });
@@ -265,7 +266,8 @@ describe("pat-validation", function () {
           </form>
         `;
         const el = document.querySelector(".pat-validation");
-        new Pattern(el);
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         el.querySelector("button").click();
         await utils.timeout(1); // wait a tick for async to settle.
@@ -283,7 +285,8 @@ describe("pat-validation", function () {
           </form>
         `;
         const el = document.querySelector(".pat-validation");
-        new Pattern(el);
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         el.querySelector("button").click();
         await utils.timeout(1); // wait a tick for async to settle.
@@ -299,8 +302,8 @@ describe("pat-validation", function () {
           </form>
         `;
         const el = document.querySelector(".pat-validation");
-
-        new Pattern(el);
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         let submit_called = false;
         let click_called = false;
@@ -393,6 +396,7 @@ describe("pat-validation", function () {
 
         registry.scan(document.body);
         await utils.timeout(1); // wait a tick for async to settle.
+        await utils.timeout(1); // wait another tick
 
         el.querySelector("button").click();
         await utils.timeout(1); // wait a tick for async to settle.
@@ -424,6 +428,7 @@ describe("pat-validation", function () {
 
         registry.scan(document.body);
         await utils.timeout(1); // wait a tick for async to settle.
+        await utils.timeout(1); // wait another tick
 
         el.querySelector("button.submit").click();
         await utils.timeout(1); // wait a tick for async to settle.
@@ -448,8 +453,8 @@ describe("pat-validation", function () {
         `;
         const el = document.querySelector(".pat-validation");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         document.querySelector("button").click();
 
@@ -466,8 +471,8 @@ describe("pat-validation", function () {
         `;
         const el = document.querySelector(".pat-validation");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         document.querySelector("[name=i1]").dispatchEvent(events.blur_event());
         await utils.timeout(1); // wait a tick for async to settle.
@@ -484,8 +489,8 @@ describe("pat-validation", function () {
         `;
         const el = document.querySelector(".pat-validation");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         document.querySelector("[name=i1]").dispatchEvent(events.blur_event());
         await utils.timeout(1); // wait a tick for async to settle.
@@ -502,8 +507,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=name]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.dispatchEvent(events.change_event());
         await utils.timeout(1); // wait a tick for async to settle.
@@ -534,8 +539,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=name]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         el.dispatchEvent(events.submit_event());
         await utils.timeout(1); // wait a tick for async to settle.
@@ -559,8 +564,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=name]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.dispatchEvent(events.change_event());
         await utils.timeout(1); // wait a tick for async to settle.
@@ -579,8 +584,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=name]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.dispatchEvent(events.change_event());
         await utils.timeout(1); // wait a tick for async to settle.
@@ -602,8 +607,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=name]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.dispatchEvent(events.change_event());
         await utils.timeout(1); // wait a tick for async to settle.
@@ -623,8 +628,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=email]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.value = "invalid email";
         inp.dispatchEvent(events.change_event());
@@ -657,8 +662,8 @@ describe("pat-validation", function () {
         const inp_min = el.querySelector("[name=min]");
         const inp_max = el.querySelector("[name=max]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         // min
 
@@ -705,8 +710,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=testing]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.value = 4.5;
         inp.dispatchEvent(events.change_event());
@@ -731,8 +736,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=testing]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.value = 4.55;
         inp.dispatchEvent(events.change_event());
@@ -763,8 +768,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=testing]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         // Let's provoke an error first.
         inp.value = "";
@@ -799,8 +804,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=testing]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.value = 4.5;
         inp.dispatchEvent(events.change_event());
@@ -829,8 +834,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=testing]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.value = 4.5;
         inp.dispatchEvent(events.change_event());
@@ -864,8 +869,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=date]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.value = "2020-02-30";
         inp.dispatchEvent(events.change_event());
@@ -889,8 +894,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=date]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         // No error when left empty and not required.
         inp.value = "";
@@ -921,8 +926,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=date]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         // No error when left empty and not required.
         inp.value = "";
@@ -962,8 +967,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=date]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         // No error when left empty and not required.
         inp.value = "";
@@ -1006,8 +1011,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=date]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         // No error when left empty and not required.
         inp.value = "";
@@ -1064,8 +1069,8 @@ describe("pat-validation", function () {
         const inp1 = el.querySelector("[name=date1]");
         const inp2 = el.querySelector("[name=date2]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp1.value = "2010-10-10";
         inp2.value = "2001-01-01";
@@ -1105,8 +1110,8 @@ describe("pat-validation", function () {
         const inp1 = el.querySelector("[name=date1]");
         const inp2 = el.querySelector("[name=date2]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp1.value = "2010-10-10";
         inp2.value = "2001-01-01";
@@ -1150,8 +1155,8 @@ describe("pat-validation", function () {
         const inp_start = el.querySelector("[name=start]");
         const inp_end = el.querySelector("[name=end]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         // Before/after without required allows for empty dates of the
         // relation.
@@ -1230,8 +1235,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=date]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.value = "";
         inp.dispatchEvent(events.change_event());
@@ -1251,8 +1256,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=input]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.value = "";
         inp.dispatchEvent(events.change_event());
@@ -1290,8 +1295,8 @@ describe("pat-validation", function () {
         const inp_start = el.querySelector("[name=start]");
         const inp_end = el.querySelector("[name=end]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         // Before/after without required allows for empty dates of the
         // relation.
@@ -1364,8 +1369,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inp = el.querySelector("[name=date]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp.value = "2022-01-01";
         inp.dispatchEvent(events.change_event());
@@ -1388,8 +1393,8 @@ describe("pat-validation", function () {
         const el = document.querySelector(".pat-validation");
         const inps = el.querySelectorAll("[name=colour]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         el.dispatchEvent(events.submit_event());
         await utils.timeout(1); // wait a tick for async to settle.
@@ -1431,8 +1436,8 @@ describe("pat-validation", function () {
         const inp_p = el.querySelector("[name=password]");
         const inp_c = el.querySelector("[name=password-confirmation]");
 
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         inp_p.value = "foo";
         inp_c.value = "bar";
