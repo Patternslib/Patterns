@@ -117,7 +117,7 @@ describe("Basepattern class tests", function () {
         expect(pat3 instanceof Pat2).toBeTruthy();
     });
 
-    it("4 - The pattern instance is stored on the element itself.", async function () {
+    it("4.1 - The pattern instance is stored on the element itself.", async function () {
         class Pat extends BasePattern {
             static name = "example";
         }
@@ -127,6 +127,44 @@ describe("Basepattern class tests", function () {
         await utils.timeout(1);
 
         expect(el["pattern-example"]).toBe(pat);
+    });
+
+    it("4.2 - The same pattern cannot be instantiated on the same element twice.", async function () {
+        class Pat extends BasePattern {
+            static name = "example";
+        }
+
+        const el = document.createElement("div");
+        const pat = new Pat(el);
+        await utils.timeout(1);
+
+        expect(el["pattern-example"]).toBe(pat);
+
+        const pat2 = new Pat(el);
+        await utils.timeout(1);
+
+        expect(el["pattern-example"]).toBe(pat);
+        expect(el["pattern-example"]).not.toBe(pat2);
+    });
+
+    it("4.3 - The same pattern can be instantiated on the same element again, after the first was destroyed.", async function () {
+        class Pat extends BasePattern {
+            static name = "example";
+        }
+
+        const el = document.createElement("div");
+        const pat = new Pat(el);
+        await utils.timeout(1);
+
+        expect(el["pattern-example"]).toBe(pat);
+
+        pat.destroy();
+
+        const pat2 = new Pat(el);
+        await utils.timeout(1);
+
+        expect(el["pattern-example"]).not.toBe(pat);
+        expect(el["pattern-example"]).toBe(pat2);
     });
 
     it("5 - Registers with the registry.", async function () {
