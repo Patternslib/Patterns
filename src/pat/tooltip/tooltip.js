@@ -119,7 +119,6 @@ class Pattern extends BasePattern {
 
     show() {
         // Show this tooltip
-        // API method.
         this.tippy.show();
     }
 
@@ -131,7 +130,7 @@ class Pattern extends BasePattern {
 
     destroy() {
         // Remove this tooltip
-        // API method.
+        super.destroy(); // Unregister
         this.tippy.destroy();
     }
 

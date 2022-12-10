@@ -200,6 +200,48 @@ describe("pat-tooltip", () => {
                 spy_trigger.mockRestore();
             });
         });
+
+        it("1.4.1 - Cannot instantiated twice on the same element", async () => {
+            document.body.innerHTML = `
+                <a class="pat-tooltip"
+                    data-pat-tooltip="source: title"
+                    title="This is the title attribute"
+                >test</a>
+            `;
+            const el = document.querySelector(".pat-tooltip");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            expect(el["pattern-tooltip"]).toBe(instance);
+
+            const instance2 = new Pattern(el);
+            await utils.timeout(1); // await_pattern_init never fullfilled.
+
+            expect(el["pattern-tooltip"]).toBe(instance);
+            expect(el["pattern-tooltip"]).not.toBe(instance2);
+        });
+
+        it("1.4.2 - Can be instantiated again on the same element after the first was destroyed.", async () => {
+            document.body.innerHTML = `
+                <a class="pat-tooltip"
+                    data-pat-tooltip="source: title"
+                    title="This is the title attribute"
+                >test</a>
+            `;
+            const el = document.querySelector(".pat-tooltip");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            expect(el["pattern-tooltip"]).toBe(instance);
+
+            instance.destroy();
+
+            const instance2 = new Pattern(el);
+            await utils.timeout(1); // await_pattern_init never fullfilled.
+
+            expect(el["pattern-tooltip"]).not.toBe(instance);
+            expect(el["pattern-tooltip"]).toBe(instance2);
+        });
     });
 
     describe("2 - Tooltip closing behavior", () => {
