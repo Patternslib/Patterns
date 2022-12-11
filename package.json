@@ -67,8 +67,7 @@
         "node": ">=12.20.0"
     },
     "browserslist": [
-        ">0.2%",
-        "not dead"
+        "defaults"
     ],
     "author": {
         "name": "Patterns developers"
