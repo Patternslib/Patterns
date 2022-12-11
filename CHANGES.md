@@ -4,6 +4,61 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.8.0-beta.1](https://github.com/Patternslib/patterns/compare/9.8.0-beta.0...9.8.0-beta.1) (2022-12-11)
+
+
+### Features
+
+
+* **core basepattern:** Add a destroy method. ([f9ca65a](https://github.com/Patternslib/patterns/commit/f9ca65a1b56c8908dec7114d66dca963f5808357))The destroy method removes the pattern instance from the element.
+This is necessary to re-initialize the same pattern on the same element.
+
+* **core events:** Support await_pattern_init with pattern double registration attempt. ([e8640a9](https://github.com/Patternslib/patterns/commit/e8640a95d11f5e9c910860c5408fd47a898931d1))When a pattern is tried to be initialized on the same element twice,
+     throw an event and use that event in await_pattern_init to reject
+     the promise. When using await_pattern_init you might want to
+     try/catch the block to handle any possible double-registration
+     errors.
+
+* **core events:** Support once-events in add_event_listener. ([fc0e333](https://github.com/Patternslib/patterns/commit/fc0e3334bbbec9be6d539f1e17d18d07cbe79704))Add support for once-events in add_event_listener and unregister them
+when called from the event_listener_map.
+
+
+### Bug Fixes
+
+
+* **pat-tooltip:** Cleanup tooltip after it's destroyed. ([ac27e20](https://github.com/Patternslib/patterns/commit/ac27e20614cadc4715ecc1219d5c4cd1541d362d))When the tooltip is destroyed, also call the tooltip's BasePattern destroy
+method to clean up and release the tooltip from the element. After that
+it can be instantiated on the same element again.
+This change was necessary after the recent BasePattern change.
+
+* **pat-validation:** Make sure to cancel submit events on invalid forms. ([e218af2](https://github.com/Patternslib/patterns/commit/e218af2290af35c6d4dbea3ab3d3d843aeeb787b))Make sure that submit events are canceled on invalid forms by using a
+    capturing event handler which is invoked before non-capturing events.
+
+The previous commit exposed a problem with the submit event handling,
+    where the then non-capturing submit event handler was registered
+    later than the one from pat-inject because pat-validation's async
+    init method where pat-inject's init method is yet non-async. That
+    happened even the pat-validation's pattern initialization is
+    enforced to run first due to registration reordering in the Pattern
+    registry. Now with the capturing event handler this problem is
+    fixed.
+
+
+### Maintenance
+
+
+* **core basepattern:** Use identity instead equality comaprison instead in tests for stricter testing. ([ce962d2](https://github.com/Patternslib/patterns/commit/ce962d2d09b41ab39b746d0f9f432df81cc96e61))
+
+* Exclude more files from npm packages. ([c312b96](https://github.com/Patternslib/patterns/commit/c312b961520bbe8edd2b425157ded450e2d2144d))
+
+* Only include dist/ and src/ directories in the npm package. ([babc4b6](https://github.com/Patternslib/patterns/commit/babc4b6cf368fc3c6f863f16c5b2f6c620e3b672))
+
+* **pat-validation:** Change to class based pattern. ([11543ea](https://github.com/Patternslib/patterns/commit/11543ea97d944f13e53f2758fa0fd5267ea513af))This is needed for better customization in deriving projects.
+
+* Upgrade dependencies. ([399105f](https://github.com/Patternslib/patterns/commit/399105f44a88d0ff7761c9151eeb153c7cba27a9))
+
+* Use browserslist defaults. ([8867fd8](https://github.com/Patternslib/patterns/commit/8867fd84747fcf20df26a39538a7e6adaa450252))
+
 ## [9.8.0-beta.0](https://github.com/Patternslib/patterns/compare/9.8.0-alpha.3...9.8.0-beta.0) (2022-12-07)
 
 
