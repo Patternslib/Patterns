@@ -59,6 +59,10 @@
         "testwatch": "jest --watch",
         "watch": "BUILD_ENV=patternslib NODE_ENV=development webpack --config webpack/webpack.config.js --watch"
     },
+    "files": [
+        "/dist",
+        "/src"
+    ],
     "engines": {
         "node": ">=12.20.0"
     },
