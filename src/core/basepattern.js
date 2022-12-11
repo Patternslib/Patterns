@@ -8,7 +8,7 @@
  */
 import logging from "./logging";
 
-const log = logging.getLogger("Patternslib Base");
+const log = logging.getLogger("basepattern");
 
 class BasePattern {
     static name; // name of pattern used in Registry.
@@ -83,6 +83,13 @@ class BasePattern {
         this.el.addEventListener(`${event_name}.${this.name}.patterns`, event_callback, {
             once: true,
         });
+    }
+
+    /**
+     * Destroy/remove/unload the pattern from the element.
+     */
+    destroy() {
+        delete this.el[`pattern-${this.name}`];
     }
 }
 
