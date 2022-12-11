@@ -3,7 +3,7 @@
 // Event listener registration for easy-to-remove event listeners.
 // once Safari supports the ``signal`` option for addEventListener we can abort
 // event handlers by calling AbortController.abort().
-const event_listener_map = {};
+export const event_listener_map = {};
 
 /**
  * Add an event listener to a DOM element under a unique id.
@@ -22,11 +22,21 @@ const add_event_listener = (el, event_type, id, cb, opts = {}) => {
     }
     remove_event_listener(el, id); // do not register one listener twice.
 
+    // Create event_listener_map entry if not existent.
     if (!event_listener_map[el]) {
         event_listener_map[el] = {};
     }
-    event_listener_map[el][id] = [event_type, cb, opts.capture ? opts : undefined]; // prettier-ignore
-    el.addEventListener(event_type, cb, opts);
+    let _cb = cb;
+    if (opts?.once === true) {
+        // For `once` events, also remove the entry from the event_listener_map.
+        _cb = (e) => {
+            delete event_listener_map[el][id];
+            cb(e);
+        };
+    }
+    // Only `capture` option is necessary for `removeEventListener`.
+    event_listener_map[el][id] = [event_type, _cb, opts.capture ? opts : undefined];
+    el.addEventListener(event_type, _cb, opts);
 };
 
 /**
@@ -90,7 +100,29 @@ const await_event = (el, event_name) => {
  */
 const await_pattern_init = (pattern) => {
     // See: https://stackoverflow.com/a/44746691/1337474
-    return new Promise((resolve) => pattern.one("init", resolve));
+    return new Promise((resolve, reject) => {
+        // Case initialized
+        pattern.one("init", () => {
+            // Resolve promise and unregister the not-init event handler.
+            remove_event_listener(
+                pattern.el,
+                `basepattern-one--not-init.${pattern.name}.patterns`
+            );
+            resolve();
+        });
+
+        // Case not initialized
+        pattern.one("not-init", () => {
+            // Reject promise and unregister the init event handler.
+            remove_event_listener(
+                pattern.el,
+                `basepattern-one--init.${pattern.name}.patterns`
+            );
+            reject();
+        });
+    }).catch(() => {
+        throw new Error(`Pattern "${pattern.name}" not initialized.`);
+    });
 };
 
 /**

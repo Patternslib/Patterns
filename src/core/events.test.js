@@ -50,7 +50,22 @@ describe("core.events tests", () => {
             done();
         });
 
-        it("Awaits an event to happen", async () => {
+        it("Supports once-events and unregisters them from the event_listener_map", async () => {
+            const event_listener_map = (await import("./events")).event_listener_map;
+            const el = document.createElement("div");
+
+            // register the once-event handler
+            events.add_event_listener(el, "test", "test_once_event", () => {}, {
+                once: true,
+            });
+
+            expect(event_listener_map[el].test_once_event).toBeDefined();
+            el.dispatchEvent(new Event("test"));
+
+            expect(event_listener_map[el].test_once_event).not.toBeDefined();
+        });
+
+        it("Awaits an event to happen.", async () => {
             const el = document.createElement("div");
 
             window.setTimeout(() => {
@@ -63,7 +78,7 @@ describe("core.events tests", () => {
             expect(true).toBe(true);
         });
 
-        it("Awaits a pattern to be initialized", async () => {
+        it("Awaits a pattern to be initialized.", async () => {
             const pat = Base.extend({
                 name: "tmp",
                 trigger: ".pat-tmp",
@@ -79,7 +94,47 @@ describe("core.events tests", () => {
             expect(true).toBe(true);
         });
 
-        it("Awaits a class based pattern to be initialized", async () => {
+        it("Awaits a class based pattern to be initialized.", async () => {
+            class Pat extends BasePattern {
+                static name = "tmp";
+                static trigger = ".pat-tmp";
+                init() {}
+            }
+
+            const el = document.createElement("div");
+            const instance = new Pat(el);
+
+            await events.await_pattern_init(instance);
+
+            // If test reaches this expect statement, all is fine.
+            expect(true).toBe(true);
+
+            // The same pattern cannot be registered twice without destroying
+            // the first one. If the same pattern is initialized twice on the
+            // same element, a event is thrown.
+            const pat2 = new Pat(el);
+            try {
+                await events.await_pattern_init(pat2);
+            } catch (e) {
+                expect(e instanceof Error).toBe(true);
+                expect(e.message).toBe(`Pattern "tmp" not initialized.`);
+            }
+
+            // We can also use the catch method of the promise to handle that
+            // case.
+            const pat3 = new Pat(el);
+            await events.await_pattern_init(pat3).catch((e) => {
+                expect(e instanceof Error).toBe(true);
+                expect(e.message).toBe(`Pattern "tmp" not initialized.`);
+                return; // We need to return here.
+            });
+
+            // If test reaches this expect statement, the not-init event was
+            // catched.
+            expect(true).toBe(true);
+        });
+
+        it("Handles double-registration attempts by rejecting the await_pattern_init promise.", async () => {
             class Pat extends BasePattern {
                 static name = "tmp";
                 static trigger = ".pat-tmp";
