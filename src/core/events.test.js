@@ -50,6 +50,21 @@ describe("core.events tests", () => {
             done();
         });
 
+        it("Supports once-events and unregisters them from the event_listener_map", async () => {
+            const event_listener_map = (await import("./events")).event_listener_map;
+            const el = document.createElement("div");
+
+            // register the once-event handler
+            events.add_event_listener(el, "test", "test_once_event", () => {}, {
+                once: true,
+            });
+
+            expect(event_listener_map[el].test_once_event).toBeDefined();
+            el.dispatchEvent(new Event("test"));
+
+            expect(event_listener_map[el].test_once_event).not.toBeDefined();
+        });
+
         it("Awaits an event to happen", async () => {
             const el = document.createElement("div");
 
