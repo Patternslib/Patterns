@@ -22,10 +22,10 @@
         "marked": "^4.2.4",
         "masonry-layout": "^4.2.2",
         "moment": "^2.29.4",
-        "moment-timezone": "^0.5.39",
+        "moment-timezone": "^0.5.40",
         "photoswipe": "^4.1.3",
         "pikaday": "^1.8.0",
-        "prettier": "^2.8.0",
+        "prettier": "^2.8.1",
         "screenfull": "^6.0.2",
         "select2": "^3.5.1",
         "showdown": "^2.1.0",
@@ -36,7 +36,7 @@
         "tippy.js": "^6.3.7"
     },
     "devDependencies": {
-        "@patternslib/dev": "^3.1.6",
+        "@patternslib/dev": "^3.1.7",
         "@patternslib/pat-content-mirror": "^3.0.0",
         "@patternslib/pat-doclock": "^3.0.0",
         "@patternslib/pat-shopping-cart": "^3.0.0",
