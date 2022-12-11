@@ -1,39 +1,8 @@
-/**
- * Patterns logging - minimal logging framework
- *
- * Copyright 2012 Simplon B.V.
- */
+// Patterns logging - minimal logging framework
 
-// source: https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/bind
-if (!Function.prototype.bind) {
-    Function.prototype.bind = function (oThis) {
-        if (typeof this !== "function") {
-            // closest thing possible to the ECMAScript 5 internal IsCallable function
-            throw new TypeError(
-                "Function.prototype.bind - what is trying to be bound is not callable"
-            );
-        }
+let writer; // writer instance, used to output log entries
 
-        var aArgs = Array.prototype.slice.call(arguments, 1),
-            fToBind = this,
-            fNOP = function () {},
-            fBound = function () {
-                return fToBind.apply(
-                    this instanceof fNOP && oThis ? this : oThis,
-                    aArgs.concat(Array.prototype.slice.call(arguments))
-                );
-            };
-        fNOP.prototype = this.prototype;
-        fBound.prototype = new fNOP();
-
-        return fBound;
-    };
-}
-
-var root, // root logger instance
-    writer; // writer instance, used to output log entries
-
-var Level = {
+const Level = {
     DEBUG: 10,
     INFO: 20,
     WARN: 30,
@@ -45,103 +14,116 @@ function ConsoleWriter() {}
 
 ConsoleWriter.prototype = {
     output: function (log_name, level, messages) {
-        if (log_name) messages.unshift(log_name + ":");
+        if (log_name) {
+            messages.unshift(log_name + ":");
+        }
         if (level <= Level.DEBUG) {
             // console.debug exists but is deprecated
             messages.unshift("[DEBUG]");
             console.log.apply(console, messages);
-        } else if (level <= Level.INFO) console.info.apply(console, messages);
-        else if (level <= Level.WARN) console.warn.apply(console, messages);
-        else console.error.apply(console, messages);
+        } else if (level <= Level.INFO) {
+            console.info.apply(console, messages);
+        } else if (level <= Level.WARN) {
+            console.warn.apply(console, messages);
+        } else {
+            console.error.apply(console, messages);
+        }
     },
 };
 
-function Logger(name, parent) {
-    this._loggers = {};
-    this.name = name || "";
-    this._parent = parent || null;
-    if (!parent) {
-        this._enabled = true;
-        this._level = Level.WARN;
+class Logger {
+    constructor(name, parent) {
+        this._loggers = {};
+        this.name = name || "";
+        this._parent = parent || null;
+        if (!parent) {
+            this._enabled = true;
+            this._level = Level.WARN;
+        }
     }
-}
 
-Logger.prototype = {
-    getLogger: function (name) {
-        var path = name.split("."),
-            root = this,
-            route = this.name ? [this.name] : [];
+    getLogger(name) {
+        const path = name.split(".");
+        const route = this.name ? [this.name] : [];
+        let root = this;
         while (path.length) {
-            var entry = path.shift();
+            const entry = path.shift();
             route.push(entry);
-            if (!(entry in root._loggers))
+            if (!(entry in root._loggers)) {
                 root._loggers[entry] = new Logger(route.join("."), root);
+            }
             root = root._loggers[entry];
         }
         return root;
-    },
+    }
 
-    _getFlag: function (flag) {
-        var context = this;
+    _getFlag(flag) {
+        let context = this;
         flag = "_" + flag;
         while (context !== null) {
-            if (context[flag] !== undefined) return context[flag];
+            if (context[flag] !== undefined) {
+                return context[flag];
+            }
             context = context._parent;
         }
         return null;
-    },
+    }
 
-    setEnabled: function (state) {
+    setEnabled(state) {
         this._enabled = !!state;
-    },
+    }
 
-    isEnabled: function () {
+    isEnabled() {
         this._getFlag("enabled");
-    },
+    }
 
-    setLevel: function (level) {
-        if (typeof level === "number") this._level = level;
-        else if (typeof level === "string") {
+    setLevel(level) {
+        if (typeof level === "number") {
+            this._level = level;
+        } else if (typeof level === "string") {
             level = level.toUpperCase();
-            if (level in Level) this._level = Level[level];
+            if (level in Level) {
+                this._level = Level[level];
+            }
         }
-    },
+    }
 
-    getLevel: function () {
+    getLevel() {
         return this._getFlag("level");
-    },
+    }
 
-    log: function (level, messages) {
+    log(level, messages) {
         if (
             !messages.length ||
             !this._getFlag("enabled") ||
             level < this._getFlag("level")
-        )
+        ) {
             return;
+        }
         messages = Array.prototype.slice.call(messages);
         writer.output(this.name, level, messages);
-    },
+    }
 
-    debug: function () {
+    debug() {
         this.log(Level.DEBUG, arguments);
-    },
+    }
 
-    info: function () {
+    info() {
         this.log(Level.INFO, arguments);
-    },
+    }
 
-    warn: function () {
+    warn() {
         this.log(Level.WARN, arguments);
-    },
+    }
 
-    error: function () {
+    error() {
         this.log(Level.ERROR, arguments);
-    },
+    }
 
-    fatal: function () {
+    fatal() {
         this.log(Level.FATAL, arguments);
-    },
-};
+    }
+}
 
 function getWriter() {
     return writer;
@@ -153,17 +135,17 @@ function setWriter(w) {
 
 setWriter(new ConsoleWriter());
 
-root = new Logger();
+const root = new Logger(); // root logger instance
 
-var logconfig = /loglevel(|-[^=]+)=([^&]+)/g,
-    match;
-
-while ((match = logconfig.exec(window.location.search)) !== null) {
-    var logger = match[1] === "" ? root : root.getLogger(match[1].slice(1));
-    logger.setLevel(match[2].toUpperCase());
+const logconfig = /loglevel(|-[^=]+)=([^&]+)/g;
+const logconfig_match = logconfig.exec(window.location.search);
+while (logconfig_match !== null) {
+    const logger =
+        logconfig_match[1] === "" ? root : root.getLogger(logconfig_match[1].slice(1));
+    logger.setLevel(logconfig_match[2].toUpperCase());
 }
 
-var api = {
+const api = {
     Level: Level,
     getLogger: root.getLogger.bind(root),
     setEnabled: root.setEnabled.bind(root),
