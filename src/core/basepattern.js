@@ -6,6 +6,7 @@
  *
  * For usage, see basepattern.md
  */
+import events from "./events";
 import logging from "./logging";
 
 const log = logging.getLogger("basepattern");
@@ -46,6 +47,14 @@ class BasePattern {
             if (typeof this.el[`pattern-${this.name}`] !== "undefined") {
                 // Do not reinstantiate
                 log.debug(`Not reinstatiating the pattern ${this.name}.`, this.el);
+
+                // Notify that not instantiated
+                this.el.dispatchEvent(
+                    new Event(`not-init.${this.name}.patterns`, {
+                        bubbles: true,
+                        cancelable: false,
+                    })
+                );
                 return;
             }
 
@@ -80,9 +89,15 @@ class BasePattern {
      * @param {function} callback - Callback to call when the event is thrown.
      */
     one(event_name, event_callback) {
-        this.el.addEventListener(`${event_name}.${this.name}.patterns`, event_callback, {
-            once: true,
-        });
+        events.add_event_listener(
+            this.el,
+            `${event_name}.${this.name}.patterns`,
+            `basepattern-one--${event_name}.${this.name}.patterns`,
+            event_callback,
+            {
+                once: true,
+            }
+        );
     }
 
     /**

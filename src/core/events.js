@@ -100,7 +100,29 @@ const await_event = (el, event_name) => {
  */
 const await_pattern_init = (pattern) => {
     // See: https://stackoverflow.com/a/44746691/1337474
-    return new Promise((resolve) => pattern.one("init", resolve));
+    return new Promise((resolve, reject) => {
+        // Case initialized
+        pattern.one("init", () => {
+            // Resolve promise and unregister the not-init event handler.
+            remove_event_listener(
+                pattern.el,
+                `basepattern-one--not-init.${pattern.name}.patterns`
+            );
+            resolve();
+        });
+
+        // Case not initialized
+        pattern.one("not-init", () => {
+            // Reject promise and unregister the init event handler.
+            remove_event_listener(
+                pattern.el,
+                `basepattern-one--init.${pattern.name}.patterns`
+            );
+            reject();
+        });
+    }).catch(() => {
+        throw new Error(`Pattern "${pattern.name}" not initialized.`);
+    });
 };
 
 /**
