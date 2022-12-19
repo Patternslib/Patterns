@@ -5,12 +5,13 @@ const mf_config = require("@patternslib/dev/webpack/webpack.mf");
 const package_json = require("../package.json");
 const path = require("path");
 const webpack_config = require("@patternslib/dev/webpack/webpack.config").config;
+const FileMergeWebpackPlugin = require("./file_merge_webpack_plugin");
 
 module.exports = () => {
     let config = {
         entry: {
-            "bundle.min": path.resolve(__dirname, "../src/index.js"),
             "modernizr.min": path.resolve(__dirname, "../src/modernizr.js"),
+            "patternslib.min": path.resolve(__dirname, "../src/index.js"),
         },
     };
 
@@ -47,6 +48,17 @@ module.exports = () => {
                     version: package_json.dependencies["highlight.js"],
                 },
             },
+        })
+    );
+
+    // Merge bundles
+    config.plugins.push(
+        new FileMergeWebpackPlugin({
+            destination: path.resolve(__dirname, "../dist/bundle.min.js"),
+            removeSourceFiles: true,
+            files: Object.keys(config.entry).map((it) => {
+                return path.resolve(__dirname, `../dist/${it}.js`);
+            }),
         })
     );
 
