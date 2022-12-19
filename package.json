@@ -61,7 +61,8 @@
     },
     "files": [
         "/dist",
-        "/src"
+        "/src",
+        "/webpack"
     ],
     "engines": {
         "node": ">=12.20.0"
