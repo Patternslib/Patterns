@@ -5,6 +5,8 @@ const mf_config = require("@patternslib/dev/webpack/webpack.mf");
 const package_json = require("../package.json");
 const path = require("path");
 const webpack_config = require("@patternslib/dev/webpack/webpack.config").config;
+const modernizr_config = require("../.modernizrrc.js");
+const modernizr = require("modernizr");
 
 module.exports = () => {
     let config = {
@@ -19,15 +21,6 @@ module.exports = () => {
     });
 
     config.output.path = path.resolve(__dirname, "../dist/");
-
-    // Modernizr
-    config.module.rules.push({
-        test: /\.modernizrrc\.js$/,
-        loader: "webpack-modernizr-loader",
-    });
-    config.resolve.alias = {
-        modernizr$: path.resolve(__dirname, "../.modernizrrc.js"),
-    };
 
     // Module federation
     config.plugins.push(
@@ -49,14 +42,41 @@ module.exports = () => {
         })
     );
 
-    // BBB polyfills not used anymore.
-    // TODO: Remove for next major version.
-    // Polyfills
+    // Copy static files
     config.plugins.push(
-        // Copy polyfills loader to the output path.
         new CopyPlugin({
             patterns: [
-                { from: path.resolve(__dirname, "../src/polyfills-loader.js"), }, // prettier-ignore
+                // Copy polyfills loader to the output path.
+                // TODO: Polyfills not used anymore, remove for next major version.
+                { from: path.resolve(__dirname, "../src/polyfills-loader.js") },
+
+                // Build and copy Modernizr.
+                // We're abusing the CopyPlugin transform method here to build
+                // a Modernizr bundle using the modernizr config. The input
+                // file does not matter and could be anything - we're using the
+                // modernizr config itself.
+                // Why building modernizr here and not in the Makefile?
+                // Because we want webpack-dev-server also to serve it.
+                {
+                    from: path.resolve(__dirname, "../.modernizrrc.js"),
+                    to: "[path]modernizr.min.js",
+                    transform: {
+                        transformer: () => {
+                            return new Promise((resolve) => {
+                                modernizr.build(
+                                    {
+                                        ...modernizr_config,
+                                        minify: process.env.NODE_ENV === "production",
+                                    },
+                                    (result) => {
+                                        resolve(result);
+                                    }
+                                );
+                            });
+                        },
+                        cache: true,
+                    },
+                },
             ],
         })
     );

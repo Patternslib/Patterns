@@ -74,12 +74,4 @@ import "@patternslib/pat-upload";
 // Set to ``true`` to include core styles via JavaScript
 //window.__patternslib_import_styles = false;
 
-// Include modernizr per default.
-// Most of our styles depend on it.
-// You might want to disable it for your project by setting:
-// window.__patternslib_disable_modernizr = true;
-if (!window.__patternslib_disable_modernizr) {
-    import("modernizr");
-}
-
 registry.init();
