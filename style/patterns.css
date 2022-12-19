@@ -427,11 +427,11 @@ form fieldset.section {
     clear: both;
   }
   form fieldset.horizontal > label > input,
-form fieldset.horizontal > label > textarea,
-form fieldset.horizontal > label > select,
-form fieldset.horizontal > label > .composed,
-form fieldset.horizontal > label > .pat-message,
-form fieldset.horizontal > label > .message {
+  form fieldset.horizontal > label > textarea,
+  form fieldset.horizontal > label > select,
+  form fieldset.horizontal > label > .composed,
+  form fieldset.horizontal > label > .pat-message,
+  form fieldset.horizontal > label > .message {
     position: relative;
     vertical-align: top;
     max-width: 170%;
@@ -472,9 +472,9 @@ form fieldset.horizontal > label > .message {
     width: 170%;
   }
   form fieldset.horizontal fieldset.group,
-form fieldset.horizontal div.group,
-form fieldset.horizontal .help,
-form fieldset.horizontal .instruction {
+  form fieldset.horizontal div.group,
+  form fieldset.horizontal .help,
+  form fieldset.horizontal .instruction {
     width: 65%;
     clear: left;
     border-style: none;
@@ -485,9 +485,9 @@ form fieldset.horizontal .instruction {
     padding-top: 0;
   }
   form fieldset.horizontal fieldset.group legend,
-form fieldset.horizontal div.group legend,
-form fieldset.horizontal .help legend,
-form fieldset.horizontal .instruction legend {
+  form fieldset.horizontal div.group legend,
+  form fieldset.horizontal .help legend,
+  form fieldset.horizontal .instruction legend {
     position: absolute;
     left: 0;
     font-weight: normal;
@@ -495,9 +495,9 @@ form fieldset.horizontal .instruction legend {
     top: 0;
   }
   form fieldset.horizontal fieldset.group .legend,
-form fieldset.horizontal div.group .legend,
-form fieldset.horizontal .help .legend,
-form fieldset.horizontal .instruction .legend {
+  form fieldset.horizontal div.group .legend,
+  form fieldset.horizontal .help .legend,
+  form fieldset.horizontal .instruction .legend {
     width: 48%;
     display: inline;
     text-align: left;
@@ -511,9 +511,9 @@ form fieldset.horizontal .instruction .legend {
     letter-spacing: 0;
   }
   form fieldset.horizontal fieldset.group label,
-form fieldset.horizontal div.group label,
-form fieldset.horizontal .help label,
-form fieldset.horizontal .instruction label {
+  form fieldset.horizontal div.group label,
+  form fieldset.horizontal .help label,
+  form fieldset.horizontal .instruction label {
     font-weight: normal;
     font-style: normal;
     position: relative;
@@ -530,15 +530,15 @@ form fieldset.horizontal .instruction label {
     position: relative;
   }
   form fieldset.horizontal input,
-form fieldset.horizontal textarea,
-form fieldset.horizontal select {
+  form fieldset.horizontal textarea,
+  form fieldset.horizontal select {
     display: block;
     margin-top: 0.2em;
     width: 100%;
   }
   form fieldset.horizontal .legend,
-form fieldset.horizontal > label,
-form fieldset.horizontal .group > label {
+  form fieldset.horizontal > label,
+  form fieldset.horizontal .group > label {
     font-weight: bold;
     display: block;
     margin-bottom: 1em;
@@ -632,7 +632,6 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
   margin: 0;
   position: relative;
   display: inline-block;
-  /* inline-block for ie7 */
   zoom: 1;
   *display: inline;
   vertical-align: middle;
@@ -979,9 +978,6 @@ disabled look for disabled choices in the results dropdown
   padding: 3px 5px 3px 5px !important;
 }
 
-.select2-container-multi .select2-choices {
-  /*min-height: 26px;*/
-}
 .select2-container-multi.select2-container-active .select2-choices {
   border: 1px solid #5897fb;
   outline: none;
@@ -995,7 +991,6 @@ disabled look for disabled choices in the results dropdown
   padding: 0 0 0 0.5em;
   white-space: nowrap;
   height: 1.6em;
-  /*The following line is a patch to make IE8 show the actual input field that's within this LI element*/
   min-width: 200px;
 }
 .select2-container-multi .select2-choices .select2-search-field input {
@@ -1197,32 +1192,22 @@ disabled look for disabled choices in the results dropdown
 /* Retina-ize icons */
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 144dpi) {
   .select2-search input,
-.select2-search-choice-close {
+  .select2-search-choice-close {
     background-image: url("select2x2.png") !important;
     background-repeat: no-repeat !important;
     background-size: 60px 40px !important;
   }
-
   .select2-container .select2-choice abbr,
-.select2-container .select2-choice .select2-arrow b {
+  .select2-container .select2-choice .select2-arrow b {
     background-image: url("select2x2.png") !important;
     background-repeat: no-repeat !important;
     background-size: 60px 40px !important;
   }
-
   .select2-search input {
     background-position: 100% -21px !important;
   }
 }
 /* @end */
-.pat-bumper {
-  position: sticky;
-  top: -0.51em;
-  bottom: -0.51em;
-  left: -0.51em;
-  right: -0.51em;
-}
-
 /* Slider */
 .slick-slider {
   position: relative;
@@ -1832,11 +1817,9 @@ License: MIT
   .sp-color {
     right: 40%;
   }
-
   .sp-hue {
     left: 63%;
   }
-
   .sp-fill {
     padding-top: 60%;
   }
@@ -2895,13 +2878,12 @@ label.focus {
 @media (-webkit-min-device-pixel-ratio: 1.1), (min-resolution: 105dpi), (min-resolution: 1.1dppx) {
   /* Serve SVG sprite if browser supports SVG and resolution is more than 105dpi */
   .pswp--svg .pswp__button,
-.pswp--svg .pswp__button--arrow--left:before,
-.pswp--svg .pswp__button--arrow--right:before {
+  .pswp--svg .pswp__button--arrow--left:before,
+  .pswp--svg .pswp__button--arrow--right:before {
     background-image: url(/src/pat/gallery/default-skin.svg);
   }
-
   .pswp--svg .pswp__button--arrow--left,
-.pswp--svg .pswp__button--arrow--right {
+  .pswp--svg .pswp__button--arrow--right {
     background: none;
   }
 }
@@ -3608,176 +3590,144 @@ Copyright (c) 2012 Mark Hayes
     margin-left: 0;
     margin-right: 0;
   }
-
   /* The Grid --- */
   /*              */
   .row {
     width: auto;
     min-width: 0;
   }
-
   .column,
-.columns {
+  .columns {
     width: auto !important;
     float: none;
   }
-
   .column:last-child,
-.columns:last-child {
+  .columns:last-child {
     float: none;
   }
-
   [class*=column] + [class*=column]:last-child {
     float: none;
   }
-
   .column:before,
-.columns:before,
-.column:after,
-.columns:after {
+  .columns:before,
+  .column:after,
+  .columns:after {
     content: "";
     display: table;
   }
-
   .column:after,
-.columns:after {
+  .columns:after {
     clear: both;
   }
-
   .offset-by-one,
-.offset-by-two,
-.offset-by-three,
-.offset-by-four,
-.offset-by-five,
-.offset-by-six,
-.offset-by-seven,
-.offset-by-eight,
-.offset-by-nine,
-.offset-by-ten {
+  .offset-by-two,
+  .offset-by-three,
+  .offset-by-four,
+  .offset-by-five,
+  .offset-by-six,
+  .offset-by-seven,
+  .offset-by-eight,
+  .offset-by-nine,
+  .offset-by-ten {
     margin-left: 0 !important;
   }
-
   .push-two,
-.push-three,
-.push-four,
-.push-five,
-.push-six,
-.push-seven,
-.push-eight,
-.push-nine,
-.push-ten {
+  .push-three,
+  .push-four,
+  .push-five,
+  .push-six,
+  .push-seven,
+  .push-eight,
+  .push-nine,
+  .push-ten {
     left: auto;
   }
-
   .pull-two,
-.pull-three,
-.pull-four,
-.pull-five,
-.pull-six,
-.pull-seven,
-.pull-eight,
-.pull-nine,
-.pull-ten {
+  .pull-three,
+  .pull-four,
+  .pull-five,
+  .pull-six,
+  .pull-seven,
+  .pull-eight,
+  .pull-nine,
+  .pull-ten {
     right: auto;
   }
-
   /* Mobile 4-column Grid */
   .row .mobile-one {
     width: 25% !important;
     float: left;
     padding: 0 15px;
   }
-
   .row .mobile-one:last-child {
     float: right;
   }
-
   .row .mobile-one.end {
     float: left;
   }
-
   .row.collapse .mobile-one {
     padding: 0;
   }
-
   .row .mobile-two {
     width: 50% !important;
     float: left;
     padding: 0 15px;
   }
-
   .row .mobile-two:last-child {
     float: right;
   }
-
   .row .mobile-two.end {
     float: left;
   }
-
   .row.collapse .mobile-two {
     padding: 0;
   }
-
   .row .mobile-three {
     width: 75% !important;
     float: left;
     padding: 0 15px;
   }
-
   .row .mobile-three:last-child {
     float: right;
   }
-
   .row .mobile-three.end {
     float: left;
   }
-
   .row.collapse .mobile-three {
     padding: 0;
   }
-
   .row .mobile-four {
     width: 100% !important;
     float: left;
     padding: 0 15px;
   }
-
   .row .mobile-four:last-child {
     float: right;
   }
-
   .row .mobile-four.end {
     float: left;
   }
-
   .row.collapse .mobile-four {
     padding: 0;
   }
-
   .push-one-mobile {
     left: 25%;
   }
-
   .pull-one-mobile {
     right: 25%;
   }
-
   .push-two-mobile {
     left: 50%;
   }
-
   .pull-two-mobile {
     right: 50%;
   }
-
   .push-three-mobile {
     left: 75%;
   }
-
   .pull-three-mobile {
     right: 75%;
   }
-
   /* Block Grids --- */
   /*                 */
   .block-grid.mobile > li {
@@ -3785,103 +3735,78 @@ Copyright (c) 2012 Mark Hayes
     width: 100%;
     margin-left: 0;
   }
-
   .block-grid > li {
     clear: none;
   }
-
   .block-grid.mobile-one-up > li {
     width: 100%;
   }
-
   .block-grid.mobile-two-up > li {
     width: 50%;
   }
-
   .block-grid.mobile-two-up > li:nth-child(2n+1) {
     clear: both;
   }
-
   .block-grid.mobile-three-up > li {
     width: 33.33333%;
   }
-
   .block-grid.mobile-three-up > li:nth-child(3n+1) {
     clear: both;
   }
-
   .block-grid.mobile-four-up > li {
     width: 25%;
   }
-
   .block-grid.mobile-four-up > li:nth-child(4n+1) {
     clear: both;
   }
-
   .block-grid.mobile-five-up > li {
     width: 20%;
   }
-
   .block-grid.mobile-five-up > li:nth-child(5n+1) {
     clear: both;
   }
-
   .block-grid.mobile-six-up > li {
     width: 16.66667%;
   }
-
   .block-grid.mobile-six-up > li:nth-child(6n+1) {
     clear: both;
   }
-
   .block-grid.mobile-seven-up > li {
     width: 14.28571%;
   }
-
   .block-grid.mobile-seven-up > li:nth-child(7n+1) {
     clear: both;
   }
-
   .block-grid.mobile-eight-up > li {
     width: 12.5%;
   }
-
   .block-grid.mobile-eight-up > li:nth-child(8n+1) {
     clear: both;
   }
-
   .block-grid.mobile-nine-up > li {
     width: 11.11111%;
   }
-
   .block-grid.mobile-nine-up > li:nth-child(9n+1) {
     clear: both;
   }
-
   .block-grid.mobile-ten-up > li {
     width: 10%;
   }
-
   .block-grid.mobile-ten-up > li:nth-child(10n+1) {
     clear: both;
   }
-
   .block-grid.mobile-eleven-up > li {
     width: 9.09091%;
   }
-
   .block-grid.mobile-eleven-up > li:nth-child(11n+1) {
     clear: both;
   }
-
   .block-grid.mobile-twelve-up > li {
     width: 8.33333%;
   }
-
   .block-grid.mobile-twelve-up > li:nth-child(12n+1) {
     clear: both;
   }
-
   /* @group Tabs */
   .tabs.mobile {
     width: auto;
@@ -3890,16 +3815,14 @@ Copyright (c) 2012 Mark Hayes
     height: auto;
     margin: 20px -15px 0px -15px;
   }
-
   .tabs.mobile dt,
-.tabs.mobile li,
-.tabs.mobile dd {
+  .tabs.mobile li,
+  .tabs.mobile dd {
     float: none;
     height: auto;
   }
-
   .tabs.mobile dd a,
-.tabs.mobile li a {
+  .tabs.mobile li a {
     font-size: 15px;
     display: block;
     width: auto;
@@ -3914,9 +3837,8 @@ Copyright (c) 2012 Mark Hayes
     border-top: 1px solid #ccc;
     background: #fff;
   }
-
   .tabs.mobile dd a.active,
-.tabs.mobile li a.active {
+  .tabs.mobile li a.active {
     border: none;
     background: #2ba6cb;
     color: #fff;
@@ -3925,36 +3847,29 @@ Copyright (c) 2012 Mark Hayes
     top: 0;
     height: auto;
   }
-
   .tabs.mobile dd:first-child a.active,
-.tabs.mobile li:first-child a.active {
+  .tabs.mobile li:first-child a.active {
     margin: 0;
   }
-
   .tabs.mobile + .tabs-content.contained {
     margin-left: -15px;
     margin-right: -15px;
   }
-
   .tabs.mobile .section-title {
     padding-left: 20px !important;
   }
-
   .contained.mobile {
     margin-bottom: 0;
   }
-
   .contained.tabs.mobile dd a,
-.contained.tabs.mobile li a {
+  .contained.tabs.mobile li a {
     padding: 18px 20px;
   }
-
   .tabs.mobile + ul.contained {
     margin-left: -20px;
     margin-right: -20px;
     border-width: 0 0 1px 0;
   }
-
   /* @end */
 }
 .row {
@@ -4755,70 +4670,48 @@ li.mode-Blue {
 pre .str,
 code .str {
   color: #65b042;
-}
-
-/* string  - green */
+} /* string  - green */
 pre .kwd,
 code .kwd {
   color: #e28964;
-}
-
-/* keyword - dark pink */
+} /* keyword - dark pink */
 pre .com,
 code .com {
   color: lightblue;
   font-style: italic;
-}
-
-/* comment - gray */
+} /* comment - gray */
 pre .typ,
 code .typ {
   color: #89bdff;
-}
-
-/* type - light blue */
+} /* type - light blue */
 pre .lit,
 code .lit {
   color: #3387cc;
-}
-
-/* literal - blue */
+} /* literal - blue */
 pre .pun,
 code .pun {
   color: #fff;
-}
-
-/* punctuation - white */
+} /* punctuation - white */
 pre .pln,
 code .pln {
   color: #fff;
-}
-
-/* plaintext - white */
+} /* plaintext - white */
 pre .tag,
 code .tag {
   color: #89bdff;
-}
-
-/* html/xml tag    - light blue */
+} /* html/xml tag    - light blue */
 pre .atn,
 code .atn {
   color: #bdb76b;
-}
-
-/* html/xml attribute name  - khaki */
+} /* html/xml attribute name  - khaki */
 pre .atv,
 code .atv {
   color: #65b042;
-}
-
-/* html/xml attribute value - green */
+} /* html/xml attribute value - green */
 pre .dec,
 code .dec {
   color: #3387cc;
-}
-
-/* decimal - blue */
+} /* decimal - blue */
 pre.prettyprint,
 code.prettyprint {
   background-color: rgba(0, 0, 0, 0.2);
@@ -4847,9 +4740,7 @@ ol.linenums {
   margin-top: 0;
   margin-bottom: 0;
   color: #aeaeae;
-}
-
-/* IE indents via margin-left */
+} /* IE indents via margin-left */
 li.L0,
 li.L1,
 li.L2,
@@ -4864,56 +4755,47 @@ li.L8 {
 /* Alternate shading for lines */
 @media print {
   pre .str,
-code .str {
+  code .str {
     color: #060;
   }
-
   pre .kwd,
-code .kwd {
+  code .kwd {
     color: #006;
     font-weight: bold;
   }
-
   pre .com,
-code .com {
+  code .com {
     color: #600;
     font-style: italic;
   }
-
   pre .typ,
-code .typ {
+  code .typ {
     color: #404;
     font-weight: bold;
   }
-
   pre .lit,
-code .lit {
+  code .lit {
     color: #044;
   }
-
   pre .pun,
-code .pun {
+  code .pun {
     color: #440;
   }
-
   pre .pln,
-code .pln {
+  code .pln {
     color: #000;
   }
-
   pre .tag,
-code .tag {
+  code .tag {
     color: #006;
     font-weight: bold;
   }
-
   pre .atn,
-code .atn {
+  code .atn {
     color: #404;
   }
-
   pre .atv,
-code .atv {
+  code .atv {
     color: #060;
   }
 }

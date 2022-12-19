@@ -16,7 +16,7 @@
         "dompurify": "^2.4.1",
         "highlight.js": "<11",
         "imagesloaded": "^4.1.4",
-        "jquery": "^3.6.1",
+        "jquery": "^3.6.2",
         "jquery-jcrop": "^0.9.13",
         "luxon": "2.4.0",
         "marked": "^4.2.4",
@@ -36,19 +36,19 @@
         "tippy.js": "^6.3.7"
     },
     "devDependencies": {
-        "@patternslib/dev": "^3.1.7",
+        "@patternslib/dev": "^3.1.8",
         "@patternslib/pat-content-mirror": "^3.0.0",
         "@patternslib/pat-doclock": "^3.0.0",
         "@patternslib/pat-shopping-cart": "^3.0.0",
         "@patternslib/pat-sortable-table": "^3.1.0",
-        "@patternslib/pat-tiptap": "^4.7.1",
+        "@patternslib/pat-tiptap": "^4.7.2",
         "@patternslib/pat-upload": "^3.1.1",
         "copy-webpack-plugin": "^11.0.0",
         "pegjs": "0.11.0-master.b7b87ea",
         "webpack-modernizr-loader": "^5.0.0"
     },
     "resolutions": {
-        "jquery": "3.6.1"
+        "jquery": "3.6.2"
     },
     "scripts": {
         "start": "BUILD_ENV=patternslib NODE_ENV=development webpack serve --config webpack/webpack.config.js",
