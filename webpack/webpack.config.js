@@ -29,6 +29,7 @@ module.exports = () => {
         modernizr$: path.resolve(__dirname, "../.modernizrrc.js"),
     };
 
+    // Module federation
     config.plugins.push(
         mf_config({
             name: "patternslib",
@@ -48,6 +49,8 @@ module.exports = () => {
         })
     );
 
+    // BBB polyfills not used anymore.
+    // TODO: Remove for next major version.
     // Polyfills
     config.plugins.push(
         // Copy polyfills loader to the output path.
@@ -60,8 +63,10 @@ module.exports = () => {
 
     if (process.env.NODE_ENV === "development") {
         config.devServer.static.directory = path.resolve(__dirname, "../");
-        config.devServer.headers["Content-Security-Policy"] =
-            "default-src https: http: data: 'self' 'unsafe-inline'; script-src https: http: data: 'self' 'unsafe-inline';";
+        // Add a strict Content-Security-Policy without 'unsafe-inline' to the dev
+        // server for testing CSR issues.
+        //config.devServer.headers["Content-Security-Policy"] =
+        //    "default-src https: http: data: 'self';";
     }
 
     // Add an @patternslib/patternslib alias when building within this repository.

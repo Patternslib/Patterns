@@ -60,8 +60,10 @@
         "watch": "BUILD_ENV=patternslib NODE_ENV=development webpack --config webpack/webpack.config.js --watch"
     },
     "files": [
+        "/_sass",
         "/dist",
-        "/src"
+        "/src",
+        "/webpack"
     ],
     "engines": {
         "node": ">=12.20.0"
