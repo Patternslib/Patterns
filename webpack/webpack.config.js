@@ -10,6 +10,7 @@ module.exports = () => {
     let config = {
         entry: {
             "bundle.min": path.resolve(__dirname, "../src/index.js"),
+            "modernizr.min": path.resolve(__dirname, "../src/modernizr.js"),
         },
     };
 
