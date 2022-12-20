@@ -4,6 +4,56 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.8.0-beta.2](https://github.com/Patternslib/patterns/compare/9.8.0-beta.1...9.8.0-beta.2) (2022-12-19)
+
+
+### Bug Fixes
+
+
+* **Build:** Also include necessary _sass directory in the npm package. ([70da6b1](https://github.com/Patternslib/patterns/commit/70da6b1a1d791e36beda951dd1b7feebff695a33))
+
+* **Build:** Also include the webpack configs in the npm package. ([f6bf2bf](https://github.com/Patternslib/patterns/commit/f6bf2bf3dfba9616b60fb599db305ad1173c1a45))Previous packages depending on @patternslib/patternslib also extended
+Patternslib' webpack configs. Include these configs for backwards
+compatibility.
+
+* **pat-bumper:** Remove style import from the patterns SCSS file. ([094010b](https://github.com/Patternslib/patterns/commit/094010bf5a315af2220b2d446afb31e442e01852))
+
+
+### Breaking Changes
+
+
+* **Build:** Separate modernizr into a own bundle. ([875b041](https://github.com/Patternslib/patterns/commit/875b04112e93f85c7215565151e80e0d44ae0649))Since Patternslib 9.0.0-alpha.0 where we introduced webpack module
+federation for our bundles, Modernizr is loaded asynchronously and
+applying it's CSS classes a tick too late. For example, the change from
+the `no-js` to the `js` class was done while the tiles have already been
+drawn and visible on the screen, resulting in screen flickering. There
+are a number of projects which depend on Modernizr being applied early.
+
+This change now fixes the problem by separating the Modernizr build from
+the Patternslib bundle.
+
+If you depend on Modernzir, please include the new `modernizr.min.js` bundle in
+a script tag, preferably before the Patternslib bundle `bundle.min.js`.
+
+The global switch "window.__patternslib_disable_modernizr" is also removed, as
+it got useless.
+
+
+### Maintenance
+
+
+* Add modernizr.min.js bundle to main index.js demo file for demonstration. ([96a7ed2](https://github.com/Patternslib/patterns/commit/96a7ed25c5cfe8e3c4454892ae787007ffa53467))
+
+* **Build:** Directly build the modernizr bundle. ([ee2acdc](https://github.com/Patternslib/patterns/commit/ee2acdc686bc26e799026e1ca8d1e434ad0f79c4))Do not use an webpack entry to build the modernizr bundle with an
+webpack runtime overhead. Instead, build it directly but abusing the
+webpack CopyPlugin transform mechanism. We could also build the
+modernizr bundle from the Makefile but that wouldn't provide the file
+when watching or when running webpack-dev-server.
+
+* **Build:** Optimize modernizr configuration. ([e1fd8de](https://github.com/Patternslib/patterns/commit/e1fd8dee625257cb2922429a6eb828d29d053f7d))Remove unnecessary tests in .modernizrrc.js and slim down the build size.
+
+* Upgrade dependencies. Also Upgrade to jQuery 3.6.2. ([071e084](https://github.com/Patternslib/patterns/commit/071e08427031bd1fad7bebccefd11f34457c915a))
+
 ## [9.8.0-beta.1](https://github.com/Patternslib/patterns/compare/9.8.0-beta.0...9.8.0-beta.1) (2022-12-11)
 
 
