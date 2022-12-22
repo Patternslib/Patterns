@@ -1,5 +1,6 @@
 import $ from "jquery";
 import Base from "../../core/base";
+import events from "../../core/events";
 import Parser from "../../core/parser";
 
 export const parser = new Parser("sortable");
@@ -28,12 +29,25 @@ export default Base.extend({
         /* Handler which gets called when pat-update is triggered within
          * the .pat-sortable element.
          */
-        if (data?.pattern == "clone") {
-            this.recordPositions();
-            data.$el.on("dragstart", this.onDragStart.bind(this));
-            data.$el.on("dragend", this.onDragEnd.bind(this));
+        if (data?.pattern !== "clone" || data?.action !== "added" || !data?.dom) {
+            // Nothing to do.
+            return;
         }
-        return true;
+
+        this.recordPositions();
+
+        events.add_event_listener(
+            data.dom,
+            "dragstart",
+            "pat-sortable--dragstart",
+            this.onDragStart.bind(this)
+        );
+        events.add_event_listener(
+            data.dom,
+            "dragend",
+            "pat-sortable--dragend",
+            this.onDragEnd.bind(this)
+        );
     },
 
     recordPositions: function () {
@@ -49,22 +63,37 @@ export default Base.extend({
     },
 
     addHandles: function () {
-        var $sortables_without_handles = this.$sortables.filter(function () {
-            return $(this).find(".sortable-handle").length === 0;
-        });
-        var $handles = $('<a href="#" class="sortable-handle">⇕</a>').appendTo(
-            $sortables_without_handles
-        );
-        if ("draggable" in document.createElement("span")) {
-            $handles.attr("draggable", true);
-        } else {
-            $handles.on("selectstart", function (ev) {
-                ev.preventDefault();
+        for (const sortable of [...this.$sortables].filter(
+            (it) => !it.querySelector(".sortable-handle")
+        )) {
+            // TODO: we should change to a <button>.
+            const handle = document.createElement("a");
+            handle.textContent = "⇕";
+            handle.classList.add("sortable-handle");
+            handle.setAttribute("draggable", "true");
+            handle.setAttribute("href", "#");
+            handle.setAttribute("title", "Drag to reorder");
+            handle.setAttribute("aria-label", "Drag to reorder");
+            sortable.insertBefore(handle, sortable.firstChild);
+
+            // TODO: remove when element is a button.
+            events.add_event_listener(handle, "click", "pat-sortable--click", (e) => {
+                e.preventDefault();
             });
+
+            events.add_event_listener(
+                handle,
+                "dragstart",
+                "pat-sortable--dragstart",
+                this.onDragStart.bind(this)
+            );
+            events.add_event_listener(
+                handle,
+                "dragend",
+                "pat-sortable--dragend",
+                this.onDragEnd.bind(this)
+            );
         }
-        $handles.on("dragstart", this.onDragStart.bind(this));
-        $handles.on("dragend", this.onDragEnd.bind(this));
-        return this;
     },
 
     initScrolling: function () {
@@ -140,12 +169,12 @@ export default Base.extend({
     },
 
     onDragStart: function (ev) {
-        var $handle = $(ev.target),
-            $dragged = $handle.parent(),
-            that = this;
-        if (typeof ev.originalEvent !== "undefined") {
+        var $handle = $(ev.target);
+        var $dragged = $handle.parent();
+        var that = this;
+        if (ev.originalEvent?.dataTransfer) {
             // Firefox seems to need this set to any value
-            ev.originalEvent.dataTransfer.setData("Text", "");
+            ev.originalEvent.dataTransfer?.setData("Text", "");
             ev.originalEvent.dataTransfer.effectAllowed = ["move"];
             if ("setDragImage" in ev.originalEvent.dataTransfer) {
                 ev.originalEvent.dataTransfer.setDragImage($dragged[0], 0, 0);

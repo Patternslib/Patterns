@@ -254,6 +254,24 @@ describe("core.events tests", () => {
             await utils.timeout(1);
             expect(catched).toBe("outer");
         });
+
+        it("dragstart event", async () => {
+            outer.addEventListener("dragstart", () => {
+                catched = "outer";
+            });
+            inner.dispatchEvent(events.dragstart_event());
+            await utils.timeout(1);
+            expect(catched).toBe("outer");
+        });
+
+        it("dragend event", async () => {
+            outer.addEventListener("dragend", () => {
+                catched = "outer";
+            });
+            inner.dispatchEvent(events.dragend_event());
+            await utils.timeout(1);
+            expect(catched).toBe("outer");
+        });
     });
 
     describe("3 - jQuery vs native", () => {

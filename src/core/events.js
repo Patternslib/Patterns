@@ -192,6 +192,20 @@ const submit_event = () => {
     });
 };
 
+const dragstart_event = () => {
+    return new Event("dragstart", {
+        bubbles: true,
+        cancelable: true,
+    });
+};
+
+const dragend_event = () => {
+    return new Event("dragend", {
+        bubbles: true,
+        cancelable: true,
+    });
+};
+
 export default {
     add_event_listener: add_event_listener,
     remove_event_listener: remove_event_listener,
@@ -206,4 +220,6 @@ export default {
     mouseup_event: mouseup_event,
     scroll_event: scroll_event,
     submit_event: submit_event,
+    dragstart_event: dragstart_event,
+    dragend_event: dragend_event,
 };
