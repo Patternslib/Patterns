@@ -172,12 +172,12 @@ export default Base.extend({
         var $handle = $(ev.target);
         var $dragged = $handle.parent();
         var that = this;
-        if (ev.originalEvent?.dataTransfer) {
+        if (ev.dataTransfer) {
             // Firefox seems to need this set to any value
-            ev.originalEvent.dataTransfer?.setData("Text", "");
-            ev.originalEvent.dataTransfer.effectAllowed = ["move"];
-            if ("setDragImage" in ev.originalEvent.dataTransfer) {
-                ev.originalEvent.dataTransfer.setDragImage($dragged[0], 0, 0);
+            ev.dataTransfer.setData("Text", "");
+            ev.dataTransfer.effectAllowed = ["move"];
+            if ("setDragImage" in ev.dataTransfer) {
+                ev.dataTransfer.setDragImage($dragged[0], 0, 0);
             }
         }
         $dragged.addClass(this.options.dragClass);
