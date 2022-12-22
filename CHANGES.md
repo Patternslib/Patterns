@@ -4,6 +4,56 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.8.0-beta.3](https://github.com/Patternslib/patterns/compare/9.8.0-beta.2...9.8.0-beta.3) (2022-12-22)
+
+
+### Features
+
+
+* **core events:** Add dragstart and dragend event factories. ([73d7fc7](https://github.com/Patternslib/patterns/commit/73d7fc748f1c2c6be8f9fd1d0d405aadea140594))
+
+
+### Bug Fixes
+
+
+* **Build:** Load modernizr early and non-asynchronously. ([8bc9b66](https://github.com/Patternslib/patterns/commit/8bc9b66e96285496fdb129ca1fa07759ddd4fd42))Include the modernizr bundle by injecting a script tag. This ensures
+modernizr is loaded synchronously and executing early and sets it's
+feature detection classes before the layout is done by the browser.
+
+This reverts the breaking change from the previous Patternslib 9.8.0-beta.2
+release. The separate modernizr.min.js build file is still kept, but
+modernizr is included by the main Patternslib bundle. There is no need
+to add another script tag to include modernizr.
+
+You can disable loading of modernizr by setting the following before the
+Patternslib bundle.min.js is included:
+
+<script>window.__patternslib_disable_modernizr = true;</script>
+
+Also, the "js" class is set on the HTML root tag when a "no-js" class
+was present regardless of the "__patternslib_disable_modernizr" setting.
+
+Since Patternslib 9.0.0-alpha.0 where we introduced webpack module
+federation for our bundles, Modernizr is loaded asynchronously and
+applying it's CSS classes a tick too late. For example, the change from
+the "no-js" to the "js" class was done while the tiles have already been
+drawn and visible on the screen, resulting in screen flickering. There
+are a number of projects which depend on Modernizr being applied early.
+
+* **pat-sortable:** Initialize sorting on cloned elements. ([d7abbc0](https://github.com/Patternslib/patterns/commit/d7abbc01febabec2162d58251c59495a89d2ed6f))Fix sorting behavior on cloned elements, which broke on Patternslib 9.8.0-alpha.0.
+
+
+### Maintenance
+
+
+* **Build:** Do not include the example minimalpattern in the build. ([9712019](https://github.com/Patternslib/patterns/commit/971201918da325644a8fa04d1c1886424055913e))
+
+* **Build:** Remove now unused globals module. ([8e05515](https://github.com/Patternslib/patterns/commit/8e05515fbca24f0a16536f20263b09b4506d7f2c))jQuery is now imported and set earlier.
+
+* **Docs:** Update some documentation. ([4ccf1bd](https://github.com/Patternslib/patterns/commit/4ccf1bd23fa3983844836973a6febd3549836106))
+
+* **pat-sortable:** Modernize tests. ([bf25dc4](https://github.com/Patternslib/patterns/commit/bf25dc4e8c671414ff1438dce2d91daf85f7477b))
+
 ## [9.8.0-beta.2](https://github.com/Patternslib/patterns/compare/9.8.0-beta.1...9.8.0-beta.2) (2022-12-19)
 
 
