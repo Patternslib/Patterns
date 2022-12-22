@@ -58,9 +58,6 @@ import "./pat/tooltip/tooltip";
 import "./pat/validation/validation";
 import "./pat/zoom/zoom";
 
-// example pattern
-import "./pat/minimalpattern/minimalpattern";
-
 // External patterns
 import "@patternslib/pat-content-mirror";
 import "@patternslib/pat-doclock";
