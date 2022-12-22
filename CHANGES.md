@@ -4,6 +4,14 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.8.0-beta.5](https://github.com/Patternslib/patterns/compare/9.8.0-beta.4...9.8.0-beta.5) (2022-12-22)
+
+
+### Features
+
+
+* **pat-sortable:** Support initialization after injection. ([afaf388](https://github.com/Patternslib/patterns/commit/afaf38850399ccb739b38f29d2d1e83a585bea09))
+
 ## [9.8.0-beta.4](https://github.com/Patternslib/patterns/compare/9.8.0-beta.3...9.8.0-beta.4) (2022-12-22)
 
 
