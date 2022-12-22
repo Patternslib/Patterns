@@ -1,5 +1,6 @@
 import $ from "jquery";
 import Base from "../../core/base";
+import dom from "../../core/dom";
 import events from "../../core/events";
 import Parser from "../../core/parser";
 
@@ -50,36 +51,44 @@ export default Base.extend({
     },
 
     addHandles: function () {
-        for (const sortable of [...this.$sortables].filter(
-            (it) => !it.querySelector(".sortable-handle")
-        )) {
-            // TODO: we should change to a <button>.
-            const handle = document.createElement("a");
-            handle.textContent = "⇕";
-            handle.classList.add("sortable-handle");
-            handle.setAttribute("draggable", "true");
-            handle.setAttribute("href", "#");
-            handle.setAttribute("title", "Drag to reorder");
-            handle.setAttribute("aria-label", "Drag to reorder");
-            sortable.appendChild(handle);
+        for (const sortable of this.$sortables) {
+            const handles = dom.querySelectorAllAndMe(sortable, ".sortable-handle");
+            if (handles.length === 0) {
+                // TODO: we should change to a <button>.
+                const handle = document.createElement("a");
+                handle.textContent = "⇕";
+                handle.classList.add("sortable-handle");
+                handle.setAttribute("draggable", "true");
+                handle.setAttribute("href", "#");
+                //handle.setAttribute("title", "Drag to reorder"); // TODO: specify if that should be kept.
+                handle.setAttribute("aria-label", "Drag to reorder");
+                sortable.appendChild(handle);
+                handles.push(handle);
+            }
 
-            // TODO: remove when element is a button.
-            events.add_event_listener(handle, "click", "pat-sortable--click", (e) => {
-                e.preventDefault();
-            });
-
-            events.add_event_listener(
-                handle,
-                "dragstart",
-                "pat-sortable--dragstart",
-                this.onDragStart.bind(this)
-            );
-            events.add_event_listener(
-                handle,
-                "dragend",
-                "pat-sortable--dragend",
-                this.onDragEnd.bind(this)
-            );
+            for (const handle of handles) {
+                // TODO: remove when element is a button.
+                events.add_event_listener(
+                    handle,
+                    "click",
+                    "pat-sortable--click",
+                    (e) => {
+                        e.preventDefault();
+                    }
+                );
+                events.add_event_listener(
+                    handle,
+                    "dragstart",
+                    "pat-sortable--dragstart",
+                    this.onDragStart.bind(this)
+                );
+                events.add_event_listener(
+                    handle,
+                    "dragend",
+                    "pat-sortable--dragend",
+                    this.onDragEnd.bind(this)
+                );
+            }
         }
     },
 
@@ -111,7 +120,7 @@ export default Base.extend({
     },
 
     onDragEnd: function (ev) {
-        var $dragged = $(ev.target).parent();
+        const $dragged = $(ev.target.closest(this.options.selector));
         $dragged.removeClass(this.options.dragClass);
         this.$sortables.off(".pat-sortable");
         this.$el.off(".pat-sortable");
@@ -156,8 +165,7 @@ export default Base.extend({
     },
 
     onDragStart: function (ev) {
-        var $handle = $(ev.target);
-        var $dragged = $handle.parent();
+        const $dragged = $(ev.target.closest(this.options.selector));
         var that = this;
         if (ev.dataTransfer) {
             // Firefox seems to need this set to any value

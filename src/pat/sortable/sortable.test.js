@@ -213,4 +213,35 @@ describe("pat-sortable", function () {
 
         expect(injected.classList.contains(sortable.options.dragClass)).toBe(true);
     });
+
+    it("7 - Initializes sorting behavior with existing handles.", function () {
+        document.body.innerHTML = `
+            <ul class="pat-sortable">
+                <li>item 1 <a class="sortable-handle">sort</a></li>
+            </ul>
+        `;
+        const el = document.querySelector(".pat-sortable");
+        const sortable = new Sortable(el);
+
+        const item = el.querySelector("li");
+        const drag_handle = item.querySelector(".sortable-handle");
+        drag_handle.dispatchEvent(new Event("dragstart"));
+
+        expect(item.classList.contains(sortable.options.dragClass)).toBe(true);
+    });
+
+    it("8 - Sortable item itself can be the handle.", function () {
+        document.body.innerHTML = `
+            <ul class="pat-sortable">
+                <li class="sortable-handle">item</li>
+            </ul>
+        `;
+        const el = document.querySelector(".pat-sortable");
+        const sortable = new Sortable(el);
+
+        const item = el.querySelector("li");
+        item.dispatchEvent(new Event("dragstart"));
+
+        expect(item.classList.contains(sortable.options.dragClass)).toBe(true);
+    });
 });
