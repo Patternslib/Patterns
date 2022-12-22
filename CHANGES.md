@@ -4,6 +4,14 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.8.0-beta.6](https://github.com/Patternslib/patterns/compare/9.8.0-beta.5...9.8.0-beta.6) (2022-12-22)
+
+
+### Bug Fixes
+
+
+* **pat-sortable:** Initialize already existing sortable handles. ([b3f5077](https://github.com/Patternslib/patterns/commit/b3f5077e5ed39a0d5a68f1cfecf1d07adc7e0745))Also allow the sortable itself to be the handle.
+
 ## [9.8.0-beta.5](https://github.com/Patternslib/patterns/compare/9.8.0-beta.4...9.8.0-beta.5) (2022-12-22)
 
 
