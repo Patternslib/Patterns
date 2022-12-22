@@ -4,6 +4,16 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.8.0-beta.4](https://github.com/Patternslib/patterns/compare/9.8.0-beta.3...9.8.0-beta.4) (2022-12-22)
+
+
+### Bug Fixes
+
+
+* **pat-sortable:** Show dragable item image while dragging. ([1c9eb80](https://github.com/Patternslib/patterns/commit/1c9eb800dd5d81c00ce4f249d101cdd589e9c83e))
+
+* **pat-sortable:** sortable-handle needs to be injected at last element of the sortable item. ([db02541](https://github.com/Patternslib/patterns/commit/db02541d7199deb3592723cc12a0c6be1a13b753))
+
 ## [9.8.0-beta.3](https://github.com/Patternslib/patterns/compare/9.8.0-beta.2...9.8.0-beta.3) (2022-12-22)
 
 
