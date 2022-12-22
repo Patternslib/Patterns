@@ -3,7 +3,6 @@
  */
 
 // Import base
-import "./globals";
 import registry from "./core/registry";
 
 // Import all used patterns for the bundle to be generated
@@ -58,9 +57,6 @@ import "./pat/toggle/toggle";
 import "./pat/tooltip/tooltip";
 import "./pat/validation/validation";
 import "./pat/zoom/zoom";
-
-// example pattern
-import "./pat/minimalpattern/minimalpattern";
 
 // External patterns
 import "@patternslib/pat-content-mirror";
