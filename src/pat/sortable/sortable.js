@@ -74,7 +74,7 @@ export default Base.extend({
             handle.setAttribute("href", "#");
             handle.setAttribute("title", "Drag to reorder");
             handle.setAttribute("aria-label", "Drag to reorder");
-            sortable.insertBefore(handle, sortable.firstChild);
+            sortable.appendChild(handle);
 
             // TODO: remove when element is a button.
             events.add_event_listener(handle, "click", "pat-sortable--click", (e) => {
