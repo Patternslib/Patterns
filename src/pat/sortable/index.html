@@ -7,6 +7,8 @@
         <script src="/bundle.min.js"></script>
     </head>
     <body>
+
+        <h2>Vertical sorting</h2>
         <ul class="pat-sortable">
             <li class="sortable-item">Item 3</li>
             <li class="sortable-item">Item 5</li>
@@ -16,6 +18,7 @@
             <li class="sortable-item">Item 2</li>
         </ul>
 
+        <h2>Horizontal sorting</h2>
         <ul class="pat-sortable vertical">
             <li class="sortable-item">Item 3</li>
             <li class="sortable-item">Item 5</li>
@@ -24,6 +27,15 @@
             <li class="sortable-item">Item 6</li>
             <li class="sortable-item">Item 2</li>
         </ul>
+
+        <h2>Vertical sorting with pat-clone</h2>
+        <button class="clone-trigger-1">Add item</button>
+        <ul class="pat-sortable pat-clone"
+          data-pat-clone="template: .clone-template-1; trigger-element: .clone-trigger-1">
+        </ul>
+        <template class="clone-template-1">
+          <li class="sortable-item">Item #{1}</li>
+        </template>
 
 
         <style>

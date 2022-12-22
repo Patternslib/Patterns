@@ -151,4 +151,33 @@ describe("pat-sortable", function () {
         expect(data.action).toBe("changed");
         expect(data.dom).toBe(dragging_element);
     });
+
+    it("5 - Initializes sorting behavior on pat-clone'd elements.", async function () {
+        const Clone = (await import("../clone/clone")).default;
+
+        document.body.innerHTML = `
+            <ul class="pat-sortable pat-clone"
+                data-pat-clone="template: .clone-template; trigger-element: .clone-trigger">
+            </ul>
+            <button class="clone-trigger">Clone</button>
+            <template class="clone-template">
+                <li>item</li>
+            </template>
+        `;
+        const el = document.querySelector(".pat-sortable");
+        const sortable = new Sortable(el);
+        new Clone(el);
+
+        const clone_trigger = document.querySelector(".clone-trigger");
+        clone_trigger.click();
+
+        const cloned = el.querySelector("li");
+        expect(cloned).toBeTruthy();
+
+        const drag_handle = cloned.querySelector(".sortable-handle");
+        expect(drag_handle).toBeTruthy();
+        drag_handle.dispatchEvent(new Event("dragstart"));
+
+        expect(cloned.classList.contains(sortable.options.dragClass)).toBe(true);
+    });
 });
