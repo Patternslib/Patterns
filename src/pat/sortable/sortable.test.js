@@ -1,4 +1,5 @@
 import events from "../../core/events";
+import utils from "../../core/utils";
 import $ from "jquery";
 import Sortable from "./sortable";
 
@@ -179,5 +180,37 @@ describe("pat-sortable", function () {
         drag_handle.dispatchEvent(new Event("dragstart"));
 
         expect(cloned.classList.contains(sortable.options.dragClass)).toBe(true);
+    });
+
+    it("6 - Initializes sorting behavior on pat-injected elements.", async function () {
+        const Inject = (await import("../inject/inject")).default;
+
+        document.body.innerHTML = `
+            <ul class="pat-sortable">
+            </ul>
+            <a class="pat-inject"
+               data-pat-inject="
+                   source: .inject-template;
+                   target: .pat-sortable::after">Inject</a>
+            <template class="inject-template">
+                <li>item</li>
+            </template>
+        `;
+        const el = document.querySelector(".pat-sortable");
+        const sortable = new Sortable(el);
+        const el_inject = document.querySelector(".pat-inject");
+        Inject.init($(el_inject));
+
+        el_inject.click();
+        await utils.timeout(1);
+
+        const injected = el.querySelector("li");
+        expect(injected).toBeTruthy();
+
+        const drag_handle = injected.querySelector(".sortable-handle");
+        expect(drag_handle).toBeTruthy();
+        drag_handle.dispatchEvent(new Event("dragstart"));
+
+        expect(injected.classList.contains(sortable.options.dragClass)).toBe(true);
     });
 });
