@@ -3,7 +3,6 @@
  */
 
 // Import base
-import "./globals";
 import registry from "./core/registry";
 
 // Import all used patterns for the bundle to be generated
