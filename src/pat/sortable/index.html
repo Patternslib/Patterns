@@ -30,7 +30,8 @@
 
         <h2>Vertical sorting with pat-clone</h2>
         <button class="clone-trigger-1">Add item</button>
-        <ul class="pat-sortable pat-clone"
+        <a class="pat-inject" data-pat-inject="source: .clone-template-1; target: #clone-inject-example::after">Add item via injection</a>
+        <ul id="clone-inject-example" class="pat-sortable pat-clone"
           data-pat-clone="template: .clone-template-1; trigger-element: .clone-trigger-1">
         </ul>
         <template class="clone-template-1">

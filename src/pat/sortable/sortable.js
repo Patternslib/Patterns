@@ -23,31 +23,18 @@ export default Base.extend({
         this.options = parser.parse(this.$el, false);
         this.recordPositions().initScrolling();
         this.$el.on("pat-update", this.onPatternUpdate.bind(this));
+        this.$el.on("patterns-injected", this.recordPositions.bind(this));
     },
 
     onPatternUpdate: function (ev, data) {
         /* Handler which gets called when pat-update is triggered within
          * the .pat-sortable element.
          */
-        if (data?.pattern !== "clone" || data?.action !== "added" || !data?.dom) {
+        if (data?.pattern !== "clone" || data?.action !== "added") {
             // Nothing to do.
             return;
         }
-
         this.recordPositions();
-
-        events.add_event_listener(
-            data.dom,
-            "dragstart",
-            "pat-sortable--dragstart",
-            this.onDragStart.bind(this)
-        );
-        events.add_event_listener(
-            data.dom,
-            "dragend",
-            "pat-sortable--dragend",
-            this.onDragEnd.bind(this)
-        );
     },
 
     recordPositions: function () {
