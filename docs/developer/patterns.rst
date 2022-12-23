@@ -27,16 +27,7 @@ Below is a minimal skeleton for a pattern.
     // Export BasePattern as named export.
     // You can import it as ``import { Pattern } from "./{{{ pattern.name }}}";``
     export { Pattern };
-   define([
-       'require'
-       '../registry'
-   ], function(require, registry) {
-       var pattern_spec = {
-           name: "mypattern",
-       };
 
-       registry.register(pattern_spec);
-   });
 
 This skeleton does several things:
 
