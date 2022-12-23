@@ -38,9 +38,13 @@ Also see: https://github.com/Patternslib/pat-PATTERN_TEMPLATE
         }
     }
 
-    // Register Pattern class in the global pattern registry
+    // Register Pattern class in the global pattern registry and make it usable there.
     registry.register(Pattern);
 
-    // Make it available
+    // Export Pattern as default export.
+    // You can import it as ``import AnyName from "./{{{ pattern.name }}}";``
     export default Pattern;
+    // Export BasePattern as named export.
+    // You can import it as ``import { Pattern } from "./{{{ pattern.name }}}";``
+    export { Pattern };
 
