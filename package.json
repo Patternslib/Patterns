@@ -16,7 +16,7 @@
         "dompurify": "^2.4.1",
         "highlight.js": "<11",
         "imagesloaded": "^4.1.4",
-        "jquery": "^3.6.2",
+        "jquery": "^3.6.3",
         "jquery-jcrop": "^0.9.13",
         "luxon": "2.4.0",
         "marked": "^4.2.4",
@@ -48,7 +48,7 @@
         "pegjs": "0.11.0-master.b7b87ea"
     },
     "resolutions": {
-        "jquery": "3.6.2"
+        "jquery": "3.6.3"
     },
     "scripts": {
         "start": "BUILD_ENV=patternslib NODE_ENV=development webpack serve --config webpack/webpack.config.js",
