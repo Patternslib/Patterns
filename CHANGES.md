@@ -12,6 +12,14 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 * **Build:** Upgrade dependencies. ([befb845](https://github.com/Patternslib/patterns/commit/befb845e71f40f6fdb79c433c3f27d62529c2523))
 
+## [9.8.0](https://github.com/Patternslib/patterns/compare/9.8.0-beta.6...9.8.0) (2022-12-23)
+
+
+### Maintenance
+
+
+* **Build:** Upgrade dependencies. ([befb845](https://github.com/Patternslib/patterns/commit/befb845e71f40f6fdb79c433c3f27d62529c2523))
+
 ## [9.8.0-beta.6](https://github.com/Patternslib/patterns/compare/9.8.0-beta.5...9.8.0-beta.6) (2022-12-22)
 
 
