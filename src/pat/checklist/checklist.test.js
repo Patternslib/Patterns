@@ -553,4 +553,44 @@ describe("pat-checklist", () => {
         expect(l2.classList.contains("unchecked")).toEqual(true);
         expect(l3.classList.contains("checked")).toEqual(true);
     });
+
+    it("Initializes on checkboxes with toggle-all checkbox", async () => {
+        document.body.innerHTML = `
+            <fieldset class="pat-checklist">
+                <label><input type="checkbox" class="toggle-all"> toggle selection</label>
+                <label><input type="checkbox" checked>Option 1</label>
+                <label><input type="checkbox">Option 2</label>
+                <label><input type="checkbox">Option 3</label>
+            </fieldset>
+        `;
+        Pattern.init(document.querySelector(".pat-checklist"));
+
+        const [f1] = document.querySelectorAll("fieldset");
+        const [t1] = document.querySelectorAll("input.toggle-all");
+        const [i1, i2, i3] = document.querySelectorAll("input[type=checkbox]:not(.toggle-all)");
+
+        expect(f1.classList.contains("checked")).toEqual(true);
+        expect(i1.checked).toEqual(true);
+        expect(i2.checked).toEqual(false);
+        expect(i3.checked).toEqual(false);
+        expect(t1.checked).toEqual(false);
+
+        t1.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("checked")).toEqual(true);
+        expect(i1.checked).toEqual(true);
+        expect(i2.checked).toEqual(true);
+        expect(i3.checked).toEqual(true);
+        expect(t1.checked).toEqual(true);
+
+        t1.click();
+        await utils.timeout(100);
+
+        expect(f1.classList.contains("unchecked")).toEqual(true);
+        expect(i1.checked).toEqual(false);
+        expect(i2.checked).toEqual(false);
+        expect(i3.checked).toEqual(false);
+        expect(t1.checked).toEqual(false);
+    });
 });
