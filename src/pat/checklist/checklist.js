@@ -26,7 +26,9 @@ export default Base.extend({
     },
 
     _init() {
-        this.all_checkboxes = this.el.querySelectorAll(`input[type=checkbox]:not(${this.options.toggle}`);
+        this.all_checkboxes = this.el.querySelectorAll(
+            `input[type=checkbox]:not(${this.options.toggle}`
+        );
         this.all_radios = this.el.querySelectorAll("input[type=radio]");
 
         this.all_selects = dom.find_scoped(this.el, this.options.select);
@@ -145,10 +147,9 @@ export default Base.extend({
     },
 
     change_checked() {
-        for (const it of [...this.all_checkboxes].concat([...this.all_radios])) {
+        for (const it of [...this.all_checkboxes, ...this.all_radios]) {
             for (const label of it.labels) {
-                label.classList.remove("unchecked");
-                label.classList.remove("checked");
+                label.classList.remove("checked", "unchecked");
                 label.classList.add(it.checked ? "checked" : "unchecked");
             }
         }
