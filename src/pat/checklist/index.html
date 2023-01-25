@@ -12,7 +12,7 @@
     </head>
     <body>
         <div class="functions" id="ElemOutsidePatChecklist">
-        <h3>Select / Deselect all for exmaple 2</h3>
+        <h3>Select / Deselect all for example 2</h3>
           <div class="pat-toolbar">
               <div class="toggles list-functions pat-button-cluster">
                   <button class="pat-button select-all">Select all</button>
@@ -73,9 +73,27 @@
                 </fieldset>
             </div>
         </form>
+
         <form class="vertical row">
             <div class="six columns">
-                <h3>Example 3: Hierarchy of Checkboxes</h3>
+                <h3>Example 3: Toggle checkbox</h3>
+                <p>
+                    Clicking the toggle checkbox to change the states.
+                </p>
+                <fieldset class="pat-checklist checklist">
+                    <label><input type="checkbox" class="toggle-all" /> Toggle checkboxes</label>
+
+                    <label><input type="checkbox" checked="checked" /> Option one</label>
+                    <label><input type="checkbox" /> Option two</label>
+                    <label><input type="checkbox" /> Option three</label>
+                    <label><input type="checkbox" /> Option four</label>
+                </fieldset>
+            </div>
+        </form>
+
+        <form class="vertical row">
+            <div class="six columns">
+                <h3>Example 4: Hierarchy of Checkboxes</h3>
                 <p>
                     Clicking select all / deselect all only affects parent of
                     buttons and its children.
@@ -136,5 +154,6 @@
             </div>
             <div class="six columns"></div>
         </form>
+
     </body>
 </html>

@@ -7,6 +7,7 @@ import "../../core/jquery-ext";
 export const parser = new Parser("checklist");
 parser.addArgument("select", ".select-all");
 parser.addArgument("deselect", ".deselect-all");
+parser.addArgument("toggle", ".toggle-all");
 
 export default Base.extend({
     name: "checklist",
@@ -14,6 +15,7 @@ export default Base.extend({
     jquery_plugin: true,
     all_selects: [],
     all_deselects: [],
+    all_toggles: [],
     all_checkboxes: [],
     all_radios: [],
 
@@ -24,7 +26,9 @@ export default Base.extend({
     },
 
     _init() {
-        this.all_checkboxes = this.el.querySelectorAll("input[type=checkbox]");
+        this.all_checkboxes = this.el.querySelectorAll(
+            `input[type=checkbox]:not(${this.options.toggle}`
+        );
         this.all_radios = this.el.querySelectorAll("input[type=radio]");
 
         this.all_selects = dom.find_scoped(this.el, this.options.select);
@@ -37,14 +41,19 @@ export default Base.extend({
             btn.addEventListener("click", this.deselect_all.bind(this));
         }
 
+        this.all_toggles = dom.find_scoped(this.el, this.options.toggle);
+        for (const btn of this.all_toggles) {
+            btn.addEventListener("click", this.toggle_all.bind(this));
+        }
+
         // update select/deselect button status
         this.el.addEventListener("change", this._handler_change.bind(this));
-        this.change_buttons();
+        this.change_buttons_and_toggles();
         this.change_checked();
     },
 
     _handler_change() {
-        utils.debounce(() => this.change_buttons(), 50)();
+        utils.debounce(() => this.change_buttons_and_toggles(), 50)();
         utils.debounce(() => this.change_checked(), 50)();
     },
 
@@ -65,7 +74,7 @@ export default Base.extend({
         let res;
         let parent = el.parentNode;
         while (parent) {
-            res = parent.querySelectorAll(sel);
+            res = parent.querySelectorAll(`${sel}:not(${this.options.toggle})`);
             if (res.length || parent === this.el) {
                 // return if results were found or we reached the pattern top
                 return res;
@@ -84,7 +93,7 @@ export default Base.extend({
         return chkbxs;
     },
 
-    change_buttons() {
+    change_buttons_and_toggles() {
         let chkbxs;
         for (const btn of this.all_selects) {
             chkbxs = this.find_checkboxes(btn, "input[type=checkbox]");
@@ -97,6 +106,12 @@ export default Base.extend({
             btn.disabled = [...chkbxs]
                 .map((el) => el.matches(":checked"))
                 .every((it) => it === false);
+        }
+        for (const tgl of this.all_toggles) {
+            chkbxs = this.find_checkboxes(tgl, "input[type=checkbox]");
+            tgl.checked = [...chkbxs]
+                .map((el) => el.matches(":checked"))
+                .every((it) => it === true);
         }
     },
 
@@ -121,11 +136,20 @@ export default Base.extend({
         }
     },
 
+    toggle_all(e) {
+        e.preventDefault();
+        const checked = e.target.checked;
+        const chkbxs = this.find_checkboxes(e.target, "input[type=checkbox]");
+        for (const box of chkbxs) {
+            box.checked = checked;
+            box.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
+        }
+    },
+
     change_checked() {
-        for (const it of [...this.all_checkboxes].concat([...this.all_radios])) {
+        for (const it of [...this.all_checkboxes, ...this.all_radios]) {
             for (const label of it.labels) {
-                label.classList.remove("unchecked");
-                label.classList.remove("checked");
+                label.classList.remove("checked", "unchecked");
                 label.classList.add(it.checked ? "checked" : "unchecked");
             }
         }
@@ -133,7 +157,7 @@ export default Base.extend({
         for (const fieldset of dom.querySelectorAllAndMe(this.el, "fieldset")) {
             if (
                 fieldset.querySelectorAll(
-                    "input[type=checkbox]:checked, input[type=radio]:checked"
+                    `input[type=checkbox]:checked:not(${this.options.toggle}), input[type=radio]:checked`
                 ).length
             ) {
                 fieldset.classList.remove("unchecked");
