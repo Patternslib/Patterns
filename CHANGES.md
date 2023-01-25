@@ -2,6 +2,24 @@
 
 See the [history](./docs/history/index.md) for older changelog entries.
 
+
+
+## [9.8.1-alpha.0](https://github.com/Patternslib/patterns/compare/9.8.0...9.8.1-alpha.0) (2023-01-25)
+
+
+### Features
+
+
+* **pat checklist:** Toggle checkbox to toggle checked boxes true/false. ([2a435fa](https://github.com/Patternslib/patterns/commit/2a435fa7d616e14722312a6b9b43ee98e3f0c7ea))
+
+
+### Maintenance
+
+
+* **Build:** Upgrade dependencies. ([7e7cc20](https://github.com/Patternslib/patterns/commit/7e7cc20b50044bbbc4b26647b452a2a8bddcfd1f))
+
+* **pat-checklist:** Document the available options. ([625f7e5](https://github.com/Patternslib/patterns/commit/625f7e54e360aa7ae6bfa5adea4fd73626e3f24d))
+
 ## [9.8.0](https://github.com/Patternslib/patterns/compare/9.8.0-beta.6...9.8.0) (2022-12-23)
 
 ### Maintenance
