@@ -53,8 +53,10 @@ disabled. And if no checkboxes are checked the deselect-all button will
 be disabled.
 
 
-### JavaScript API
+### Option reference
 
-The JavaScript API is entirely optional since Patterns already
-automatically enables the switching behaviour for all elements with a
-`data-pat-checklist` attribute.
+| Property    | Type    | Default Value    | Description                                                                                                                                                                                                    |
+| ----------- | ------- | ---------------- | -------------------------------------------- |
+| `select`    | String  | `.select-all`    | CSS selector for the "Select All" button.    |
+| `deselect`  | String  | `.deselect-all`  | CSS selector for the "Deselect All" button.  |
+| `toggle`    | String  | `.toggle-all`    | CSS selector for the "Toggle" button.        |
