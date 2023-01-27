@@ -26,9 +26,7 @@ export default Base.extend({
     },
 
     _init() {
-        this.all_checkboxes = this.el.querySelectorAll(
-            `input[type=checkbox]:not(${this.options.toggle}`
-        );
+        this.all_checkboxes = this.el.querySelectorAll(`input[type=checkbox]`);
         this.all_radios = this.el.querySelectorAll("input[type=radio]");
 
         this.all_selects = dom.find_scoped(this.el, this.options.select);
