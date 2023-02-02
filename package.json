@@ -18,7 +18,7 @@
         "imagesloaded": "^4.1.4",
         "jquery": "^3.6.3",
         "jquery-jcrop": "^0.9.13",
-        "luxon": "2.5.2",
+        "luxon": "2.4.0",
         "marked": "^4.2.12",
         "masonry-layout": "^4.2.2",
         "moment": "^2.29.4",
