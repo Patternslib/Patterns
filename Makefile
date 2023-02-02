@@ -67,3 +67,36 @@ bundle-pre:
 css:
 	@$(SASS) -I style -I _sass -I . _sass/_patterns.scss style/patterns.css
 
+
+# Update patterns-site
+
+
+Patterns-site/Makefile:
+	git clone git@github.com:Patternslib/Patterns-site.git
+
+
+.PHONY: update-patternslib-site
+update-patternslib-site: Patterns-site/Makefile
+	# something
+	cd Patterns-site && git pull &&	make update-patternslib && git push
+
+
+# Overrides release + Update https://patternslib.com
+
+
+.PHONY: release-major
+release-major:
+	make LEVEL=major release
+	make update-patternslib-site
+
+
+.PHONY: release-minor
+release-minor:
+	make LEVEL=minor release
+	make update-patternslib-site
+
+
+.PHONY: release-patch
+release-patch:
+	make LEVEL=patch release
+	make update-patternslib-site
