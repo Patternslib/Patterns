@@ -20,6 +20,22 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 * **pat checklist:** Also set the "checked" and "unchecked" classes on the toggle checkbox. ([8154775](https://github.com/Patternslib/patterns/commit/81547755be231b47689dc26492cd62811096e0b5))
 
+## [9.8.1](https://github.com/Patternslib/patterns/compare/9.8.1-alpha.0...9.8.1) (2023-02-02)
+
+
+### Features
+
+
+* **build:** Update patternslib.com with each non-pre release. ([143031d](https://github.com/Patternslib/patterns/commit/143031df875e31cfec1577dac3886950a5721d00))
+
+
+### Bug Fixes
+
+
+* **Build:** Fix luxon (again) to 2.4.0 to avoid webpack MF error due to non standard package.json setup. ([9661ae7](https://github.com/Patternslib/patterns/commit/9661ae7cc9bfbe51b8987ac2d70ae08d697be499))
+
+* **pat checklist:** Also set the "checked" and "unchecked" classes on the toggle checkbox. ([8154775](https://github.com/Patternslib/patterns/commit/81547755be231b47689dc26492cd62811096e0b5))
+
 ## [9.8.1-alpha.0](https://github.com/Patternslib/patterns/compare/9.8.0...9.8.1-alpha.0) (2023-01-25)
 
 
