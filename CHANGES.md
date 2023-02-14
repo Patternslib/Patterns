@@ -4,6 +4,14 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.8.2-alpha.0](https://github.com/Patternslib/patterns/compare/9.8.1...9.8.2-alpha.0) (2023-02-14)
+
+
+### Maintenance
+
+
+* Upgrade dependencies. ([81915cd](https://github.com/Patternslib/patterns/commit/81915cdebbc943b18951a98cab97c8dcc2257ad7))
+
 ## [9.8.1](https://github.com/Patternslib/patterns/compare/9.8.1-alpha.0...9.8.1) (2023-02-02)
 
 
