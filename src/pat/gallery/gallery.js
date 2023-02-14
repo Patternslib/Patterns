@@ -12,7 +12,7 @@ export const parser = new Parser("gallery");
 parser.addArgument("item-selector", "a"); // selector for anchor element, which is added to the gallery.
 parser.addArgument("loop", true);
 parser.addArgument("scale-method", "fit", ["fit", "fitNoUpscale", "zoom"]);
-parser.addArgument("delay", 30000);
+parser.addArgument("delay", 1);
 parser.addArgument("effect-duration", 250);
 
 let PhotoSwipe;
