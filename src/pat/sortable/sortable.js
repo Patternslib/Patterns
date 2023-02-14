@@ -6,6 +6,7 @@ import Parser from "../../core/parser";
 
 export const parser = new Parser("sortable");
 parser.addArgument("selector", "li");
+parser.addArgument("handle-selector", ".sortable-handle");
 parser.addArgument("drag-class", "dragged"); // Class to apply to item that is being dragged.
 parser.addArgument("drop"); // Callback function for when item is dropped (null)
 
@@ -52,21 +53,24 @@ export default Base.extend({
 
     addHandles: function () {
         for (const sortable of this.$sortables) {
-            const handles = dom.querySelectorAllAndMe(sortable, ".sortable-handle");
+            const handles = dom.querySelectorAllAndMe(
+                sortable,
+                this.options.handleSelector
+            );
             if (handles.length === 0) {
                 // TODO: we should change to a <button>.
                 const handle = document.createElement("a");
                 handle.textContent = "⇕";
                 handle.classList.add("sortable-handle");
-                handle.setAttribute("draggable", "true");
                 handle.setAttribute("href", "#");
                 //handle.setAttribute("title", "Drag to reorder"); // TODO: specify if that should be kept.
-                handle.setAttribute("aria-label", "Drag to reorder");
                 sortable.appendChild(handle);
                 handles.push(handle);
             }
 
             for (const handle of handles) {
+                handle.setAttribute("draggable", "true");
+                handle.setAttribute("aria-label", "Drag to reorder");
                 // TODO: remove when element is a button.
                 events.add_event_listener(
                     handle,
@@ -170,7 +174,8 @@ export default Base.extend({
         if (ev.dataTransfer) {
             // Firefox seems to need this set to any value
             ev.dataTransfer.setData("Text", "");
-            ev.dataTransfer.effectAllowed = ["move"];
+            ev.dataTransfer.dropEffect = "move";
+            ev.dataTransfer.effectAllowed = "move";
             if ("setDragImage" in ev.dataTransfer) {
                 ev.dataTransfer.setDragImage($dragged[0], 0, 0);
             }
