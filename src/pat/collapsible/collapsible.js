@@ -45,6 +45,10 @@ class Pattern extends BasePattern {
     };
 
     init() {
+        if (window.__patternslib_import_styles) {
+            import("./_collapsible.scss");
+        }
+
         const $el = (this.$el = $(this.el));
 
         let $content;
