@@ -88,6 +88,34 @@ describe("pat-autosubmit", function () {
             expect(spy).toHaveBeenCalled();
         });
 
+        it("2.2 - when pat-clone'd input is changed", async function () {
+            const pattern_clone = (await import("../clone/clone")).default;
+            document.body.innerHTML = `
+              <form class="pat-autosubmit pat-clone"
+                    data-pat-autosubmit="delay: 0"
+                    data-pat-clone="template: #template">
+                  <button type="button" class="add-clone">clone</button>
+              </form>
+              <template id="template">
+                  <input name="test-input"></div>
+              </template>
+            `;
+            const el = document.querySelector(".pat-autosubmit");
+            const el_clone = document.querySelector(".pat-clone");
+            const button_clone = document.querySelector(".add-clone");
+
+            const instance = new Pattern(el);
+            new pattern_clone(el_clone);
+
+            const spy = jest.spyOn(instance.$el, "submit");
+
+            button_clone.click();
+
+            document.querySelector("form input").dispatchEvent(events.input_event());
+
+            expect(spy).toHaveBeenCalled();
+        });
+
         it("when pat-clone removes an element", function () {
             document.body.innerHTML = `
               <form class="pat-autosubmit">

@@ -49,7 +49,7 @@ export default Base.extend({
                 );
             } else if (data?.pattern === "clone") {
                 // Refresh listeners on cloning.
-                this.refreshListeners(e, null, null, data.$el);
+                this.refreshListeners(e, null, null, data.dom);
             }
         });
     },
