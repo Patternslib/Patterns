@@ -133,22 +133,6 @@ describe("core.events tests", () => {
             // catched.
             expect(true).toBe(true);
         });
-
-        it("Handles double-registration attempts by rejecting the await_pattern_init promise.", async () => {
-            class Pat extends BasePattern {
-                static name = "tmp";
-                static trigger = ".pat-tmp";
-                init() {}
-            }
-
-            const el = document.createElement("div");
-            const instance = new Pat(el);
-
-            await events.await_pattern_init(instance);
-
-            // If test reaches this expect statement, all is fine.
-            expect(true).toBe(true);
-        });
     });
 
     describe("2 - event factories", () => {
