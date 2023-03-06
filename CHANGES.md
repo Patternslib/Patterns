@@ -4,6 +4,14 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.8.3-alpha.0](https://github.com/Patternslib/patterns/compare/9.8.2...9.8.3-alpha.0) (2023-03-06)
+
+
+### Bug Fixes
+
+
+* **pat auto submit:** Fix cloned elements not submitted when their input changes. ([f36c69b](https://github.com/Patternslib/patterns/commit/f36c69b640e765d7fafabddef65d511ddb9df00e))
+
 ## [9.8.2](https://github.com/Patternslib/patterns/compare/9.8.1...9.8.2) (2023-02-24)
 
 ## [9.8.2-alpha.0](https://github.com/Patternslib/patterns/compare/9.8.1...9.8.2) (2023-02-14)
