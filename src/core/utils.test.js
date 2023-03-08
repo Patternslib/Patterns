@@ -625,6 +625,9 @@ describe("debounce ...", function () {
         debouncer();
         expect(test_func).not.toHaveBeenCalled();
         await utils.timeout(1);
+        await utils.timeout(1);
+        await utils.timeout(1);
+        await utils.timeout(1);
         expect(test_func).toHaveBeenCalledTimes(1);
     });
     it("incorrect usage by multi instantiation won't cancel previous runs", async () => {
