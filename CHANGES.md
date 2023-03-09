@@ -4,6 +4,29 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.8.3-alpha.1](https://github.com/Patternslib/patterns/compare/9.8.3-alpha.0...9.8.3-alpha.1) (2023-03-09)
+
+
+### Bug Fixes
+
+
+* **core events:** await_pattern_init - check for event coming from correct element. ([a532ebf](https://github.com/Patternslib/patterns/commit/a532ebf7fadfb645c8288f700a7c505bf2956b4c))Check if the init/not-init events were thrown from the Pattern's own
+element. When a child element did an unsuccessful Pattern init (rejected
+because already initialized) and at the same time the parent element also tried
+to initialized the same Pattern await_pattern_init could fail. The not-init
+event bubbled up which was incorrectly catched by await_pattern_init on the
+parent element.
+
+
+### Maintenance
+
+
+* **core events test:** Remove unused test. ([ca16b1d](https://github.com/Patternslib/patterns/commit/ca16b1d6f63e6032c978fe47eed9be2604f09b70))
+
+* **core utils debounce tests:** await for number of debounce calls to correctly test the debounce method. ([0c3dea7](https://github.com/Patternslib/patterns/commit/0c3dea7943518c5bf7ab07370037eff8b023b3fa))
+
+* Upgrade dependencies. ([bfaf95c](https://github.com/Patternslib/patterns/commit/bfaf95c1a7840a4004c47345aa41b9ce891b8270))
+
 ## [9.8.3-alpha.0](https://github.com/Patternslib/patterns/compare/9.8.2...9.8.3-alpha.0) (2023-03-06)
 
 
