@@ -4,6 +4,14 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.8.3-alpha.2](https://github.com/Patternslib/patterns/compare/9.8.3-alpha.1...9.8.3-alpha.2) (2023-03-09)
+
+
+### Maintenance
+
+
+* Upgrade pat-tiptap to 4.8.1. ([eda16d7](https://github.com/Patternslib/patterns/commit/eda16d7d1d5dcffcc686f5b58d7521e39f9a7c57))
+
 ## [9.8.3-alpha.1](https://github.com/Patternslib/patterns/compare/9.8.3-alpha.0...9.8.3-alpha.1) (2023-03-09)
 
 
