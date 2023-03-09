@@ -134,17 +134,30 @@ describe("core.events tests", () => {
             expect(true).toBe(true);
         });
 
-        it("Handles double-registration attempts by rejecting the await_pattern_init promise.", async () => {
+        it("Allows to initialize the same pattern in a nested structure.", async () => {
             class Pat extends BasePattern {
                 static name = "tmp";
                 static trigger = ".pat-tmp";
                 init() {}
             }
 
-            const el = document.createElement("div");
-            const instance = new Pat(el);
+            const div = document.createElement("div");
+            const span = document.createElement("span");
+            div.append(span);
 
-            await events.await_pattern_init(instance);
+            new Pat(span);
+            // need to wait a tick as basepattern initializes also with a
+            // tick delay.
+            await utils.timeout(1);
+
+            // Next one isn't initialized and throws an bubbling not-init error.
+            new Pat(span);
+            const instance_div = new Pat(div);
+
+            // The bubbling not-init error would be catched if there wasn't a
+            // check for the origin of the error which has to be the same as
+            // the Pattern element.
+            await events.await_pattern_init(instance_div);
 
             // If test reaches this expect statement, all is fine.
             expect(true).toBe(true);

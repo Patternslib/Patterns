@@ -102,7 +102,13 @@ const await_pattern_init = (pattern) => {
     // See: https://stackoverflow.com/a/44746691/1337474
     return new Promise((resolve, reject) => {
         // Case initialized
-        pattern.one("init", () => {
+        pattern.one("init", (e) => {
+            if (e.target !== pattern.el) {
+                // Don't handle bubbling init events from child elements. We
+                // want to check on init events coming directly from this
+                // Pattern's element.
+                return;
+            }
             // Resolve promise and unregister the not-init event handler.
             remove_event_listener(
                 pattern.el,
@@ -112,7 +118,13 @@ const await_pattern_init = (pattern) => {
         });
 
         // Case not initialized
-        pattern.one("not-init", () => {
+        pattern.one("not-init", (e) => {
+            if (e.target !== pattern.el) {
+                // Don't handle bubbling not-init events from child elements.
+                // We want to check on not-init events coming directly from
+                // this Pattern's element.
+                return;
+            }
             // Reject promise and unregister the init event handler.
             remove_event_listener(
                 pattern.el,
