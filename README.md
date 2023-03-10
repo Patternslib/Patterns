@@ -22,22 +22,6 @@ Patterns aims to support at least the two latest major versions of all popular b
 
 Other browser version may work too, but are not actively tested against.
 
-Additionally we do support Microsoft Internet Explorer 11 until a certain extend via optional polyfills loading.
-
-
-## Using polyfills
-
-For Internet Explorer 11 support we have included a `src/polyfills.js` module.
-You can inlcude it optionally via `src/polyfills-loader.js` which injects the polyfills bundle only if the current browser is Internet Explorer.
-For this to work, include the following in BEFORE you load the patternslib bundle:
-
-```
-<script src="/your-dist-directory/polyfills-loader.js" type="text/javascript"></script>
-```
-
-Note: this only works, if the bundle nor the polyfills-loader are not loaded asynchronously.
-The script loading order matters here and async loading has no deterministic loading order.
-
 
 ## Development installation requirements
 
