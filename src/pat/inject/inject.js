@@ -44,8 +44,7 @@ parser.addArgument("url");
 
 const inject = {
     name: "inject",
-    trigger:
-        ".raptor-ui .ui-button.pat-inject, a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
+    trigger: "a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
     parser: parser,
 
     init($el, opts) {
