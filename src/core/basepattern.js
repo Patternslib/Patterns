@@ -31,6 +31,14 @@ class BasePattern {
         }
         this.el = el;
 
+        // Notify pre-init
+        this.el.dispatchEvent(
+            new Event(`pre-init.${this.name}.patterns`, {
+                bubbles: true,
+                cancelable: true,
+            })
+        );
+
         // Initialize asynchronously.
         //
         // 1) We need to call the concrete implementation of ``init``, but the

@@ -210,20 +210,37 @@ describe("Basepattern class tests", function () {
         expect(cnt).toBe(1);
     });
 
-    it("6.2 - Throws a init event after asynchronous initialization has finished.", async function () {
+    it("6.2 - Throws bubbling initialization events.", async function () {
         const events = (await import("./events")).default;
         class Pat extends BasePattern {
             static name = "example";
             static trigger = ".example";
+
+            async init() {
+                this.el.dispatchEvent(new Event("initializing"), { bubbles: true });
+            }
         }
 
-        const el = document.createElement("div");
+        document.body.innerHTML = "<div></div>";
+        const el = document.querySelector("div");
+
+        const event_list = [];
+        document.body.addEventListener("pre-init.example.patterns", () =>
+            event_list.push("pre-init.example.patterns")
+        );
+        document.body.addEventListener("pre-init.example.patterns", () =>
+            event_list.push("initializing")
+        );
+        document.body.addEventListener("pre-init.example.patterns", () =>
+            event_list.push("init.example.patterns")
+        );
 
         const pat = new Pat(el);
         await events.await_pattern_init(pat);
 
-        // If test reaches this expect statement, the init event catched.
-        expect(true).toBe(true);
+        expect(event_list[0]).toBe("pre-init.example.patterns");
+        expect(event_list[1]).toBe("initializing");
+        expect(event_list[2]).toBe("init.example.patterns");
     });
 
     it("6.3 - Throws a not-init event in case of an double initialization event which is handled by await_pattern_init.", async function () {
