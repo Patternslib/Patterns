@@ -373,3 +373,22 @@ You can customise the behaviour of injection through options in the `data-pat-in
 | `loading-class`   | 'injecting'                                 |                                         | A class which will be added to the injection target while content is still being loaded. Multiple classes can be specified (separated with spaces), or leave empty if no class should be added.                                                                                                                                                                                                 | String                                       |
 | `history`         |                                             | `none` `record`                         | If set to `record` then injection will update the URL history and the title tag of the HTML page.                                                                                                                                                                                                                                                                                               | String or null.                              |
 | `hooks`           | `[]`                                        | `["raptor"]`                            | Once injection has completed successfully, pat-inject will trigger an event for each hook: pat-inject-hook-\$(hook). Useful for other patterns which need to know whether injection relevant to them has finished, for example `pat-raptor`.                                                                                                                                                    | String.                                      |
+
+
+## Developer documentation
+
+pat-inject fires several JavaScript events which bubble up the DOM tree:
+
+| Event name | Type | Triggered on | Bubbles | Description |
+| --- | --- | --- | --- | --- |
+| `patterns-inject-triggered` | jQuery | pat-inject-element | true | Triggered, right after injection has been triggered. This can be on click, on submit, automatically and so on. |
+| `pat-ajax-success` | jQuery | pat-inject element | true | Triggered after successful ajax call but before the response is injected into the document |
+| `patterns-injected` | jQuery | parent of injected content | true | Triggered after successful injection |
+| `pat-inject-success` | JavaScript | pat-inject element | true | Triggered after successful injection, right after `patterns-injected` but on the pat-inject element and not on the injected content itself. |
+| `patterns-injected-scanned` | jQuery | injected content | true | Triggered after injected content was scanned by Pattern registry for new patterns. |
+| `patterns-injected-delayed` | JavaScript | injected content | true | Triggered 10ms after `patterns-injected-scanned` |
+| `pat-inject-content-loaded` | jQuery | images within injected content | true | Triggered on images within the injected content when those images are loaded. |
+| `pat-inject-missingSource` | jQuery | trigger which caused the injection | true | Triggered when no to-be-injected source could be found. |
+| `pat-inject-missingTarget` | jQuery | trigger which caused the injection | true | Triggered when no target could be found. |
+
+Please note: `jQuery.trigger` events can be catched with jQuery only while JavaScript `dispatchEvent` events can be catched with bare JavaScript `addEventListener` and `jQuery.on`.
