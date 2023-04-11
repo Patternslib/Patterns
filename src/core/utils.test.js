@@ -630,6 +630,25 @@ describe("debounce ...", function () {
         await utils.timeout(1);
         expect(test_func).toHaveBeenCalledTimes(1);
     });
+    it("ensures to be called every x ms", async () => {
+        const test_func = jest.fn();
+        const debouncer = utils.debounce(test_func, 2, { timer: null }, false);
+        debouncer();
+        await utils.timeout(1);
+        debouncer();
+        await utils.timeout(1);
+        debouncer();
+        await utils.timeout(1);
+        debouncer();
+        await utils.timeout(1);
+        debouncer();
+        await utils.timeout(1);
+        await utils.timeout(1);
+
+        // There should be 2 or 3 calls, depending on timing corner cases.
+        const calls = test_func.mock.calls.length;
+        expect(calls >= 2 && calls < 4).toBe(true);
+    });
     it("incorrect usage by multi instantiation won't cancel previous runs", async () => {
         const test_func = jest.fn();
         utils.debounce(test_func, 1)();
