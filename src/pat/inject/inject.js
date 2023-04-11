@@ -30,7 +30,6 @@ parser.addArgument("delay"); // only used in autoload
 parser.addArgument("browser-cache", "no-cache", ["cache", "no-cache"]); // Cache ajax requests. Pass to pat-ajax.
 parser.addArgument("confirm", "class", ["never", "always", "form-data", "class"]);
 parser.addArgument("confirm-message", "Are you sure you want to leave this page?");
-parser.addArgument("hooks", [], ["raptor"], true); // After injection, pat-inject will trigger an event for each hook: pat-inject-hook-$(hook)
 parser.addArgument("loading-class", "injecting"); // Add a class to the target while content is still loading.
 parser.addArgument("executing-class", "executing"); // Add a class to the element while content is still loading.
 parser.addArgument("executed-class", "executed"); // Add a class to the element when content is loaded.
@@ -562,9 +561,6 @@ const inject = {
             // Special case, we want to call something, but we don't want to inject anything
             data = "";
         }
-        $.each(cfgs[0].hooks || [], (idx, hook) =>
-            $el.trigger("pat-inject-hook-" + hook)
-        );
         const sources$ = await this.callTypeHandler(cfgs[0].dataType, "sources", $el, [
             cfgs,
             data,
