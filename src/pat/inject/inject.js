@@ -716,10 +716,23 @@ const inject = {
             }
         }
 
-        $el.on(
-            "pat-ajax-success.pat-inject",
-            this._onInjectSuccess.bind(this, $el, cfgs)
-        );
+        $el.on("pat-ajax-success.pat-inject", async (e) => {
+            this._onInjectSuccess($el, cfgs, e);
+
+            // Wait for the next tick to ensure that the close-panel listener
+            // is called before this one, even for non-async local injects.
+            await utils.timeout(1);
+            // Remove the close-panel event listener.
+            events.remove_event_listener($el[0], "pat-inject--close-panel");
+            // Only close the panel if a close-panel event was catched previously.
+            if (do_close_panel) {
+                do_close_panel = false;
+                // Re-trigger close-panel event if it was caught while injection was in progress.
+                $el[0].dispatchEvent(
+                    new Event("close-panel", { bubbles: true, cancelable: true })
+                );
+            }
+        });
         $el.on("pat-ajax-error.pat-inject", this._onInjectError.bind(this, $el, cfgs));
         $el.on("pat-ajax-success.pat-inject pat-ajax-error.pat-inject", () =>
             $el.removeData("pat-inject-triggered")
@@ -737,21 +750,6 @@ const inject = {
                 do_close_panel = true;
             }
         );
-        $el.on("pat-ajax-success.pat-inject", async () => {
-            // Wait for the next tick to ensure that the close-panel listener
-            // is called before this one, even for non-async local injects.
-            await utils.timeout(1);
-            // Remove the close-panel event listener.
-            events.remove_event_listener($el[0], "pat-inject--close-panel");
-            // Only close the panel if a close-panel event was catched previously.
-            if (do_close_panel) {
-                do_close_panel = false;
-                // Re-trigger close-panel event if it was caught while injection was in progress.
-                $el[0].dispatchEvent(
-                    new Event("close-panel", { bubbles: true, cancelable: true })
-                );
-            }
-        });
 
         if (cfgs[0].url.length) {
             ajax.request($el, {
