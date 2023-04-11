@@ -219,15 +219,21 @@ describe("pat-base: The Base class for patterns", function () {
         const node = document.createElement("div");
         node.setAttribute("class", "pat-example");
         const event_list = [];
-        node.addEventListener("init_done", () => event_list.push("pat init"));
-        $(node).on("init.example.patterns", () => event_list.push("base init"));
+        $(node).on("pre-init.example.patterns", () =>
+            event_list.push("pre-init.example.patterns")
+        );
+        node.addEventListener("init_done", () => event_list.push("init_done"));
+        $(node).on("init.example.patterns", () =>
+            event_list.push("init.example.patterns")
+        );
         new Tmp(node);
 
         // await until all asyncs are settled. 1 event loop should be enough.
         await utils.timeout(1);
 
-        expect(event_list[0]).toBe("pat init");
-        expect(event_list[1]).toBe("base init");
+        expect(event_list[0]).toBe("pre-init.example.patterns");
+        expect(event_list[1]).toBe("init_done");
+        expect(event_list[2]).toBe("init.example.patterns");
     });
 
     it("adds the pattern instance on the element when manually initialized", async () => {
