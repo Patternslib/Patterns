@@ -1,4 +1,4 @@
-import "../../core/jquery-ext"; // for :scrollable for autoLoading-visible
+import "../../core/jquery-ext"; // for findInclusive
 import $ from "jquery";
 import ajax from "../ajax/ajax";
 import dom from "../../core/dom";
@@ -487,8 +487,11 @@ const inject = {
         }
 
         if (cfg.scroll && cfg.scroll !== "none") {
-            let scroll_container = cfg.$target.parents().addBack().filter(":scrollable");
-            scroll_container = scroll_container.length ? scroll_container[0] : window;
+            const scroll_container = dom.find_scroll_container(
+                cfg.$target[0],
+                null,
+                window
+            );
 
             // default for scroll===top
             let top = 0;
