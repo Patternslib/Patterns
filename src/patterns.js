@@ -45,6 +45,7 @@ import "./pat/notification/notification";
 import "./pat/push/push";
 import "./pat/scroll-box/scroll-box";
 import "./pat/scroll/scroll";
+import "./pat/scroll-marker/scroll-marker";
 import "./pat/selectbox/selectbox";
 import "./pat/slides/slides";
 import "./pat/sortable/sortable";

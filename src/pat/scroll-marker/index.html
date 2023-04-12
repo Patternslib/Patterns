@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Scroll marker demo</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="/style/common.css" />
+        <script src="/bundle.min.js"></script>
+    </head>
+    <style>
+        html{
+          scroll-behavior: smooth;
+        }
+        .nav-container {
+            position: fixed;
+            top: 1em;
+            right: 1em;
+            background-color: #eee;
+            padding: 1em;
+            border-top: 1px solid black;
+            border-right: 1px solid black;
+            border-left: 5px solid black;
+            border-bottom: 5px solid black;
+        }
+        .in-view {
+            border-top: 3px solid black;
+        }
+        .current {
+            border-bottom: 3px solid black;
+        }
+        .navigation-current,
+        .scroll-marker-current {
+            background-color: #eee;
+        }
+        section {
+          padding: 1em;
+        }
+
+    </style>
+    <body>
+      <div class="nav-container">
+        <code>↱ class in-view</code>
+        <nav class="pat-navigation"
+            data-pat-navigation="
+              scroll-marker-visibility: most-visible;
+              scroll-marker-distance: 100%;
+              scroll-marker-side: auto;
+            ">
+          <a href="#id1">link 1</a>
+          <a href="#id2">link 2</a>
+          <a href="#id3">link 3</a>
+          <a href="#id4">link 4</a>
+        </nav>
+        <code>↳ class current</code>
+      </div>
+
+      <p>Text from: <a href="https://satoristudio.net/delorean-ipsum/">DeLorean Ipsum Text Generator</a></p>
+
+      <section id="id1">
+        <h3>1</h3>
+        <pre>
+          Good. Have a good trip Einstein, watch your head.
+          Marty, will we ever see you again? I know what you're
+          gonna say, son, and you're right, you're right, But
+          Biff just happens to be my supervisor, and I'm afraid
+          I'm not very good at confrontations. Right, and where
+          am I gonna be? Great Scott. Let me see that
+          photograph again of your brother. Just as I thought,
+          this proves my theory, look at your brother.
+        </pre>
+
+        <pre>
+          Where does he come from? There, there, now, just
+          relax. You've been asleep for almost nine hours now.
+          Of course, from a group of Libyan Nationalists. They
+          wanted me to build them a bomb, so I took their
+          plutonium and in turn gave them a shiny bomb case
+          full of used pinball machine parts. Good, there's
+          somebody I'd like you to meet. Lorraine. Marty, you
+          seem so nervous, is something wrong?
+        </pre>
+      </section>
+
+      <section id="id2">
+        <h3>2</h3>
+        <pre>
+          Now that's a risk you'll have to take you're life
+          depends on it. His head's gone, it's like it's been
+          erased. Something that really cooks. Alright, alright
+          this is an oldie, but uh, it's an oldie where I come
+          from. Alright guys, let's do some blues riff in b,
+          watch me for the changes, and uh, try and keep up,
+          okay. Yeah well look, Marvin, Marvin, you gotta play.
+          See that's where they kiss for the first time on the
+          dance floor. And if there's no music, they can't
+          dance, and if they can't dance, they can't kiss, and
+          if they can't kiss, they can't fall in love and I'm
+          history. Right, and where am I gonna be?
+        </pre>
+
+        <pre>
+          Calvin. They're late. My experiment worked. They're
+          all exactly twenty-five minutes slow. I guarantee it.
+          No no no this sucker's electrical, but I need a
+          nuclear reaction to generate the one point twenty-one
+          gigawatts of electricity that I need. he's an idiot,
+          comes from upbringing, parents were probably idiots
+          too. Lorraine, if you ever have a kid like that, I'll
+          disown you.
+        </pre>
+      </section>
+
+      <section id="id3">
+        <h3>3</h3>
+        <pre>
+          Oh. What, what? Who do you think, the Libyans. I
+          don't know, but I'm gonna find out. Excuse me.
+        </pre>
+
+        <pre>
+          Keys? He's a very strange young man. What, what is it
+          hot? What, what? Oh, if Paul calls me tell him I'm
+          working at the boutique late tonight.
+        </pre>
+      </section>
+
+      <section id="id4">
+        <h3>4</h3>
+        <pre>
+          George, buddy. remember that girl I introduced you
+          to, Lorraine. What are you writing? You're George
+          McFly. this has gotta be a dream. Why is she gonna
+          get angry with you? Who, who?
+        </pre>
+
+        <pre>
+          That Biff, what a character. Always trying to get
+          away with something. Been on top of Biff ever since
+          high school. Although, if it wasn't for him- Yes,
+          definitely, god-dammit George, swear. Okay, so now,
+          you come up, you punch me in the stomach, I'm out for
+          the count, right? And you and Lorraine live happily
+          ever after. I have to tell you about the future. That
+          Biff, what a character. Always trying to get away
+          with something. Been on top of Biff ever since high
+          school. Although, if it wasn't for him- What a
+          nightmare.
+        </pre>
+
+      </section>
+   </body>
+</html>
