@@ -169,7 +169,7 @@ const get_parents = (el) => {
 /**
  * Return the value of the first attribute found in the list of parents.
  *
- * @param {DOM element} el - The DOM element to start the acquisition search for the given attribute.
+ * @param {Node} el - The DOM element to start the acquisition search for the given attribute.
  * @param {string} attribute - Name of the attribute to search for.
  * @param {Boolean} include_empty - Also return empty values.
  * @param {Boolean} include_all - Return a list of attribute values found in all parents.
@@ -245,7 +245,7 @@ function get_css_value(el, property, as_pixels = false, as_float = false) {
  * @param {String} [direction=] - Not given: Search for any scrollable element up in the DOM tree.
  *                                ``x``: Search for a horizontally scrollable element.
  *                                ``y``: Search for a vertically scrollable element.
- * @param {(DOM Node|null)} [fallback=document.body] - Fallback, if no scroll container can be found.
+ * @param {(Node|null)} [fallback=document.body] - Fallback, if no scroll container can be found.
  *                                                     The default is to use document.body.
  *
  * @returns {Node} - Return the first scrollable element.
