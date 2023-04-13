@@ -271,6 +271,38 @@ const find_scroll_container = (el, direction, fallback = document.body) => {
 };
 
 /**
+ * Get the horizontal scroll position.
+ *
+ * @param {Node} scroll_reference - The element to get the scroll position from.
+ *
+ * @returns {number} The horizontal scroll position.
+ */
+const get_scroll_x = (scroll_reference) => {
+    // scroll_listener == window: window.scrollX
+    // scroll_listener == html: html.scrollLeft == window.scrollX
+    // scroll_listener == DOM node: node.scrollLeft
+    return typeof scroll_reference.scrollLeft !== "undefined"
+        ? scroll_reference.scrollLeft
+        : scroll_reference.scrollX;
+};
+
+/**
+ * Get the vertical scroll position.
+ *
+ * @param {Node} scroll_reference - The element to get the scroll position from.
+ *
+ * @returns {number} The vertical scroll position.
+ */
+const get_scroll_y = (scroll_reference) => {
+    // scroll_listener == window: window.scrollY
+    // scroll_listener == html: html.scrollTop == window.scrollY
+    // scroll_listener == DOM node: node.scrollTop
+    return typeof scroll_reference.scrollTop !== "undefined"
+        ? scroll_reference.scrollTop
+        : scroll_reference.scrollY;
+};
+
+/**
  * Get data stored directly on the node instance.
  * We are using a prefix to make sure the data doesn't collide with other attributes.
  *
@@ -351,6 +383,8 @@ const dom = {
     create_from_string: create_from_string,
     get_css_value: get_css_value,
     find_scroll_container: find_scroll_container,
+    get_scroll_x: get_scroll_x,
+    get_scroll_y: get_scroll_y,
     get_data: get_data,
     set_data: set_data,
     delete_data: delete_data,

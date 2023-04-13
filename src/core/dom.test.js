@@ -710,6 +710,62 @@ describe("core.dom tests", () => {
         });
     });
 
+    describe("get_scroll_y", function () {
+        it("get vertical scroll from window", function (done) {
+            jest.replaceProperty(window, "scrollY", 2000);
+            expect(dom.get_scroll_y(window)).toBe(2000);
+            done();
+        });
+
+        it("get vertical scroll from window when scrollY is 0", function (done) {
+            jest.replaceProperty(window, "scrollY", 0);
+            expect(dom.get_scroll_y(window)).toBe(0);
+            done();
+        });
+
+        it("get vertical scroll from an element", function (done) {
+            const el = document.createElement("div");
+            jest.spyOn(el, "scrollTop", "get").mockReturnValue(2000);
+            expect(dom.get_scroll_y(el)).toBe(2000);
+            done();
+        });
+
+        it("get vertical scroll from an element when scrollTop is 0", function (done) {
+            const el = document.createElement("div");
+            jest.spyOn(el, "scrollTop", "get").mockReturnValue(0);
+            expect(dom.get_scroll_y(el)).toBe(0);
+            done();
+        });
+    });
+
+    describe("get_scroll_x", function () {
+        it("get horizontal scroll from window", function (done) {
+            jest.replaceProperty(window, "scrollX", 2000);
+            expect(dom.get_scroll_x(window)).toBe(2000);
+            done();
+        });
+
+        it("get horizontal scroll from window when scrollX is 0", function (done) {
+            jest.replaceProperty(window, "scrollX", 0);
+            expect(dom.get_scroll_x(window)).toBe(0);
+            done();
+        });
+
+        it("get horizontal scroll from an element", function (done) {
+            const el = document.createElement("div");
+            jest.spyOn(el, "scrollLeft", "get").mockReturnValue(2000);
+            expect(dom.get_scroll_x(el)).toBe(2000);
+            done();
+        });
+
+        it("get horizontal scroll from an element when scrollLeft is 0", function (done) {
+            const el = document.createElement("div");
+            jest.spyOn(el, "scrollLeft", "get").mockReturnValue(0);
+            expect(dom.get_scroll_x(el)).toBe(0);
+            done();
+        });
+    });
+
     describe("set_data, get_data, delete_data", function () {
         it("can be used to store and retrieve data on DOM nodes.", function () {
             const el = document.createElement("div");
