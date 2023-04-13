@@ -689,6 +689,25 @@ const date_diff = (date_1, date_2) => {
     return Math.floor((utc_1 - utc_2) / _MS_PER_DAY);
 };
 
+/**
+ * Build intersection observer threshold list.
+ *
+ * See: https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#building_the_array_of_threshold_ratios
+ *
+ * @param {Number} num_steps - The number of steps to use.
+ *
+ * @returns {Array} - Returns the threshold list.
+ */
+const threshold_list = (num_steps = 0) => {
+    let thresholds = [];
+
+    for (let i = 1.0; i <= num_steps; i++) {
+        thresholds.push(i / num_steps);
+    }
+    thresholds.push(0);
+    return thresholds.sort();
+};
+
 var utils = {
     jqueryPlugin: jqueryPlugin,
     escapeRegExp: escapeRegExp,
@@ -720,6 +739,7 @@ var utils = {
     is_iso_date_time: is_iso_date_time,
     is_iso_date: is_iso_date,
     date_diff: date_diff,
+    threshold_list: threshold_list,
     getCSSValue: dom.get_css_value, // BBB: moved to dom. TODO: Remove in upcoming version.
 };
 

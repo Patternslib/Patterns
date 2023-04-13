@@ -780,3 +780,34 @@ describe("date_diff ...", function () {
         expect(utils.date_diff(date_1, date_2)).toBe(1);
     });
 });
+
+describe("threshold_list ...", function () {
+    it("returns a list with 0 for num_steps 0", () => {
+        expect(utils.threshold_list(0)).toEqual([0]);
+    });
+
+    it("returns a list of thresholds for num_steps 2", () => {
+        expect(utils.threshold_list(2)).toEqual([0, 0.5, 1]);
+    });
+
+    it("returns a list of thresholds for num_steps 4", () => {
+        expect(utils.threshold_list(4)).toEqual([0, 0.25, 0.5, 0.75, 1]);
+    });
+
+    it("returns a list of thresholds for num_steps 5", () => {
+        expect(utils.threshold_list(5)).toEqual([0, 0.2, 0.4, 0.6, 0.8, 1]);
+    });
+
+    it("returns a list of thresholds for num_steps 10", () => {
+        expect(utils.threshold_list(10)).toEqual([
+            0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1,
+        ]);
+    });
+
+    it("returns a list of thresholds for num_steps 20", () => {
+        expect(utils.threshold_list(20)).toEqual([
+            0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65,
+            0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1,
+        ]);
+    });
+});
