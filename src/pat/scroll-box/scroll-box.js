@@ -1,5 +1,6 @@
 import Base from "../../core/base";
 import Parser from "../../core/parser";
+import dom from "../../core/dom";
 import events from "../../core/events";
 
 export const parser = new Parser("scroll-box");
@@ -56,7 +57,7 @@ export default Base.extend({
     },
 
     set_scroll_classes() {
-        const scroll_pos = this.get_scroll_y();
+        const scroll_pos = dom.get_scroll_y(this.scroll_listener);
         const el = this.el;
 
         const to_add = [];
@@ -103,14 +104,5 @@ export default Base.extend({
         // Remove ``scrolling-up`` and ``scrolling-down``
         // but keep ``scroll-up`` and ``scroll-down``.
         this.el.classList.remove("scrolling-up", "scrolling-down");
-    },
-
-    get_scroll_y() {
-        if (this.scroll_listener === window) {
-            // scrolling the window
-            return window.scrollY !== undefined ? window.scrollY : window.pageYOffset; // pageYOffset for IE
-        }
-        // scrolling a DOM element
-        return this.scroll_listener.scrollTop;
     },
 });
