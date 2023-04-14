@@ -368,6 +368,44 @@ const template = (template_string, template_variables = {}) => {
     return new Function("return `" + template_string + "`;").call(template_variables);
 };
 
+/**
+ * Get the visible ratio of an element compared to container.
+ * If no container is given, the viewport is used.
+ *
+ * Note: currently only vertical ratio is supported.
+ *
+ * @param {Node} el - The element to get the visible ratio from.
+ * @param {Node} [container] - The container to compare the element to.
+ * @returns {number} - The visible ratio of the element.
+ *                    0 means the element is not visible.
+ *                    1 means the element is fully visible.
+ */
+const get_visible_ratio = (el, container) => {
+    if (!el) {
+        return 0;
+    }
+
+    const rect = el.getBoundingClientRect();
+    const container_rect =
+        container !== window
+            ? container.getBoundingClientRect()
+            : {
+                  top: 0,
+                  bottom: window.innerHeight,
+              };
+
+    let visible_ratio = 0;
+    if (rect.top < container_rect.bottom && rect.bottom > container_rect.top) {
+        const rect_height = rect.bottom - rect.top;
+        const visible_height =
+            Math.min(rect.bottom, container_rect.bottom) -
+            Math.max(rect.top, container_rect.top);
+        visible_ratio = visible_height / rect_height;
+    }
+
+    return visible_ratio;
+};
+
 const dom = {
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
@@ -389,6 +427,7 @@ const dom = {
     set_data: set_data,
     delete_data: delete_data,
     template: template,
+    get_visible_ratio: get_visible_ratio,
     add_event_listener: events.add_event_listener, // BBB export. TODO: Remove in an upcoming version.
     remove_event_listener: events.remove_event_listener, // BBB export. TODO: Remove in an upcoming version.
 };

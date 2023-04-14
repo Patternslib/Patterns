@@ -806,4 +806,53 @@ describe("core.dom tests", () => {
             done();
         });
     });
+
+    describe("get_visible_ratio", () => {
+        it("returns 0 if the element is not given", (done) => {
+            expect(dom.get_visible_ratio()).toBe(0);
+            done();
+        });
+
+        it("container = window, returns 0 if the element is not visible", (done) => {
+            const el = document.createElement("div");
+            jest.spyOn(el, "getBoundingClientRect").mockImplementation(() => {
+                return {
+                    top: 200,
+                    bottom: 300,
+                };
+            });
+            jest.replaceProperty(window, "innerHeight", 100);
+
+            expect(dom.get_visible_ratio(el, window)).toBe(0);
+            done();
+        });
+
+        it("container = window, returns 0.5 if the element is half-visible", (done) => {
+            const el = document.createElement("div");
+            jest.spyOn(el, "getBoundingClientRect").mockImplementation(() => {
+                return {
+                    top: 50,
+                    bottom: 150,
+                };
+            });
+            jest.replaceProperty(window, "innerHeight", 100);
+
+            expect(dom.get_visible_ratio(el, window)).toBe(0.5);
+            done();
+        });
+
+        it("container = window, returns 1 if the element is fully visible", (done) => {
+            const el = document.createElement("div");
+            jest.spyOn(el, "getBoundingClientRect").mockImplementation(() => {
+                return {
+                    top: 0,
+                    bottom: 100,
+                };
+            });
+            jest.replaceProperty(window, "innerHeight", 100);
+
+            expect(dom.get_visible_ratio(el, window)).toBe(1);
+            done();
+        });
+    });
 });
