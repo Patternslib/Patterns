@@ -442,6 +442,54 @@ function parseTime(time) {
     }
 }
 
+/*
+
+ * parseLength - Parse a length from a string and return the parsed length in
+ * pixels.
+
+ * @param {String} length - A length string like `1px` or `25%`.
+ * @param {Number} reference_length - The reference length to use for percentage lengths.
+ *
+ * @returns {Number} - A integer which represents the parsed length in pixels.
+ *
+ * @throws {Error} - If the length string is invalid.
+ *
+ * @example
+ * parseLength("1px"); // 1
+ * parseLength("10%", 100); // 10
+ *
+ */
+function parseLength(length, reference_length = null) {
+    const m = /^(\d+(?:\.\d+)?)\s*(\%?\w*)/.exec(length);
+    if (!m) {
+        throw new Error("Invalid length");
+    }
+    const amount = parseFloat(m[1]);
+    switch (m[2]) {
+        case "px":
+            return Math.round(amount);
+        case "%":
+            if (!reference_length) {
+                return 0;
+            }
+            return (reference_length / 100) * Math.round(amount);
+        case "vw":
+            return Math.round((amount * window.innerWidth) / 100);
+        case "vh":
+            return Math.round((amount * window.innerHeight) / 100);
+        case "vmin":
+            return Math.round(
+                (amount * Math.min(window.innerWidth, window.innerHeight)) / 100
+            );
+        case "vmax":
+            return Math.round(
+                (amount * Math.max(window.innerWidth, window.innerHeight)) / 100
+            );
+        default:
+            return null;
+    }
+}
+
 // Return a jQuery object with elements related to an input element.
 function findRelatives(el) {
     var $el = $(el),
@@ -723,6 +771,7 @@ var utils = {
     isElementInViewport: isElementInViewport,
     hasValue: hasValue,
     parseTime: parseTime,
+    parseLength: parseLength,
     findRelatives: findRelatives,
     get_bounds: get_bounds,
     checkInputSupport: checkInputSupport,

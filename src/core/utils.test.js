@@ -472,6 +472,76 @@ describe("parseTime", function () {
     });
 });
 
+describe("parseLength", function () {
+    it("raises exception for invalid input", function () {
+        var p = function () {
+            utils.parseLength("abc");
+        };
+        expect(p).toThrow();
+    });
+
+    it("handles pixel lengths", function () {
+        expect(utils.parseLength("10px")).toBe(10);
+        expect(utils.parseLength("100px")).toBe(100);
+        expect(utils.parseLength("1000.1px")).toBe(1000);
+        expect(utils.parseLength("1000.9px")).toBe(1001);
+
+        expect(utils.parseLength("10 px")).toBe(10);
+    });
+
+    it("handles percent lengths", function () {
+        expect(utils.parseLength("10%", 1)).toBe(0.1);
+        expect(utils.parseLength("10%", 10)).toBe(1);
+        expect(utils.parseLength("10%", 100)).toBe(10);
+        expect(utils.parseLength("10%", 1000)).toBe(100);
+
+        expect(utils.parseLength("10.1%", 100)).toBe(10);
+        expect(utils.parseLength("10.9%", 100)).toBe(11);
+
+        expect(utils.parseLength("10 %", 100)).toBe(10);
+    });
+
+    it("handles vw lengths", function () {
+        jest.replaceProperty(window, "innerWidth", 1000);
+
+        expect(utils.parseLength("1vw")).toBe(10);
+        expect(utils.parseLength("10vw")).toBe(100);
+        expect(utils.parseLength("100vw")).toBe(1000);
+
+        expect(utils.parseLength("10 vw")).toBe(100);
+    });
+
+    it("handles vh lengths", function () {
+        jest.replaceProperty(window, "innerHeight", 1000);
+
+        expect(utils.parseLength("1vh")).toBe(10);
+        expect(utils.parseLength("10vh")).toBe(100);
+        expect(utils.parseLength("100vh")).toBe(1000);
+
+        expect(utils.parseLength("10 vh")).toBe(100);
+    });
+
+    it("handles vmin lengths", function () {
+        jest.replaceProperty(window, "innerHeight", 100);
+        jest.replaceProperty(window, "innerWidth", 200);
+        expect(utils.parseLength("10vmin")).toBe(10);
+
+        jest.replaceProperty(window, "innerHeight", 100);
+        jest.replaceProperty(window, "innerWidth", 50);
+        expect(utils.parseLength("10vmin")).toBe(5);
+    });
+
+    it("handles vmax lengths", function () {
+        jest.replaceProperty(window, "innerHeight", 100);
+        jest.replaceProperty(window, "innerWidth", 200);
+        expect(utils.parseLength("10vmax")).toBe(20);
+
+        jest.replaceProperty(window, "innerHeight", 100);
+        jest.replaceProperty(window, "innerWidth", 50);
+        expect(utils.parseLength("10vmax")).toBe(10);
+    });
+});
+
 describe("get_bounds", function () {
     it("returns the bounds values as integer numbers instead of double/float values.", () => {
         const el = document.createElement("div");
