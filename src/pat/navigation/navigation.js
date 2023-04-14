@@ -1,7 +1,9 @@
-import Base from "../../core/base";
+import $ from "jquery";
+import { BasePattern } from "../../core/basepattern";
 import Parser from "../../core/parser";
 import logging from "../../core/logging";
 import events from "../../core/events";
+import registry from "../../core/registry";
 
 const log = logging.getLogger("navigation");
 
@@ -10,16 +12,18 @@ parser.addArgument("item-wrapper", "li");
 parser.addArgument("in-path-class", "navigation-in-path");
 parser.addArgument("current-class", "current");
 
-export default Base.extend({
-    name: "navigation",
-    trigger: ".pat-navigation",
+class Pattern extends BasePattern {
+    static name = "navigation";
+    static trigger = ".pat-navigation";
+    static parser = parser;
 
     init() {
         this.options = parser.parse(this.el, this.options);
+        this.$el = $(this.el);
 
         this.init_listeners();
         this.init_markings();
-    },
+    }
 
     /**
      * Initialize listeners for the navigation.
@@ -64,7 +68,7 @@ export default Base.extend({
             });
             this.el.querySelector(`a.${current}, .${current} a`)?.click();
         }
-    },
+    }
 
     /**
      * Initial run to mark the current item and its parents.
@@ -77,7 +81,7 @@ export default Base.extend({
             log.debug("Mark navigation items based on URL pattern.");
             this.mark_items_url();
         }
-    },
+    }
 
     /**
      * Get a matching parent or stop at stop_el.
@@ -99,7 +103,7 @@ export default Base.extend({
             }
             matching_parent = matching_parent.parentNode;
         }
-    },
+    }
 
     /**
      * Mark an item and it's wrapper as current.
@@ -120,7 +124,7 @@ export default Base.extend({
             this.mark_in_path(wrapper || item);
             log.debug("Statically set current item marked as current", item);
         }
-    },
+    }
 
     /**
      * Mark all parent navigation elements as in path.
@@ -140,7 +144,7 @@ export default Base.extend({
             }
             path_el = this.get_parent(path_el, this.options.itemWrapper, this.el);
         }
-    },
+    }
 
     /**
      * Mark all navigation items that are in the path of the current url.
@@ -183,7 +187,7 @@ export default Base.extend({
                 continue;
             }
         }
-    },
+    }
 
     /**
      * Clear all navigation items from the inPath and current classes
@@ -196,7 +200,7 @@ export default Base.extend({
             item.classList.remove(this.options.inPathClass);
             item.classList.remove(this.options.currentClass);
         }
-    },
+    }
 
     /**
      * Prepare a URL for comparison.
@@ -208,7 +212,7 @@ export default Base.extend({
      */
     prepare_url(url) {
         return url?.replace("/view", "").replaceAll("@@", "").replace(/\/$/, "");
-    },
+    }
 
     /**
      * Get the URL of the current page.
@@ -223,5 +227,9 @@ export default Base.extend({
             document.querySelector('head link[rel="canonical"]')?.href ||
                 window.location.href
         );
-    },
-});
+    }
+}
+
+registry.register(Pattern);
+export default Pattern;
+export { Pattern };
