@@ -15,7 +15,7 @@ describe("Basepattern class tests", function () {
         jest.restoreAllMocks();
     });
 
-    it("1 - Trigger, name and parser are statically available on the class.", async function () {
+    it("1.1 - Trigger, name and parser are statically available on the class.", async function () {
         class Pat extends BasePattern {
             static name = "example";
             static trigger = ".example";
@@ -37,6 +37,57 @@ describe("Basepattern class tests", function () {
         expect(typeof pat.parser.parse).toBe("function");
     });
 
+    it("1.2 - Options are created with grouping per default.", async function () {
+        const Parser = (await import("./parser")).default;
+
+        const parser = new Parser("example");
+        parser.addArgument("a", 1);
+        parser.addArgument("camel-b", 2);
+        parser.addArgument("test-a", 3);
+        parser.addArgument("test-b", 4);
+
+        class Pat extends BasePattern {
+            static name = "example";
+            static trigger = ".example";
+            static parser = parser;
+        }
+
+        const el = document.createElement("div");
+        const pat = new Pat(el);
+        await utils.timeout(1);
+
+        expect(pat.options.a).toBe(1);
+        expect(pat.options.camelB).toBe(2);
+        expect(pat.options.test.a).toBe(3);
+        expect(pat.options.test.b).toBe(4);
+    });
+
+    it("1.3 - Option grouping can be turned off.", async function () {
+        const Parser = (await import("./parser")).default;
+
+        const parser = new Parser("example");
+        parser.addArgument("a", 1);
+        parser.addArgument("camel-b", 2);
+        parser.addArgument("test-a", 3);
+        parser.addArgument("test-b", 4);
+
+        class Pat extends BasePattern {
+            static name = "example";
+            static trigger = ".example";
+            static parser = parser;
+
+            parser_group_options = false;
+        }
+
+        const el = document.createElement("div");
+        const pat = new Pat(el);
+        await utils.timeout(1);
+
+        expect(pat.options.a).toBe(1);
+        expect(pat.options["camel-b"]).toBe(2);
+        expect(pat.options["test-a"]).toBe(3);
+        expect(pat.options["test-b"]).toBe(4);
+    });
     it("2 - Base pattern is class based and does inheritance, polymorphism, encapsulation, ... pt1", async function () {
         class Pat1 extends BasePattern {
             some = "thing";

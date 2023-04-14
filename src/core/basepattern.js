@@ -16,6 +16,11 @@ class BasePattern {
     static trigger; // A CSS selector to match elements that should trigger the pattern instantiation.
     static parser; // Options parser.
 
+    // Parser options
+    parser_group_options = true;
+    parser_multiple = undefined;
+    parser_inherit = true;
+
     constructor(el, options = {}) {
         // Make static variables available on instance.
         this.name = this.constructor.name;
@@ -68,7 +73,14 @@ class BasePattern {
 
             // Create the options object by parsing the element and using the
             // optional options as default.
-            this.options = this.parser?.parse(this.el, options) ?? options;
+            this.options =
+                this.parser?.parse(
+                    this.el,
+                    options,
+                    this.parser_multiple,
+                    this.parser_inherit,
+                    this.parser_group_options
+                ) ?? options;
 
             // Store pattern instance on element
             this.el[`pattern-${this.name}`] = this;
