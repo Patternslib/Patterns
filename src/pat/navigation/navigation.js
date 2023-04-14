@@ -17,8 +17,9 @@ class Pattern extends BasePattern {
     static trigger = ".pat-navigation";
     static parser = parser;
 
+    parser_group_options = false;
+
     init() {
-        this.options = parser.parse(this.el, this.options);
         this.$el = $(this.el);
 
         this.init_listeners();
@@ -29,7 +30,7 @@ class Pattern extends BasePattern {
      * Initialize listeners for the navigation.
      */
     init_listeners() {
-        const current = this.options.currentClass;
+        const current = this.options["current-class"];
 
         events.add_event_listener(
             this.el,
@@ -74,7 +75,7 @@ class Pattern extends BasePattern {
      * Initial run to mark the current item and its parents.
      */
     init_markings() {
-        if (this.el.querySelector(`.${this.options.currentClass}`)) {
+        if (this.el.querySelector(`.${this.options["current-class"]}`)) {
             log.debug("Mark navigation items based on existing current class");
             this.mark_current();
         } else {
@@ -118,9 +119,9 @@ class Pattern extends BasePattern {
             : this.el.querySelectorAll(`.current > a, a.current`);
 
         for (const item of current_els) {
-            item.classList.add(this.options.currentClass);
-            const wrapper = item.closest(this.options.itemWrapper);
-            wrapper?.classList.add(this.options.currentClass);
+            item.classList.add(this.options["current-class"]);
+            const wrapper = item.closest(this.options["item-wrapper"]);
+            wrapper?.classList.add(this.options["current-class"]);
             this.mark_in_path(wrapper || item);
             log.debug("Statically set current item marked as current", item);
         }
@@ -133,16 +134,16 @@ class Pattern extends BasePattern {
      *
      */
     mark_in_path(start_el) {
-        let path_el = this.get_parent(start_el, this.options.itemWrapper, this.el);
+        let path_el = this.get_parent(start_el, this.options["item-wrapper"], this.el);
         while (path_el) {
-            if (!path_el.matches(`.${this.options.currentClass}`)) {
-                path_el.classList.add(this.options.inPathClass);
+            if (!path_el.matches(`.${this.options["current-class"]}`)) {
+                path_el.classList.add(this.options["in-path-class"]);
                 for (const it of [...path_el.children].filter((it) => it.matches("a"))) {
-                    it.classList.add(this.options.inPathClass);
+                    it.classList.add(this.options["in-path-class"]);
                 }
                 log.debug("Marked item as in-path", path_el);
             }
-            path_el = this.get_parent(path_el, this.options.itemWrapper, this.el);
+            path_el = this.get_parent(path_el, this.options["item-wrapper"], this.el);
         }
     }
 
@@ -166,11 +167,11 @@ class Pattern extends BasePattern {
                 new URL(nav_item.getAttribute("href", ""), current_url)?.href
             );
 
-            const wrapper = nav_item.closest(this.options.itemWrapper);
+            const wrapper = nav_item.closest(this.options["item-wrapper"]);
 
             if (nav_url === current_url_prepared) {
-                nav_item.classList.add(this.options.currentClass);
-                wrapper?.classList.add(this.options.currentClass);
+                nav_item.classList.add(this.options["current-class"]);
+                wrapper?.classList.add(this.options["current-class"]);
                 this.mark_in_path(nav_item);
             } else if (
                 // Compare the current navigation item url with a slash at the
@@ -180,8 +181,8 @@ class Pattern extends BasePattern {
                 // be in the path.
                 nav_url !== portal_url
             ) {
-                nav_item.classList.add(this.options.inPathClass);
-                wrapper?.classList.add(this.options.inPathClass);
+                nav_item.classList.add(this.options["in-path-class"]);
+                wrapper?.classList.add(this.options["in-path-class"]);
             } else {
                 // Not even in path.
                 continue;
@@ -194,11 +195,11 @@ class Pattern extends BasePattern {
      */
     clear_items() {
         const items = this.el.querySelectorAll(
-            `.${this.options.inPathClass}, .${this.options.currentClass}`
+            `.${this.options["in-path-class"]}, .${this.options["current-class"]}`
         );
         for (const item of items) {
-            item.classList.remove(this.options.inPathClass);
-            item.classList.remove(this.options.currentClass);
+            item.classList.remove(this.options["in-path-class"]);
+            item.classList.remove(this.options["current-class"]);
         }
     }
 
