@@ -1,16 +1,27 @@
 import $ from "jquery";
 import { BasePattern } from "../../core/basepattern";
 import Parser from "../../core/parser";
+import ScrollMarker from "../scroll-marker/scroll-marker";
 import logging from "../../core/logging";
 import events from "../../core/events";
 import registry from "../../core/registry";
+import utils from "../../core/utils";
 
 const log = logging.getLogger("navigation");
 
 export const parser = new Parser("navigation");
 parser.addArgument("item-wrapper", "li");
 parser.addArgument("in-path-class", "navigation-in-path");
+parser.addArgument("in-view-class", "in-view");
 parser.addArgument("current-class", "current");
+parser.addArgument("current-content-class", "navigation-current");
+
+// Side of element that scrolls. top/bottom/middle/auto (default 'top')
+parser.addArgument("scroll-marker-side", "top", ["top", "bottom", "middle", "auto"]);
+// Distance from side of scroll box. any amount in px or % (default '50%')
+parser.addArgument("scroll-marker-distance", "50%");
+// Visibility of element in scroll box. most-visible or null (default null)
+parser.addArgument("scroll-marker-visibility", null, [null, "most-visible"]);
 
 class Pattern extends BasePattern {
     static name = "navigation";
@@ -24,6 +35,26 @@ class Pattern extends BasePattern {
 
         this.init_listeners();
         this.init_markings();
+
+        this.scroll_marker = new ScrollMarker(this.el, {
+            "current-class": this.options["current-class"],
+            "current-content-class": this.options["current-content-class"],
+            "in-view-class": this.options["in-view-class"],
+            "side": this.options["scroll-marker-side"],
+            "distance": this.options["scroll-marker-distance"],
+            "visibility": this.options["scroll-marker-visibility"],
+        });
+
+        this.debounced_scroll_marker_enabler = utils.debounce(() => {
+            log.debug("Enable scroll-marker.");
+            this.scroll_marker.set_current_disabled = false;
+            events.remove_event_listener(
+                this.scroll_marker.scroll_container === window
+                    ? document
+                    : this.scroll_marker.scroll_container,
+                "pat-navigation__scroll_marker_enable"
+            );
+        }, 200);
     }
 
     /**
@@ -42,6 +73,20 @@ class Pattern extends BasePattern {
                     this.clear_items();
                     // Mark the current item
                     this.mark_current(ev.target);
+
+                    // Disable scroll marker to set the current class after
+                    // clicking in the menu and scrolling to the target.
+                    log.debug("Disable scroll-marker.");
+                    this.scroll_marker.set_current_disabled = true;
+                    this.debounced_scroll_marker_enabler();
+                    events.add_event_listener(
+                        this.scroll_marker.scroll_container === window
+                            ? document
+                            : this.scroll_marker.scroll_container,
+                        "scroll",
+                        "pat-navigation__scroll_marker_enable",
+                        this.debounced_scroll_marker_enabler
+                    );
                 }
             }
         );
@@ -124,6 +169,22 @@ class Pattern extends BasePattern {
             wrapper?.classList.add(this.options["current-class"]);
             this.mark_in_path(wrapper || item);
             log.debug("Statically set current item marked as current", item);
+
+            // Clear all previous current content items.
+            for (const it of [
+                ...document.querySelectorAll(
+                    `.${this.options["current-content-class"]}`
+                ),
+            ]) {
+                it.classList.remove(this.options["current-content-class"]);
+            }
+            // Mark the current content item, if it is a hash link.
+            if (item.matches("a[href^='#']")) {
+                const content_item = document.querySelector(item.getAttribute("href"));
+                if (content_item) {
+                    content_item.classList.add(this.options["current-content-class"]);
+                }
+            }
         }
     }
 
