@@ -169,7 +169,7 @@ const get_parents = (el) => {
 /**
  * Return the value of the first attribute found in the list of parents.
  *
- * @param {DOM element} el - The DOM element to start the acquisition search for the given attribute.
+ * @param {Node} el - The DOM element to start the acquisition search for the given attribute.
  * @param {string} attribute - Name of the attribute to search for.
  * @param {Boolean} include_empty - Also return empty values.
  * @param {Boolean} include_all - Return a list of attribute values found in all parents.
@@ -245,7 +245,7 @@ function get_css_value(el, property, as_pixels = false, as_float = false) {
  * @param {String} [direction=] - Not given: Search for any scrollable element up in the DOM tree.
  *                                ``x``: Search for a horizontally scrollable element.
  *                                ``y``: Search for a vertically scrollable element.
- * @param {(DOM Node|null)} [fallback=document.body] - Fallback, if no scroll container can be found.
+ * @param {(Node|null)} [fallback=document.body] - Fallback, if no scroll container can be found.
  *                                                     The default is to use document.body.
  *
  * @returns {Node} - Return the first scrollable element.
@@ -268,6 +268,38 @@ const find_scroll_container = (el, direction, fallback = document.body) => {
         el = el.parentElement;
     }
     return fallback;
+};
+
+/**
+ * Get the horizontal scroll position.
+ *
+ * @param {Node} scroll_reference - The element to get the scroll position from.
+ *
+ * @returns {number} The horizontal scroll position.
+ */
+const get_scroll_x = (scroll_reference) => {
+    // scroll_listener == window: window.scrollX
+    // scroll_listener == html: html.scrollLeft == window.scrollX
+    // scroll_listener == DOM node: node.scrollLeft
+    return typeof scroll_reference.scrollLeft !== "undefined"
+        ? scroll_reference.scrollLeft
+        : scroll_reference.scrollX;
+};
+
+/**
+ * Get the vertical scroll position.
+ *
+ * @param {Node} scroll_reference - The element to get the scroll position from.
+ *
+ * @returns {number} The vertical scroll position.
+ */
+const get_scroll_y = (scroll_reference) => {
+    // scroll_listener == window: window.scrollY
+    // scroll_listener == html: html.scrollTop == window.scrollY
+    // scroll_listener == DOM node: node.scrollTop
+    return typeof scroll_reference.scrollTop !== "undefined"
+        ? scroll_reference.scrollTop
+        : scroll_reference.scrollY;
 };
 
 /**
@@ -336,6 +368,44 @@ const template = (template_string, template_variables = {}) => {
     return new Function("return `" + template_string + "`;").call(template_variables);
 };
 
+/**
+ * Get the visible ratio of an element compared to container.
+ * If no container is given, the viewport is used.
+ *
+ * Note: currently only vertical ratio is supported.
+ *
+ * @param {Node} el - The element to get the visible ratio from.
+ * @param {Node} [container] - The container to compare the element to.
+ * @returns {number} - The visible ratio of the element.
+ *                    0 means the element is not visible.
+ *                    1 means the element is fully visible.
+ */
+const get_visible_ratio = (el, container) => {
+    if (!el) {
+        return 0;
+    }
+
+    const rect = el.getBoundingClientRect();
+    const container_rect =
+        container !== window
+            ? container.getBoundingClientRect()
+            : {
+                  top: 0,
+                  bottom: window.innerHeight,
+              };
+
+    let visible_ratio = 0;
+    if (rect.top < container_rect.bottom && rect.bottom > container_rect.top) {
+        const rect_height = rect.bottom - rect.top;
+        const visible_height =
+            Math.min(rect.bottom, container_rect.bottom) -
+            Math.max(rect.top, container_rect.top);
+        visible_ratio = visible_height / rect_height;
+    }
+
+    return visible_ratio;
+};
+
 const dom = {
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
@@ -351,10 +421,13 @@ const dom = {
     create_from_string: create_from_string,
     get_css_value: get_css_value,
     find_scroll_container: find_scroll_container,
+    get_scroll_x: get_scroll_x,
+    get_scroll_y: get_scroll_y,
     get_data: get_data,
     set_data: set_data,
     delete_data: delete_data,
     template: template,
+    get_visible_ratio: get_visible_ratio,
     add_event_listener: events.add_event_listener, // BBB export. TODO: Remove in an upcoming version.
     remove_event_listener: events.remove_event_listener, // BBB export. TODO: Remove in an upcoming version.
 };

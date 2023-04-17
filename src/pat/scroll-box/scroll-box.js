@@ -1,5 +1,6 @@
 import Base from "../../core/base";
 import Parser from "../../core/parser";
+import dom from "../../core/dom";
 import events from "../../core/events";
 
 export const parser = new Parser("scroll-box");
@@ -56,8 +57,9 @@ export default Base.extend({
     },
 
     set_scroll_classes() {
-        const scroll_pos = this.get_scroll_y();
-        const el = this.el;
+        const scroll_pos = dom.get_scroll_y(this.scroll_listener);
+        const offset =
+            this.scroll_listener === window ? window.innerHeight : this.el.clientHeight;
 
         const to_add = [];
 
@@ -71,22 +73,14 @@ export default Base.extend({
 
         if (scroll_pos <= 0) {
             to_add.push("scroll-position-top");
-        } else if (
-            this.scroll_listener === window &&
-            window.innerHeight + scroll_pos >= el.scrollHeight
-        ) {
-            to_add.push("scroll-position-bottom");
-        } else if (
-            this.scroll_listener !== window &&
-            el.clientHeight + scroll_pos >= el.scrollHeight
-        ) {
+        } else if (offset + scroll_pos >= this.el.scrollHeight) {
             to_add.push("scroll-position-bottom");
         }
 
         // Keep DOM manipulation calls together to let the browser optimize reflow/repaint.
         // See: https://areknawo.com/dom-performance-case-study/
 
-        el.classList.remove(
+        this.el.classList.remove(
             "scroll-up",
             "scroll-down",
             "scrolling-up",
@@ -94,7 +88,7 @@ export default Base.extend({
             "scroll-position-top",
             "scroll-position-bottom"
         );
-        el.classList.add(...to_add);
+        this.el.classList.add(...to_add);
 
         this.last_known_scroll_position = scroll_pos;
     },
@@ -103,14 +97,5 @@ export default Base.extend({
         // Remove ``scrolling-up`` and ``scrolling-down``
         // but keep ``scroll-up`` and ``scroll-down``.
         this.el.classList.remove("scrolling-up", "scrolling-down");
-    },
-
-    get_scroll_y() {
-        if (this.scroll_listener === window) {
-            // scrolling the window
-            return window.scrollY !== undefined ? window.scrollY : window.pageYOffset; // pageYOffset for IE
-        }
-        // scrolling a DOM element
-        return this.scroll_listener.scrollTop;
     },
 });

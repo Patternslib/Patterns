@@ -74,29 +74,25 @@ export default Base.extend({
     },
 
     markIfVisible() {
-        if (this.$el.hasClass("pat-scroll-animated")) {
-            // this section is triggered when the scrolling is a result of the animate function
-            // ie. automatic scrolling as opposed to the user manually scrolling
-            this.$el.removeClass("pat-scroll-animated");
-        } else if (this.el.href) {
-            const fragment = this.el.href.split("#")?.[1];
-            if (fragment) {
-                const $target = $(`#${fragment}`);
-                if ($target.length) {
-                    if (
-                        utils.isElementInViewport($target[0], true, this.options.offset)
-                    ) {
-                        // check that the anchor's target is visible
-                        // if so, mark both the anchor and the target element
-                        $target.addClass("current");
-                        this.$el.addClass("current");
-                        this.$el.trigger("pat-update", {
-                            pattern: "scroll",
-                            action: "attribute-changed",
-                            dom: $target[0],
-                        });
-                    }
-                }
+        if (!this.el.href) {
+            return;
+        }
+        const fragment = this.el.href.split("#")?.[1];
+        if (!fragment) {
+            return;
+        }
+        const $target = $(`#${fragment}`);
+        if ($target.length) {
+            if (utils.isElementInViewport($target[0], true, this.options.offset)) {
+                // check that the anchor's target is visible
+                // if so, mark both the anchor and the target element
+                $target.addClass("current");
+                this.$el.addClass("current");
+                this.$el.trigger("pat-update", {
+                    pattern: "scroll",
+                    action: "attribute-changed",
+                    dom: $target[0],
+                });
             }
         }
     },
@@ -223,5 +219,6 @@ export default Base.extend({
                 },
             })
             .promise();
+        $(".pat-scroll").removeClass("pat-scroll-animated");
     },
 });

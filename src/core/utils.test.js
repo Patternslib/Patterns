@@ -472,6 +472,76 @@ describe("parseTime", function () {
     });
 });
 
+describe("parseLength", function () {
+    it("raises exception for invalid input", function () {
+        var p = function () {
+            utils.parseLength("abc");
+        };
+        expect(p).toThrow();
+    });
+
+    it("handles pixel lengths", function () {
+        expect(utils.parseLength("10px")).toBe(10);
+        expect(utils.parseLength("100px")).toBe(100);
+        expect(utils.parseLength("1000.1px")).toBe(1000);
+        expect(utils.parseLength("1000.9px")).toBe(1001);
+
+        expect(utils.parseLength("10 px")).toBe(10);
+    });
+
+    it("handles percent lengths", function () {
+        expect(utils.parseLength("10%", 1)).toBe(0.1);
+        expect(utils.parseLength("10%", 10)).toBe(1);
+        expect(utils.parseLength("10%", 100)).toBe(10);
+        expect(utils.parseLength("10%", 1000)).toBe(100);
+
+        expect(utils.parseLength("10.1%", 100)).toBe(10);
+        expect(utils.parseLength("10.9%", 100)).toBe(11);
+
+        expect(utils.parseLength("10 %", 100)).toBe(10);
+    });
+
+    it("handles vw lengths", function () {
+        jest.replaceProperty(window, "innerWidth", 1000);
+
+        expect(utils.parseLength("1vw")).toBe(10);
+        expect(utils.parseLength("10vw")).toBe(100);
+        expect(utils.parseLength("100vw")).toBe(1000);
+
+        expect(utils.parseLength("10 vw")).toBe(100);
+    });
+
+    it("handles vh lengths", function () {
+        jest.replaceProperty(window, "innerHeight", 1000);
+
+        expect(utils.parseLength("1vh")).toBe(10);
+        expect(utils.parseLength("10vh")).toBe(100);
+        expect(utils.parseLength("100vh")).toBe(1000);
+
+        expect(utils.parseLength("10 vh")).toBe(100);
+    });
+
+    it("handles vmin lengths", function () {
+        jest.replaceProperty(window, "innerHeight", 100);
+        jest.replaceProperty(window, "innerWidth", 200);
+        expect(utils.parseLength("10vmin")).toBe(10);
+
+        jest.replaceProperty(window, "innerHeight", 100);
+        jest.replaceProperty(window, "innerWidth", 50);
+        expect(utils.parseLength("10vmin")).toBe(5);
+    });
+
+    it("handles vmax lengths", function () {
+        jest.replaceProperty(window, "innerHeight", 100);
+        jest.replaceProperty(window, "innerWidth", 200);
+        expect(utils.parseLength("10vmax")).toBe(20);
+
+        jest.replaceProperty(window, "innerHeight", 100);
+        jest.replaceProperty(window, "innerWidth", 50);
+        expect(utils.parseLength("10vmax")).toBe(10);
+    });
+});
+
 describe("get_bounds", function () {
     it("returns the bounds values as integer numbers instead of double/float values.", () => {
         const el = document.createElement("div");
@@ -630,6 +700,25 @@ describe("debounce ...", function () {
         await utils.timeout(1);
         expect(test_func).toHaveBeenCalledTimes(1);
     });
+    it("ensures to be called every x ms", async () => {
+        const test_func = jest.fn();
+        const debouncer = utils.debounce(test_func, 2, { timer: null }, false);
+        debouncer();
+        await utils.timeout(1);
+        debouncer();
+        await utils.timeout(1);
+        debouncer();
+        await utils.timeout(1);
+        debouncer();
+        await utils.timeout(1);
+        debouncer();
+        await utils.timeout(1);
+        await utils.timeout(1);
+
+        // There should be 2 or 3 calls, depending on timing corner cases.
+        const calls = test_func.mock.calls.length;
+        expect(calls >= 2 && calls < 4).toBe(true);
+    });
     it("incorrect usage by multi instantiation won't cancel previous runs", async () => {
         const test_func = jest.fn();
         utils.debounce(test_func, 1)();
@@ -759,5 +848,36 @@ describe("date_diff ...", function () {
         const date_1 = new Date("Sun Oct 30 2022 10:00:00 GMT+0100"); // After DST change
         const date_2 = new Date("Sun Oct 29 2022 10:00:00 GMT+0200"); // Before DST change
         expect(utils.date_diff(date_1, date_2)).toBe(1);
+    });
+});
+
+describe("threshold_list ...", function () {
+    it("returns a list with 0 for num_steps 0", () => {
+        expect(utils.threshold_list(0)).toEqual([0]);
+    });
+
+    it("returns a list of thresholds for num_steps 2", () => {
+        expect(utils.threshold_list(2)).toEqual([0, 0.5, 1]);
+    });
+
+    it("returns a list of thresholds for num_steps 4", () => {
+        expect(utils.threshold_list(4)).toEqual([0, 0.25, 0.5, 0.75, 1]);
+    });
+
+    it("returns a list of thresholds for num_steps 5", () => {
+        expect(utils.threshold_list(5)).toEqual([0, 0.2, 0.4, 0.6, 0.8, 1]);
+    });
+
+    it("returns a list of thresholds for num_steps 10", () => {
+        expect(utils.threshold_list(10)).toEqual([
+            0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1,
+        ]);
+    });
+
+    it("returns a list of thresholds for num_steps 20", () => {
+        expect(utils.threshold_list(20)).toEqual([
+            0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65,
+            0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1,
+        ]);
     });
 });

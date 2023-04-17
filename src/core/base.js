@@ -56,6 +56,9 @@ const Base = async function ($el, options, trigger) {
     this.$el = $el;
     this.el = $el[0];
     this.options = $.extend(true, {}, this.defaults || {}, options || {});
+
+    this.emit("pre-init");
+
     await this.init($el, options, trigger);
 
     // Store pattern instance on element

@@ -710,6 +710,62 @@ describe("core.dom tests", () => {
         });
     });
 
+    describe("get_scroll_y", function () {
+        it("get vertical scroll from window", function (done) {
+            jest.replaceProperty(window, "scrollY", 2000);
+            expect(dom.get_scroll_y(window)).toBe(2000);
+            done();
+        });
+
+        it("get vertical scroll from window when scrollY is 0", function (done) {
+            jest.replaceProperty(window, "scrollY", 0);
+            expect(dom.get_scroll_y(window)).toBe(0);
+            done();
+        });
+
+        it("get vertical scroll from an element", function (done) {
+            const el = document.createElement("div");
+            jest.spyOn(el, "scrollTop", "get").mockReturnValue(2000);
+            expect(dom.get_scroll_y(el)).toBe(2000);
+            done();
+        });
+
+        it("get vertical scroll from an element when scrollTop is 0", function (done) {
+            const el = document.createElement("div");
+            jest.spyOn(el, "scrollTop", "get").mockReturnValue(0);
+            expect(dom.get_scroll_y(el)).toBe(0);
+            done();
+        });
+    });
+
+    describe("get_scroll_x", function () {
+        it("get horizontal scroll from window", function (done) {
+            jest.replaceProperty(window, "scrollX", 2000);
+            expect(dom.get_scroll_x(window)).toBe(2000);
+            done();
+        });
+
+        it("get horizontal scroll from window when scrollX is 0", function (done) {
+            jest.replaceProperty(window, "scrollX", 0);
+            expect(dom.get_scroll_x(window)).toBe(0);
+            done();
+        });
+
+        it("get horizontal scroll from an element", function (done) {
+            const el = document.createElement("div");
+            jest.spyOn(el, "scrollLeft", "get").mockReturnValue(2000);
+            expect(dom.get_scroll_x(el)).toBe(2000);
+            done();
+        });
+
+        it("get horizontal scroll from an element when scrollLeft is 0", function (done) {
+            const el = document.createElement("div");
+            jest.spyOn(el, "scrollLeft", "get").mockReturnValue(0);
+            expect(dom.get_scroll_x(el)).toBe(0);
+            done();
+        });
+    });
+
     describe("set_data, get_data, delete_data", function () {
         it("can be used to store and retrieve data on DOM nodes.", function () {
             const el = document.createElement("div");
@@ -747,6 +803,55 @@ describe("core.dom tests", () => {
         it("Returns the string when no template variables are given.", (done) => {
             const res = dom.template(`<h1>hello</h1>`);
             expect(res).toBe(`<h1>hello</h1>`);
+            done();
+        });
+    });
+
+    describe("get_visible_ratio", () => {
+        it("returns 0 if the element is not given", (done) => {
+            expect(dom.get_visible_ratio()).toBe(0);
+            done();
+        });
+
+        it("container = window, returns 0 if the element is not visible", (done) => {
+            const el = document.createElement("div");
+            jest.spyOn(el, "getBoundingClientRect").mockImplementation(() => {
+                return {
+                    top: 200,
+                    bottom: 300,
+                };
+            });
+            jest.replaceProperty(window, "innerHeight", 100);
+
+            expect(dom.get_visible_ratio(el, window)).toBe(0);
+            done();
+        });
+
+        it("container = window, returns 0.5 if the element is half-visible", (done) => {
+            const el = document.createElement("div");
+            jest.spyOn(el, "getBoundingClientRect").mockImplementation(() => {
+                return {
+                    top: 50,
+                    bottom: 150,
+                };
+            });
+            jest.replaceProperty(window, "innerHeight", 100);
+
+            expect(dom.get_visible_ratio(el, window)).toBe(0.5);
+            done();
+        });
+
+        it("container = window, returns 1 if the element is fully visible", (done) => {
+            const el = document.createElement("div");
+            jest.spyOn(el, "getBoundingClientRect").mockImplementation(() => {
+                return {
+                    top: 0,
+                    bottom: 100,
+                };
+            });
+            jest.replaceProperty(window, "innerHeight", 100);
+
+            expect(dom.get_visible_ratio(el, window)).toBe(1);
             done();
         });
     });

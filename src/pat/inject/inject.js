@@ -1,4 +1,4 @@
-import "../../core/jquery-ext"; // for :scrollable for autoLoading-visible
+import "../../core/jquery-ext"; // for findInclusive
 import $ from "jquery";
 import ajax from "../ajax/ajax";
 import dom from "../../core/dom";
@@ -30,7 +30,6 @@ parser.addArgument("delay"); // only used in autoload
 parser.addArgument("browser-cache", "no-cache", ["cache", "no-cache"]); // Cache ajax requests. Pass to pat-ajax.
 parser.addArgument("confirm", "class", ["never", "always", "form-data", "class"]);
 parser.addArgument("confirm-message", "Are you sure you want to leave this page?");
-parser.addArgument("hooks", [], ["raptor"], true); // After injection, pat-inject will trigger an event for each hook: pat-inject-hook-$(hook)
 parser.addArgument("loading-class", "injecting"); // Add a class to the target while content is still loading.
 parser.addArgument("executing-class", "executing"); // Add a class to the element while content is still loading.
 parser.addArgument("executed-class", "executed"); // Add a class to the element when content is loaded.
@@ -45,8 +44,7 @@ parser.addArgument("url");
 
 const inject = {
     name: "inject",
-    trigger:
-        ".raptor-ui .ui-button.pat-inject, a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
+    trigger: "a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
     parser: parser,
 
     init($el, opts) {
@@ -489,8 +487,11 @@ const inject = {
         }
 
         if (cfg.scroll && cfg.scroll !== "none") {
-            let scroll_container = cfg.$target.parents().addBack().filter(":scrollable");
-            scroll_container = scroll_container.length ? scroll_container[0] : window;
+            const scroll_container = dom.find_scroll_container(
+                cfg.$target[0],
+                null,
+                window
+            );
 
             // default for scroll===top
             let top = 0;
@@ -562,9 +563,6 @@ const inject = {
             // Special case, we want to call something, but we don't want to inject anything
             data = "";
         }
-        $.each(cfgs[0].hooks || [], (idx, hook) =>
-            $el.trigger("pat-inject-hook-" + hook)
-        );
         const sources$ = await this.callTypeHandler(cfgs[0].dataType, "sources", $el, [
             cfgs,
             data,
@@ -716,10 +714,23 @@ const inject = {
             }
         }
 
-        $el.on(
-            "pat-ajax-success.pat-inject",
-            this._onInjectSuccess.bind(this, $el, cfgs)
-        );
+        $el.on("pat-ajax-success.pat-inject", async (e) => {
+            this._onInjectSuccess($el, cfgs, e);
+
+            // Wait for the next tick to ensure that the close-panel listener
+            // is called before this one, even for non-async local injects.
+            await utils.timeout(1);
+            // Remove the close-panel event listener.
+            events.remove_event_listener($el[0], "pat-inject--close-panel");
+            // Only close the panel if a close-panel event was catched previously.
+            if (do_close_panel) {
+                do_close_panel = false;
+                // Re-trigger close-panel event if it was caught while injection was in progress.
+                $el[0].dispatchEvent(
+                    new Event("close-panel", { bubbles: true, cancelable: true })
+                );
+            }
+        });
         $el.on("pat-ajax-error.pat-inject", this._onInjectError.bind(this, $el, cfgs));
         $el.on("pat-ajax-success.pat-inject pat-ajax-error.pat-inject", () =>
             $el.removeData("pat-inject-triggered")
@@ -737,21 +748,6 @@ const inject = {
                 do_close_panel = true;
             }
         );
-        $el.on("pat-ajax-success.pat-inject", async () => {
-            // Wait for the next tick to ensure that the close-panel listener
-            // is called before this one, even for non-async local injects.
-            await utils.timeout(1);
-            // Remove the close-panel event listener.
-            events.remove_event_listener($el[0], "pat-inject--close-panel");
-            // Only close the panel if a close-panel event was catched previously.
-            if (do_close_panel) {
-                do_close_panel = false;
-                // Re-trigger close-panel event if it was caught while injection was in progress.
-                $el[0].dispatchEvent(
-                    new Event("close-panel", { bubbles: true, cancelable: true })
-                );
-            }
-        });
 
         if (cfgs[0].url.length) {
             ajax.request($el, {

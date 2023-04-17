@@ -1,6 +1,7 @@
 import "../inject/inject";
 import Pattern from "./navigation";
 import Registry from "../../core/registry";
+import events from "../../core/events";
 import utils from "../../core/utils";
 
 describe("1 - Navigation pattern tests", function () {
@@ -246,7 +247,7 @@ describe("3 - Navigation pattern tests - Mark items based on URL", () => {
         document.body.dataset.portalUrl = portal_url;
     };
 
-    it("navigation roundtrip", () => {
+    it("navigation roundtrip", async () => {
         document.body.innerHTML = `
           <nav class="pat-navigation"
                data-pat-navigation="in-path-class: inPath">
@@ -292,6 +293,7 @@ describe("3 - Navigation pattern tests - Mark items based on URL", () => {
         set_url("https://patternslib.com/");
 
         const instance = new Pattern(document.querySelector(".pat-navigation"));
+        await events.await_pattern_init(instance);
 
         const it0 = document.querySelector("a[href='/']");
         const it1 = document.querySelector("a[href='/path1']");
@@ -384,7 +386,7 @@ describe("4 - Navigation pattern tests - Mark items based based clicking without
         document.body.innerHTML = "";
     });
 
-    it("navigation roundtrip", () => {
+    it("navigation roundtrip", async () => {
         document.body.innerHTML = `
           <nav class="pat-navigation"
                data-pat-navigation="in-path-class: inPath">
@@ -419,6 +421,7 @@ describe("4 - Navigation pattern tests - Mark items based based clicking without
         `;
 
         const instance = new Pattern(document.querySelector(".pat-navigation"));
+        await events.await_pattern_init(instance);
 
         const it0 = document.querySelector("a[href='/home']");
         const it1 = document.querySelector("a[href='/path1']");

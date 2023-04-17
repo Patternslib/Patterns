@@ -442,6 +442,54 @@ function parseTime(time) {
     }
 }
 
+/*
+
+ * parseLength - Parse a length from a string and return the parsed length in
+ * pixels.
+
+ * @param {String} length - A length string like `1px` or `25%`.
+ * @param {Number} reference_length - The reference length to use for percentage lengths.
+ *
+ * @returns {Number} - A integer which represents the parsed length in pixels.
+ *
+ * @throws {Error} - If the length string is invalid.
+ *
+ * @example
+ * parseLength("1px"); // 1
+ * parseLength("10%", 100); // 10
+ *
+ */
+function parseLength(length, reference_length = null) {
+    const m = /^(\d+(?:\.\d+)?)\s*(\%?\w*)/.exec(length);
+    if (!m) {
+        throw new Error("Invalid length");
+    }
+    const amount = parseFloat(m[1]);
+    switch (m[2]) {
+        case "px":
+            return Math.round(amount);
+        case "%":
+            if (!reference_length) {
+                return 0;
+            }
+            return (reference_length / 100) * Math.round(amount);
+        case "vw":
+            return Math.round((amount * window.innerWidth) / 100);
+        case "vh":
+            return Math.round((amount * window.innerHeight) / 100);
+        case "vmin":
+            return Math.round(
+                (amount * Math.min(window.innerWidth, window.innerHeight)) / 100
+            );
+        case "vmax":
+            return Math.round(
+                (amount * Math.max(window.innerWidth, window.innerHeight)) / 100
+            );
+        default:
+            return null;
+    }
+}
+
 // Return a jQuery object with elements related to an input element.
 function findRelatives(el) {
     var $el = $(el),
@@ -516,7 +564,20 @@ const timeout = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-const debounce = (func, ms, timer = { timer: null }) => {
+/**
+ * Returns a function, that, as long as it continues to be invoked, will not
+ * be triggered. The function will be called after it stops being called for
+ * N milliseconds.
+ * From: https://underscorejs.org/#debounce
+ *
+ * @param {Function} func - The function to debounce.
+ * @param {Number} ms - The time in milliseconds to debounce.
+ * @param {Object} timer - A module-global timer as an object.
+ * @param {Boolean} postpone - If true, the function will be called after it stops being called for N milliseconds.
+ *
+ * @returns {Function} - The debounced function.
+ */
+const debounce = (func, ms, timer = { timer: null }, postpone = true) => {
     // Returns a function, that, as long as it continues to be invoked, will not
     // be triggered. The function will be called after it stops being called for
     // N milliseconds.
@@ -528,11 +589,17 @@ const debounce = (func, ms, timer = { timer: null }) => {
     //
     // Pass a module-global timer as an object ``{ timer: null }`` if you want
     // to also cancel debounced functions from other pattern-invocations.
-    //
+    timer.last_run = 0;
     return function () {
-        clearTimeout(timer.timer);
         const args = arguments;
-        timer.timer = setTimeout(() => func.apply(this, args), ms);
+        if (!postpone && timer.timer && Date.now() - timer.last_run <= ms) {
+            return;
+        }
+        clearTimeout(timer.timer);
+        timer.last_run = Date.now();
+        timer.timer = setTimeout(() => {
+            func.apply(this, args);
+        }, ms);
     };
 };
 
@@ -670,6 +737,25 @@ const date_diff = (date_1, date_2) => {
     return Math.floor((utc_1 - utc_2) / _MS_PER_DAY);
 };
 
+/**
+ * Build intersection observer threshold list.
+ *
+ * See: https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#building_the_array_of_threshold_ratios
+ *
+ * @param {Number} num_steps - The number of steps to use.
+ *
+ * @returns {Array} - Returns the threshold list.
+ */
+const threshold_list = (num_steps = 0) => {
+    let thresholds = [];
+
+    for (let i = 1.0; i <= num_steps; i++) {
+        thresholds.push(i / num_steps);
+    }
+    thresholds.push(0);
+    return thresholds.sort();
+};
+
 var utils = {
     jqueryPlugin: jqueryPlugin,
     escapeRegExp: escapeRegExp,
@@ -685,6 +771,7 @@ var utils = {
     isElementInViewport: isElementInViewport,
     hasValue: hasValue,
     parseTime: parseTime,
+    parseLength: parseLength,
     findRelatives: findRelatives,
     get_bounds: get_bounds,
     checkInputSupport: checkInputSupport,
@@ -701,6 +788,7 @@ var utils = {
     is_iso_date_time: is_iso_date_time,
     is_iso_date: is_iso_date,
     date_diff: date_diff,
+    threshold_list: threshold_list,
     getCSSValue: dom.get_css_value, // BBB: moved to dom. TODO: Remove in upcoming version.
 };
 
