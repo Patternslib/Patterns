@@ -50,7 +50,11 @@ class Pattern extends BasePattern {
                 )
         );
 
-        this.scroll_container = dom.find_scroll_container(this.el, "y", window);
+        // Find a possible scroll container based on the first target/content
+        // element in the observables map.
+        // Note, a Map's values method returns an iterator.
+        const first_target = this.observables.values().next()?.value.target;
+        this.scroll_container = dom.find_scroll_container(first_target, "y", window);
         // window.innerHeight or el.clientHeight
         const scroll_container_height =
             typeof this.scroll_container.innerHeight !== "undefined"
