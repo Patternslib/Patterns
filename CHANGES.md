@@ -4,6 +4,31 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.0-alpha.1](https://github.com/Patternslib/patterns/compare/9.9.0-alpha.0...9.9.0-alpha.1) (2023-04-17)
+
+
+### Bug Fixes
+
+
+* **pat scroll-marker:** Do not break if no scroll-marker observables have been found. ([be6723f](https://github.com/Patternslib/patterns/commit/be6723faaf6040f0339896a2673656867b04615c))
+
+
+* **pat scroll-marker:** Use the correct scroll container. ([ccc3ddc](https://github.com/Patternslib/patterns/commit/ccc3ddc4d5d2a839faad86f97a67f67f6b49eb61))
+
+  The scroll container was potentially wrong and is a parent of the
+hash-link target contents and not a parent of the navigation where
+pat-scroll-container (or pat-navigation) are defined upon.
+
+
+
+### Maintenance
+
+
+* Upgrade dependencies. ([41e7a94](https://github.com/Patternslib/patterns/commit/41e7a945f45c4d247c184c4e1a39d220f40e6039))
+
+
+* Upgrade dependencies. ([981739d](https://github.com/Patternslib/patterns/commit/981739d525b4e8eeb8f949ef67341de920dd0e99))
+
 ## [9.9.0-alpha.0](https://github.com/Patternslib/patterns/compare/9.8.3...9.9.0-alpha.0) (2023-04-17)
 
 
