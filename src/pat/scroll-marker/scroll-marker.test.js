@@ -2,7 +2,7 @@ import Pattern from "./scroll-marker";
 import events from "../../core/events";
 import utils from "../../core/utils";
 
-async function create_scroll_marker(options = {}) {
+async function create_scroll_marker({ options = {} } = {}) {
     document.body.innerHTML = `
           <nav class="pat-scroll-marker">
             <a href="#id1">link 1</a>
@@ -64,6 +64,7 @@ async function create_scroll_marker(options = {}) {
     await utils.timeout(200);
 
     return {
+        instance: instance,
         el: el,
         nav_id1: nav_id1,
         nav_id2: nav_id2,
@@ -79,86 +80,101 @@ describe("pat-scroll-marker", () => {
         document.body.innerHTML = "";
     });
 
-    it("1: default values, id3 is current", async () => {
-        // With the default values the baseline is in the middle and the
-        // content element side's are calculated from the top. id3 is therefore
-        // the current one, as it's top is nearer to the middle than the top of
-        // id2.
+    describe("1: Test on window as scroll container", () => {
+        it("1.1: default values, id3 is current", async () => {
+            // With the default values the baseline is in the middle and the
+            // content element side's are calculated from the top. id3 is therefore
+            // the current one, as it's top is nearer to the middle than the top of
+            // id2.
 
-        const { nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
-            await create_scroll_marker();
+            const { instance, nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
+                await create_scroll_marker();
 
-        expect(nav_id1.classList.contains("in-view")).toBe(false);
-        expect(nav_id2.classList.contains("in-view")).toBe(true);
-        expect(nav_id3.classList.contains("in-view")).toBe(true);
+            // Without any overflow settings in other containers, the scroll
+            // container is the window object.
+            expect(instance.scroll_container).toBe(window);
 
-        expect(nav_id1.classList.contains("current")).toBe(false);
-        expect(nav_id2.classList.contains("current")).toBe(false);
-        expect(nav_id3.classList.contains("current")).toBe(true);
+            expect(nav_id1.classList.contains("in-view")).toBe(false);
+            expect(nav_id2.classList.contains("in-view")).toBe(true);
+            expect(nav_id3.classList.contains("in-view")).toBe(true);
 
-        expect(id1.classList.contains("scroll-marker-current")).toBe(false);
-        expect(id2.classList.contains("scroll-marker-current")).toBe(false);
-        expect(id3.classList.contains("scroll-marker-current")).toBe(true);
-    });
+            expect(nav_id1.classList.contains("current")).toBe(false);
+            expect(nav_id2.classList.contains("current")).toBe(false);
+            expect(nav_id3.classList.contains("current")).toBe(true);
 
-    it("2: distance 0, id2 is current", async () => {
-        const { nav_id1, nav_id2, nav_id3, id1, id2, id3 } = await create_scroll_marker({
-            distance: 0,
+            expect(id1.classList.contains("scroll-marker-current")).toBe(false);
+            expect(id2.classList.contains("scroll-marker-current")).toBe(false);
+            expect(id3.classList.contains("scroll-marker-current")).toBe(true);
         });
 
-        expect(nav_id1.classList.contains("in-view")).toBe(false);
-        expect(nav_id2.classList.contains("in-view")).toBe(true);
-        expect(nav_id3.classList.contains("in-view")).toBe(true);
+        it("1.2: distance 0, id2 is current", async () => {
+            const { nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
+                await create_scroll_marker({
+                    options: {
+                        distance: 0,
+                    },
+                });
 
-        expect(nav_id1.classList.contains("current")).toBe(false);
-        expect(nav_id2.classList.contains("current")).toBe(true);
-        expect(nav_id3.classList.contains("current")).toBe(false);
+            expect(nav_id1.classList.contains("in-view")).toBe(false);
+            expect(nav_id2.classList.contains("in-view")).toBe(true);
+            expect(nav_id3.classList.contains("in-view")).toBe(true);
 
-        expect(id1.classList.contains("scroll-marker-current")).toBe(false);
-        expect(id2.classList.contains("scroll-marker-current")).toBe(true);
-        expect(id3.classList.contains("scroll-marker-current")).toBe(false);
-    });
+            expect(nav_id1.classList.contains("current")).toBe(false);
+            expect(nav_id2.classList.contains("current")).toBe(true);
+            expect(nav_id3.classList.contains("current")).toBe(false);
 
-    it("3: distance 50, side bottom, id2 is current", async () => {
-        const { nav_id1, nav_id2, nav_id3, id1, id2, id3 } = await create_scroll_marker({
-            distance: "50%",
-            side: "bottom",
+            expect(id1.classList.contains("scroll-marker-current")).toBe(false);
+            expect(id2.classList.contains("scroll-marker-current")).toBe(true);
+            expect(id3.classList.contains("scroll-marker-current")).toBe(false);
         });
 
-        expect(nav_id1.classList.contains("in-view")).toBe(false);
-        expect(nav_id2.classList.contains("in-view")).toBe(true);
-        expect(nav_id3.classList.contains("in-view")).toBe(true);
+        it("1.3: distance 50, side bottom, id2 is current", async () => {
+            const { nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
+                await create_scroll_marker({
+                    options: {
+                        distance: "50%",
+                        side: "bottom",
+                    },
+                });
 
-        expect(nav_id1.classList.contains("current")).toBe(false);
-        expect(nav_id2.classList.contains("current")).toBe(true);
-        expect(nav_id3.classList.contains("current")).toBe(false);
+            expect(nav_id1.classList.contains("in-view")).toBe(false);
+            expect(nav_id2.classList.contains("in-view")).toBe(true);
+            expect(nav_id3.classList.contains("in-view")).toBe(true);
 
-        expect(id1.classList.contains("scroll-marker-current")).toBe(false);
-        expect(id2.classList.contains("scroll-marker-current")).toBe(true);
-        expect(id3.classList.contains("scroll-marker-current")).toBe(false);
-    });
+            expect(nav_id1.classList.contains("current")).toBe(false);
+            expect(nav_id2.classList.contains("current")).toBe(true);
+            expect(nav_id3.classList.contains("current")).toBe(false);
 
-    it("4: distance 50, side top, visibility: most-visible, id2 is current", async () => {
-        // Here we have again the default values, this time explicitly set.
-        // Only the visibility is set to most-visible, which means that id2 is
-        // the current one,
-        //
-        const { nav_id1, nav_id2, nav_id3, id1, id2, id3 } = await create_scroll_marker({
-            distance: "50%",
-            side: "top",
-            visibility: "most-visible",
+            expect(id1.classList.contains("scroll-marker-current")).toBe(false);
+            expect(id2.classList.contains("scroll-marker-current")).toBe(true);
+            expect(id3.classList.contains("scroll-marker-current")).toBe(false);
         });
 
-        expect(nav_id1.classList.contains("in-view")).toBe(false);
-        expect(nav_id2.classList.contains("in-view")).toBe(true);
-        expect(nav_id3.classList.contains("in-view")).toBe(true);
+        it("1.4: distance 50, side top, visibility: most-visible, id2 is current", async () => {
+            // Here we have again the default values, this time explicitly set.
+            // Only the visibility is set to most-visible, which means that id2 is
+            // the current one,
+            //
+            const { nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
+                await create_scroll_marker({
+                    options: {
+                        distance: "50%",
+                        side: "top",
+                        visibility: "most-visible",
+                    },
+                });
 
-        expect(nav_id1.classList.contains("current")).toBe(false);
-        expect(nav_id2.classList.contains("current")).toBe(true);
-        expect(nav_id3.classList.contains("current")).toBe(false);
+            expect(nav_id1.classList.contains("in-view")).toBe(false);
+            expect(nav_id2.classList.contains("in-view")).toBe(true);
+            expect(nav_id3.classList.contains("in-view")).toBe(true);
 
-        expect(id1.classList.contains("scroll-marker-current")).toBe(false);
-        expect(id2.classList.contains("scroll-marker-current")).toBe(true);
-        expect(id3.classList.contains("scroll-marker-current")).toBe(false);
+            expect(nav_id1.classList.contains("current")).toBe(false);
+            expect(nav_id2.classList.contains("current")).toBe(true);
+            expect(nav_id3.classList.contains("current")).toBe(false);
+
+            expect(id1.classList.contains("scroll-marker-current")).toBe(false);
+            expect(id2.classList.contains("scroll-marker-current")).toBe(true);
+            expect(id3.classList.contains("scroll-marker-current")).toBe(false);
+        });
     });
 });
