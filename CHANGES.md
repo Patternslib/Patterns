@@ -4,6 +4,119 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.0-alpha.0](https://github.com/Patternslib/patterns/compare/9.8.3...9.9.0-alpha.0) (2023-04-17)
+
+
+### Features
+
+
+* **core basepattern:** Allow to specify parser options on the pattern. ([eb66159](https://github.com/Patternslib/patterns/commit/eb66159e82ba019a3210d8d862ea65dcbd178df6))
+
+
+* **core basepattern:** Throw pre-init.PATTERNNAME.patterns event. ([cacb743](https://github.com/Patternslib/patterns/commit/cacb743268e018563deef2795ccaf992044cf7f9))
+
+  Throw a bubbling pre-init.PATTERNNAME.patterns event before initializing
+the event for new class-based patterns.
+
+
+* **core base:** Throw pre-init.PATTERNNAME.patterns event. ([e9a8f2f](https://github.com/Patternslib/patterns/commit/e9a8f2fa4f2151928fd473c75e339496d93e0d8c))
+
+  Throw a bubbling pre-init.PATTERNNAME.patterns event before initializing
+the event for old prototype based patterns.
+
+
+* **core dom:** Add get_scroll_x and get_scroll_y helper methods to get the horizontal/vertical scrolling position. ([a3ecf93](https://github.com/Patternslib/patterns/commit/a3ecf9350c2720e6ac2cf6a5e50eea28691067a4))
+
+
+* **core dom:** Implement get_visible_ratio to calculate the visible ratio between an element and a container. ([622d5e2](https://github.com/Patternslib/patterns/commit/622d5e21bc6295ec93d11224a2ff78ee010a617a))
+
+
+* **core utils:** add parseLength method for parsing px and % lengths. ([95c16b8](https://github.com/Patternslib/patterns/commit/95c16b8dab1f9324e8751fbd7211da1a9e82d47f))
+
+
+* **core utils:** Add threshold_list helper for intersection observers. ([52d9ecf](https://github.com/Patternslib/patterns/commit/52d9ecf1ecb2e14d5f0e4e3fd9f39531b0846dab))
+
+
+* **core utils:** debouncer - Add postpone option for callback to be run after all debounce calls or in between. ([12c980b](https://github.com/Patternslib/patterns/commit/12c980b02ce140e58b9d256520e056561795ac1b))
+
+  If "postpone" is set to "true" (the default and previous behavior) the
+callback will only be called after no more debouncer calls are done for
+the given timeout.
+If "postpone" is set to "false" the callback will be run after the
+timeout has passed and calls to "debouncer" in between are ignored.
+
+
+* **pat navigation:** Add scroll-marker functionality. ([fb8eb82](https://github.com/Patternslib/patterns/commit/fb8eb82783b1a2f957dfa4f3f896c65dbda2d455))
+
+  The pattern now sets current and in-view classes on the navigation and
+the content when scrolling to hash-link targets.
+
+
+* **pat scroll-marker:** Add pattern to set navigation classes based on the scroll position. ([6483649](https://github.com/Patternslib/patterns/commit/64836491c2591b399fe543bd4aacb1e50b826b3c))
+
+  The new scroll-marker pattern allows you to set classes on the
+navigation and content elements for hash-links. If a content section
+with a hash id and a corresponding navigation link with the same
+hash-url is visible, the navigation and content section are marked with
+CSS classes.
+
+
+
+### Maintenance
+
+
+* **pat inject:** Use dom.find_scroll_container instead jQuery :scrollable selector. ([14af661](https://github.com/Patternslib/patterns/commit/14af6612c38e79bd073ee08d9e1e1a6048dfe086))
+
+
+* **pat navigation:** Don't do option grouping. There will some options be added where grouping get's in the way. ([3c55864](https://github.com/Patternslib/patterns/commit/3c5586466f4ba72a1d9d2c80b5f978200b6e263f))
+
+
+* **pat navigation:** Switch to class based pattern. ([5b0fc43](https://github.com/Patternslib/patterns/commit/5b0fc43295bb7eab46cb483e8744f1fafb839269))
+
+
+* **pat scroll-box:** Cleanup code. ([148f79a](https://github.com/Patternslib/patterns/commit/148f79a45b482c78e04f8b5e7e0c4342a567bba7))
+
+
+* **pat scroll-box:** Use dom.scroll_y instead of own implementation. ([e5a4b24](https://github.com/Patternslib/patterns/commit/e5a4b244c65974619b9716e3baecfe5e7376be58))
+
+
+* **pat scroll:** Code cleanup. ([a66a9f8](https://github.com/Patternslib/patterns/commit/a66a9f8b24ca18f658a25ecc31ef2762131b8c3c))
+
+
+* **pat-inject:** Remove obsolete hooks option. ([411653d](https://github.com/Patternslib/patterns/commit/411653d0e01bdf659b05da2ca6c67b843c204751))
+
+  The hooks option allowed to throw custom events after successful
+injection. It was a multi-value argument but only allowed "raptor" as
+value. Raptor was a WYSIWYG editor which has not been further developed
+since 10 years and which we're not supporting anymore since quite some
+time. Thus this option could be safely removed and this change is not a
+breaking change.
+
+If you need to react on events, see the documented event list in
+pat-inject's documentation.
+
+
+* **pat-inject:** Remove obsolete raptor-ui trigger. ([ae01e20](https://github.com/Patternslib/patterns/commit/ae01e205a9b58aafac71a323c5e36f4f5154f4b8))
+
+  Remove the ".raptor-ui .ui-button.pat-inject" trigger selector which was
+for raptor WYSIWYG HTML editor support. This editor isn't actively
+developed since almost 9 years and not supported anymore. This is not a
+breaking change.
+
+
+* Upgrade dependencies. ([15b6adb](https://github.com/Patternslib/patterns/commit/15b6adbaa11529cf3f93aef1c4fc3cd2f6367a81))
+
+
+* Upgrade luxon to 3.3.0. ([b19f1e5](https://github.com/Patternslib/patterns/commit/b19f1e5cf1f493a208d25e11f6e0af0c617aa4dc))
+
+  The Module federation warning "Unable to find required version" is fixed
+since webpack v5.78.0 for modules which do package.json
+self-referencing.
+
+Ref:
+- https://github.com/webpack/webpack/issues/16683
+- https://github.com/webpack/webpack/pull/16685
+
 ## [9.8.3](https://github.com/Patternslib/patterns/compare/9.8.2...9.8.3) (2023-04-17)
 
 
