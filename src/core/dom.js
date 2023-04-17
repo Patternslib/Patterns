@@ -47,7 +47,11 @@ const querySelectorAllAndMe = (el, selector) => {
 /**
  * Wrap a element with a wrapper element.
  *
+ * The element to be wrapped will be moved into the wrapper element and the
+ * wrapper element is placed just before the old element was.
+ *
  * @param {Node} el - The DOM node to wrap.
+ * @param {Node} wrapper - The wrapper element.
  */
 const wrap = (el, wrapper) => {
     // See: https://stackoverflow.com/a/13169465/1337474
