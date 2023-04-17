@@ -4,6 +4,57 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.8.3](https://github.com/Patternslib/patterns/compare/9.8.2...9.8.3) (2023-04-17)
+
+
+### Maintenance
+
+
+* **Docs:** Remove section about IE polyfills from README. ([b9c3697](https://github.com/Patternslib/patterns/commit/b9c369728e773854651a0acc544529d8b6410278))The IE polyfills were removed in Patternslib 9.8.0-alpha.2.
+
+* **pat inject:** Document events thrown by the pattern. ([d3a7a0e](https://github.com/Patternslib/patterns/commit/d3a7a0e54d820fc41377347932218c263c20e5b9))
+
+* **pat inject:** Document the scroll argument. ([1b9604e](https://github.com/Patternslib/patterns/commit/1b9604e7127114e70dc3f6f99b1e5bd643a21e59))
+
+## [9.8.3-alpha.2](https://github.com/Patternslib/patterns/compare/9.8.2...9.8.3) (2023-03-09)
+
+
+### Maintenance
+
+
+* Upgrade pat-tiptap to 4.8.1. ([eda16d7](https://github.com/Patternslib/patterns/commit/eda16d7d1d5dcffcc686f5b58d7521e39f9a7c57))
+
+## [9.8.3-alpha.1](https://github.com/Patternslib/patterns/compare/9.8.2...9.8.3) (2023-03-09)
+
+
+### Bug Fixes
+
+
+* **core events:** await_pattern_init - check for event coming from correct element. ([a532ebf](https://github.com/Patternslib/patterns/commit/a532ebf7fadfb645c8288f700a7c505bf2956b4c))Check if the init/not-init events were thrown from the Pattern's own
+element. When a child element did an unsuccessful Pattern init (rejected
+because already initialized) and at the same time the parent element also tried
+to initialized the same Pattern await_pattern_init could fail. The not-init
+event bubbled up which was incorrectly catched by await_pattern_init on the
+parent element.
+
+
+### Maintenance
+
+
+* **core events test:** Remove unused test. ([ca16b1d](https://github.com/Patternslib/patterns/commit/ca16b1d6f63e6032c978fe47eed9be2604f09b70))
+
+* **core utils debounce tests:** await for number of debounce calls to correctly test the debounce method. ([0c3dea7](https://github.com/Patternslib/patterns/commit/0c3dea7943518c5bf7ab07370037eff8b023b3fa))
+
+* Upgrade dependencies. ([bfaf95c](https://github.com/Patternslib/patterns/commit/bfaf95c1a7840a4004c47345aa41b9ce891b8270))
+
+## [9.8.3-alpha.0](https://github.com/Patternslib/patterns/compare/9.8.2...9.8.3) (2023-03-06)
+
+
+### Bug Fixes
+
+
+* **pat auto submit:** Fix cloned elements not submitted when their input changes. ([f36c69b](https://github.com/Patternslib/patterns/commit/f36c69b640e765d7fafabddef65d511ddb9df00e))
+
 ## [9.8.3-alpha.2](https://github.com/Patternslib/patterns/compare/9.8.3-alpha.1...9.8.3-alpha.2) (2023-03-09)
 
 
