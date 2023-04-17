@@ -33,7 +33,7 @@ class Pattern extends BasePattern {
 
     async init() {
         // Get all elements that are referenced by links in the current page.
-        this.observeables = new Map(
+        this.observables = new Map(
             [...dom.querySelectorAllAndMe(this.el, "a[href^='#']")]
                 .map(
                     // Create the structure:
@@ -50,7 +50,19 @@ class Pattern extends BasePattern {
                 )
         );
 
-        this.scroll_container = dom.find_scroll_container(this.el, "y", window);
+        // Find a possible scroll container based on the first target/content
+        // element in the observables map.
+        // Note, a Map's values method returns an iterator.
+        const first_observable = this.observables.values().next();
+        if (!first_observable.value) {
+            // No targets found.
+            return;
+        }
+        this.scroll_container = dom.find_scroll_container(
+            first_observable.value.target,
+            "y",
+            window
+        );
         // window.innerHeight or el.clientHeight
         const scroll_container_height =
             typeof this.scroll_container.innerHeight !== "undefined"
@@ -85,7 +97,7 @@ class Pattern extends BasePattern {
                 threshold: utils.threshold_list(10),
             }
         );
-        for (const it of this.observeables.values()) {
+        for (const it of this.observables.values()) {
             observer.observe(it.target);
         }
     }
@@ -97,7 +109,7 @@ class Pattern extends BasePattern {
         for (const entry of entries) {
             // Set the in-view class on the link.
             const id = entry.target.getAttribute("id");
-            const item = this.observeables.get(id);
+            const item = this.observables.get(id);
             if (!item) {
                 continue;
             }
@@ -122,13 +134,13 @@ class Pattern extends BasePattern {
         // Set the item which is nearest to the scroll container's middle to current.
 
         // First, set all to non-current.
-        for (const item of this.observeables.values()) {
+        for (const item of this.observables.values()) {
             item.link.classList.remove(this.options["current-class"]);
             item.target.classList.remove(this.options["current-content-class"]);
         }
 
         // Sort by distance to the middle of the scroll container.
-        let items_by_weight = [...this.observeables.values()].map((it) => it.target);
+        let items_by_weight = [...this.observables.values()].map((it) => it.target);
         log.debug("items_by_weight initial: ", items_by_weight);
 
         if (this.options.visibility === "most-visible") {
@@ -216,7 +228,7 @@ class Pattern extends BasePattern {
 
         // Finally, set the nearest to current.
         const nearest = items_by_weight[0];
-        const nearest_link = this.observeables.get(nearest?.getAttribute("id"))?.link;
+        const nearest_link = this.observables.get(nearest?.getAttribute("id"))?.link;
         log.debug("nearest: ", nearest);
         log.debug("nearest_link: ", nearest_link);
         if (nearest_link) {
