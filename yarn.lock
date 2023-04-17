@@ -1710,10 +1710,10 @@
     colorette "^2.0.16"
     ora "^5.4.1"
 
-"@patternslib/dev@^3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@patternslib/dev/-/dev-3.2.0.tgz#aecae2741e7cda5f207bc829b7efa41985b5fa9c"
-  integrity sha512-al5K1JhUA1oXELPOJOle9eGYfOCnd148yYIz9pbXUfOP9StpZouwPCptov4XVmu9MCapVyfMn1WtmLs7BAZBMQ==
+"@patternslib/dev@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@patternslib/dev/-/dev-3.3.0.tgz#e2ee8f862514d19fb9fae4c07cbbf9437a9b6f06"
+  integrity sha512-TSwjHQynSm5C5c3+AZJNlbRNl0QiUa64QOia0hj5g4La9fL65NCBTsKiYfB+CEoS8axR3tmua+bt3yRXTzTgZQ==
   dependencies:
     "@babel/core" "^7.21.4"
     "@babel/eslint-parser" "^7.21.3"
