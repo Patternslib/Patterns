@@ -70,6 +70,9 @@ async function create_scroll_marker({
     });
 
     const instance = new Pattern(el, options);
+    jest.spyOn(instance, "scroll_marker_callback");
+    jest.spyOn(instance, "scroll_marker_current_callback");
+
     await events.await_pattern_init(instance);
 
     instance.scroll_marker_callback([
@@ -99,6 +102,24 @@ describe("pat-scroll-marker", () => {
         document.body.innerHTML = "";
     });
 
+    it("0: Inexistent targets do not break the runtime", async () => {
+        document.body.innerHTML = `
+          <nav class="pat-scroll-marker">
+            <a href="#id1">link 1</a>
+            <a href="#id2">link 2</a>
+            <a href="#id3">link 3</a>
+          </nav>
+        `;
+        const el = document.querySelector(".pat-scroll-marker");
+        const instance = new Pattern(el);
+        jest.spyOn(instance, "scroll_marker_callback");
+        jest.spyOn(instance, "scroll_marker_current_callback");
+        await events.await_pattern_init(instance);
+
+        expect(instance.scroll_marker_callback).not.toHaveBeenCalled();
+        expect(instance.scroll_marker_current_callback).not.toHaveBeenCalled();
+    });
+
     describe("1: Test on window as scroll container", () => {
         it("1.1: default values, id3 is current", async () => {
             // With the default values the baseline is in the middle and the
@@ -112,6 +133,10 @@ describe("pat-scroll-marker", () => {
             // Without any overflow settings in other containers, the scroll
             // container is the window object.
             expect(instance.scroll_container).toBe(window);
+
+            // Callbacks have been called.
+            expect(instance.scroll_marker_callback).toHaveBeenCalled();
+            expect(instance.scroll_marker_current_callback).toHaveBeenCalled();
 
             expect(nav_id1.classList.contains("in-view")).toBe(false);
             expect(nav_id2.classList.contains("in-view")).toBe(true);
@@ -127,12 +152,16 @@ describe("pat-scroll-marker", () => {
         });
 
         it("1.2: distance 0, id2 is current", async () => {
-            const { nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
+            const { instance, nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
                 await create_scroll_marker({
                     options: {
                         distance: 0,
                     },
                 });
+
+            // Callbacks have been called.
+            expect(instance.scroll_marker_callback).toHaveBeenCalled();
+            expect(instance.scroll_marker_current_callback).toHaveBeenCalled();
 
             expect(nav_id1.classList.contains("in-view")).toBe(false);
             expect(nav_id2.classList.contains("in-view")).toBe(true);
@@ -148,13 +177,17 @@ describe("pat-scroll-marker", () => {
         });
 
         it("1.3: distance 50, side bottom, id2 is current", async () => {
-            const { nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
+            const { instance, nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
                 await create_scroll_marker({
                     options: {
                         distance: "50%",
                         side: "bottom",
                     },
                 });
+
+            // Callbacks have been called.
+            expect(instance.scroll_marker_callback).toHaveBeenCalled();
+            expect(instance.scroll_marker_current_callback).toHaveBeenCalled();
 
             expect(nav_id1.classList.contains("in-view")).toBe(false);
             expect(nav_id2.classList.contains("in-view")).toBe(true);
@@ -174,7 +207,7 @@ describe("pat-scroll-marker", () => {
             // Only the visibility is set to most-visible, which means that id2 is
             // the current one,
             //
-            const { nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
+            const { instance, nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
                 await create_scroll_marker({
                     options: {
                         distance: "50%",
@@ -182,6 +215,10 @@ describe("pat-scroll-marker", () => {
                         visibility: "most-visible",
                     },
                 });
+
+            // Callbacks have been called.
+            expect(instance.scroll_marker_callback).toHaveBeenCalled();
+            expect(instance.scroll_marker_current_callback).toHaveBeenCalled();
 
             expect(nav_id1.classList.contains("in-view")).toBe(false);
             expect(nav_id2.classList.contains("in-view")).toBe(true);
@@ -211,6 +248,10 @@ describe("pat-scroll-marker", () => {
             // container is the window object.
             expect(instance.scroll_container).toBe(main);
 
+            // Callbacks have been called.
+            expect(instance.scroll_marker_callback).toHaveBeenCalled();
+            expect(instance.scroll_marker_current_callback).toHaveBeenCalled();
+
             expect(nav_id1.classList.contains("in-view")).toBe(false);
             expect(nav_id2.classList.contains("in-view")).toBe(true);
             expect(nav_id3.classList.contains("in-view")).toBe(true);
@@ -225,13 +266,17 @@ describe("pat-scroll-marker", () => {
         });
 
         it("2.2: distance 0, id2 is current", async () => {
-            const { nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
+            const { instance, nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
                 await create_scroll_marker({
                     options: {
                         distance: 0,
                     },
                     scroll_container_main: true,
                 });
+
+            // Callbacks have been called.
+            expect(instance.scroll_marker_callback).toHaveBeenCalled();
+            expect(instance.scroll_marker_current_callback).toHaveBeenCalled();
 
             expect(nav_id1.classList.contains("in-view")).toBe(false);
             expect(nav_id2.classList.contains("in-view")).toBe(true);
@@ -247,7 +292,7 @@ describe("pat-scroll-marker", () => {
         });
 
         it("2.3: distance 50, side bottom, id2 is current", async () => {
-            const { nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
+            const { instance, nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
                 await create_scroll_marker({
                     options: {
                         distance: "50%",
@@ -255,6 +300,10 @@ describe("pat-scroll-marker", () => {
                     },
                     scroll_container_main: true,
                 });
+
+            // Callbacks have been called.
+            expect(instance.scroll_marker_callback).toHaveBeenCalled();
+            expect(instance.scroll_marker_current_callback).toHaveBeenCalled();
 
             expect(nav_id1.classList.contains("in-view")).toBe(false);
             expect(nav_id2.classList.contains("in-view")).toBe(true);
@@ -274,7 +323,7 @@ describe("pat-scroll-marker", () => {
             // Only the visibility is set to most-visible, which means that id2 is
             // the current one,
             //
-            const { nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
+            const { instance, nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
                 await create_scroll_marker({
                     options: {
                         distance: "50%",
@@ -283,6 +332,10 @@ describe("pat-scroll-marker", () => {
                     },
                     scroll_container_main: true,
                 });
+
+            // Callbacks have been called.
+            expect(instance.scroll_marker_callback).toHaveBeenCalled();
+            expect(instance.scroll_marker_current_callback).toHaveBeenCalled();
 
             expect(nav_id1.classList.contains("in-view")).toBe(false);
             expect(nav_id2.classList.contains("in-view")).toBe(true);
