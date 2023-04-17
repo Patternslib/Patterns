@@ -55,44 +55,6 @@ parent element.
 
 * **pat auto submit:** Fix cloned elements not submitted when their input changes. ([f36c69b](https://github.com/Patternslib/patterns/commit/f36c69b640e765d7fafabddef65d511ddb9df00e))
 
-## [9.8.3-alpha.2](https://github.com/Patternslib/patterns/compare/9.8.3-alpha.1...9.8.3-alpha.2) (2023-03-09)
-
-
-### Maintenance
-
-
-* Upgrade pat-tiptap to 4.8.1. ([eda16d7](https://github.com/Patternslib/patterns/commit/eda16d7d1d5dcffcc686f5b58d7521e39f9a7c57))
-
-## [9.8.3-alpha.1](https://github.com/Patternslib/patterns/compare/9.8.3-alpha.0...9.8.3-alpha.1) (2023-03-09)
-
-
-### Bug Fixes
-
-
-* **core events:** await_pattern_init - check for event coming from correct element. ([a532ebf](https://github.com/Patternslib/patterns/commit/a532ebf7fadfb645c8288f700a7c505bf2956b4c))Check if the init/not-init events were thrown from the Pattern's own
-element. When a child element did an unsuccessful Pattern init (rejected
-because already initialized) and at the same time the parent element also tried
-to initialized the same Pattern await_pattern_init could fail. The not-init
-event bubbled up which was incorrectly catched by await_pattern_init on the
-parent element.
-
-
-### Maintenance
-
-
-* **core events test:** Remove unused test. ([ca16b1d](https://github.com/Patternslib/patterns/commit/ca16b1d6f63e6032c978fe47eed9be2604f09b70))
-
-* **core utils debounce tests:** await for number of debounce calls to correctly test the debounce method. ([0c3dea7](https://github.com/Patternslib/patterns/commit/0c3dea7943518c5bf7ab07370037eff8b023b3fa))
-
-* Upgrade dependencies. ([bfaf95c](https://github.com/Patternslib/patterns/commit/bfaf95c1a7840a4004c47345aa41b9ce891b8270))
-
-## [9.8.3-alpha.0](https://github.com/Patternslib/patterns/compare/9.8.2...9.8.3-alpha.0) (2023-03-06)
-
-
-### Bug Fixes
-
-
-* **pat auto submit:** Fix cloned elements not submitted when their input changes. ([f36c69b](https://github.com/Patternslib/patterns/commit/f36c69b640e765d7fafabddef65d511ddb9df00e))
 
 ## [9.8.2](https://github.com/Patternslib/patterns/compare/9.8.1...9.8.2) (2023-02-24)
 
@@ -104,14 +66,6 @@ parent element.
 
 * Upgrade dependencies. ([81915cd](https://github.com/Patternslib/patterns/commit/81915cdebbc943b18951a98cab97c8dcc2257ad7))
 
-## [9.8.2-alpha.0](https://github.com/Patternslib/patterns/compare/9.8.1...9.8.2-alpha.0) (2023-02-14)
-
-
-### Maintenance
-
-
-* Upgrade dependencies. ([81915cd](https://github.com/Patternslib/patterns/commit/81915cdebbc943b18951a98cab97c8dcc2257ad7))
-
 ## [9.8.1](https://github.com/Patternslib/patterns/compare/9.8.1-alpha.0...9.8.1) (2023-02-02)
 
 
@@ -128,21 +82,6 @@ parent element.
 
 * **pat checklist:** Also set the "checked" and "unchecked" classes on the toggle checkbox. ([8154775](https://github.com/Patternslib/patterns/commit/81547755be231b47689dc26492cd62811096e0b5))
 
-## [9.8.1](https://github.com/Patternslib/patterns/compare/9.8.1-alpha.0...9.8.1) (2023-02-02)
-
-
-### Features
-
-
-* **build:** Update patternslib.com with each non-pre release. ([143031d](https://github.com/Patternslib/patterns/commit/143031df875e31cfec1577dac3886950a5721d00))
-
-
-### Bug Fixes
-
-
-* **Build:** Fix luxon (again) to 2.4.0 to avoid webpack MF error due to non standard package.json setup. ([9661ae7](https://github.com/Patternslib/patterns/commit/9661ae7cc9bfbe51b8987ac2d70ae08d697be499))
-
-* **pat checklist:** Also set the "checked" and "unchecked" classes on the toggle checkbox. ([8154775](https://github.com/Patternslib/patterns/commit/81547755be231b47689dc26492cd62811096e0b5))
 
 ## [9.8.1-alpha.0](https://github.com/Patternslib/patterns/compare/9.8.0...9.8.1-alpha.0) (2023-01-25)
 
@@ -159,6 +98,7 @@ parent element.
 * **Build:** Upgrade dependencies. ([7e7cc20](https://github.com/Patternslib/patterns/commit/7e7cc20b50044bbbc4b26647b452a2a8bddcfd1f))
 
 * **pat-checklist:** Document the available options. ([625f7e5](https://github.com/Patternslib/patterns/commit/625f7e54e360aa7ae6bfa5adea4fd73626e3f24d))
+
 
 ## [9.8.0](https://github.com/Patternslib/patterns/compare/9.8.0-beta.6...9.8.0) (2022-12-23)
 
