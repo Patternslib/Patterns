@@ -4,6 +4,33 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.0-alpha.2](https://github.com/Patternslib/patterns/compare/9.9.0-alpha.1...9.9.0-alpha.2) (2023-04-18)
+
+
+### Features
+
+
+* **core dom:** Add escape_css_id method. ([5aa7a52](https://github.com/Patternslib/patterns/commit/5aa7a52eebc5780c5cc3a831f3161b8475d352a0))
+
+  Get an escaped CSS selector for a given id string.
+
+id selectors should - but don't have to - start with a letter.
+If the id starts with a number or a dash, it should be escaped.
+This method does that for you.
+
+
+
+### Bug Fixes
+
+
+* **pat navigation:** Do escaping for hash id selectors, so they are allowed to start with a number. ([75d8283](https://github.com/Patternslib/patterns/commit/75d8283f501149a95ab23b10f398ded6d7ca605c))
+
+
+* **pat scroll-marker:** Do escaping for hash id selectors, so they are allowed to start with a number. ([d733cb7](https://github.com/Patternslib/patterns/commit/d733cb7d7bbfc8918b3ada1890f6f0808bdc1207))
+
+
+* **pat scroll-marker:** The init method does not need to be async. ([c308b66](https://github.com/Patternslib/patterns/commit/c308b66b0fcfd0ff72e555bda85a4f54f9018285))
+
 ## [9.9.0-alpha.1](https://github.com/Patternslib/patterns/compare/9.9.0-alpha.0...9.9.0-alpha.1) (2023-04-17)
 
 
