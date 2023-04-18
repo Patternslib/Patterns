@@ -41,7 +41,10 @@ class Pattern extends BasePattern {
                     // to create the resulting Map holding all necessary information.
                     (it) => [
                         it.hash.split("#")[1],
-                        { link: it, target: document.querySelector(it.hash) },
+                        {
+                            link: it,
+                            target: document.querySelector(dom.escape_css_id(it.hash)),
+                        },
                     ]
                 )
                 .filter(
