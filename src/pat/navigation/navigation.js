@@ -2,6 +2,7 @@ import $ from "jquery";
 import { BasePattern } from "../../core/basepattern";
 import Parser from "../../core/parser";
 import ScrollMarker from "../scroll-marker/scroll-marker";
+import dom from "../../core/dom";
 import logging from "../../core/logging";
 import events from "../../core/events";
 import registry from "../../core/registry";
@@ -180,7 +181,9 @@ class Pattern extends BasePattern {
             }
             // Mark the current content item, if it is a hash link.
             if (item.matches("a[href^='#']")) {
-                const content_item = document.querySelector(item.getAttribute("href"));
+                const content_item = document.querySelector(
+                    dom.escape_css_id(item.hash)
+                );
                 if (content_item) {
                     content_item.classList.add(this.options["current-content-class"]);
                 }
