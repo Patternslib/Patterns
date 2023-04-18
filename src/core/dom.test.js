@@ -856,3 +856,21 @@ describe("core.dom tests", () => {
         });
     });
 });
+
+describe("escape_css_id", function () {
+    it("returns a standard id selector as-is", function () {
+        expect(dom.escape_css_id("#foo")).toBe("#foo");
+    });
+
+    it("returns an escaped version when the id is a number", function () {
+        expect(dom.escape_css_id("#123")).toBe("#\\31 23");
+    });
+
+    it("returns an escaped version when the id starts with a number", function () {
+        expect(dom.escape_css_id("#1foo")).toBe("#\\31 foo");
+    });
+
+    it("returns an escaped version when the id starts with a dash", function () {
+        expect(dom.escape_css_id("#-1-2-3")).toBe("#-\\31 -2-3");
+    });
+});

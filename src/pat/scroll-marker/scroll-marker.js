@@ -31,7 +31,7 @@ class Pattern extends BasePattern {
     // differently, e.g. by clicking in a pat-navigation menu.
     set_current_disabled = false;
 
-    async init() {
+    init() {
         // Get all elements that are referenced by links in the current page.
         this.observables = new Map(
             [...dom.querySelectorAllAndMe(this.el, "a[href^='#']")]
@@ -41,7 +41,10 @@ class Pattern extends BasePattern {
                     // to create the resulting Map holding all necessary information.
                     (it) => [
                         it.hash.split("#")[1],
-                        { link: it, target: document.querySelector(it.hash) },
+                        {
+                            link: it,
+                            target: document.querySelector(dom.escape_css_id(it.hash)),
+                        },
                     ]
                 )
                 .filter(
