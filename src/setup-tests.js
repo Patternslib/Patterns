@@ -19,3 +19,6 @@ import dom from "./core/dom";
 dom.is_visible = (el) => {
     return !el.hidden && el.style.display !== "none";
 };
+
+// polyfill css.escape for jsdom
+import("css.escape");

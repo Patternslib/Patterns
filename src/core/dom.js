@@ -410,6 +410,29 @@ const get_visible_ratio = (el, container) => {
     return visible_ratio;
 };
 
+/**
+ * Get an escaped CSS selector for a given id string.
+ *
+ * id selectors should - but don't have to - start with a letter.
+ * If the id starts with a number or a dash, it should be escaped.
+ * This method does that for you.
+ *
+ * Alse see:
+ * - https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/id
+ * - https://developer.mozilla.org/en-US/docs/Web/API/CSS/escape
+ *
+ * @param {String} id - The id to escape.
+ *
+ * @returns {String} - The escaped CSS selector.
+ *
+ * @example
+ * escape_css_id_selector("#123"); // returns "#\\31 23""
+ * escape_css_id_selector("#-123"); // returns "#-\\31 23"
+ */
+const escape_css_id = (id) => {
+    return `#${CSS.escape(id.split("#")[1])}`;
+};
+
 const dom = {
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
@@ -432,6 +455,7 @@ const dom = {
     delete_data: delete_data,
     template: template,
     get_visible_ratio: get_visible_ratio,
+    escape_css_id: escape_css_id,
     add_event_listener: events.add_event_listener, // BBB export. TODO: Remove in an upcoming version.
     remove_event_listener: events.remove_event_listener, // BBB export. TODO: Remove in an upcoming version.
 };
