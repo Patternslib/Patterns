@@ -20,7 +20,7 @@ parser.addArgument("current-content-class", "navigation-current");
 parser.addArgument("scroll-item-side", "top", ["top", "bottom", "middle", "auto"]);
 parser.addArgument("scroll-item-distance", "50%");
 parser.addArgument("scroll-item-visibility", null, [null, "none", "most-visible"]);
-parser.addArgument("scroll-trigger-selector", "a[href^='#'].scroll-marker");
+parser.addArgument("scroll-trigger-selector", "a[href^='#'].scroll-trigger");
 
 class Pattern extends BasePattern {
     static name = "navigation";
