@@ -447,7 +447,7 @@ function parseTime(time) {
  * parseLength - Parse a length from a string and return the parsed length in
  * pixels.
 
- * @param {String} length - A length string like `1px` or `25%`.
+ * @param {String} length - A length string like `1px` or `25%`. Lengths without a unit are treated as pixels.
  * @param {Number} reference_length - The reference length to use for percentage lengths.
  *
  * @returns {Number} - A integer which represents the parsed length in pixels.
@@ -486,7 +486,7 @@ function parseLength(length, reference_length = null) {
                 (amount * Math.max(window.innerWidth, window.innerHeight)) / 100
             );
         default:
-            return null;
+            return Math.round(amount);
     }
 }
 

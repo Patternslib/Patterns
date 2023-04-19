@@ -480,6 +480,24 @@ describe("parseLength", function () {
         expect(p).toThrow();
     });
 
+    it("handles unitless lengths", function () {
+        // As strings
+        expect(utils.parseLength("0")).toBe(0);
+        expect(utils.parseLength("1")).toBe(1);
+        expect(utils.parseLength("10")).toBe(10);
+        expect(utils.parseLength("100")).toBe(100);
+        expect(utils.parseLength("1000.1")).toBe(1000);
+        expect(utils.parseLength("1000.9")).toBe(1001);
+
+        // As numbers
+        expect(utils.parseLength(0)).toBe(0);
+        expect(utils.parseLength(1)).toBe(1);
+        expect(utils.parseLength(10)).toBe(10);
+        expect(utils.parseLength(100)).toBe(100);
+        expect(utils.parseLength(1000.1)).toBe(1000);
+        expect(utils.parseLength(1000.9)).toBe(1001);
+    });
+
     it("handles pixel lengths", function () {
         expect(utils.parseLength("10px")).toBe(10);
         expect(utils.parseLength("100px")).toBe(100);
