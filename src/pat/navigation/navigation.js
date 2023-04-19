@@ -17,12 +17,10 @@ parser.addArgument("in-view-class", "in-view");
 parser.addArgument("current-class", "current");
 parser.addArgument("current-content-class", "navigation-current");
 
-// Side of element that scrolls. top/bottom/middle/auto (default 'top')
-parser.addArgument("scroll-marker-side", "top", ["top", "bottom", "middle", "auto"]);
-// Distance from side of scroll box. any amount in px or % (default '50%')
-parser.addArgument("scroll-marker-distance", "50%");
-// Visibility of element in scroll box. most-visible or null (default null)
-parser.addArgument("scroll-marker-visibility", null, [null, "most-visible"]);
+parser.addArgument("scroll-item-side", "top", ["top", "bottom", "middle", "auto"]);
+parser.addArgument("scroll-item-distance", "50%");
+parser.addArgument("scroll-item-visibility", null, [null, "none", "most-visible"]);
+parser.addArgument("scroll-trigger-selector", "a[href^='#'].scroll-marker");
 
 class Pattern extends BasePattern {
     static name = "navigation";
@@ -37,25 +35,28 @@ class Pattern extends BasePattern {
         this.init_listeners();
         this.init_markings();
 
-        this.scroll_marker = new ScrollMarker(this.el, {
-            "current-class": this.options["current-class"],
-            "current-content-class": this.options["current-content-class"],
-            "in-view-class": this.options["in-view-class"],
-            "side": this.options["scroll-marker-side"],
-            "distance": this.options["scroll-marker-distance"],
-            "visibility": this.options["scroll-marker-visibility"],
-        });
+        if (utils.is_option_truthy(this.options["scroll-trigger-selector"])) {
+            this.scroll_marker = new ScrollMarker(this.el, {
+                "current-class": this.options["current-class"],
+                "current-content-class": this.options["current-content-class"],
+                "in-view-class": this.options["in-view-class"],
+                "side": this.options["scroll-item-side"],
+                "distance": this.options["scroll-item-distance"],
+                "visibility": this.options["scroll-item-visibility"],
+                "selector": this.options["scroll-trigger-selector"],
+            });
 
-        this.debounced_scroll_marker_enabler = utils.debounce(() => {
-            log.debug("Enable scroll-marker.");
-            this.scroll_marker.set_current_disabled = false;
-            events.remove_event_listener(
-                this.scroll_marker.scroll_container === window
-                    ? document
-                    : this.scroll_marker.scroll_container,
-                "pat-navigation__scroll_marker_enable"
-            );
-        }, 200);
+            this.debounced_scroll_marker_enabler = utils.debounce(() => {
+                log.debug("Enable scroll-marker.");
+                this.scroll_marker.set_current_disabled = false;
+                events.remove_event_listener(
+                    this.scroll_marker.scroll_container === window
+                        ? document
+                        : this.scroll_marker.scroll_container,
+                    "pat-navigation__scroll_marker_enable"
+                );
+            }, 200);
+        }
     }
 
     /**
@@ -75,6 +76,12 @@ class Pattern extends BasePattern {
                     // Mark the current item
                     this.mark_current(ev.target);
 
+                    if (
+                        !utils.is_option_truthy(this.options["scroll-trigger-selector"])
+                    ) {
+                        // Don't do the scroll-marker stuff below, if it is disabled by the settings.
+                        return;
+                    }
                     // Disable scroll marker to set the current class after
                     // clicking in the menu and scrolling to the target.
                     log.debug("Disable scroll-marker.");

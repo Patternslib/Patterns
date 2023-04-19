@@ -48,11 +48,13 @@ Here is a complete example:
 
 ### Options reference
 
-| Property       | Default Value | Values | Type              | Description                   |
-| -------------- | ------------- | ------ | ----------------- | ----------------------------- |
-| in-view-class  | in-view       |        | String            | CSS class for a navigation item when it's corresponding content item is in view. |
-| current-class  | current       |        | String            | CSS class for a navigation item when it's corresponding content item is the current one. |
-| current-content-class | current |       | String            | CSS class for a content item when it is the current one. |
-| side           | top           | top, bottom, middle, auto  | String | Side of element that scrolls. This is used to calculate the current item. The defined side of the element will be used to calculate the distance baseline. If this is set to "auto" then one of the "top" or "bottom" positions are used, depending on which one is nearer to the distance baseline. |
-| distance       | 50%           |        | String            | Distance from side of scroll box. any amount in px, %, vw, vh, vmin or vmax. This is used to calculate the current item. The nearest element to the distance-baseline measured from the top of the container will get the current class. |
-| visibility     |               | null, most-visible | String | Visibility of element in scroll box. This is used to calculate the current item. If "most-visible" is set, the element which is most visible in the scroll container gets the current class. If more elements have the same visibility ratio, the other conditions are used to calculate the current one. |
+| Property              | Default        | Options                                  | Description                   |
+| --------------------- | -------------- | ---------------------------------------- | ----------------------------- |
+| current-class         | `current`      | CSS class name                           | CSS class for a navigation item when it's corresponding content item is the current one. |
+| current-content-class | `current`      | CSS class name                           | CSS class for a content item when it is the current one. |
+| in-view-class         | `in-view`      | CSS class name                           | CSS class for a navigation item when it's corresponding content item is in view. |
+| side                  | `top`          | `top`, `bottom`, `middle`, `auto`        | Side of element that scrolls. This is used to calculate the current item. The defined side of the element will be used to calculate the distance baseline. If this is set to "auto" then one of the "top" or "bottom" positions are used, depending on which one is nearer to the distance baseline. |
+| distance              | `50%`          | CSS length (px, %, vw, vh, vmin or vmax) | Distance from side of scroll box. any amount in px, %, vw, vh, vmin or vmax. This is used to calculate the current item. The nearest element to the distance-baseline measured from the top of the container will get the current class. |
+| visibility            |                | `none`, `most-visible`                   | Visibility of element in scroll box. This is used to calculate the current item. If "most-visible" is set, the element which is most visible in the scroll container gets the current class. If more elements have the same visibility ratio, the other conditions are used to calculate the current one. |
+| selector              | `a[href^='#']` | CSS selector, `none`                     | Selects the element within the pat-navigation container that should get a class current while scrolling, when applicable. |
+

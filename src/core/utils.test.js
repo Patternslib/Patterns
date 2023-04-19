@@ -480,6 +480,24 @@ describe("parseLength", function () {
         expect(p).toThrow();
     });
 
+    it("handles unitless lengths", function () {
+        // As strings
+        expect(utils.parseLength("0")).toBe(0);
+        expect(utils.parseLength("1")).toBe(1);
+        expect(utils.parseLength("10")).toBe(10);
+        expect(utils.parseLength("100")).toBe(100);
+        expect(utils.parseLength("1000.1")).toBe(1000);
+        expect(utils.parseLength("1000.9")).toBe(1001);
+
+        // As numbers
+        expect(utils.parseLength(0)).toBe(0);
+        expect(utils.parseLength(1)).toBe(1);
+        expect(utils.parseLength(10)).toBe(10);
+        expect(utils.parseLength(100)).toBe(100);
+        expect(utils.parseLength(1000.1)).toBe(1000);
+        expect(utils.parseLength(1000.9)).toBe(1001);
+    });
+
     it("handles pixel lengths", function () {
         expect(utils.parseLength("10px")).toBe(10);
         expect(utils.parseLength("100px")).toBe(100);
@@ -879,5 +897,26 @@ describe("threshold_list ...", function () {
             0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65,
             0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1,
         ]);
+    });
+});
+
+describe("is_option_truthy ...", function () {
+    it("checks if an option is set", () => {
+        // These options are considered truthy
+        expect(utils.is_option_truthy("a")).toBe(true);
+        expect(utils.is_option_truthy(true)).toBe(true);
+        expect(utils.is_option_truthy("true")).toBe(true);
+        expect(utils.is_option_truthy(1)).toBe(true);
+        // Also "0" is considered truthy because it can be a valid option for
+        // length, time and so forth.
+        expect(utils.is_option_truthy(0)).toBe(true);
+
+        // These options are considered falsy
+        expect(utils.is_option_truthy(undefined)).toBe(false);
+        expect(utils.is_option_truthy(null)).toBe(false);
+        expect(utils.is_option_truthy(false)).toBe(false);
+        expect(utils.is_option_truthy("false")).toBe(false);
+        expect(utils.is_option_truthy("none")).toBe(false);
+        expect(utils.is_option_truthy("")).toBe(false);
     });
 });

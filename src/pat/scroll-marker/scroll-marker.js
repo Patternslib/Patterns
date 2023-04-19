@@ -13,12 +13,10 @@ parser.addArgument("in-view-class", "in-view");
 parser.addArgument("current-class", "current");
 parser.addArgument("current-content-class", "scroll-marker-current");
 
-// Side of element that scrolls. top/bottom/middle/auto (default 'top')
 parser.addArgument("side", "top", ["top", "bottom", "middle", "auto"]);
-// Distance from side of scroll box. any amount in px, %, vw, vh, vmin or vmax (default '50%')
 parser.addArgument("distance", "50%");
-// Visibility of element in scroll box. most-visible or null (default null)
-parser.addArgument("visibility", null, [null, "most-visible"]);
+parser.addArgument("visibility", null, [null, "none", "most-visible"]);
+parser.addArgument("selector", "a[href^='#']");
 
 class Pattern extends BasePattern {
     static name = "scroll-marker";
@@ -34,7 +32,7 @@ class Pattern extends BasePattern {
     init() {
         // Get all elements that are referenced by links in the current page.
         this.observables = new Map(
-            [...dom.querySelectorAllAndMe(this.el, "a[href^='#']")]
+            [...dom.querySelectorAllAndMe(this.el, this.options.selector)]
                 .map(
                     // Create the structure:
                     // id: {link, target}

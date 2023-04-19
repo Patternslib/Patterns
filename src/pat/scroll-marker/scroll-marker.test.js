@@ -232,6 +232,30 @@ describe("pat-scroll-marker", () => {
             expect(id2.classList.contains("scroll-marker-current")).toBe(true);
             expect(id3.classList.contains("scroll-marker-current")).toBe(false);
         });
+
+        it("1.5: The selector option can exclude some items", async () => {
+            // With the selector option you can include/exclude some items from
+            // being included in the scroll-marker functionality.
+
+            const { nav_id1, nav_id2, nav_id3, id1, id2, id3 } =
+                await create_scroll_marker({
+                    options: {
+                        selector: "a[href^='#']:not([href='#id3'])",
+                    },
+                });
+
+            expect(nav_id1.classList.contains("in-view")).toBe(false);
+            expect(nav_id2.classList.contains("in-view")).toBe(true);
+            expect(nav_id3.classList.contains("in-view")).toBe(false);
+
+            expect(nav_id1.classList.contains("current")).toBe(false);
+            expect(nav_id2.classList.contains("current")).toBe(true);
+            expect(nav_id3.classList.contains("current")).toBe(false);
+
+            expect(id1.classList.contains("scroll-marker-current")).toBe(false);
+            expect(id2.classList.contains("scroll-marker-current")).toBe(true);
+            expect(id3.classList.contains("scroll-marker-current")).toBe(false);
+        });
     });
 
     describe("2: Test on element as scroll container", () => {

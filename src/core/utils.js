@@ -447,7 +447,7 @@ function parseTime(time) {
  * parseLength - Parse a length from a string and return the parsed length in
  * pixels.
 
- * @param {String} length - A length string like `1px` or `25%`.
+ * @param {String} length - A length string like `1px` or `25%`. Lengths without a unit are treated as pixels.
  * @param {Number} reference_length - The reference length to use for percentage lengths.
  *
  * @returns {Number} - A integer which represents the parsed length in pixels.
@@ -486,7 +486,7 @@ function parseLength(length, reference_length = null) {
                 (amount * Math.max(window.innerWidth, window.innerHeight)) / 100
             );
         default:
-            return null;
+            return Math.round(amount);
     }
 }
 
@@ -756,6 +756,36 @@ const threshold_list = (num_steps = 0) => {
     return thresholds.sort();
 };
 
+/**
+ * is_option_truthy - Check if an Pattern option is set.
+ *
+ * An option is set if it is not one of:
+ * - undefined
+ * - null
+ * - "none"
+ * - ""
+ *
+ * @param {String} option - The option to check.
+ *
+ * @returns {Boolean} - Returns true if the option is set, false otherwise.
+ *
+ * @example
+ *
+ * is_option_truthy() // false
+ * is_option_truthy(undefined) // false
+ * is_option_truthy(null) // false
+ * is_option_truthy("") // false
+ * is_option_truthy("none") // false
+ * is_option_truthy("false") // false
+ * is_option_truthy("foo") // true
+ * is_option_truthy(true) // true
+ * is_option_truthy(0) // true
+ *
+ */
+const is_option_truthy = (option) => {
+    return ![undefined, null, "none", false, "false", ""].includes(option);
+};
+
 var utils = {
     jqueryPlugin: jqueryPlugin,
     escapeRegExp: escapeRegExp,
@@ -789,6 +819,7 @@ var utils = {
     is_iso_date: is_iso_date,
     date_diff: date_diff,
     threshold_list: threshold_list,
+    is_option_truthy: is_option_truthy,
     getCSSValue: dom.get_css_value, // BBB: moved to dom. TODO: Remove in upcoming version.
 };
 
