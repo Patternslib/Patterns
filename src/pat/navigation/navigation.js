@@ -17,12 +17,9 @@ parser.addArgument("in-view-class", "in-view");
 parser.addArgument("current-class", "current");
 parser.addArgument("current-content-class", "navigation-current");
 
-// Side of element that scrolls. top/bottom/middle/auto (default 'top')
-parser.addArgument("scroll-marker-side", "top", ["top", "bottom", "middle", "auto"]);
-// Distance from side of scroll box. any amount in px or % (default '50%')
-parser.addArgument("scroll-marker-distance", "50%");
-// Visibility of element in scroll box. most-visible or null (default null)
-parser.addArgument("scroll-marker-visibility", null, [null, "most-visible"]);
+parser.addArgument("scroll-item-side", "top", ["top", "bottom", "middle", "auto"]);
+parser.addArgument("scroll-item-distance", "50%");
+parser.addArgument("scroll-item-visibility", null, [null, "most-visible"]);
 
 class Pattern extends BasePattern {
     static name = "navigation";
@@ -41,9 +38,9 @@ class Pattern extends BasePattern {
             "current-class": this.options["current-class"],
             "current-content-class": this.options["current-content-class"],
             "in-view-class": this.options["in-view-class"],
-            "side": this.options["scroll-marker-side"],
-            "distance": this.options["scroll-marker-distance"],
-            "visibility": this.options["scroll-marker-visibility"],
+            "side": this.options["scroll-item-side"],
+            "distance": this.options["scroll-item-distance"],
+            "visibility": this.options["scroll-item-visibility"],
         });
 
         this.debounced_scroll_marker_enabler = utils.debounce(() => {
