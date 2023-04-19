@@ -899,3 +899,24 @@ describe("threshold_list ...", function () {
         ]);
     });
 });
+
+describe("is_option_truthy ...", function () {
+    it("checks if an option is set", () => {
+        // These options are considered truthy
+        expect(utils.is_option_truthy("a")).toBe(true);
+        expect(utils.is_option_truthy(true)).toBe(true);
+        expect(utils.is_option_truthy("true")).toBe(true);
+        expect(utils.is_option_truthy(1)).toBe(true);
+        // Also "0" is considered truthy because it can be a valid option for
+        // length, time and so forth.
+        expect(utils.is_option_truthy(0)).toBe(true);
+
+        // These options are considered falsy
+        expect(utils.is_option_truthy(undefined)).toBe(false);
+        expect(utils.is_option_truthy(null)).toBe(false);
+        expect(utils.is_option_truthy(false)).toBe(false);
+        expect(utils.is_option_truthy("false")).toBe(false);
+        expect(utils.is_option_truthy("none")).toBe(false);
+        expect(utils.is_option_truthy("")).toBe(false);
+    });
+});

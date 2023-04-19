@@ -756,6 +756,36 @@ const threshold_list = (num_steps = 0) => {
     return thresholds.sort();
 };
 
+/**
+ * is_option_truthy - Check if an Pattern option is set.
+ *
+ * An option is set if it is not one of:
+ * - undefined
+ * - null
+ * - "none"
+ * - ""
+ *
+ * @param {String} option - The option to check.
+ *
+ * @returns {Boolean} - Returns true if the option is set, false otherwise.
+ *
+ * @example
+ *
+ * is_option_truthy() // false
+ * is_option_truthy(undefined) // false
+ * is_option_truthy(null) // false
+ * is_option_truthy("") // false
+ * is_option_truthy("none") // false
+ * is_option_truthy("false") // false
+ * is_option_truthy("foo") // true
+ * is_option_truthy(true) // true
+ * is_option_truthy(0) // true
+ *
+ */
+const is_option_truthy = (option) => {
+    return ![undefined, null, "none", false, "false", ""].includes(option);
+};
+
 var utils = {
     jqueryPlugin: jqueryPlugin,
     escapeRegExp: escapeRegExp,
@@ -789,6 +819,7 @@ var utils = {
     is_iso_date: is_iso_date,
     date_diff: date_diff,
     threshold_list: threshold_list,
+    is_option_truthy: is_option_truthy,
     getCSSValue: dom.get_css_value, // BBB: moved to dom. TODO: Remove in upcoming version.
 };
 
