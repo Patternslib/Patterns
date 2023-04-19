@@ -4,6 +4,17 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.0-alpha.4](https://github.com/Patternslib/patterns/compare/9.9.0-alpha.3...9.9.0-alpha.4) (2023-04-19)
+
+
+### Bug Fixes
+
+
+* **pat navigation:** Change default scroll-trigger-selector to "a[href^='#'].scroll-trigger". ([efc5826](https://github.com/Patternslib/patterns/commit/efc58267815caaf92a8cf1ba370a39880498062e))
+
+  In the alpha.3 release it was "a[href^='#'].scroll-marker" where it
+should have been "a[href^='#'].scroll-trigger". This is fixed now.
+
 ## [9.9.0-alpha.3](https://github.com/Patternslib/patterns/compare/9.9.0-alpha.2...9.9.0-alpha.3) (2023-04-19)
 
 
