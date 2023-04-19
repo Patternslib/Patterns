@@ -15,7 +15,7 @@ parser.addArgument("current-content-class", "scroll-marker-current");
 
 parser.addArgument("side", "top", ["top", "bottom", "middle", "auto"]);
 parser.addArgument("distance", "50%");
-parser.addArgument("visibility", null, [null, "most-visible"]);
+parser.addArgument("visibility", null, [null, "none", "most-visible"]);
 
 class Pattern extends BasePattern {
     static name = "scroll-marker";
