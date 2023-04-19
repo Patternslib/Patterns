@@ -4,6 +4,57 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.0-alpha.3](https://github.com/Patternslib/patterns/compare/9.9.0-alpha.2...9.9.0-alpha.3) (2023-04-19)
+
+
+### Features
+
+
+* **core utils:** Add is_option_truthy to check Pattern options for a truthy value. ([6a6e9fa](https://github.com/Patternslib/patterns/commit/6a6e9fae0aef9ceb5f71117133a45c3e1a2a0d82))
+
+  A values "undefined", "null", "false", "none" or "" are considered falsy
+and can be used to disable some functionality. Other values including
+"0" are considered to be true.
+
+
+* **core utils:** parseLength: handle unitless lengths as pixels. ([15090e3](https://github.com/Patternslib/patterns/commit/15090e3d19b8384042b25dcfb6bb9361283c5044))
+
+
+* **pat navigation:** Implement scroll-trigger-selector option. ([818c68d](https://github.com/Patternslib/patterns/commit/818c68d175c254b192a909b4e7c8e4770687c681))
+
+  Define the CSS selector which is used to find navigation links with hash
+URLs. The default is "a[href^='#'].scroll-marker" which would find all anchor
+elements which href starts with a "#" sign and have the class
+scroll-marker.
+The restriction on scroll-marker allows for other hash-urls in the same
+navigation - e.g. a pat-tooltip which references a local content.
+If you set it to "none" the scroll marker functionality is not activated.
+
+
+* **pat scroll-marker:** Implement selector option. ([678aee5](https://github.com/Patternslib/patterns/commit/678aee5d2725cf47085df246536e57d9b4639b62))
+
+  Define the CSS selector which is used to find navigation links with hash
+URLs. The default is "a[href^='#']" which would find all anchor elements
+which href starts with a "#" sign.
+
+
+
+### Bug Fixes
+
+
+* **pat navigation:** Allow "none" to be a valid option for scroll-item-visibility. ([456e05a](https://github.com/Patternslib/patterns/commit/456e05ac288638a7a631377c6fb886e49e951493))
+
+
+* **pat navigation:** Rename scroll-marker- options to scroll-item. ([a40fc0f](https://github.com/Patternslib/patterns/commit/a40fc0fb1d0c68c074d9153d8872edc63eeccda7))
+
+  Implement review comments.
+
+This is not listed as "breaking" change because this change on the
+scroll-marker feature happens within the alpha phase.
+
+
+* **pat scroll-marker:** Allow "none" to be a valid option for visibility. ([e506ed2](https://github.com/Patternslib/patterns/commit/e506ed28b7a3c23d2b67c612c1979d260727282e))
+
 ## [9.9.0-alpha.2](https://github.com/Patternslib/patterns/compare/9.9.0-alpha.1...9.9.0-alpha.2) (2023-04-18)
 
 
