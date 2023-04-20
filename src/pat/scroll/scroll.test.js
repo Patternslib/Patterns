@@ -1,126 +1,130 @@
 import $ from "jquery";
-import pattern from "./scroll";
+import Pattern from "./scroll";
+import events from "../../core/events";
 import utils from "../../core/utils";
 import { jest } from "@jest/globals";
 
 describe("pat-scroll", function () {
+    beforeEach(function () {
+        // polyfill window.scrollTo for jsdom, which just runs but does not scroll.
+        this.spy_scrollTo = jest
+            .spyOn(window, "scrollTo")
+            .mockImplementation(() => null);
+    });
+
     afterEach(function () {
         jest.restoreAllMocks();
     });
 
-    it("will automatically scroll to an anchor if the trigger is set to 'auto' and will also handle 'click' events", async () => {
+    it("1 - will automatically scroll to an anchor if the trigger is set to 'auto' and will also handle 'click' events", async function () {
         document.body.innerHTML = `
             <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>
             <p id="p1"></p>
         `;
         const el = document.querySelector(".pat-scroll");
-        const spy_animate = jest.spyOn($.fn, "animate");
 
-        pattern.init(el);
-        await utils.timeout(10); // wait some ticks for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
+        await utils.timeout(1); // wait a tick for async to settle.
 
-        expect(spy_animate).toHaveBeenCalledTimes(1);
+        expect(this.spy_scrollTo).toHaveBeenCalledTimes(1);
 
         el.click();
         await utils.timeout(1); // wait a tick for async to settle.
 
-        expect(spy_animate).toHaveBeenCalledTimes(2);
+        expect(this.spy_scrollTo).toHaveBeenCalledTimes(2);
     });
 
-    it("will scroll to an anchor on click if the trigger is set to 'click'", async () => {
+    it("2 - will scroll to an anchor on click if the trigger is set to 'click'", async function () {
         document.body.innerHTML = `
             <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click">p1</a>
             <p id="p1"></p>
         `;
         const el = document.querySelector(".pat-scroll");
-        const spy_animate = jest.spyOn($.fn, "animate");
 
-        pattern.init(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         el.click();
         await utils.timeout(1); // wait a tick for async to settle.
 
-        expect(spy_animate).toHaveBeenCalled();
+        expect(this.spy_scrollTo).toHaveBeenCalled();
     });
 
-    it("allows to define a delay after which it will scroll to an anchor", async () => {
+    it("3 - allows to define a delay after which it will scroll to an anchor", async function () {
         document.body.innerHTML = `
             <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click; delay: 200">p1</a>
             <p id="p1"></p>
         `;
         const el = document.querySelector(".pat-scroll");
-        const spy_animate = jest.spyOn($.fn, "animate");
 
-        pattern.init(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         el.click();
         await utils.timeout(1); // wait a tick for async to settle.
-        expect(spy_animate).not.toHaveBeenCalled();
+        expect(this.spy_scrollTo).not.toHaveBeenCalled();
         await utils.timeout(100);
-        expect(spy_animate).not.toHaveBeenCalled();
+        expect(this.spy_scrollTo).not.toHaveBeenCalled();
         await utils.timeout(100);
-        expect(spy_animate).toHaveBeenCalled();
+        expect(this.spy_scrollTo).toHaveBeenCalled();
     });
 
-    it("allows to define a delay with units after which it will scroll to an anchor", async () => {
+    it("4 - allows to define a delay with units after which it will scroll to an anchor", async function () {
         document.body.innerHTML = `
             <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click; delay: 200ms">p1</a>
             <p id="p1"></p>
         `;
         const el = document.querySelector(".pat-scroll");
-        const spy_animate = jest.spyOn($.fn, "animate");
 
-        pattern.init(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         el.click();
         await utils.timeout(1); // wait a tick for async to settle.
-        expect(spy_animate).not.toHaveBeenCalled();
+        expect(this.spy_scrollTo).not.toHaveBeenCalled();
         await utils.timeout(100);
-        expect(spy_animate).not.toHaveBeenCalled();
+        expect(this.spy_scrollTo).not.toHaveBeenCalled();
         await utils.timeout(100);
-        expect(spy_animate).toHaveBeenCalled();
+        expect(this.spy_scrollTo).toHaveBeenCalled();
     });
 
-    it("will scroll to an anchor on pat-update with originalEvent of click", async () => {
+    it("5 - will scroll to an anchor on pat-update with originalEvent of click", async function () {
         document.body.innerHTML = `
             <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click">p1</a>
             <p id="p1"></p>
         `;
         const $el = $(".pat-scroll");
-        const spy_animate = jest.spyOn($.fn, "animate");
-        pattern.init($el);
-        await utils.timeout(1); // wait a tick for async to settle.
+
+        const instance = new Pattern($el[0]);
+        await events.await_pattern_init(instance);
         $el.trigger("pat-update", {
             pattern: "stacks",
             originalEvent: {
                 type: "click",
             },
         });
-        expect(spy_animate).toHaveBeenCalled();
+        expect(this.spy_scrollTo).toHaveBeenCalled();
     });
 
-    it("will allow for programmatic scrolling with trigger set to 'manual'", async () => {
+    it("6 - will allow for programmatic scrolling with trigger set to 'manual'", async function () {
         document.body.innerHTML = `
             <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: manual">p1</a>
             <p id="p1"></p>
         `;
         const el = document.querySelector(".pat-scroll");
-        const spy_animate = jest.spyOn($.fn, "animate");
 
-        const pat = pattern.init(el);
-        await utils.timeout(1); // wait some ticks for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
-        expect(spy_animate).not.toHaveBeenCalled();
+        expect(this.spy_scrollTo).not.toHaveBeenCalled();
 
-        await pat.smoothScroll();
+        await instance.scrollTo();
 
-        expect(spy_animate).toHaveBeenCalled();
+        expect(this.spy_scrollTo).toHaveBeenCalled();
     });
 
-    it("will scroll to bottom with selector:bottom", async () => {
+    it("7 - will scroll to bottom with selector:bottom", async function () {
         document.body.innerHTML = `
             <div id="scroll-container" style="overflow-y: scroll">
               <button class="pat-scroll" data-pat-scroll="selector: bottom; trigger: manual">to bottom</button>
@@ -132,20 +136,27 @@ describe("pat-scroll", function () {
 
         // mocking stuff jsDOM doesn't implement
         jest.spyOn(container, "scrollHeight", "get").mockImplementation(() => 1000);
+        // Need to force overwrite scrollTo, otherwise jest doesn't let it to
+        // mock as it thinks it's a property.
+        container.scrollTo = () => null;
+        jest.spyOn(container, "scrollTo").mockImplementation((options) => {
+            // We're at least testing that scrollTo is called with the right args
+            container.scrollTop = options.top;
+        });
 
         expect(container.scrollTop).toBe(0);
 
-        const pat = pattern.init(trigger);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(trigger);
+        await events.await_pattern_init(instance);
 
         expect(container.scrollTop).toBe(0);
 
-        await pat.smoothScroll();
+        await instance.scrollTo();
 
         expect(container.scrollTop).toBe(1000);
     });
 
-    it("will add an offset to the scroll position", async () => {
+    it("8 - will add an offset to the scroll position", async function () {
         // Testing with `selector: top`, as this just sets scrollTop to 0
 
         document.body.innerHTML = `
@@ -156,20 +167,26 @@ describe("pat-scroll", function () {
 
         const container = document.querySelector("#scroll-container");
         const trigger = document.querySelector(".pat-scroll");
-        const spy_animate = jest.spyOn($.fn, "animate");
+
+        // Need to force overwrite scrollTo, otherwise jest doesn't let it to
+        // mock as it thinks it's a property.
+        container.scrollTo = () => null;
+        jest.spyOn(container, "scrollTo").mockImplementation((options) => {
+            // We're at least testing that scrollTo is called with the right args
+            container.scrollTop = options.top;
+        });
 
         expect(container.scrollTop).toBe(0);
 
-        const pat = pattern.init(trigger);
-        await utils.timeout(1); // wait a tick for async to settle.
-        await pat.smoothScroll();
+        const instance = new Pattern(trigger);
+        await events.await_pattern_init(instance);
 
-        // get first called argument
-        const arg_1 = spy_animate.mock.calls[0][0];
-        expect(arg_1.scrollTop).toBe(-40); // the offset is substracted from the scroll position to stop BEFORE the target position
+        await instance.scrollTo();
+
+        expect(container.scrollTop).toBe(-40);
     });
 
-    it("will adds a negative offset to scroll position", async () => {
+    it("9 - will adds a negative offset to scroll position", async function () {
         // Testing with `selector: top`, as this just sets scrollTop to 0
 
         document.body.innerHTML = `
@@ -180,20 +197,25 @@ describe("pat-scroll", function () {
 
         const container = document.querySelector("#scroll-container");
         const trigger = document.querySelector(".pat-scroll");
-        const spy_animate = jest.spyOn($.fn, "animate");
+
+        // Need to force overwrite scrollTo, otherwise jest doesn't let it to
+        // mock as it thinks it's a property.
+        container.scrollTo = () => null;
+        jest.spyOn(container, "scrollTo").mockImplementation((options) => {
+            // We're at least testing that scrollTo is called with the right args
+            container.scrollTop = options.top;
+        });
 
         expect(container.scrollTop).toBe(0);
 
-        const pat = pattern.init(trigger);
-        await utils.timeout(1); // wait a tick for async to settle.
-        await pat.smoothScroll();
+        const instance = new Pattern(trigger);
+        await events.await_pattern_init(instance);
+        await instance.scrollTo();
 
-        // get first called argument
-        const arg_1 = spy_animate.mock.calls[0][0];
-        expect(arg_1.scrollTop).toBe(40); // the offset is substracted from the scroll position, so a negative offset is added to the scroll position and stops AFTER the target position.
+        expect(container.scrollTop).toBe(40);
     });
 
-    it("handles different selector options.", () => {
+    it("10 - handles different selector options.", async function () {
         document.body.innerHTML = `
             <a href="#el3" class="pat-scroll">scroll</a>
             <div id="el1"></div>
@@ -206,49 +228,25 @@ describe("pat-scroll", function () {
         const el_2 = document.querySelector(".el2");
         const el_3 = document.querySelector("#el3");
 
-        const pat = pattern.init(el_pat);
+        const pat = new Pattern(el_pat);
+        await events.await_pattern_init(pat);
 
         pat.options.selector = "self";
-        expect(pat._get_selector_target()).toBe(el_pat);
+        expect(pat.get_target()).toBe(el_pat);
+
+        pat.options.selector = "top";
+        expect(pat.get_target()).toBe(el_pat);
+
+        pat.options.selector = "bottom";
+        expect(pat.get_target()).toBe(el_pat);
 
         pat.options.selector = "#el1";
-        expect(pat._get_selector_target()).toBe(el_1);
+        expect(pat.get_target()).toBe(el_1);
 
         pat.options.selector = ".el2";
-        expect(pat._get_selector_target()).toBe(el_2);
+        expect(pat.get_target()).toBe(el_2);
 
         pat.options.selector = null; // Using href target
-        expect(pat._get_selector_target()).toBe(el_3);
-    });
-
-    it("triggers pat-update event.", async () => {
-        document.body.innerHTML = `
-            <a href="#el1" class="pat-scroll">scroll to</a>
-            <div id="el1" />
-        `;
-
-        const spy = jest
-            .spyOn(utils, "isElementInViewport")
-            .mockImplementation(() => true);
-
-        const el = document.querySelector(".pat-scroll");
-        const target = document.querySelector("#el1");
-
-        new pattern(el);
-
-        let data = null;
-        $(el).on("pat-update", (e, d) => {
-            data = d;
-        });
-
-        $(window).scroll();
-        await utils.timeout(50); // wait for debounce.
-
-        expect(data).not.toBeNull();
-        expect(data.pattern).toBe("scroll");
-        expect(data.action).toBe("attribute-changed");
-        expect(data.dom).toBe(target);
-
-        spy.mockRestore();
+        expect(pat.get_target()).toBe(el_3);
     });
 });
