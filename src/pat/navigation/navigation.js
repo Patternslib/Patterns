@@ -93,7 +93,7 @@ class Pattern extends BasePattern {
                             : this.scroll_marker.scroll_container,
                         "scroll",
                         "pat-navigation__scroll_marker_enable",
-                        this.debounced_scroll_marker_enabler
+                        this.debounced_scroll_marker_enabler.bind(this)
                     );
                 }
             }
