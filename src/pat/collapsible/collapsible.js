@@ -1,6 +1,7 @@
 import $ from "jquery";
 import "../../core/jquery-ext";
 import { BasePattern } from "../../core/basepattern";
+import events from "../../core/events";
 import inject from "../inject/inject";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
@@ -44,7 +45,7 @@ class Pattern extends BasePattern {
         "slide-horizontal": { closed: "slideOut", open: "slideIn" },
     };
 
-    init() {
+    async init() {
         const $el = (this.$el = $(this.el));
 
         let $content;
@@ -85,8 +86,9 @@ class Pattern extends BasePattern {
             $el.removeClass("open").addClass("closed");
             this.$panel.hide();
         } else {
-            if (this.options.loadContent)
+            if (this.options.loadContent) {
                 this._loadContent($el, this.options.loadContent, this.$panel);
+            }
             this.$trigger.removeClass("collapsible-closed").addClass("collapsible-open");
             $el.removeClass("closed").addClass("open");
             this.$panel.show();
@@ -104,13 +106,33 @@ class Pattern extends BasePattern {
             $(document).on("click", this.options.openTrigger, this.open.bind(this));
         }
 
+        // pat-scroll support
+        if (this.options.scroll?.selector) {
+            const Scroll = (await import("../scroll/scroll")).default;
+            this.scroll = new Scroll(this.el, {
+                trigger: "manual",
+                selector: this.options.scroll.selector,
+                offset: this.options.scroll?.offset,
+            });
+            await events.await_pattern_init(this.scroll);
+        }
+
+        // scroll debouncer for later use.
         this.debounce_scroll = utils.debounce(
-            () => this._scroll(),
+            this._scroll.bind(this),
             10,
             debounce_scroll_timer
-        ); // scroll debouncer for later use.
+        );
 
         return $el;
+    }
+
+    async _scroll() {
+        const scroll_selector = this.options.scroll?.selector;
+        if (!scroll_selector) {
+            return;
+        }
+        await this.scroll.scrollTo();
     }
 
     open() {
@@ -174,19 +196,6 @@ class Pattern extends BasePattern {
             this._transit(this.$el, "open", "closed");
         }
         return this.$el; // allow chaining
-    }
-
-    async _scroll() {
-        const scroll_selector = this.options.scroll?.selector;
-        if (scroll_selector) {
-            const pat_scroll = (await import("../scroll/scroll")).default;
-            const scroll = new pat_scroll(this.el, {
-                trigger: "manual",
-                selector: scroll_selector,
-                offset: this.options.scroll?.offset,
-            });
-            await scroll.smoothScroll();
-        }
     }
 
     async _transit($el, from_cls, to_cls) {
