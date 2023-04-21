@@ -4,6 +4,42 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.0-alpha.5](https://github.com/Patternslib/patterns/compare/9.9.0-alpha.4...9.9.0-alpha.5) (2023-04-21)
+
+
+### Bug Fixes
+
+
+* **pat collapsible:** Adapt to changed pat-scroll. ([7211616](https://github.com/Patternslib/patterns/commit/72116164a65792d58e9bdd89d933e110a9580ca8))
+
+
+
+### Breaking Changes
+
+
+* **pat scroll:** Simplify pattern and remove obsolete functionality. ([b62e6e0](https://github.com/Patternslib/patterns/commit/b62e6e0309f385d272fe221168e06145f33ae533))
+
+  Since pat-navigation now supports marking navigation and content items
+with CSS classes based on their scroll position this functionality is
+removed from pat-scroll. You can still use pat-scroll in combination
+with pat-scroll-marker to achieve the same functionality like before.
+
+Also the jQuery based scroll animation is removed as smooth scrolling is
+supported by CSS since long.
+
+
+
+### Maintenance
+
+
+* **core utils:** Deprecate elementInViewport in favor of isElementInViewport. ([a9b5035](https://github.com/Patternslib/patterns/commit/a9b5035f5a31c6ce2e7fd3d793ddfd909f59558a))
+
+
+* **pat scroll:** Update documentation. ([fdb44bf](https://github.com/Patternslib/patterns/commit/fdb44bf7a84e6db27ea13babdcf6c98792398157))
+
+
+* Upgrade dependencies. ([75acb81](https://github.com/Patternslib/patterns/commit/75acb81ab133f8f735c0492eb45334876de18593))
+
 ## [9.9.0-alpha.4](https://github.com/Patternslib/patterns/compare/9.9.0-alpha.3...9.9.0-alpha.4) (2023-04-19)
 
 
