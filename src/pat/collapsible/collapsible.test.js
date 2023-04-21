@@ -10,7 +10,7 @@ describe("pat-collapsible", function () {
         jest.restoreAllMocks();
     });
 
-    it("1- wraps the collapsible within a div.panel-content", async function () {
+    it("1 - wraps the collapsible within a div.panel-content", async function () {
         document.body.innerHTML = `
             <div class="pat-collapsible">
                 <h3>Trigger header</h3>
@@ -128,16 +128,27 @@ describe("pat-collapsible", function () {
     });
 
     describe("8 - scrolling", function () {
+        beforeEach(function () {
+            // polyfill window.scrollTo for jsdom, which just runs but does not scroll.
+            this.spy_scrollTo = jest
+                .spyOn(window, "scrollTo")
+                .mockImplementation(() => null);
+        });
+
+        afterEach(function () {
+            this.spy_scrollTo.mockRestore();
+        });
+
         it("8.1 - can scroll to itself when opened.", async function () {
             document.body.innerHTML = `
             <div class="pat-collapsible closed" data-pat-collapsible="scroll-selector: self">
                 <p>Collapsible content</p>
             </div>
-        `;
+            `;
             const collapsible = document.querySelector(".pat-collapsible");
             const instance = new Pattern(collapsible, { transition: "none" });
-            await events.await_pattern_init(instance);
             const spy_scroll = jest.spyOn(instance, "_scroll");
+            await events.await_pattern_init(instance);
 
             instance.toggle();
             await utils.timeout(10);
@@ -153,8 +164,8 @@ describe("pat-collapsible", function () {
         `;
             const collapsible = document.querySelector(".pat-collapsible");
             const instance = new Pattern(collapsible, { transition: "none" });
-            await events.await_pattern_init(instance);
             const spy_scroll = jest.spyOn(instance, "_scroll");
+            await events.await_pattern_init(instance);
 
             instance.toggle();
             await utils.timeout(10);
@@ -182,7 +193,6 @@ describe("pat-collapsible", function () {
             await events.await_pattern_init(instance2);
             const instance3 = new Pattern(document.querySelector(".c3"));
             await events.await_pattern_init(instance3);
-            const spy_animate = jest.spyOn($.fn, "animate");
 
             document.querySelector("#open").click();
             await utils.timeout(30);
@@ -192,7 +202,7 @@ describe("pat-collapsible", function () {
             expect(document.querySelector(".c3").classList.contains("open")).toBeTruthy(); // prettier-ignore
 
             // Other calls to _scroll resp. jQuery.animate should have been canceled.
-            expect(spy_animate).toHaveBeenCalledTimes(1);
+            expect(this.spy_scrollTo).toHaveBeenCalledTimes(1);
         });
 
         it("8.4 - can scroll to itself when opened with an offset.", async function () {
@@ -204,13 +214,12 @@ describe("pat-collapsible", function () {
             const collapsible = document.querySelector(".pat-collapsible");
             const instance = new Pattern(collapsible);
             await events.await_pattern_init(instance);
-            const spy_animate = jest.spyOn($.fn, "animate");
 
             instance.toggle();
             await utils.timeout(10);
 
-            const arg_1 = spy_animate.mock.calls[0][0];
-            expect(arg_1.scrollTop).toBe(-40); // the offset is substracted from the scroll position to stop BEFORE the target position.
+            const arg_1 = this.spy_scrollTo.mock.calls[0][0];
+            expect(arg_1.top).toBe(-40); // the offset is substracted from the scroll position to stop BEFORE the target position.
         });
 
         it("8.5 - can scroll to itself when opened with a negative offset.", async function () {
@@ -222,13 +231,12 @@ describe("pat-collapsible", function () {
             const collapsible = document.querySelector(".pat-collapsible");
             const instance = new Pattern(collapsible);
             await events.await_pattern_init(instance);
-            const spy_animate = jest.spyOn($.fn, "animate");
 
             instance.toggle();
             await utils.timeout(10);
 
-            const arg_1 = spy_animate.mock.calls[0][0];
-            expect(arg_1.scrollTop).toBe(40); // the offset is substracted from the scroll position, so a negative offset is added to the scroll position and stops AFTER the target position.
+            const arg_1 = this.spy_scrollTo.mock.calls[0][0];
+            expect(arg_1.top).toBe(40); // the offset is substracted from the scroll position, so a negative offset is added to the scroll position and stops AFTER the target position.
         });
     });
 

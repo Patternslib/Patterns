@@ -170,18 +170,6 @@ function findLabel(input) {
     }
 }
 
-// Taken from http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
-function elementInViewport(el) {
-    var rect = el.getBoundingClientRect(),
-        docEl = document.documentElement,
-        vWidth = window.innerWidth || docEl.clientWidth,
-        vHeight = window.innerHeight || docEl.clientHeight;
-
-    if (rect.right < 0 || rect.bottom < 0 || rect.left > vWidth || rect.top > vHeight)
-        return false;
-    return true;
-}
-
 // Taken from http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
 function escapeRegExp(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
@@ -792,7 +780,6 @@ var utils = {
     isObject: isObject,
     extend: extend,
     findLabel: findLabel,
-    elementInViewport: elementInViewport,
     removeWildcardClass: removeWildcardClass,
     hideOrShow: hideOrShow,
     addURLQueryParameter: addURLQueryParameter,
@@ -821,6 +808,11 @@ var utils = {
     threshold_list: threshold_list,
     is_option_truthy: is_option_truthy,
     getCSSValue: dom.get_css_value, // BBB: moved to dom. TODO: Remove in upcoming version.
+    elementInViewport: (el) => {
+        // BBB: Remove with next major version.
+        console.warn("Deprecated. Use utils.isElementInViewport");
+        return isElementInViewport(el);
+    },
 };
 
 export default utils;
