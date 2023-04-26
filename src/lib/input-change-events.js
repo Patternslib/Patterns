@@ -30,15 +30,15 @@ const _ = {
     },
 
     setupInputHandlers($el) {
-        if (!$el.is(":input")) {
+        if ($el.is(":input")) {
+            // The element itself is an input, se we simply register a
+            // handler fot it.
+            _.registerHandlersForElement.bind($el)();
+        } else {
             // We've been given an element that is not a form input. We
             // therefore assume that it's a container of form inputs and
             // register handlers for its children.
             $el.findInclusive(":input").each(_.registerHandlersForElement);
-        } else {
-            // The element itself is an input, se we simply register a
-            // handler fot it.
-            _.registerHandlersForElement.bind($el)();
         }
     },
 
