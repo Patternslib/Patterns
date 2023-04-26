@@ -1,11 +1,12 @@
 // helper functions to make all input elements
 import $ from "jquery";
 import logging from "../core/logging";
+
 const namespace = "input-change-events";
 const log = logging.getLogger(namespace);
 
 const _ = {
-    setup: function ($el, pat) {
+    setup($el, pat) {
         if (!pat) {
             log.error("The name of the calling pattern has to be set.");
             return;
@@ -28,7 +29,7 @@ const _ = {
         }
     },
 
-    setupInputHandlers: function ($el) {
+    setupInputHandlers($el) {
         if (!$el.is(":input")) {
             // We've been given an element that is not a form input. We
             // therefore assume that it's a container of form inputs and
@@ -41,7 +42,7 @@ const _ = {
         }
     },
 
-    registerHandlersForElement: function () {
+    registerHandlersForElement() {
         const $el = $(this);
         const isNumber = $el.is("input[type=number]");
         const isText = $el.is("input:text, input[type=search], textarea");
@@ -73,7 +74,7 @@ const _ = {
         });
     },
 
-    remove: function ($el, pat) {
+    remove($el, pat) {
         let patterns = $el.data(namespace) || [];
         if (patterns.indexOf(pat) === -1) {
             log.warn("input-change-events were never installed for " + pat);
