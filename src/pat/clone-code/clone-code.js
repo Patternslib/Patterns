@@ -12,6 +12,10 @@ class Pattern extends BasePattern {
     static trigger = ".pat-clone-code";
     static parser = parser;
 
+    // Initialize clone-code early.
+    // We want to copy the markup before any other patterns have changed it.
+    static order = 200;
+
     async init() {
         // Source
         if (this.options.source.lastIndexOf(":", 0) === 0) {

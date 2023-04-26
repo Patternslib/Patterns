@@ -133,19 +133,26 @@ const registry = {
     },
 
     orderPatterns(patterns) {
-        // Always add pat-validation as first pattern, so that it can prevent
-        // other patterns from reacting to submit events if form validation
-        // fails.
-        if (patterns.includes("validation")) {
-            patterns.splice(patterns.indexOf("validation"), 1);
-            patterns.unshift("validation");
+        patterns = [...patterns];
+        const sorted_patterns = [];
+
+        // Sort patterns
+        for (const name of patterns) {
+            const pattern = registry.patterns[name];
+            if (!pattern) {
+                // No registered pattern. Ignore that.
+                continue;
+            }
+            sorted_patterns.push([name, pattern?.order || 1000]);
         }
-        // Add clone-code to the very beginning - we want to copy the markup
-        // before any other patterns changed the markup.
-        if (patterns.includes("clone-code")) {
-            patterns.splice(patterns.indexOf("clone-code"), 1);
-            patterns.unshift("clone-code");
-        }
+        // Sorting. Sort for the value in the sorted_patterns map.
+        patterns = sorted_patterns
+            .toSorted((a, b) => {
+                return a[1] - b[1];
+            })
+            .map((item) => {
+                return item[0];
+            });
 
         return patterns;
     },

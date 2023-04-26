@@ -37,6 +37,11 @@ class Pattern extends BasePattern {
     static trigger = "form.pat-validation";
     static parser = parser;
 
+    // Initialize pat-validation early.
+    // We need to prevent other patterns from reacting to submit events if form
+    // validation fails (e.g. pat-inject).
+    static order = 100;
+
     init() {
         events.add_event_listener(
             this.el,
