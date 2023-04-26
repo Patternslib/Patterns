@@ -42,17 +42,27 @@ const _ = {
             // We've been given an element that is not a form input. We
             // therefore assume that it's a container of form inputs and
             // register handlers for its children.
-            for (const _el of dom.querySelectorAllAndMe(
-                el,
-                "input, textarea, select, button"
-            )) {
+            for (const _el of el.closest("form").elements) {
+                // Search for all form elements, also those outside the form
+                // container.
+                if (!dom.is_input(_el)) {
+                    // form.elements also catches fieldsets, object, output,
+                    // which we do not want to handle here.
+                    continue;
+                }
                 this.registerHandlersForElement(_el);
             }
         }
     },
 
     registerHandlersForElement(el) {
+        let el_within_form = true;
+        if (el.closest("form") !== el.form) {
+            el_within_form = false;
+        }
+
         const $el = $(el);
+        const $form = $(el.form);
         const isNumber = el.matches("input[type=number]");
         const isText = el.matches(
             "input:not(type), input[type=text], input[type=search], textarea"
@@ -62,23 +72,23 @@ const _ = {
             // for number inputs we want to trigger the change on keyup
             $el.on("keyup." + namespace, function () {
                 log.debug("translating keyup");
-                $el.trigger("input-change");
+                (el_within_form ? $el : $form).trigger("input-change");
             });
         }
         if (isText || isNumber) {
             $el.on("input." + namespace, function () {
                 log.debug("translating input");
-                $el.trigger("input-change");
+                (el_within_form ? $el : $form).trigger("input-change");
             });
         } else {
             $el.on("change." + namespace, function () {
                 log.debug("translating change");
-                $el.trigger("input-change");
+                (el_within_form ? $el : $form).trigger("input-change");
             });
         }
 
         $el.on("blur", function () {
-            $el.trigger("input-defocus");
+            (el_within_form ? $el : $form).trigger("input-defocus");
         });
     },
 

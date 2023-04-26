@@ -62,7 +62,9 @@ describe("pat-autosubmit", function () {
             `;
             const el = document.querySelector(".pat-autosubmit");
             const instance = new Pattern(el);
-            const spy = jest.spyOn(instance, "refreshListeners");
+            const spy = jest
+                .spyOn(instance, "refreshListeners")
+                .mockImplementation(() => {});
             $(el).trigger("pat-update", { pattern: "clone" });
             expect(spy).toHaveBeenCalled();
         });
