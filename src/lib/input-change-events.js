@@ -1,25 +1,30 @@
 // helper functions to make all input elements
 import $ from "jquery";
+import dom from "../core/dom";
 import logging from "../core/logging";
-var namespace = "input-change-events";
+
+const namespace = "input-change-events";
 const log = logging.getLogger(namespace);
 
-var _ = {
-    setup: function ($el, pat) {
+const _ = {
+    setup($el, pat) {
         if (!pat) {
             log.error("The name of the calling pattern has to be set.");
             return;
         }
+
         // list of patterns that installed input-change-event handlers
-        var patterns = $el.data(namespace) || [];
+        const patterns = $el.data(namespace) || [];
         log.debug("setup handlers for " + pat);
+
+        const el = $el[0];
 
         if (!patterns.length) {
             log.debug("installing handlers");
-            _.setupInputHandlers($el);
+            this.setupInputHandlers(el);
 
-            $el.on("patterns-injected." + namespace, function (event) {
-                _.setupInputHandlers($(event.target));
+            $el.on("patterns-injected." + namespace, (event) => {
+                this.setupInputHandlers(event.target);
             });
         }
         if (patterns.indexOf(pat) === -1) {
@@ -28,33 +33,37 @@ var _ = {
         }
     },
 
-    setupInputHandlers: function ($el) {
-        if (!$el.is(":input")) {
+    setupInputHandlers(el) {
+        if (dom.is_input(el)) {
+            // The element itself is an input, se we simply register a
+            // handler fot it.
+            this.registerHandlersForElement(el);
+        } else {
             // We've been given an element that is not a form input. We
             // therefore assume that it's a container of form inputs and
             // register handlers for its children.
-            $el.findInclusive(":input").each(_.registerHandlersForElement);
-        } else {
-            // The element itself is an input, se we simply register a
-            // handler fot it.
-            _.registerHandlersForElement.bind($el)();
+            for (const _el of dom.querySelectorAllAndMe(
+                el,
+                "input, textarea, select, button"
+            )) {
+                this.registerHandlersForElement(_el);
+            }
         }
     },
 
-    registerHandlersForElement: function () {
-        var $el = $(this),
-            isNumber = $el.is("input[type=number]"),
-            isText = $el.is("input:text, input[type=search], textarea");
+    registerHandlersForElement(el) {
+        const $el = $(el);
+        const isNumber = el.matches("input[type=number]");
+        const isText = el.matches(
+            "input:not(type), input[type=text], input[type=search], textarea"
+        );
 
         if (isNumber) {
-            // for <input type="number" /> we want to trigger the change
-            // on keyup
-            if ("onkeyup" in window) {
-                $el.on("keyup." + namespace, function () {
-                    log.debug("translating keyup");
-                    $el.trigger("input-change");
-                });
-            }
+            // for number inputs we want to trigger the change on keyup
+            $el.on("keyup." + namespace, function () {
+                log.debug("translating keyup");
+                $el.trigger("input-change");
+            });
         }
         if (isText || isNumber) {
             $el.on("input." + namespace, function () {
@@ -73,8 +82,8 @@ var _ = {
         });
     },
 
-    remove: function ($el, pat) {
-        var patterns = $el.data(namespace) || [];
+    remove($el, pat) {
+        let patterns = $el.data(namespace) || [];
         if (patterns.indexOf(pat) === -1) {
             log.warn("input-change-events were never installed for " + pat);
         } else {
