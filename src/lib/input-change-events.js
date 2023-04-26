@@ -1,17 +1,18 @@
 // helper functions to make all input elements
 import $ from "jquery";
 import logging from "../core/logging";
-var namespace = "input-change-events";
+
+const namespace = "input-change-events";
 const log = logging.getLogger(namespace);
 
-var _ = {
-    setup: function ($el, pat) {
+const _ = {
+    setup($el, pat) {
         if (!pat) {
             log.error("The name of the calling pattern has to be set.");
             return;
         }
         // list of patterns that installed input-change-event handlers
-        var patterns = $el.data(namespace) || [];
+        const patterns = $el.data(namespace) || [];
         log.debug("setup handlers for " + pat);
 
         if (!patterns.length) {
@@ -28,7 +29,7 @@ var _ = {
         }
     },
 
-    setupInputHandlers: function ($el) {
+    setupInputHandlers($el) {
         if (!$el.is(":input")) {
             // We've been given an element that is not a form input. We
             // therefore assume that it's a container of form inputs and
@@ -41,10 +42,10 @@ var _ = {
         }
     },
 
-    registerHandlersForElement: function () {
-        var $el = $(this),
-            isNumber = $el.is("input[type=number]"),
-            isText = $el.is("input:text, input[type=search], textarea");
+    registerHandlersForElement() {
+        const $el = $(this);
+        const isNumber = $el.is("input[type=number]");
+        const isText = $el.is("input:text, input[type=search], textarea");
 
         if (isNumber) {
             // for <input type="number" /> we want to trigger the change
@@ -73,8 +74,8 @@ var _ = {
         });
     },
 
-    remove: function ($el, pat) {
-        var patterns = $el.data(namespace) || [];
+    remove($el, pat) {
+        let patterns = $el.data(namespace) || [];
         if (patterns.indexOf(pat) === -1) {
             log.warn("input-change-events were never installed for " + pat);
         } else {
