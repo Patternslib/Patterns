@@ -71,12 +71,12 @@ class Pattern extends BasePattern {
     }
 
     initialize_inputs() {
-        this.inputs = [
-            ...this.el.querySelectorAll("input[name], select[name], textarea[name]"),
-        ];
-        this.disabled_elements = [
-            ...this.el.querySelectorAll(this.options.disableSelector),
-        ];
+        this.inputs = [...this.el.elements].filter((el) =>
+            el.matches("input[name], select[name], textarea[name]")
+        );
+        this.disabled_elements = [...this.el.elements].filter((el) =>
+            el.matches(this.options.disableSelector)
+        );
 
         for (const [cnt, input] of this.inputs.entries()) {
             // Cancelable debouncer.

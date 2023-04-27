@@ -1455,4 +1455,80 @@ describe("pat-validation", function () {
         expect(el.querySelectorAll("em.warning").length).toBe(0);
         expect(el.querySelector("#form-buttons-create").disabled).toBe(false);
     });
+
+    it("8.1 - input ouside form: validates inputs part of the form but outside the form container", async function () {
+        document.body.innerHTML = `
+          <form id="form-el" class="pat-validation">
+          </form>
+          <input name="name" form="form-el" required>
+        `;
+        const el = document.querySelector(".pat-validation");
+        const inp = document.querySelector("[name=name]");
+
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
+
+        inp.value = "";
+        inp.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(document.querySelectorAll("em.warning").length).toBe(1);
+    });
+
+    it("8.2 - input outside form: removes the error when the field becomes valid.", async function () {
+        document.body.innerHTML = `
+          <form id="form-el" class="pat-validation">
+          </form>
+          <input name="name" form="form-el" required>
+        `;
+        const el = document.querySelector(".pat-validation");
+        const inp = document.querySelector("[name=name]");
+
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
+
+        inp.value = "";
+        inp.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(document.querySelectorAll("em.warning").length).toBe(1);
+
+        inp.value = "abc";
+        inp.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(document.querySelectorAll("em.warning").length).toBe(0);
+    });
+
+    it("8.3 - input outside form: can disable certain form elements when validation fails", async function () {
+        // Tests the disable-selector argument
+        document.body.innerHTML = `
+          <form id="form-el" class="pat-validation"
+                data-pat-validation="
+                    disable-selector: button;
+                ">
+          </form>
+          <input form="form-el" name="input" required>
+          <button form="form-el">Submit</button>
+        `;
+
+        const el = document.querySelector(".pat-validation");
+        const inp = document.querySelector("[name=input]");
+        const but = document.querySelector("button");
+
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
+
+        inp.value = "";
+        inp.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(document.querySelectorAll("em.warning").length).toBe(1);
+        expect(but.disabled).toBe(true);
+
+        inp.value = "ok";
+        inp.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(document.querySelectorAll("em.warning").length).toBe(0);
+        expect(but.disabled).toBe(false);
+    });
 });
