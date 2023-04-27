@@ -118,6 +118,7 @@ export default Base.extend({
     },
 
     onInputChange(e) {
+        console.log("onInputChange", e);
         e.stopPropagation();
         this.$el.submit();
         log.debug("triggered by " + e.type);

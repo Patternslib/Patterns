@@ -71,7 +71,7 @@ describe("pat-autosubmit", function () {
     });
 
     describe("2 - Trigger a submit", function () {
-        it("when a change on a single input happens", async function () {
+        it("2.1 - when a change on a single input happens", async function () {
             document.body.innerHTML = `
               <form>
                 <input
@@ -118,7 +118,7 @@ describe("pat-autosubmit", function () {
             expect(spy).toHaveBeenCalled();
         });
 
-        it("when pat-clone removes an element", function () {
+        it("2.3 - when pat-clone removes an element", function () {
             document.body.innerHTML = `
               <form class="pat-autosubmit">
               </form>
@@ -130,7 +130,7 @@ describe("pat-autosubmit", function () {
             expect(spy).toHaveBeenCalled();
         });
 
-        it("when pat-sortable changes the sorting", function () {
+        it("2.4 - when pat-sortable changes the sorting", function () {
             document.body.innerHTML = `
               <form class="pat-autosubmit">
               </form>
@@ -141,9 +141,84 @@ describe("pat-autosubmit", function () {
             $(el).trigger("pat-update", { pattern: "sortable" });
             expect(spy).toHaveBeenCalled();
         });
+
+        it("2.5 - input outside form: change on input 1", async function () {
+            document.body.innerHTML = `
+              <form id="form-el">
+              </form>
+              <input
+                  form="form-el"
+                  class="pat-autosubmit"
+                  name="name"
+                  data-pat-autosubmit="delay: 0"
+              />
+            `;
+            const input = document.querySelector("[name=name]");
+            const form = document.querySelector("form");
+
+            let submit_input = false;
+            let submit_form = false;
+            input.addEventListener("submit", () => {
+                submit_input = true;
+                // NOTE: In a real browser a submit on an input outside a form
+                // would submit the form too. In jsdom this is not the case, so
+                // we need to trigger it manually. This is making this test a
+                // bit useless.
+                form.dispatchEvent(events.submit_event());
+            });
+            form.addEventListener("submit", () => {
+                submit_form = true;
+            });
+
+            const instance = new Pattern(input);
+            await events.await_pattern_init(instance);
+
+            jest.spyOn(instance.$el, "submit").mockImplementation(() => {
+                input.dispatchEvent(events.submit_event());
+            });
+
+            input.dispatchEvent(events.input_event());
+
+            expect(submit_input).toBe(true);
+            expect(submit_form).toBe(true);
+        });
+
+        it("2.6 - input outside form: change on input 2", async function () {
+            document.body.innerHTML = `
+              <form id="form-el" class="pat-auto-submit"
+                  data-pat-autosubmit="delay: 0"
+              >
+              </form>
+              <input
+                  form="form-el"
+                  name="name"
+              />
+            `;
+            const input = document.querySelector("[name=name]");
+            const form = document.querySelector("form");
+
+            let submit_input = false;
+            let submit_form = false;
+            input.addEventListener("submit", () => (submit_input = true));
+            form.addEventListener("submit", () => (submit_form = true));
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            jest.spyOn(instance.$el, "submit").mockImplementation(() => {
+                input.dispatchEvent(events.submit_event());
+            });
+
+            input.dispatchEvent(events.input_event());
+
+            expect(submit_input).toBe(true);
+            expect(submit_form).toBe(true);
+        });
     });
 
-    describe("3 - Parsing of the delay option", function () {
+    describe("3 - Input outside form: Trigger a submit", function () {});
+
+    describe("4 - Parsing of the delay option", function () {
         it("can be done in shorthand notation", function () {
             let pat = new Pattern(`<input data-pat-autosubmit="500ms"/>`);
             expect(pat.options.delay).toBe(500);

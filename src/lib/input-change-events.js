@@ -37,12 +37,16 @@ const _ = {
         if (dom.is_input(el)) {
             // The element itself is an input, se we simply register a
             // handler fot it.
-            this.registerHandlersForElement(el);
+            console.log("1");
+            this.registerHandlersForElement({ trigger_source: el, trigger_target: el });
         } else {
             // We've been given an element that is not a form input. We
             // therefore assume that it's a container of form inputs and
             // register handlers for its children.
-            for (const _el of el.closest("form").elements) {
+            console.log("2");
+            const form = el.closest("form");
+            for (const _el of form.elements) {
+                console.log("3", _el);
                 // Search for all form elements, also those outside the form
                 // container.
                 if (!dom.is_input(_el)) {
@@ -50,45 +54,43 @@ const _ = {
                     // which we do not want to handle here.
                     continue;
                 }
-                this.registerHandlersForElement(_el);
+                this.registerHandlersForElement({
+                    trigger_source: _el,
+                    trigger_target: form,
+                });
             }
         }
     },
 
-    registerHandlersForElement(el) {
-        let el_within_form = true;
-        if (el.closest("form") !== el.form) {
-            el_within_form = false;
-        }
-
-        const $el = $(el);
-        const $form = $(el.form);
-        const isNumber = el.matches("input[type=number]");
-        const isText = el.matches(
+    registerHandlersForElement({ trigger_source, trigger_target }) {
+        const $trigger_source = $(trigger_source);
+        const $trigger_target = $(trigger_target);
+        const isNumber = trigger_source.matches("input[type=number]");
+        const isText = trigger_source.matches(
             "input:not(type), input[type=text], input[type=search], textarea"
         );
 
         if (isNumber) {
             // for number inputs we want to trigger the change on keyup
-            $el.on("keyup." + namespace, function () {
+            $trigger_source.on("keyup." + namespace, function () {
                 log.debug("translating keyup");
-                (el_within_form ? $el : $form).trigger("input-change");
+                $trigger_target.trigger("input-change");
             });
         }
         if (isText || isNumber) {
-            $el.on("input." + namespace, function () {
+            $trigger_source.on("input." + namespace, function () {
                 log.debug("translating input");
-                (el_within_form ? $el : $form).trigger("input-change");
+                $trigger_target.trigger("input-change");
             });
         } else {
-            $el.on("change." + namespace, function () {
+            $trigger_source.on("change." + namespace, function () {
                 log.debug("translating change");
-                (el_within_form ? $el : $form).trigger("input-change");
+                $trigger_target.trigger("input-change");
             });
         }
 
-        $el.on("blur", function () {
-            (el_within_form ? $el : $form).trigger("input-defocus");
+        $trigger_source.on("blur", function () {
+            $trigger_target.trigger("input-defocus");
         });
     },
 
