@@ -102,16 +102,11 @@ const is_visible = (el) => {
 /**
  * Test, if a element is a input-type element.
  *
- * This is taken from Sizzle/jQuery at:
- * https://github.com/jquery/sizzle/blob/f2a2412e5e8a5d9edf168ae3b6633ac8e6bd9f2e/src/sizzle.js#L139
- * https://github.com/jquery/sizzle/blob/f2a2412e5e8a5d9edf168ae3b6633ac8e6bd9f2e/src/sizzle.js#L1773
- *
  * @param {Node} el - The DOM node to test.
  * @returns {Boolean} - True if the element is a input-type element.
  */
 const is_input = (el) => {
-    const re_input = /^(?:input|select|textarea|button)$/i;
-    return re_input.test(el.nodeName);
+    return el.matches("button, input, select, textarea");
 };
 
 /**
