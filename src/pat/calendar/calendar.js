@@ -313,7 +313,6 @@ export default Base.extend({
                     mode: "cors",
                     headers: {
                         "Accept": "application/json",
-                        "Content-Type": "application/json",
                     },
                 });
             } catch (e) {
