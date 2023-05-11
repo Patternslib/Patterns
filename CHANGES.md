@@ -4,6 +4,31 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.0-beta.0](https://github.com/Patternslib/patterns/compare/9.9.0-alpha.5...9.9.0-beta.0) (2023-05-11)
+
+
+### Bug Fixes
+
+
+* **pat calendar:** Do not set a Content-Type header when no body is submitted ([89d34c1](https://github.com/Patternslib/patterns/commit/89d34c15fbb84c36a18a67142c678f5d2cacc54a))
+
+  Closes #1156
+closes [#1156](https://github.com/Patternslib/patterns/issues/1156)
+
+* **pat navigation:** Fix current marker anchors with child elements. ([8578b1b](https://github.com/Patternslib/patterns/commit/8578b1bad59933cc7e6cc2fcc5685e2cd4fa2a51))
+
+  The links within a pat-navigation structure might have child elements,
+e.g. a span within an anchor. In that case the click target is the span
+and not the anchor. Apply a fix where a closest anchor of the click
+target is searched, which might be the click target itself.
+
+
+
+### Maintenance
+
+
+* Upgrade dependencies. ([c0b107e](https://github.com/Patternslib/patterns/commit/c0b107e87c1e4afeda9d6dac074142dd688d7d94))
+
 ## [9.9.0-alpha.5](https://github.com/Patternslib/patterns/compare/9.9.0-alpha.4...9.9.0-alpha.5) (2023-04-21)
 
 
