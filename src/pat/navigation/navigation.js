@@ -70,11 +70,16 @@ class Pattern extends BasePattern {
             "click",
             "pat_navigation_click_handler",
             (ev) => {
-                if (ev.target.matches("a:not(.pat-inject)")) {
+                // Get the click target's anchor element. The click target
+                // might be a child of the link, e.g. a span wrapped within an
+                // anchor.
+                const target = ev.target.closest("a");
+                if (target.matches(":not(.pat-inject)")) {
+
                     // Remove all set current classes
                     this.clear_items();
                     // Mark the current item
-                    this.mark_current(ev.target);
+                    this.mark_current(target);
 
                     if (
                         !utils.is_option_truthy(this.options["scroll-trigger-selector"])
