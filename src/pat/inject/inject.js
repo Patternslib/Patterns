@@ -501,7 +501,7 @@ const inject = {
                 const scroll_target =
                     cfg.scroll === "target"
                         ? cfg.$target[0]
-                        : $injected.filter(cfg.scroll)[0];
+                        : $(cfg.scroll, $injected)[0];
 
                 // Get the reference element to which against we calculate
                 // the relative position of the target.
