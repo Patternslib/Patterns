@@ -347,7 +347,6 @@ const inject = {
                 return false;
             }
             cfg.$target = this.createTarget(cfg.target);
-            cfg.$injected = cfg.$target;
         }
         return true;
     },
@@ -455,23 +454,36 @@ const inject = {
         /* Called after the XHR has succeeded and we have a new $source
          * element to inject.
          */
-        if (cfg.sourceMod === "content") {
-            $source = $source.contents();
-        }
-        const $src = $source.safeClone();
-        for (const img of dom.querySelectorAllAndMe($src[0], "img")) {
-            $(img).on("load", (e) => {
-                $(e.currentTarget).trigger("pat-inject-content-loaded");
-            });
+        const wrapper = document.createElement("div");
+        if ($source.length > 0) {
+            if (cfg.sourceMod === "content") {
+                wrapper.innerHTML = $source[0].innerHTML;
+            } else {
+                wrapper.innerHTML = $source[0].outerHTML;
+            }
+
+            for (const img of wrapper.querySelectorAll("img")) {
+                events.add_event_listener(
+                    img,
+                    "load",
+                    "inject_img_load",
+                    (e) => {
+                        $(e.currentTarget).trigger("pat-inject-content-loaded");
+                    },
+                    { once: true }
+                );
+            }
         }
 
-        const $injected = cfg.$injected || $src;
+        // Copy, because after insertion wrapper.children is empty.
+        const source_nodes = [...wrapper.childNodes];
+
         // Now the injection actually happens.
-        if (this._inject(trigger, $src, $(target), cfg)) {
+        if (this._inject(trigger, source_nodes, target, cfg)) {
             // Update history
             this._update_history(cfg, trigger, title);
             // Post-injection
-            this._afterInjection($el, $injected, cfg);
+            this._afterInjection($el, $(source_nodes), cfg);
         }
     },
 
@@ -488,9 +500,12 @@ const inject = {
         history.pushState({ url: url }, "", url);
         // Also inject title element if we have one
         if (title) {
-            this._inject(trigger, title, $("title"), {
-                action: "element",
-            });
+            const title_el = document.querySelector("title");
+            if (title_el) {
+                this._inject(trigger, title, title_el, {
+                    action: "element",
+                });
+            }
         }
     },
 
@@ -761,45 +776,45 @@ const inject = {
         }
     },
 
-    _inject(trigger, $source, $target, cfg) {
-        // action to jquery method mapping, except for "content"
-        // and "element"
-        const method = {
-            contentbefore: "prepend",
-            contentafter: "append",
-            elementbefore: "before",
-            elementafter: "after",
-        }[cfg.action];
-
+    _inject(trigger, source, target, cfg) {
         if (cfg.source === "none") {
-            $target.replaceWith("");
+            // Special case. Clear the target after ajax call.
+            target.replaceWith("");
             return true;
         }
-        if ($source.length === 0) {
-            log.warn("Aborting injection, source not found:", $source);
+        if (source.length === 0) {
+            log.warn("Aborting injection, source not found:", source);
             $(trigger).trigger("pat-inject-missingSource", {
                 url: cfg.url,
                 selector: cfg.source,
             });
             return false;
         }
-        if (cfg.target === "none")
+        if (cfg.target === "none") {
             // Special case. Don't do anything, we don't want any result
             return true;
-        if ($target.length === 0) {
-            log.warn("Aborting injection, target not found:", $target);
+        }
+        if (!target) {
+            log.warn("Aborting injection, target not found:", target);
             $(trigger).trigger("pat-inject-missingTarget", {
                 selector: cfg.target,
             });
             return false;
         }
-        if (cfg.action === "content") {
-            $target.empty().append($source);
-        } else if (cfg.action === "element") {
-            $target.replaceWith($source);
-        } else {
-            $target[method]($source);
-        }
+
+        // cfg.action to DOM method mapping
+        const method = {
+            content: "replaceChildren",
+            contentafter: "append",
+            contentbefore: "prepend",
+            element: "replaceWith",
+            elementafter: "after",
+            elementbefore: "before",
+        }[cfg.action];
+
+        // Inject the content HERE!
+        target[method](...source);
+
         return true;
     },
 
