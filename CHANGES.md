@@ -4,6 +4,36 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.0-beta.3](https://github.com/Patternslib/patterns/compare/9.9.0-beta.2...9.9.0-beta.3) (2023-05-17)
+
+
+### Features
+
+
+* **core dom:** Add get_position, scroll_to_element, scroll_to_top and scroll_to_bottom functions. ([0368c48](https://github.com/Patternslib/patterns/commit/0368c487349278488b6b12c8acfe6b2551290e73))
+
+  To help with scrolling tasks and to unify them these methods were
+introduced:
+- `get_relative_position`: Get the position of an element relative to
+  another.
+- `scroll_to_element`: Scroll the given scroll_container to a given element.
+- `scroll_to_top`: Scroll the container to the top.
+- `scroll_to_bottom`: Scroll the container to the bottom.
+
+
+
+### Maintenance
+
+
+* **pat inject:** Use the new scrolling helpers from core.dom. ([89d3ef3](https://github.com/Patternslib/patterns/commit/89d3ef3718f40e98fca940ce6ba3c001abf2eb03))
+
+
+* **pat scroll:** Use the new scrolling helpers from core.dom. ([f37bc99](https://github.com/Patternslib/patterns/commit/f37bc997afe21a50313ddcca4bb4cae3a1c0681e))
+
+  This fixes also the scrolling position from the previous release which
+would have been wrong for many cases where the scrolling target is
+within a positioned element.
+
 ## [9.9.0-beta.2](https://github.com/Patternslib/patterns/compare/9.9.0-beta.1...9.9.0-beta.2) (2023-05-17)
 
 
