@@ -489,7 +489,7 @@ const inject = {
         if (cfg.scroll && cfg.scroll !== "none") {
             // Get the scroll target for
             // 1) finding the scroll container
-            // 2) getting the scroll offset (if not "top" or "target")
+            // 2) getting the element to scroll to (if not "top")
             const scroll_target = ["top", "target"].includes(cfg.scroll)
                 ? cfg.$target[0]
                 : $(cfg.scroll, $injected)[0];
@@ -500,53 +500,10 @@ const inject = {
                 window
             );
 
-            // default for scroll===top
-            let top = 0;
-            let left = 0;
-
-            if (cfg.scroll !== "top") {
-                // Get the reference element to which against we calculate
-                // the relative position of the target.
-                // In case of a scroll container of window, we do not have
-                // getBoundingClientRect method, so get the body instead.
-                const scroll_container_ref =
-                    scroll_container === window ? document.body : scroll_container;
-
-                // Calculate absolute [¹] position difference between
-                // scroll_container and scroll_target.
-                // Substract the container's border from the scrolling
-                // value, as this one isn't respected by
-                // getBoundingClientRect [²] and would lead to covered
-                // items [³].
-                // ¹) so that it doesn't make a difference, if the element
-                // is below or above the scrolling container. We just need
-                // to know the absolute difference.
-                // ²) Calculations are based from the viewport.
-                // ³) See:
-                //      https://docs.microsoft.com/en-us/previous-versions//hh781509(v=vs.85)
-                //      https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
-                left = Math.abs(
-                    scroll_target.getBoundingClientRect().left +
-                        scroll_container_ref.scrollLeft -
-                        scroll_container_ref.getBoundingClientRect().left -
-                        dom.get_css_value(
-                            scroll_container_ref,
-                            "border-left-width",
-                            true
-                        )
-                );
-                top = Math.abs(
-                    scroll_target.getBoundingClientRect().top +
-                        scroll_container_ref.scrollTop -
-                        scroll_container_ref.getBoundingClientRect().top -
-                        dom.get_css_value(scroll_container_ref, "border-top-width", true)
-                );
-            }
-            if (scroll_container === window) {
-                scroll_container.scrollTo(left, top);
+            if (cfg.scroll === "top") {
+                dom.scroll_to_top(scroll_container);
             } else {
-                scroll_container.scrollLeft = left;
-                scroll_container.scrollTop = top;
+                dom.scroll_to_element(scroll_target, scroll_container);
             }
         }
 
