@@ -4,6 +4,18 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.0-beta.2](https://github.com/Patternslib/patterns/compare/9.9.0-beta.1...9.9.0-beta.2) (2023-05-17)
+
+
+### Bug Fixes
+
+
+* **pat scroll:** Fix scroll to position. ([a6d72f3](https://github.com/Patternslib/patterns/commit/a6d72f305bdda8943f7f63a721d6f8c09e71432c))
+
+  The scrolling offset was incorrectly calculated since Patternslib
+9.9.0-alpha.5. Fix the calculation for the scrolling position by using
+`offsetTop` and `offsetLeft` instead `getBoundingClientRect`.
+
 ## [9.9.0-beta.1](https://github.com/Patternslib/patterns/compare/9.9.0-beta.0...9.9.0-beta.1) (2023-05-17)
 
 
