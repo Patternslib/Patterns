@@ -466,7 +466,9 @@ describe("pat-validation", function () {
           <form class="pat-validation">
             <input name="i1" required>
             <input name="i2" required>
-            <button>submit</button> <!-- button will be disabled -->
+            <button name="b1">submit</button> <!-- button will be disabled -->
+            <button name="b2" formnovalidate>more submit</button> <!-- button will NOT be disabled -->
+            <button name="b3">even more submit</button> <!-- button will be disabled -->
           </form>
         `;
         const el = document.querySelector(".pat-validation");
@@ -478,6 +480,9 @@ describe("pat-validation", function () {
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(el.querySelectorAll("em.warning").length).toBe(2);
+        expect(el.querySelector("[name=b1]").disabled).toBe(true);
+        expect(el.querySelector("[name=b2]").disabled).toBe(false);
+        expect(el.querySelector("[name=b3]").disabled).toBe(true);
     });
 
     it("1.20 - does not validate all inputs after one failed check and no disabled button", async function () {

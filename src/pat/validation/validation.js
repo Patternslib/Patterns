@@ -117,7 +117,7 @@ class Pattern extends BasePattern {
         const validity_state = input.validity;
 
         if (event?.submitter?.hasAttribute("formnovalidate")) {
-            // Do not submit when a button with ``formnovalidate`` was used.
+            // Do not check when a button with ``formnovalidate`` was used.
             return;
         }
 
@@ -402,7 +402,10 @@ class Pattern extends BasePattern {
 
         let did_disable = false;
         for (const it of this.disabled_elements) {
-            if (!it.disabled) {
+            // Disable for melements if they are not already disabled and which
+            // do not have set the `formnovalidate` attribute, e.g.
+            // `<button formnovalidate>cancel</button>`.
+            if (!it.disabled && !it.formNoValidate) {
                 did_disable = true;
                 it.setAttribute("disabled", "disabled");
                 it.classList.add("disabled");
