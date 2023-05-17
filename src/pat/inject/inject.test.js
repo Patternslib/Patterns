@@ -28,8 +28,8 @@ describe("pat-inject", function () {
         jest.restoreAllMocks();
     });
 
-    describe("The next-href argument", function () {
-        it("allows you to specify the href to be applied to the clicked element after injection", async function () {
+    describe("1 - The next-href argument", function () {
+        it("1.1 - allows you to specify the href to be applied to the clicked element after injection", async function () {
             var $a = $(
                 '<a class="pat-inject" data-pat-inject="next-href: http://patternslib.com" href="/src/pat/inject/inject-sources.html#pos-1">link</a>'
             );
@@ -51,8 +51,8 @@ describe("pat-inject", function () {
         });
     });
 
-    describe("The loading-class argument", function () {
-        it("has a default value of 'injecting' and gets added to the target while content is still loading", async function () {
+    describe("2 - The loading-class argument", function () {
+        it("2.1 - has a default value of 'injecting' and gets added to the target while content is still loading", async function () {
             const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
             var $div = $('<div id="someid" />');
@@ -77,7 +77,7 @@ describe("pat-inject", function () {
             spy_ajax.mockRestore();
         });
 
-        it("can be set to another string value which then gets added to the target while content is still loading'", async function () {
+        it("2.2 - can be set to another string value which then gets added to the target while content is still loading'", async function () {
             const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             var $a = $(
                 '<a class="pat-inject" data-pat-inject="loading-class: other-class;" href="test.html#someid">link</a>'
@@ -100,7 +100,7 @@ describe("pat-inject", function () {
             spy_ajax.mockRestore();
         });
 
-        it("can be set to an empty string value so that nothing gets added to the target while content is still loading'", function () {
+        it("2.3 - can be set to an empty string value so that nothing gets added to the target while content is still loading'", function () {
             const spy_ajax = jest.spyOn($, "ajax");
             var $a = $(
                 '<a class="pat-inject" data-pat-inject="loading-class: ;" href="test.html#someid">link</a>'
@@ -117,8 +117,8 @@ describe("pat-inject", function () {
         });
     });
 
-    describe("The confirm argument", function () {
-        it("is by default set to 'class', which means it asks for confirmation based on a class on the target", function () {
+    describe("3 - The confirm argument", function () {
+        it("3.1 - is by default set to 'class', which means it asks for confirmation based on a class on the target", function () {
             var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
             var $div = $('<div id="someid" />');
             $("#lab").empty().append($a).append($div);
@@ -144,7 +144,7 @@ describe("pat-inject", function () {
             spy_confirm.mockRestore();
         });
 
-        it("can be set to 'never' to never ask for confirmation", function () {
+        it("3.2 - can be set to 'never' to never ask for confirmation", function () {
             var $a = $(
                 '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: never">link</a>'
             );
@@ -169,7 +169,7 @@ describe("pat-inject", function () {
             spy_confirm.mockRestore();
         });
 
-        it("can be set to 'always' to always ask for confirmation before injecting", function () {
+        it("3.3 - can be set to 'always' to always ask for confirmation before injecting", function () {
             var $a = $(
                 '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: always">link</a>'
             );
@@ -194,7 +194,7 @@ describe("pat-inject", function () {
             spy_confirm.mockRestore();
         });
 
-        it("can be set to 'form-data' to ask for confirmation before injecting over form fields changed by the user", function () {
+        it("3.4 - can be set to 'form-data' to ask for confirmation before injecting over form fields changed by the user", function () {
             var $a = $(
                 '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: form-data">link</a>'
             );
@@ -225,8 +225,8 @@ describe("pat-inject", function () {
             spy_confirm.mockRestore();
         });
 
-        describe("The confirm-message argument", function () {
-            it("can be used to provide a custom confirmation prompt message", function () {
+        describe("3.5 - The confirm-message argument", function () {
+            it("3.5.1 - can be used to provide a custom confirmation prompt message", function () {
                 var $a = $(
                     '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: always; confirm-message: Hello world">link</a>'
                 );
@@ -253,30 +253,30 @@ describe("pat-inject", function () {
         });
     });
 
-    describe("rebaseURL", function () {
-        it("Keep URL with scheme", function () {
+    describe("4 - rebaseURL", function () {
+        it("4.1 - Keep URL with scheme", function () {
             expect(
                 pattern._rebaseURL("http://example.com/foo/", "http://other.com/me")
             ).toBe("http://other.com/me");
         });
 
-        it("Keep URL with absolute path", function () {
+        it("4.2 - Keep URL with absolute path", function () {
             expect(pattern._rebaseURL("http://example.com/foo/", "/me")).toBe("/me");
         });
 
-        it("Rebase to base with filename", function () {
+        it("4.3 - Rebase to base with filename", function () {
             expect(
                 pattern._rebaseURL("http://example.com/foo/index.html", "me/page.html")
             ).toBe("http://example.com/foo/me/page.html");
         });
 
-        it("Rebase to base with directory path", function () {
+        it("4.4 - Rebase to base with directory path", function () {
             expect(pattern._rebaseURL("http://example.com/foo/", "me/page.html")).toBe(
                 "http://example.com/foo/me/page.html"
             );
         });
 
-        it("Rebase with absolute base url", function () {
+        it("4.5 - Rebase with absolute base url", function () {
             expect(
                 pattern
                     ._rebaseURL("/foo/", "me/page.html")
@@ -284,7 +284,7 @@ describe("pat-inject", function () {
             ).toBe(true);
         });
 
-        it("Rebase with relative base url", function () {
+        it("4.6 - Rebase with relative base url", function () {
             expect(
                 pattern
                     ._rebaseURL("example.com/foo/", "me/page.html")
@@ -292,7 +292,7 @@ describe("pat-inject", function () {
             ).toBe(true);
         });
 
-        it("Doesn't rebase data: urls", function () {
+        it("4.7 - Doesn't rebase data: urls", function () {
             expect(
                 pattern._rebaseURL(
                     "http://example.com/foo/",
@@ -302,8 +302,8 @@ describe("pat-inject", function () {
         });
     });
 
-    describe("rebaseHTML", function () {
-        it("Basic markup with DOCTYPE", function () {
+    describe("5 - rebaseHTML", function () {
+        it("5.1 - Basic markup with DOCTYPE", function () {
             expect(
                 pattern._rebaseHTML(
                     "base",
@@ -312,19 +312,19 @@ describe("pat-inject", function () {
             ).toBe("<p>This is a simple <em>test</em></p>");
         });
 
-        it("Basic markup", function () {
+        it("5.2 - Basic markup", function () {
             expect(
                 pattern._rebaseHTML("base", "<p>This is a simple <em>test</em></p>")
             ).toBe("<p>This is a simple <em>test</em></p>");
         });
 
-        it("Recover from unclosed tags", function () {
+        it("5.3 - Recover from unclosed tags", function () {
             expect(pattern._rebaseHTML("base", "<p>This is a simple <em>test</p>")).toBe(
                 "<p>This is a simple <em>test</em></p>"
             );
         });
 
-        it("Element without link attribute", function () {
+        it("5.4 - Element without link attribute", function () {
             var spy_rebaseURL = jest.spyOn(pattern, "_rebaseURL");
             expect(pattern._rebaseHTML("base", "<a>This is a test</a>")).toBe(
                 "<a>This is a test</a>"
@@ -334,7 +334,7 @@ describe("pat-inject", function () {
             spy_rebaseURL.mockRestore();
         });
 
-        it("Element with link attribute", function () {
+        it("5.5 - Element with link attribute", function () {
             expect(
                 pattern._rebaseHTML(
                     "http://example.com/test/",
@@ -345,7 +345,7 @@ describe("pat-inject", function () {
             );
         });
 
-        it("Automatically fix casing of attribute", function () {
+        it("5.6 - Automatically fix casing of attribute", function () {
             expect(
                 pattern._rebaseHTML(
                     "http://example.com/test/",
@@ -356,13 +356,13 @@ describe("pat-inject", function () {
             );
         });
 
-        it("Check if image is rebased correctly", function () {
+        it("5.7 - Check if image is rebased correctly", function () {
             expect(
                 pattern._rebaseHTML("http://example.com/test/", '<img src="image.png">')
             ).toBe('<img src="http://example.com/test/image.png">');
         });
 
-        it("Leave non attribute occurences of src intact", function () {
+        it("5.8 - Leave non attribute occurences of src intact", function () {
             expect(
                 pattern._rebaseHTML(
                     "base",
@@ -371,7 +371,7 @@ describe("pat-inject", function () {
             ).toBe("<p>This string has    src = \"foo\" , src= bar , and SrC='foo'</p>");
         });
 
-        it("rebase pattern configuration", async () => {
+        it("5.9 - rebase pattern configuration", async () => {
             await import("../calendar/calendar");
             await import("../collapsible/collapsible");
             await import("../date-picker/date-picker");
@@ -410,7 +410,7 @@ describe("pat-inject", function () {
             expect(test3c_config["load-content"]).toEqual("https://example.com/test/../load/content/from/here"); // prettier-ignore
         });
 
-        it("rebase pattern configuration creatively styled.", async () => {
+        it("5.10 - rebase pattern configuration creatively styled.", async () => {
             // tests for an error where a semicolon at the end of a pattern
             // config as well as multiple configs were not correctly parsed.
 
@@ -453,7 +453,7 @@ describe("pat-inject", function () {
             expect(test1_config[2]["loading-class"]).toEqual("some");
         });
 
-        it("doesn't rebase invalid pattern configuration options", async () => {
+        it("5.11 - doesn't rebase invalid pattern configuration options", async () => {
             await import("../calendar/calendar");
 
             const res = pattern._rebaseHTML(
@@ -475,8 +475,8 @@ describe("pat-inject", function () {
         });
     });
 
-    describe("parseRawHtml", function () {
-        it("Roundtrip attributes with double quotes", function () {
+    describe("6 - parseRawHtml", function () {
+        it("6.1 - Roundtrip attributes with double quotes", function () {
             var value =
                     '{"plugins": "paste", "content_css": "/_themes/Style/tiny-body.css"}',
                 input = "<a data-tinymce-json='" + value + "'>Test</a>",
@@ -484,7 +484,7 @@ describe("pat-inject", function () {
             expect($output.find("a").attr("data-tinymce-json")).toBe(value);
         });
 
-        it("Roundtrip attributes with single quotes", function () {
+        it("6.2 - Roundtrip attributes with single quotes", function () {
             var value =
                     "{'plugins': 'paste', 'content_css': '/_themes/Style/tiny-body.css'}",
                 input = '<a data-tinymce-json="' + value + '">Test</a>',
@@ -493,8 +493,8 @@ describe("pat-inject", function () {
         });
     });
 
-    describe("Functional tests", function () {
-        describe("extract/verifyConfig", function () {
+    describe("7 - Functional tests", function () {
+        describe("7.1 - extract/verifyConfig", function () {
             var $a, $target;
 
             beforeEach(function () {
@@ -568,8 +568,8 @@ describe("pat-inject", function () {
         });
     });
 
-    describe("Injection events tests", function () {
-        it("triggers the pat-inject-success event after successful injection", async function () {
+    describe("8 - Injection events tests", function () {
+        it("8.1 - triggers the pat-inject-success event after successful injection", async function () {
             const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             document.body.innerHTML = `
                <a class="pat-inject" href="test.html">link</a>
@@ -586,7 +586,7 @@ describe("pat-inject", function () {
             spy_ajax.mockRestore();
         });
 
-        it("triggers the patterns-injected event after injection has finished'", async function () {
+        it("8.2 - triggers the patterns-injected event after injection has finished'", async function () {
             const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
             var $div = $('<div id="someid" />');
@@ -602,7 +602,7 @@ describe("pat-inject", function () {
             spy_ajax.mockRestore();
         });
 
-        it("triggers the patterns-injected-scanned event after the injected content has been scanned", async function () {
+        it("8.3 - triggers the patterns-injected-scanned event after the injected content has been scanned", async function () {
             const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
             var $div = $('<div id="someid" />');
@@ -626,7 +626,7 @@ describe("pat-inject", function () {
             spy_ajax.mockRestore();
         });
 
-        it("triggers the patterns-injected-delayed event 10ms after the injected content has been scanned", async function () {
+        it("8.4 - triggers the patterns-injected-delayed event 10ms after the injected content has been scanned", async function () {
             const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
             var $div = $('<div id="someid" />');
@@ -652,7 +652,7 @@ describe("pat-inject", function () {
             spy_ajax.mockRestore();
         });
 
-        it("does not trigger the patterns-injected-scanned event for text nodes", async function () {
+        it("8.5 - does not trigger the patterns-injected-scanned event for text nodes", async function () {
             const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
             var $div = $('<div id="someid" />');
@@ -676,7 +676,7 @@ describe("pat-inject", function () {
             spy_ajax.mockRestore();
         });
 
-        it("does not trigger the patterns-injected-scanned event for comment nodes", async function () {
+        it("8.6 - does not trigger the patterns-injected-scanned event for comment nodes", async function () {
             const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             var $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
             var $div = $('<div id="someid" />');
@@ -701,10 +701,10 @@ describe("pat-inject", function () {
         });
     });
 
-    describe("DOM tests", function () {
+    describe("9 - DOM tests", function () {
         beforeEach(function () {});
 
-        describe("Injection on an anchor element", function () {
+        describe("9.1 - Injection on an anchor element", function () {
             var $a, $div;
             let spy_ajax;
 
@@ -719,28 +719,28 @@ describe("pat-inject", function () {
                 spy_ajax.mockRestore();
             });
 
-            it("fetches url on click", function () {
+            it("9.1.1 - fetches url on click", function () {
                 pattern.init($a);
                 $a.trigger("click");
                 expect($.ajax).toHaveBeenCalled();
                 expect($.ajax.mock.calls.pop()[0].url).toBe("test.html");
             });
 
-            it("fetches url on autoload", function () {
+            it("9.1.2 - fetches url on autoload", function () {
                 $a.attr("data-pat-inject", "autoload");
                 pattern.init($a);
                 expect($.ajax).toHaveBeenCalled();
                 expect($.ajax.mock.calls.pop()[0].url).toBe("test.html");
             });
 
-            it("fetches url on autoload-delayed", function () {
+            it("9.1.3 - fetches url on autoload-delayed", function () {
                 $a.attr("data-pat-inject", "autoload-delayed");
                 pattern.init($a);
                 // this needs to be checked async - is beyond me
                 // expect($.ajax).toHaveBeenCalled();
                 // expect($.ajax.mock.calls.pop()[0].url).toBe("test.html");
             });
-            it("fetches url on push_marker sent", function () {
+            it("9.1.4 - fetches url on push_marker sent", function () {
                 $a.attr("data-pat-inject", "push-marker: content-updated");
                 pattern.init($a);
                 $("body").trigger("push", ["content-updated"]);
@@ -748,7 +748,7 @@ describe("pat-inject", function () {
                 expect($.ajax.mock.calls.pop()[0].url).toBe("test.html");
             });
 
-            it("injects into existing div", async function () {
+            it("9.1.5 - injects into existing div", async function () {
                 pattern.init($a);
                 $a.trigger("click");
                 answer('<html><body><div id="someid">replacement</div></body></html>');
@@ -756,7 +756,7 @@ describe("pat-inject", function () {
                 expect($div.html()).toBe("replacement");
             });
 
-            it("injects multiple times", async function () {
+            it("9.1.6 - injects multiple times", async function () {
                 pattern.init($a);
                 $a.trigger("click");
                 answer('<html><body><div id="someid">replacement</div></body></html>');
@@ -782,7 +782,7 @@ describe("pat-inject", function () {
                 spy_ajax2.mockRestore();
             });
 
-            it("takes multiple source-target pairs", async function () {
+            it("9.1.7 - takes multiple source-target pairs", async function () {
                 $a.attr("data-pat-inject", "#someid1 #otherid1 && #someid2 #otherid2");
                 var $target1 = $('<div id="otherid1" />'),
                     $target2 = $('<div id="otherid2" />');
@@ -802,7 +802,7 @@ describe("pat-inject", function () {
                 expect($target2.html()).toBe("repl2");
             });
 
-            it("acts on other selectors as well", async function () {
+            it("9.1.8 - acts on other selectors as well", async function () {
                 $a.attr("data-pat-inject", "target: #someid > .someclass");
                 var $target1 = $('<div class="someclass" />'),
                     $target2 = $('<div class="someclass" />');
@@ -819,7 +819,7 @@ describe("pat-inject", function () {
                 expect($target2.html()).toBe("repl");
             });
 
-            it("copies into target if source has ::element", async function () {
+            it("9.1.9 - copies into target if source has ::element", async function () {
                 $a.attr("data-pat-inject", "#otherid::element #someid");
 
                 pattern.init($a);
@@ -835,7 +835,7 @@ describe("pat-inject", function () {
                 expect($div.children().attr("class")).toBe("someclass");
             });
 
-            it("replaces target if both selectors have ::element", async function () {
+            it("9.1.10 - replaces target if both selectors have ::element", async function () {
                 $a.attr("data-pat-inject", "#someid::element #otherid::element");
                 $div.append($('<div id="otherid" />'));
 
@@ -852,7 +852,7 @@ describe("pat-inject", function () {
                 expect($div.children().attr("class")).toBe("someclass");
             });
 
-            it("allows ::before and ::after in target selector", async function () {
+            it("9.1.11 - allows ::before and ::after in target selector", async function () {
                 $a.attr(
                     "data-pat-inject",
                     "target: #target1::after && target: #target2::before"
@@ -872,7 +872,7 @@ describe("pat-inject", function () {
                 expect($target2.html()).toBe("replcontent");
             });
 
-            it("allows mixing ::element and ::after in target", async function () {
+            it("9.1.12 - allows mixing ::element and ::after in target", async function () {
                 $a.attr("data-pat-inject", "target: #otherid::element::after");
                 $div.append($('<div id="otherid" />'));
 
@@ -887,7 +887,7 @@ describe("pat-inject", function () {
             });
         });
 
-        describe("inject on forms", function () {
+        describe("9.2 - inject on forms", function () {
             var $form, $div;
             let spy_ajax;
 
@@ -902,7 +902,7 @@ describe("pat-inject", function () {
                 spy_ajax.mockRestore();
             });
 
-            it("trigger injection on submit", async function () {
+            it("9.2.1 - trigger injection on submit", async function () {
                 pattern.init($form);
                 $form.trigger("submit");
                 answer(
@@ -913,7 +913,7 @@ describe("pat-inject", function () {
                 expect($div.html()).toBe("repl");
             });
 
-            it("pass get form parameters in ajax call as data", function () {
+            it("9.2.2 - pass get form parameters in ajax call as data", function () {
                 $form.attr("method", "get");
                 $form.append($('<input type="text" name="param" value="somevalue" />'));
 
@@ -925,7 +925,7 @@ describe("pat-inject", function () {
                 expect(ajaxargs.data).toContain("param=somevalue");
             });
 
-            it("pass post form parameters in ajax call as data", function () {
+            it("9.2.3 - pass post form parameters in ajax call as data", function () {
                 $form.attr("method", "post");
                 $form.append($('<input type="text" name="param" value="somevalue" />'));
 
@@ -936,7 +936,8 @@ describe("pat-inject", function () {
                 expect($.ajax).toHaveBeenCalled();
                 expect(ajaxargs.data.get("param")).toContain("somevalue");
             });
-            it("pass submit button value in ajax call as data", function () {
+
+            it("9.2.4 - pass submit button value in ajax call as data", function () {
                 var $submit = $('<input type="submit" name="submit" value="label" />');
 
                 $form.attr("method", "post");
@@ -950,8 +951,8 @@ describe("pat-inject", function () {
                 expect(ajaxargs.data.get("submit")).toContain("label");
             });
 
-            describe("formaction attribute on submit buttons", function () {
-                it("use submit button formaction value as action URL", function () {
+            describe("9.2.5 - formaction attribute on submit buttons", function () {
+                it("9.2.5.1 - use submit button formaction value as action URL", function () {
                     var $submit1 = $(
                             '<input type="submit" name="submit" value="default" />'
                         ),
@@ -971,7 +972,7 @@ describe("pat-inject", function () {
                     expect(ajaxargs.data).toBe("submit=special");
                 });
 
-                it("use an image submit with a formaction value as action URL", function () {
+                it("9.2.5.2 - use an image submit with a formaction value as action URL", function () {
                     var $submit1 = $(
                             '<input type="submit" name="submit" value="default" />'
                         ),
@@ -991,7 +992,7 @@ describe("pat-inject", function () {
                     expect(ajaxargs.data).toBe("submit=special");
                 });
 
-                it("use fragment in formaction value as source + target selector", async function () {
+                it("9.2.5.3 - use fragment in formaction value as source + target selector", async function () {
                     var $submit1 = $(
                             '<input type="submit" name="submit" value="default" />'
                         ),
@@ -1020,7 +1021,7 @@ describe("pat-inject", function () {
                     expect($target.html()).toBe("other");
                 });
 
-                it("use fragment in formaction value as source selector, respect target", async function () {
+                it("9.2.5.4 - use fragment in formaction value as source selector, respect target", async function () {
                     var $submit1 = $(
                             '<input type="submit" name="submit" value="default" />'
                         ),
@@ -1050,7 +1051,7 @@ describe("pat-inject", function () {
                     expect($target.html()).toBe("other");
                 });
 
-                it("formaction works with multiple targets", async function () {
+                it("9.2.5.5 - formaction works with multiple targets", async function () {
                     var $submit1 = $(
                             '<input type="submit" name="submit" value="default" />'
                         ),
@@ -1085,7 +1086,7 @@ describe("pat-inject", function () {
                     expect($target2.html()).toBe("other");
                 });
 
-                it("formaction works with multiple sources", async function () {
+                it("9.2.5.6 - formaction works with multiple sources", async function () {
                     var $submit1 = $(
                             '<input type="submit" name="submit" value="default" />'
                         ),
@@ -1121,7 +1122,7 @@ describe("pat-inject", function () {
                     expect($target2.html()).toBe("other");
                 });
 
-                it("formaction works source and target on the button", async function () {
+                it("9.2.5.7 - formaction works source and target on the button", async function () {
                     var $submit1 = $(
                             '<input type="submit" name="submit" value="default" />'
                         ),
@@ -1157,7 +1158,7 @@ describe("pat-inject", function () {
                     expect($target2.html()).toBe("other");
                 });
 
-                it("formaction which replaces itself", async () => {
+                it("9.2.5.8 - formaction which replaces itself", async () => {
                     answer(`
                         <html>
                             <body>
@@ -1192,7 +1193,7 @@ describe("pat-inject", function () {
                     );
                 });
 
-                it("nested injects keep correct configuration context", async () => {
+                it("9.2.5.9 - nested injects keep correct configuration context", async () => {
                     answer(`
                         <html>
                             <body>
@@ -1224,7 +1225,7 @@ describe("pat-inject", function () {
         });
     });
 
-    describe("Error handling", () => {
+    describe("10 - Error handling", () => {
         let $a;
         let spy_ajax;
 
@@ -1245,7 +1246,7 @@ describe("pat-inject", function () {
             spy_ajax.mockRestore();
         });
 
-        it("Adds on error a data-error-message to body in standard case.", async () => {
+        it("10.1 - Adds on error a data-error-message to body in standard case.", async () => {
             pattern.init($a);
 
             // Invoke error case
@@ -1259,7 +1260,7 @@ describe("pat-inject", function () {
             expect(document.body.hasAttribute("data-error-message")).toBeTruthy();
         });
 
-        it("Gets error page from meta tags", async () => {
+        it("10.2 - Gets error page from meta tags", async () => {
             global.fetch = jest.fn().mockImplementation(
                 mockFetch(`
                         <!DOCTYPE html>
@@ -1293,7 +1294,7 @@ describe("pat-inject", function () {
             delete global.fetch;
         });
 
-        it("Removes loading and executing classes.", async () => {
+        it("10.3 - Removes loading and executing classes.", async () => {
             document.body.innerHTML = `
               <a
                   class="pat-inject i-am-executing"
@@ -1325,7 +1326,7 @@ describe("pat-inject", function () {
             expect(document.querySelector("#someid").getAttribute("class")).toEqual("");
         });
 
-        it("Doesnt get error page from meta tags if query string present", async () => {
+        it("10.4 - Doesnt get error page from meta tags if query string present", async () => {
             const _window_location = global.window.location;
             delete global.window.location;
             global.window.location = {
@@ -1368,7 +1369,7 @@ describe("pat-inject", function () {
             global.window.location = _window_location;
         });
 
-        it("Injects an error message from the error response.", async () => {
+        it("10.5 - Injects an error message from the error response.", async () => {
             // In this test the error message from the error reponse is used instead of the error template.
             // No need to mock fetch which would get the error template.
 
@@ -1413,7 +1414,7 @@ describe("pat-inject", function () {
             );
         });
 
-        it("Injects an error message from the error template.", async () => {
+        it("10.6 - Injects an error message from the error template.", async () => {
             // Let the error response contain a error zone section with an ID as configured further below.
             global.fetch = jest.fn().mockImplementation(
                 mockFetch(`
@@ -1475,7 +1476,7 @@ describe("pat-inject", function () {
             delete global.fetch;
         });
 
-        it("Falls back to data-error-message attribute if no error page can be found.", async () => {
+        it("10.7 - Falls back to data-error-message attribute if no error page can be found.", async () => {
             global.fetch = jest.fn().mockImplementation(mockFetch(""));
 
             // Configure fallback error page with a error zone selector #error-message
@@ -1513,13 +1514,13 @@ describe("pat-inject", function () {
         });
     });
 
-    describe("Test triggers", function () {
+    describe("11 - Test triggers", function () {
         afterEach(function () {
             document.body.innerHTML = "";
             delete global.__patternslib_test_intersection_observers;
         });
 
-        it("Test trigger: autoload-visible, delay 10ms", async () => {
+        it("11.1 - Test trigger: autoload-visible, delay 10ms", async () => {
             // Note, as we are heavily mocking the IntersectionObserver we are
             // actually not testing if a trigger is really run when an element
             // becomes visible.
@@ -1574,7 +1575,7 @@ describe("pat-inject", function () {
             spy_ajax.mockRestore();
         });
 
-        it("Test trigger: autoload-visible, default delay time", async () => {
+        it("11.2 - Test trigger: autoload-visible, default delay time", async () => {
             const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             answer("<html><body>OK</body></html>");
 
@@ -1607,12 +1608,12 @@ describe("pat-inject", function () {
         });
     });
 
-    describe("caching", () => {
+    describe("12 - caching", () => {
         afterEach(function () {
             document.body.innerHTML = "";
         });
 
-        it("does not cache by default", async function () {
+        it("12.1 - does not cache by default", async function () {
             const spy_ajax = jest.spyOn($, "ajax");
             document.body.innerHTML = `<a
                 href="hello.html"
@@ -1626,7 +1627,7 @@ describe("pat-inject", function () {
             spy_ajax.mockRestore();
         });
 
-        it("does not cache when explicitly set", async function () {
+        it("12.2 - does not cache when explicitly set", async function () {
             const spy_ajax = jest.spyOn($, "ajax");
             document.body.innerHTML = `<a
                 href="hello.html"
@@ -1641,7 +1642,7 @@ describe("pat-inject", function () {
             spy_ajax.mockRestore();
         });
 
-        it("does cache when explicitly set", async function () {
+        it("12.3 - does cache when explicitly set", async function () {
             const spy_ajax = jest.spyOn($, "ajax");
             document.body.innerHTML = `<a
                 href="hello.html"
@@ -1656,7 +1657,7 @@ describe("pat-inject", function () {
             spy_ajax.mockRestore();
         });
 
-        it("does not cache on POST forms, regardless of the setting", async function () {
+        it("12.4 - does not cache on POST forms, regardless of the setting", async function () {
             const spy_ajax = jest.spyOn($, "ajax");
             document.body.innerHTML = `<form
                 class="pat-inject"

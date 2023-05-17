@@ -487,8 +487,15 @@ const inject = {
         }
 
         if (cfg.scroll && cfg.scroll !== "none") {
+            // Get the scroll target for
+            // 1) finding the scroll container
+            // 2) getting the scroll offset (if not "top" or "target")
+            const scroll_target = ["top", "target"].includes(cfg.scroll)
+                ? cfg.$target[0]
+                : $(cfg.scroll, $injected)[0];
+
             const scroll_container = dom.find_scroll_container(
-                cfg.$target[0],
+                scroll_target,
                 null,
                 window
             );
@@ -498,11 +505,6 @@ const inject = {
             let left = 0;
 
             if (cfg.scroll !== "top") {
-                const scroll_target =
-                    cfg.scroll === "target"
-                        ? cfg.$target[0]
-                        : $injected.filter(cfg.scroll)[0];
-
                 // Get the reference element to which against we calculate
                 // the relative position of the target.
                 // In case of a scroll container of window, we do not have
