@@ -307,6 +307,102 @@ const get_scroll_y = (scroll_reference) => {
 };
 
 /**
+ * Get the elements position relative to another element.
+ *
+ * @param {Node} el - The DOM element to get the position for.
+ * @param {Node} [reference_el=document.body] - The DOM element to get the position relative to.
+ *
+ * @returns {{top: number, left: number}} - The position of the element relative to the other element.
+ */
+const get_relative_position = (el, reference_el = document.body) => {
+    // Get the reference element to which against we calculate
+    // the relative position of the target.
+    // In case of a scroll container of window, we do not have
+    // getBoundingClientRect method, so get the body instead.
+    if (reference_el === window) {
+        reference_el = document.body;
+    }
+
+    // Calculate absolute [¹] position difference between
+    // scroll_container and scroll_target.
+    // Substract the container's border from the scrolling
+    // value, as this one isn't respected by
+    // getBoundingClientRect [²] and would lead to covered
+    // items [³].
+    // ¹) so that it doesn't make a difference, if the element
+    // is below or above the scrolling container. We just need
+    // to know the absolute difference.
+    // ²) Calculations are based from the viewport.
+    // ³) See:
+    //      https://docs.microsoft.com/en-us/previous-versions//hh781509(v=vs.85)
+    //      https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+    const left = Math.abs(
+        el.getBoundingClientRect().left +
+            reference_el.scrollLeft -
+            reference_el.getBoundingClientRect().left -
+            dom.get_css_value(reference_el, "border-left-width", true)
+    );
+    const top = Math.abs(
+        el.getBoundingClientRect().top +
+            reference_el.scrollTop -
+            reference_el.getBoundingClientRect().top -
+            dom.get_css_value(reference_el, "border-top-width", true)
+    );
+
+    return { top, left };
+};
+
+/**
+ * Scroll to a given element.
+ * The element will be scrolled to the top of the scroll container.
+ *
+ * @param {Node} el - The element which should be scrolled to.
+ * @param {Node} scroll_container - The element which is scrollable.
+ * @param {number} [offset=0] - Optional offset in pixels to stop scrolling before the target position. Can also be a negative number.
+ * @param {string} [direction="top"] - The direction to scroll to. Can be either "top", "left" or "both".
+ */
+const scroll_to_element = (el, scroll_container, offset = 0, direction = "top") => {
+    // Get the position of the element relative to the scroll container.
+    const position = get_relative_position(el, scroll_container);
+
+    const options = { behavior: "auto" };
+    if (direction === "top" || direction === "both") {
+        options.top = position.top - offset;
+    }
+    if (direction === "left" || direction === "both") {
+        options.left = position.left - offset;
+    }
+
+    // Scroll to the target position.
+    scroll_container.scrollTo(options);
+};
+
+/**
+ * Scroll to the top of a scrolling container.
+ *
+ * @param {Node} [scroll_container = document.body] - The element which is scrollable.
+ * @param {number} [offset=0] - Optional offset in pixels to stop scrolling before the target position. Can also be a negative number.
+ */
+const scroll_to_top = (scroll_container = document.body, offset = 0) => {
+    // Just scroll up, period.
+    scroll_container.scrollTo({ top: 0 - offset, behavior: "auto" });
+};
+
+/**
+ * Scroll to the bottom of a scrolling container.
+ *
+ * @param {Node} [scroll_container = document.body] - The element which is scrollable.
+ * @param {number} [offset=0] - Optional offset in pixels to stop scrolling before the target position. Can also be a negative number.
+ */
+const scroll_to_bottom = (scroll_container = document.body, offset = 0) => {
+    // Just scroll up, period.
+    //
+    const top = (scroll_container === window ? document.body : scroll_container)
+        .scrollHeight;
+    scroll_container.scrollTo({ top: top - offset, behavior: "auto" });
+};
+
+/**
  * Get data stored directly on the node instance.
  * We are using a prefix to make sure the data doesn't collide with other attributes.
  *
@@ -450,6 +546,10 @@ const dom = {
     find_scroll_container: find_scroll_container,
     get_scroll_x: get_scroll_x,
     get_scroll_y: get_scroll_y,
+    get_relative_position: get_relative_position,
+    scroll_to_element: scroll_to_element,
+    scroll_to_top: scroll_to_top,
+    scroll_to_bottom: scroll_to_bottom,
     get_data: get_data,
     set_data: set_data,
     delete_data: delete_data,

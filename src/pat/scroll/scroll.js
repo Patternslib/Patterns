@@ -69,36 +69,6 @@ class Pattern extends BasePattern {
             window
         );
 
-        const scroll_options = { behavior: "auto" }; // Set the behavior in CSS.
-        if (this.options.selector === "top") {
-            // Just scroll up or left, period.
-            scroll_options[this.options.direction] = 0;
-        } else if (this.options.selector === "bottom") {
-            // Just scroll down or right, period.
-            if (this.options.direction === "top") {
-                scroll_options.top = (
-                    scroll_container === window ? document.body : scroll_container
-                ).scrollHeight;
-            } else {
-                scroll_options.left = (
-                    scroll_container === window ? document.body : scroll_container
-                ).scrollWidth;
-            }
-        } else if (this.options.direction === "top") {
-            scroll_options.top = target.offsetTop;
-        } else if (this.options.direction === "left") {
-            scroll_options.left = target.offsetLeft;
-        }
-
-        if (typeof scroll_options.top !== "undefined") {
-            scroll_options.top -= this.options.offset;
-        }
-        if (typeof scroll_options.left !== "undefined") {
-            scroll_options.left -= this.options.offset;
-        }
-
-        log.debug("scroll_options: ", scroll_options);
-
         // Set/remove classes on beginning and end of scroll
         this.el.classList.add("pat-scroll-animated");
         const debounced_scroll_end = utils.debounce(() => {
@@ -115,7 +85,18 @@ class Pattern extends BasePattern {
         debounced_scroll_end();
 
         // now scroll
-        scroll_container.scrollTo(scroll_options);
+        if (this.options.selector === "top") {
+            dom.scroll_to_top(scroll_container, this.options.offset);
+        } else if (this.options.selector === "bottom") {
+            dom.scroll_to_bottom(scroll_container, this.options.offset);
+        } else {
+            dom.scroll_to_element(
+                target,
+                scroll_container,
+                this.options.offset,
+                this.options.direction
+            );
+        }
     }
 }
 
