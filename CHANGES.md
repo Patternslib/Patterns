@@ -4,6 +4,46 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.0-beta.1](https://github.com/Patternslib/patterns/compare/9.9.0-beta.0...9.9.0-beta.1) (2023-05-17)
+
+
+### Bug Fixes
+
+
+* **pat display time:** Default to locale-formatted output. ([c77d01a](https://github.com/Patternslib/patterns/commit/c77d01a4fcf592b45bce3950d2dab5b386aa2f0e))
+
+  Default to formatted output according to the current locale.
+This fixes a regression since 4.1.0 which came with the date picker's
+styled behavior but let display time output an ISO date instead of a
+formatted date when not output format was set.
+
+
+* **pat inject:** Allow to use a scroll container other than the injection target. ([efde472](https://github.com/Patternslib/patterns/commit/efde472b7f286363a90a08a5d3b6ef4f90ea14f1))
+
+  This fixes a problem when the content should scroll to an element which
+is within a scroll container below the injection target. Until now the
+scroll container could only be a parent of the injection target. Now it
+can be a parent of the scroll-target.
+
+
+* **pat inject:** Fix scrolling behavior, where the scrolling target could not be found. ([911b8b8](https://github.com/Patternslib/patterns/commit/911b8b8660197d44291c7d5a9537bbb496df1a38))
+
+
+* **pat validation:** Do not disable input elements with formnovalidate. ([f30af14](https://github.com/Patternslib/patterns/commit/f30af1473b4c5b1cfbba62dc53d4a8c363a85783))
+
+  Do not disable input elements with the `formnovalidate` attribute set
+when form validation fails.
+E.g. a cancel button: `<button formnovalidate>Cancel</button>`.
+
+  Fixes #1132.
+closes [#1132](https://github.com/Patternslib/patterns/issues/1132)
+
+
+### Maintenance
+
+
+* **pat inject:** Give tests a individual number to allow easier selectively testing individual tests. ([e819b84](https://github.com/Patternslib/patterns/commit/e819b84f0f272ea5d4e118d195e0b8a8355611ef))
+
 ## [9.9.0-beta.0](https://github.com/Patternslib/patterns/compare/9.9.0-alpha.5...9.9.0-beta.0) (2023-05-11)
 
 
