@@ -24,7 +24,7 @@ describe("pat-display-time tests", () => {
         Pattern.init(el);
         await utils.timeout(1); // wait a tick for async to settle.
 
-        expect(el.textContent).toBe("2021-04-22T03:00:00-07:00");
+        expect(el.textContent).toBe("Thu Apr 22 2021 03:00:00 GMT-0700");
     });
 
     it("Example setting the output format explicitly", async () => {
