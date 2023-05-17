@@ -48,6 +48,7 @@ export default Base.extend({
         let out = "";
         if (datetime) {
             const date = Moment(datetime, this.options.format, this.options.strict);
+            out = date;
             if (this.options.fromNow === true) {
                 if (utils.is_iso_date(datetime)) {
                     // date-only case.
@@ -71,8 +72,8 @@ export default Base.extend({
                     // datetime case.
                     out = date.fromNow(this.options.noSuffix);
                 }
-            } else {
-                out = date.format(this.options.outputFormat || undefined);
+            } else if (this.options.outputFormat) {
+                out = date.format(this.options.outputFormat);
             }
         }
         this.el.textContent = out;
