@@ -68,7 +68,6 @@ class Pattern extends BasePattern {
             this.options.direction === "top" ? "y" : "x",
             window
         );
-        const rect = target.getBoundingClientRect();
 
         const scroll_options = { behavior: "auto" }; // Set the behavior in CSS.
         if (this.options.selector === "top") {
@@ -86,9 +85,9 @@ class Pattern extends BasePattern {
                 ).scrollWidth;
             }
         } else if (this.options.direction === "top") {
-            scroll_options.top = rect.top;
+            scroll_options.top = target.offsetTop;
         } else if (this.options.direction === "left") {
-            scroll_options.left = rect.left;
+            scroll_options.left = target.offsetLeft;
         }
 
         if (typeof scroll_options.top !== "undefined") {

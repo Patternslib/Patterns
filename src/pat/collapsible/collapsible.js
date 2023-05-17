@@ -106,6 +106,13 @@ class Pattern extends BasePattern {
             $(document).on("click", this.options.openTrigger, this.open.bind(this));
         }
 
+        // scroll debouncer for later use.
+        this.debounce_scroll = utils.debounce(
+            this._scroll.bind(this),
+            10,
+            debounce_scroll_timer
+        );
+
         // pat-scroll support
         if (this.options.scroll?.selector) {
             const Scroll = (await import("../scroll/scroll")).default;
@@ -116,13 +123,6 @@ class Pattern extends BasePattern {
             });
             await events.await_pattern_init(this.scroll);
         }
-
-        // scroll debouncer for later use.
-        this.debounce_scroll = utils.debounce(
-            this._scroll.bind(this),
-            10,
-            debounce_scroll_timer
-        );
 
         return $el;
     }
@@ -136,12 +136,16 @@ class Pattern extends BasePattern {
     }
 
     open() {
-        if (!this.$el.hasClass("open")) this.toggle();
+        if (!this.$el.hasClass("open")) {
+            this.toggle();
+        }
         return this.$el;
     }
 
     close() {
-        if (!this.$el.hasClass("closed")) this.toggle();
+        if (!this.$el.hasClass("closed")) {
+            this.toggle();
+        }
         return this.$el;
     }
 
@@ -151,7 +155,9 @@ class Pattern extends BasePattern {
 
     _onKeyPress(event) {
         const keycode = event.keyCode ? event.keyCode : event.which;
-        if (keycode === 13) this.toggle();
+        if (keycode === 13) {
+            this.toggle();
+        }
     }
 
     _loadContent($el, url, $target) {
