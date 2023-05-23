@@ -4,6 +4,20 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.1-alpha.0](https://github.com/Patternslib/patterns/compare/9.9.0...9.9.1-alpha.0) (2023-05-23)
+
+
+### Bug Fixes
+
+
+* **pat inject:** Second attempt to fix the scrolling behavior, where the scrolling target could not be found. ([829a6a6](https://github.com/Patternslib/patterns/commit/829a6a6abc5f547611e13253608209fc0dcee1ec))
+
+  The original problem fixed in commit 911b8b8660197d44291c7d5a9537bbb496df1a38
+for 9.9.0-beta.1 addressed a problem where the scroll target was not a
+direct child of the injected content but some levels deeper. But this
+fix broke the situation where the scroll target is a direct child of the
+injected content. The fix applied here handles both situations.
+
 ## [9.9.0](https://github.com/Patternslib/patterns/compare/9.9.0-beta.3...9.9.0) (2023-05-23)
 
 
