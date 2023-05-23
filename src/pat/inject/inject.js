@@ -492,7 +492,7 @@ const inject = {
             // 2) getting the element to scroll to (if not "top")
             const scroll_target = ["top", "target"].includes(cfg.scroll)
                 ? cfg.$target[0]
-                : $(cfg.scroll, $injected)[0];
+                : $injected.findInclusive(cfg.scroll)[0];
 
             const scroll_container = dom.find_scroll_container(
                 scroll_target,
@@ -502,7 +502,7 @@ const inject = {
 
             if (cfg.scroll === "top") {
                 dom.scroll_to_top(scroll_container);
-            } else {
+            } else if (scroll_target) {
                 dom.scroll_to_element(scroll_target, scroll_container);
             }
         }
