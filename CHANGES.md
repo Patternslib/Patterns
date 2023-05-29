@@ -4,6 +4,16 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.3](https://github.com/Patternslib/patterns/compare/9.9.2...9.9.3) (2023-05-29)
+
+
+### Maintenance
+
+
+* Upgrade to @patternslib/dev 3.3.4 ([61b3c56](https://github.com/Patternslib/patterns/commit/61b3c56d00ab76c656a2b56d6441ed209da2578d))
+
+  This fixes the wrong version number comment in the package-included build files.
+
 ## [9.9.2](https://github.com/Patternslib/patterns/compare/9.9.1...9.9.2) (2023-05-29)
 
 
