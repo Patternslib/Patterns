@@ -1959,10 +1959,10 @@
     colorette "^2.0.16"
     ora "^5.4.1"
 
-"@patternslib/dev@^3.3.4":
-  version "3.3.4"
-  resolved "https://registry.yarnpkg.com/@patternslib/dev/-/dev-3.3.4.tgz#fe5bc769e68881043f2ff7c2d119b346ac7cd1a4"
-  integrity sha512-ExRwug9VgS8t82xsVL+QQGNia/VDpOQVubAVurkkrF3UxwfLXBFcBqhyMJOh0nahNUaltOHFm0vFRCUE6lQZeA==
+"@patternslib/dev@^3.3.5":
+  version "3.3.5"
+  resolved "https://registry.yarnpkg.com/@patternslib/dev/-/dev-3.3.5.tgz#9e27ed64dde3e55381f9a50ada8f8e6283d91c6b"
+  integrity sha512-58+eUPBJwtbhVHY8LBwzRNKm1n0acpHf67Xi5mzHG3/rJlk/T9/iZFvnPVpQxV2VAP66/PAQFfi5OcbDqivqow==
   dependencies:
     "@babel/core" "^7.22.1"
     "@babel/eslint-parser" "^7.21.8"
