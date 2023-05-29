@@ -12,6 +12,14 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 * Upgrade to @patternslib/dev 3.3.5 which fixes an incorrect release-it hook config. ([e909e34](https://github.com/Patternslib/patterns/commit/e909e3451d9039573a8775ff9a62378ab89f6992))
 
+## [9.9.4](https://github.com/Patternslib/patterns/compare/9.9.3...9.9.4) (2023-05-29)
+
+
+### Maintenance
+
+
+* Upgrade to @patternslib/dev 3.3.5 which fixes an incorrect release-it hook config. ([e909e34](https://github.com/Patternslib/patterns/commit/e909e3451d9039573a8775ff9a62378ab89f6992))
+
 ## [9.9.3](https://github.com/Patternslib/patterns/compare/9.9.2...9.9.3) (2023-05-29)
 
 
