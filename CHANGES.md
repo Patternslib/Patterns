@@ -15,6 +15,17 @@ See the [history](./docs/history/index.md) for older changelog entries.
   This fixes a missing build in npm releases.
 Now you can again use jsdelivr and unpkg.
 
+## [9.9.2](https://github.com/Patternslib/patterns/compare/9.9.1...9.9.2) (2023-05-29)
+
+
+### Maintenance
+
+
+* Upgrade to @patternslib/dev 3.3.3 ([35c63df](https://github.com/Patternslib/patterns/commit/35c63dfb0f4d2f7697656658ac134af24c1c8337))
+
+  This fixes a missing build in npm releases.
+Now you can again use jsdelivr and unpkg.
+
 ## [9.9.1](https://github.com/Patternslib/patterns/compare/9.9.1-alpha.0...9.9.1) (2023-05-23)
 
 ## [9.9.1](https://github.com/Patternslib/patterns/compare/9.9.1-alpha.0...9.9.1) (2023-05-23)
