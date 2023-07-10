@@ -11,7 +11,7 @@ import utils from "../../core/utils";
 const log = logging.getLogger("date-picker");
 
 export const parser = new Parser("date-picker");
-parser.addArgument("behavior", "styled", ["native", "styled"]);
+parser.addArgument("behavior", "styled", ["native", "styled", "editable"]);
 parser.addArgument("week-numbers", [], ["show", "hide"]);
 parser.addArgument("i18n"); // URL pointing to JSON resource with i18n values
 parser.addArgument("first-day", 0);
@@ -149,7 +149,10 @@ export default Base.extend({
             }
         } else if (disabled) {
             return;
-        } else if (utils.checkInputSupport("date", "invalid date")) {
+        } else if (
+            this.options.behavior !== "editable" &&
+            utils.checkInputSupport("date", "invalid date")
+        ) {
             // behavior native with native support.
             return;
         } else if (el.getAttribute("type") === "date") {
