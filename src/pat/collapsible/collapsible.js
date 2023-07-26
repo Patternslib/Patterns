@@ -106,15 +106,8 @@ class Pattern extends BasePattern {
             $(document).on("click", this.options.openTrigger, this.open.bind(this));
         }
 
-        // scroll debouncer for later use.
-        this.debounce_scroll = utils.debounce(
-            this._scroll.bind(this),
-            10,
-            debounce_scroll_timer
-        );
-
         // pat-scroll support
-        if (this.options.scroll?.selector) {
+        if (this.options.scroll?.selector && this.options.scroll.selector !== "none") {
             const Scroll = (await import("../scroll/scroll")).default;
             this.scroll = new Scroll(this.el, {
                 trigger: "manual",
@@ -122,17 +115,16 @@ class Pattern extends BasePattern {
                 offset: this.options.scroll?.offset,
             });
             await events.await_pattern_init(this.scroll);
+
+            // scroll debouncer for later use.
+            this.debounce_scroll = utils.debounce(
+                this.scroll.scrollTo.bind(this.scroll),
+                10,
+                debounce_scroll_timer
+            );
         }
 
         return $el;
-    }
-
-    async _scroll() {
-        const scroll_selector = this.options.scroll?.selector;
-        if (!scroll_selector) {
-            return;
-        }
-        await this.scroll.scrollTo();
     }
 
     open() {
@@ -196,7 +188,7 @@ class Pattern extends BasePattern {
         if (new_state === "open") {
             this.$el.trigger("patterns-collapsible-open");
             this._transit(this.$el, "closed", "open");
-            this.debounce_scroll();
+            this.debounce_scroll?.(); // debounce scroll, if available.
         } else {
             this.$el.trigger("patterns-collapsible-close");
             this._transit(this.$el, "open", "closed");

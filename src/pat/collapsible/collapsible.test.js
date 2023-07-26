@@ -238,6 +238,29 @@ describe("pat-collapsible", function () {
             const arg_1 = this.spy_scrollTo.mock.calls[0][0];
             expect(arg_1.top).toBe(40); // the offset is substracted from the scroll position, so a negative offset is added to the scroll position and stops AFTER the target position.
         });
+
+        it("8.6 - disables scrolling if a parent pat-collapsible has enabled it.", async function () {
+            document.body.innerHTML = `
+                <div id="id1" class="pat-collapsible closed" data-pat-collapsible="scroll-selector: self; transition: none">
+                    <p>Collapsible content</p>
+                    <div id="id2" class="pat-collapsible closed" data-pat-collapsible="scroll-selector: none">
+                        <p>Collapsible content</p>
+                    </div>
+                </div>
+            `;
+            const collapsible_1 = document.querySelector("#id1");
+            const instance_1 = new Pattern(collapsible_1);
+            await events.await_pattern_init(instance_1);
+
+            const collapsible_2 = document.querySelector("#id2");
+            const instance_2 = new Pattern(collapsible_2);
+            await events.await_pattern_init(instance_2);
+
+            instance_2.toggle();
+            await utils.timeout(10);
+
+            expect(this.spy_scrollTo).not.toHaveBeenCalled();
+        });
     });
 
     it("9 - triggers the pat-update event.", async function () {
