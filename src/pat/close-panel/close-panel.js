@@ -25,6 +25,7 @@ export default Base.extend({
             await utils.timeout(0); // Wait for other patterns, like pat-validation.
 
             if (
+                e.target.matches(":not([formnovalidate])") &&
                 e.target.matches("[type=submit], button:not([type=button])") &&
                 this.el.closest("form")?.checkValidity() === false
             ) {
