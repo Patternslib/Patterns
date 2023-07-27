@@ -1,18 +1,22 @@
 ## Description
 
-This pattern provides a simple but powerful form validation beyond what HTML5 offers.
+This pattern provides form validation based on the HTML standard and offers extended functionality like custom error messages and extra validation rules.
+
 
 ## Documentation
 
-The validation pattern is triggered by a single class `pat-validation` on the form tag. The rest is handled mostly with standard HTML5 validation attributes.
+The validation pattern is triggered by a single class `pat-validation` on the form tag.
+The rest is handled mostly with standard HTML validation attributes.
 
-This pattern has several advantages over standard HTML 5 form validation:
+This patterns offers:
 
--   it supports older browsers
--   it uses simple documented HTML markup to allow non-browser-specific styling of error messages
--   it supports extra validation rules
+- extra validation rules like checking for equality or checking is one date it after another.
+- custom error messages.
 
-### The following attributes may be used.
+Since it is based on the HTML standard you can still use the `:valid`, `:invalid` and `:out-of-range` CSS pseudo classes.
+
+You can use any HTML form validation attributes but here are some examples:
+
 
 | Name          | Syntax                     | Description                                                  |
 | ------------- | -------------------------- | ------------------------------------------------------------ |
@@ -22,6 +26,10 @@ This pattern has several advantages over standard HTML 5 form validation:
 | Minimum value | `type="number" min="6"`    | Check if a number is greater than or equal to a given value. |
 | Maximum value | `type="number" max="10"`   | Check if a number is less than or equal to a given value.    |
 | Real number   | `type="number" step="any"` | Check if a number is less than or equal to a given value.    |
+
+
+> **_NOTE:_**  The form inputs must have a `name` attribute, otherwise the validation would not happen.
+
 
 ### Error messages
 
@@ -64,6 +72,11 @@ Error messages can also be overridden on a per-field basis, for example:
     <input type="date" name="date" data-pat-validation="not-after: #planning-end-${number}; message-date: This date must be on or before the end date."/>
 
 ### Options reference
+
+> **_NOTE:_**  The form inputs must have a `name` attribute, otherwise the validation would not happen.
+
+> **_NOTE:_**  If you need to exclude a submit button from form validation - like a cancel button which actually submits - add the `formnovalidate` attribute to the button.
+
 
 | Property         | Description                                                                                                                | Default                                              | Type                                   |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------- |
