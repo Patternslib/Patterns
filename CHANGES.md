@@ -4,6 +4,39 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.5](https://github.com/Patternslib/patterns/compare/9.9.4...9.9.5) (2023-07-28)
+
+
+### Bug Fixes
+
+
+* **pat-close-panel:** Do not prevent closing for formnovalidate buttons. ([1272ac5](https://github.com/Patternslib/patterns/commit/1272ac5497a9e7cacf8f9bfe56f6e9cd5642984e))
+
+  Do not prevent closing of panels when a form with invalid data is
+submitted when a button with the formnovalidate attribute is pressed.
+This is useful for cases where a "cancel" button actually needs to
+submit to roll back any changes which were already made.
+
+
+* **pat-collapsible:** Allow to explicitly clear the scroll selector. ([9c99a2e](https://github.com/Patternslib/patterns/commit/9c99a2ed95e15cfab8541e8defef8ce0d9174e2b))
+
+  In case of nested pat-collapsible elements, child elements inherit the
+options from parent elements, including the scroll-selector. If the
+child element should do no scrolling, it needs to explicitly be reset.
+This can be done by adding th following options to the collapsible data
+attribute:
+data-pat-collapsible="scroll-selector: none"
+
+
+
+### Maintenance
+
+
+* **Dependencies:** Upgrade dependencies. ([a46de2e](https://github.com/Patternslib/patterns/commit/a46de2e4a8f5ee9ddb497b6c55ea10d0c72beeab))
+
+
+* **pat-validation:** Improve documentation - based on HTML standards, CSS‌ pseudo classes, formnovalidate buttons. ([daab725](https://github.com/Patternslib/patterns/commit/daab725afaa87f777b4f98da0c82036126964cf1))
+
 ## [9.9.4](https://github.com/Patternslib/patterns/compare/9.9.3...9.9.4) (2023-05-29)
 
 
