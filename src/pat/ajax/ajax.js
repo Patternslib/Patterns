@@ -14,9 +14,8 @@ const log = logging.getLogger("pat.ajax");
 export const parser = new Parser("ajax");
 parser.addArgument("accept", "text/html");
 parser.addArgument("url", function ($el) {
-    return (
-        $el.is("a") ? $el.attr("href") : $el.is("form") ? $el.attr("action") : ""
-    ).split("#")[0];
+    var val = $el.is("a") ? $el.attr("href") : $el.is("form") ? $el.attr("action") : "";
+    return (val || "").split("#")[0];
 });
 parser.addArgument("browser-cache", "no-cache", ["cache", "no-cache"]); // Cache ajax requests
 

@@ -131,6 +131,18 @@ describe("pat-ajax", function () {
             const ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
             expect(ajaxargs.url).toEqual("else.html");
         });
+        it("Does not break with missing anchor-href", async function () {
+            document.body.innerHTML = `<a class="pat-ajax"/>`;
+            jest.spyOn(pattern.parser.log, "error");
+            pattern.parser.parse(document.body.querySelector(".pat-ajax"));
+            expect(pattern.parser.log.error).not.toHaveBeenCalled();
+        });
+        it("Does not break with missing form-action", async function () {
+            document.body.innerHTML = `<form class="pat-ajax"/>`;
+            jest.spyOn(pattern.parser.log, "error");
+            pattern.parser.parse(document.body.querySelector(".pat-ajax"));
+            expect(pattern.parser.log.error).not.toHaveBeenCalled();
+        });
 
         // Accept
         it("Default accept header", function () {
