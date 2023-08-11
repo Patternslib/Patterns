@@ -4,6 +4,34 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.6-alpha.0](https://github.com/Patternslib/patterns/compare/9.9.5...9.9.6-alpha.0) (2023-08-11)
+
+
+### Bug Fixes
+
+
+* **pat-ajax:** Support anchors without a href attribute and forms without an action attribute. ([099da3c](https://github.com/Patternslib/patterns/commit/099da3cde9c4e6de790e11680a2c16daa13bb88f))
+
+  The URL can still be set via the data-pat-ajax attribute.
+This fixes a problem where pat-inject enabled forms without an action attribute
+but a submit button with a formaction attribute would break.
+
+
+* **pat-inject:** For submit buttons with a formaction, do not call ajax.onClickSubmit twice. ([22d814f](https://github.com/Patternslib/patterns/commit/22d814ff30e99ad8ea59dd4c1b6a87fcab84ca11))
+
+
+* **pat-inject:** Support submit buttons without a type attribute. ([6882f45](https://github.com/Patternslib/patterns/commit/6882f45b33c9c3a8bbcae525f75bd454e6319b96))
+
+
+
+### Maintenance
+
+
+* **core parser:** Adapt code to Patternslib standards. ([9079a47](https://github.com/Patternslib/patterns/commit/9079a47a55e1f44e6c8abcfca76d5152811f169a))
+
+
+* **pat-ajax:** Improve the default function from the url argument to not use jQuery. ([bb8ce9d](https://github.com/Patternslib/patterns/commit/bb8ce9d021cc5d026b09a332b63d507c5956c6c4))
+
 ## [9.9.5](https://github.com/Patternslib/patterns/compare/9.9.4...9.9.5) (2023-07-28)
 
 
