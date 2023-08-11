@@ -1221,6 +1221,69 @@ describe("pat-inject", function () {
                         "other"
                     );
                 });
+
+                it("9.2.5.10 - does not call ajax.onClickSubmit twice.", async function () {
+                    document.body.innerHTML = `
+                        <form class="pat-inject">
+                            <button type="submit" formaction="test.cgi"/>
+                        </form>
+                    `;
+
+                    const pat_ajax = (await import("../ajax/ajax.js")).default;
+                    jest.spyOn(pat_ajax, "onClickSubmit");
+
+                    const form = document.querySelector("form");
+                    const button = form.querySelector("button");
+
+                    pattern.init($(form));
+                    button.click();
+
+                    expect(pat_ajax.onClickSubmit).toHaveBeenCalledTimes(1);
+                });
+            });
+
+            describe("9.2.6 - Support submit buttons without type attribute ...", () => {
+                it("9.2.6.1 - ... without a formaction atttribute.", async function () {
+                    document.body.innerHTML = `
+                        <form class="pat-inject" action="test.cgi">
+                            <button/>
+                        </form>
+                    `;
+
+                    const pat_ajax = (await import("../ajax/ajax.js")).default;
+                    jest.spyOn(pat_ajax, "onClickSubmit");
+                    jest.spyOn(pattern, "onFormActionSubmit");
+
+                    const form = document.querySelector("form");
+                    const button = form.querySelector("button");
+
+                    pattern.init($(form));
+                    button.click();
+
+                    expect(pat_ajax.onClickSubmit).toHaveBeenCalledTimes(1);
+                    expect(pattern.onFormActionSubmit).toHaveBeenCalledTimes(0);
+                });
+
+                it("9.2.6.1 - ... with a formaction atttribute.", async function () {
+                    document.body.innerHTML = `
+                        <form class="pat-inject">
+                            <button formaction="test.cgi"/>
+                        </form>
+                    `;
+
+                    const pat_ajax = (await import("../ajax/ajax.js")).default;
+                    jest.spyOn(pat_ajax, "onClickSubmit");
+                    jest.spyOn(pattern, "onFormActionSubmit");
+
+                    const form = document.querySelector("form");
+                    const button = form.querySelector("button");
+
+                    pattern.init($(form));
+                    button.click();
+
+                    expect(pat_ajax.onClickSubmit).toHaveBeenCalledTimes(1);
+                    expect(pattern.onFormActionSubmit).toHaveBeenCalledTimes(1);
+                });
             });
         });
     });
