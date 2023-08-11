@@ -14,8 +14,14 @@ const log = logging.getLogger("pat.ajax");
 export const parser = new Parser("ajax");
 parser.addArgument("accept", "text/html");
 parser.addArgument("url", function ($el) {
-    var val = $el.is("a") ? $el.attr("href") : $el.is("form") ? $el.attr("action") : "";
-    return (val || "").split("#")[0];
+    const el = $el[0];
+    const value =
+        el.tagName === "A"
+            ? el.getAttribute("href")
+            : el.tagName === "FORM"
+            ? el.getAttribute("action")
+            : "";
+    return (value || "").split("#")[0];
 });
 parser.addArgument("browser-cache", "no-cache", ["cache", "no-cache"]); // Cache ajax requests
 
