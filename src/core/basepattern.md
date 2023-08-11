@@ -16,7 +16,7 @@ Also see: https://github.com/Patternslib/pat-PATTERN_TEMPLATE
     import registry from "@patternslib/patternslib/src/core/registry";
 
     export const parser = new Parser("test-pattern");
-    parser.addArgument("example-option", "Stranger");
+    parser.addArgument("example-option", "Hollareidulio");
 
     class Pattern extends BasePattern {
         static name = "test-pattern";
@@ -33,7 +33,7 @@ Also see: https://github.com/Patternslib/pat-PATTERN_TEMPLATE
             // The options are automatically created, if parser is defined.
             const example_option = this.options.exampleOption;
             this.el.innerHTML = `
-                <p>hello, ${example_option}, this is pattern ${this.name} speaking.</p>
+                <p>${example_option}, this is the ${this.name} pattern!</p>
             `;
         }
     }

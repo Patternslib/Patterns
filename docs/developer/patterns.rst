@@ -1,20 +1,46 @@
-Creating a new pattern
-======================
+The structure of a pattern
+==========================
 
-Patterns are implemented as JavaScript classes that are registered with the patterns library.
-Below is a minimal skeleton for a pattern.
+Patterns are implemented as JavaScript classes that are registered with the patterns registry.
+Below is a minimalistic skeleton for a pattern with explanations as inline comments.
 
 .. code-block:: javascript
    :linenos:
 
     import { BasePattern } from "@patternslib/patternslib/src/core/basepattern";
+    import Parser from "@patternslib/patternslib/src/core/parser";
     import registry from "@patternslib/patternslib/src/core/registry";
 
+    export const parser = new Parser("test-pattern");
+    // Define an argument with a default value. You can configure the value via
+    // data-attributes.
+    parser.addArgument("example-option", "Hollareidulio");
+
     class Pattern extends BasePattern {
+
+        // Define a name for the pattern which is used as key in the pattern
+        // registry.
         static name = "test-pattern";
+        
+        // Define a CSS selector. The pattern will be initialized on elements
+        // matching this selector.
         static trigger = ".pat-test-pattern";
 
+        // The parser instance from above.
+        static parser = parser;
+
         init() {
+            import("./test-pattern.scss");
+
+            // Try to avoid jQuery, but here is how to import it, asynchronously.
+            // eslint-disable-next-line no-unused-vars
+            const $ = (await import("jquery")).default;
+
+            // The options are automatically created, if parser is defined.
+            const example_option = this.options.exampleOption;
+            this.el.innerHTML = `
+                <p>${example_option}, this is the ${this.name} pattern!</p>
+            `;
         }
     }
 
@@ -29,55 +55,12 @@ Below is a minimal skeleton for a pattern.
     export { Pattern };
 
 
-This skeleton does several things:
-
-* lines 1-4 use `RequireJS <http://requirejs.org/>`_ to load the patterns
-  registry.
-* lines 5-7 create an object which defines this pattern's specifications.
-* line 9 registers the pattern.
-
-
-Markup patterns
----------------
-
-Most patterns deal with markup: they are activated for content that matches
-a specific CSS selector. This is handled by adding two items to the
-pattern specification: a ``trigger`` and an ``init`` function.
-
-.. code-block:: javascript
-   :linenos:
-
-   var pattern_spec = {
-       name: "mypattern",
-       trigger: ".tooltip, [data-tooltip]",
-
-       init: function($el) {
-           ...
-       },
-
-       destroy: function($el) {
-           ...
-       }
-   };
-
-The trigger specified on line 3 is a CSS selector which tells the pattern
-framework which elements this pattern is interested in. If new items are
-discovered in the DOM that match this pattern, the ``init`` function will be
-called with a jQuery wrapper around the element.
-
-While not required patterns are encouraged to include a ``destroy`` function
-that undos the pattern initialisation.  After calling ``destroy`` it should be
-possible to call ``init`` again to reactivate the pattern.
-
-Methods must always return ``this`` to facilitate their use as jQuery widgets.
-
 
 Pattern configuration
 ---------------------
 
 The configuration of a pattern is generally based on three components: the
-default settings, configuration set on a DOM element via a data-attribute, and,
-if the jQuery API is used, via options passed in via the jQuery plugin API.
+default settings, configuration set on a DOM element via a data-attribute.
 The init method for patterns should combine these settings. Let's update our
 example pattern to do this:
 
