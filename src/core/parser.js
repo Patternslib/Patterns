@@ -33,13 +33,7 @@ class ArgumentParser {
         if (this.parameters[original]) {
             this.parameters[original].alias = alias;
         } else {
-            throw (
-                'Attempted to add an alias "' +
-                alias +
-                '" for a non-existing parser argument "' +
-                original +
-                '".'
-            );
+            throw `Attempted to add an alias "${alias}" for a non-existing parser argument "${original}".`;
         }
     }
 
@@ -166,19 +160,19 @@ class ArgumentParser {
                         } else if (typeof value === "number") {
                             value = !!value;
                         } else {
-                            throw "Cannot convert value for " + name + " to boolean";
+                            throw `Cannot convert value for ${name} to boolean.`;
                         }
                         break;
                     case "number":
                         if (typeof value === "string") {
                             value = parseInt(value, 10);
                             if (isNaN(value)) {
-                                throw "Cannot convert value for " + name + " to number";
+                                throw `Cannot convert value for ${name} to number.`;
                             }
                         } else if (typeof value === "boolean") {
                             value = value + 0;
                         } else {
-                            throw "Cannot convert value for " + name + " to number";
+                            throw `Cannot convert value for ${name} to number.`;
                         }
                         break;
                     case "string":
@@ -188,12 +182,9 @@ class ArgumentParser {
                     case "undefined":
                         break;
                     default:
-                        throw (
-                            "Do not know how to convert value for " +
-                            name +
-                            " to " +
+                        throw `Do not know how to convert value for ${name} of type ${typeof value} to ${
                             spec.type
-                        );
+                        }.`;
                 }
             } catch (e) {
                 this.log.warn(e);
@@ -201,7 +192,7 @@ class ArgumentParser {
             }
 
         if (spec.choices && spec.choices.indexOf(value) === -1) {
-            this.log.warn("Illegal value for " + name + ": " + value);
+            this.log.warn(`Illegal value for ${name}: ${value}.`);
             return null;
         }
         return value;
@@ -209,7 +200,7 @@ class ArgumentParser {
 
     _set(opts, name, value) {
         if (!(name in this.parameters)) {
-            this.log.debug("Ignoring value for unknown argument " + name);
+            this.log.debug(`Ignoring value for unknown argument: ${name}.`);
             return;
         }
         const spec = this.parameters[name];
@@ -261,7 +252,7 @@ class ArgumentParser {
             }
             const matches = part.match(this.named_param_pattern);
             if (!matches) {
-                this.log.warn("Invalid parameter: " + part + ": " + argstring);
+                this.log.warn(`Invalid parameter: ${part}: ${argstring}.`);
                 continue;
             }
             const name = matches[1];
@@ -280,7 +271,7 @@ class ArgumentParser {
                     this._set(opts, name + "-" + field, subopt[field]);
                 }
             } else {
-                this.log.warn("Unknown named parameter " + matches[1]);
+                this.log.warn(`Unknown named parameter: ${matches[1]}.`);
                 continue;
             }
         }
@@ -320,7 +311,7 @@ class ArgumentParser {
                 break;
             }
         }
-        if (parts.length) this.log.warn("Ignore extra arguments: " + parts.join(" "));
+        if (parts.length) this.log.warn(`Ignore extra arguments: ${parts.join(" ")}.`);
         return opts;
     }
 
@@ -332,7 +323,7 @@ class ArgumentParser {
             try {
                 return JSON.parse(parameter);
             } catch (e) {
-                this.log.warn("Invalid JSON argument found: " + parameter);
+                this.log.warn(`Invalid JSON argument found: ${parameter}.`);
             }
         }
         if (parameter.match(this.named_param_pattern)) {
@@ -352,15 +343,18 @@ class ArgumentParser {
 
     _defaults($el) {
         const result = {};
-        for (const name in this.parameters)
-            if (typeof this.parameters[name].value === "function")
+        for (const name in this.parameters) {
+            if (typeof this.parameters[name].value === "function") {
                 try {
                     result[name] = this.parameters[name].value($el, name);
                     this.parameters[name].type = typeof result[name];
                 } catch (e) {
-                    this.log.error("Default function for " + name + " failed.");
+                    this.log.error(`Default function for ${name} failed.`);
                 }
-            else result[name] = this.parameters[name].value;
+            } else {
+                result[name] = this.parameters[name].value;
+            }
+        }
         return result;
     }
 
@@ -368,25 +362,31 @@ class ArgumentParser {
         // Resolve references
         for (const name of Object.keys(options)) {
             const spec = this.parameters[name];
-            if (spec === undefined) continue;
+            if (spec === undefined) {
+                continue;
+            }
 
             if (
                 options[name] === spec.value &&
                 typeof spec.value === "string" &&
                 spec.value.slice(0, 1) === "$"
-            )
+            ) {
                 options[name] = options[spec.value.slice(1)];
+            }
         }
         if (group_options) {
             // Move options into groups and do renames
             for (const name of Object.keys(options)) {
                 const spec = this.parameters[name];
                 let target;
-                if (spec === undefined) continue;
+                if (spec === undefined) {
+                    continue;
+                }
 
                 if (spec.group) {
-                    if (typeof options[spec.group] !== "object")
+                    if (typeof options[spec.group] !== "object") {
                         options[spec.group] = {};
+                    }
                     target = options[spec.group];
                 } else {
                     target = options;
@@ -430,9 +430,7 @@ class ArgumentParser {
         ) {
             $possible_config_providers = $el;
         } else {
-            $possible_config_providers = $el
-                .parents("[" + this.attribute + "]")
-                .addBack();
+            $possible_config_providers = $el.parents(`[${this.attribute}]`).addBack();
         }
 
         for (const provider of $possible_config_providers) {
