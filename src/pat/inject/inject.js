@@ -97,7 +97,11 @@ const inject = {
                     // setup event handlers
                     if ($el.is("form")) {
                         $el.on("submit.pat-inject", this.onTrigger.bind(this))
-                            .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit)
+                            .on(
+                                "click.pat-inject",
+                                "[type=submit]:not([formaction])",
+                                ajax.onClickSubmit
+                            )
                             .on(
                                 "click.pat-inject",
                                 "[type=submit][formaction], [type=image][formaction]",

@@ -1221,6 +1221,25 @@ describe("pat-inject", function () {
                         "other"
                     );
                 });
+
+                it("9.2.5.10 - does not call ajax.onClickSubmit twice.", async function () {
+                    document.body.innerHTML = `
+                        <form class="pat-inject">
+                            <button type="submit" formaction="test.cgi"/>
+                        </form>
+                    `;
+
+                    const pat_ajax = (await import("../ajax/ajax.js")).default;
+                    jest.spyOn(pat_ajax, "onClickSubmit");
+
+                    const form = document.querySelector("form");
+                    const button = form.querySelector("button");
+
+                    pattern.init($(form));
+                    button.click();
+
+                    expect(pat_ajax.onClickSubmit).toHaveBeenCalledTimes(1);
+                });
             });
         });
     });
