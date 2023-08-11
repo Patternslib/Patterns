@@ -72,7 +72,7 @@ class Pattern extends BasePattern {
         if (base_url !== href_parts[0] || !href_parts[1]) {
             return;
         }
-        if (!this.$el.has("#" + href_parts[1]).length) {
+        if (!this.$el.has(`#${href_parts[1]}`).length) {
             return;
         }
         e.preventDefault();
@@ -89,20 +89,20 @@ class Pattern extends BasePattern {
     _updateAnchors(selected) {
         const $sheets = this.$el.find(this.options.selector);
         const base_url = this._base_URL();
-        $sheets.each(function (idx, sheet) {
+        for (const sheet of $sheets) {
             // This may appear odd, but: when querying a browser uses the
             // original href of an anchor as it appeared in the document
             // source, but when you access the href property you always get
             // the fully qualified version.
-            var $anchors = $(
-                'a[href="' + base_url + "#" + sheet.id + '"],a[href="#' + sheet.id + '"]'
+            const $anchors = $(
+                `a[href="${base_url}#${sheet.id}"], a[href="#${sheet.id}"]`
             );
             if (sheet.id === selected) {
                 $anchors.addClass("current");
             } else {
                 $anchors.removeClass("current");
             }
-        });
+        }
     }
 
     _switch(sheet_id) {
