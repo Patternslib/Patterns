@@ -99,12 +99,15 @@ const inject = {
                         $el.on("submit.pat-inject", this.onTrigger.bind(this))
                             .on(
                                 "click.pat-inject",
-                                "[type=submit]:not([formaction])",
+                                `[type=submit]:not([formaction]),
+                                 button:not([formaction]):not([type=button])`,
                                 ajax.onClickSubmit
                             )
                             .on(
                                 "click.pat-inject",
-                                "[type=submit][formaction], [type=image][formaction]",
+                                `[type=submit][formaction],
+                                 [type=image][formaction],
+                                 button[formaction]:not([type=button])`,
                                 this.onFormActionSubmit.bind(this)
                             );
                     } else if ($el.is(".pat-subform")) {
