@@ -1,7 +1,8 @@
 import $ from "jquery";
 import { BasePattern } from "../../core/basepattern";
-import Parser from "../../core/parser";
+import events from "../../core/events";
 import logging from "../../core/logging";
+import Parser from "../../core/parser";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 
@@ -12,6 +13,11 @@ parser.addArgument("selector", "> *[id]");
 parser.addArgument("transition", "none", ["none", "css", "fade", "slide"]);
 parser.addArgument("effect-duration", "fast");
 parser.addArgument("effect-easing", "swing");
+// pat-scroll support
+parser.addArgument("scroll-selector");
+parser.addArgument("scroll-offset", 0);
+
+const debounce_scroll_timer = { timer: null };
 
 class Pattern extends BasePattern {
     static name = "stacks";
@@ -19,8 +25,27 @@ class Pattern extends BasePattern {
     static parser = parser;
     document = document;
 
-    init() {
+    async init() {
         this.$el = $(this.el);
+
+        // pat-scroll support
+        if (this.options.scroll?.selector && this.options.scroll.selector !== "none") {
+            const Scroll = (await import("../scroll/scroll")).default;
+            this.scroll = new Scroll(this.el, {
+                trigger: "manual",
+                selector: this.options.scroll.selector,
+                offset: this.options.scroll?.offset,
+            });
+            await events.await_pattern_init(this.scroll);
+
+            // scroll debouncer for later use.
+            this.debounce_scroll = utils.debounce(
+                this.scroll.scrollTo.bind(this.scroll),
+                10,
+                debounce_scroll_timer
+            );
+        }
+
         this._setupStack();
         $(this.document).on("click", "a", this._onClick.bind(this));
     }
@@ -78,6 +103,10 @@ class Pattern extends BasePattern {
         e.preventDefault();
         this._updateAnchors(href_parts[1]);
         this._switch(href_parts[1]);
+
+        this.debounce_scroll?.(); // debounce scroll, if available.
+
+        // Notify other patterns
         $(e.target).trigger("pat-update", {
             pattern: "stacks",
             action: "attribute-changed",

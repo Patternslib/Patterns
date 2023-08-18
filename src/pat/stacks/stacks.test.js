@@ -1,6 +1,7 @@
 import $ from "jquery";
 import events from "../../core/events";
 import Stacks from "./stacks";
+import utils from "../../core/utils";
 import { jest } from "@jest/globals";
 
 describe("pat-stacks", function () {
@@ -162,6 +163,67 @@ describe("pat-stacks", function () {
             pattern._updateAnchors("s2");
             expect($("#l1").hasClass("current")).toBe(false);
             expect($("#l2").hasClass("current")).toBe(true);
+        });
+    });
+
+    describe("5 - Scrolling support.", function () {
+        beforeEach(function () {
+            document.body.innerHTML = "";
+            this.spy_scrollTo = jest
+                .spyOn(window, "scrollTo")
+                .mockImplementation(() => null);
+        });
+
+        afterEach(function () {
+            this.spy_scrollTo.mockRestore();
+        });
+
+        it("5.1 - Scrolls to self.", async function () {
+            document.body.innerHTML = `
+                <a href='#s51'>1</a>
+                <div class="pat-stacks" data-pat-stacks="scroll-selector: self">
+                    <section id="s51">
+                    </section>
+                </div>
+            `;
+            const el = document.querySelector(".pat-stacks");
+
+            const instance = new Stacks(el);
+            await events.await_pattern_init(instance);
+
+            const s51 = document.querySelector("[href='#s51']");
+            $(s51).click();
+            await utils.timeout(10);
+
+            expect(this.spy_scrollTo).toHaveBeenCalled();
+        });
+
+        it("5.2 - Does clear scroll setting from parent config.", async function () {
+            // NOTE: We give the stack section a different id.
+            // The event handler which is registered on the document in the
+            // previous test is still attached. Two event handlers are run when
+            // clicking here and if the anchor-targets would have the same id
+            // the scrolling would happen as it was set up in the previous
+            // test.
+            document.body.innerHTML = `
+                <div data-pat-stacks="scroll-selector: self">
+                    <a href='#s52'>1</a>
+                    <div class="pat-stacks" data-pat-stacks="scroll-selector: none">
+                        <section id="s52">
+                        </section>
+                    </div>
+                </div>
+            `;
+            const el = document.querySelector(".pat-stacks");
+
+            const instance = new Stacks(el);
+            await events.await_pattern_init(instance);
+
+            const s52 = document.querySelector("[href='#s52']");
+            $(s52).click();
+            await utils.timeout(10);
+
+            expect(this.spy_scrollTo).not.toHaveBeenCalled();
         });
     });
 });
