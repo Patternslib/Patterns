@@ -1,4 +1,3 @@
-import $ from "jquery";
 import Pattern from "./scroll";
 import events from "../../core/events";
 import utils from "../../core/utils";
@@ -89,25 +88,7 @@ describe("pat-scroll", function () {
         expect(this.spy_scrollTo).toHaveBeenCalled();
     });
 
-    it("5 - will scroll to an anchor on pat-update with originalEvent of click", async function () {
-        document.body.innerHTML = `
-            <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click">p1</a>
-            <p id="p1"></p>
-        `;
-        const $el = $(".pat-scroll");
-
-        const instance = new Pattern($el[0]);
-        await events.await_pattern_init(instance);
-        $el.trigger("pat-update", {
-            pattern: "stacks",
-            originalEvent: {
-                type: "click",
-            },
-        });
-        expect(this.spy_scrollTo).toHaveBeenCalled();
-    });
-
-    it("6 - will allow for programmatic scrolling with trigger set to 'manual'", async function () {
+    it("5 - will allow for programmatic scrolling with trigger set to 'manual'", async function () {
         document.body.innerHTML = `
             <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: manual">p1</a>
             <p id="p1"></p>
@@ -124,7 +105,7 @@ describe("pat-scroll", function () {
         expect(this.spy_scrollTo).toHaveBeenCalled();
     });
 
-    it("7 - will scroll to bottom with selector:bottom", async function () {
+    it("6 - will scroll to bottom with selector:bottom", async function () {
         document.body.innerHTML = `
             <div id="scroll-container" style="overflow-y: scroll">
               <button class="pat-scroll" data-pat-scroll="selector: bottom; trigger: manual">to bottom</button>
@@ -156,7 +137,7 @@ describe("pat-scroll", function () {
         expect(container.scrollTop).toBe(1000);
     });
 
-    it("8 - will add an offset to the scroll position", async function () {
+    it("7 - will add an offset to the scroll position", async function () {
         // Testing with `selector: top`, as this just sets scrollTop to 0
 
         document.body.innerHTML = `
@@ -186,7 +167,7 @@ describe("pat-scroll", function () {
         expect(container.scrollTop).toBe(-40);
     });
 
-    it("9 - will adds a negative offset to scroll position", async function () {
+    it("8 - will adds a negative offset to scroll position", async function () {
         // Testing with `selector: top`, as this just sets scrollTop to 0
 
         document.body.innerHTML = `
@@ -215,7 +196,7 @@ describe("pat-scroll", function () {
         expect(container.scrollTop).toBe(40);
     });
 
-    it("10 - handles different selector options.", async function () {
+    it("9 - handles different selector options.", async function () {
         document.body.innerHTML = `
             <a href="#el3" class="pat-scroll">scroll</a>
             <div id="el1"></div>

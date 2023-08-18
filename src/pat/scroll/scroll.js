@@ -1,4 +1,3 @@
-import $ from "jquery";
 import { BasePattern } from "../../core/basepattern";
 import dom from "../../core/dom";
 import events from "../../core/events";
@@ -35,15 +34,6 @@ class Pattern extends BasePattern {
         }
         if (this.options.trigger === "auto" || this.options.trigger === "click") {
             this.el.addEventListener("click", this.scrollTo.bind(this));
-        }
-        $(this.el).on("pat-update", this.onPatternsUpdate.bind(this));
-    }
-
-    onPatternsUpdate(ev, data) {
-        if (data?.pattern === "stacks") {
-            if (data.originalEvent && data.originalEvent.type === "click") {
-                this.scrollTo();
-            }
         }
     }
 
