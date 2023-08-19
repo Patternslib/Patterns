@@ -1,4 +1,5 @@
 import "../../core/jquery-ext"; // for findInclusive
+import "../../core/polyfills"; // SubmitEvent.submitter for Safari < 15.4 and jsDOM
 import $ from "jquery";
 import ajax from "../ajax/ajax";
 import dom from "../../core/dom";
@@ -47,7 +48,14 @@ const inject = {
     trigger: "a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
     parser: parser,
 
-    init($el, opts) {
+    async init($el, opts) {
+        // We need to wait a tick. Modern BasePattern based patterns like
+        // pat-validation do always wait a tick before initializing. The
+        // patterns registry always initializes pat-validation first but since
+        // it is waiting a tick the event handlers are registerd after the ones
+        // from pat-inject. Waiting a tick in pat-inject solves this -
+        // pat-validation's event handlers are initialized first.
+        await utils.timeout(1);
         const cfgs = this.extractConfig($el, opts);
         if (cfgs.some((e) => e.history === "record") && !("pushState" in history)) {
             // if the injection shall add a history entry and HTML5 pushState
@@ -95,21 +103,29 @@ const inject = {
                         }
                     });
                     // setup event handlers
-                    if ($el.is("form")) {
-                        $el.on("submit.pat-inject", this.onTrigger.bind(this))
-                            .on(
-                                "click.pat-inject",
-                                `[type=submit]:not([formaction]),
-                                 button:not([formaction]):not([type=button])`,
-                                ajax.onClickSubmit
-                            )
-                            .on(
-                                "click.pat-inject",
-                                `[type=submit][formaction],
-                                 [type=image][formaction],
-                                 button[formaction]:not([type=button])`,
-                                this.onFormActionSubmit.bind(this)
+                    if ($el[0]?.tagName === "FORM") {
+                        events.add_event_listener(
+                            $el[0],
+                            "submit",
+                            "pat-inject--form-submit",
+                            (e) => {
+                                this.onTrigger(e);
+                            }
+                        );
+                        for (const button of $el[0].querySelectorAll(
+                            "[type=submit], button:not([type=button]), [type=image]"
+                        )) {
+                            events.add_event_listener(
+                                button,
+                                "click",
+                                "pat-inject--form-submit-click",
+                                (e) => {
+                                    // make sure the submitting button is sent
+                                    // with the form
+                                    ajax.onClickSubmit(e);
+                                }
                             );
+                        }
                     } else if ($el.is(".pat-subform")) {
                         log.debug("Initializing subform with injection");
                     } else {
@@ -165,37 +181,40 @@ const inject = {
         /* Injection has been triggered, either via form submission or a
          * link has been clicked.
          */
-        const $el = $(e.currentTarget);
-        const cfgs = $el.data("pat-inject");
-        if ($el.is("form")) {
-            $(cfgs).each((i, v) => {
-                v.params = $.param($el.serializeArray());
-            });
-        }
+
+        // Prevent the original event from doing it's work.
+        // We want an AJAX request instead.
         e.preventDefault && e.preventDefault();
+
+        const $el = $(e.currentTarget);
+        let cfgs = $el.data("pat-inject");
+        if ($el[0].tagName === "FORM" && e.type === "submit") {
+            if ($el[0].matches(":invalid")) {
+                // Do not submit invalid forms.
+                // Works with native form validation and with pat-validation.
+                log.debug("Form is invalid, aborting");
+                return;
+            }
+
+            const submitter = e.submitter;
+            const formaction = submitter?.getAttribute("formaction");
+            if (formaction) {
+                const opts = {
+                    url: formaction,
+                };
+
+                // Support custom data-pat-inject on formaction buttons.
+                const cfg_node = submitter.closest("[data-pat-inject]");
+                cfgs = this.extractConfig($(cfg_node), opts);
+            }
+
+            for (const cfg of cfgs) {
+                cfg.params = $.param($el.serializeArray());
+            }
+        }
+
         $el.trigger("patterns-inject-triggered");
         this.execute(cfgs, $el);
-    },
-
-    onFormActionSubmit(e) {
-        ajax.onClickSubmit(e); // make sure the submitting button is sent with the form
-
-        const $button = $(e.target);
-        const formaction = $button.attr("formaction");
-        const $form = $button.parents(".pat-inject").first();
-        const opts = {
-            url: formaction,
-        };
-        const $cfg_node = $button.closest("[data-pat-inject]");
-        const cfgs = this.extractConfig($cfg_node, opts);
-
-        $(cfgs).each((i, v) => {
-            v.params = $.param($form.serializeArray());
-        });
-
-        e.preventDefault();
-        $form.trigger("patterns-inject-triggered");
-        this.execute(cfgs, $form);
     },
 
     submitSubform($sub) {

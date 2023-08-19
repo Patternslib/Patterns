@@ -200,6 +200,7 @@ describe("pat-sortable", function () {
         const sortable = new Sortable(el);
         const el_inject = document.querySelector(".pat-inject");
         Inject.init($(el_inject));
+        await utils.timeout(1); // wait a tick for async to settle.
 
         el_inject.click();
         await utils.timeout(1);

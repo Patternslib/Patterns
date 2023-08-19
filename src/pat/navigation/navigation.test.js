@@ -201,6 +201,7 @@ describe("2 - Navigation pattern tests - mark after navigation injection", funct
         set_url("https://patternslib.com/path/to/test");
 
         Registry.scan(document.body);
+        await utils.timeout(1); // wait a tick for async to settle.
 
         const nav = document.querySelector("nav");
         const load_nav = document.querySelector(".load-nav");

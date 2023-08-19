@@ -1,4 +1,5 @@
 import $ from "jquery";
+import events from "../../core/events";
 import pattern from "./modal";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
@@ -81,37 +82,29 @@ describe("pat-modal", function () {
             expect($("body").hasClass("modal-active")).toBeTruthy();
         });
 
-        it("1.4 - Modal with a form that has the pat-modal CSS class", function () {
+        it("1.4 - Modal with a form that has the pat-modal CSS class", async function () {
             var $modal, // main modal container
                 $modalLink; // link that triggers the modal
 
-            $("#lab").html(
-                [
-                    '<a id="modalLink" class="pat-modal"',
-                    '   href="some-page-with-modal.html">Open a modal',
-                    "   containing a form with pat-modal CSS class.</a>",
-                ].join("/n")
-            );
+            $("#lab")[0].innerHTML = `
+                <a id="modalLink"
+                   class="pat-modal"
+                   href="some-page-with-modal.html">
+                    Open a modal containing a form with pat-modal CSS class.
+                </a>
+            `;
 
             $modalLink = $("#modalLink");
-            pattern.init($modalLink);
+            const instance = new pattern($modalLink);
+            await events.await_pattern_init(instance);
 
             // najprej #modalLink ne obstaja
             $modal = $("div#pat-modal");
             expect($modal.length).toBe(0);
 
             $modalLink.click(); // trigger panel loading
+            utils.timeout(1); // wait a tick for async to settle.
 
-            // TODO: we need to insert a delay here so that the asynchronous
-            // AJAX injection of the potentially problematic HTML finishes ...
-            // and only AFTER THAT we test that everything is still OK
-            // (read: that the modal still exists in DOM)
-            // NOTE: If AJAX request in inject.execute() is performed in a
-            // synchronous way, a delay is not need and this test detects a
-            // bug in modal._init_inject1()
-
-            // div#pat-modal should still exist even after the click has
-            // loaded and injected problematic HTML
             $modal = $("div#pat-modal");
             expect($modal.length).toBeGreaterThan(0);
         });
@@ -341,6 +334,7 @@ describe("pat-modal", function () {
 
         el.click();
         await utils.timeout(1); // wait a tick for async to settle.
+        await utils.timeout(1); // wait a tick for async to settle.
 
         expect(document.querySelectorAll("#pat-modal").length).toBe(1);
 
@@ -389,6 +383,7 @@ describe("pat-modal", function () {
         await utils.timeout(1); // wait a tick for async to settle.
 
         el.click();
+        await utils.timeout(1); // wait a tick for async to settle.
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(document.querySelectorAll("#pat-modal").length).toBe(1);

@@ -24,7 +24,7 @@ export default Base.extend({
     // links, forms and subforms inject modals
     trigger: "div.pat-modal, a.pat-modal, form.pat-modal, .pat-modal.pat-subform",
 
-    init($el, opts, trigger) {
+    async init($el, opts, trigger) {
         if (window.__patternslib_import_styles) {
             import("./_modal.scss");
         }
@@ -36,11 +36,11 @@ export default Base.extend({
         if (this.$el.is("div")) {
             this._init_div1();
         } else {
-            this._init_inject1();
+            await this._init_inject1();
         }
     },
 
-    _init_inject1() {
+    async _init_inject1() {
         // This will get remote content via pat-inject, add the pat-modal class
         // to the result and pat-inject's pattern scanning will then call
         // ``_init_div1``.
@@ -67,7 +67,7 @@ export default Base.extend({
             $("#pat-modal").detach();
         });
 
-        inject.init(this.$el, opts);
+        await inject.init(this.$el, opts);
     },
 
     _init_div1() {
