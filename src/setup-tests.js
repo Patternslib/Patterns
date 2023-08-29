@@ -22,3 +22,7 @@ dom.is_visible = (el) => {
 
 // polyfill css.escape for jsdom
 import("css.escape");
+
+// NodeJS polyfill for window.crypto.randomUUID
+import crypto from "crypto";
+window.crypto.randomUUID = () => crypto.randomUUID();
