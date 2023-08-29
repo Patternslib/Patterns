@@ -50,6 +50,10 @@ class Pattern extends BasePattern {
         $(this.document).on("click", "a", this._onClick.bind(this));
     }
 
+    destroy() {
+        $(this.document).off("click", "a", this._onClick.bind(this));
+    }
+
     _setupStack() {
         let selected = this._currentFragment();
         const $sheets = this.$el.find(this.options.selector);
