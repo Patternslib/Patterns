@@ -4,6 +4,14 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.6-alpha.2](https://github.com/Patternslib/patterns/compare/9.9.6-alpha.1...9.9.6-alpha.2) (2023-08-30)
+
+
+### Maintenance
+
+
+* Upgrade pat-tiptap with new tiptap version. ([f0c2602](https://github.com/Patternslib/patterns/commit/f0c26023237d00dad2fb25d2be158995dc6a7b61))
+
 ## [9.9.6-alpha.1](https://github.com/Patternslib/patterns/compare/9.9.6-alpha.0...9.9.6-alpha.1) (2023-08-30)
 
 
