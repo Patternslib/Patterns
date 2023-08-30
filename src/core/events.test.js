@@ -1,22 +1,30 @@
 import Base from "./base";
 import { BasePattern } from "./basepattern";
-import events from "./events";
+import events, { event_listener_map } from "./events";
 import utils from "./utils";
 
 describe("core.events tests", () => {
     describe("1 - add / remove event listener", () => {
-        const _el = {
-            event_list: [],
-            addEventListener(event_type, cb) {
-                this.event_list.push([event_type, cb]);
-            },
-            removeEventListener(event_type, cb) {
-                const idx = this.event_list.indexOf([event_type, cb]);
-                this.event_list.splice(idx, 1);
-            },
-        };
+        afterEach(() => {
+            // Clear event_listener_map after each test.
+            for (const el in event_listener_map) {
+                delete event_listener_map[el];
+            }
+        });
 
         it("Registers events only once and unregisters events.", (done) => {
+            // Mock a DOM element.
+            const _el = {
+                event_list: [],
+                addEventListener(event_type, cb) {
+                    this.event_list.push([event_type, cb]);
+                },
+                removeEventListener(event_type, cb) {
+                    const idx = this.event_list.indexOf([event_type, cb]);
+                    this.event_list.splice(idx, 1);
+                },
+            };
+
             const cb1 = () => {};
             const cb2 = () => {};
 
@@ -50,8 +58,7 @@ describe("core.events tests", () => {
             done();
         });
 
-        it("Supports once-events and unregisters them from the event_listener_map", async () => {
-            const event_listener_map = (await import("./events")).event_listener_map;
+        it("Supports once-events and unregisters them from the event_listener_map", () => {
             const el = document.createElement("div");
 
             // register the once-event handler
@@ -65,6 +72,127 @@ describe("core.events tests", () => {
             expect(event_listener_map[el].test_once_event).not.toBeDefined();
         });
 
+        it("Removes a specific event listener.", () => {
+            const el = document.createElement("div");
+
+            let cnt = 0;
+
+            // register the once-event handler
+            events.add_event_listener(el, "test", "test_event", () => cnt++);
+            expect(event_listener_map[el].test_event).toBeDefined();
+
+            el.dispatchEvent(new Event("test"));
+            expect(cnt).toBe(1);
+
+            el.dispatchEvent(new Event("test"));
+            expect(cnt).toBe(2);
+
+            events.remove_event_listener(el, "test_event");
+
+            // Now the event listener should be removed.
+            expect(event_listener_map[el]?.test_once_event).not.toBeDefined();
+            // Even the element itself should be removed, if there are no more event listeners on it.
+            expect(event_listener_map[el]).not.toBeDefined();
+
+            // counter should not increase anymore
+            el.dispatchEvent(new Event("test"));
+            expect(cnt).toBe(2);
+        });
+
+        it("Remove single and all event listeners from an element, not touching others.", () => {
+            const el1 = document.createElement("div");
+            const el2 = document.createElement("span");
+
+            let cnt1 = 0;
+            let cnt2 = 0;
+            let cnt3 = 0;
+
+            const shared_cb = () => {
+                cnt1++;
+            };
+
+            // register the event handlers
+            events.add_event_listener(el1, "test1", "test_event_1", shared_cb);
+            events.add_event_listener(el1, "test2", "test_event_2", shared_cb);
+            events.add_event_listener(el1, "test3", "test_event_3", () => cnt2++);
+            events.add_event_listener(el2, "test4", "test_event_4", () => cnt3++);
+
+            expect(event_listener_map[el1].test_event_1).toBeDefined();
+            expect(event_listener_map[el1].test_event_2).toBeDefined();
+            expect(event_listener_map[el1].test_event_3).toBeDefined();
+            expect(event_listener_map[el2].test_event_4).toBeDefined();
+
+            expect(Object.keys(event_listener_map).length).toBe(2);
+
+            el1.dispatchEvent(new Event("test1"));
+            expect(cnt1).toBe(1);
+            expect(cnt2).toBe(0);
+            expect(cnt3).toBe(0);
+
+            el1.dispatchEvent(new Event("test1"));
+            expect(cnt1).toBe(2);
+            expect(cnt2).toBe(0);
+            expect(cnt3).toBe(0);
+
+            el1.dispatchEvent(new Event("test2"));
+            expect(cnt1).toBe(3);
+            expect(cnt2).toBe(0);
+            expect(cnt3).toBe(0);
+
+            el1.dispatchEvent(new Event("test3"));
+            expect(cnt1).toBe(3);
+            expect(cnt2).toBe(1);
+            expect(cnt3).toBe(0);
+
+            el2.dispatchEvent(new Event("test4"));
+            expect(cnt1).toBe(3);
+            expect(cnt2).toBe(1);
+            expect(cnt3).toBe(1);
+
+            // Remove only test_event_1
+            events.remove_event_listener(el1, "test_event_1");
+            expect(event_listener_map[el1].test_event_1).not.toBeDefined();
+            expect(event_listener_map[el1].test_event_2).toBeDefined();
+            expect(event_listener_map[el1].test_event_3).toBeDefined();
+            expect(event_listener_map[el2].test_event_4).toBeDefined();
+            expect(Object.keys(event_listener_map).length).toBe(2);
+
+            // Counter should not increase anymore on event "test1"
+            el1.dispatchEvent(new Event("test1"));
+            expect(cnt1).toBe(3);
+            expect(cnt2).toBe(1);
+            expect(cnt3).toBe(1);
+
+            // Rest should not be affected.
+            el1.dispatchEvent(new Event("test2"));
+            el1.dispatchEvent(new Event("test3"));
+            el2.dispatchEvent(new Event("test4"));
+            expect(cnt1).toBe(4);
+            expect(cnt2).toBe(2);
+            expect(cnt3).toBe(2);
+
+            // Remove all event handler on el1
+            events.remove_event_listener(el1);
+            expect(event_listener_map[el1]).not.toBeDefined();
+            expect(Object.keys(event_listener_map).length).toBe(1);
+
+            // Counter should not increase anymore on el1
+            el1.dispatchEvent(new Event("test1"));
+            el1.dispatchEvent(new Event("test2"));
+            el1.dispatchEvent(new Event("test3"));
+            expect(cnt1).toBe(4);
+            expect(cnt2).toBe(2);
+            expect(cnt3).toBe(2);
+
+            // But el2 should still work.
+            el2.dispatchEvent(new Event("test4"));
+            expect(cnt1).toBe(4);
+            expect(cnt2).toBe(2);
+            expect(cnt3).toBe(3);
+        });
+    });
+
+    describe("2 - await pattern initialization", () => {
         it("Awaits an event to happen.", async () => {
             const el = document.createElement("div");
 
@@ -164,7 +292,7 @@ describe("core.events tests", () => {
         });
     });
 
-    describe("2 - event factories", () => {
+    describe("3 - event factories", () => {
         let catched;
         let outer;
         let inner;
@@ -287,7 +415,7 @@ describe("core.events tests", () => {
         });
     });
 
-    describe("3 - jQuery vs native", () => {
+    describe("4 - jQuery vs native", () => {
         // These tests show an annoying difference between jQuery and native
         // JavaScript events. jQuery catches native JavaScript events, which is
         // good. But events triggered by jQuery are not compatibel with native
@@ -324,7 +452,7 @@ describe("core.events tests", () => {
         });
     });
 
-    describe("4 - Special DOM behavior", () => {
+    describe("5 - Special DOM behavior", () => {
         afterEach(() => {
             document.body.innerHTML = "";
         });

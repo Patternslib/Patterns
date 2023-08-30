@@ -58,13 +58,19 @@ const remove_event_listener = (el, id) => {
     if (id) {
         // remove event listener with specific id
         const entry = el_events[id];
-        entries = entry ? [entry] : [];
+        entries = entry ? [[id, entry]] : [];
     } else {
         // remove all event listeners of element
         entries = Object.entries(el_events);
     }
     for (const entry of entries || []) {
-        el.removeEventListener(entry[0], entry[1], entry[2]);
+        el.removeEventListener(entry[1][0], entry[1][1], entry[1][2]);
+        // Delete entry from event_listener_map
+        delete event_listener_map[el][entry[0]];
+        // Delete element from event_listener_map if no more events are registered.
+        if (!Object.keys(event_listener_map[el]).length) {
+            delete event_listener_map[el];
+        }
     }
 };
 
