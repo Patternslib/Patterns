@@ -169,7 +169,7 @@ describe("core.events tests", () => {
             expect(cnt2).toBe(2);
             expect(cnt3).toBe(2);
 
-            // Remove all event handler on el1
+            // Remove all event handlers on el1
             events.remove_event_listener(el1);
             expect(event_listener_map.get(el1)).not.toBeDefined();
             expect(event_listener_map.size).toBe(1);
@@ -187,6 +187,121 @@ describe("core.events tests", () => {
             expect(cnt1).toBe(4);
             expect(cnt2).toBe(2);
             expect(cnt3).toBe(3);
+        });
+
+        it("Remove all events matching exactly an id from any element.", () => {
+            const el1 = document.createElement("div");
+            const el2 = document.createElement("div");
+
+            let cnt1 = 0;
+            let cnt2 = 0;
+            let cnt3 = 0;
+
+            const shared_cb = () => {
+                cnt1++;
+            };
+
+            // register the event handlers
+            events.add_event_listener(el1, "test1", "test_event_1", shared_cb);
+            events.add_event_listener(el1, "test2", "test_event_2", shared_cb);
+            events.add_event_listener(el1, "test3", "test_event_3", () => cnt2++);
+            events.add_event_listener(el2, "test4", "test_event_4", () => cnt3++);
+
+            expect(event_listener_map.get(el1).get("test_event_1")).toBeDefined();
+            expect(event_listener_map.get(el1).get("test_event_2")).toBeDefined();
+            expect(event_listener_map.get(el1).get("test_event_3")).toBeDefined();
+            expect(event_listener_map.get(el2).get("test_event_4")).toBeDefined();
+
+            expect(event_listener_map.size).toBe(2);
+
+            el1.dispatchEvent(new Event("test1"));
+            expect(cnt1).toBe(1);
+            expect(cnt2).toBe(0);
+            expect(cnt3).toBe(0);
+
+            el1.dispatchEvent(new Event("test1"));
+            expect(cnt1).toBe(2);
+            expect(cnt2).toBe(0);
+            expect(cnt3).toBe(0);
+
+            el1.dispatchEvent(new Event("test2"));
+            expect(cnt1).toBe(3);
+            expect(cnt2).toBe(0);
+            expect(cnt3).toBe(0);
+
+            el1.dispatchEvent(new Event("test3"));
+            expect(cnt1).toBe(3);
+            expect(cnt2).toBe(1);
+            expect(cnt3).toBe(0);
+
+            el2.dispatchEvent(new Event("test4"));
+            expect(cnt1).toBe(3);
+            expect(cnt2).toBe(1);
+            expect(cnt3).toBe(1);
+
+            // Remove only test_event_1
+            events.remove_event_listener(undefined, "test_event_1");
+            expect(event_listener_map.get(el1).get("test_event_1")).not.toBeDefined();
+            expect(event_listener_map.get(el1).get("test_event_2")).toBeDefined();
+            expect(event_listener_map.get(el1).get("test_event_3")).toBeDefined();
+            expect(event_listener_map.get(el2).get("test_event_4")).toBeDefined();
+            expect(event_listener_map.size).toBe(2);
+
+            // Counter should not increase anymore on event "test1"
+            el1.dispatchEvent(new Event("test1"));
+            expect(cnt1).toBe(3);
+            expect(cnt2).toBe(1);
+            expect(cnt3).toBe(1);
+
+            // Rest should not be affected.
+            el1.dispatchEvent(new Event("test2"));
+            el1.dispatchEvent(new Event("test3"));
+            el2.dispatchEvent(new Event("test4"));
+            expect(cnt1).toBe(4);
+            expect(cnt2).toBe(2);
+            expect(cnt3).toBe(2);
+
+            // Remove rest of event handlers on el1
+            events.remove_event_listener(undefined, "test_event_2");
+            events.remove_event_listener(undefined, "test_event_3");
+            expect(event_listener_map.get(el1)).not.toBeDefined();
+            expect(event_listener_map.size).toBe(1);
+
+            // Counter should not increase anymore on el1
+            el1.dispatchEvent(new Event("test1"));
+            el1.dispatchEvent(new Event("test2"));
+            el1.dispatchEvent(new Event("test3"));
+            expect(cnt1).toBe(4);
+            expect(cnt2).toBe(2);
+            expect(cnt3).toBe(2);
+
+            // But el2 should still work.
+            el2.dispatchEvent(new Event("test4"));
+            expect(cnt1).toBe(4);
+            expect(cnt2).toBe(2);
+            expect(cnt3).toBe(3);
+        });
+
+        it("Remove all event listeners at once.", () => {
+            const el1 = document.createElement("div");
+            const el2 = document.createElement("div");
+
+            // register the event handlers
+            events.add_event_listener(el1, "test1", "test_event_1", () => {});
+            events.add_event_listener(el1, "test2", "test_event_2", () => {});
+            events.add_event_listener(el1, "test3", "test_event_3", () => {});
+            events.add_event_listener(el2, "test4", "test_event_4", () => {});
+
+            expect(event_listener_map.get(el1).get("test_event_1")).toBeDefined();
+            expect(event_listener_map.get(el1).get("test_event_2")).toBeDefined();
+            expect(event_listener_map.get(el1).get("test_event_3")).toBeDefined();
+            expect(event_listener_map.get(el2).get("test_event_4")).toBeDefined();
+
+            expect(event_listener_map.size).toBe(2);
+
+            // Remove all event listeners
+            events.remove_event_listener();
+            expect(event_listener_map.size).toBe(0);
         });
     });
 

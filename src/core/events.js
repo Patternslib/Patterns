@@ -44,34 +44,43 @@ const add_event_listener = (el, event_type, id, cb, opts = {}) => {
 /**
  * Remove an event listener from a DOM element under a unique id.
  *
- * @param {DOM Node} el - The element to register the event for.
- * @param {string} id - A unique id under which the event is registered.
+ * If an element and id are given, the event listeners for the given element matching the id are removed.
+ * If an element but no id is given, all event listeners for that element are removed.
+ * If an id but no element is given, all event listeners for any element matching the id are removed.
+ * If no element and no id are given, all event listeners are removed.
+ *
+ * @param {DOM Node} [el] - The element to register the event for.
+ * @param {string} [id] - A unique id under which the event is registered.
  *
  */
 const remove_event_listener = (el, id) => {
-    if (!el?.removeEventListener) {
-        return; // nothing to do.
-    }
-    const el_events = event_listener_map.get(el);
-    if (!el_events) {
-        return;
-    }
-    let entries;
-    if (id) {
-        // remove event listener with specific id
-        const entry = el_events.get(id);
-        entries = entry ? [[id, entry]] : [];
-    } else {
-        // remove all event listeners of element
-        entries = el_events.entries();
-    }
-    for (const entry of entries || []) {
-        el.removeEventListener(entry[1][0], entry[1][1], entry[1][2]);
-        // Delete entry from event_listener_map
-        event_listener_map.get(el).delete(entry[0]);
-        // Delete element from event_listener_map if no more events are registered.
-        if (!event_listener_map.get(el).size) {
-            event_listener_map.delete(el);
+    const els = el ? [el] : event_listener_map.keys();
+    for (const el of els) {
+        if (!el?.removeEventListener) {
+            return; // nothing to do.
+        }
+        const el_events = event_listener_map.get(el);
+        if (!el_events) {
+            return;
+        }
+        let entries;
+        if (id) {
+            // remove event listener with specific id
+            const entry = el_events.get(id);
+            entries = entry ? [[id, entry]] : [];
+        } else {
+            // remove all event listeners of element
+            entries = el_events.entries();
+        }
+        for (const entry of entries || []) {
+            // Remove event listener
+            el.removeEventListener(entry[1][0], entry[1][1], entry[1][2]);
+            // Delete entry from event_listener_map
+            event_listener_map.get(el).delete(entry[0]);
+            // Delete element from event_listener_map if no more events are registered.
+            if (!event_listener_map.get(el).size) {
+                event_listener_map.delete(el);
+            }
         }
     }
 };
