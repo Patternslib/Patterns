@@ -3,7 +3,7 @@
 // Event listener registration for easy-to-remove event listeners.
 // once Safari supports the ``signal`` option for addEventListener we can abort
 // event handlers by calling AbortController.abort().
-export const event_listener_map = {};
+export const event_listener_map = new Map();
 
 /**
  * Add an event listener to a DOM element under a unique id.
@@ -23,19 +23,21 @@ const add_event_listener = (el, event_type, id, cb, opts = {}) => {
     remove_event_listener(el, id); // do not register one listener twice.
 
     // Create event_listener_map entry if not existent.
-    if (!event_listener_map[el]) {
-        event_listener_map[el] = {};
+    if (!event_listener_map.has(el)) {
+        event_listener_map.set(el, new Map());
     }
     let _cb = cb;
     if (opts?.once === true) {
         // For `once` events, also remove the entry from the event_listener_map.
         _cb = (e) => {
-            delete event_listener_map[el][id];
+            event_listener_map.get(el)?.delete(id);
             cb(e);
         };
     }
     // Only `capture` option is necessary for `removeEventListener`.
-    event_listener_map[el][id] = [event_type, _cb, opts.capture ? opts : undefined];
+    event_listener_map
+        .get(el)
+        .set(id, [event_type, _cb, opts.capture ? opts : undefined]);
     el.addEventListener(event_type, _cb, opts);
 };
 
@@ -50,26 +52,26 @@ const remove_event_listener = (el, id) => {
     if (!el?.removeEventListener) {
         return; // nothing to do.
     }
-    const el_events = event_listener_map[el];
+    const el_events = event_listener_map.get(el);
     if (!el_events) {
         return;
     }
     let entries;
     if (id) {
         // remove event listener with specific id
-        const entry = el_events[id];
+        const entry = el_events.get(id);
         entries = entry ? [[id, entry]] : [];
     } else {
         // remove all event listeners of element
-        entries = Object.entries(el_events);
+        entries = el_events.entries();
     }
     for (const entry of entries || []) {
         el.removeEventListener(entry[1][0], entry[1][1], entry[1][2]);
         // Delete entry from event_listener_map
-        delete event_listener_map[el][entry[0]];
+        event_listener_map.get(el).delete(entry[0]);
         // Delete element from event_listener_map if no more events are registered.
-        if (!Object.keys(event_listener_map[el]).length) {
-            delete event_listener_map[el];
+        if (!event_listener_map.get(el).size) {
+            event_listener_map.delete(el);
         }
     }
 };
