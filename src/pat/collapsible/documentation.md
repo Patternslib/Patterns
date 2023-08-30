@@ -170,4 +170,4 @@ attribute. The available options are:
 | `effect-duration` | `fast`    | Duration of transition. This is ignored if the transition is `none` or `css`.                                                                                        |
 | `effect-easing`   | `swing`   | Easing to use for the open/close animation. This must be a known jQuery easing method. jQuery includes `swing` and `linear`, but more can be included via jQuery UI. |
 | `scroll-selector` |           | CSS selector, `self` or `none`. Defines which element will be scrolled into view. `self` if it is the collapsible element itself. `none` to disable scrolling if a scrolling selector is inherited from a parent pat-collapsible element. |
-| `scroll-offset`   |           | `offset` in pixels to stop scrolling before the target position defines by `scroll-selector`. Can also be a negative number.                                         |
+| `scroll-offset`   |           | `offset` in pixels to stop scrolling before the target position defined by `scroll-selector`. Can also be a negative number.                                         |
