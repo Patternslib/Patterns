@@ -4,6 +4,56 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.6-alpha.1](https://github.com/Patternslib/patterns/compare/9.9.6-alpha.0...9.9.6-alpha.1) (2023-08-30)
+
+
+### Breaking Changes
+
+
+* **pat-scroll:** Remove implicit and unpreventable scroll support for pat-stacks. ([92e1e6b](https://github.com/Patternslib/patterns/commit/92e1e6b7f7a0e952ac8831e67c5567e1c6907f24))
+
+  With a pat-scroll as parent of a pat-stacks enabled navigation anchors,
+the page would scroll to the target configured for pat-scroll. This
+behavior could not be prevented and led to unwanted effects when using
+pat-stacks inside pat-collapsible which itself uses pat-scroll when
+configured properly.
+
+This commit removes the scrolling support for pat-stacks within
+pat-scroll in favor of an explicit and configurable scrolling behavior
+in pat-stacks itself.
+
+
+
+### Features
+
+
+* **core dom:** Add dom.element_uuid to get/set an uuid to a DOM node. ([a7e5de1](https://github.com/Patternslib/patterns/commit/a7e5de149178796ce956386b7b76fb5d98ea8c7e))
+
+
+* **pat stacks:** Add a destroy method to unregister event handlers. ([8479cfa](https://github.com/Patternslib/patterns/commit/8479cfa170a20a863d36b65309c9706f67b33bd9))
+
+
+* **pat-stacks:** Add configurable scroll support. ([a8aae63](https://github.com/Patternslib/patterns/commit/a8aae6365c79ad22336cb77d711e21e4fcfee05e))
+
+  Add "scroll-selector" and "scroll-offset" arguments to pat-stacks,
+likewise as in pat-collapsible. "scroll-selector" accepts a CSS selector
+string or the special values "self" to scroll to the element itself and
+"none" to block any scrolling behavior from parent pat-stacks configuration
+options.
+
+With these configuration options you can control the scrolling behavior
+for pat-stacks on a fine-grained level.
+
+
+
+### Maintenance
+
+
+* **pat-stacks:** Adapt code to Patternslib standards. ([2f95379](https://github.com/Patternslib/patterns/commit/2f95379c136d7b21097e9936c0bb3b3d5e21fc23))
+
+
+* Upgrade dependencies. ([9bd50b8](https://github.com/Patternslib/patterns/commit/9bd50b843fa7370432d4995285eec917ba52234c))
+
 ## [9.9.6-alpha.0](https://github.com/Patternslib/patterns/compare/9.9.5...9.9.6-alpha.0) (2023-08-11)
 
 
