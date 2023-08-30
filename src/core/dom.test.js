@@ -874,3 +874,32 @@ describe("escape_css_id", function () {
         expect(dom.escape_css_id("#-1-2-3")).toBe("#-\\31 -2-3");
     });
 });
+
+describe("element_uuid", function () {
+    it("returns a UUIDv4 for an element", function () {
+        const el = document.createElement("div");
+        const uuid = dom.element_uuid(el);
+        expect(uuid).toMatch(
+            /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+        );
+
+        // The UUID isn't created anew when called again.
+        expect(dom.element_uuid(el)).toBe(uuid);
+    });
+
+    it("returns a sufficiently unique id for an element", function () {
+        // Mock window.crypto.randomUUID not existing, like in browser with
+        // non-secure context.
+        const orig_randomUUID = window.crypto.randomUUID;
+        window.crypto.randomUUID = undefined;
+
+        const el = document.createElement("div");
+        const uuid = dom.element_uuid(el);
+        expect(uuid).toMatch(/^[0-9]*$/);
+
+        // The UUID isn't created anew when called again.
+        expect(dom.element_uuid(el)).toBe(uuid);
+
+        window.crypto.randomUUID = orig_randomUUID;
+    });
+});

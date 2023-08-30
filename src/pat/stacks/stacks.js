@@ -1,7 +1,8 @@
 import $ from "jquery";
 import { BasePattern } from "../../core/basepattern";
-import Parser from "../../core/parser";
+import events from "../../core/events";
 import logging from "../../core/logging";
+import Parser from "../../core/parser";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 
@@ -12,6 +13,11 @@ parser.addArgument("selector", "> *[id]");
 parser.addArgument("transition", "none", ["none", "css", "fade", "slide"]);
 parser.addArgument("effect-duration", "fast");
 parser.addArgument("effect-easing", "swing");
+// pat-scroll support
+parser.addArgument("scroll-selector");
+parser.addArgument("scroll-offset", 0);
+
+const debounce_scroll_timer = { timer: null };
 
 class Pattern extends BasePattern {
     static name = "stacks";
@@ -19,10 +25,33 @@ class Pattern extends BasePattern {
     static parser = parser;
     document = document;
 
-    init() {
+    async init() {
         this.$el = $(this.el);
+
+        // pat-scroll support
+        if (this.options.scroll?.selector && this.options.scroll.selector !== "none") {
+            const Scroll = (await import("../scroll/scroll")).default;
+            this.scroll = new Scroll(this.el, {
+                trigger: "manual",
+                selector: this.options.scroll.selector,
+                offset: this.options.scroll?.offset,
+            });
+            await events.await_pattern_init(this.scroll);
+
+            // scroll debouncer for later use.
+            this.debounce_scroll = utils.debounce(
+                this.scroll.scrollTo.bind(this.scroll),
+                10,
+                debounce_scroll_timer
+            );
+        }
+
         this._setupStack();
         $(this.document).on("click", "a", this._onClick.bind(this));
+    }
+
+    destroy() {
+        $(this.document).off("click", "a", this._onClick.bind(this));
     }
 
     _setupStack() {
@@ -72,12 +101,16 @@ class Pattern extends BasePattern {
         if (base_url !== href_parts[0] || !href_parts[1]) {
             return;
         }
-        if (!this.$el.has("#" + href_parts[1]).length) {
+        if (!this.$el.has(`#${href_parts[1]}`).length) {
             return;
         }
         e.preventDefault();
         this._updateAnchors(href_parts[1]);
         this._switch(href_parts[1]);
+
+        this.debounce_scroll?.(); // debounce scroll, if available.
+
+        // Notify other patterns
         $(e.target).trigger("pat-update", {
             pattern: "stacks",
             action: "attribute-changed",
@@ -89,20 +122,20 @@ class Pattern extends BasePattern {
     _updateAnchors(selected) {
         const $sheets = this.$el.find(this.options.selector);
         const base_url = this._base_URL();
-        $sheets.each(function (idx, sheet) {
+        for (const sheet of $sheets) {
             // This may appear odd, but: when querying a browser uses the
             // original href of an anchor as it appeared in the document
             // source, but when you access the href property you always get
             // the fully qualified version.
-            var $anchors = $(
-                'a[href="' + base_url + "#" + sheet.id + '"],a[href="#' + sheet.id + '"]'
+            const $anchors = $(
+                `a[href="${base_url}#${sheet.id}"], a[href="#${sheet.id}"]`
             );
             if (sheet.id === selected) {
                 $anchors.addClass("current");
             } else {
                 $anchors.removeClass("current");
             }
-        });
+        }
     }
 
     _switch(sheet_id) {

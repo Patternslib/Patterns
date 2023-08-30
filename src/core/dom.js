@@ -529,6 +529,34 @@ const escape_css_id = (id) => {
     return `#${CSS.escape(id.split("#")[1])}`;
 };
 
+/**
+ * Get a universally unique id (uuid) for a DOM element.
+ *
+ * This method returns a uuid for the given element. On the first call it will
+ * generate a uuid and store it on the element.
+ *
+ * @param {Node} el - The DOM node to get the uuid for.
+ * @returns {String} - The uuid.
+ */
+const element_uuid = (el) => {
+    if (!get_data(el, "uuid", false)) {
+        let uuid;
+        if (window.crypto.randomUUID) {
+            // Create a real UUID
+            // window.crypto.randomUUID does only exist in browsers with secure
+            // context.
+            // See: https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomUUID
+            uuid = window.crypto.randomUUID();
+        } else {
+            // Create a sufficiently unique ID
+            const array = new Uint32Array(4);
+            uuid = window.crypto.getRandomValues(array).join("");
+        }
+        set_data(el, "uuid", uuid);
+    }
+    return get_data(el, "uuid");
+};
+
 const dom = {
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
@@ -556,6 +584,7 @@ const dom = {
     template: template,
     get_visible_ratio: get_visible_ratio,
     escape_css_id: escape_css_id,
+    element_uuid: element_uuid,
     add_event_listener: events.add_event_listener, // BBB export. TODO: Remove in an upcoming version.
     remove_event_listener: events.remove_event_listener, // BBB export. TODO: Remove in an upcoming version.
 };
