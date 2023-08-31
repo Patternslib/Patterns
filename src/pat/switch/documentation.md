@@ -20,8 +20,8 @@ This pattern takes three properties:
 
 -   `selector`: the CSS selector identifying the elements that must be
     updated
--   `remove`: the class that should be added
--   `add`: a class that should be removed
+-   `remove`: the class that should be removed
+-   `add`: a class that should be added
 
 You must provide the selector and at least one of _remove_ or _add_.
 
