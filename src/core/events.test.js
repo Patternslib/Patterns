@@ -303,6 +303,41 @@ describe("core.events tests", () => {
             events.remove_event_listener();
             expect(event_listener_map.size).toBe(0);
         });
+
+        it("Remove wildcard matching event listeners.", () => {
+            const el = document.createElement("div");
+
+            // register the event handlers
+            events.add_event_listener(el, "test", "test_event_1", () => {});
+            events.add_event_listener(el, "test", "test_event_2", () => {});
+            events.add_event_listener(el, "test", "test_event_3", () => {});
+
+            events.add_event_listener(el, "test", "a_aha", () => {});
+            events.add_event_listener(el, "test", "b_aha", () => {});
+            events.add_event_listener(el, "test", "c_aha", () => {});
+
+            events.add_event_listener(el, "test", "ok_aha_ok", () => {});
+            events.add_event_listener(el, "test", "ok_bhb_ok", () => {});
+            events.add_event_listener(el, "test", "ok_chc_ok", () => {});
+
+            events.add_event_listener(el, "test", "oh_aha_ok", () => {});
+            events.add_event_listener(el, "test", "ah_bhb_ok", () => {});
+            events.add_event_listener(el, "test", "uh_chc_ok", () => {});
+
+            expect(event_listener_map.get(el).size).toBe(12);
+
+            events.remove_event_listener(el, "test_event_*");
+            expect(event_listener_map.get(el).size).toBe(9);
+
+            events.remove_event_listener(el, "*_aha");
+            expect(event_listener_map.get(el).size).toBe(6);
+
+            events.remove_event_listener(el, "ok_*_ok");
+            expect(event_listener_map.get(el).size).toBe(3);
+
+            events.remove_event_listener(el, "*h_*_ok");
+            expect(event_listener_map.get(el)).not.toBeDefined();
+        });
     });
 
     describe("2 - await pattern initialization", () => {

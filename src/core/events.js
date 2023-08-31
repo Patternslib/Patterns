@@ -1,3 +1,5 @@
+import utils from "./utils";
+
 // Event related methods and event factories
 
 // Event listener registration for easy-to-remove event listeners.
@@ -49,8 +51,14 @@ const add_event_listener = (el, event_type, id, cb, opts = {}) => {
  * If an id but no element is given, all event listeners for any element matching the id are removed.
  * If no element and no id are given, all event listeners are removed.
  *
+ * The id can be a wildcard string, e.g. `test-*-event`, which would match any
+ * event which starts with "test-" and ends with "-event". The wildcard "*" can
+ * be anywhere in the string and also be used multiple times. If no wildcard is
+ * present the search string is used for an exact match.
+ *
  * @param {DOM Node} [el] - The element to register the event for.
  * @param {string} [id] - A unique id under which the event is registered.
+ *                        Can be a wildcard string.
  *
  */
 const remove_event_listener = (el, id) => {
@@ -65,9 +73,10 @@ const remove_event_listener = (el, id) => {
         }
         let entries;
         if (id) {
-            // remove event listener with specific id
-            const entry = el_events.get(id);
-            entries = entry ? [[id, entry]] : [];
+            // remove event listener with matching id
+            entries = [...el_events.entries()].filter((entry) =>
+                utils.regexp_from_wildcard(id).test(entry[0])
+            );
         } else {
             // remove all event listeners of element
             entries = el_events.entries();
