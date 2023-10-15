@@ -1,6 +1,7 @@
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
+import events from "../../core/events";
 import utils from "../../core/utils";
 import "../../core/jquery-ext";
 
@@ -121,7 +122,7 @@ export default Base.extend({
         );
         for (const box of chkbxs) {
             box.checked = true;
-            box.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
+            box.dispatchEvent(events.change_event());
         }
     },
 
@@ -130,7 +131,7 @@ export default Base.extend({
         const chkbxs = this.find_checkboxes(e.target, "input[type=checkbox]:checked");
         for (const box of chkbxs) {
             box.checked = false;
-            box.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
+            box.dispatchEvent(events.change_event());
         }
     },
 
@@ -140,7 +141,7 @@ export default Base.extend({
         const chkbxs = this.find_checkboxes(e.target, "input[type=checkbox]");
         for (const box of chkbxs) {
             box.checked = checked;
-            box.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
+            box.dispatchEvent(events.change_event());
         }
     },
 
