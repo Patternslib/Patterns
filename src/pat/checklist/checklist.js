@@ -1,6 +1,7 @@
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
+import events from "../../core/events";
 import utils from "../../core/utils";
 import "../../core/jquery-ext";
 
@@ -22,6 +23,12 @@ export default Base.extend({
     init() {
         this.options = parser.parse(this.el, this.options, false);
         this.$el.on("patterns-injected", this._init.bind(this));
+
+        this.change_handler = utils.debounce(() => {
+            this.change_buttons_and_toggles();
+            this.change_checked();
+        }, 50);
+
         this._init();
     },
 
@@ -31,38 +38,56 @@ export default Base.extend({
 
         this.all_selects = dom.find_scoped(this.el, this.options.select);
         for (const btn of this.all_selects) {
-            btn.addEventListener("click", this.select_all.bind(this));
+            events.add_event_listener(
+                btn,
+                "click",
+                "pat-checklist--select-all--click",
+                this.select_all.bind(this)
+            );
         }
 
         this.all_deselects = dom.find_scoped(this.el, this.options.deselect);
         for (const btn of this.all_deselects) {
-            btn.addEventListener("click", this.deselect_all.bind(this));
+            events.add_event_listener(
+                btn,
+                "click",
+                "pat-checklist--deselect-all--click",
+                this.deselect_all.bind(this)
+            );
         }
 
         this.all_toggles = dom.find_scoped(this.el, this.options.toggle);
         for (const btn of this.all_toggles) {
-            btn.addEventListener("click", this.toggle_all.bind(this));
+            events.add_event_listener(
+                btn,
+                "click",
+                "pat-checklist--toggle-all--click",
+                this.toggle_all.bind(this)
+            );
         }
 
         // update select/deselect button status
-        this.el.addEventListener("change", this._handler_change.bind(this));
         this.change_buttons_and_toggles();
         this.change_checked();
-    },
-
-    _handler_change() {
-        utils.debounce(() => this.change_buttons_and_toggles(), 50)();
-        utils.debounce(() => this.change_checked(), 50)();
+        events.add_event_listener(
+            this.el,
+            "change",
+            "pat-checklist--change-handler--change",
+            this.change_handler.bind(this)
+        );
     },
 
     destroy() {
         for (const it of this.all_selects) {
-            it.removeEventListener("click", this.select_all);
+            events.remove_event_listener(it, "pat-checklist--select-all--click");
         }
         for (const it of this.all_deselects) {
-            it.removeEventListener("click", this.deselect_all);
+            events.remove_event_listener(it, "pat-checklist--deselect-all--click");
         }
-        this.el.removeEventListener("change", this._handler_change);
+        for (const it of this.all_toggles) {
+            events.remove_event_listener(it, "pat-checklist--toggle-all--click");
+        }
+        events.remove_event_listener(this.el, "pat-checklist--change-handler--change");
         this.$el.off("patterns_injected");
     },
 
@@ -121,7 +146,7 @@ export default Base.extend({
         );
         for (const box of chkbxs) {
             box.checked = true;
-            box.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
+            box.dispatchEvent(events.change_event());
         }
     },
 
@@ -130,7 +155,7 @@ export default Base.extend({
         const chkbxs = this.find_checkboxes(e.target, "input[type=checkbox]:checked");
         for (const box of chkbxs) {
             box.checked = false;
-            box.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
+            box.dispatchEvent(events.change_event());
         }
     },
 
@@ -140,7 +165,7 @@ export default Base.extend({
         const chkbxs = this.find_checkboxes(e.target, "input[type=checkbox]");
         for (const box of chkbxs) {
             box.checked = checked;
-            box.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
+            box.dispatchEvent(events.change_event());
         }
     },
 

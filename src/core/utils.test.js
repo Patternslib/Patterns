@@ -161,6 +161,29 @@ describe("basic tests", function () {
     });
 });
 
+describe("regexp_from_wildcard", function () {
+    it("creates regular expressions from wildcard strings", function () {
+        let regex = utils.regexp_from_wildcard("test-*-tset");
+        expect(regex.test("test-abcd-defg-tset")).toBe(true);
+        expect(regex.test("tset-abcd-defg-test")).toBe(false);
+
+        regex = utils.regexp_from_wildcard("*-test");
+        expect(regex.test("abdc-test")).toBe(true);
+        expect(regex.test("abdc-wxyz")).toBe(false);
+
+        regex = utils.regexp_from_wildcard("test-*");
+        expect(regex.test("test-abcd")).toBe(true);
+        expect(regex.test("abdc-wxyz")).toBe(false);
+
+        regex = utils.regexp_from_wildcard("*-test-*");
+        expect(regex.test("abcd-test-wxyz")).toBe(true);
+        expect(regex.test("abcd-efgh-wxyz")).toBe(false);
+
+        regex = utils.regexp_from_wildcard("*");
+        expect(regex.test("abcd")).toBe(true);
+    });
+});
+
 describe("removeWildcardClass", function () {
     describe("... with single element", function () {
         it("Remove basic class", function () {

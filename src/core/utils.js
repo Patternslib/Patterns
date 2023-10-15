@@ -176,6 +176,23 @@ function escapeRegExp(str) {
 }
 
 /**
+ * Create a RegExp object of a wildcard search string.
+ *
+ * @param {string} wildcard: A search string which can contain wildcards "*".
+ *                           The wildcard "*" can be anywhere in the string and
+ *                           can also be used multiple times. If no wildcard is
+ *                           present the search string is used for an exact match.
+
+ * @returns {RegExp}: A RegExp object which can be used to match strings.
+ */
+function regexp_from_wildcard(wildcard) {
+    let regexp = wildcard.replace(/[\-\[\]{}()+?.,\\\^$|#\s]/g, "\\$&");
+    regexp = regexp.replace(/[*]/g, ".*");
+    regexp = new RegExp(`^${regexp}$`);
+    return regexp;
+}
+
+/**
  * Remove classes from a list of targets if they match a specific pattern.
  *
  * @param {Node, NodeList} targets: Dom Node or NodeList where the classes should be removed.
@@ -193,10 +210,7 @@ function removeWildcardClass(targets, classes) {
             target.classList.remove(classes);
         }
     } else {
-        let matcher = classes.replace(/[\-\[\]{}()+?.,\\\^$|#\s]/g, "\\$&");
-        matcher = matcher.replace(/[*]/g, ".*");
-        matcher = new RegExp("^" + matcher + "$");
-
+        const matcher = regexp_from_wildcard(classes);
         for (const target of targets) {
             const class_list = (target.getAttribute("class") || "").split(/\s+/);
             if (!class_list.length) {
@@ -561,7 +575,10 @@ const timeout = (ms) => {
  * @param {Function} func - The function to debounce.
  * @param {Number} ms - The time in milliseconds to debounce.
  * @param {Object} timer - A module-global timer as an object.
- * @param {Boolean} postpone - If true, the function will be called after it stops being called for N milliseconds.
+ * @param {Boolean} [postpone=true] - If true, the function will only be called
+ * at the end, after it stops being called for N milliseconds. If false, the
+ * function will be called no more than each [ms] milliseconds, ensuring that
+ * the function isn't postponed for for too long.
  *
  * @returns {Function} - The debounced function.
  */
@@ -780,6 +797,7 @@ var utils = {
     isObject: isObject,
     extend: extend,
     findLabel: findLabel,
+    regexp_from_wildcard: regexp_from_wildcard,
     removeWildcardClass: removeWildcardClass,
     hideOrShow: hideOrShow,
     addURLQueryParameter: addURLQueryParameter,
@@ -807,7 +825,7 @@ var utils = {
     date_diff: date_diff,
     threshold_list: threshold_list,
     is_option_truthy: is_option_truthy,
-    getCSSValue: dom.get_css_value, // BBB: moved to dom. TODO: Remove in upcoming version.
+    //getCSSValue: dom.get_css_value, // BBB: moved to dom. TODO: Remove in upcoming version.
     elementInViewport: (el) => {
         // BBB: Remove with next major version.
         console.warn("Deprecated. Use utils.isElementInViewport");

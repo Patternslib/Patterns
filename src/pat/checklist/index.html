@@ -155,5 +155,29 @@
             <div class="six columns"></div>
         </form>
 
+        <section>
+          <header>
+            <h3>Infinite scrolling example</h3>
+          </header>
+
+          <form class="pat-checklist">
+            <label><input type="checkbox" class="toggle-all" />Toggle checkboxes</label><br>
+            <fieldset id="infinite-boxes">
+                <label><input type="checkbox" checked="checked" /> Option one</label><br>
+                <label><input type="checkbox" /> Option two</label><br>
+                <label><input type="checkbox" /> Option three</label><br>
+                <label><input type="checkbox" /> Option four</label><br>
+
+                <a
+                    href="./index.html#infinite-boxes"
+                    class="pat-inject"
+                    data-pat-inject="trigger: autoload-visible; target:self::element"
+                    >Loading...</a>
+
+            </fieldset>
+          </form>
+
+        </section>
+
     </body>
 </html>

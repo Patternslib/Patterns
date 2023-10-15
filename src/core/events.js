@@ -1,9 +1,11 @@
+import utils from "./utils";
+
 // Event related methods and event factories
 
 // Event listener registration for easy-to-remove event listeners.
 // once Safari supports the ``signal`` option for addEventListener we can abort
 // event handlers by calling AbortController.abort().
-export const event_listener_map = {};
+export const event_listener_map = new Map();
 
 /**
  * Add an event listener to a DOM element under a unique id.
@@ -23,48 +25,72 @@ const add_event_listener = (el, event_type, id, cb, opts = {}) => {
     remove_event_listener(el, id); // do not register one listener twice.
 
     // Create event_listener_map entry if not existent.
-    if (!event_listener_map[el]) {
-        event_listener_map[el] = {};
+    if (!event_listener_map.has(el)) {
+        event_listener_map.set(el, new Map());
     }
     let _cb = cb;
     if (opts?.once === true) {
         // For `once` events, also remove the entry from the event_listener_map.
         _cb = (e) => {
-            delete event_listener_map[el][id];
+            event_listener_map.get(el)?.delete(id);
             cb(e);
         };
     }
     // Only `capture` option is necessary for `removeEventListener`.
-    event_listener_map[el][id] = [event_type, _cb, opts.capture ? opts : undefined];
+    event_listener_map
+        .get(el)
+        .set(id, [event_type, _cb, opts.capture ? opts : undefined]);
     el.addEventListener(event_type, _cb, opts);
 };
 
 /**
  * Remove an event listener from a DOM element under a unique id.
  *
- * @param {DOM Node} el - The element to register the event for.
- * @param {string} id - A unique id under which the event is registered.
+ * If an element and id are given, the event listeners for the given element matching the id are removed.
+ * If an element but no id is given, all event listeners for that element are removed.
+ * If an id but no element is given, all event listeners for any element matching the id are removed.
+ * If no element and no id are given, all event listeners are removed.
+ *
+ * The id can be a wildcard string, e.g. `test-*-event`, which would match any
+ * event which starts with "test-" and ends with "-event". The wildcard "*" can
+ * be anywhere in the string and also be used multiple times. If no wildcard is
+ * present the search string is used for an exact match.
+ *
+ * @param {DOM Node} [el] - The element to register the event for.
+ * @param {string} [id] - A unique id under which the event is registered.
+ *                        Can be a wildcard string.
  *
  */
 const remove_event_listener = (el, id) => {
-    if (!el?.removeEventListener) {
-        return; // nothing to do.
-    }
-    const el_events = event_listener_map[el];
-    if (!el_events) {
-        return;
-    }
-    let entries;
-    if (id) {
-        // remove event listener with specific id
-        const entry = el_events[id];
-        entries = entry ? [entry] : [];
-    } else {
-        // remove all event listeners of element
-        entries = Object.entries(el_events);
-    }
-    for (const entry of entries || []) {
-        el.removeEventListener(entry[0], entry[1], entry[2]);
+    const els = el ? [el] : event_listener_map.keys();
+    for (const el of els) {
+        if (!el?.removeEventListener) {
+            return; // nothing to do.
+        }
+        const el_events = event_listener_map.get(el);
+        if (!el_events) {
+            return;
+        }
+        let entries;
+        if (id) {
+            // remove event listener with matching id
+            entries = [...el_events.entries()].filter((entry) =>
+                utils.regexp_from_wildcard(id).test(entry[0])
+            );
+        } else {
+            // remove all event listeners of element
+            entries = el_events.entries();
+        }
+        for (const entry of entries || []) {
+            // Remove event listener
+            el.removeEventListener(entry[1][0], entry[1][1], entry[1][2]);
+            // Delete entry from event_listener_map
+            event_listener_map.get(el).delete(entry[0]);
+            // Delete element from event_listener_map if no more events are registered.
+            if (!event_listener_map.get(el).size) {
+                event_listener_map.delete(el);
+            }
+        }
     }
 };
 
