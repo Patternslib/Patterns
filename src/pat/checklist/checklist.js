@@ -23,6 +23,12 @@ export default Base.extend({
     init() {
         this.options = parser.parse(this.el, this.options, false);
         this.$el.on("patterns-injected", this._init.bind(this));
+
+        this.change_handler = utils.debounce(() => {
+            this.change_buttons_and_toggles();
+            this.change_checked();
+        }, 50);
+
         this._init();
     },
 
@@ -46,14 +52,9 @@ export default Base.extend({
         }
 
         // update select/deselect button status
-        this.el.addEventListener("change", this._handler_change.bind(this));
         this.change_buttons_and_toggles();
         this.change_checked();
-    },
-
-    _handler_change() {
-        utils.debounce(() => this.change_buttons_and_toggles(), 50)();
-        utils.debounce(() => this.change_checked(), 50)();
+        this.el.addEventListener("change", this.change_handler.bind(this));
     },
 
     destroy() {
@@ -63,7 +64,7 @@ export default Base.extend({
         for (const it of this.all_deselects) {
             it.removeEventListener("click", this.deselect_all);
         }
-        this.el.removeEventListener("change", this._handler_change);
+        this.el.removeEventListener("change", this.change_handler);
         this.$el.off("patterns_injected");
     },
 
