@@ -575,7 +575,10 @@ const timeout = (ms) => {
  * @param {Function} func - The function to debounce.
  * @param {Number} ms - The time in milliseconds to debounce.
  * @param {Object} timer - A module-global timer as an object.
- * @param {Boolean} postpone - If true, the function will be called after it stops being called for N milliseconds.
+ * @param {Boolean} [postpone=true] - If true, the function will only be called
+ * at the end, after it stops being called for N milliseconds. If false, the
+ * function will be called no more than each [ms] milliseconds, ensuring that
+ * the function isn't postponed for for too long.
  *
  * @returns {Function} - The debounced function.
  */
