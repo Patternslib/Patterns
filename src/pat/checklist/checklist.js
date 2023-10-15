@@ -38,33 +38,56 @@ export default Base.extend({
 
         this.all_selects = dom.find_scoped(this.el, this.options.select);
         for (const btn of this.all_selects) {
-            btn.addEventListener("click", this.select_all.bind(this));
+            events.add_event_listener(
+                btn,
+                "click",
+                "pat-checklist--select-all--click",
+                this.select_all.bind(this)
+            );
         }
 
         this.all_deselects = dom.find_scoped(this.el, this.options.deselect);
         for (const btn of this.all_deselects) {
-            btn.addEventListener("click", this.deselect_all.bind(this));
+            events.add_event_listener(
+                btn,
+                "click",
+                "pat-checklist--deselect-all--click",
+                this.deselect_all.bind(this)
+            );
         }
 
         this.all_toggles = dom.find_scoped(this.el, this.options.toggle);
         for (const btn of this.all_toggles) {
-            btn.addEventListener("click", this.toggle_all.bind(this));
+            events.add_event_listener(
+                btn,
+                "click",
+                "pat-checklist--toggle-all--click",
+                this.toggle_all.bind(this)
+            );
         }
 
         // update select/deselect button status
         this.change_buttons_and_toggles();
         this.change_checked();
-        this.el.addEventListener("change", this.change_handler.bind(this));
+        events.add_event_listener(
+            this.el,
+            "change",
+            "pat-checklist--change-handler--change",
+            this.change_handler.bind(this)
+        );
     },
 
     destroy() {
         for (const it of this.all_selects) {
-            it.removeEventListener("click", this.select_all);
+            events.remove_event_listener(it, "pat-checklist--select-all--click");
         }
         for (const it of this.all_deselects) {
-            it.removeEventListener("click", this.deselect_all);
+            events.remove_event_listener(it, "pat-checklist--deselect-all--click");
         }
-        this.el.removeEventListener("change", this.change_handler);
+        for (const it of this.all_toggles) {
+            events.remove_event_listener(it, "pat-checklist--toggle-all--click");
+        }
+        events.remove_event_listener(this.el, "pat-checklist--change-handler--change");
         this.$el.off("patterns_injected");
     },
 
