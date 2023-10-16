@@ -4,6 +4,110 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.6-alpha.3](https://github.com/Patternslib/patterns/compare/9.9.6-alpha.2...9.9.6-alpha.3) (2023-10-16)
+
+
+### Features
+
+
+* **core events:** remove_event_listener - support removal by id and all at once. ([2e78439](https://github.com/Patternslib/patterns/commit/2e78439fcac3827ffd7d77811859bdd0b4ba3f9a))
+
+  Previously registered events can now be removed by a matching id with no
+element given, like:
+remove_event_listener(undefined, "my-event-id");
+When called with no parameters like "remove_event_listener()" all
+registered events are removed.
+
+
+* **core events:** remove_event_listener - support wildcard ids. ([b2d0651](https://github.com/Patternslib/patterns/commit/b2d0651a66b0d2e41c1f9da4ea01b22bd95a9d30))
+
+  The id parameter can be a wildcard string, e.g. `test-*-event`, which
+would match any event which starts with "test-" and ends with "-event".
+The wildcard "*" can be anywhere in the string and also be used multiple
+times. If no wildcard is present the search string is used for an exact
+match.
+
+
+* **core utils:** regexp_from_wildcard - Create regular expressions from wildcard strings. ([4cf724a](https://github.com/Patternslib/patterns/commit/4cf724af6eab7d558dce5bec5d6d378033012386))
+
+  This utility can be used for search strings with wildcards like "test-*-xyz".
+The wildcard can be at the beginning, somewhere in the middle or at the
+end and multiple wildcards can be used.
+This method was factored out from removeWildcardClass for broader usage.
+
+
+
+### Bug Fixes
+
+
+* **core events:** Fix references in add_event_listener and remove_event_listener. ([7dd9aff](https://github.com/Patternslib/patterns/commit/7dd9aff5f5e079ab511225e4dd3a04a33c07de36))
+
+  add_event_listener and remove_event_listener did incorrectly use an
+object instead of a map to store element references. This is now fixed.
+
+
+* **core events:** Fixes for remove_event_listener. ([c2caf48](https://github.com/Patternslib/patterns/commit/c2caf4830f7295e6a4962c16f02dbc1f9e1f029c))
+
+  - Fix removing all events on a given element.
+- Clean up the event registry after removing events.
+
+
+* **pat checklist:** Fix incorrect usage of the dispatch method. ([0e6eb01](https://github.com/Patternslib/patterns/commit/0e6eb0180d18d00da7fdd89d4305d901f322ffeb))
+
+  This fixes a performance problem with pat-checklist.
+
+
+* **pat-inject:** Don't submit forms with invalid data. ([a0fa4d2](https://github.com/Patternslib/patterns/commit/a0fa4d2743ef0d96c2c58ebf2d6d14bd37188859))
+
+  Fix a problem with pat-inject and pat-validation where forms with
+invalid data could be submitted and the submit button wasn't inactive.
+The problem was fixed in two ways:
+
+- pat-inject now has a check for browser-native form validation. Invalid
+  forms would not be submitted.
+
+- pat-inject now waits a tick before it get's initialized. Modern
+  BasePattern based patterns including pat-validation are all deferred
+  for 1 tick by design. pat-inject, being and older Pattern isn't
+  deferred and thus initialized before pat-inject. It's initialized
+  before pat-validation even though we have some Pattern initialization
+  reorganization code in place - pat-inject not being deferred will have
+  it's event handlers always run before any others. But now, with the
+  1-tick defer in place, pat-inject's event handlers are run in the
+  correct order - after pat-validation form validation which in case of
+  an invalid form would also deactivate the submit button.
+
+
+
+### Maintenance
+
+
+* **core utils:** Dispatch - document postpone parameter. ([cd7822c](https://github.com/Patternslib/patterns/commit/cd7822c53ff677ad16977791ad064baa6960a37d))
+
+  Better document the postpone parameter of the dispatch method.
+
+
+* **pat checklist:** Infinite scrolling example. ([18ac157](https://github.com/Patternslib/patterns/commit/18ac1575b7f0c96ddd943aaba7d70c01b6ef9340))
+
+  Add infinite scrolling example to demonstrate a performance problem
+which is solved by in this release.
+
+
+* **pat checklist:** Use Patternslib event factory. ([e12aaac](https://github.com/Patternslib/patterns/commit/e12aaace66eae8fcb1052ecb10e5e361a819d0aa))
+
+  Use Patternslib core event factory for the change event.
+
+
+* **pat checklist:** Use Patternslib event listeners. ([69831f3](https://github.com/Patternslib/patterns/commit/69831f34c49e33ee1224c511cb721c45b1a39268))
+
+  Change to Patternslib core event listeners to avoid double registration
+and allow better unregistration.
+
+This fixes a performance problem with pat-checklist.
+
+
+* Upgrade dependencies. ([35bbd9c](https://github.com/Patternslib/patterns/commit/35bbd9cd3e4a16713481bd199b296fce0632843d))
+
 ## [9.9.6-alpha.2](https://github.com/Patternslib/patterns/compare/9.9.6-alpha.1...9.9.6-alpha.2) (2023-08-30)
 
 
