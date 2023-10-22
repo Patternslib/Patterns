@@ -95,7 +95,7 @@ export default Base.extend({
         }
 
         function trigger_event(ev) {
-            if ($(ev.target).closest(".pat-autosubmit")[0] !== this) {
+            if (ev.target.closest(".pat-autosubmit") !== this) {
                 return;
             }
             ev.target.dispatchEvent(events.generic_event("input-change-delayed"));
