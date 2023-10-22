@@ -167,6 +167,20 @@ const await_pattern_init = (pattern) => {
  * Event factories
  */
 
+/** Generic event factory.
+ *
+ * A event factory for a bubbling and cancelable generic event.
+ *
+ * @param {string} name - The event name.
+ * @returns {Event} - Returns a blur event.
+ */
+const generic_event = (name) => {
+    return new Event(name, {
+        bubbles: true,
+        cancelable: true,
+    });
+};
+
 const blur_event = () => {
     return new Event("blur", {
         bubbles: false,
@@ -249,6 +263,7 @@ export default {
     remove_event_listener: remove_event_listener,
     await_event: await_event,
     await_pattern_init: await_pattern_init,
+    generic_event: generic_event,
     blur_event: blur_event,
     click_event: click_event,
     change_event: change_event,

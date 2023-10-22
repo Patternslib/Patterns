@@ -31,8 +31,10 @@ export default Base.extend({
     },
 
     registerListeners() {
-        this.$el.on(
-            "input-change-delayed.pat-autosubmit",
+        events.add_event_listener(
+            this.el,
+            "input-change-delayed",
+            "pat-autosubmit--input-change-delayed",
             this.onInputChange.bind(this)
         );
         this.registerSubformListeners();
@@ -44,7 +46,7 @@ export default Base.extend({
                 data?.pattern === "sortable"
             ) {
                 // Directly submit when removing a clone or changing the sorting.
-                this.$el.submit();
+                this.el.dispatchEvent(events.submit_event());
                 log.debug(
                     `triggered by pat-update, pattern: ${data.pattern}, action: ${data.action}`
                 );
@@ -60,15 +62,21 @@ export default Base.extend({
          * that only the subform gets submitted if an element inside it
          * changes.
          */
-        const $el = typeof ev !== "undefined" ? $(ev.target) : this.$el;
-        $el.find(".pat-subform")
-            .not(".pat-autosubmit")
-            .each((idx, el) => {
-                $(el).on(
-                    "input-change-delayed.pat-autosubmit",
-                    this.onInputChange.bind(this)
-                );
-            });
+        const el = typeof ev !== "undefined" ? ev.target : this.el;
+
+        // get all subforms whice are not yet auto submit forms.
+        const subforms = el.querySelectorAll(
+            ".pat-autosubmit:not(.pat-autosubmit):not(.pat-auto-submit)"
+        );
+        for (const subform of subforms) {
+            // register autosubmit on subform
+            events.add_event_listener(
+                subform,
+                "input-change-delayed",
+                "pat-autosubmit--input-change-delayed",
+                this.onInputChange.bind(this)
+            );
+        }
     },
 
     refreshListeners(ev, cfg, el, injected) {
@@ -87,10 +95,10 @@ export default Base.extend({
         }
 
         function trigger_event(ev) {
-            if ($(ev.target).closest(".pat-autosubmit")[0] !== this) {
+            if (ev.target.closest(".pat-autosubmit") !== this) {
                 return;
             }
-            $(ev.target).trigger("input-change-delayed");
+            ev.target.dispatchEvent(events.generic_event("input-change-delayed"));
         }
         if (this.options.delay === "defocus") {
             this.$el.on("input-defocus.pat-autosubmit", trigger_event);
