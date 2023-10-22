@@ -144,10 +144,12 @@ describe("pat-inject", function () {
             await utils.timeout(1); // wait a tick for async to settle.
 
             $a.trigger("click");
+            expect(spy_onTrigger).toHaveBeenCalled();
             expect(spy_confirm).not.toHaveBeenCalled();
 
             $div.addClass("is-dirty");
             $a.trigger("click");
+            expect(spy_onTrigger).toHaveBeenCalledTimes(2);
             expect(spy_confirm).toHaveBeenCalled();
 
             spy_onTrigger.mockRestore();
@@ -174,8 +176,8 @@ describe("pat-inject", function () {
             await utils.timeout(1); // wait a tick for async to settle.
 
             $a.trigger("click");
-            expect(spy_confirm).not.toHaveBeenCalled();
             expect(spy_onTrigger).toHaveBeenCalled();
+            expect(spy_confirm).not.toHaveBeenCalled();
 
             spy_onTrigger.mockRestore();
             spy_confirm.mockRestore();
