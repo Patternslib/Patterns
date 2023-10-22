@@ -165,6 +165,39 @@ describe("pat-autosubmit", function () {
 
             expect(submit_dispatched).toBe(true);
         });
+
+        it("2.5 - when a change on a single input happens with delay option", async function () {
+            document.body.innerHTML = `
+              <form>
+                <input
+                    class="pat-autosubmit"
+                    type="text"
+                    name="q"
+                    data-pat-autosubmit="delay: 20"
+                />
+              </form>
+            `;
+            const input = document.querySelector(".pat-autosubmit");
+            new Pattern(input);
+            let submit_input_dispatched = false;
+            let submit_form_dispatched = false;
+            input.addEventListener("submit", () => {
+                submit_input_dispatched = true;
+            });
+            document.querySelector("form").addEventListener("submit", () => {
+                submit_form_dispatched = true;
+            });
+            input.dispatchEvent(events.input_event());
+            await utils.timeout(1);
+            expect(submit_input_dispatched).toBe(false);
+            expect(submit_form_dispatched).toBe(false);
+            await utils.timeout(9);
+            expect(submit_input_dispatched).toBe(false);
+            expect(submit_form_dispatched).toBe(false);
+            await utils.timeout(10);
+            expect(submit_input_dispatched).toBe(true);
+            expect(submit_form_dispatched).toBe(true);
+        });
     });
 
     describe("3 - Parsing of the delay option", function () {
