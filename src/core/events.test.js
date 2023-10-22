@@ -457,6 +457,16 @@ describe("core.events tests", () => {
             inner = el.querySelector("#inner");
         });
 
+        it("generic event", async () => {
+            const name = "fantasy_event";
+            outer.addEventListener(name, () => {
+                catched = "outer";
+            });
+            inner.dispatchEvent(events.generic_event(name));
+            await utils.timeout(1);
+            expect(catched).toBe("outer");
+        });
+
         it("blur event", async () => {
             outer.addEventListener("blur", () => {
                 catched = "outer";
