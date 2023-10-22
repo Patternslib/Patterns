@@ -3,6 +3,50 @@
 See the [history](./docs/history/index.md) for older changelog entries.
 
 
+
+## [9.9.7](https://github.com/Patternslib/patterns/compare/9.9.6...9.9.7) (2023-10-22)
+
+
+### Features
+
+
+* **core events:** Add a event factory for a generic bubbling and cancelable event. ([ed6777e](https://github.com/Patternslib/patterns/commit/ed6777e7f477a5fa78195fe682acdb6bcc191310))
+
+
+
+### Bug Fixes
+
+
+* **pat-inject:** Fix problem with pat-autosubmit together with pat-sortable and/or pat-clone. ([2e3d9a2](https://github.com/Patternslib/patterns/commit/2e3d9a20a70a8c27e25ff58a1172b15a35a9279c))
+
+
+* **pat-inject:** Fix problem with pat-autosubmit. ([8ab6029](https://github.com/Patternslib/patterns/commit/8ab6029e70f498208fe637e025775755f19e268e))
+
+  Fix a problem since Patternslib 9.9.6 where pat-inject didn't work
+together with pat-autosubmit.
+
+
+
+### Maintenance
+
+
+* **pat-autosubmit:** Add a test for delayed autosubmit. ([e487ff5](https://github.com/Patternslib/patterns/commit/e487ff5c826de753d3218ee3e40637cca5a05fc0))
+
+
+* **pat-autosubmit:** Make use of add_event_listener. ([035bd76](https://github.com/Patternslib/patterns/commit/035bd760c75d92d401dbabf1ee2ce486b6583be9))
+
+  This has advantages regarding preventing double registrations and
+allowing wildcard removal.
+
+
+* **pat-autosubmit:** Number the individual test cases. ([9d20ea1](https://github.com/Patternslib/patterns/commit/9d20ea1d53bc6f1e17658dcf3e55997cd5810362))
+
+
+* **pat-autosubmit:** Simplify the sortable+clone demo example a bit. ([a8b316b](https://github.com/Patternslib/patterns/commit/a8b316b71ce33f565619cf5c50a957c14d9d227b))
+
+
+* **pat-inject:** Log a warning if inject isn't initialized when pushState isn't available. ([2b897ca](https://github.com/Patternslib/patterns/commit/2b897ca74af6bcc0a7bd2848c8e59fb01dc4f0fa))
+
 ## [9.9.6](https://github.com/Patternslib/patterns/compare/9.9.6-alpha.3...9.9.6) (2023-10-20)
 
 ## [9.9.6-alpha.3](https://github.com/Patternslib/patterns/compare/9.9.6-alpha.2...9.9.6-alpha.3) (2023-10-16)
