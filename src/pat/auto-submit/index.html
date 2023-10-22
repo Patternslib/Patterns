@@ -110,19 +110,19 @@
                         </label>
                     </fieldset>
 
-                    <fieldset class="group">
+                    <fieldset
+                        class="group pat-sortable pat-clone"
+                        data-pat-clone="template: #clone-item-template; trigger-element: #add-clone-item"
+                        data-pat-sortable="selector: .sortable-item"
+                    >
                       <legend>example with pat-clone and pat-sortable</legend>
-
-                      <ul class="pat-sortable pat-clone"
-                          data-pat-clone="template: #clone-item-template; trigger-element: #add-clone-item"
-                          data-pat-sortable="selector: .sortable-item">
-
-                        <li class="sortable-item" id="clone-item-template" hidden>
+                      <button type="button" id="add-clone-item">Add clone item</button>
+                      <template id="clone-item-template">
+                        <label class="sortable-item">
                           <input type="text" name="pat-clone-example"/>
                           <button type="button" class="remove-clone">x</button>
-                        </li>
-                      </ul>
-                      <button type="button" id="add-clone-item">Add clone item</button>
+                        </label>
+                      </template>
                     </fieldset>
 
                 </fieldset>
