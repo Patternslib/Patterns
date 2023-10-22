@@ -1,6 +1,7 @@
 import "../../core/jquery-ext";
 import $ from "jquery";
 import Base from "../../core/base";
+import events from "../../core/events";
 import input_change_events from "../../lib/input-change-events";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
@@ -119,7 +120,7 @@ export default Base.extend({
 
     onInputChange(e) {
         e.stopPropagation();
-        this.$el.submit();
+        this.el.dispatchEvent(events.submit_event());
         log.debug("triggered by " + e.type);
     },
 });

@@ -81,11 +81,19 @@ describe("pat-autosubmit", function () {
               </form>
             `;
             const input = document.querySelector(".pat-autosubmit");
-            const instance = new Pattern(input);
-            const spy = jest.spyOn(instance.$el, "submit");
+            new Pattern(input);
+            let submit_input_dispatched = false;
+            let submit_form_dispatched = false;
+            input.addEventListener("submit", () => {
+                submit_input_dispatched = true;
+            });
+            document.querySelector("form").addEventListener("submit", () => {
+                submit_form_dispatched = true;
+            });
             input.dispatchEvent(events.input_event());
             await utils.timeout(1);
-            expect(spy).toHaveBeenCalled();
+            expect(submit_input_dispatched).toBe(true);
+            expect(submit_form_dispatched).toBe(true);
         });
 
         it("2.2 - when pat-clone'd input is changed", async function () {
@@ -104,16 +112,20 @@ describe("pat-autosubmit", function () {
             const el_clone = document.querySelector(".pat-clone");
             const button_clone = document.querySelector(".add-clone");
 
-            const instance = new Pattern(el);
-            new pattern_clone(el_clone);
+            let submit_dispatched = false;
+            el.addEventListener("submit", () => {
+                submit_dispatched = true;
+            });
 
-            const spy = jest.spyOn(instance.$el, "submit");
+            new Pattern(el);
+            new pattern_clone(el_clone);
 
             button_clone.click();
 
             document.querySelector("form input").dispatchEvent(events.input_event());
 
-            expect(spy).toHaveBeenCalled();
+            await utils.timeout(1);
+            expect(submit_dispatched).toBe(true);
         });
 
         it("2.3 - when pat-clone removes an element", function () {
