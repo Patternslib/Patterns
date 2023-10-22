@@ -134,10 +134,17 @@ describe("pat-autosubmit", function () {
               </form>
             `;
             const el = document.querySelector(".pat-autosubmit");
-            const instance = new Pattern(el);
-            const spy = jest.spyOn(instance.$el, "submit");
+
+            let submit_dispatched = false;
+            el.addEventListener("submit", () => {
+                submit_dispatched = true;
+            });
+
+            new Pattern(el);
+
             $(el).trigger("pat-update", { pattern: "clone", action: "removed" });
-            expect(spy).toHaveBeenCalled();
+
+            expect(submit_dispatched).toBe(true);
         });
 
         it("2.4 - when pat-sortable changes the sorting", function () {
@@ -146,10 +153,17 @@ describe("pat-autosubmit", function () {
               </form>
             `;
             const el = document.querySelector(".pat-autosubmit");
-            const instance = new Pattern(el);
-            const spy = jest.spyOn(instance.$el, "submit");
+
+            let submit_dispatched = false;
+            el.addEventListener("submit", () => {
+                submit_dispatched = true;
+            });
+
+            new Pattern(el);
+
             $(el).trigger("pat-update", { pattern: "sortable" });
-            expect(spy).toHaveBeenCalled();
+
+            expect(submit_dispatched).toBe(true);
         });
     });
 

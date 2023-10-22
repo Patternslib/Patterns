@@ -44,7 +44,7 @@ export default Base.extend({
                 data?.pattern === "sortable"
             ) {
                 // Directly submit when removing a clone or changing the sorting.
-                this.$el.submit();
+                this.el.dispatchEvent(events.submit_event());
                 log.debug(
                     `triggered by pat-update, pattern: ${data.pattern}, action: ${data.action}`
                 );
