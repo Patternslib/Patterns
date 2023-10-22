@@ -437,15 +437,20 @@ describe("pat-autosuggest", function () {
 
             const pattern_autosubmit = (await import("../auto-submit/auto-submit")).default; // prettier-ignore
             const input = document.querySelector("input");
+            let submit_dispatched = false;
+            input.addEventListener("submit", () => {
+                submit_dispatched = true;
+            });
+
             new pattern(input);
-            const instance_autosubmit = new pattern_autosubmit(input);
-            const spy = jest.spyOn(instance_autosubmit.$el, "submit");
+            new pattern_autosubmit(input);
+
             await utils.timeout(1); // wait a tick for async to settle.
 
             $(".select2-input").click();
             $(document.querySelector(".select2-result")).mouseup();
 
-            expect(spy).toHaveBeenCalled();
+            expect(submit_dispatched).toBe(true);
         });
 
         it("4.2 - Works with pat-validate on an empty selection.", async function () {

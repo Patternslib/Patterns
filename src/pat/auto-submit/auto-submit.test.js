@@ -11,7 +11,7 @@ describe("pat-autosubmit", function () {
     });
 
     describe("1 - Triggering of the pattern", function () {
-        it("happens when a form has the pat-autosubmit class", function () {
+        it("1.1 - happens when a form has the pat-autosubmit class", function () {
             document.body.innerHTML = `
               <form class="pat-autosubmit">
                 <fieldset>
@@ -25,7 +25,7 @@ describe("pat-autosubmit", function () {
             expect(spy_init).toHaveBeenCalled();
         });
 
-        it("when a grouping of inputs has the pat-autosubmit class", function () {
+        it("1.2 - when a grouping of inputs has the pat-autosubmit class", function () {
             document.body.innerHTML = `
               <form>
                 <fieldset class="pat-autosubmit">
@@ -39,7 +39,7 @@ describe("pat-autosubmit", function () {
             expect(spy_init).toHaveBeenCalled();
         });
 
-        it("when a single input has the pat-autosubmit class", function () {
+        it("1.3 - when a single input has the pat-autosubmit class", function () {
             document.body.innerHTML = `
               <form>
                 <input
@@ -55,7 +55,7 @@ describe("pat-autosubmit", function () {
             expect(spy_init).toHaveBeenCalled();
         });
 
-        it("calls refreshListeners when pat-clone adds an element", function () {
+        it("1.4 - calls refreshListeners when pat-clone adds an element", function () {
             document.body.innerHTML = `
               <form class="pat-autosubmit">
               </form>
@@ -69,7 +69,7 @@ describe("pat-autosubmit", function () {
     });
 
     describe("2 - Trigger a submit", function () {
-        it("when a change on a single input happens", async function () {
+        it("2.1 - when a change on a single input happens", async function () {
             document.body.innerHTML = `
               <form>
                 <input
@@ -81,11 +81,19 @@ describe("pat-autosubmit", function () {
               </form>
             `;
             const input = document.querySelector(".pat-autosubmit");
-            const instance = new Pattern(input);
-            const spy = jest.spyOn(instance.$el, "submit");
+            new Pattern(input);
+            let submit_input_dispatched = false;
+            let submit_form_dispatched = false;
+            input.addEventListener("submit", () => {
+                submit_input_dispatched = true;
+            });
+            document.querySelector("form").addEventListener("submit", () => {
+                submit_form_dispatched = true;
+            });
             input.dispatchEvent(events.input_event());
             await utils.timeout(1);
-            expect(spy).toHaveBeenCalled();
+            expect(submit_input_dispatched).toBe(true);
+            expect(submit_form_dispatched).toBe(true);
         });
 
         it("2.2 - when pat-clone'd input is changed", async function () {
@@ -104,19 +112,23 @@ describe("pat-autosubmit", function () {
             const el_clone = document.querySelector(".pat-clone");
             const button_clone = document.querySelector(".add-clone");
 
-            const instance = new Pattern(el);
-            new pattern_clone(el_clone);
+            let submit_dispatched = false;
+            el.addEventListener("submit", () => {
+                submit_dispatched = true;
+            });
 
-            const spy = jest.spyOn(instance.$el, "submit");
+            new Pattern(el);
+            new pattern_clone(el_clone);
 
             button_clone.click();
 
             document.querySelector("form input").dispatchEvent(events.input_event());
 
-            expect(spy).toHaveBeenCalled();
+            await utils.timeout(1);
+            expect(submit_dispatched).toBe(true);
         });
 
-        it("when pat-clone removes an element", function () {
+        it("2.3 - when pat-clone removes an element", function () {
             document.body.innerHTML = `
               <form class="pat-autosubmit">
               </form>
@@ -128,7 +140,7 @@ describe("pat-autosubmit", function () {
             expect(spy).toHaveBeenCalled();
         });
 
-        it("when pat-sortable changes the sorting", function () {
+        it("2.4 - when pat-sortable changes the sorting", function () {
             document.body.innerHTML = `
               <form class="pat-autosubmit">
               </form>
@@ -142,7 +154,7 @@ describe("pat-autosubmit", function () {
     });
 
     describe("3 - Parsing of the delay option", function () {
-        it("can be done in shorthand notation", function () {
+        it("3.1 - can be done in shorthand notation", function () {
             let pat = new Pattern(`<input data-pat-autosubmit="500ms"/>`);
             expect(pat.options.delay).toBe(500);
             pat = new Pattern(`<input data-pat-autosubmit="500"/>`);
@@ -151,7 +163,7 @@ describe("pat-autosubmit", function () {
             expect(pat.options.delay).toBe("defocus");
         });
 
-        it("can be done in longhand notation", function () {
+        it("3.2 - can be done in longhand notation", function () {
             let pat = new Pattern(`<input data-pat-autosubmit="delay: 500ms"/>`);
             expect(pat.options.delay).toBe(500);
             pat = new Pattern(`<input data-pat-autosubmit="delay: 500"/>`);

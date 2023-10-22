@@ -144,10 +144,12 @@ describe("pat-inject", function () {
             await utils.timeout(1); // wait a tick for async to settle.
 
             $a.trigger("click");
+            expect(spy_onTrigger).toHaveBeenCalled();
             expect(spy_confirm).not.toHaveBeenCalled();
 
             $div.addClass("is-dirty");
             $a.trigger("click");
+            expect(spy_onTrigger).toHaveBeenCalledTimes(2);
             expect(spy_confirm).toHaveBeenCalled();
 
             spy_onTrigger.mockRestore();
@@ -174,8 +176,8 @@ describe("pat-inject", function () {
             await utils.timeout(1); // wait a tick for async to settle.
 
             $a.trigger("click");
-            expect(spy_confirm).not.toHaveBeenCalled();
             expect(spy_onTrigger).toHaveBeenCalled();
+            expect(spy_confirm).not.toHaveBeenCalled();
 
             spy_onTrigger.mockRestore();
             spy_confirm.mockRestore();
@@ -1769,6 +1771,39 @@ describe("pat-inject", function () {
             expect(el.textContent).toBe("OK");
 
             spy_ajax.mockRestore();
+        });
+
+        it("11.3 - Test trigger: submit with auto-submit", async () => {
+            const PatAutoSubmit = (await import("../auto-submit/auto-submit.js"))
+                .default;
+            document.body.innerHTML = `
+              <form
+                  class="pat-inject pat-autosubmit"
+                  data-pat-autosubmit="delay: 0"
+              >
+                <input
+                    type="text"
+                    name="q"
+                />
+              </form>
+            `;
+
+            const form = document.querySelector("form");
+            const input = document.querySelector("input");
+
+            const spy_trigger = jest.spyOn(pattern, "onTrigger");
+
+            pattern.init($(form));
+            await utils.timeout(1);
+            new PatAutoSubmit(form);
+
+            expect(spy_trigger).not.toHaveBeenCalled();
+
+            input.dispatchEvent(events.input_event());
+
+            expect(spy_trigger).toHaveBeenCalled();
+
+            spy_trigger.mockRestore();
         });
     });
 

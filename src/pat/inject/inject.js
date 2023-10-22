@@ -60,6 +60,7 @@ const inject = {
         if (cfgs.some((e) => e.history === "record") && !("pushState" in history)) {
             // if the injection shall add a history entry and HTML5 pushState
             // is missing, then don't initialize the injection.
+            log.warn("HTML5 pushState is missing, aborting");
             return $el;
         }
         $el.data("pat-inject", cfgs);
