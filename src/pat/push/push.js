@@ -41,7 +41,7 @@ export default Base.extend({
                 if (this.options.mode === "desktop-notification") {
                     this.desktop_notification();
                 } else if (this.el.tagName === "FORM") {
-                    this.el.submit();
+                    this.el.dispatchEvent(events.submit_event());
                 } else {
                     this.perform_inject();
                 }
