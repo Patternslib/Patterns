@@ -118,7 +118,7 @@ describe("pat-sortable", function () {
         $("#item3").prependTo($("ol")); // Simulate dragging it to the top.
         const submitCallback = jest.fn();
         submitCallback.mockReturnValue(false);
-        $(form).submit(submitCallback);
+        form.addEventListener("submit", submitCallback);
         document
             .querySelector("#item3 a.sortable-handle")
             .dispatchEvent(events.dragend_event());

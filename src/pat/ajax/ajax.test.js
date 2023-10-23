@@ -1,6 +1,7 @@
-import registry from "../../core/registry";
-import pattern from "./ajax";
 import $ from "jquery";
+import events from "../../core/events";
+import pattern from "./ajax";
+import registry from "../../core/registry";
 import { jest } from "@jest/globals";
 
 var $lab;
@@ -47,13 +48,13 @@ describe("pat-ajax", function () {
         });
 
         it("triggers ajax request on submit", function () {
-            $form.submit();
+            $form[0].dispatchEvent(events.submit_event());
             expect(spy_ajax).toHaveBeenCalled();
         });
 
         it("honors method='post'", function () {
             $form.attr("method", "post");
-            $form.submit();
+            $form[0].dispatchEvent(events.submit_event());
             var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
             expect(ajaxargs.url).toEqual("action.html");
             expect(ajaxargs.method).toEqual("POST");
@@ -73,7 +74,7 @@ describe("pat-ajax", function () {
         });
 
         it("does not include submit buttons if not clicked", function () {
-            $form.submit();
+            $form[0].dispatchEvent(events.submit_event());
             var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
             expect(ajaxargs.url).toEqual("action.html");
             expect(ajaxargs.data).toEqual("input1=value1");
@@ -99,7 +100,7 @@ describe("pat-ajax", function () {
             document.body.innerHTML = `<form class="pat-ajax" action="somewhere.html"/>`;
             registry.scan(document.body);
             jest.spyOn($, "ajax");
-            $(".pat-ajax").submit();
+            $(".pat-ajax")[0].dispatchEvent(events.submit_event());
             const ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
             expect(ajaxargs.url).toEqual("somewhere.html");
         });
@@ -127,7 +128,7 @@ describe("pat-ajax", function () {
             `;
             registry.scan(document.body);
             jest.spyOn($, "ajax");
-            $(".pat-ajax").submit();
+            $(".pat-ajax")[0].dispatchEvent(events.submit_event());
             const ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
             expect(ajaxargs.url).toEqual("else.html");
         });
@@ -214,7 +215,7 @@ describe("pat-ajax", function () {
                 data-pat-ajax="browser-cache: cache"
                 />`;
             registry.scan(document.body);
-            $(".pat-ajax").submit(); // need jquery submit here
+            $(".pat-ajax")[0].dispatchEvent(events.submit_event());
             const ajaxargs = spy_ajax.mock.calls[spy_ajax.mock.calls.length - 1][0];
             expect(ajaxargs.cache).toBe(false);
             spy_ajax.mockRestore();
