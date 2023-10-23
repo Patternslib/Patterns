@@ -1874,7 +1874,7 @@ describe("pat-inject", function () {
             registry.scan(document.body);
             await utils.timeout(1);
 
-            $(".pat-inject").submit(); // need jquery submit here
+            document.querySelector(".pat-inject").dispatchEvent(events.submit_event());
             const ajaxargs = spy_ajax.mock.calls[spy_ajax.mock.calls.length - 1][0];
             expect(ajaxargs.cache).toBe(false);
             spy_ajax.mockRestore();
