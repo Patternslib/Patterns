@@ -6,6 +6,7 @@
 import $ from "jquery";
 import ajax from "../ajax/ajax";
 import Base from "../../core/base";
+import events from "../../core/events";
 import inject from "../inject/inject";
 import logging from "../../core/logging";
 
@@ -16,7 +17,12 @@ export default Base.extend({
     trigger: ".pat-subform",
 
     init($el) {
-        $el.submit(this.submit.bind(this));
+        events.add_event_listener(
+            $el[0],
+            "submit",
+            "pat-subform--submit",
+            this.submit.bind(this)
+        );
         $el.find("input").on("keyup keypress keydown", this.keyboard_handler.bind(this));
         $el.find("button[type=submit]").on("click", this.submitClicked.bind(this));
     },
@@ -76,7 +82,7 @@ export default Base.extend({
         if (!$subform.is(".pat-autosubmit")) {
             return;
         }
-        return $subform.submit();
+        $subform[0].dispatchEvent(events.submit_event());
     },
 
     submitClicked(ev) {
