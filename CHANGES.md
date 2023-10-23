@@ -3,6 +3,31 @@
 See the [history](./docs/history/index.md) for older changelog entries.
 
 
+
+## [9.9.8](https://github.com/Patternslib/patterns/compare/9.9.7...9.9.8) (2023-10-23)
+
+
+### Bug Fixes
+
+
+* **pat-push:** Fix form submits not working with pat-inject. ([09822c5](https://github.com/Patternslib/patterns/commit/09822c5ee25c7195a62f7b6286017ec39cb85812))
+
+
+* **pat-subform:** Fix subform submits not working with pat-inject. ([79436cb](https://github.com/Patternslib/patterns/commit/79436cb71fcacde80b55caf366a431dd1c428ed7))
+
+
+
+### Maintenance
+
+
+* **pat-ajax:** Use bare JavaScript submit for tests. ([98e4235](https://github.com/Patternslib/patterns/commit/98e423532afd837ef8961f1089039af659dfad63))
+
+
+* **pat-inject:** Use bare JavaScript submit for tests. ([bec5184](https://github.com/Patternslib/patterns/commit/bec5184ab244d29c9a16152673ce4bb31664bd91))
+
+
+* **pat-sortable:** Use bare JavaScript submit for tests. ([59bbe4d](https://github.com/Patternslib/patterns/commit/59bbe4dfc38e43e286919b40e4416d748138efd5))
+
 ## [9.9.7](https://github.com/Patternslib/patterns/compare/9.9.6...9.9.7) (2023-10-22)
 
 
