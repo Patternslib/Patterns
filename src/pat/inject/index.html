@@ -425,20 +425,52 @@
           </div>
         </section>
 
-        <div id="inject-demo__content-wrapper" style="display: none">
-          <section id="inject-demo__content">Liked</section>
-        </div>
+        <template id="inject-demo__like--anchor">
+          <a
+              type="button"
+              class="pat-inject"
+              href="./#inject-demo__dislike--anchor"
+              data-pat-inject="target: self::element"
+          >Like</a>
+        </template>
+
+        <template id="inject-demo__dislike--anchor">
+          <a
+              type="button"
+              class="pat-inject"
+              href="./#inject-demo__like--anchor"
+              data-pat-inject="target: self::element"
+          >Dislike</a>
+        </template>
+
+        <template id="inject-demo__like--button">
+          <button
+              type="submit"
+              name="like_button"
+              value="like"
+              formaction="./#inject-demo__dislike--button"
+              class="pat-inject"
+              data-pat-inject="target: self::element">Like</button>
+        </template>
+
+        <template id="inject-demo__dislike--button">
+          <button
+              type="submit"
+              name="like_button"
+              value="dislike"
+              formaction="./#inject-demo__like--button"
+              class="pat-inject"
+              data-pat-inject="target: self::element">Dislike</button>
+        </template>
 
         <section>
           <h3>Can replace itself</h3>
           <a
               type="button"
               class="pat-inject"
-              href="./#inject-demo__content"
+              href="./#inject-demo__dislike--anchor"
               data-pat-inject="target: self::element"
-          >
-            Like
-          </a>
+          >Like</a>
         </section>
 
         <section>
@@ -451,7 +483,9 @@
               data-pat-inject="target: inject-demo__content-wrapper::element">
             <button
                 type="submit"
-                formaction="./#inject-demo__content"
+                name="like_button"
+                value="like"
+                formaction="./#inject-demo__dislike--button"
                 class="pat-inject"
                 data-pat-inject="target: self::element">Like</button>
           </form>

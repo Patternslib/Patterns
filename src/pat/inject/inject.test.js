@@ -1044,24 +1044,27 @@ describe("pat-inject", function () {
                 });
 
                 it("9.2.5.2 - use an image submit with a formaction value as action URL", async function () {
-                    var $submit1 = $(
-                            '<input type="submit" name="submit" value="default" />'
-                        ),
-                        $submit2 = $(
-                            '<input type="image" name="submit" value="special" formaction="other.html" />'
-                        );
+                    const $submit = $(`
+                        <input
+                            type="image"
+                            name="submit"
+                            value="special"
+                            formaction="other.html" />
+                    `);
 
-                    $form.append($submit1).append($submit2);
+                    $form.append($submit);
 
                     pattern.init($form);
                     await utils.timeout(1); // wait a tick for async to settle.
 
                     // Work around jsDOM not submitting with image buttons.
-                    $submit2[0].addEventListener("click", () => {
-                        $submit2[0].form.dispatchEvent(events.submit_event());
+                    $submit[0].addEventListener("click", async () => {
+                        await utils.timeout(1); // wait a tick for click event reaching form before submitting.
+                        $submit[0].form.dispatchEvent(events.submit_event());
                     });
 
-                    $submit2[0].click();
+                    $submit[0].click();
+                    await utils.timeout(1); // wait a tick for click handler
 
                     var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
                     expect($.ajax).toHaveBeenCalled();
@@ -1377,6 +1380,29 @@ describe("pat-inject", function () {
                     expect(pat_ajax.onClickSubmit).toHaveBeenCalledTimes(1);
                     expect(pattern.onTrigger).toHaveBeenCalledTimes(1);
                 });
+            });
+
+            it("9.2.7 - Sends submit button form values even if submit button is added after initialization.", async function () {
+                document.body.innerHTML = `
+                    <form class="pat-inject" action="test.cgi">
+                    </form>
+                `;
+
+                const pat_ajax = (await import("../ajax/ajax.js")).default;
+                jest.spyOn(pat_ajax, "onClickSubmit");
+                jest.spyOn(pattern, "onTrigger");
+
+                const form = document.querySelector("form");
+
+                pattern.init($(form));
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                form.innerHTML = `<button type="submit"/>`;
+                const button = form.querySelector("button");
+                button.click();
+
+                expect(pat_ajax.onClickSubmit).toHaveBeenCalledTimes(1);
+                expect(pattern.onTrigger).toHaveBeenCalledTimes(1);
             });
         });
     });

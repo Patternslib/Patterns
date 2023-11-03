@@ -107,26 +107,28 @@ const inject = {
                     if ($el[0]?.tagName === "FORM") {
                         events.add_event_listener(
                             $el[0],
+                            "click",
+                            "pat-inject--form-submit-click",
+                            (e) => {
+                                if (
+                                    e.target.matches(
+                                        "[type=submit], button:not([type=button]), [type=image]"
+                                    )
+                                ) {
+                                    // make sure the submitting button is sent
+                                    // with the form
+                                    ajax.onClickSubmit(e);
+                                }
+                            }
+                        );
+                        events.add_event_listener(
+                            $el[0],
                             "submit",
                             "pat-inject--form-submit",
                             (e) => {
                                 this.onTrigger(e);
                             }
                         );
-                        for (const button of $el[0].querySelectorAll(
-                            "[type=submit], button:not([type=button]), [type=image]"
-                        )) {
-                            events.add_event_listener(
-                                button,
-                                "click",
-                                "pat-inject--form-submit-click",
-                                (e) => {
-                                    // make sure the submitting button is sent
-                                    // with the form
-                                    ajax.onClickSubmit(e);
-                                }
-                            );
-                        }
                     } else if ($el.is(".pat-subform")) {
                         log.debug("Initializing subform with injection");
                     } else {
