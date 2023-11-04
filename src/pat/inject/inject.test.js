@@ -1026,6 +1026,28 @@ describe("pat-inject", function () {
                     expect(ajaxargs.data.get("submit")).toContain("label");
                 });
 
+                it("9.2.4.2 - pass submit button value in ajax call as data when clicked on a dom node within the submit button", async function () {
+                    document.body.innerHTML = `
+                    <form class="pat-inject" action="test.html#someid" method="post">
+                        <button name="submit" value="label">
+                            <span>label</span>
+                        </button>
+                    </form>
+                `;
+
+                    const form = document.querySelector("form");
+                    const label = document.querySelector("form button span");
+
+                    pattern.init($(form));
+                    await utils.timeout(1); // wait a tick for async to settle.
+
+                    label.click();
+
+                    const ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
+                    expect($.ajax).toHaveBeenCalled();
+                    expect(ajaxargs.data.get("submit")).toContain("label");
+                });
+
                 it("9.2.4.3 - Sends submit button form values even if submit button is added after initialization.", async function () {
                     document.body.innerHTML = `
                         <form class="pat-inject" action="test.cgi">

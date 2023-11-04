@@ -107,11 +107,11 @@ const inject = {
                     if ($el[0]?.tagName === "FORM") {
                         events.add_event_listener(
                             $el[0],
-                            "click",
-                            "pat-inject--form-submit-click",
+                            "submit",
+                            "pat-inject--form-submit",
                             (e) => {
                                 if (
-                                    e.target.matches(
+                                    e.submitter?.matches(
                                         "[type=submit], button:not([type=button]), [type=image]"
                                     )
                                 ) {
@@ -119,13 +119,6 @@ const inject = {
                                     // with the form
                                     ajax.onClickSubmit(e);
                                 }
-                            }
-                        );
-                        events.add_event_listener(
-                            $el[0],
-                            "submit",
-                            "pat-inject--form-submit",
-                            (e) => {
                                 this.onTrigger(e);
                             }
                         );
