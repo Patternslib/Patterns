@@ -1005,404 +1005,438 @@ describe("pat-inject", function () {
                 expect(ajaxargs.data.get("param")).toContain("somevalue");
             });
 
-            it("9.2.4 - pass submit button value in ajax call as data", async function () {
-                var $submit = $('<input type="submit" name="submit" value="label" />');
-
-                $form.attr("method", "post");
-                $form.append($submit);
-
-                pattern.init($form);
-                await utils.timeout(1); // wait a tick for async to settle.
-
-                $submit.trigger("click");
-
-                var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
-                expect($.ajax).toHaveBeenCalled();
-                expect(ajaxargs.data.get("submit")).toContain("label");
-            });
-
-            describe("9.2.5 - formaction attribute on submit buttons", function () {
-                it("9.2.5.1 - use submit button formaction value as action URL", async function () {
-                    var $submit1 = $(
-                            '<input type="submit" name="submit" value="default" />'
-                        ),
-                        $submit2 = $(
-                            '<input type="submit" name="submit" value="special" formaction="other.html" />'
-                        );
-
-                    $form.append($submit1).append($submit2);
-
-                    pattern.init($form);
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    $submit2[0].click();
-
-                    var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
-                    expect($.ajax).toHaveBeenCalled();
-                    expect(ajaxargs.url).toBe("other.html");
-                    expect(ajaxargs.data).toBe("submit=special");
-                });
-
-                it("9.2.5.2 - use an image submit with a formaction value as action URL", async function () {
-                    const $submit = $(`
-                        <input
-                            type="image"
-                            name="submit"
-                            value="special"
-                            formaction="other.html" />
-                    `);
-
-                    $form.append($submit);
-
-                    pattern.init($form);
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    // Work around jsDOM not submitting with image buttons.
-                    $submit[0].addEventListener("click", async () => {
-                        await utils.timeout(1); // wait a tick for click event reaching form before submitting.
-                        $submit[0].form.dispatchEvent(events.submit_event());
-                    });
-
-                    $submit[0].click();
-                    await utils.timeout(1); // wait a tick for click handler
-
-                    var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
-                    expect($.ajax).toHaveBeenCalled();
-                    expect(ajaxargs.url).toBe("other.html");
-                    expect(ajaxargs.data).toBe("submit=special");
-                });
-
-                it("9.2.5.3 - use fragment in formaction value as source + target selector", async function () {
-                    var $submit1 = $(
-                            '<input type="submit" name="submit" value="default" />'
-                        ),
-                        $submit2 = $(
-                            '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
-                        ),
-                        $target = $('<div id="otherid" />');
-
-                    $form.append($submit1).append($submit2);
-                    $div.append($target);
-
-                    pattern.init($form);
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    $submit2[0].click();
-
-                    answer(
-                        "<html><body>" +
-                            '<div id="otherid">other</div>' +
-                            "</body></html>"
-                    );
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
-                    expect($.ajax).toHaveBeenCalled();
-                    expect(ajaxargs.url).toBe("other.html");
-                    expect(ajaxargs.data).toContain("submit=special");
-                    expect($target.html()).toBe("other");
-                });
-
-                it("9.2.5.4 - use fragment in formaction value as source selector, respect target", async function () {
-                    var $submit1 = $(
-                            '<input type="submit" name="submit" value="default" />'
-                        ),
-                        $submit2 = $(
-                            '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
-                        ),
-                        $target = $('<div id="othertarget" />');
-
-                    $form.attr("data-pat-inject", "target: #othertarget");
-                    $form.append($submit1).append($submit2);
-                    $div.append($target);
-
-                    pattern.init($form);
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    $submit2[0].click();
-
-                    answer(
-                        "<html><body>" +
-                            '<div id="otherid">other</div>' +
-                            "</body></html>"
-                    );
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
-                    expect($.ajax).toHaveBeenCalled();
-                    expect(ajaxargs.url).toBe("other.html");
-                    expect(ajaxargs.data).toContain("submit=special");
-                    expect($target.html()).toBe("other");
-                });
-
-                it("9.2.5.5 - formaction works with multiple targets", async function () {
-                    var $submit1 = $(
-                            '<input type="submit" name="submit" value="default" />'
-                        ),
-                        $submit2 = $(
-                            '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
-                        ),
-                        $target1 = $('<div id="target1" />'),
-                        $target2 = $('<div id="target2" />');
-
-                    $form.attr(
-                        "data-pat-inject",
-                        "target: #target1 && target: #target2"
-                    );
-                    $form.append($submit1).append($submit2);
-                    $div.append($target1).append($target2);
-
-                    pattern.init($form);
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    $submit2[0].click();
-
-                    answer(
-                        "<html><body>" +
-                            '<div id="otherid">other</div>' +
-                            "</body></html>"
-                    );
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
-                    expect($.ajax).toHaveBeenCalled();
-                    expect(ajaxargs.url).toBe("other.html");
-                    expect(ajaxargs.data).toContain("submit=special");
-                    expect($target1.html()).toBe("other");
-                    expect($target2.html()).toBe("other");
-                });
-
-                it("9.2.5.6 - formaction works with multiple sources", async function () {
-                    var $submit1 = $(
-                            '<input type="submit" name="submit" value="default" />'
-                        ),
-                        $submit2 = $(
-                            '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
-                        ),
-                        $target1 = $('<div id="target1" />'),
-                        $target2 = $('<div id="target2" />');
-
-                    $form.attr(
-                        "data-pat-inject",
-                        "#someid #target1 && #otherid #target2"
-                    );
-                    $form.append($submit1).append($submit2);
-                    $div.append($target1).append($target2);
-
-                    pattern.init($form);
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    $submit2[0].click();
-
-                    answer(
-                        "<html><body>" +
-                            '<div id="someid">some</div>' +
-                            '<div id="otherid">other</div>' +
-                            "</body></html>"
-                    );
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
-                    expect($.ajax).toHaveBeenCalled();
-                    expect(ajaxargs.url).toBe("other.html");
-                    expect(ajaxargs.data).toContain("submit=special");
-                    expect($target1.html()).toBe("some");
-                    expect($target2.html()).toBe("other");
-                });
-
-                it("9.2.5.7 - formaction works source and target on the button", async function () {
-                    var $submit1 = $(
-                            '<input type="submit" name="submit" value="default" />'
-                        ),
-                        $submit2 = $(
-                            '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
-                        ),
-                        $target1 = $('<div id="target1" />'),
-                        $target2 = $('<div id="target2" />');
-
-                    $submit2.attr(
-                        "data-pat-inject",
-                        "#someid #target1 && #otherid #target2"
-                    );
-                    $form.append($submit1).append($submit2);
-                    $div.append($target1).append($target2);
-
-                    pattern.init($form);
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    $submit2[0].click();
-
-                    answer(
-                        "<html><body>" +
-                            '<div id="someid">some</div>' +
-                            '<div id="otherid">other</div>' +
-                            "</body></html>"
-                    );
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
-                    expect($.ajax).toHaveBeenCalled();
-                    expect(ajaxargs.url).toBe("other.html");
-                    expect(ajaxargs.data).toContain("submit=special");
-                    expect($target1.html()).toBe("some");
-                    expect($target2.html()).toBe("other");
-                });
-
-                it("9.2.5.8 - formaction which replaces itself", async () => {
-                    answer(`
-                        <html>
-                            <body>
-                                <div id="someid">some</div>
-                                <div id="otherid">other</div>
-                            </body>
-                        </html>
-                    `);
-
+            describe("9.2.4 - submit button tests", function () {
+                it("9.2.4.1 - pass submit button value in ajax call as data", async function () {
                     document.body.innerHTML = `
-                        <div id="oha">form inject target</div>
-                        <form
-                            class="pat-inject"
-                            data-pat-inject="target:#oha;source:#id1">
-                          <button
-                              type="submit"
-                              formaction="test.cgi"
-                              class="pat-inject"
-                              data-pat-inject="target:self::element;source:#otherid"
-                              />
+                        <form class="pat-inject" action="test.html#someid" method="post">
+                            <input type="submit" name="submit" value="label" />
                         </form>
                     `;
-
-                    pattern.init($("form"));
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    document.querySelector("form button").click();
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    expect(document.querySelector("form").innerHTML.trim()).toBe(
-                        "other"
-                    );
-                });
-
-                it("9.2.5.9 - nested injects keep correct configuration context", async () => {
-                    answer(`
-                        <html>
-                            <body>
-                                <div id="someid">some</div>
-                                <div id="otherid">other</div>
-                            </body>
-                        </html>
-                    `);
-
-                    document.body.innerHTML = `
-                        <form class="pat-inject">
-                            <span class="pat-inject" data-pat-inject="target:self; source:#otherid">
-                                <button type="submit" formaction="test.cgi"/>
-                            </span>
-                        </form>
-                    `;
-
-                    pattern.init($("form"));
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    document.querySelector("form button").click();
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    expect(document.querySelector("form span").innerHTML.trim()).toBe(
-                        "other"
-                    );
-                });
-
-                it("9.2.5.10 - does not call ajax.onClickSubmit twice.", async function () {
-                    document.body.innerHTML = `
-                        <form class="pat-inject">
-                            <button type="submit" formaction="test.cgi"/>
-                        </form>
-                    `;
-
-                    const pat_ajax = (await import("../ajax/ajax.js")).default;
-                    jest.spyOn(pat_ajax, "onClickSubmit");
 
                     const form = document.querySelector("form");
-                    const button = form.querySelector("button");
+                    const submit = document.querySelector("input[type=submit]");
 
                     pattern.init($(form));
                     await utils.timeout(1); // wait a tick for async to settle.
 
-                    button.click();
+                    submit.click();
 
-                    expect(pat_ajax.onClickSubmit).toHaveBeenCalledTimes(1);
+                    const ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
+                    expect($.ajax).toHaveBeenCalled();
+                    expect(ajaxargs.data.get("submit")).toContain("label");
                 });
-            });
 
-            describe("9.2.6 - Support submit buttons without type attribute ...", () => {
-                it("9.2.6.1 - ... without a formaction atttribute.", async function () {
+                it("9.2.4.2 - pass submit button value in ajax call as data when clicked on a dom node within the submit button", async function () {
                     document.body.innerHTML = `
-                        <form class="pat-inject" action="test.cgi">
-                            <button/>
-                        </form>
-                    `;
-
-                    const pat_ajax = (await import("../ajax/ajax.js")).default;
-                    jest.spyOn(pat_ajax, "onClickSubmit");
-                    jest.spyOn(pattern, "onTrigger");
-
-                    const form = document.querySelector("form");
-                    const button = form.querySelector("button");
-
-                    pattern.init($(form));
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    button.click();
-
-                    expect(pat_ajax.onClickSubmit).toHaveBeenCalledTimes(1);
-                    expect(pattern.onTrigger).toHaveBeenCalledTimes(1);
-                });
-
-                it("9.2.6.2 - ... with a formaction atttribute.", async function () {
-                    document.body.innerHTML = `
-                        <form class="pat-inject">
-                            <button formaction="test.cgi"/>
-                        </form>
-                    `;
-
-                    const pat_ajax = (await import("../ajax/ajax.js")).default;
-                    jest.spyOn(pat_ajax, "onClickSubmit");
-                    jest.spyOn(pattern, "onTrigger");
-
-                    const form = document.querySelector("form");
-                    const button = form.querySelector("button");
-
-                    pattern.init($(form));
-                    await utils.timeout(1); // wait a tick for async to settle.
-
-                    button.click();
-
-                    expect(pat_ajax.onClickSubmit).toHaveBeenCalledTimes(1);
-                    expect(pattern.onTrigger).toHaveBeenCalledTimes(1);
-                });
-            });
-
-            it("9.2.7 - Sends submit button form values even if submit button is added after initialization.", async function () {
-                document.body.innerHTML = `
-                    <form class="pat-inject" action="test.cgi">
+                    <form class="pat-inject" action="test.html#someid" method="post">
+                        <button name="submit" value="label">
+                            <span>label</span>
+                        </button>
                     </form>
                 `;
 
-                const pat_ajax = (await import("../ajax/ajax.js")).default;
-                jest.spyOn(pat_ajax, "onClickSubmit");
-                jest.spyOn(pattern, "onTrigger");
+                    const form = document.querySelector("form");
+                    const label = document.querySelector("form button span");
 
-                const form = document.querySelector("form");
+                    pattern.init($(form));
+                    await utils.timeout(1); // wait a tick for async to settle.
 
-                pattern.init($(form));
-                await utils.timeout(1); // wait a tick for async to settle.
+                    label.click();
 
-                form.innerHTML = `<button type="submit"/>`;
-                const button = form.querySelector("button");
-                button.click();
+                    const ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
+                    expect($.ajax).toHaveBeenCalled();
+                    expect(ajaxargs.data.get("submit")).toContain("label");
+                });
 
-                expect(pat_ajax.onClickSubmit).toHaveBeenCalledTimes(1);
-                expect(pattern.onTrigger).toHaveBeenCalledTimes(1);
+                it("9.2.4.3 - Sends submit button form values even if submit button is added after initialization.", async function () {
+                    document.body.innerHTML = `
+                        <form class="pat-inject" action="test.cgi">
+                        </form>
+                    `;
+                    const pat_ajax = (await import("../ajax/ajax.js")).default;
+                    jest.spyOn(pat_ajax, "onClickSubmit");
+                    jest.spyOn(pattern, "onTrigger");
+
+                    const form = document.querySelector("form");
+
+                    pattern.init($(form));
+                    await utils.timeout(1); // wait a tick for async to settle.
+
+                    form.innerHTML = `<button type="submit"/>`;
+                    const button = form.querySelector("button");
+                    button.click();
+
+                    expect(pat_ajax.onClickSubmit).toHaveBeenCalledTimes(1);
+                    expect(pattern.onTrigger).toHaveBeenCalledTimes(1);
+                });
+
+                describe("9.2.4.4 - formaction attribute on submit buttons", function () {
+                    it("9.2.4.4.1 - use submit button formaction value as action URL", async function () {
+                        var $submit1 = $(
+                                '<input type="submit" name="submit" value="default" />'
+                            ),
+                            $submit2 = $(
+                                '<input type="submit" name="submit" value="special" formaction="other.html" />'
+                            );
+
+                        $form.append($submit1).append($submit2);
+
+                        pattern.init($form);
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        $submit2[0].click();
+
+                        var ajaxargs =
+                            $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
+                        expect($.ajax).toHaveBeenCalled();
+                        expect(ajaxargs.url).toBe("other.html");
+                        expect(ajaxargs.data).toBe("submit=special");
+                    });
+
+                    it("9.2.4.4.2 - use an image submit with a formaction value as action URL", async function () {
+                        const $submit = $(`
+                            <input
+                                type="image"
+                                name="submit"
+                                value="special"
+                                formaction="other.html" />
+                        `);
+
+                        $form.append($submit);
+
+                        pattern.init($form);
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        // Work around jsDOM not submitting with image buttons.
+                        $submit[0].addEventListener("click", async () => {
+                            await utils.timeout(1); // wait a tick for click event reaching form before submitting.
+                            $submit[0].form.dispatchEvent(events.submit_event());
+                        });
+
+                        $submit[0].click();
+                        await utils.timeout(1); // wait a tick for click handler
+
+                        var ajaxargs =
+                            $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
+                        expect($.ajax).toHaveBeenCalled();
+                        expect(ajaxargs.url).toBe("other.html");
+                        expect(ajaxargs.data).toBe("submit=special");
+                    });
+
+                    it("9.2.4.4.3 - use fragment in formaction value as source + target selector", async function () {
+                        var $submit1 = $(
+                                '<input type="submit" name="submit" value="default" />'
+                            ),
+                            $submit2 = $(
+                                '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
+                            ),
+                            $target = $('<div id="otherid" />');
+
+                        $form.append($submit1).append($submit2);
+                        $div.append($target);
+
+                        pattern.init($form);
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        $submit2[0].click();
+
+                        answer(
+                            "<html><body>" +
+                                '<div id="otherid">other</div>' +
+                                "</body></html>"
+                        );
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        var ajaxargs =
+                            $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
+                        expect($.ajax).toHaveBeenCalled();
+                        expect(ajaxargs.url).toBe("other.html");
+                        expect(ajaxargs.data).toContain("submit=special");
+                        expect($target.html()).toBe("other");
+                    });
+
+                    it("9.2.4.4.4 - use fragment in formaction value as source selector, respect target", async function () {
+                        var $submit1 = $(
+                                '<input type="submit" name="submit" value="default" />'
+                            ),
+                            $submit2 = $(
+                                '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
+                            ),
+                            $target = $('<div id="othertarget" />');
+
+                        $form.attr("data-pat-inject", "target: #othertarget");
+                        $form.append($submit1).append($submit2);
+                        $div.append($target);
+
+                        pattern.init($form);
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        $submit2[0].click();
+
+                        answer(
+                            "<html><body>" +
+                                '<div id="otherid">other</div>' +
+                                "</body></html>"
+                        );
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        var ajaxargs =
+                            $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
+                        expect($.ajax).toHaveBeenCalled();
+                        expect(ajaxargs.url).toBe("other.html");
+                        expect(ajaxargs.data).toContain("submit=special");
+                        expect($target.html()).toBe("other");
+                    });
+
+                    it("9.2.4.4.5 - formaction works with multiple targets", async function () {
+                        var $submit1 = $(
+                                '<input type="submit" name="submit" value="default" />'
+                            ),
+                            $submit2 = $(
+                                '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
+                            ),
+                            $target1 = $('<div id="target1" />'),
+                            $target2 = $('<div id="target2" />');
+
+                        $form.attr(
+                            "data-pat-inject",
+                            "target: #target1 && target: #target2"
+                        );
+                        $form.append($submit1).append($submit2);
+                        $div.append($target1).append($target2);
+
+                        pattern.init($form);
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        $submit2[0].click();
+
+                        answer(
+                            "<html><body>" +
+                                '<div id="otherid">other</div>' +
+                                "</body></html>"
+                        );
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        var ajaxargs =
+                            $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
+                        expect($.ajax).toHaveBeenCalled();
+                        expect(ajaxargs.url).toBe("other.html");
+                        expect(ajaxargs.data).toContain("submit=special");
+                        expect($target1.html()).toBe("other");
+                        expect($target2.html()).toBe("other");
+                    });
+
+                    it("9.2.4.4.6 - formaction works with multiple sources", async function () {
+                        var $submit1 = $(
+                                '<input type="submit" name="submit" value="default" />'
+                            ),
+                            $submit2 = $(
+                                '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
+                            ),
+                            $target1 = $('<div id="target1" />'),
+                            $target2 = $('<div id="target2" />');
+
+                        $form.attr(
+                            "data-pat-inject",
+                            "#someid #target1 && #otherid #target2"
+                        );
+                        $form.append($submit1).append($submit2);
+                        $div.append($target1).append($target2);
+
+                        pattern.init($form);
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        $submit2[0].click();
+
+                        answer(
+                            "<html><body>" +
+                                '<div id="someid">some</div>' +
+                                '<div id="otherid">other</div>' +
+                                "</body></html>"
+                        );
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        var ajaxargs =
+                            $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
+                        expect($.ajax).toHaveBeenCalled();
+                        expect(ajaxargs.url).toBe("other.html");
+                        expect(ajaxargs.data).toContain("submit=special");
+                        expect($target1.html()).toBe("some");
+                        expect($target2.html()).toBe("other");
+                    });
+
+                    it("9.2.4.4.7 - formaction works source and target on the button", async function () {
+                        var $submit1 = $(
+                                '<input type="submit" name="submit" value="default" />'
+                            ),
+                            $submit2 = $(
+                                '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
+                            ),
+                            $target1 = $('<div id="target1" />'),
+                            $target2 = $('<div id="target2" />');
+
+                        $submit2.attr(
+                            "data-pat-inject",
+                            "#someid #target1 && #otherid #target2"
+                        );
+                        $form.append($submit1).append($submit2);
+                        $div.append($target1).append($target2);
+
+                        pattern.init($form);
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        $submit2[0].click();
+
+                        answer(
+                            "<html><body>" +
+                                '<div id="someid">some</div>' +
+                                '<div id="otherid">other</div>' +
+                                "</body></html>"
+                        );
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        var ajaxargs =
+                            $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
+                        expect($.ajax).toHaveBeenCalled();
+                        expect(ajaxargs.url).toBe("other.html");
+                        expect(ajaxargs.data).toContain("submit=special");
+                        expect($target1.html()).toBe("some");
+                        expect($target2.html()).toBe("other");
+                    });
+
+                    it("9.2.4.4.8 - formaction which replaces itself", async () => {
+                        answer(`
+                            <html>
+                                <body>
+                                    <div id="someid">some</div>
+                                    <div id="otherid">other</div>
+                                </body>
+                            </html>
+                        `);
+
+                        document.body.innerHTML = `
+                            <div id="oha">form inject target</div>
+                            <form
+                                class="pat-inject"
+                                data-pat-inject="target:#oha;source:#id1">
+                              <button
+                                  type="submit"
+                                  formaction="test.cgi"
+                                  class="pat-inject"
+                                  data-pat-inject="target:self::element;source:#otherid"
+                                  />
+                            </form>
+                        `;
+
+                        pattern.init($("form"));
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        document.querySelector("form button").click();
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        expect(document.querySelector("form").innerHTML.trim()).toBe(
+                            "other"
+                        );
+                    });
+
+                    it("9.2.4.4.9 - nested injects keep correct configuration context", async () => {
+                        answer(`
+                            <html>
+                                <body>
+                                    <div id="someid">some</div>
+                                    <div id="otherid">other</div>
+                                </body>
+                            </html>
+                        `);
+
+                        document.body.innerHTML = `
+                            <form class="pat-inject">
+                                <span class="pat-inject" data-pat-inject="target:self; source:#otherid">
+                                    <button type="submit" formaction="test.cgi"/>
+                                </span>
+                            </form>
+                        `;
+
+                        pattern.init($("form"));
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        document.querySelector("form button").click();
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        expect(
+                            document.querySelector("form span").innerHTML.trim()
+                        ).toBe("other");
+                    });
+
+                    it("9.2.4.4.10 - does not call ajax.onClickSubmit twice.", async function () {
+                        document.body.innerHTML = `
+                            <form class="pat-inject">
+                                <button type="submit" formaction="test.cgi"/>
+                            </form>
+                        `;
+
+                        const pat_ajax = (await import("../ajax/ajax.js")).default;
+                        jest.spyOn(pat_ajax, "onClickSubmit");
+
+                        const form = document.querySelector("form");
+                        const button = form.querySelector("button");
+
+                        pattern.init($(form));
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        button.click();
+
+                        expect(pat_ajax.onClickSubmit).toHaveBeenCalledTimes(1);
+                    });
+                });
+
+                describe("9.2.4.5 - Support submit buttons without type attribute ...", () => {
+                    it("9.2.4.5.1 - ... without a formaction atttribute.", async function () {
+                        document.body.innerHTML = `
+                            <form class="pat-inject" action="test.cgi">
+                                <button/>
+                            </form>
+                        `;
+
+                        const pat_ajax = (await import("../ajax/ajax.js")).default;
+                        jest.spyOn(pat_ajax, "onClickSubmit");
+                        jest.spyOn(pattern, "onTrigger");
+
+                        const form = document.querySelector("form");
+                        const button = form.querySelector("button");
+
+                        pattern.init($(form));
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        button.click();
+
+                        expect(pat_ajax.onClickSubmit).toHaveBeenCalledTimes(1);
+                        expect(pattern.onTrigger).toHaveBeenCalledTimes(1);
+                    });
+
+                    it("9.2.4.5.2 - ... with a formaction atttribute.", async function () {
+                        document.body.innerHTML = `
+                            <form class="pat-inject">
+                                <button formaction="test.cgi"/>
+                            </form>
+                        `;
+
+                        const pat_ajax = (await import("../ajax/ajax.js")).default;
+                        jest.spyOn(pat_ajax, "onClickSubmit");
+                        jest.spyOn(pattern, "onTrigger");
+
+                        const form = document.querySelector("form");
+                        const button = form.querySelector("button");
+
+                        pattern.init($(form));
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        button.click();
+
+                        expect(pat_ajax.onClickSubmit).toHaveBeenCalledTimes(1);
+                        expect(pattern.onTrigger).toHaveBeenCalledTimes(1);
+                    });
+                });
             });
         });
     });

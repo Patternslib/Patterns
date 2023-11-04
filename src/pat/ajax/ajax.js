@@ -4,6 +4,7 @@
  * Copyright 2012-2013 Florian Friesdorf
  * Copyright 2012-2013 Marko Durkovic
  */
+import "../../core/polyfills"; // SubmitEvent.submitter for Safari < 15.4 and jsDOM
 import $ from "jquery";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
@@ -53,8 +54,8 @@ const _ = {
         $el.off(".pat-ajax");
     },
     onClickSubmit(event) {
-        const el = event.target;
-        const form = el.closest("form");
+        const el = event.submitter || event.target;
+        const form = el.form;
         const data = {};
         if (el.name) {
             data[el.name] = el.value;
