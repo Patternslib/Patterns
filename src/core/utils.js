@@ -494,18 +494,22 @@ function parseLength(length, reference_length = null) {
 
 // Return a jQuery object with elements related to an input element.
 function findRelatives(el) {
-    var $el = $(el),
-        $relatives = $(el),
-        $label = $();
+    const $el = $(el);
+    let $relatives = $(el);
+    let $label = $();
 
     $relatives = $relatives.add($el.closest("label"));
     $relatives = $relatives.add($el.closest("fieldset"));
 
-    if (el.id) $label = $("label[for='" + el.id + "']");
+    if (el.id) {
+        $label = $(`label[for="${el.id}"]`);
+    }
     if (!$label.length) {
-        var $form = $el.closest("form");
-        if (!$form.length) $form = $(document.body);
-        $label = $form.find("label[for='" + el.name + "']");
+        let $form = $el.closest("form");
+        if (!$form.length) {
+            $form = $(document.body);
+        }
+        $label = $form.find(`label[for="${el.name}"]`);
     }
     $relatives = $relatives.add($label);
     return $relatives;
