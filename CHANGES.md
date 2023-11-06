@@ -3,40 +3,6 @@
 See the [history](./docs/history/index.md) for older changelog entries.
 
 
-
-## [9.9.9](https://github.com/Patternslib/patterns/compare/9.9.8...9.9.9) (2023-11-06)
-
-
-### Features
-
-
-* **pat inject:** Support submit buttons with child elements. ([3821ca8](https://github.com/Patternslib/patterns/commit/3821ca8793557ede2e42e20caee7908a9f466b62))
-
-  Send the value of a submit button even if a child element of the submit
-button was clicked and not the submit button itself.
-
-
-
-### Bug Fixes
-
-
-* **pat inject:** Fix issue with submit buttons which are added later. ([edf9f5e](https://github.com/Patternslib/patterns/commit/edf9f5e0ca3899a13b5107c19c3bf6fcc376e10b))
-
-  Fix an issue with submit buttons which were added after initialization
-of pat-inject which did not send their value (e.g. via a pat-inject call).
-
-Ref: scrum-1670
-
-
-
-### Maintenance
-
-
-* **pat inject:** Restructure pat-inject 9.2 tests. ([981d71f](https://github.com/Patternslib/patterns/commit/981d71ff52afd327ddb5d0796e0c3b9fbc364d9e))
-
-
-* Upgrade caniuse-lite db. ([8ccdc6d](https://github.com/Patternslib/patterns/commit/8ccdc6d33569e23b8b4977735d157f3cccd168ee))
-
 ## [9.9.9](https://github.com/Patternslib/patterns/compare/9.9.8...9.9.9) (2023-11-06)
 
 
