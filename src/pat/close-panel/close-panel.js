@@ -27,7 +27,7 @@ export default Base.extend({
             if (
                 e.target.matches(":not([formnovalidate])") &&
                 e.target.matches("[type=submit], button:not([type=button])") &&
-                this.el.closest("form")?.checkValidity() === false
+                this.el.form?.checkValidity() === false
             ) {
                 // Prevent closing an invalid form when submitting.
                 return;

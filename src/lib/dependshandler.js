@@ -1,11 +1,11 @@
 import $ from "jquery";
 import parser from "./depends_parse";
+import utils from "../core/utils";
 
 function DependsHandler($el, expression) {
-    var $context = $el.closest("form");
-    if (!$context.length) $context = $(document);
+    const el = utils.jqToNode($el);
     this.$el = $el;
-    this.$context = $context;
+    this.$context = $(el.form || el.closest("form") || document);
     this.ast = parser.parse(expression); // TODO: handle parse exceptions here
 }
 

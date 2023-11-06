@@ -132,7 +132,7 @@ export default Base.extend({
 
         // Clear values on reset.
         events.add_event_listener(
-            this.el.closest("form"),
+            this.el.form || this.el.closest("form"), // TODO: `closest` necessary?
             "reset",
             "pat-auto-suggest--reset",
             () => this.$el.select2("val", "")
