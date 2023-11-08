@@ -66,7 +66,7 @@ export default Base.extend({
 
         // get all subforms whice are not yet auto submit forms.
         const subforms = el.querySelectorAll(
-            ".pat-autosubmit:not(.pat-autosubmit):not(.pat-auto-submit)"
+            ".pat-subform:not(.pat-autosubmit):not(.pat-auto-submit)"
         );
         for (const subform of subforms) {
             // register autosubmit on subform
@@ -128,7 +128,7 @@ export default Base.extend({
 
     onInputChange(e) {
         e.stopPropagation();
-        this.el.dispatchEvent(events.submit_event());
+        this.el.dispatchEvent(events.submit_event({ submitter: e.target }));
         log.debug("triggered by " + e.type);
     },
 });
