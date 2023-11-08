@@ -66,7 +66,7 @@ export default Base.extend({
 
         // get all subforms whice are not yet auto submit forms.
         const subforms = el.querySelectorAll(
-            ".pat-autosubmit:not(.pat-autosubmit):not(.pat-auto-submit)"
+            ".pat-subform:not(.pat-autosubmit):not(.pat-auto-submit)"
         );
         for (const subform of subforms) {
             // register autosubmit on subform
