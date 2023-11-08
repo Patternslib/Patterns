@@ -3,6 +3,31 @@
 See the [history](./docs/history/index.md) for older changelog entries.
 
 
+
+## [9.9.10-alpha.0](https://github.com/Patternslib/patterns/compare/9.9.9...9.9.10-alpha.0) (2023-11-08)
+
+
+### Features
+
+
+* **core events:** Support the submitter property on submit_event events. ([2e6b7e5](https://github.com/Patternslib/patterns/commit/2e6b7e5949ce3ad23e4ffffa1070f5f598f70ba9))
+
+
+
+### Bug Fixes
+
+
+* **pat autosubmit:** Fix a typo where pat-autosubmit wasn't working for subforms anymore. ([3be0170](https://github.com/Patternslib/patterns/commit/3be0170fb92a44d205b857f0636ba4ea9f1e1ea7))
+
+
+* **pat autosubmit:** Trigger the submit event with the correct submitter property. ([36c0c36](https://github.com/Patternslib/patterns/commit/36c0c36f1f3feed76510bb6d29762709dbc7e2b1))
+
+  This resp. the previous commit in event.js fixes a problem where the
+submitter was the added to the browser automatically and could lead to
+incorrect form submission data in combination with pat-ajax. E.g. we had
+a case where for a file upload the delete button's value was submitted,
+where it shouldn't have.
+
 ## [9.9.9](https://github.com/Patternslib/patterns/compare/9.9.8...9.9.9) (2023-11-06)
 
 
