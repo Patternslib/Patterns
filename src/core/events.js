@@ -237,11 +237,13 @@ const scroll_event = () => {
     });
 };
 
-const submit_event = () => {
-    return new Event("submit", {
+const submit_event = ({ submitter } = { submitter: undefined }) => {
+    const event = new Event("submit", {
         bubbles: true,
         cancelable: true,
     });
+    event.submitter = submitter; // undefined or the submitting element
+    return event;
 };
 
 const dragstart_event = () => {

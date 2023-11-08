@@ -1110,7 +1110,9 @@ describe("pat-inject", function () {
                         // Work around jsDOM not submitting with image buttons.
                         $submit[0].addEventListener("click", async () => {
                             await utils.timeout(1); // wait a tick for click event reaching form before submitting.
-                            $submit[0].form.dispatchEvent(events.submit_event());
+                            $submit[0].form.dispatchEvent(
+                                events.submit_event({ submitter: $submit[0] })
+                            );
                         });
 
                         $submit[0].click();

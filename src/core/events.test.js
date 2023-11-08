@@ -546,12 +546,27 @@ describe("core.events tests", () => {
         });
 
         it("submit event", async () => {
-            outer.addEventListener("submit", () => {
+            let submitter = "not defined";
+            outer.addEventListener("submit", (e) => {
                 catched = "outer";
+                submitter = e.submitter;
             });
             inner.dispatchEvent(events.submit_event());
             await utils.timeout(1);
             expect(catched).toBe("outer");
+            expect(submitter).toBe(undefined);
+        });
+
+        it("submit event with defined submitter", async () => {
+            let submitter = "not defined";
+            outer.addEventListener("submit", (e) => {
+                catched = "outer";
+                submitter = e.submitter;
+            });
+            inner.dispatchEvent(events.submit_event({ submitter: inner }));
+            await utils.timeout(1);
+            expect(catched).toBe("outer");
+            expect(submitter).toBe(inner);
         });
 
         it("dragstart event", async () => {
