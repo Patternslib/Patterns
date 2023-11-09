@@ -129,6 +129,10 @@ export default Base.extend({
     onInputChange(e) {
         e.stopPropagation();
         this.el.dispatchEvent(events.submit_event({ submitter: e.target }));
-        log.debug("triggered by " + e.type);
+        log.debug(
+            `submit event triggered by event ${e.type} by submitter (1) on (2)`,
+            e.target,
+            this.el
+        );
     },
 });
