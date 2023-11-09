@@ -4,6 +4,44 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.10-alpha.1](https://github.com/Patternslib/patterns/compare/9.9.10-alpha.0...9.9.10-alpha.1) (2023-11-09)
+
+
+### Features
+
+
+* **core dom:** find_form - find a related form element. ([01b348d](https://github.com/Patternslib/patterns/commit/01b348db79381d0d9c3901ed48ddb531dccced3c))
+
+  Add a function to find a related form element. If called on any element
+it would first try to get a input element and get it's associated form -
+which can be different and as a last resort to find the element's
+enclosing form. Otherwise return undefined.
+
+
+
+### Bug Fixes
+
+
+* **pat autosubmit:** Re-add support for autosubmit on non form elements. ([a2530f3](https://github.com/Patternslib/patterns/commit/a2530f3e4cd57943c3109e3ef5be58278f1252bb))
+
+  Fix a problem introduces in Patternslib 9.9.7 where pat-autosubmit did
+not work when not defined on a form or input element.
+
+As a side effect, the submit event is now always invoked on the related
+or nearest form of the element where pat-autosubmit was defined on. If
+that element is not a form element a related (input.form) or the nearest
+parent form is searched and the submit event invoked upon.
+
+
+
+### Maintenance
+
+
+* **pat autosubmit:** Improve debug messages. ([8c01058](https://github.com/Patternslib/patterns/commit/8c01058eac2bec6f6e5b6f3fd75088b21c845d30))
+
+
+* **pat inject:** Add more debug messages. ([fddb3b6](https://github.com/Patternslib/patterns/commit/fddb3b6fbe150fb462f71508a7318627e6a2a29e))
+
 ## [9.9.10-alpha.0](https://github.com/Patternslib/patterns/compare/9.9.9...9.9.10-alpha.0) (2023-11-08)
 
 
