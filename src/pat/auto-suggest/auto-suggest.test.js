@@ -428,17 +428,20 @@ describe("pat-autosuggest", function () {
     describe("4 - Integration...", function () {
         it("4.1 - Works with pat-auto-submit", async function () {
             document.body.innerHTML = `
-                <input
-                    type="text"
-                    class="pat-autosuggest pat-autosubmit"
-                    data-pat-autosuggest="words: apple, orange, pear"
-                    data-pat-autosubmit="delay:0" />
+                <form>
+                    <input
+                        type="text"
+                        class="pat-autosuggest pat-autosubmit"
+                        data-pat-autosuggest="words: apple, orange, pear"
+                        data-pat-autosubmit="delay:0" />
+                </form>
             `;
 
             const pattern_autosubmit = (await import("../auto-submit/auto-submit")).default; // prettier-ignore
             const input = document.querySelector("input");
+
             let submit_dispatched = false;
-            input.addEventListener("submit", () => {
+            document.querySelector("form").addEventListener("submit", () => {
                 submit_dispatched = true;
             });
 

@@ -82,17 +82,12 @@ describe("pat-autosubmit", function () {
             `;
             const input = document.querySelector(".pat-autosubmit");
             new Pattern(input);
-            let submit_input_dispatched = false;
             let submit_form_dispatched = false;
-            input.addEventListener("submit", () => {
-                submit_input_dispatched = true;
-            });
             document.querySelector("form").addEventListener("submit", () => {
                 submit_form_dispatched = true;
             });
             input.dispatchEvent(events.input_event());
             await utils.timeout(1);
-            expect(submit_input_dispatched).toBe(true);
             expect(submit_form_dispatched).toBe(true);
         });
 
@@ -179,23 +174,41 @@ describe("pat-autosubmit", function () {
             `;
             const input = document.querySelector(".pat-autosubmit");
             new Pattern(input);
-            let submit_input_dispatched = false;
             let submit_form_dispatched = false;
-            input.addEventListener("submit", () => {
-                submit_input_dispatched = true;
-            });
             document.querySelector("form").addEventListener("submit", () => {
                 submit_form_dispatched = true;
             });
             input.dispatchEvent(events.input_event());
             await utils.timeout(1);
-            expect(submit_input_dispatched).toBe(false);
             expect(submit_form_dispatched).toBe(false);
             await utils.timeout(9);
-            expect(submit_input_dispatched).toBe(false);
             expect(submit_form_dispatched).toBe(false);
             await utils.timeout(10);
-            expect(submit_input_dispatched).toBe(true);
+            expect(submit_form_dispatched).toBe(true);
+        });
+
+        it("2.6 - when pat-autosubmit is defined not on aform element", async function () {
+            document.body.innerHTML = `
+              <form>
+                <div
+                    class="pat-autosubmit"
+                    data-pat-autosubmit="delay: 0"
+                >
+                    <input name="q">
+                </div>
+              </form>
+            `;
+            const input = document.querySelector("input");
+            const autosubmit = document.querySelector(".pat-autosubmit");
+            new Pattern(autosubmit);
+
+            let submit_form_dispatched = false;
+            document.querySelector("form").addEventListener("submit", () => {
+                submit_form_dispatched = true;
+            });
+
+            input.dispatchEvent(events.input_event());
+            await utils.timeout(1);
             expect(submit_form_dispatched).toBe(true);
         });
     });
