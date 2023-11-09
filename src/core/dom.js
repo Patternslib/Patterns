@@ -557,6 +557,25 @@ const element_uuid = (el) => {
     return get_data(el, "uuid");
 };
 
+/**
+ * Find a related form element.
+ *
+ * @param {Node} el - The DOM node to start the search from.
+ * @returns {Node} - The closest form element.
+ *
+ * @example
+ * find_form(document.querySelector("input"));
+ */
+const find_form = (el) => {
+    // Prefer input.form which allows for input outside form elements and fall
+    // back to search for a parent form.
+    return (
+        el.form ||
+        el.querySelector("input, select, textarea, button")?.form ||
+        el.closest("form")
+    );
+};
+
 const dom = {
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
@@ -585,6 +604,7 @@ const dom = {
     get_visible_ratio: get_visible_ratio,
     escape_css_id: escape_css_id,
     element_uuid: element_uuid,
+    find_form: find_form,
     add_event_listener: events.add_event_listener, // BBB export. TODO: Remove in an upcoming version.
     remove_event_listener: events.remove_event_listener, // BBB export. TODO: Remove in an upcoming version.
 };

@@ -105,6 +105,7 @@ const inject = {
                     });
                     // setup event handlers
                     if ($el[0]?.tagName === "FORM") {
+                        log.debug("Initializing form with injection on", $el[0]);
                         events.add_event_listener(
                             $el[0],
                             "submit",

@@ -903,3 +903,103 @@ describe("element_uuid", function () {
         window.crypto.randomUUID = orig_randomUUID;
     });
 });
+
+describe("find_form", function () {
+    it("example 1", function () {
+        document.body.innerHTML = `
+            <form>
+                <div id="start"></div>
+            </form>
+        `;
+        const el = document.querySelector("#start");
+        const form = document.querySelector("form");
+        expect(dom.find_form(el)).toBe(form);
+    });
+
+    it("example 2", function () {
+        document.body.innerHTML = `
+            <form>
+                <input>
+            </form>
+        `;
+        const el = document.querySelector("input");
+        const form = document.querySelector("form");
+        expect(dom.find_form(el)).toBe(form);
+    });
+
+    it("example 3", function () {
+        document.body.innerHTML = `
+            <form id="the-form">
+            </form>
+            <input form="the-form">
+        `;
+        const el = document.querySelector("input");
+        const form = document.querySelector("#the-form");
+        expect(dom.find_form(el)).toBe(form);
+    });
+
+    it("example 4", function () {
+        document.body.innerHTML = `
+            <form id="the-form">
+            </form>
+            <form id="other-form">
+                <input form="the-form">
+            </form>
+        `;
+        const el = document.querySelector("input");
+        const form = document.querySelector("#the-form");
+        expect(dom.find_form(el)).toBe(form);
+    });
+
+    it("example 5", function () {
+        document.body.innerHTML = `
+            <form id="the-form">
+            </form>
+            <form id="other-form">
+                <input form="the-form">
+            </form>
+        `;
+        const el = document.querySelector("#other-form");
+        const form = document.querySelector("#the-form");
+        expect(dom.find_form(el)).toBe(form);
+    });
+
+    it("example 6", function () {
+        document.body.innerHTML = `
+            <form id="the-form">
+            </form>
+            <form id="other-form">
+                <select form="the-form"></select>
+            </form>
+        `;
+        const el = document.querySelector("#other-form");
+        const form = document.querySelector("#the-form");
+        expect(dom.find_form(el)).toBe(form);
+    });
+
+    it("example 7", function () {
+        document.body.innerHTML = `
+            <form id="the-form">
+            </form>
+            <form id="other-form">
+                <textarea form="the-form"></textarea>
+            </form>
+        `;
+        const el = document.querySelector("#other-form");
+        const form = document.querySelector("#the-form");
+        expect(dom.find_form(el)).toBe(form);
+    });
+
+    it("example 8", function () {
+        document.body.innerHTML = `
+            <form id="the-form">
+            </form>
+            <form id="other-form">
+                <button form="the-form"></button>
+            </form>
+        `;
+        const el = document.querySelector("#other-form");
+        const form = document.querySelector("#the-form");
+        expect(dom.find_form(el)).toBe(form);
+    });
+});
