@@ -129,7 +129,7 @@ export default Base.extend({
 
     onInputChange(e) {
         e.stopPropagation();
-        dom.find_form(this.el).dispatchEvent(
+        dom.find_form(e.target).dispatchEvent(
             events.submit_event({ submitter: e.target })
         );
         log.debug(
