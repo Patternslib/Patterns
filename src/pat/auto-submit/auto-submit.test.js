@@ -187,7 +187,7 @@ describe("pat-autosubmit", function () {
             expect(submit_form_dispatched).toBe(true);
         });
 
-        it("2.6 - when pat-autosubmit is defined not on aform element", async function () {
+        it("2.6 - when pat-autosubmit is defined not on a form element", async function () {
             document.body.innerHTML = `
               <form>
                 <div
@@ -209,6 +209,40 @@ describe("pat-autosubmit", function () {
 
             input.dispatchEvent(events.input_event());
             await utils.timeout(1);
+            expect(submit_form_dispatched).toBe(true);
+        });
+
+        it("2.7 - directly on a pat-subform", async function () {
+            document.body.innerHTML = `
+              <form>
+                <div class="pat-subform">
+                    <input
+                        class="pat-autosubmit"
+                        data-pat-autosubmit="delay: 0"
+                        name="q">
+                </div>
+              </form>
+            `;
+            const input = document.querySelector("input");
+            const subform = document.querySelector(".pat-subform");
+            const autosubmit = document.querySelector(".pat-autosubmit");
+            new Pattern(autosubmit);
+
+            // The submit event should be invoked on the subform.
+            let submit_subform_dispatched = false;
+            subform.addEventListener("submit", () => {
+                submit_subform_dispatched = true;
+            });
+
+            // The submit event should also bubble up to the form.
+            let submit_form_dispatched = false;
+            document.querySelector("form").addEventListener("submit", () => {
+                submit_form_dispatched = true;
+            });
+
+            input.dispatchEvent(events.input_event());
+            await utils.timeout(1);
+            expect(submit_subform_dispatched).toBe(true);
             expect(submit_form_dispatched).toBe(true);
         });
     });
