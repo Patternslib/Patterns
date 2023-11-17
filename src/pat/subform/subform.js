@@ -28,7 +28,7 @@ export default Base.extend({
     },
 
     destroy($el) {
-        $el.off("submit");
+        events.remove_event_listener($el[0], "pat-subform--submit");
     },
 
     scopedSubmit($el) {
