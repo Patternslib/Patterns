@@ -4,6 +4,27 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.10-alpha.3](https://github.com/Patternslib/patterns/compare/9.9.10-alpha.2...9.9.10-alpha.3) (2023-11-17)
+
+
+### Bug Fixes
+
+
+* **core dom find_form, pat autosubmit:** Add support for pat-subform. ([bd19154](https://github.com/Patternslib/patterns/commit/bd191548992aa04ececadf750b08e1821617540a))
+
+  Subform was recently lost when introducing dom.find_form.
+Now subform support is back in pat-autosubmit.
+
+
+* **pat subform:** Correctly unregister the submit event on Pattern destroy. ([8252014](https://github.com/Patternslib/patterns/commit/8252014a8bfc2f8da0a1e18b4b930e2abd3ed51b))
+
+
+
+### Maintenance
+
+
+* **pat subform:** Modernize code. ([dc7c0ff](https://github.com/Patternslib/patterns/commit/dc7c0ff59974736846f8dd56ac88d04eca42244b))
+
 ## [9.9.10-alpha.2](https://github.com/Patternslib/patterns/compare/9.9.10-alpha.1...9.9.10-alpha.2) (2023-11-10)
 
 
