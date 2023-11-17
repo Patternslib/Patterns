@@ -28,18 +28,18 @@ export default Base.extend({
     },
 
     destroy($el) {
-        $el.off("submit");
+        events.remove_event_listener($el[0], "pat-subform--submit");
     },
 
     scopedSubmit($el) {
-        var $form = $el.parents("form"),
-            $exclude = $form.find(":input").filter(function () {
-                return !$(this).is($el.find("*"));
-            });
+        const $form = $el.parents("form");
+        const $exclude = $form.find(":input").filter(function () {
+            return !$(this).is($el.find("*"));
+        });
         // make other controls "unsuccessful"
         log.debug("Hiding unwanted elements from submission.");
-        var names = $exclude.map(function () {
-            var name = $(this).attr("name");
+        const names = $exclude.map(function () {
+            const name = $(this).attr("name");
             return name ? name : 0;
         });
         $exclude.each(function () {
@@ -63,8 +63,8 @@ export default Base.extend({
 
     submit(ev) {
         ev.stopPropagation();
-        var $this = $(ev.target),
-            $button = $this.find("button[type=submit][formaction]").first();
+        const $this = $(ev.target);
+        const $button = $this.find("button[type=submit][formaction]").first();
         if ($button.length) {
             $button.trigger("click");
         } else {
@@ -78,7 +78,7 @@ export default Base.extend({
         if (ev.keyCode != 13) {
             return;
         }
-        var $subform = $(ev.target).parents(".pat-subform");
+        const $subform = $(ev.target).parents(".pat-subform");
         if (!$subform.is(".pat-autosubmit")) {
             return;
         }
@@ -90,14 +90,14 @@ export default Base.extend({
         ev.stopPropagation();
         ajax.onClickSubmit(ev); // make sure the submitting button is sent with the form
 
-        var $button = $(ev.target),
-            $sub = $button.parents(".pat-subform").first(),
-            formaction = $button.attr("formaction");
+        const $button = $(ev.target);
+        const $sub = $button.parents(".pat-subform").first();
+        const formaction = $button.attr("formaction");
 
         if (formaction) {
             // override the default action and restore afterwards
             if ($sub.is(".pat-inject")) {
-                var previousValue = $sub.data("pat-inject");
+                const previousValue = $sub.data("pat-inject");
                 $sub.data("pat-inject", inject.extractConfig($sub, { url: formaction }));
                 this.scopedSubmit($sub);
                 $sub.data("pat-inject", previousValue);

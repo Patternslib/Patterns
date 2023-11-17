@@ -1002,4 +1002,18 @@ describe("find_form", function () {
         const form = document.querySelector("#the-form");
         expect(dom.find_form(el)).toBe(form);
     });
+
+    it("example 9 - subform support", function () {
+        // Subform support. Subforms have precedence over forms.
+        document.body.innerHTML = `
+            <form>
+                <div class="pat-subform">
+                    <button></button>
+                </div>
+            </form>
+        `;
+        const el = document.querySelector("button");
+        const subform = document.querySelector(".pat-subform");
+        expect(dom.find_form(el)).toBe(subform);
+    });
 });

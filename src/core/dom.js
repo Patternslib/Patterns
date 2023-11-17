@@ -569,11 +569,12 @@ const element_uuid = (el) => {
 const find_form = (el) => {
     // Prefer input.form which allows for input outside form elements and fall
     // back to search for a parent form.
-    return (
+    const form =
+        el.closest(".pat-subform") || // Special Patternslib subform concept has precedence.
         el.form ||
         el.querySelector("input, select, textarea, button")?.form ||
-        el.closest("form")
-    );
+        el.closest("form");
+    return form;
 };
 
 const dom = {
