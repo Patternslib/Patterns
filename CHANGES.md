@@ -4,6 +4,21 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.10-alpha.4](https://github.com/Patternslib/patterns/compare/9.9.10-alpha.3...9.9.10-alpha.4) (2023-11-23)
+
+
+### Features
+
+
+* Upgrade dependencies. ([a896a80](https://github.com/Patternslib/patterns/commit/a896a80d07d5bc471fd5495aacb56496d0e64edb))
+
+
+
+### Bug Fixes
+
+
+* Upgrade node version for GitHub Actions. ([1cf4d6a](https://github.com/Patternslib/patterns/commit/1cf4d6a620ac361b99bbf7c2d13f6b4da4d96694))
+
 ## [9.9.10-alpha.3](https://github.com/Patternslib/patterns/compare/9.9.10-alpha.2...9.9.10-alpha.3) (2023-11-17)
 
 
