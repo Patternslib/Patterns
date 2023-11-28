@@ -1,129 +1,58 @@
-Creating a new pattern
-======================
+The structure of a pattern
+==========================
 
-Patterns are implemented as javascript objects that are registered with the
-patterns library. Below is a minimal skeleton for a pattern.
-
-.. code-block:: javascript
-   :linenos:
-
-   define([
-       'require'
-       '../registry'
-   ], function(require, registry) {
-       var pattern_spec = {
-           name: "mypattern",
-       };
-
-       registry.register(pattern_spec);
-   });
-
-This skeleton does several things:
-
-* lines 1-4 use `RequireJS <http://requirejs.org/>`_ to load the patterns
-  registry.
-* lines 5-7 create an object which defines this pattern's specifications.
-* line 9 registers the pattern.
-
-
-Markup patterns
----------------
-
-Most patterns deal with markup: they are activated for content that matches
-a specific CSS selector. This is handled by adding two items to the
-pattern specification: a ``trigger`` and an ``init`` function.
+Patterns are implemented as JavaScript classes that are registered with the patterns registry.
+Below is a minimalistic skeleton for a pattern with explanations as inline comments.
 
 .. code-block:: javascript
    :linenos:
 
-   var pattern_spec = {
-       name: "mypattern",
-       trigger: ".tooltip, [data-tooltip]",
+    import { BasePattern } from "@patternslib/patternslib/src/core/basepattern";
+    import Parser from "@patternslib/patternslib/src/core/parser";
+    import registry from "@patternslib/patternslib/src/core/registry";
 
-       init: function($el) {
-           ...
-       },
+    export const parser = new Parser("test-pattern");
+    // Define an argument with a default value. You can configure the value via
+    // data-attributes.
+    parser.addArgument("example-option", "Hollareidulio");
 
-       destroy: function($el) {
-           ...
-       }
-   };
+    class Pattern extends BasePattern {
 
-The trigger specified on line 3 is a CSS selector which tells the pattern
-framework which elements this pattern is interested in. If new items are
-discovered in the DOM that match this pattern, the ``init`` function will be
-called with a jQuery wrapper around the element.
+        // Define a name for the pattern which is used as key in the pattern
+        // registry.
+        static name = "test-pattern";
+        
+        // Define a CSS selector. The pattern will be initialized on elements
+        // matching this selector.
+        static trigger = ".pat-test-pattern";
 
-While not required patterns are encouraged to include a ``destroy`` function
-that undos the pattern initialisation.  After calling ``destroy`` it should be
-possible to call ``init`` again to reactivate the pattern.
+        // The parser instance from above.
+        static parser = parser;
 
-Methods must always return ``this`` to facilitate their use as jQuery widgets.
+        init() {
+            import("./test-pattern.scss");
 
-jQuery plugins
---------------
+            // Try to avoid jQuery, but here is how to import it, asynchronously.
+            // eslint-disable-next-line no-unused-vars
+            const $ = (await import("jquery")).default;
 
-Patterns can also act as jQuery plugins. This can be done by providing a
-``jquery_plugin`` option in the pattern specification.
+            // The options are automatically created, if parser is defined.
+            const example_option = this.options.exampleOption;
+            this.el.innerHTML = `
+                <p>${example_option}, this is the ${this.name} pattern!</p>
+            `;
+        }
+    }
 
-.. code-block:: javascript
-   :linenos:
-   :emphasize-lines: 3
+    // Register Pattern class in the global pattern registry and make it usable there.
+    registry.register(Pattern);
 
-   var pattern_spec = {
-       name: "mypattern",
-       jquery_plugin: true,
-
-       init: function($el) {
-           ...
-       },
-
-       destroy: function($el) {
-           ...
-       },
-
-       othermethod: function($el, options) {
-           ...
-       }
-   };
-
-
-Line 3 tells the patterns framework that this pattern can be used as a jQuery
-plugin named ``patMypattern``. You can then interact with it using the
-standard jQuery API:
-
-.. code-block:: javascript
-
-   // Initialize mypattern for #title
-   $("#title").patMypattern();
-
-   // Invoke othermethod for the pattern 
-   $("#title").patMypattern("othermethod", {option: "value"});
-
-
-Injection actions
------------------
-
-The injection mechanism supports invoking arbitrary actions after loading new
-content. This is handled through *injection actions*. These are handled by an
-``inject`` method on a pattern.
-
-.. code-block:: javascript
-   :linenos:
-   :emphasize-lines: 3
-
-   var pattern_spec = {
-       name: "mypattern",
-
-       inject: function($trigger, content) {
-           ...
-       }
-   };
-
-The inject methods gets a number of parameters:
-
-* ``$trigger`` is the element that triggered the injection. 
-* ``content`` is an array containing the loaded content.
+    // Export Pattern as default export.
+    // You can import it as ``import AnyName from "./{{{ pattern.name }}}";``
+    export default Pattern;
+    // Export BasePattern as named export.
+    // You can import it as ``import { Pattern } from "./{{{ pattern.name }}}";``
+    export { Pattern };
 
 
 
@@ -131,8 +60,7 @@ Pattern configuration
 ---------------------
 
 The configuration of a pattern is generally based on three components: the
-default settings, configuration set on a DOM element via a data-attribute, and,
-if the jQuery API is used, via options passed in via the jQuery plugin API.
+default settings, configuration set on a DOM element via a data-attribute.
 The init method for patterns should combine these settings. Let's update our
 example pattern to do this:
 
@@ -163,43 +91,3 @@ parser instance and add our options with their default values. In the init
 method we use the parser to parse the ``data-mypattern`` attribute for the
 element. Finally we combine that with the options that might have been
 provided through the jQuery plugin API.
-
-Creating a JavaScript API
--------------------------
-
-Sometimes you may want to create a JavaScript API that is not tied to DOM
-elements, so exposing it as a jQuery plugin does not make sense. This can
-be done using the standard RequireJS mechanism by creating and returning an
-API object.
-
-.. code-block:: javascript
-   :linenos:
-   :emphasize-lines: 13-17
-
-   define([
-       'require',
-       '../registry'
-   ], function(require, registry) {
-       var pattern_spec = {
-           init: function($el) {
-               ...
-           };
-       };
-
-       registry.register(pattern_spec);
-
-       var public_api = {
-           method1: function() { .... },
-           method2: function() { .... }
-       };
-       return public_api;
-   });
-
-
-You can then use the API by using require to retrieve the API object for
-the pattern:
-
-.. code-block:: javascript
-
-  var pattern_api = require("patterns/mypattern");
-  pattern_api.method1();
