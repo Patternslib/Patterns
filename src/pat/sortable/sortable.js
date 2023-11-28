@@ -20,7 +20,7 @@ export default Base.extend({
         if (window.__patternslib_import_styles) {
             import("./_sortable.scss");
         }
-        this.$form = this.$el.closest("form");
+        this.$form = $(this.el.form || this.el.closest("form"));
         this.options = parser.parse(this.$el, false);
         this.recordPositions().initScrolling();
         this.$el.on("pat-update", this.onPatternUpdate.bind(this));
