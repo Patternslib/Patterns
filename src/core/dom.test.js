@@ -875,6 +875,19 @@ describe("escape_css_id", function () {
     });
 });
 
+describe("get_uuid", function () {
+    it("returns a UUIDv4", function () {
+        const uuid = dom.get_uuid();
+        expect(uuid).toMatch(
+            /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+        );
+    });
+
+    it("the uuid is unique", function () {
+        expect(dom.get_uuid()).not.toBe(dom.get_uuid());
+    });
+});
+
 describe("element_uuid", function () {
     it("returns a UUIDv4 for an element", function () {
         const el = document.createElement("div");

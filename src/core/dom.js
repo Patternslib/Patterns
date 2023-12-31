@@ -529,7 +529,27 @@ const escape_css_id = (id) => {
 };
 
 /**
- * Get a universally unique id (uuid) for a DOM element.
+ * Get a universally unique id (uuid).
+ * This method returns a uuid.
+ */
+const get_uuid = () => {
+    let uuid;
+    if (window.crypto.randomUUID) {
+        // Create a real UUID
+        // window.crypto.randomUUID does only exist in browsers with secure
+        // context.
+        // See: https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomUUID
+        uuid = window.crypto.randomUUID();
+    } else {
+        // Create a sufficiently unique ID
+        const array = new Uint32Array(4);
+        uuid = window.crypto.getRandomValues(array).join("");
+    }
+    return uuid;
+};
+
+/**
+ * Set and get a universally unique id (uuid) for a DOM element.
  *
  * This method returns a uuid for the given element. On the first call it will
  * generate a uuid and store it on the element.
@@ -539,19 +559,7 @@ const escape_css_id = (id) => {
  */
 const element_uuid = (el) => {
     if (!get_data(el, "uuid", false)) {
-        let uuid;
-        if (window.crypto.randomUUID) {
-            // Create a real UUID
-            // window.crypto.randomUUID does only exist in browsers with secure
-            // context.
-            // See: https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomUUID
-            uuid = window.crypto.randomUUID();
-        } else {
-            // Create a sufficiently unique ID
-            const array = new Uint32Array(4);
-            uuid = window.crypto.getRandomValues(array).join("");
-        }
-        set_data(el, "uuid", uuid);
+        set_data(el, "uuid", get_uuid());
     }
     return get_data(el, "uuid");
 };
@@ -603,6 +611,7 @@ const dom = {
     template: template,
     get_visible_ratio: get_visible_ratio,
     escape_css_id: escape_css_id,
+    get_uuid: get_uuid,
     element_uuid: element_uuid,
     find_form: find_form,
 };
