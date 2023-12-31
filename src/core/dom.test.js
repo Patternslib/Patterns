@@ -1,11 +1,91 @@
 import $ from "jquery";
 import dom from "./dom";
+import utils from "./utils";
 
 describe("core.dom tests", () => {
     // Tests from the core.dom module
 
     afterEach(() => {
         document.body.innerHTML = "";
+        jest.restoreAllMocks();
+    });
+
+    describe("document_ready", () => {
+        it("calls the callback, once the document is ready.", async () => {
+            let cnt = 0;
+            const counter = () => {
+                cnt++;
+            };
+
+            // Call document ready immediately. It should already call the
+            // callback, if ready. Which it isn't.
+            jest.spyOn(document, "readyState", "get").mockReturnValue("loading");
+            dom.document_ready(counter);
+            await utils.timeout(1);
+            expect(cnt).toBe(0);
+
+            // While readyState "loading" the callback should not be called.
+            document.dispatchEvent(new Event("readystatechange"));
+            await utils.timeout(1);
+            expect(cnt).toBe(0);
+
+            // While still loading the callback should still not be called.
+            document.dispatchEvent(new Event("readystatechange"));
+            await utils.timeout(1);
+            expect(cnt).toBe(0);
+
+            // Now it's the time.
+            jest.spyOn(document, "readyState", "get").mockReturnValue("complete");
+            document.dispatchEvent(new Event("readystatechange"));
+            await utils.timeout(1);
+            expect(cnt).toBe(1);
+
+            // But the callback is only called once and the event handler removed from the document.
+            document.dispatchEvent(new Event("readystatechange"));
+            await utils.timeout(1);
+            expect(cnt).toBe(1);
+        });
+
+        it("it will also fire on readyState interactive, not only complete.", async () => {
+            let cnt = 0;
+            const counter = () => {
+                cnt++;
+            };
+
+            // Call document ready immediately. It should already call the
+            // callback, if ready. Which it isn't.
+            jest.spyOn(document, "readyState", "get").mockReturnValue("loading");
+            dom.document_ready(counter);
+            await utils.timeout(1);
+            expect(cnt).toBe(0);
+
+            // When readyState interactive, the callback should be called.
+            jest.spyOn(document, "readyState", "get").mockReturnValue("interactive");
+            document.dispatchEvent(new Event("readystatechange"));
+            await utils.timeout(1);
+            expect(cnt).toBe(1);
+        });
+
+        it("the callback will be called immedeately if the ready state change has already happended.", async () => {
+            let cnt = 0;
+            const counter = () => {
+                cnt++;
+            };
+
+            // Call document ready immediately. It should already call the
+            // callback, if ready. Which it isn't.
+            jest.spyOn(document, "readyState", "get").mockReturnValue("complete");
+            dom.document_ready(counter);
+            await utils.timeout(1);
+            expect(cnt).toBe(1);
+
+            // But another state change would not call the callback, because
+            // the event listener is already de-registered.
+            jest.spyOn(document, "readyState", "get").mockReturnValue("interactive");
+            document.dispatchEvent(new Event("readystatechange"));
+            await utils.timeout(1);
+            expect(cnt).toBe(1);
+        });
     });
 
     describe("toNodeArray tests", () => {
