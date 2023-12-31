@@ -7,6 +7,30 @@ const DATA_PREFIX = "__patternslib__data_prefix__";
 const DATA_STYLE_DISPLAY = "__patternslib__style__display";
 
 /**
+ * Wait for the document to be ready.
+ *
+ * @param {Function} fn - The function to call when the document is ready.
+ */
+const document_ready = (fn) => {
+    const event_id = get_uuid();
+
+    const _ready = () => {
+        if (document.readyState !== "loading") {
+            // Remove the event listener for this callback.
+            events.remove_event_listener(document, event_id);
+            // call on next available tick
+            setTimeout(fn, 1);
+        }
+    };
+
+    // Listen for the document to be ready and call _ready() when it is.
+    events.add_event_listener(document, "readystatechange", event_id, _ready);
+
+    // Also check the ready state immediately in case we missed the event.
+    _ready();
+};
+
+/**
  * Return an array of DOM nodes.
  *
  * @param {Node|NodeList|jQuery} nodes - The DOM node to start the search from.
@@ -585,6 +609,7 @@ const find_form = (el) => {
 };
 
 const dom = {
+    document_ready: document_ready,
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
     wrap: wrap,
