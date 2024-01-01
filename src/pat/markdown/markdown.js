@@ -104,7 +104,7 @@ class Pattern extends BasePattern {
     }
 }
 
-$(document).ready(function () {
+dom.document_ready(() => {
     $(document.body).on(
         "patterns-inject-triggered.pat-markdown",
         "a.pat-inject",
