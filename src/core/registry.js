@@ -61,7 +61,7 @@ const registry = {
     // the DOM is scanned. After that registering a new pattern
     // results in rescanning the DOM only for this pattern.
     init() {
-        $(document).ready(function () {
+        dom.document_ready(() => {
             if (window.__patternslib_registry_initialized) {
                 // Do not reinitialize a already initialized registry.
                 return;
