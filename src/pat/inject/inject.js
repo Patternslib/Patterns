@@ -839,10 +839,10 @@ const inject = {
     _rebaseAttrs: {
         a: "href",
         form: "action",
-        img: "data-pat-inject-rebase-src",
+        img: "src",
         object: "data",
-        source: "data-pat-inject-rebase-src",
-        video: "data-pat-inject-rebase-src",
+        source: "src",
+        video: "src",
     },
 
     _rebaseOptions: {
@@ -867,13 +867,17 @@ const inject = {
             return "";
         }
 
-        // Create temporary DOM node and store the html contents on it where
-        // the original src attribute is kept.
-        const node = document.createElement("div");
-        node.innerHTML = html.replace(/(\s)(src\s*)=/gi, '$1src="" data-pat-inject-rebase-$2=').trim();
+        // Parse the html string into a DOM tree.
+        const page = document.createElement("div");
+        page.innerHTML = html;
 
-        const selector = Object.keys(this._rebaseAttrs).join(",");
-        for (const el_ of node.querySelectorAll(selector)) {
+        // Create efficient selector for any tag with it's corresponding
+        // attribute from _rebaseAttrs. Note: the current data structure allows
+        // only for one attribute to be rebased per tag.
+        const rebase_selector = Object.entries(this._rebaseAttrs)
+            .map(([tag, attr]) => `${tag}[${attr}]`)
+            .join(", ");
+        for (const el_ of page.querySelectorAll(rebase_selector)) {
             const attr = this._rebaseAttrs[el_.tagName.toLowerCase()];
             let value = el_.getAttribute(attr);
 
@@ -895,7 +899,10 @@ const inject = {
         }
 
         for (const [pattern_name, opts] of Object.entries(this._rebaseOptions)) {
-            for (const el_ of node.querySelectorAll(`[data-pat-${pattern_name}]`)) {
+            for (const el_ of dom.querySelectorAllAndMe(
+                page,
+                `[data-pat-${pattern_name}]`
+            )) {
                 const pattern = registry.patterns?.[pattern_name];
                 const pattern_parser = pattern?.parser;
                 if (!pattern_parser) {
@@ -927,10 +934,7 @@ const inject = {
             }
         }
 
-        return node
-            .innerHTML
-            .replace(/src="" data-pat-inject-rebase-/g, "")
-            .trim();
+        return page.innerHTML.trim();
     },
 
     _parseRawHtml(html, url = "") {
