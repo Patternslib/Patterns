@@ -47,6 +47,10 @@ which contains Patterns and all its dependencies:
 
 Alternatively, you can [download a bundle at patternslib.com](http://patternslib.com/download.html).
 
+To start the development server, use `make serve` or `npx yarn start` and access the demo pages via [http://localhost:3001/](http://localhost:3001/).
+The files are watched and the bundle re-built on changes.
+You can access the bundle directly at [http://localhost:3001/bundle.min.js](http://localhost:3001/bundle.min.js).
+
 
 ## Layout
 
@@ -70,7 +74,7 @@ You'll need to have a Sass compiler installed.
 To demo the patterns, simply type `make serve` to install the necessary
 dependencies and to start a simple Node.js HTTP server.
 
-You can then visit http://localhost:4001 to see a site with demos.
+You can then visit http://localhost:3001 to see a site with demos.
 
 Alternatively, patterns can also be demoed through the
 [Patternslib.com](http://patternslib.com) website, which is open-source. The
