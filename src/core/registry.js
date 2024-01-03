@@ -38,6 +38,8 @@ while ((match = dont_catch_re.exec(window.location.search)) !== null) {
     log.info("I will not catch init exceptions");
 }
 
+const BLACKLIST = window.__patternslib_patterns_blacklist || [];
+
 /**
  * Global pattern registry.
  *
@@ -207,6 +209,10 @@ const registry = {
         name = name || pattern.name;
         if (!name) {
             log.error("Pattern lacks a name.", pattern);
+            return false;
+        }
+        if (BLACKLIST.includes(name)) {
+            log.warn(`Pattern name ${name} is blacklisted.`);
             return false;
         }
         if (registry.patterns[name]) {
