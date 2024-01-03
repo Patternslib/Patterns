@@ -12,6 +12,8 @@ export const parser = new Parser("autosuggest");
 parser.addArgument("ajax-data-type", "JSON");
 parser.addArgument("ajax-search-index", "");
 parser.addArgument("ajax-url", "");
+parser.addArgument("ajax-batch-size", 10);
+parser.addArgument("ajax-batch-mode", "fixed", ["fixed", "batched"]);
 parser.addArgument("allow-new-words", true); // Should custom tags be allowed?
 parser.addArgument("max-selection-size", 0);
 parser.addArgument("minimum-input-length"); // Don't restrict by default so that all results show
@@ -258,14 +260,28 @@ export default Base.extend({
                             return {
                                 index: this.options.ajax["search-index"],
                                 q: term, // search term
-                                page_limit: 10,
+                                page_limit: this.options.ajax["batch-size"],
                                 page: page,
                             };
                         },
                         results: (data, page) => {
-                            // parse the results into the format expected by Select2.
+                            // Parse the results into the format expected by Select2.
                             // data must be a list of objects with keys "id" and "text"
-                            return { results: data, page: page };
+
+                            // Check, if there are more results to come.
+                            // If batch-mode is fixed, we do not load more
+                            // results. Otherwise there are maybe more results
+                            // if the number of items is the same as the
+                            // batch-size.
+                            // We expect the backend to return an empty list if
+                            // a batch page is requested where there are no
+                            // more results.
+                            const load_more =
+                                this.options.ajax["batch-mode"] !== "fixed" && // no batching if fixed.
+                                Object.keys(data).length >=
+                                    this.options.ajax["batch-size"];
+
+                            return { results: data, page: page, more: load_more };
                         },
                     },
                 },
