@@ -11,7 +11,10 @@ const log = logging.getLogger("autosuggest");
 export const parser = new Parser("autosuggest");
 parser.addArgument("ajax-data-type", "JSON");
 parser.addArgument("ajax-search-index", "");
+parser.addArgument("ajax-timeout", 400);
 parser.addArgument("ajax-url", "");
+parser.addArgument("max-initial-size", 10); // AJAX search results limit for the first page.
+parser.addArgument("ajax-batch-size", 0); // AJAX search results limit for subsequent pages.
 parser.addArgument("allow-new-words", true); // Should custom tags be allowed?
 parser.addArgument("max-selection-size", 0);
 parser.addArgument("minimum-input-length"); // Don't restrict by default so that all results show
@@ -54,10 +57,11 @@ export default Base.extend({
             separator: this.options.valueSeparator,
             tokenSeparators: [","],
             openOnEnter: false,
-            maximumSelectionSize: this.options.maxSelectionSize,
+            maximumSelectionSize: this.options.max["selection-size"],
             minimumInputLength: this.options.minimumInputLength,
             allowClear:
-                this.options.maxSelectionSize === 1 && !this.el.hasAttribute("required"),
+                this.options.max["selection-size"] === 1 &&
+                !this.el.hasAttribute("required"),
         };
         if (this.el.hasAttribute("readonly")) {
             config.placeholder = "";
@@ -179,7 +183,7 @@ export default Base.extend({
         // Even if words was [], we would get a tag stylee select
         // That was then properly working with ajax if configured.
 
-        if (this.options.maxSelectionSize === 1) {
+        if (this.options.max["selection-size"] === 1) {
             config.data = words;
             // We allow exactly one value, use dropdown styles. How do we feed in words?
         } else {
@@ -198,7 +202,7 @@ export default Base.extend({
                 for (const value of values) {
                     data.push({ id: value, text: value });
                 }
-                if (this.options.maxSelectionSize === 1) {
+                if (this.options.max["selection-size"] === 1) {
                     data = data[0];
                 }
                 callback(data);
@@ -234,7 +238,7 @@ export default Base.extend({
                             _data.push({ id: d, text: data[d] });
                         }
                     }
-                    if (this.options.maxSelectionSize === 1) {
+                    if (this.options.max["selection-size"] === 1) {
                         _data = _data[0];
                     }
                     callback(_data);
@@ -253,19 +257,36 @@ export default Base.extend({
                         url: this.options.ajax.url,
                         dataType: this.options.ajax["data-type"],
                         type: "GET",
-                        quietMillis: 400,
+                        quietMillis: this.options.ajax.timeout,
                         data: (term, page) => {
-                            return {
+                            const request_data = {
                                 index: this.options.ajax["search-index"],
                                 q: term, // search term
-                                page_limit: 10,
                                 page: page,
                             };
+
+                            const page_limit = this.page_limit(page);
+                            if (page_limit > 0) {
+                                request_data.page_limit = page_limit;
+                            }
+
+                            return request_data;
                         },
                         results: (data, page) => {
-                            // parse the results into the format expected by Select2.
+                            // Parse the results into the format expected by Select2.
                             // data must be a list of objects with keys "id" and "text"
-                            return { results: data, page: page };
+
+                            // Check whether there are more results to come.
+                            // There are maybe more results if the number of
+                            // items is the same as the batch-size.
+                            // We expect the backend to return an empty list if
+                            // a batch page is requested where there are no
+                            // more results.
+                            const page_limit = this.page_limit(page);
+                            const load_more = page_limit > 0 &&
+                                data &&
+                                Object.keys(data).length >= page_limit;
+                            return { results: data, page: page, more: load_more };
                         },
                     },
                 },
@@ -273,6 +294,26 @@ export default Base.extend({
             );
         }
         return config;
+    },
+
+    page_limit(page) {
+        /* Return the page limit based on the current page.
+         *
+         * If no `ajax-batch-size` is set, batching is disabled but we can
+         * still define the number of items to be shown on the first page with
+         * `max-initial-size`.
+         *
+         * @param {number} page - The current page number.
+         * @returns {number} - The page limit.
+         */
+
+        // Page limit for the first page of a batch.
+        const initial_size = this.options.max["initial-size"] || 0;
+
+        // Page limit for subsequent pages.
+        const batch_size = this.options.ajax["batch-size"] || 0;
+
+        return page === 1 ? initial_size : batch_size;
     },
 
     destroy($el) {
