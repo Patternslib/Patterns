@@ -18,6 +18,7 @@
  */
 import $ from "jquery";
 import dom from "./dom";
+import events from "./events";
 import logging from "./logging";
 import utils from "./utils";
 
@@ -68,6 +69,14 @@ const registry = {
                 // Do not reinitialize a already initialized registry.
                 return;
             }
+            events.add_event_listener(
+                document,
+                "patternslib__mf--loaded",
+                "registry_rescan_mf",
+                () => {
+                    registry.scan(document.body);
+                }
+            );
             window.__patternslib_registry_initialized = true;
             log.debug("Loaded: " + Object.keys(registry.patterns).sort().join(", "));
             registry.scan(document.body);
