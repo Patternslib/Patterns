@@ -116,4 +116,38 @@ describe("pat-registry: The registry for patterns", function () {
         expect(() => { registry.scan(el) }).not.toThrow(DOMException);
     });
 
+    it("Does not initialize the pattern if blacklisted", function () {
+        window.__patternslib_patterns_blacklist = ["example"];
+
+        Base.extend({
+            name: "example",
+            trigger: ".pat-example",
+            init: function () {
+                this.el.innerHTML = "initialized";
+            },
+        });
+
+        const tree = document.createElement("div");
+        tree.setAttribute("class", "pat-example");
+        registry.scan(tree);
+        expect(tree.textContent).toBe("");
+    });
+
+    it("but also doesn't break with invalid blacklists", function () {
+        window.__patternslib_patterns_blacklist = "example"; // not an array
+
+        Base.extend({
+            name: "example",
+            trigger: ".pat-example",
+            init: function () {
+                this.el.innerHTML = "initialized";
+            },
+        });
+
+        const tree = document.createElement("div");
+        tree.setAttribute("class", "pat-example");
+        registry.scan(tree);
+        expect(tree.textContent).toBe("initialized");
+    });
+
 });

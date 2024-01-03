@@ -142,10 +142,10 @@ global settings or access otherwise hidden objects.
 | Global variable | Purpose | Default |
 | --------------- | ------- | ------ |
 | window.__patternslib_import_styles | Whether to import pattern-specific styles | false |
+| window.__patternslib_patterns_blacklist | A list of patterns that should not be loaded. | [] |
 | window.__patternslib_registry | Global access to the Patternslib registry object. | - |
 | window.__patternslib_registry_initialized | True, if the registry has been initialized. | false |
 | window.__patternslib_disable_modernizr (Deprecated) | Disable modernizr, but still write the js/no-js classes to the body. | undefined |
-
 
 ### Bundle build analyzation
 
