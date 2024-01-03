@@ -484,6 +484,11 @@ const inject = {
                 action: "element",
             });
         }
+
+        // Notify for changed URL.
+        document.body.dispatchEvent(
+            new CustomEvent("pat-inject-history-changed", { detail: { url: cfg.url } })
+        );
     },
 
     _afterInjection($el, $injected, cfg) {
