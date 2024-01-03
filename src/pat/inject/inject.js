@@ -512,6 +512,11 @@ const inject = {
                 });
             }
         }
+
+        // Notify for changed URL.
+        document.body.dispatchEvent(
+            new CustomEvent("pat-inject-history-changed", { detail: { url: url } })
+        );
     },
 
     _afterInjection($el, $injected, cfg) {
