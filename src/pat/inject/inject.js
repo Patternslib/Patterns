@@ -468,22 +468,20 @@ const inject = {
 
     _update_history(cfg, trigger, title) {
         // History support. if subform is submitted, append form params
-        const glue = cfg.url.indexOf("?") > -1 ? "&" : "?";
-        if (cfg.history === "record" && "pushState" in history) {
-            if (cfg.params) {
-                history.pushState(
-                    { url: cfg.url + glue + cfg.params },
-                    "",
-                    cfg.url + glue + cfg.params
-                );
-            } else {
-                history.pushState({ url: cfg.url }, "", cfg.url);
-            }
-            // Also inject title element if we have one
-            if (title)
-                this._inject(trigger, title, $("title"), {
-                    action: "element",
-                });
+        if (cfg.history !== "record" || !history?.pushState) {
+            return;
+        }
+        let url = cfg.url;
+        const glue = url.indexOf("?") > -1 ? "&" : "?";
+        if (cfg.params) {
+            url = `${url}${glue}${cfg.params}`;
+        }
+        history.pushState({ url: url }, "", url);
+        // Also inject title element if we have one
+        if (title) {
+            this._inject(trigger, title, $("title"), {
+                action: "element",
+            });
         }
     },
 
