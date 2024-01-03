@@ -89,6 +89,7 @@ module.exports = () => {
         // server for testing CSR issues.
         //config.devServer.headers["Content-Security-Policy"] =
         //    "default-src https: http: data: 'self';";
+        config.devServer.liveReload = false;
     }
 
     // Add an @patternslib/patternslib alias when building within this repository.
