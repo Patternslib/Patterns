@@ -56,6 +56,7 @@ import "./pat/syntax-highlight/syntax-highlight";
 import "./pat/tabs/tabs";
 import "./pat/toggle/toggle";
 import "./pat/tooltip/tooltip";
+import "./pat/update/update";
 import "./pat/validation/validation";
 import "./pat/zoom/zoom";
 
