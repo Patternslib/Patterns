@@ -268,7 +268,7 @@ export default Base.extend({
                             // Parse the results into the format expected by Select2.
                             // data must be a list of objects with keys "id" and "text"
 
-                            // Check, if there are more results to come.
+                            // Check whether there are more results to come.
                             // If batch-mode is fixed, we do not load more
                             // results. Otherwise there are maybe more results
                             // if the number of items is the same as the
