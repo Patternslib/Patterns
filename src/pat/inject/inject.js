@@ -945,7 +945,7 @@ const inject = {
         // remove script tags and head and replace body by a div
         const title = html.match(/\<title\>(.*)\<\/title\>/);
         let clean_html = html
-            .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+            //.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
             .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
             .replace(/<body([^>]*?)>/gi, '<div id="__original_body">')
             .replace(/<\/body([^>]*?)>/gi, "</div>");
