@@ -38,9 +38,9 @@ parser.addArgument("class"); // Add a class to the injected content.
 parser.addArgument("history", "none", ["none", "record"]);
 parser.addArgument("push-marker");
 parser.addArgument("scroll");
-// XXX: this should not be here but the parser would bail on
-// unknown parameters and expand/collapsible need to pass the url
-// to us
+
+// Note: this should not be here but the parser would bail on unknown
+// parameters and expand/collapsible need to pass the url to us.
 parser.addArgument("url");
 
 const inject = {
@@ -56,12 +56,15 @@ const inject = {
         // from pat-inject. Waiting a tick in pat-inject solves this -
         // pat-validation's event handlers are initialized first.
         await utils.timeout(1);
+
+        const el = utils.jqToNode($el);
+
         const cfgs = this.extractConfig($el, opts);
         if (cfgs.some((e) => e.history === "record") && !("pushState" in history)) {
             // if the injection shall add a history entry and HTML5 pushState
             // is missing, then don't initialize the injection.
             log.warn("HTML5 pushState is missing, aborting");
-            return $el;
+            return;
         }
         $el.data("pat-inject", cfgs);
 
@@ -70,18 +73,19 @@ const inject = {
             // exists in the page, we do not activate the injection
             // but instead just change the anchors href.
 
-            // XXX: This is used in only one project for linked
-            // fullcalendars, it's sanity is wonky and we should
-            // probably solve it differently.
-            if ($el.is("a") && $(cfgs[0].nextHref).length > 0) {
+            // Note: This is used in only one project for linked fullcalendars,
+            // it's sanity is wonky and we should probably solve it differently.
+            if (el.nodeName === "A" && $(cfgs[0].nextHref).length > 0) {
                 log.debug(
                     "Skipping as next href is anchor, which already exists",
                     cfgs[0].nextHref
                 );
-                // XXX: reconsider how the injection enters exhausted state
-                return $el.attr({
-                    href: (window.location.href.split("#")[0] || "") + cfgs[0].nextHref,
-                });
+                // TODO: reconsider how the injection enters exhausted state
+                el.setAttribute(
+                    "href",
+                    (window.location.href.split("#")[0] || "") + cfgs[0].nextHref
+                );
+                return $el;
             }
         }
         if (cfgs[0].pushMarker) {
@@ -89,7 +93,7 @@ const inject = {
                 log.debug("received push message: " + data);
                 if (data == cfgs[0].pushMarker) {
                     log.debug("re-injecting " + data);
-                    this.onTrigger({ currentTarget: $el[0] });
+                    this.onTrigger({ currentTarget: el });
                 }
             });
         }
@@ -104,10 +108,10 @@ const inject = {
                         }
                     });
                     // setup event handlers
-                    if ($el[0]?.tagName === "FORM") {
-                        log.debug("Initializing form with injection on", $el[0]);
+                    if (el?.tagName === "FORM") {
+                        log.debug("Initializing form with injection on", el);
                         events.add_event_listener(
-                            $el[0],
+                            el,
                             "submit",
                             "pat-inject--form-submit",
                             (e) => {
@@ -123,7 +127,7 @@ const inject = {
                                 this.onTrigger(e);
                             }
                         );
-                    } else if ($el.is(".pat-subform")) {
+                    } else if (el?.matches(".pat-subform")) {
                         log.debug("Initializing subform with injection");
                     } else {
                         $el.on("click.pat-inject", this.onTrigger.bind(this));
@@ -131,22 +135,24 @@ const inject = {
                     break;
                 case "autoload":
                     if (!cfgs[0].delay) {
-                        this.onTrigger({ currentTarget: $el[0] });
+                        this.onTrigger({ currentTarget: el });
                     } else {
                         // generate UID
                         const uid = Math.random().toString(36);
-                        $el.attr("data-pat-inject-uid", uid);
+                        el.setAttribute("data-pat-inject-uid", uid);
 
                         // function to trigger the autoload and mark as triggered
                         const delayed_trigger = (uid_) => {
                             // Check if the element has been removed from the dom
-                            const still_there = $(
-                                "[data-pat-inject-uid='" + uid_ + "']"
+                            const still_there = document.querySelector(
+                                `[data-pat-inject-uid="${uid_}"]`
                             );
-                            if (still_there.length == 0) return false;
+                            if (!still_there) {
+                                return false;
+                            }
 
                             $el.data("pat-inject-autoloaded", true);
-                            this.onTrigger({ currentTarget: $el[0] });
+                            this.onTrigger({ currentTarget: el });
                             return true;
                         };
                         window.setTimeout(
@@ -164,7 +170,7 @@ const inject = {
             }
         }
 
-        log.debug("initialised:", $el);
+        log.debug("initialised:", el);
         return $el;
     },
 
@@ -183,10 +189,11 @@ const inject = {
         // We want an AJAX request instead.
         e.preventDefault && e.preventDefault();
 
-        const $el = $(e.currentTarget);
+        const el = e.currentTarget;
+        const $el = $(el);
         let cfgs = $el.data("pat-inject");
-        if ($el[0].tagName === "FORM" && e.type === "submit") {
-            const form = $el[0];
+        if (el.tagName === "FORM" && e.type === "submit") {
+            const form = el;
             const submitter = e.submitter;
 
             // Do not submit invalid forms, if validation is active.
@@ -239,19 +246,20 @@ const inject = {
         this.execute(cfgs, $el);
     },
 
-    extractConfig($el, opts) {
-        opts = $.extend({}, opts);
+    extractConfig($el, options = {}) {
+        const el = utils.jqToNode($el);
+        options = Object.assign({}, options); // copy
 
-        const cfgs = parser.parse($el, opts, true);
+        const cfgs = parser.parse($el, options, true);
         cfgs.forEach((cfg) => {
             cfg.$context = $el;
-            // opts and cfg have priority, fall back to href/action
+            // options and cfg have priority, fall back to href/action
             cfg.url =
-                opts.url ||
+                options.url ||
                 cfg.url ||
-                $el.attr("href") ||
-                $el.attr("action") ||
-                $el.parents("form").attr("action") ||
+                el?.getAttribute("href") ||
+                el?.getAttribute("action") ||
+                el?.closest("form")?.getAttribute("action") ||
                 "";
 
             // separate selector from url
@@ -431,8 +439,8 @@ const inject = {
     createTarget(selector) {
         /* create a target that matches the selector
          *
-         * XXX: so far we only support #target and create a div with
-         * that id appended to the body.
+         * Note: so far we only support #target and create a div with that id
+         * appended to the body.
          */
         if (selector.slice(0, 1) !== "#") {
             log.error("only id supported for non-existing target");
@@ -489,6 +497,7 @@ const inject = {
         /* Set a class on the injected elements and fire the
          * patterns-injected event.
          */
+        const el = utils.jqToNode($el);
         $injected
             .filter((idx, el_) => {
                 return el_.nodeType !== TEXT_NODE;
@@ -501,14 +510,14 @@ const inject = {
             // The event handler should check whether the
             // injected element and the triggered element are
             // the same.
-            $injected.parent().trigger("patterns-injected", [cfg, $el[0], $injected[0]]);
+            $injected.parent().trigger("patterns-injected", [cfg, el, $injected[0]]);
         } else {
             $injected.each((idx, el_) => {
                 // patterns-injected event will be triggered for each injected (non-text) element.
                 if (el_.nodeType !== TEXT_NODE) {
                     $(el_)
                         .addClass(cfg["class"])
-                        .trigger("patterns-injected", [cfg, $el[0], el_]);
+                        .trigger("patterns-injected", [cfg, el, el_]);
                 }
             });
         }
@@ -534,7 +543,7 @@ const inject = {
             }
         }
 
-        $el[0].dispatchEvent(
+        el.dispatchEvent(
             new Event("pat-inject-success", { bubbles: true, cancelable: true })
         );
     },
@@ -567,7 +576,7 @@ const inject = {
         }
         cfgs.forEach((cfg, idx1) => {
             const perform_inject = () => {
-                if (cfg.target !== "none")
+                if (cfg.target !== "none") {
                     cfg.$target.each((idx2, target) => {
                         this._performInjection(
                             target,
@@ -578,6 +587,7 @@ const inject = {
                             title
                         );
                     });
+                }
             };
             if (cfg.processDelay) {
                 setTimeout(() => perform_inject(), cfg.processDelay);
@@ -674,6 +684,7 @@ const inject = {
          * Either by making an ajax request or by spoofing an ajax
          * request when the content is readily available in the current page.
          */
+        const el = utils.jqToNode($el);
         // get a kinda deep copy, we scribble on it
         cfgs = cfgs.map((cfg) => $.extend({}, cfg));
         if (!this.verifyConfig(cfgs)) {
@@ -691,7 +702,7 @@ const inject = {
         for (const cfg of cfgs) {
             // Add a execute class on the pat-inject element.
             if (cfg?.executingClass) {
-                $el[0].classList.add(cfg.executingClass);
+                el.classList.add(cfg.executingClass);
             }
             // Add a loading class to the target.
             // Can be used for loading-spinners.
@@ -707,12 +718,12 @@ const inject = {
             // is called before this one, even for non-async local injects.
             await utils.timeout(1);
             // Remove the close-panel event listener.
-            events.remove_event_listener($el[0], "pat-inject--close-panel");
+            events.remove_event_listener(el, "pat-inject--close-panel");
             // Only close the panel if a close-panel event was catched previously.
             if (do_close_panel) {
                 do_close_panel = false;
                 // Re-trigger close-panel event if it was caught while injection was in progress.
-                $el[0].dispatchEvent(
+                el.dispatchEvent(
                     new Event("close-panel", { bubbles: true, cancelable: true })
                 );
             }
@@ -724,16 +735,11 @@ const inject = {
 
         // Prevent closing the panel while injection is in progress.
         let do_close_panel = false;
-        events.add_event_listener(
-            $el[0],
-            "close-panel",
-            "pat-inject--close-panel",
-            (e) => {
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                do_close_panel = true;
-            }
-        );
+        events.add_event_listener(el, "close-panel", "pat-inject--close-panel", (e) => {
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            do_close_panel = true;
+        });
 
         if (cfgs[0].url.length) {
             ajax.request($el, {
@@ -964,7 +970,7 @@ const inject = {
             return false;
         }
 
-        const el = $el[0];
+        const el = utils.jqToNode($el);
 
         // delay: default is 200ms to allow scrolling over and past autoload-visible elements without loading them.
         const delay = cfgs[0].delay || 200;
@@ -1011,18 +1017,20 @@ const inject = {
     },
 
     _initIdleTrigger($el, delay) {
-        // XXX TODO: handle item removed from DOM
+        // TODO: handle item removed from DOM
         const timeout = parseInt(delay, 10);
         let timer;
 
+        const el = utils.jqToNode($el);
+
         const onTimeout = () => {
-            this.onTrigger({ currentTarget: $el[0] });
+            this.onTrigger({ currentTarget: el });
             unsub();
             clearTimeout(timer);
         };
 
         const onInteraction = utils.debounce(() => {
-            if (!document.body.contains($el[0])) {
+            if (!document.body.contains(el)) {
                 unsub();
                 return;
             }
@@ -1052,7 +1060,6 @@ const inject = {
         );
     },
 
-    // XXX: simple so far to see what the team thinks of the idea
     registerTypeHandler(type, handler) {
         this.handlers[type] = handler;
     },
@@ -1083,7 +1090,7 @@ $(document).on("patterns-injected.inject", async (ev, cfg, trigger, injected) =>
      * Remove the "loading-class" classes from all injection targets and
      * then scan the injected content for new patterns.
      */
-    if (cfg && cfg.skipPatInjectHandler) {
+    if (cfg?.skipPatInjectHandler) {
         // Allow skipping this handler but still have other handlers in other
         // patterns listen to ``patterns-injected``.
         return;
