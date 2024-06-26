@@ -41,15 +41,20 @@ class Pattern extends BasePattern {
                 for (const el of targets) {
                     let url;
                     if (this.options.action === "reload") {
-                        // Get the URL, if possible.
-                        url =
-                            this.options["reload-url"] ||
-                            el.getAttribute("href") ||
-                            el.getAttribute("src") ||
-                            document.body.dataset?.baseUrl;
+                        if (this.options.event === "navigate") {
+                            url = window.location.href;
+                        } else {
+                            // Get the URL, if possible.
+                            url =
+                                this.options["reload-url"] ||
+                                el.getAttribute("href") ||
+                                el.getAttribute("src") ||
+                                document.body.dataset?.baseUrl;
+                        }
 
                         // Append to URL if defined.
                         if (url && this.options["reload-url-append"]) {
+                            url = url.split("@@")[0]; // Use URL without any `@@` view.
                             url = `${url}/${this.options["reload-url-append"]}`;
                         }
                     }
