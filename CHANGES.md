@@ -3,6 +3,9 @@
 See the [history](./docs/history/index.md) for older changelog entries.
 
 
+
+## [9.9.11](https://github.com/Patternslib/patterns/compare/9.9.10...9.9.11) (2024-07-23)
+
 ## [9.9.10](https://github.com/Patternslib/patterns/compare/9.9.10-alpha.4...9.9.10) (2023-11-27)
 
 ## [9.9.10-alpha.4](https://github.com/Patternslib/patterns/compare/9.9.10-alpha.3...9.9.10-alpha.4) (2023-11-23)
