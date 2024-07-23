@@ -2,6 +2,10 @@
 
 See the [history](./docs/history/index.md) for older changelog entries.
 
+
+
+## [9.9.12](https://github.com/Patternslib/patterns/compare/9.9.11...9.9.12) (2024-07-23)
+
 * Include fix for pat-tiptap table handling
 
 ## [9.9.11](https://github.com/Patternslib/patterns/compare/9.9.10...9.9.11) (2024-07-23)
