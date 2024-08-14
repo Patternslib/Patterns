@@ -144,6 +144,9 @@ export default Base.extend({
         /* If we are in a form, then submit the form with the right amount
          * that the sortable element was moved up or down.
          */
+        // TODO: This is dead code, right?
+        // remove any instances of `sortable-amount` from templates and code.
+        // It is just weird.
         var $amount_input = this.$form.find(".sortable-amount");
         if ($amount_input.length === 0) {
             return;
