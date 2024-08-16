@@ -831,12 +831,12 @@ const inject = {
     },
 
     _rebaseAttrs: {
-        A: "href",
-        FORM: "action",
-        IMG: "data-pat-inject-rebase-src",
-        OBJECT: "data",
-        SOURCE: "data-pat-inject-rebase-src",
-        VIDEO: "data-pat-inject-rebase-src",
+        a: "href",
+        form: "action",
+        img: "data-pat-inject-rebase-src",
+        object: "data",
+        source: "data-pat-inject-rebase-src",
+        video: "data-pat-inject-rebase-src",
     },
 
     _rebaseOptions: {
@@ -868,7 +868,7 @@ const inject = {
 
         const selector = Object.keys(this._rebaseAttrs).join(",");
         for (const el_ of node.querySelectorAll(selector)) {
-            const attr = this._rebaseAttrs[el_.tagName];
+            const attr = this._rebaseAttrs[el_.tagName.toLowerCase()];
             let value = el_.getAttribute(attr);
 
             if (
