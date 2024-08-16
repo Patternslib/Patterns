@@ -344,7 +344,7 @@ describe("pat-inject", function () {
             );
         });
 
-        it("5.4 - Element without link attribute", function () {
+        it("5.4 - Anchor element without href attribute", function () {
             var spy_rebaseURL = jest.spyOn(pattern, "_rebaseURL");
             expect(pattern._rebaseHTML("base", "<a>This is a test</a>")).toBe(
                 "<a>This is a test</a>"
@@ -354,7 +354,7 @@ describe("pat-inject", function () {
             spy_rebaseURL.mockRestore();
         });
 
-        it("5.5 - Element with link attribute", function () {
+        it("5.5 - Anchor element with href attribute", function () {
             expect(
                 pattern._rebaseHTML(
                     "http://example.com/test/",
