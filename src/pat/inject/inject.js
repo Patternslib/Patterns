@@ -860,16 +860,16 @@ const inject = {
             // Special case, source is none
             return "";
         }
-        const $page = $(
-            html.replace(/(\s)(src\s*)=/gi, '$1src="" data-pat-inject-rebase-$2=').trim()
-        )
-            .wrapAll("<div>")
-            .parent();
 
-        $page.find(Object.keys(this._rebaseAttrs).join(",")).each((idx, el_) => {
-            const $el_ = $(el_);
-            const attrName = this._rebaseAttrs[el_.tagName];
-            let value = $el_.attr(attrName);
+        // Create temporary DOM node and store the html contents on it where
+        // the original src attribute is kept.
+        const node = document.createElement("div");
+        node.innerHTML = html.replace(/(\s)(src\s*)=/gi, '$1src="" data-pat-inject-rebase-$2=').trim();
+
+        const selector = Object.keys(this._rebaseAttrs).join(",");
+        for (const el_ of node.querySelectorAll(selector)) {
+            const attr = this._rebaseAttrs[el_.tagName];
+            let value = el_.getAttribute(attr);
 
             if (
                 value &&
@@ -884,15 +884,12 @@ const inject = {
                 value.slice(0, 11) !== "javascript:"
             ) {
                 value = this._rebaseURL(base, value);
-                $el_.attr(attrName, value);
+                el_.setAttribute(attr, value);
             }
-        });
+        }
 
         for (const [pattern_name, opts] of Object.entries(this._rebaseOptions)) {
-            for (const el_ of dom.querySelectorAllAndMe(
-                $page[0],
-                `[data-pat-${pattern_name}]`
-            )) {
+            for (const el_ of node.querySelectorAll(`[data-pat-${pattern_name}]`)) {
                 const pattern = registry.patterns?.[pattern_name];
                 const pattern_parser = pattern?.parser;
                 if (!pattern_parser) {
@@ -924,8 +921,8 @@ const inject = {
             }
         }
 
-        return $page
-            .html()
+        return node
+            .innerHTML
             .replace(/src="" data-pat-inject-rebase-/g, "")
             .trim();
     },
