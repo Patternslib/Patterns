@@ -1,5 +1,4 @@
 /* Utilities for DOM traversal or navigation */
-import events from "./events";
 import logging from "./logging";
 
 const logger = logging.getLogger("core dom");
@@ -606,8 +605,6 @@ const dom = {
     escape_css_id: escape_css_id,
     element_uuid: element_uuid,
     find_form: find_form,
-    add_event_listener: events.add_event_listener, // BBB export. TODO: Remove in an upcoming version.
-    remove_event_listener: events.remove_event_listener, // BBB export. TODO: Remove in an upcoming version.
 };
 
 export default dom;
