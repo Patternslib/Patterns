@@ -52,13 +52,12 @@ const inject = {
 
     _store: null,
 
-    @get
-    store() {
+    get store() {
         if (!this._storage) {
             this._storage = new Store(self.name);
         }
         return this._storage;
-    }
+    },
 
     /**
      * reload_when
@@ -78,6 +77,7 @@ const inject = {
         stored_value = this.store.get(`${prefix}${condition}`);
 
         if (value === stored_value) {
+            // No changes, nothing to do.
             return;
         }
 
@@ -88,25 +88,18 @@ const inject = {
             return;
         }
 
+        // store new value back.
+        this.store.set(`${prefix}${condition}`, value);
+
+        // reload condition met.
         window.reload();
-
-        // if the value from `querySelector(page)` is different from the value
-        // from the session storage. reload the page
-        // But first set the session storage to `querySelector(page)`
-        if (value !===
-
-        )
-
-
-        // Otherwise, keep calm and do nothing.
-    }
-
+    },
 
     async init($el, opts) {
         const cfgs = this.extractConfig($el, opts);
 
         // reload early, if condition passes.
-        cfgs.some((cfg) => cfg.reloadWhen && cfg.reloadWhen !== "none" && reload_when(cfg.reloadWhen, page));
+        //cfgs.some((cfg) => cfg.reloadWhen && cfg.reloadWhen !== "none" && reload_when(cfg.reloadWhen, page));
 
         // We need to wait a tick. Modern BasePattern based patterns like
         // pat-validation do always wait a tick before initializing. The
