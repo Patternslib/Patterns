@@ -7,6 +7,7 @@ import events from "../../core/events";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
+import Store from "../../core/store";
 import utils from "../../core/utils";
 
 const log = logging.getLogger("pat.inject");
@@ -38,6 +39,7 @@ parser.addArgument("class"); // Add a class to the injected content.
 parser.addArgument("history", "none", ["none", "record"]);
 parser.addArgument("push-marker");
 parser.addArgument("scroll");
+parser.addArgument("reload-when", "none");
 // XXX: this should not be here but the parser would bail on
 // unknown parameters and expand/collapsible need to pass the url
 // to us
@@ -48,7 +50,64 @@ const inject = {
     trigger: "a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
     parser: parser,
 
+    _store: null,
+
+    @get
+    store() {
+        if (!this._storage) {
+            this._storage = new Store(self.name);
+        }
+        return this._storage;
+    }
+
+    /**
+     * reload_when
+     *
+     * When the contents of an element or attribujte - defined by a selector - changes, reload the page.
+     * Useful to reload when the theme changes or the umbrella template where the page is injected into.
+     */
+    reload_when(condition, page) {
+        const value = page.querySelector(condition);
+        if (! value) {
+            return;
+        }
+        const prefix = "reload_when--";
+
+        // read session_storage for `condition`.
+        // E.g. a `site_theme` data attribute.
+        stored_value = this.store.get(`${prefix}${condition}`);
+
+        if (value === stored_value) {
+            return;
+        }
+
+        this.store.set(`reload_when--${condition}`, value);
+        if (!stored_value) {
+            // if storedd value is empty then this is the first initialization.
+            // With having set the value, leave.
+            return;
+        }
+
+        window.reload();
+
+        // if the value from `querySelector(page)` is different from the value
+        // from the session storage. reload the page
+        // But first set the session storage to `querySelector(page)`
+        if (value !===
+
+        )
+
+
+        // Otherwise, keep calm and do nothing.
+    }
+
+
     async init($el, opts) {
+        const cfgs = this.extractConfig($el, opts);
+
+        // reload early, if condition passes.
+        cfgs.some((cfg) => cfg.reloadWhen && cfg.reloadWhen !== "none" && reload_when(cfg.reloadWhen, page));
+
         // We need to wait a tick. Modern BasePattern based patterns like
         // pat-validation do always wait a tick before initializing. The
         // patterns registry always initializes pat-validation first but since
@@ -56,8 +115,8 @@ const inject = {
         // from pat-inject. Waiting a tick in pat-inject solves this -
         // pat-validation's event handlers are initialized first.
         await utils.timeout(1);
-        const cfgs = this.extractConfig($el, opts);
-        if (cfgs.some((e) => e.history === "record") && !("pushState" in history)) {
+
+        if (cfgs.some((cfg) => cfg.history === "record") && !("pushState" in history)) {
             // if the injection shall add a history entry and HTML5 pushState
             // is missing, then don't initialize the injection.
             log.warn("HTML5 pushState is missing, aborting");
