@@ -30,7 +30,7 @@
         "select2": "^3.5.1",
         "showdown": "^2.1.0",
         "showdown-prettify": "^1.3.0",
-        "slick-carousel": "^1.8.1",
+        "slick-carousel": "git+https://github.com/markvantilburg/slick.git#patch-3",
         "slides": "git+https://github.com/Patternslib/slides.git",
         "spectrum-colorpicker": "^1.8.0",
         "tippy.js": "^6.3.7"
