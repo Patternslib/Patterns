@@ -3,7 +3,6 @@
 See the [history](./docs/history/index.md) for older changelog entries.
 
 
-
 ## [9.9.13](https://github.com/Patternslib/patterns/compare/9.9.12...9.9.13) (2024-08-19)
 
 
@@ -40,51 +39,7 @@ new result is more readable.
 * **pat-inject:** Fix some test method names. ([e9a5257](https://github.com/Patternslib/patterns/commit/e9a52571be5c12b394600e48d164a2fb802d5481))
 
 
-* **pat-inject:** Rework _rebaseHTML to non-JQuery code as preparation to fix a failing test with recent @patternslib/dev. ([df710a2](https://github.com/Patternslib/patterns/commit/df710a20a15d7a9b26ee6411a9b463e791b7f386))
-
-
-* Update GitHub Actions workflow. ([a413e26](https://github.com/Patternslib/patterns/commit/a413e2649f0c19ae1bea791ef7c8241f00b92b18))
-
-
-* Upgrade devDependencies. ([bda3cf1](https://github.com/Patternslib/patterns/commit/bda3cf13dbbf4c597dc8e8a70c3a8b584a473163))
-
-## [9.9.13](https://github.com/Patternslib/patterns/compare/9.9.12...9.9.13) (2024-08-19)
-
-
-### Bug Fixes
-
-
-* **Build:** Apply "npm pkg fix" to correct the repository URL. ([cfec736](https://github.com/Patternslib/patterns/commit/cfec7360ed2026e07f037dca92ed56d0232f7fa7))
-
-
-* Fix reference to 3rd party styles in stylesheets. ([d00253d](https://github.com/Patternslib/patterns/commit/d00253df839fbb4b2f774992c0c3df8ab7b757a9))
-
-  Since latest scss build tools which became available in
-`@patternslib/dev` version 3.6 references to `node_modules` need to be
-left out. The build tool searches in node_modules anyways. This is now
-fixed.
-
-
-* **pat-carousel:** Fix SASS compilation warnings. ([e4e2dae](https://github.com/Patternslib/patterns/commit/e4e2daea38c59740a8e0a72b40c9772c65d549fe))
-
-  Upgrade to a version of slick.js where the compilation warnings are fixed.
-
-
-* **pat-inject:** Fix failing test. ([1472b06](https://github.com/Patternslib/patterns/commit/1472b0635820c97d376846910dcfe1cdf0c36328))
-
-  Recent Jest/jsDOM stopped working with uppercase tag selectors.
-This is now fixed without making compromises to production code, as the
-new result is more readable.
-
-
-
-### Maintenance
-
-
-* **pat-inject:** Fix some test method names. ([e9a5257](https://github.com/Patternslib/patterns/commit/e9a52571be5c12b394600e48d164a2fb802d5481))
-
-
-* **pat-inject:** Rework _rebaseHTML to non-JQuery code as preparation to fix a failing test with recent @patternslib/dev. ([df710a2](https://github.com/Patternslib/patterns/commit/df710a20a15d7a9b26ee6411a9b463e791b7f386))
+* **pat-inject:** Rework `_rebaseHTML` to non-JQuery code as preparation to fix a failing test with recent @patternslib/dev. ([df710a2](https://github.com/Patternslib/patterns/commit/df710a20a15d7a9b26ee6411a9b463e791b7f386))
 
 
 * Update GitHub Actions workflow. ([a413e26](https://github.com/Patternslib/patterns/commit/a413e2649f0c19ae1bea791ef7c8241f00b92b18))
