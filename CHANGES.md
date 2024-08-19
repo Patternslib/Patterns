@@ -3,6 +3,18 @@
 See the [history](./docs/history/index.md) for older changelog entries.
 
 
+
+## [9.9.14](https://github.com/Patternslib/patterns/compare/9.9.13...9.9.14) (2024-08-19)
+
+
+### Bug Fixes
+
+
+* **core dom:** Avoid circular imports. ([962d5f2](https://github.com/Patternslib/patterns/commit/962d5f275c577beff0bd3cd7eccea376a117dcbb))
+
+  Remove BBB export "add_event_listener" and "remove_event_listener" to avoid circular imports.
+This fixes a test-run problem in pat-tiptap and was long overdue anyways.
+
 ## [9.9.13](https://github.com/Patternslib/patterns/compare/9.9.12...9.9.13) (2024-08-19)
 
 
