@@ -1,4 +1,5 @@
 /* Utilities for DOM traversal or navigation */
+import events from "./events";
 import logging from "./logging";
 
 const logger = logging.getLogger("core dom");
