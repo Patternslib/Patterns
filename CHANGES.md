@@ -3,6 +3,15 @@
 See the [history](./docs/history/index.md) for older changelog entries.
 
 
+
+## [9.9.15](https://github.com/Patternslib/patterns/compare/9.9.14...9.9.15) (2024-08-20)
+
+
+### Bug Fixes
+
+
+* **pat-tiptap:** Upgrade pat-tiptap to 4.9.4 to fix a problem with adding colums to tables. ([5a0281e](https://github.com/Patternslib/patterns/commit/5a0281e16dfed78c264eac5d73d9d5be119be1e4))
+
 ## [9.9.14](https://github.com/Patternslib/patterns/compare/9.9.13...9.9.14) (2024-08-19)
 
 
