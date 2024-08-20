@@ -41,7 +41,7 @@
         "@patternslib/pat-doclock": "^3.0.0",
         "@patternslib/pat-shopping-cart": "^3.0.0",
         "@patternslib/pat-sortable-table": "^3.1.0",
-        "@patternslib/pat-tiptap": "^4.9.2",
+        "@patternslib/pat-tiptap": "^4.9.4",
         "@patternslib/pat-upload": "^3.1.1",
         "copy-webpack-plugin": "^12.0.2",
         "css.escape": "^1.5.1",
