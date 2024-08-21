@@ -4,6 +4,14 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.9.16](https://github.com/Patternslib/patterns/compare/9.9.15...9.9.16) (2024-08-21)
+
+
+### Maintenance
+
+
+* Update dependencies with newer patch-level versions. ([118f031](https://github.com/Patternslib/patterns/commit/118f03143042487b1835a472cb29c379460993d2))
+
 ## [9.9.15](https://github.com/Patternslib/patterns/compare/9.9.14...9.9.15) (2024-08-20)
 
 
