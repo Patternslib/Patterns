@@ -175,7 +175,7 @@ const await_pattern_init = (pattern) => {
  * @returns {Event} - Returns a blur event.
  */
 const generic_event = (name) => {
-    return new Event(name, {
+    return new CustomEvent(name, {
         bubbles: true,
         cancelable: true,
     });
@@ -265,6 +265,7 @@ export default {
     remove_event_listener: remove_event_listener,
     await_event: await_event,
     await_pattern_init: await_pattern_init,
+    event: generic_event,
     generic_event: generic_event,
     blur_event: blur_event,
     click_event: click_event,
