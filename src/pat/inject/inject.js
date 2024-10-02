@@ -466,18 +466,22 @@ const inject = {
         }
     },
 
+    _url_from_config(cfg) {
+        // Return the URL from the config, with parameters if present.
+        // This is used for history support.
+        const glue = cfg.url.indexOf("?") > -1 ? "&" : "?";
+        return cfg.params ? `${cfg.url}${glue}${cfg.params}` : cfg.url;
+    },
+
     _update_history(cfg, trigger, title) {
         // History support. if subform is submitted, append form params
-        const glue = cfg.url.indexOf("?") > -1 ? "&" : "?";
         if (cfg.history !== "record" || !history?.pushState) {
             return;
         }
-        if (cfg.params) {
-            const url = `${cfg.url}${glue}${cfg.params}`;
-            history.pushState({ url: url }, "", url);
-        } else {
-            history.pushState({ url: cfg.url }, "", cfg.url);
-        }
+
+        const url = this._url_from_config(cfg);
+        history.pushState({ url: url }, "", url);
+
         // Also inject title element if we have one
         if (title) {
             this._inject(trigger, title, $("title"), {
@@ -487,7 +491,7 @@ const inject = {
 
         // Notify for changed URL.
         document.body.dispatchEvent(
-            new CustomEvent("pat-inject-history-changed", { detail: { url: cfg.url } })
+            new CustomEvent("pat-inject-history-changed", { detail: { url: url } })
         );
     },
 
@@ -674,7 +678,7 @@ const inject = {
         }
     },
 
-    execute(cfgs, $el) {
+    async execute(cfgs, $el) {
         /* Actually execute the injection.
          *
          * Either by making an ajax request or by spoofing an ajax
@@ -742,10 +746,18 @@ const inject = {
         );
 
         if (cfgs[0].url.length) {
+            //const options = {};
+            //if (cfgs[0].browserCache) {
+            //    options.cache = cfgs[0].browserCache;
+            //}
+
+            //const response = await fetch(cfgs[0].url, options);
+
             ajax.request($el, {
                 "url": cfgs[0].url,
                 "browser-cache": cfgs[0].browserCache,
             });
+
         } else {
             // If there is no url specified, then content is being fetched
             // from the same page.
