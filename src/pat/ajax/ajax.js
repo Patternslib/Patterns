@@ -98,7 +98,7 @@ const _ = {
                 // if this url is requested multiple time, only return the last result
                 $el.trigger({
                     type: "pat-ajax-success",
-                    jqxhr: jqxhr,
+                    jqxhr: {"url": cfg.url, ...jqxhr},
                 });
             } else {
                 // ignore
