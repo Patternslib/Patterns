@@ -29,8 +29,8 @@ For jQuery the remote bundle is named ``jquery-remote.min.js``.
 
 ```
 import "@patternslib/patternslib/webpack/module_federation";
-// Please not the parentheses for the next import.
-// Kepp them, otherwise we get this error:
+// Please note the parentheses for the next import.
+// Keep them, otherwise we get this error:
 // "Shared module is not available for eager consumption."
 import("./src/patterns");
 ```
@@ -39,8 +39,8 @@ For the jQuery bundle which we will use as remote we create: ``index-jquery.js``
 
 ```
 import "@patternslib/patternslib/webpack/module_federation";
-// Please not the parentheses for the next import.
-// Kepp them, otherwise we get this error:
+// Please note the parentheses for the next import.
+// Keep them, otherwise we get this error:
 // "Shared module is not available for eager consumption."
 import("@patternslib/patternslib/src/globals");
 ```
