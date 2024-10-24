@@ -1439,6 +1439,128 @@ describe("pat-inject", function () {
                         expect(pattern.onTrigger).toHaveBeenCalledTimes(1);
                     });
                 });
+
+                describe("9.2.4.6 - Validation on submit", () => {
+                    it("9.2.4.6.1 - Submit valid forms.", async function () {
+                        document.body.innerHTML = `
+                          <form action="." class="pat-inject">
+                            <input name="ok" />
+                            <button>submit</button>
+                          </form>
+                        `;
+                        jest.spyOn(pattern, "execute");
+
+                        const form = document.querySelector("form");
+                        const button = form.querySelector("button");
+
+                        // add submit listener
+                        let catched = false;
+                        form.addEventListener("submit", () => {
+                            catched = true;
+                        });
+
+                        pattern.init($(form));
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        button.click();
+
+                        expect(catched).toBe(true);
+                        expect(pattern.execute).toHaveBeenCalled();
+                    });
+
+                    it("9.2.4.6.2 - Do not submit invalid forms.", async function () {
+                        document.body.innerHTML = `
+                          <form action="." class="pat-inject">
+                            <input name="ok" required />
+                            <button>submit</button>
+                          </form>
+                        `;
+                        jest.spyOn(pattern, "execute");
+
+                        const form = document.querySelector("form");
+                        const button = form.querySelector("button");
+
+                        // add submit listener
+                        let catched = false;
+                        form.addEventListener("submit", () => {
+                            catched = true;
+                        });
+
+                        pattern.init($(form));
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        button.click();
+
+                        expect(catched).toBe(false);
+                        expect(pattern.execute).not.toHaveBeenCalled();
+                    });
+
+                    it("9.2.4.6.3 - Respect a form novalidate attribute and allow submission.", async function () {
+                        document.body.innerHTML = `
+                          <form novalidate action="." class="pat-inject">
+                            <input name="ok" required />
+                            <button>submit</button>
+                          </form>
+                        `;
+                        jest.spyOn(pattern, "execute");
+
+                        const form = document.querySelector("form");
+                        const button = form.querySelector("button");
+
+                        // add submit listener
+                        let catched = false;
+                        form.addEventListener("submit", () => {
+                            catched = true;
+                        });
+
+                        pattern.init($(form));
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        button.click();
+
+                        expect(catched).toBe(true);
+                        expect(pattern.execute).toHaveBeenCalled();
+                    });
+
+                    // The following test does not work with jsDOM 25.0.1.
+                    // jsDOM supports `form[novalidate]` but not `button[formnovalidate]`
+                    // Ref: https://github.com/jsdom/jsdom/pull/3249
+                    it.skip("9.2.4.6.4 - Respect a formnovalidate attribute on buttons and allow submission.", async function () {
+                        document.body.innerHTML = `
+                          <form action="." class="pat-inject">
+                            <input name="ok" required />
+                            <button class="cancel" formnovalidate>cancel</button>
+                            <button class="submit">submit</button>
+                          </form>
+                        `;
+                        jest.spyOn(pattern, "execute");
+
+                        const form = document.querySelector("form");
+                        const button_cancel = form.querySelector("button.cancel");
+                        const button_submit = form.querySelector("button.submit");
+
+                        // add submit listener
+                        let catched = false;
+                        form.addEventListener("submit", () => {
+                            catched = true;
+                        });
+
+                        pattern.init($(form));
+                        await utils.timeout(1); // wait a tick for async to settle.
+
+                        button_submit.click();
+
+                        expect(catched).toBe(false);
+                        expect(pattern.execute).not.toHaveBeenCalled();
+
+                        button_cancel.click();
+
+                        expect(catched).toBe(true);
+                        expect(pattern.execute).toHaveBeenCalled();
+
+                    });
+
+                });
             });
         });
     });
