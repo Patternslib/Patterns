@@ -1028,12 +1028,12 @@ describe("pat-inject", function () {
 
                 it("9.2.4.2 - pass submit button value in ajax call as data when clicked on a dom node within the submit button", async function () {
                     document.body.innerHTML = `
-                    <form class="pat-inject" action="test.html#someid" method="post">
-                        <button name="submit" value="label">
-                            <span>label</span>
-                        </button>
-                    </form>
-                `;
+                        <form class="pat-inject" action="test.html#someid" method="post">
+                            <button name="submit" value="label">
+                                <span>label</span>
+                            </button>
+                        </form>
+                    `;
 
                     const form = document.querySelector("form");
                     const label = document.querySelector("form button span");
