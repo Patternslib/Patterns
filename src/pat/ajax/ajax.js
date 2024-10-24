@@ -39,6 +39,7 @@ const _ = {
     name: "ajax",
     trigger: ".pat-ajax",
     parser: parser,
+
     init($el) {
         $el.off(".pat-ajax");
         $el.filter("a").on("click.pat-ajax", _.onTriggerEvents);
@@ -50,9 +51,11 @@ const _ = {
         });
         return $el;
     },
+
     destroy($el) {
         $el.off(".pat-ajax");
     },
+
     onClickSubmit(event) {
         const el = event.submitter || event.target;
         const form = el.form;
@@ -62,17 +65,20 @@ const _ = {
         }
         $(form).data("pat-ajax.clicked-data", data);
     },
+
     onTriggerEvents(event) {
         if (event) {
             event.preventDefault();
         }
         _.request($(this));
     },
+
     request($el, opts) {
         return $el.each(function () {
             _._request($(this), opts);
         });
     },
+
     _request($el, opts) {
         const cfg = _.parser.parse($el, opts);
         const onError = function (jqxhr, status, error) {
