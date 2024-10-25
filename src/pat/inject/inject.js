@@ -186,14 +186,20 @@ const inject = {
         const $el = $(e.currentTarget);
         let cfgs = $el.data("pat-inject");
         if ($el[0].tagName === "FORM" && e.type === "submit") {
-            if ($el[0].matches(":invalid")) {
-                // Do not submit invalid forms.
-                // Works with native form validation and with pat-validation.
+            const form = $el[0];
+            const submitter = e.submitter;
+
+            // Do not submit invalid forms, if validation is active.
+            // Works with native form validation and with pat-validation.
+            if (
+                !submitter?.matches("[formnovalidate]") &&
+                !form.matches("[novalidate]") &&
+                form.matches(":invalid")
+            ) {
                 log.debug("Form is invalid, aborting");
                 return;
             }
 
-            const submitter = e.submitter;
             const formaction = submitter?.getAttribute("formaction");
             if (formaction) {
                 const opts = {
