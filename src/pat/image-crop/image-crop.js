@@ -52,7 +52,7 @@ var _ = {
             // Set the form ID
             if (opts.formId.length === 0) {
                 // no form ID supplied. Look for the closest parent form element
-                data.form = $this.closest("form");
+                data.form = $(this.form || this.closest("form"));
                 if (data.form.length === 0) {
                     log.error("No form specified or found");
                     return;
