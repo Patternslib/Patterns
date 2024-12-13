@@ -1,5 +1,6 @@
 import $ from "jquery";
 import events from "../../core/events";
+import { storage } from "./date-picker";
 import pattern from "./date-picker";
 import pattern_auto_submit from "../auto-submit/auto-submit";
 import utils from "../../core/utils";
@@ -142,46 +143,89 @@ describe("pat-date-picker", function () {
     });
 
     describe("5 - Date picker with i18n", function () {
-        describe("with proper json URL", function () {
-            it("properly localizes the months and weekdays", async () => {
-                global.fetch = jest.fn().mockImplementation(mock_fetch_i18n);
-                document.body.innerHTML =
-                    '<input type="date" class="pat-date-picker" value="2018-10-21" data-pat-date-picker="i18n:/path/to/i18njson" />';
-                const el = document.querySelector("input[type=date]");
-                pattern.init(el);
-                await utils.timeout(1); // wait a tick for async to settle.
-                const display_el = document.querySelector("time");
-                display_el.click();
+        it("with proper json URL properly localizes the months and weekdays", async () => {
+            global.fetch = jest.fn().mockImplementation(mock_fetch_i18n);
+            document.body.innerHTML =
+                '<input type="date" class="pat-date-picker" value="2018-10-21" data-pat-date-picker="i18n:/path/to/i18njson" />';
+            const el = document.querySelector("input[type=date]");
+            pattern.init(el);
+            await utils.timeout(1); // wait a tick for async to settle.
+            const display_el = document.querySelector("time");
+            display_el.click();
 
-                const month = document.querySelector('.pika-lendar .pika-select-month option[selected="selected"]'); // prettier-ignore
-                expect(month.textContent).toBe("Oktober");
+            const month = document.querySelector('.pika-lendar .pika-select-month option[selected="selected"]'); // prettier-ignore
+            expect(month.textContent).toBe("Oktober");
 
-                global.fetch.mockClear();
-                delete global.fetch;
-            });
+            // Clear the storage
+            storage.clear();
+            // Reset mock
+            global.fetch.mockClear();
+            delete global.fetch;
         });
 
-        describe("with bogus json URL", function () {
-            it("falls back to default (english) month and weekday labels ", async () => {
-                // Simulate failing getJSON call
-                global.fetch = jest.fn().mockImplementation(() => {
-                    throw "error";
-                });
+        it("stores i18n results", async () => {
+            global.fetch = jest.fn().mockImplementation(mock_fetch_i18n);
+            document.body.innerHTML = `
+                <input
+                    type="date"
+                    class="pat-date-picker"
+                    value="2018-10-21"
+                    data-pat-date-picker="i18n:/path/to/i18njson"
+                />
+                <input
+                    type="date"
+                    class="pat-date-picker"
+                    value="2018-10-22"
+                    data-pat-date-picker="i18n:/path/to/i18njson"
+                />
+            `;
+            const els = document.querySelectorAll("input[type=date]");
+            pattern.init(els[0]);
+            await utils.timeout(1); // wait a tick for async to settle.
+            expect(global.fetch).toHaveBeenCalledTimes(1);
 
-                document.body.innerHTML =
-                    '<input type="date" class="pat-date-picker" value="2018-10-21" data-pat-date-picker="i18n:/path/to/i18njson" />';
-                const el = document.querySelector("input[type=date]");
-                pattern.init(el);
-                await utils.timeout(1); // wait a tick for async to settle.
-                const display_el = document.querySelector("time");
-                display_el.click();
+            // Initializing the other pattern should not lead to another AJAX call.
 
-                const month = document.querySelector('.pika-lendar .pika-select-month option[selected="selected"]'); // prettier-ignore
-                expect(month.textContent).toBe("October");
+            // NOTE: in a real environment where multiple instances are
+            // initialized at once on the same page, before the ajax call has
+            // been completed, each instance will do an AJAX call. After that,
+            // when navigating to other pages with other date picker instance
+            // the cached value should be used and no more AJAX calls should be
+            // made.
 
-                global.fetch.mockClear();
-                delete global.fetch;
+            pattern.init(els[1]);
+            await utils.timeout(1); // wait a tick for async to settle.
+            expect(global.fetch).toHaveBeenCalledTimes(1);
+
+            // Clear the storage
+            storage.clear();
+            // Reset mock
+            global.fetch.mockClear();
+            delete global.fetch;
+        });
+
+        it("with bogus json URL falls back to default (english) month and weekday labels ", async () => {
+            // Simulate failing getJSON call
+            global.fetch = jest.fn().mockImplementation(() => {
+                throw "error";
             });
+
+            document.body.innerHTML =
+                '<input type="date" class="pat-date-picker" value="2018-10-21" data-pat-date-picker="i18n:/path/to/i18njson" />';
+            const el = document.querySelector("input[type=date]");
+            console.log(document.body.innerHTML);
+            pattern.init(el);
+            await utils.timeout(1); // wait a tick for async to settle.
+            console.log(document.body.innerHTML);
+            const display_el = document.querySelector("time");
+            display_el.click();
+
+            const month = document.querySelector('.pika-lendar .pika-select-month option[selected="selected"]'); // prettier-ignore
+            expect(month.textContent).toBe("October");
+
+            // Reset mock
+            global.fetch.mockClear();
+            delete global.fetch;
         });
     });
 

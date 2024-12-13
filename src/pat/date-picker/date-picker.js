@@ -5,6 +5,7 @@ import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
 import events from "../../core/events";
+import store from "../../core/store";
 import utils from "../../core/utils";
 
 const log = logging.getLogger("date-picker");
@@ -29,6 +30,9 @@ parser.addAlias("behaviour", "behavior");
  *   "weekdays"     : ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
  *   "weekdaysShort": ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
  * } */
+
+export const storage = store.session("pat-date-picker");
+
 
 export default Base.extend({
     name: "date-picker",
@@ -184,11 +188,18 @@ export default Base.extend({
         }
 
         if (this.options.i18n) {
-            try {
-                const response = await fetch(this.options.i18n);
-                config.i18n = await response.json();
-            } catch {
-                log.error(`date-picker could not load i18n for ${this.options.i18n}`);
+            let i18n = storage.get(this.options.i18n);
+            if (!i18n) {
+                try {
+                    const response = await fetch(this.options.i18n);
+                    i18n = await response.json();
+                    storage.set(this.options.i18n, i18n);
+                } catch {
+                    log.error(`date-picker could not load i18n for ${this.options.i18n}`);
+                }
+            }
+            if (i18n) {
+                config.i18n = i18n;
             }
         }
         this.pikaday = new Pikaday(config);
