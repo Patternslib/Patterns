@@ -1017,3 +1017,44 @@ describe("find_form", function () {
         expect(dom.find_form(el)).toBe(subform);
     });
 });
+
+describe("find_inputs", () => {
+    it("finds an input within a node structure.", (done) => {
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = `
+            <p>hello</p>
+            <fieldset>
+                <div>
+                    <input type="text" />
+                </div>
+                <select>
+                    <option>1</option>
+                    <option>2</option>
+                </select>
+                <textarea></textarea>
+            </fieldset>
+            <button>Click me!</button>
+        `;
+        const inputs = dom.find_inputs(wrapper);
+        const input_types = inputs.map((node) => node.nodeName);
+
+        expect(inputs.length).toBe(4);
+        expect(input_types.includes("INPUT")).toBeTruthy();
+        expect(input_types.includes("SELECT")).toBeTruthy();
+        expect(input_types.includes("TEXTAREA")).toBeTruthy();
+        expect(input_types.includes("BUTTON")).toBeTruthy();
+
+        done();
+    });
+
+    it("finds the input on the node itself.", (done) => {
+        const wrapper = document.createElement("input");
+        const inputs = dom.find_inputs(wrapper);
+        const input_types = inputs.map((node) => node.nodeName);
+
+        expect(inputs.length).toBe(1);
+        expect(input_types.includes("INPUT")).toBeTruthy();
+
+        done();
+    });
+});
