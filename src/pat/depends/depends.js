@@ -1,5 +1,6 @@
 import $ from "jquery";
 import Base from "../../core/base";
+import dom from "../../core/dom";
 import utils from "../../core/utils";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
@@ -34,6 +35,7 @@ export default Base.extend({
         }
 
         let state = handler.evaluate();
+        this.set_input_state(state);
         switch (options.action) {
             case "show":
                 utils.hideOrShow($el, state, options, this.name);
@@ -74,6 +76,28 @@ export default Base.extend({
             }
             $(input).on("change.pat-depends", null, data, this.onChange.bind(this));
             $(input).on("keyup.pat-depends", null, data, this.onChange.bind(this));
+        }
+    },
+
+    set_input_state(enabled) {
+        // If not enabled, remove any `required` attributes on input fields.
+        // Otherwise restore them.
+        const inputs = dom.find_inputs(this.el);
+
+        for (const el of inputs) {
+            if (enabled) {
+                const required = el.dataset.required;
+                if (typeof required !== "undefined") {
+                    el.setAttribute("required", required);
+                    delete el.dataset.required;
+                }
+            } else {
+                const required = el.getAttribute("required", null);
+                if (required !== null) {
+                    el.dataset.required = required;
+                    el.removeAttribute("required");
+                }
+            }
         }
     },
 
@@ -130,6 +154,7 @@ export default Base.extend({
         const $depdendent = $(dependent);
         const state = handler.evaluate();
 
+        this.set_input_state(state);
         switch (options.action) {
             case "show":
                 utils.hideOrShow($depdendent, state, options, this.name);
