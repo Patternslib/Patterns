@@ -1,7 +1,8 @@
 import $ from "jquery";
 import parser from "./depends_parse";
 
-function DependsHandler($el, expression) {
+function DependsHandler(el, expression) {
+    const $el = $(el);
     var $context = $el.closest("form");
     if (!$context.length) $context = $(document);
     this.$el = $el;
