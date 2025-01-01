@@ -1,8 +1,10 @@
-import $ from "jquery";
-import Base from "../../core/base";
-import utils from "../../core/utils";
+import { BasePattern } from "@patternslib/patternslib/src/core/basepattern";
+import events from "../../core/events";
+import dom from "../../core/dom";
 import logging from "../../core/logging";
-import Parser from "../../core/parser";
+import Parser from "@patternslib/patternslib/src/core/parser";
+import registry from "@patternslib/patternslib/src/core/registry";
+import utils from "../../core/utils";
 
 const log = logging.getLogger("depends");
 
@@ -13,127 +15,101 @@ parser.addArgument("transition", "none", ["none", "css", "fade", "slide"]);
 parser.addArgument("effect-duration", "fast");
 parser.addArgument("effect-easing", "swing");
 
-export default Base.extend({
-    name: "depends",
-    trigger: ".pat-depends",
-    jquery_plugin: true,
+class Pattern extends BasePattern {
+    static name = "depends";
+    static trigger = ".pat-depends";
+    static parser = parser;
 
-    async init($el, opts) {
+    async init() {
+        this.$el = $(this.el);
         const DependsHandler = (await import("../../lib/dependshandler")).default; // prettier-ignore
 
-        const dependent = this.$el[0];
-        const options = parser.parse(this.$el, opts);
-        this.$modal = this.$el.parents(".pat-modal");
-
-        let handler;
         try {
-            handler = new DependsHandler(this.$el, options.condition);
+            this.handler = new DependsHandler(this.el, this.options.condition);
         } catch (e) {
-            log.error("Invalid condition: " + e.message, dependent);
+            log.error("Invalid condition: " + e.message, this.el);
             return;
         }
 
-        let state = handler.evaluate();
-        switch (options.action) {
-            case "show":
-                utils.hideOrShow($el, state, options, this.name);
-                this.updateModal();
-                break;
-            case "enable":
-                if (state) this.enable();
-                else this.disable();
-                break;
-            case "both":
-                if (state) {
-                    utils.hideOrShow($el, state, options, this.name);
-                    this.updateModal();
-                    this.enable();
-                } else {
-                    utils.hideOrShow($el, state, options, this.name);
-                    this.updateModal();
-                    this.disable();
-                }
-                break;
-        }
+        // Initialize
+        this.set_state();
 
-        const data = {
-            handler: handler,
-            options: options,
-            dependent: dependent,
-        };
+        for (const input of this.handler.getAllInputs()) {
+            events.add_event_listener(
+                input,
+                "change",
+                `pat-depends--change--${this.uuid}`, // We need to support multiple events per dependant ...
+                this.set_state.bind(this)
+            );
+            events.add_event_listener(
+                input,
+                "keyup",
+                `pat-depends--keyup--${this.uuid}`, // ... therefore we need to add a uuid to the event id ...
+                this.set_state.bind(this)
+            );
 
-        for (let input of handler.getAllInputs()) {
             if (input.form) {
-                let $form = $(input.form);
-                let dependents = $form.data("patDepends.dependents");
-                if (!dependents) {
-                    dependents = [data];
-                    $form.on("reset.pat-depends", () => this.onReset);
-                } else if (dependents.indexOf(data) === -1) dependents.push(data);
-                $form.data("patDepends.dependents", dependents);
+                events.add_event_listener(
+                    input.form,
+                    "reset",
+                    `pat-depends--reset--${this.uuid}`, // ... to not override previously set event handlers.
+                    async () => {
+                        // TODO: note sure, what this timeout is for.
+                        await utils.timeout(50);
+                        this.set_state.bind(this);
+                    }
+                );
             }
-            $(input).on("change.pat-depends", null, data, this.onChange.bind(this));
-            $(input).on("keyup.pat-depends", null, data, this.onChange.bind(this));
         }
-    },
+    }
 
-    async onReset(event) {
-        const dependents = $(event.target).data("patDepends.dependents");
-        await utils.timeout(50);
-        for (let dependent of dependents) {
-            event.data = dependent;
-            this.onChange(event);
-        }
-    },
+    update_modal() {
+        const modal = this.el.closest(".pat-modal");
 
-    updateModal() {
         // If we're in a modal, make sure that it gets resized.
-        if (this.$modal.length) {
+        if (this.modal) {
             $(document).trigger("pat-update", { pattern: "depends" });
         }
-    },
+    }
 
     enable() {
-        if (this.$el.is(":input")) {
-            this.$el[0].disabled = null;
-        } else if (this.$el.is("a")) {
-            this.$el.off("click.patternDepends");
+        if (dom.is_input(this.el)) {
+            this.el.disabled = false;
+        } else if (this.el.tagName === "A") {
+            events.remove_event_listener(this.el, "pat-depends--click");
         }
-        this.$el.removeClass("disabled");
+        this.el.classList.remove("disabled");
         this.$el.trigger("pat-update", {
             pattern: "depends",
             action: "attribute-changed",
-            dom: this.$el[0],
+            dom: this.el,
             enabled: true,
         });
-    },
+    }
 
     disable() {
-        if (this.$el.is(":input")) {
-            this.$el[0].disabled = "disabled";
-        } else if (this.$el.is("a")) {
-            this.$el.on("click.patternDepends", (e) => e.preventDefault());
+        if (dom.is_input(this.el)) {
+            this.el.disabled = true;
+        } else if (this.el.tagName === "A") {
+            events.add_event_listener(this.el, "click", "pat-depends--click", (e) =>
+                e.preventDefault()
+            );
         }
-        this.$el.addClass("disabled");
+        this.el.classList.add("disabled");
         this.$el.trigger("pat-update", {
             pattern: "depends",
             action: "attribute-changed",
-            dom: this.$el[0],
+            dom: this.el,
             enabled: false,
         });
-    },
+    }
 
-    onChange(event) {
-        const handler = event.data.handler;
-        const options = event.data.options;
-        const dependent = event.data.dependent;
-        const $depdendent = $(dependent);
-        const state = handler.evaluate();
-
-        switch (options.action) {
+    set_state() {
+        const state = this.handler.evaluate();
+        switch (this.options.action) {
             case "show":
-                utils.hideOrShow($depdendent, state, options, this.name);
-                this.updateModal();
+                utils.hideOrShow(this.el, state, this.options, this.name);
+                this.update_modal();
                 break;
             case "enable":
                 if (state) {
@@ -143,8 +119,8 @@ export default Base.extend({
                 }
                 break;
             case "both":
-                utils.hideOrShow($depdendent, state, options, this.name);
-                this.updateModal();
+                utils.hideOrShow(this.el, state, this.options, this.name);
+                this.update_modal();
                 if (state) {
                     this.enable();
                 } else {
@@ -152,5 +128,11 @@ export default Base.extend({
                 }
                 break;
         }
-    },
-});
+    }
+}
+
+// Register Pattern class in the global pattern registry
+registry.register(Pattern);
+
+// Make it available
+export default Pattern;
