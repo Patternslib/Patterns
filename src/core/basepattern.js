@@ -8,6 +8,7 @@
  */
 import events from "./events";
 import logging from "./logging";
+import create_uuid from "./uuid";
 
 const log = logging.getLogger("basepattern");
 
@@ -35,6 +36,7 @@ class BasePattern {
             el = el[0];
         }
         this.el = el;
+        this.uuid = create_uuid();
 
         // Notify pre-init
         this.el.dispatchEvent(
