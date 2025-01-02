@@ -35,6 +35,10 @@ describe("Basepattern class tests", function () {
         expect(pat.name).toBe("example");
         expect(pat.trigger).toBe(".example");
         expect(typeof pat.parser.parse).toBe("function");
+
+        // Test more attributes
+        expect(pat.el).toBe(el);
+        expect(pat.uuid).toMatch(/^[0-9a-f\-]*$/);
     });
 
     it("1.2 - Options are created with grouping per default.", async function () {
