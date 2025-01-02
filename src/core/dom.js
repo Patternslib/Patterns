@@ -1,5 +1,6 @@
 /* Utilities for DOM traversal or navigation */
 import logging from "./logging";
+import create_uuid from "./uuid";
 
 const logger = logging.getLogger("core dom");
 
@@ -541,19 +542,7 @@ const escape_css_id = (id) => {
  */
 const element_uuid = (el) => {
     if (!get_data(el, "uuid", false)) {
-        let uuid;
-        if (window.crypto.randomUUID) {
-            // Create a real UUID
-            // window.crypto.randomUUID does only exist in browsers with secure
-            // context.
-            // See: https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomUUID
-            uuid = window.crypto.randomUUID();
-        } else {
-            // Create a sufficiently unique ID
-            const array = new Uint32Array(4);
-            uuid = window.crypto.getRandomValues(array).join("");
-        }
-        set_data(el, "uuid", uuid);
+        set_data(el, "uuid", create_uuid());
     }
     return get_data(el, "uuid");
 };
