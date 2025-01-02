@@ -74,9 +74,11 @@ class Pattern extends BasePattern {
     }
 
     enable() {
-        if (dom.is_input(this.el)) {
-            this.el.disabled = false;
-        } else if (this.el.tagName === "A") {
+        const inputs = dom.find_inputs(this.el);
+        for (const input of inputs) {
+            input.disabled = false;
+        }
+        if (this.el.tagName === "A") {
             events.remove_event_listener(this.el, "pat-depends--click");
         }
         this.el.classList.remove("disabled");
@@ -89,9 +91,11 @@ class Pattern extends BasePattern {
     }
 
     disable() {
-        if (dom.is_input(this.el)) {
-            this.el.disabled = true;
-        } else if (this.el.tagName === "A") {
+        const inputs = dom.find_inputs(this.el);
+        for (const input of inputs) {
+            input.disabled = true;
+        }
+        if (this.el.tagName === "A") {
             events.add_event_listener(this.el, "click", "pat-depends--click", (e) =>
                 e.preventDefault()
             );
