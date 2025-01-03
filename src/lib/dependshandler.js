@@ -9,10 +9,10 @@ class DependsHandler {
 
     _find_input(name) {
         const input = this.context.querySelector(`
-            input[name=${name}],
-            select[name=${name}],
-            textarea[name=${name}],
-            button[name=${name}]
+            input[name="${name}"],
+            select[name="${name}"],
+            textarea[name="${name}"],
+            button[name="${name}"]
         `);
         return input || document.querySelector(`#${name}`) || null;
     }
