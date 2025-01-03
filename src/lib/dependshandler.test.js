@@ -2,9 +2,7 @@ import $ from "jquery";
 import DependsHandler from "./dependshandler";
 
 describe("pat-dependshandler", function () {
-
     describe("Basic tests", function () {
-
         it("uses a form as context, if there is one.", function () {
             document.body.innerHTML = `
                 <form>
@@ -30,11 +28,9 @@ describe("pat-dependshandler", function () {
 
             expect(handler.context).toBe(document);
         });
-
     });
 
     describe("_find_input", function () {
-
         it("no input, nothing found", function () {
             document.body.innerHTML = `
                 <div id="lab"></div>
@@ -86,7 +82,6 @@ describe("pat-dependshandler", function () {
     });
 
     describe("_getValue", function () {
-
         it("Unchecked checkbox returns no value", function () {
             document.body.innerHTML = `
                 <div id="lab">
