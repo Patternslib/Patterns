@@ -15,7 +15,6 @@ parser.addArgument("transition", "none", ["none", "css", "fade", "slide"]);
 parser.addArgument("effect-duration", "fast");
 parser.addArgument("effect-easing", "swing");
 
-
 class Pattern extends BasePattern {
     static name = "depends";
     static trigger = ".pat-depends";
@@ -40,13 +39,13 @@ class Pattern extends BasePattern {
                 input,
                 "change",
                 `pat-depends--change--${this.uuid}`, // We need to support multiple events per dependant ...
-                this.set_state.bind(this),
+                this.set_state.bind(this)
             );
             events.add_event_listener(
                 input,
                 "keyup",
                 `pat-depends--keyup--${this.uuid}`, // ... therefore we need to add a uuid to the event id ...
-                this.set_state.bind(this),
+                this.set_state.bind(this)
             );
 
             if (input.form) {
@@ -58,7 +57,7 @@ class Pattern extends BasePattern {
                         // TODO: note sure, what this timeout is for.
                         await utils.timeout(50);
                         this.set_state.bind(this);
-                    },
+                    }
                 );
             }
         }
@@ -81,7 +80,7 @@ class Pattern extends BasePattern {
             input.dispatchEvent(events.change_event());
         }
         if (this.el.tagName === "A") {
-            events.remove_event_listener(this.el, "pat-depends--click")
+            events.remove_event_listener(this.el, "pat-depends--click");
         }
         this.el.classList.remove("disabled");
         this.$el.trigger("pat-update", {
@@ -100,7 +99,9 @@ class Pattern extends BasePattern {
             input.dispatchEvent(events.change_event());
         }
         if (this.el.tagName === "A") {
-            events.add_event_listener(this.el, "click", "pat-depends--click", e => e.preventDefault());
+            events.add_event_listener(this.el, "click", "pat-depends--click", (e) =>
+                e.preventDefault()
+            );
         }
         this.el.classList.add("disabled");
         this.$el.trigger("pat-update", {
