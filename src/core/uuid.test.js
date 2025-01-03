@@ -20,5 +20,3 @@ describe("uuid", function () {
         window.crypto.randomUUID = orig_randomUUID;
     });
 });
-
-
