@@ -33,7 +33,7 @@ class DependsHandler {
                 return false;
             }
             if (input.disabled) {
-                    return false;
+                return false;
             }
             return true;
         })
