@@ -9,7 +9,6 @@ const DATA_STYLE_DISPLAY = "__patternslib__style__display";
 
 const INPUT_SELECTOR = "input, select, textarea, button";
 
-
 /**
  * Return an array of DOM nodes.
  *
