@@ -2,139 +2,193 @@
 <html>
     <head>
         <title>Depends demo</title>
-        <meta charset="utf-8">
+        <meta charset="utf-8" />
         <script>
             window.__patternslib_import_styles = true;
         </script>
         <script src="/bundle.min.js"></script>
     </head>
     <body>
-      <section id="pat-depends-demo">
-        <h2>pat-depends with checkboxes, radiobuttons and multiselects</h2>
-        <form>
-            <fieldset class="horizontal">
-                <fieldset class="group checklist radio">
-                    <legend>Flavour</legend>
+        <section id="pat-depends-demo">
+            <h2>pat-depends with checkboxes, radiobuttons and multiselects</h2>
+            <form>
+                <fieldset class="horizontal">
+                    <fieldset class="group checklist radio">
+                        <legend>Flavour</legend>
+                        <label>
+                            <input
+                                autocomplete="off"
+                                name="flavour:list"
+                                type="radio"
+                                value="margherita"
+                            />
+                            Margherita
+                        </label>
+                        <label>
+                            <input
+                                autocomplete="off"
+                                name="flavour:list"
+                                type="radio"
+                                value="hawaii"
+                            />
+                            Hawaii
+                        </label>
+                        <label>
+                            <input
+                                autocomplete="off"
+                                checked
+                                name="flavour:list"
+                                type="radio"
+                                value="bacon"
+                            />
+                            Bacon Supreme
+                        </label>
+                        <label>
+                            <input
+                                autocomplete="off"
+                                name="flavour:list"
+                                type="radio"
+                                value="sea"
+                            />
+                            Fruits de mer
+                        </label>
+                    </fieldset>
 
-                    <label
-                        ><input type="radio" name="flavour:list" value="margherita" autocomplete="off" />
-                        Margherita</label
+                    <fieldset
+                        class="pat-depends group"
+                        data-pat-depends="condition:flavour:list=hawaii; transition: slide"
                     >
-                    <label
-                        ><input type="radio" name="flavour:list" value="hawaii" autocomplete="off" />
-                        Hawaii</label
-                    >
-                    <label
-                        ><input type="radio" name="flavour:list" value="bacon" autocomplete="off" checked />
-                        Bacon Supreme</label
-                    >
-                    <label
-                        ><input type="radio" name="flavour:list" value="sea" autocomplete="off" />
-                        Fruits de mer</label
-                    >
-                </fieldset>
-
-                <fieldset
-                    class="pat-depends group"
-                    data-pat-depends="condition:flavour:list=hawaii; transition: slide"
-                >
-                    <legend>Select the type of ananas</legend>
-                    <input
-                        class="pat-autosuggest"
-                        placeholder="Choose a type of ananas"
-                        data-pat-autosuggest="words: Smooth Cayenne, Kew, Natal Queen, Singapore Spanish, Paulista, Perolera;
+                        <legend>Select the type of ananas</legend>
+                        <input
+                            class="pat-autosuggest"
+                            placeholder="Choose a type of ananas"
+                            type="text"
+                            data-pat-autosuggest="words: Smooth Cayenne, Kew, Natal Queen, Singapore Spanish, Paulista, Perolera;
                                               allow-new-words: false; max-selection-size: 1;"
-                        type="text"
-                    />
-                </fieldset>
+                        />
+                    </fieldset>
 
-                <fieldset class="group pat-checklist">
-                    <legend>Add extra toppings</legend>
-                    <label>
-                        <input type="checkbox" name="custom" autocomplete="off" /> Add extra
-                        toppings
-                    </label>
-                </fieldset>
+                    <fieldset class="group pat-checklist">
+                        <legend>Add extra toppings</legend>
+                        <label>
+                            <input autocomplete="off" name="custom" type="checkbox" />
+                            Add extra toppings
+                        </label>
+                    </fieldset>
 
-                <fieldset
-                    class="pat-depends group pat-checklist"
-                    data-pat-depends="condition: custom; transition: slide"
-                >
-                    <legend>Extra toppings</legend>
-                    <label
+                    <fieldset
+                        class="pat-depends group pat-checklist"
+                        data-pat-depends="condition: custom"
+                    >
+                        <legend>Extra toppings</legend>
+                        <label
+                            class="pat-depends"
+                            data-pat-depends="flavour:list!=hawaii"
+                        >
+                            <input autocomplete="off" name="pineapple" type="checkbox" />
+                            Pineapple
+                        </label>
+                        <label>
+                            <input
+                                autocomplete="off"
+                                name="gorgonzola"
+                                type="checkbox"
+                            />
+                            Gorgonzola
+                        </label>
+                        <label>
+                            <input autocomplete="off" name="peanuts" type="checkbox" />
+                            Peanuts
+                        </label>
+                        <label>
+                            <input autocomplete="off" name="redonion" type="checkbox" />
+                            Red onions
+                        </label>
+                    </fieldset>
+                    <p>
+                        <strong
+                            class="pat-depends"
+                            data-pat-depends="condition: flavour:list=bacon; transition: fade"
+                        >
+                            This pizza is bad for your health!
+                        </strong>
+                        <em
+                            class="pat-depends"
+                            data-pat-depends="condition: flavour:list=bacon and gorgonzola"
+                        >
+                            Bad, but <em>extremely</em> tasty!
+                        </em>
+                    </p>
+                    <fieldset>
+                        <legend>Choose your satisfaction level</legend>
+                        <select multiple name="satisfaction" size="4">
+                            <option value="4">very much</option>
+                            <option value="3">somehow</option>
+                            <option value="2">a bit</option>
+                            <option value="1">not at all</option>
+                        </select>
+
+                        <p
+                            class="pat-depends"
+                            data-pat-depends="condition: satisfaction ~= 4"
+                        >
+                            thank you very much
+                        </p>
+                        <p
+                            class="pat-depends"
+                            data-pat-depends="condition: satisfaction ~= 3"
+                        >
+                            thank you somehow
+                        </p>
+                        <p
+                            class="pat-depends"
+                            data-pat-depends="condition: satisfaction ~= 2"
+                        >
+                            thank you a bit
+                        </p>
+                        <p
+                            class="pat-depends"
+                            data-pat-depends="condition: satisfaction ~= 1"
+                        >
+                            thank you not at all
+                        </p>
+                    </fieldset>
+                </fieldset>
+            </form>
+        </section>
+
+        <section id="pat-depends-demo-2">
+            <h2>pat-depends with optional date/time inputs</h2>
+            <form>
+                <label
+                    >Start
+                    <input name="start-date" type="date" />
+                    <input
                         class="pat-depends"
-                        data-pat-depends="flavour:list!=hawaii"
-                        ><input type="checkbox" name="pineapple" autocomplete="off"/>
-                        Pineapple</label
-                    >
-                    <label
-                        ><input type="checkbox" name="gorgonzola" autocomplete="off" />
-                        Gorgonzola</label
-                    >
-                    <label
-                        ><input type="checkbox" name="peanuts" autocomplete="off" /> Peanuts</label
-                    >
-                    <label
-                        ><input type="checkbox" name="redonion" autocomplete="off" /> Red
-                        onions</label
-                    >
-                </fieldset>
-                <p>
-                  <strong
-                      class="pat-depends"
-                      data-pat-depends="condition: flavour:list=bacon; transition: fade">
-                    This pizza is bad for your health!
-                  </strong>
-                  <em
-                      class="pat-depends"
-                      data-pat-depends="condition: flavour:list=bacon and gorgonzola">
-                    Bad, but <em>extremely</em> tasty!
-                  </em>
-                </p>
-                <fieldset>
-                  <legend>Choose your satisfaction level</legend>
-                  <select name="satisfaction"multiple size="4">
-                      <option value="4">very much</option>
-                      <option value="3">somehow</option>
-                      <option value="2">a bit</option>
-                      <option value="1">not at all</option>
-                  </select>
-
-                  <p class="pat-depends" data-pat-depends="condition: satisfaction ~= 4">thank you very much</p>
-                  <p class="pat-depends" data-pat-depends="condition: satisfaction ~= 3">thank you somehow</p>
-                  <p class="pat-depends" data-pat-depends="condition: satisfaction ~= 2">thank you a bit</p>
-                  <p class="pat-depends" data-pat-depends="condition: satisfaction ~= 1">thank you not at all</p>
-
-                </fieldset>
-
-            </fieldset>
-        </form>
-      </section>
-
-      <section id="pat-depends-demo-2">
-        <h2>pat-depends with optional date/time inputs</h2>
-        <form>
-          <label>Start
-            <input type="date" name="start-date" />
-            <input type="time" name="start-time"
-                class="pat-depends"
-                data-pat-depends="condition: not whole_day" />
-          </label>
-          <label
-              class="pat-depends"
-              data-pat-depends="condition: not open_end">End
-            <input type="date" name="end-date" />
-            <input type="time" name="end-time"
-                class="pat-depends"
-                data-pat-depends="condition: not whole_day" />
-          </label>
-          <label>Whole day
-            <input type="checkbox" name="whole_day" />
-          </label>
-          <label>Open end
-            <input type="checkbox" name="open_end" />
-          </label>
-        </form>
-      </section>
+                        name="start-time"
+                        type="time"
+                        data-pat-depends="condition: not whole_day"
+                    />
+                </label>
+                <label class="pat-depends" data-pat-depends="condition: not open_end">
+                    End
+                    <input name="end-date" type="date" />
+                    <input
+                        class="pat-depends"
+                        name="end-time"
+                        type="time"
+                        data-pat-depends="condition: not whole_day"
+                    />
+                </label>
+                <label>
+                    Whole day
+                    <input name="whole_day" type="checkbox" />
+                </label>
+                <label>
+                    Open end
+                    <input name="open_end" type="checkbox" />
+                </label>
+            </form>
+        </section>
     </body>
 </html>

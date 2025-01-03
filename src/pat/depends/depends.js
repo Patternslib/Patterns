@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { BasePattern } from "@patternslib/patternslib/src/core/basepattern";
 import events from "../../core/events";
 import dom from "../../core/dom";
@@ -67,7 +68,7 @@ class Pattern extends BasePattern {
         const modal = this.el.closest(".pat-modal");
 
         // If we're in a modal, make sure that it gets resized.
-        if (this.modal) {
+        if (modal) {
             $(document).trigger("pat-update", { pattern: "depends" });
         }
     }
