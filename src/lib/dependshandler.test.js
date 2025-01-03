@@ -29,14 +29,15 @@ describe("pat-dependshandler", function () {
         });
     });
 
-    describe("_findInput", function () {
+    describe("_findInputs", function () {
         it("no input, nothing found", function () {
             document.body.innerHTML = `
                 <div id="lab"></div>
             `;
             const lab = document.getElementById("lab");
             const handler = new DependsHandler(lab, "foo");
-            expect(handler._findInput("foo")).toBe(null);
+
+            expect(handler._findInputs("foo").length).toBe(0);
         });
 
         it("find input by name", function () {
@@ -48,7 +49,9 @@ describe("pat-dependshandler", function () {
             const lab = document.getElementById("lab");
             const foo = document.querySelector("[name=foo]");
             const handler = new DependsHandler(lab, "foo");
-            expect(handler._findInput("foo")).toBe(foo);
+
+            expect(handler._findInputs("foo").length).toBe(1);
+            expect(handler._findInputs("foo")[0]).toBe(foo);
         });
 
         it("find input by id", function () {
@@ -61,7 +64,8 @@ describe("pat-dependshandler", function () {
             const bar = document.getElementById("bar");
             const handler = new DependsHandler(lab, "bar");
 
-            expect(handler._findInput("bar")).toBe(bar);
+            expect(handler._findInputs("bar").length).toBe(1);
+            expect(handler._findInputs("bar")[0]).toBe(bar);
         });
 
         it("Restrict searches to current form", function () {
@@ -76,7 +80,25 @@ describe("pat-dependshandler", function () {
             const foo1 = document.getElementById("foo1");
             const handler = new DependsHandler(lab, "foo");
 
-            expect(handler._findInput("foo")).toBe(foo1);
+            expect(handler._findInputs("foo").length).toBe(1);
+            expect(handler._findInputs("foo")[0]).toBe(foo1);
+        });
+
+        it("find multiple inputs of the same name, e.g. for radio buttons", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input type="radio" name="foo:list"/>
+                    <input type="radio" name="foo:list"/>
+                    <input type="radio" name="foo:list"/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const foos = document.querySelectorAll("[name='foo:list']");
+            const handler = new DependsHandler(lab, "foo:list");
+            expect(handler._findInputs("foo:list").length).toBe(3);
+            expect(handler._findInputs("foo:list")[0]).toBe(foos[0]);
+            expect(handler._findInputs("foo:list")[1]).toBe(foos[1]);
+            expect(handler._findInputs("foo:list")[2]).toBe(foos[2]);
         });
     });
 
@@ -128,6 +150,37 @@ describe("pat-dependshandler", function () {
 
             expect(handler._getValue("foo")).toBe("bar");
         });
+
+        it("Returns the value of the checked radio buttons in a list of multiple radio buttons.", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input type="radio" name="foo:list" value="bar"/>
+                    <input type="radio" name="foo:list" value="baz"/>
+                    <input type="radio" name="foo:list" value="fuzz" checked/>
+                    <input type="radio" name="foo:list" value="nuzz"/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo:list");
+
+            expect(handler._getValue("foo:list")).toBe("fuzz");
+        });
+
+        it("Returns no value in a list of multiple radio buttons of no one is checked.", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input type="radio" name="foo:list" value="bar"/>
+                    <input type="radio" name="foo:list" value="baz"/>
+                    <input type="radio" name="foo:list" value="fuzz"/>
+                    <input type="radio" name="foo:list" value="nuzz"/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo:list");
+
+            expect(handler._getValue("foo:list")).toBe(null);
+        });
+
     });
 
     describe("getAllInputs", function () {

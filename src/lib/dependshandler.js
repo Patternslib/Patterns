@@ -7,51 +7,60 @@ class DependsHandler {
         this.ast = parser.parse(expression); // TODO: handle parse exceptions here
     }
 
-    _findInput(name) {
+    _findInputs(name) {
+        // In case of radio buttons, there might be multiple inputs.
         // "name" in parentheses, because it can be any value. Common is:
         // `somename:list` for a radio input list.
-        const input = this.context.querySelector(`
+        let inputs = this.context.querySelectorAll(`
             input[name="${name}"],
             select[name="${name}"],
             textarea[name="${name}"],
             button[name="${name}"]
         `);
-        return input || document.querySelector(`#${name}`) || null;
+        if (!inputs.length) {
+            // This should really only find one instance.
+            inputs = document.querySelectorAll(`#${name}`);
+        }
+        return inputs;
     }
 
     _getValue(name) {
-        const input = this._findInput(name);
-        if (!input) {
+        let inputs = this._findInputs(name);
+
+        inputs = [...inputs].filter((input) => {
+            if (input.type === "radio" && input.checked === false) {
+                return false;
+            }
+            if (input.type === "checkbox" && input.checked === false) {
+                return false;
+            }
+            return true;
+        });
+
+        if (inputs.length === 0) {
             return null;
         }
 
-        if (
-            (input.type === "radio" || input.type === "checkbox") &&
-            input.checked === false
-        ) {
-            return null;
-        }
-
-        return input.value;
+        return inputs[0].value;
     }
 
     getAllInputs() {
         const todo = [this.ast];
-        const inputs = new Set();
+        const all_inputs = new Set();
 
         while (todo.length) {
             const node = todo.shift();
             if (node.input) {
-                const input = this._findInput(node.input);
-                if (input) {
-                    inputs.add(input);
+                const inputs = this._findInputs(node.input);
+                for (const input of inputs) {
+                    all_inputs.add(input);
                 }
             }
             if (node.children && node.children.length) {
                 todo.push.apply(todo, node.children);
             }
         }
-        return [...inputs];
+        return [...all_inputs];
     }
 
     _evaluate(node) {
