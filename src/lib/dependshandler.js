@@ -8,11 +8,13 @@ class DependsHandler {
     }
 
     _findInput(name) {
+        // "name" in parentheses, because it can be any value. Common is:
+        // `somename:list` for a radio input list.
         const input = this.context.querySelector(`
-            input[name=${name}],
-            select[name=${name}],
-            textarea[name=${name}],
-            button[name=${name}]
+            input[name="${name}"],
+            select[name="${name}"],
+            textarea[name="${name}"],
+            button[name="${name}"]
         `);
         return input || document.querySelector(`#${name}`) || null;
     }
