@@ -17,7 +17,7 @@ class DependsHandler {
         `);
         if (!inputs.length) {
             // This should really only find one instance.
-            inputs = document.querySelectorAll(`#${name}`)
+            inputs = document.querySelectorAll(`#${name}`);
         }
         return inputs;
     }
@@ -25,7 +25,7 @@ class DependsHandler {
     _getValue(name) {
         let inputs = this._find_inputs(name);
 
-        inputs = [...inputs].filter(input => {
+        inputs = [...inputs].filter((input) => {
             if (input.type === "radio" && input.checked === false) {
                 return false;
             }
@@ -36,7 +36,7 @@ class DependsHandler {
                 return false;
             }
             return true;
-        })
+        });
 
         if (inputs.length === 0) {
             return null;
@@ -55,7 +55,6 @@ class DependsHandler {
                 const inputs = this._find_inputs(node.input);
                 for (const input of inputs) {
                     all_inputs.add(input);
-
                 }
             }
             if (node.children && node.children.length) {
