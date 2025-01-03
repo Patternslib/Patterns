@@ -77,6 +77,8 @@ class Pattern extends BasePattern {
         const inputs = dom.find_inputs(this.el);
         for (const input of inputs) {
             input.disabled = false;
+            // Trigger the change event after disabling so that any other bound actions can react on that.
+            input.dispatchEvent(events.change_event());
         }
         if (this.el.tagName === "A") {
             events.remove_event_listener(this.el, "pat-depends--click");
@@ -94,6 +96,8 @@ class Pattern extends BasePattern {
         const inputs = dom.find_inputs(this.el);
         for (const input of inputs) {
             input.disabled = true;
+            // Trigger the change event after disabling so that any other bound actions can react on that.
+            input.dispatchEvent(events.change_event());
         }
         if (this.el.tagName === "A") {
             events.add_event_listener(this.el, "click", "pat-depends--click", (e) =>

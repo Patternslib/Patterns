@@ -1,4 +1,5 @@
 import $ from "jquery";
+import dom from "../../core/dom";
 import pattern from "./depends";
 import utils from "../../core/utils";
 
@@ -186,5 +187,74 @@ describe("pat-depends", function () {
             expect(data.dom).toBe(el);
             expect(data.enabled).toBe(false);
         });
+    });
+
+    describe("5 - Support pat-depends within a pat-depends controlled tree.", function () {
+
+        it("Also updates pat-depends within a pat-depends controlled tree", async function () {
+
+            document.body.innerHTML = `
+                <div data-pat-depends="action: both">
+                    <label>
+                        <input
+                            name="show-tree"
+                            type="checkbox"
+                        />
+                        show
+                    </label>
+
+                    <fieldset
+                        class="dep1 pat-depends"
+                        data-pat-depends="condition: show-tree"
+                    >
+                        <label>
+                            <input
+                                name="extra"
+                                type="checkbox"
+                            />
+                            Extra
+                        </label>
+                    </fieldset>
+
+                    <!-- This pat-depends node controlled by a checkbox which is
+                         within another pat-depends controlled tree.
+                    -->
+                    <p
+                        class="dep2 pat-depends"
+                        data-pat-depends="condition: extra"
+                    >
+                        You shose extra!
+                    </p>
+                </div>
+            `;
+
+            const dep1 = document.querySelector(".dep1");
+            new pattern(dep1);
+            await utils.timeout(1); // wait a tick for async to settle.
+            const dep2 = document.querySelector(".dep2");
+            new pattern(dep2);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            const button1 = document.querySelector("[name=show-tree]");
+            const button2 = document.querySelector("[name=extra]");
+
+            button1.checked = true;
+            button1.dispatchEvent(new Event("change"));
+            button2.checked = true;
+            button2.dispatchEvent(new Event("change"));
+
+            expect(dom.is_visible(dep1)).toBe(true);
+            expect(dom.is_visible(dep2)).toBe(true);
+
+
+            // Even though button2 is still checked, the visibility of dep2 is
+            // hidden.
+            button1.checked = false;
+            button1.dispatchEvent(new Event("change"));
+
+            expect(dom.is_visible(dep1)).toBe(false);
+            expect(dom.is_visible(dep2)).toBe(false);
+        });
+
     });
 });
