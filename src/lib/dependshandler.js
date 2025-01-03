@@ -34,6 +34,9 @@ class DependsHandler {
             if (input.type === "checkbox" && input.checked === false) {
                 return false;
             }
+            if (input.disabled) {
+                return false;
+            }
             return true;
         });
 

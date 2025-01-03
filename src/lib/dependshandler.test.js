@@ -103,6 +103,42 @@ describe("pat-dependshandler", function () {
     });
 
     describe("_getValue", function () {
+        it("Just get the text value.", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input name="foo" value="bar"/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo");
+
+            expect(handler._getValue("foo")).toBe("bar");
+        });
+
+        it("Get an empty value from an empty input.", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input name="foo" value=""/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo");
+
+            expect(handler._getValue("foo")).toBe("");
+        });
+
+        it("Get null from a disabled input.", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input name="foo" value="bar" disabled/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo");
+
+            expect(handler._getValue("foo")).toBe(null);
+        });
+
         it("Unchecked checkbox returns no value", function () {
             document.body.innerHTML = `
                 <div id="lab">
