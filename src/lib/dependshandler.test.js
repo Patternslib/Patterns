@@ -1,4 +1,3 @@
-import $ from "jquery";
 import DependsHandler from "./dependshandler";
 
 describe("pat-dependshandler", function () {
