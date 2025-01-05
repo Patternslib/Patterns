@@ -1,7 +1,6 @@
 import $ from "jquery";
 import events from "../../core/events";
-import { storage } from "./date-picker";
-import pattern from "./date-picker";
+import pattern, { storage } from "./date-picker";
 import pattern_auto_submit from "../auto-submit/auto-submit";
 import utils from "../../core/utils";
 import { jest } from "@jest/globals";
