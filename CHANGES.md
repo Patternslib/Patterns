@@ -4,6 +4,70 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.10.0-alpha.0](https://github.com/Patternslib/patterns/compare/9.9.16...9.10.0-alpha.0) (2025-01-06)
+
+
+### Features
+
+
+* **core basepattern:** Assign each pattern a UUID. ([c142214](https://github.com/Patternslib/patterns/commit/c14221498693bda204f14a7f4baeccd2f77509df))
+
+
+* **core dom:** Add find_inputs to find all inputs in a node tree, including the node itself. ([db271ce](https://github.com/Patternslib/patterns/commit/db271ce9265c3c020fa6a237984178c92cd7995b))
+
+
+* **core uuid:** Add utility function to generate a uuid. ([8b70876](https://github.com/Patternslib/patterns/commit/8b70876f7c132d521a3c9b591ba75a94442363be))
+
+
+* **pat-autosuggest:** Add batching support for AJAX requests. ([1323eaa](https://github.com/Patternslib/patterns/commit/1323eaa4c472a6eff3e3d42096f9fd1e61b6ea48))
+
+  This PR introduces three new options for that:
+max-initial-size: Defines the batch size for the initial request (default: 10).
+ajax-batch-size: Defines the batch size for subsequent requests (default: 10).
+ajax-timeout: Defines the timeout in milliseconds before a AJAX request is submitted. (default: 400).
+
+Ref: scrum-1638
+
+
+* **pat-date-picker:** Cache the ajax call to retrieve i18n picker translations. ([9050ddc](https://github.com/Patternslib/patterns/commit/9050ddcdb112db324b8b55df0cde0dc648506a46))
+
+
+
+### Bug Fixes
+
+
+* **lib dependshandler:** Do not return the value from an disabled input. Return null instead. ([430167b](https://github.com/Patternslib/patterns/commit/430167bf7cc881eea2bd20d7df3d98df825ce4bf))
+
+
+* **pat-depends:** Enable/Disable all inputs of a subtree, if a parent is a dependend. ([0bbe3f4](https://github.com/Patternslib/patterns/commit/0bbe3f40ee6e6bff3af6a3406f3951e49bfa6fd6))
+
+
+* **pat-depends:** Support updating for sub-pat-depends when the parent state is changed. ([9abf534](https://github.com/Patternslib/patterns/commit/9abf534c82d149d5c59349bc7226c501d242f7ba))
+
+
+* **pat-inject:** Allow to submit invalid forms when form/novalidate. ([993d27d](https://github.com/Patternslib/patterns/commit/993d27db6ba7e3d9c2f2713b46e64c2e82599632))
+
+  Respect the form[novalidate] and button[formnovalidate] attributes and
+allow the submission of invalid forms.
+This is necessary if a cancel button is a submit button and needs to be
+allowed to submit even if the form input is invalid.
+
+
+
+### Maintenance
+
+
+* **lib dependshandler:** Modernize code. ([4c1650f](https://github.com/Patternslib/patterns/commit/4c1650f00ce0cd18cb48a95c19a68372cdc4ecf3))
+
+
+* **pat-datepicker:** Fix ESLint warning. ([4a10d4b](https://github.com/Patternslib/patterns/commit/4a10d4bc7217d477da2b1ba6997699c4f611b260))
+
+
+* **pat-depends:** Rework to class based pattern. ([c83bb0a](https://github.com/Patternslib/patterns/commit/c83bb0af71b50e44c097ea7220fcfd8a3ffb77eb))
+
+
+* Remove obsolete src/lib/README.txt. ([70ee738](https://github.com/Patternslib/patterns/commit/70ee7389a3aab7601d5347c919821252b23f5969))
+
 ## [9.9.16](https://github.com/Patternslib/patterns/compare/9.9.15...9.9.16) (2024-08-21)
 
 
