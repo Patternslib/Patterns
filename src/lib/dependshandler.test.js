@@ -1,106 +1,252 @@
-import $ from "jquery";
 import DependsHandler from "./dependshandler";
 
 describe("pat-dependshandler", function () {
-    beforeEach(function () {
-        $("<div/>", { id: "lab" }).appendTo(document.body);
-    });
+    describe("Basic tests", function () {
+        it("uses a form as context, if there is one.", function () {
+            document.body.innerHTML = `
+                <form>
+                    <input id="lab" />
+                </form>
+            `;
 
-    afterEach(function () {
-        $("#lab").remove();
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "lab");
+
+            expect(handler.context).toBe(document.querySelector("form"));
+        });
+
+        it("uses the document as context, if there is no form", function () {
+            document.body.innerHTML = `
+                <div>
+                    <input id="lab" />
+                </div>
+            `;
+
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "lab");
+
+            expect(handler.context).toBe(document);
+        });
     });
 
     describe("_findInputs", function () {
-        it("Reference to unknown input", function () {
-            var handler = new DependsHandler($("#lab"), "foo");
+        it("no input, nothing found", function () {
+            document.body.innerHTML = `
+                <div id="lab"></div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo");
+
             expect(handler._findInputs("foo").length).toBe(0);
         });
 
-        it("Reference to input name", function () {
-            var $lab = $("#lab"),
-                handler = new DependsHandler($("#lab"), "foo");
-            $lab.append('<input type="text" name="foo"/>');
+        it("find input by name", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input name="foo"/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const foo = document.querySelector("[name=foo]");
+            const handler = new DependsHandler(lab, "foo");
+
             expect(handler._findInputs("foo").length).toBe(1);
+            expect(handler._findInputs("foo")[0]).toBe(foo);
         });
 
-        it("Reference to input id", function () {
-            var $lab = $("#lab"),
-                handler = new DependsHandler($("#lab"), "foo");
-            $lab.append('<input type="text" id="bar" name="foo"/>');
+        it("find input by id", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input id="bar"/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const bar = document.getElementById("bar");
+            const handler = new DependsHandler(lab, "bar");
+
             expect(handler._findInputs("bar").length).toBe(1);
+            expect(handler._findInputs("bar")[0]).toBe(bar);
         });
 
         it("Restrict searches to current form", function () {
-            $("#lab").html(
-                [
-                    '<input type="text" name="foo"/>',
-                    "<form>",
-                    '  <div id="context"/>',
-                    '  <input type="radio" name="foo" value="1"/>',
-                    "</form>",
-                ].join("\n")
-            );
-            var handler = new DependsHandler($("#context"), "foo"),
-                $inputs = handler._findInputs("foo");
-            expect($inputs.length).toBe(1);
-            expect($inputs[0].type).toBe("radio");
+            document.body.innerHTML = `
+                <input id="foo0" name="foo"/>
+                <form>
+                    <div id="lab"></div>
+                    <input id="foo1" name="foo"/>
+                </form>
+            `;
+            const lab = document.getElementById("lab");
+            const foo1 = document.getElementById("foo1");
+            const handler = new DependsHandler(lab, "foo");
+
+            expect(handler._findInputs("foo").length).toBe(1);
+            expect(handler._findInputs("foo")[0]).toBe(foo1);
+        });
+
+        it("find multiple inputs of the same name, e.g. for radio buttons", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input type="radio" name="foo:list"/>
+                    <input type="radio" name="foo:list"/>
+                    <input type="radio" name="foo:list"/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const foos = document.querySelectorAll("[name='foo:list']");
+            const handler = new DependsHandler(lab, "foo:list");
+            expect(handler._findInputs("foo:list").length).toBe(3);
+            expect(handler._findInputs("foo:list")[0]).toBe(foos[0]);
+            expect(handler._findInputs("foo:list")[1]).toBe(foos[1]);
+            expect(handler._findInputs("foo:list")[2]).toBe(foos[2]);
         });
     });
 
     describe("_getValue", function () {
-        it("Unchecked checkbox", function () {
-            $("#lab").append('<input type="checkbox" name="foo" value="bar"/>');
-            var handler = new DependsHandler($("#lab"), "foo");
-            expect(handler._getValue("foo")).toBeNull();
-        });
+        it("Just get the text value.", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input name="foo" value="bar"/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo");
 
-        it("Checked checkbox", function () {
-            $("#lab").append(
-                '<input type="checkbox" name="foo" value="bar" checked="checked"/>'
-            );
-            var handler = new DependsHandler($("#lab"), "foo");
             expect(handler._getValue("foo")).toBe("bar");
         });
 
-        it("Unchecked radio button", function () {
-            $("#lab").append('<input type="radio" name="foo" value="bar"/>');
-            var handler = new DependsHandler($("#lab"), "foo");
+        it("Get an empty value from an empty input.", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input name="foo" value=""/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo");
+
+            expect(handler._getValue("foo")).toBe("");
+        });
+
+        it("Get null from a disabled input.", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input name="foo" value="bar" disabled/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo");
+
+            expect(handler._getValue("foo")).toBe(null);
+        });
+
+        it("Unchecked checkbox returns no value", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input type="checkbox" name="foo" value="bar"/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo");
+
             expect(handler._getValue("foo")).toBeNull();
         });
 
-        it("Unchecked radio button", function () {
-            $("#lab").append('<input type="radio" name="foo" value="bar"/>');
-            var handler = new DependsHandler($("#lab"), "foo");
+        it("Checked checkbox returns value", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input type="checkbox" name="foo" value="bar" checked/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo");
+
+            expect(handler._getValue("foo")).toBe("bar");
+        });
+
+        it("Unchecked radio button returns no value", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input type="radio" name="foo" value="bar"/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo");
+
             expect(handler._getValue("foo")).toBeNull();
         });
 
         it("Checked radio button", function () {
-            $("#lab").append(
-                '<input type="radio" name="foo" value="bar" checked="checked"/>'
-            );
-            var handler = new DependsHandler($("#lab"), "foo");
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input type="radio" name="foo" value="bar" checked/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo");
+
             expect(handler._getValue("foo")).toBe("bar");
         });
+
+        it("Returns the value of the checked radio buttons in a list of multiple radio buttons.", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input type="radio" name="foo:list" value="bar"/>
+                    <input type="radio" name="foo:list" value="baz"/>
+                    <input type="radio" name="foo:list" value="fuzz" checked/>
+                    <input type="radio" name="foo:list" value="nuzz"/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo:list");
+
+            expect(handler._getValue("foo:list")).toBe("fuzz");
+        });
+
+        it("Returns no value in a list of multiple radio buttons of no one is checked.", function () {
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input type="radio" name="foo:list" value="bar"/>
+                    <input type="radio" name="foo:list" value="baz"/>
+                    <input type="radio" name="foo:list" value="fuzz"/>
+                    <input type="radio" name="foo:list" value="nuzz"/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo:list");
+
+            expect(handler._getValue("foo:list")).toBe(null);
+        });
+
     });
 
     describe("getAllInputs", function () {
         it("Simple expression", function () {
-            $("#lab").append('<input type="radio" name="foo" value="bar"/>');
-            var handler = new DependsHandler($("#lab"), "foo"),
-                inputs = handler.getAllInputs();
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input name="foo"/>
+                    <input name="bar"/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo");
+            const inputs = handler.getAllInputs();
+
             expect(inputs.length).toBe(1);
-            expect(inputs[0].type).toBe("radio");
+            expect(inputs[0].name).toBe("foo");
         });
 
         it("Nested expression", function () {
-            $("#lab").html(
-                [
-                    '<input type="text" name="foo"/>',
-                    '<input type="text" name="buz"/>',
-                ].join("\n")
-            );
-            var handler = new DependsHandler($("#lab"), "foo or (foo and buz)"),
-                inputs = handler.getAllInputs();
+            document.body.innerHTML = `
+                <div id="lab">
+                    <input name="foo"/>
+                    <input name="bar"/>
+                    <input name="buz"/>
+                </div>
+            `;
+            const lab = document.getElementById("lab");
+            const handler = new DependsHandler(lab, "foo or (foo and buz)");
+            const inputs = handler.getAllInputs();
+
             expect(inputs.length).toBe(2);
             expect(inputs[0].name).toBe("foo");
             expect(inputs[1].name).toBe("buz");
@@ -110,102 +256,196 @@ describe("pat-dependshandler", function () {
     describe("evaluate", function () {
         describe("truthy", function () {
             it("Text input with value", function () {
-                $("#lab").append('<input type="text" name="foo" value="xxx"/>');
-                var handler = new DependsHandler($("#lab"), "foo");
+                document.body.innerHTML = `
+                    <div id="lab">
+                        <input name="foo" value="xyz"/>
+                    </div>
+                `;
+                const lab = document.getElementById("lab");
+                const handler = new DependsHandler(lab, "foo");
+
                 expect(handler.evaluate()).toBe(true);
             });
 
             it("Text input without value", function () {
-                $("#lab").append('<input type="text" name="foo"/>');
-                var handler = new DependsHandler($("#lab"), "foo");
+                document.body.innerHTML = `
+                    <div id="lab">
+                        <input name="foo"/>
+                    </div>
+                `;
+                const lab = document.getElementById("lab");
+                const handler = new DependsHandler(lab, "foo");
+
                 expect(handler.evaluate()).toBe(false);
             });
         });
 
-        describe("Comparison", function () {
-            it("Positive number input below value", function () {
-                $("#lab").append('<input type="number" name="foo" value="10"/>');
-                var handler = new DependsHandler($("#lab"), "foo<15");
+        describe("Number comparisons", function () {
+            it("Number below expression value", function () {
+                document.body.innerHTML = `
+                    <div id="lab">
+                        <input type="number" name="foo" value="10"/>
+                    </div>
+                `;
+                const lab = document.getElementById("lab");
+                const handler = new DependsHandler(lab, "foo<15");
+
                 expect(handler.evaluate()).toBe(true);
             });
 
-            it("Negative number input below value", function () {
-                $("#lab").append('<input type="number" name="foo" value="20"/>');
-                var handler = new DependsHandler($("#lab"), "foo<15");
+            it("Number above expression value", function () {
+                document.body.innerHTML = `
+                    <div id="lab">
+                        <input type="number" name="foo" value="20"/>
+                    </div>
+                `;
+                const lab = document.getElementById("lab");
+                const handler = new DependsHandler(lab, "foo<15");
+
                 expect(handler.evaluate()).toBe(false);
             });
 
-            it("Positive equal to value", function () {
-                $("#lab").append('<input type="text" name="foo" value="bar"/>');
-                var handler = new DependsHandler($("#lab"), "foo=bar");
+            it("Negative number below expression value", function () {
+                document.body.innerHTML = `
+                    <div id="lab">
+                        <input type="number" name="foo" value="-10"/>
+                    </div>
+                `;
+                const lab = document.getElementById("lab");
+                const handler = new DependsHandler(lab, "foo<15");
+
                 expect(handler.evaluate()).toBe(true);
             });
 
-            it("Negative equal to value", function () {
-                $("#lab").append('<input type="text" name="foo" value="buz"/>');
-                var handler = new DependsHandler($("#lab"), "foo=bar");
+            describe.skip("Negative expression values not yet supported.", function () {
+                it("Negative number above negative expression value", function () {
+                    document.body.innerHTML = `
+                        <div id="lab">
+                            <input type="number" name="foo" value="-10"/>
+                        </div>
+                    `;
+                    const lab = document.getElementById("lab");
+                    const handler = new DependsHandler(lab, "foo<-15");
+
+                    expect(handler.evaluate()).toBe(false);
+                });
+            });
+
+            it("Number equal to expression value", function () {
+                document.body.innerHTML = `
+                    <div id="lab">
+                        <input type="number" name="foo" value="15"/>
+                    </div>
+                `;
+                const lab = document.getElementById("lab");
+                const handler = new DependsHandler(lab, "foo<=15");
+
+                expect(handler.evaluate()).toBe(true);
+            });
+
+            it("Text equal to expression value", function () {
+                document.body.innerHTML = `
+                    <div id="lab">
+                        <input name="foo" value="buz"/>
+                    </div>
+                `;
+                const lab = document.getElementById("lab");
+                const handler = new DependsHandler(lab, "foo=buz");
+
+                expect(handler.evaluate()).toBe(true);
+            });
+
+            it("Text not equal to expression value", function () {
+                document.body.innerHTML = `
+                    <div id="lab">
+                        <input name="foo" value="bar"/>
+                    </div>
+                `;
+                const lab = document.getElementById("lab");
+                const handler = new DependsHandler(lab, "foo=buz");
+
                 expect(handler.evaluate()).toBe(false);
             });
         });
 
-        describe("Negate test", function () {
-            it("Text input with value", function () {
-                $("#lab").append('<input type="text" name="foo" value="xxx"/>');
-                var handler = new DependsHandler($("#lab"), "not foo");
+        describe("NOT expressions", function () {
+            it("Text input with value where expressions expects no value", function () {
+                document.body.innerHTML = `
+                    <div id="lab">
+                        <input name="foo" value="xyz"/>
+                    </div>
+                `;
+                const lab = document.getElementById("lab");
+                const handler = new DependsHandler(lab, "not foo");
+
                 expect(handler.evaluate()).toBe(false);
             });
 
-            it("Text input without value", function () {
-                $("#lab").append('<input type="text" name="foo" value=""/>');
-                var handler = new DependsHandler($("#lab"), "not foo");
+            it("Text input without value where expression expects no value", function () {
+                document.body.innerHTML = `
+                    <div id="lab">
+                        <input name="foo"/>
+                    </div>
+                `;
+                const lab = document.getElementById("lab");
+                const handler = new DependsHandler(lab, "not foo");
+
                 expect(handler.evaluate()).toBe(true);
             });
         });
 
-        describe("AND multiple expressions", function () {
+        describe("AND expressions", function () {
             it("All options true", function () {
-                $("#lab").html(
-                    [
-                        '<input type="text" name="one" value="1"/>',
-                        '<input type="text" name="two" value="2"/>',
-                    ].join("\n")
-                );
-                var handler = new DependsHandler($("#lab"), "one and two");
+                document.body.innerHTML = `
+                    <div id="lab">
+                        <input name="one" value="1"/>
+                        <input name="two" value="2"/>
+                    </div>
+                `;
+                const lab = document.getElementById("lab");
+                const handler = new DependsHandler(lab, "one and two");
+
                 expect(handler.evaluate()).toBe(true);
             });
 
             it("Not all options true", function () {
-                $("#lab").html(
-                    [
-                        '<input type="text" name="one" value="1"/>',
-                        '<input type="text" name="two" value=""/>',
-                    ].join("\n")
-                );
-                var handler = new DependsHandler($("#lab"), "one and two");
+                document.body.innerHTML = `
+                    <div id="lab">
+                        <input name="one" value="1"/>
+                        <input name="two"/>
+                    </div>
+                `;
+                const lab = document.getElementById("lab");
+                const handler = new DependsHandler(lab, "one and two");
+
                 expect(handler.evaluate()).toBe(false);
             });
         });
 
-        describe("OR multiple expressions", function () {
+        describe("OR expressions", function () {
             it("No options true", function () {
-                $("#lab").html(
-                    [
-                        '<input type="text" name="one" value=""/>',
-                        '<input type="text" name="two" value=""/>',
-                    ].join("\n")
-                );
-                var handler = new DependsHandler($("#lab"), "one or two");
+                document.body.innerHTML = `
+                    <div id="lab">
+                        <input name="one"/>
+                        <input name="two"/>
+                    </div>
+                `;
+                const lab = document.getElementById("lab");
+                const handler = new DependsHandler(lab, "one or two");
+
                 expect(handler.evaluate()).toBe(false);
             });
 
             it("One option true", function () {
-                $("#lab").html(
-                    [
-                        '<input type="text" name="one" value="1"/>',
-                        '<input type="text" name="two" value=""/>',
-                    ].join("\n")
-                );
-                var handler = new DependsHandler($("#lab"), "one or two");
+                document.body.innerHTML = `
+                    <div id="lab">
+                        <input name="one" value="1"/>
+                        <input name="two"/>
+                    </div>
+                `;
+                const lab = document.getElementById("lab");
+                const handler = new DependsHandler(lab, "one or two");
+
                 expect(handler.evaluate()).toBe(true);
             });
         });

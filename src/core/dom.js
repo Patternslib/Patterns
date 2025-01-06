@@ -1,10 +1,13 @@
 /* Utilities for DOM traversal or navigation */
 import logging from "./logging";
+import create_uuid from "./uuid";
 
 const logger = logging.getLogger("core dom");
 
 const DATA_PREFIX = "__patternslib__data_prefix__";
 const DATA_STYLE_DISPLAY = "__patternslib__style__display";
+
+const INPUT_SELECTOR = "input, select, textarea, button";
 
 /**
  * Return an array of DOM nodes.
@@ -539,19 +542,7 @@ const escape_css_id = (id) => {
  */
 const element_uuid = (el) => {
     if (!get_data(el, "uuid", false)) {
-        let uuid;
-        if (window.crypto.randomUUID) {
-            // Create a real UUID
-            // window.crypto.randomUUID does only exist in browsers with secure
-            // context.
-            // See: https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomUUID
-            uuid = window.crypto.randomUUID();
-        } else {
-            // Create a sufficiently unique ID
-            const array = new Uint32Array(4);
-            uuid = window.crypto.getRandomValues(array).join("");
-        }
-        set_data(el, "uuid", uuid);
+        set_data(el, "uuid", create_uuid());
     }
     return get_data(el, "uuid");
 };
@@ -571,9 +562,16 @@ const find_form = (el) => {
     const form =
         el.closest(".pat-subform") || // Special Patternslib subform concept has precedence.
         el.form ||
-        el.querySelector("input, select, textarea, button")?.form ||
+        el.querySelector(INPUT_SELECTOR)?.form ||
         el.closest("form");
     return form;
+};
+
+/**
+ * Find any input type.
+ */
+const find_inputs = (el) => {
+    return querySelectorAllAndMe(el, INPUT_SELECTOR);
 };
 
 const dom = {
@@ -582,6 +580,7 @@ const dom = {
     wrap: wrap,
     hide: hide,
     show: show,
+    find_inputs: find_inputs,
     find_parents: find_parents,
     find_scoped: find_scoped,
     get_parents: get_parents,
