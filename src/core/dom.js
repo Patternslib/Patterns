@@ -532,7 +532,7 @@ const escape_css_id = (id) => {
 };
 
 /**
- * Get a universally unique id (uuid) for a DOM element.
+ * Set and get a universally unique id (uuid) for a DOM element.
  *
  * This method returns a uuid for the given element. On the first call it will
  * generate a uuid and store it on the element.

@@ -19,4 +19,8 @@ describe("uuid", function () {
 
         window.crypto.randomUUID = orig_randomUUID;
     });
+
+    it("the uuid is unique", function () {
+        expect(create_uuid()).not.toBe(create_uuid());
+    });
 });
