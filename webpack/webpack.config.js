@@ -83,6 +83,8 @@ module.exports = () => {
 
     if (process.env.NODE_ENV === "development") {
         config.devServer.static.directory = path.resolve(__dirname, "../");
+        config.devServer.watchFiles = ["src/"];
+        config.devServer.port = "3001";
         // Add a strict Content-Security-Policy without 'unsafe-inline' to the dev
         // server for testing CSR issues.
         //config.devServer.headers["Content-Security-Policy"] =
