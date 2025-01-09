@@ -4,6 +4,57 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.10.0-alpha.1](https://github.com/Patternslib/patterns/compare/9.10.0-alpha.0...9.10.0-alpha.1) (2025-01-09)
+
+
+### Features
+
+
+* **core dom:** Add document_ready function which ensures callbacks to be run when or after the DOM has been loaded. ([1bbb837](https://github.com/Patternslib/patterns/commit/1bbb837183895033360c5cb1524991ebd287443f))
+
+
+
+### Bug Fixes
+
+
+* **pat-inject:** Fix pat-inject to not break complex JSON pattern options. ([c3e4a68](https://github.com/Patternslib/patterns/commit/c3e4a6812ec6f8ba9ca751dc5e5cea7591626948))
+
+  Rework the html rebasing to fix up relative URLs in pat-inject for a
+simpler and slightly more efficient method to walk over all attributes
+which need rebasing.
+The old method could destroy complex JSON based pattern options, like
+those from pat-structure in Mockup.
+
+Note: Only one rebase attribute per tag is currently possible. 1) This
+is the same as before. 2) We don't need more.
+
+
+
+### Maintenance
+
+
+* **Build:** Explicitly set the dev server port to 3001 and fix the documentation which was wrong about it. ([3882272](https://github.com/Patternslib/patterns/commit/3882272eccc8465d27d2424ef499d3e97cde6cb4))
+
+
+* **Build:** Restrict development server watcher only for files in the src directory. ([758f7aa](https://github.com/Patternslib/patterns/commit/758f7aa8c0458d2d0e9d3aa3568d13d10e81c9b7))
+
+  This reduces the number of necessary file watchers and saves important system resources.
+
+
+* **core registry:** Use dom.document_ready instead of jQuery aequivalent. ([c73b0e1](https://github.com/Patternslib/patterns/commit/c73b0e1caf7848f8b208c00aa91516fcc387a9e2))
+
+
+* **core uuid:** Extend with documentation and test from thet-own-needs with similar changes. ([69ea565](https://github.com/Patternslib/patterns/commit/69ea56536ece83c1e8fab5c4b33d58b040cdd0a5))
+
+
+* **Docs:** Minor typo in module federation document. ([fadd5d4](https://github.com/Patternslib/patterns/commit/fadd5d4d8be573536049db200dab05b95d1d0109))
+
+
+* **pat-markdown:** Use dom.document_ready instead of jQuery aequivalent. ([e8c8b4b](https://github.com/Patternslib/patterns/commit/e8c8b4b530e0c99d1e484ca7c8aa94ec108487ff))
+
+
+* Upgrade dependencies. ([be61ac5](https://github.com/Patternslib/patterns/commit/be61ac5bb452db8a36dfbc727d292ec84281e6ed))
+
 ## [9.10.0-alpha.0](https://github.com/Patternslib/patterns/compare/9.9.16...9.10.0-alpha.0) (2025-01-06)
 
 
