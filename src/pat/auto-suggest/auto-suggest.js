@@ -260,10 +260,14 @@ export default Base.extend({
                         quietMillis: this.options.ajax.timeout,
                         data: (term, page) => {
                             const request_data = {
-                                index: this.options.ajax["search-index"],
                                 q: term, // search term
                                 page: page,
                             };
+
+                            const index = this.options.ajax["search-index"];
+                            if (index) {
+                                request_data.index = index;
+                            }
 
                             const page_limit = this.page_limit(page);
                             if (page_limit > 0) {
