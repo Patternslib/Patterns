@@ -258,6 +258,7 @@ export default Base.extend({
                         dataType: this.options.ajax["data-type"],
                         type: "GET",
                         quietMillis: this.options.ajax.timeout,
+                        cache: true,
                         data: (term, page) => {
                             const request_data = {
                                 q: term, // search term
