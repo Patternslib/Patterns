@@ -18,7 +18,7 @@
 -include .env
 export
 
-PEGJS		?= npx pegjs
+PEGJS		?= npx peggy
 SASS		?= npx sass
 YARN		?= npx yarn
 
@@ -48,7 +48,7 @@ build: bundle css
 
 .PHONY: depends-parser
 depends-parser:  stamp-yarn
-	$(PEGJS) -O size -f es src/lib/depends_parse.pegjs
+	$(PEGJS) --format es src/lib/depends_parse.pegjs
 
 
 # Unlink any linked dependencies before building a bundle.
