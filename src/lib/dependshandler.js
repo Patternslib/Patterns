@@ -1,10 +1,10 @@
-import parser from "./depends_parse";
+import { parse } from "./depends_parse";
 
 class DependsHandler {
     constructor(el, expression) {
         this.el = el;
         this.context = el.closest("form") || document;
-        this.ast = parser.parse(expression); // TODO: handle parse exceptions here
+        this.ast = parse(expression); // TODO: handle parse exceptions here
     }
 
     _findInputs(name) {
