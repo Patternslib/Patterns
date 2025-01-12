@@ -6,6 +6,7 @@ import events from "../../core/events";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
+import create_uuid from "../../core/uuid";
 import utils from "../../core/utils";
 
 const log = logging.getLogger("pat.inject");
@@ -136,15 +137,15 @@ const inject = {
                     if (!cfgs[0].delay) {
                         this.onTrigger({ currentTarget: el });
                     } else {
-                        // generate UID
-                        const uid = Math.random().toString(36);
-                        el.setAttribute("data-pat-inject-uid", uid);
+                        // generate UUID
+                        const uuid = create_uuid();
+                        el.setAttribute("data-pat-inject-uuid", uuid);
 
                         // function to trigger the autoload and mark as triggered
-                        const delayed_trigger = (uid_) => {
+                        const delayed_trigger = (uuid_) => {
                             // Check if the element has been removed from the dom
                             const still_there = document.querySelector(
-                                `[data-pat-inject-uid="${uid_}"]`
+                                `[data-pat-inject-uuid="${uuid_}"]`
                             );
                             if (!still_there) {
                                 return false;
@@ -152,10 +153,12 @@ const inject = {
 
                             $el.data("pat-inject-autoloaded", true);
                             this.onTrigger({ currentTarget: el });
+                            // Cleanup again.
+                            still_there.removeAttribute("data-pat-inject-uuid");
                             return true;
                         };
                         window.setTimeout(
-                            delayed_trigger.bind(null, uid),
+                            delayed_trigger.bind(null, uuid),
                             cfgs[0].delay
                         );
                     }
