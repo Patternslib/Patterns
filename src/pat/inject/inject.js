@@ -458,8 +458,7 @@ const inject = {
         if (cfg.sourceMod === "content") {
             $source = $source.contents();
         }
-        let $src;
-        $src = $source.safeClone();
+        const $src = $source.safeClone();
         for (const img of dom.querySelectorAllAndMe($src[0], "img")) {
             $(img).on("load", (e) => {
                 $(e.currentTarget).trigger("pat-inject-content-loaded");
