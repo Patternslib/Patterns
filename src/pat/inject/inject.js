@@ -1,4 +1,3 @@
-import "../../core/jquery-ext"; // for findInclusive
 import "../../core/polyfills"; // SubmitEvent.submitter for Safari < 15.4 and jsDOM
 import $ from "jquery";
 import ajax from "../ajax/ajax";
@@ -461,9 +460,11 @@ const inject = {
         }
         let $src;
         $src = $source.safeClone();
-        $src.findInclusive("img").on("load", (e) => {
-            $(e.currentTarget).trigger("pat-inject-content-loaded");
-        });
+        for (const img of dom.querySelectorAllAndMe($src[0], "img")) {
+            $(img).on("load", (e) => {
+                $(e.currentTarget).trigger("pat-inject-content-loaded");
+            });
+        }
 
         const $injected = cfg.$injected || $src;
         // Now the injection actually happens.
@@ -529,7 +530,7 @@ const inject = {
             // 2) getting the element to scroll to (if not "top")
             const scroll_target = ["top", "target"].includes(cfg.scroll)
                 ? cfg.$target[0]
-                : $injected.findInclusive(cfg.scroll)[0];
+                : dom.querySelectorAllAndMe($injected[0], cfg.scroll);
 
             const scroll_container = dom.find_scroll_container(
                 scroll_target,
