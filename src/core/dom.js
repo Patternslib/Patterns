@@ -60,7 +60,7 @@ const toNodeArray = (nodes) => {
  * @returns {Array} - The DOM nodes found.
  */
 const querySelectorAllAndMe = (el, selector) => {
-    if (!el) {
+    if (!el || !el.querySelectorAll) {
         return [];
     }
 

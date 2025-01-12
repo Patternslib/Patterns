@@ -174,6 +174,15 @@ describe("core.dom tests", () => {
 
             done();
         });
+
+        it("return empty list, if the element is not a real element.", (done) => {
+            const res = dom.querySelectorAllAndMe("text", ".selector");
+            expect(Array.isArray(res)).toBe(true);
+            expect(res.length).toBe(0);
+
+            done();
+        });
+
     });
 
     describe("wrap tests", () => {
