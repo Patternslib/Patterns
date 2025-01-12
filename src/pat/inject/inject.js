@@ -108,7 +108,7 @@ const inject = {
                         }
                     });
                     // setup event handlers
-                    if (el?.tagName === "FORM") {
+                    if (el?.nodeName === "FORM") {
                         log.debug("Initializing form with injection on", el);
                         events.add_event_listener(
                             el,
@@ -192,7 +192,7 @@ const inject = {
         const el = e.currentTarget;
         const $el = $(el);
         let cfgs = $el.data("pat-inject");
-        if (el.tagName === "FORM" && e.type === "submit") {
+        if (el.nodeName === "FORM" && e.type === "submit") {
             const form = el;
             const submitter = e.submitter;
 
@@ -570,7 +570,7 @@ const inject = {
             sources$ &&
             sources$[sources$.length - 1] &&
             sources$[sources$.length - 1][0] &&
-            sources$[sources$.length - 1][0].nodeName == "TITLE"
+            sources$[sources$.length - 1][0].nodeName === "TITLE"
         ) {
             title = sources$[sources$.length - 1];
         }
@@ -882,7 +882,7 @@ const inject = {
             .map(([tag, attr]) => `${tag}[${attr}]`)
             .join(", ");
         for (const el_ of page.querySelectorAll(rebase_selector)) {
-            const attr = this._rebaseAttrs[el_.tagName.toLowerCase()];
+            const attr = this._rebaseAttrs[el_.nodeName.toLowerCase()];
             let value = el_.getAttribute(attr);
 
             if (
