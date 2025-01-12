@@ -102,11 +102,11 @@ const inject = {
         } else {
             switch (cfgs[0].trigger) {
                 case "default":
-                    cfgs.forEach((cfg) => {
+                    for (const cfg of cfgs) {
                         if (cfg.delay) {
                             cfg.processDelay = cfg.delay;
                         }
-                    });
+                    }
                     // setup event handlers
                     if (el?.nodeName === "FORM") {
                         log.debug("Initializing form with injection on", el);
@@ -218,6 +218,7 @@ const inject = {
                 cfgs = this.extractConfig($(cfg_node), opts);
             }
 
+            // store the params of the form in the config, to be used by history
             for (const cfg of cfgs) {
                 cfg.params = $.param($el.serializeArray());
             }
@@ -230,13 +231,13 @@ const inject = {
     submitSubform($sub) {
         /* This method is called from pat-subform
          */
-        const $el = $sub.parents("form");
+        const $el = $($sub[0].closest("form"));
         const cfgs = $sub.data("pat-inject");
 
         // store the params of the subform in the config, to be used by history
-        $(cfgs).each((i, v) => {
-            v.params = $.param($sub.serializeArray());
-        });
+        for (const cfg of cfgs) {
+            cfg.params = $.param($sub.serializeArray());
+        }
 
         try {
             $el.trigger("patterns-inject-triggered");
@@ -251,7 +252,7 @@ const inject = {
         options = Object.assign({}, options); // copy
 
         const cfgs = parser.parse($el, options, true);
-        cfgs.forEach((cfg) => {
+        for (const cfg of cfgs) {
             cfg.$context = $el;
             // options and cfg have priority, fall back to href/action
             cfg.url =
@@ -283,7 +284,7 @@ const inject = {
                 }
             }
             cfg.processDelay = 0;
-        });
+        }
         return cfgs;
     },
 
@@ -577,7 +578,7 @@ const inject = {
         cfgs.forEach((cfg, idx1) => {
             const perform_inject = () => {
                 if (cfg.target !== "none") {
-                    cfg.$target.each((idx2, target) => {
+                    for (const target of cfg.$target) {
                         this._performInjection(
                             target,
                             $el,
@@ -586,7 +587,7 @@ const inject = {
                             ev.target,
                             title
                         );
-                    });
+                    }
                 }
             };
             if (cfg.processDelay) {
@@ -654,13 +655,13 @@ const inject = {
         }
 
         // clean up
-        cfgs.forEach((cfg) => {
+        for (const cfg of cfgs) {
             if ("$injected" in cfg) {
                 cfg.$injected.remove();
             }
             cfg.$target.removeClass(cfg.loadingClass);
             $el.removeClass(cfg.executingClass);
-        });
+        }
         $el.off("pat-ajax-success.pat-inject");
         $el.off("pat-ajax-error.pat-inject");
 
@@ -1039,25 +1040,36 @@ const inject = {
         }, timeout);
 
         const unsub = () => {
-            ["scroll", "resize"].forEach((e) =>
-                window.removeEventListener(e, onInteraction)
-            );
-            [
+            for (const event of ["scroll", "resize"]) {
+                window.removeEventListener(event, onInteraction);
+            }
+            for (const event of [
                 "click",
                 "keypress",
                 "keyup",
                 "mousemove",
                 "touchstart",
                 "touchend",
-            ].forEach((e) => document.removeEventListener(e, onInteraction));
+            ]) {
+                document.removeEventListener(event, onInteraction);
+            }
         };
 
         onInteraction();
 
-        ["scroll", "resize"].forEach((e) => window.addEventListener(e, onInteraction));
-        ["click", "keypress", "keyup", "mousemove", "touchstart", "touchend"].forEach(
-            (e) => document.addEventListener(e, onInteraction)
-        );
+        for (const event of ["scroll", "resize"]) {
+            window.addEventListener(event, onInteraction);
+        }
+        for (const event of [
+            "click",
+            "keypress",
+            "keyup",
+            "mousemove",
+            "touchstart",
+            "touchend",
+        ]) {
+            document.addEventListener(event, onInteraction);
+        }
     },
 
     registerTypeHandler(type, handler) {
