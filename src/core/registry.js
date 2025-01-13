@@ -180,17 +180,14 @@ const registry = {
         );
         matches = matches.filter((el) => {
             // Filter out patterns:
-            // - with class ``.disable-patterns``
-            // - wrapped in ``.disable-patterns`` elements
+            // - with class ``.disable-patterns`` or wrapped within.
             // - wrapped in ``<pre>`` elements
-            // - wrapped in ``<template>`` elements
+            // - wrapped in ``<template>`` elements (not reachable anyways)
             return (
-                !el.matches(".disable-patterns") &&
-                !el?.parentNode?.closest?.(".disable-patterns") &&
+                !el?.closest?.(".disable-patterns") &&
                 !el?.parentNode?.closest?.("pre") &&
-                !el?.parentNode?.closest?.("template") && // NOTE: not strictly necessary. Template is a DocumentFragment and not reachable except for IE.
-                !el.matches(".cant-touch-this") && // BBB. TODO: Remove with next major version.
-                !el?.parentNode?.closest?.(".cant-touch-this") // BBB. TODO: Remove with next major version.
+                // BBB. TODO: Remove with next major version.
+                !el?.closest?.(".cant-touch-this")
             );
         });
 
