@@ -4,6 +4,40 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.10.1-alpha.0](https://github.com/Patternslib/patterns/compare/9.10.0-alpha.1...9.10.1-alpha.0) (2025-01-14)
+
+
+### Features
+
+
+* **pat-auto-suggest:** Enable caching. ([154890b](https://github.com/Patternslib/patterns/commit/154890b055225f8bc95c5769bccb9a67ee402b83))
+
+
+
+### Bug Fixes
+
+
+* **core dom:** Do not break querySelectorAllAndMe, if passed element is not a real element but something like a text node. ([1b19844](https://github.com/Patternslib/patterns/commit/1b19844cd907fa0ebb47ee003cd0d161ed14ee2b))
+
+
+* **pat-autosuggest:** For ajax queries, include the index parameter only if it is set. ([85da6a5](https://github.com/Patternslib/patterns/commit/85da6a5799597422fd7a090960bd3fc799254f1e))
+
+
+
+### Maintenance
+
+
+* **core registry:** Simplify pattern scanning filter. ([43c7255](https://github.com/Patternslib/patterns/commit/43c72555d117933e86713f4da7ee722ea8bf0c66))
+
+  Reduce the number of DOM search tests while not changing the behavior.
+Less rules means more speed.
+
+
+* **pat inject:** Modernize some parts of pat inject. ([b0f94fb](https://github.com/Patternslib/patterns/commit/b0f94fb058a7067e19bc9c3101a11dfa49ff8dd2))
+
+
+* **pat-inject:** Use create_uuid for generating the temporary autoload uuid and remove it again afterwards. ([8a3af53](https://github.com/Patternslib/patterns/commit/8a3af538654c7b6919d5e0b84b22a0603fa7a0b1))
+
 ## [9.10.0-alpha.1](https://github.com/Patternslib/patterns/compare/9.10.0-alpha.0...9.10.0-alpha.1) (2025-01-09)
 
 
