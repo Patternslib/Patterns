@@ -4,6 +4,14 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.10.1-alpha.1](https://github.com/Patternslib/patterns/compare/9.10.1-alpha.0...9.10.1-alpha.1) (2025-01-15)
+
+
+### Maintenance
+
+
+* **Dependencies:** Upgrade pat-content-mirror to 4.0.0. ([04e4816](https://github.com/Patternslib/patterns/commit/04e48160482d32f2b1c809a670d821acee2fcde8))
+
 ## [9.10.1-alpha.0](https://github.com/Patternslib/patterns/compare/9.10.0-alpha.1...9.10.1-alpha.0) (2025-01-14)
 
 
