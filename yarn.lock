@@ -1763,10 +1763,10 @@
     whybundled "^2.0.0"
     yarn "^1.22.22"
 
-"@patternslib/pat-content-mirror@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@patternslib/pat-content-mirror/-/pat-content-mirror-4.0.0.tgz#3d9b75081cb3b676bfb58f385ff2392771091bed"
-  integrity sha512-O9KA3lCH1c7Akrjxlb7eAuLoSMCgm0/zevZe+USxkkE+Twv7tATNyU5Kw153mvAZ1d6lXgZwR+w4ju3a9cz7cw==
+"@patternslib/pat-content-mirror@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@patternslib/pat-content-mirror/-/pat-content-mirror-4.0.1.tgz#e6b133dc13537220e6c9a622ab6087e2bf688a09"
+  integrity sha512-Z/Ks2UXtpT/8W6MH+KIQcXTHjR8HuDU+l+yU57mjP9lBFCzHB3pP41LVXZMz4PReJp2N3s9Y/+yWud1raWoZgw==
   dependencies:
     "@patternslib/patternslib" ">=9.10.1-alpha.0"
     jquery "^3.6.0"
