@@ -704,7 +704,7 @@ const inject = {
         }
     },
 
-    execute(cfgs, $el) {
+    async execute(cfgs, $el) {
         /* Actually execute the injection.
          *
          * Either by making an ajax request or by spoofing an ajax
@@ -768,10 +768,18 @@ const inject = {
         });
 
         if (cfgs[0].url.length) {
+            //const options = {};
+            //if (cfgs[0].browserCache) {
+            //    options.cache = cfgs[0].browserCache;
+            //}
+
+            //const response = await fetch(cfgs[0].url, options);
+
             ajax.request($el, {
                 "url": cfgs[0].url,
                 "browser-cache": cfgs[0].browserCache,
             });
+
         } else {
             // If there is no url specified, then content is being fetched
             // from the same page.
