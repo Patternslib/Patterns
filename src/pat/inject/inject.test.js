@@ -1557,9 +1557,7 @@ describe("pat-inject", function () {
 
                         expect(catched).toBe(true);
                         expect(pattern.execute).toHaveBeenCalled();
-
                     });
-
                 });
             });
         });
@@ -1652,6 +1650,98 @@ describe("pat-inject", function () {
             });
         });
 
+        describe("9.4 - injecton of the title element.", function () {
+            let spy_ajax;
+
+            beforeEach(function () {
+                spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            });
+
+            afterEach(function () {
+                spy_ajax.mockRestore();
+            });
+
+            it("9.4.1 - Injects a title element with history:record", async function () {
+                document.head.innerHTML = `
+                    <title>test</title>
+                `;
+                document.body.innerHTML = `
+                    <a class="pat-inject"
+                       href="test.html"
+                       data-pat-inject="
+                        source: body;
+                        target: body;
+                        history: record;
+                    ">link</a>
+                `;
+
+                answer(`
+                    <html>
+                        <head>
+                            <title>hello</title>
+                        </head>
+                        <body>
+                            OK
+                        </body>
+                    </html>
+                `);
+
+                const inject = document.querySelector(".pat-inject");
+
+                pattern.init($(inject));
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                inject.click();
+
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                expect(document.body.textContent.trim()).toBe("OK");
+
+                const title = document.head.querySelector("title");
+                expect(title).toBeTruthy();
+                expect(title.textContent.trim()).toBe("hello");
+            });
+
+            it("9.4.2 - Does not inject a title element without history:record", async function () {
+                document.head.innerHTML = `
+                    <title>test</title>
+                `;
+                document.body.innerHTML = `
+                    <a class="pat-inject"
+                       href="test.html"
+                       data-pat-inject="
+                        source: body;
+                        target: body;
+                    ">link</a>
+                `;
+
+                answer(`
+                    <html>
+                        <head>
+                            <title>hello</title>
+                        </head>
+                        <body>
+                            OK
+                        </body>
+                    </html>
+                `);
+
+                const inject = document.querySelector(".pat-inject");
+
+                pattern.init($(inject));
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                inject.click();
+
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                expect(document.body.textContent.trim()).toBe("OK");
+
+                const title = document.head.querySelector("title");
+                expect(title).toBeTruthy();
+                expect(title.textContent.trim()).toBe("test"); // Old title
+            });
+        });
     });
 
     describe("10 - Error handling", () => {
