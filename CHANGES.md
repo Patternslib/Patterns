@@ -4,6 +4,24 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.10.1-alpha.3](https://github.com/Patternslib/patterns/compare/9.10.1-alpha.2...9.10.1-alpha.3) (2025-01-20)
+
+
+### Bug Fixes
+
+
+* **pat-inject:** Fix a problem with injections without a target which was introduced in 9.10.1-alpha.0. ([9030ba5](https://github.com/Patternslib/patterns/commit/9030ba5ea90ee68db61073f7841462b1e0e502ef))
+
+
+* **pat-inject:** Re-enable support for multiple source matches. ([07a244f](https://github.com/Patternslib/patterns/commit/07a244f121d6651afe0936bb7cb1b7d846e68602))
+
+
+
+### Maintenance
+
+
+* **pat-inject:** Test automatic title insertion in history record mode. ([fcd87d4](https://github.com/Patternslib/patterns/commit/fcd87d4884ebc988e935a9b9b68155ea6ea8811c))
+
 ## [9.10.1-alpha.2](https://github.com/Patternslib/patterns/compare/9.10.1-alpha.1...9.10.1-alpha.2) (2025-01-15)
 
 
