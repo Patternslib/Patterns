@@ -1609,7 +1609,6 @@ describe("pat-inject", function () {
 
                 await utils.timeout(1); // wait a tick for async to settle.
 
-                console.log(document.body.innerHTML);
                 const modal = document.querySelector("#pat-modal");
                 expect(modal).toBeTruthy();
                 expect(modal.innerHTML.replace(/\s/g, "")).toBe(
@@ -1644,7 +1643,6 @@ describe("pat-inject", function () {
 
                 await utils.timeout(1); // wait a tick for async to settle.
 
-                console.log(document.body.innerHTML);
                 const modal = document.querySelector("#pat-modal");
                 expect(modal).toBeFalsy();
             });
@@ -1742,6 +1740,56 @@ describe("pat-inject", function () {
                 expect(title.textContent.trim()).toBe("test"); // Old title
             });
         });
+
+        describe("9.5 - support multiple source element matches.", function () {
+            let spy_ajax;
+
+            beforeEach(function () {
+                spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            });
+
+            afterEach(function () {
+                spy_ajax.mockRestore();
+            });
+
+            it("9.5.1 - Injects multiple source element matches", async function () {
+                document.body.innerHTML = `
+                    <a class="pat-inject"
+                       href="test.html"
+                       data-pat-inject="
+                        source: a::element;
+                        target: .result;
+                    ">link</a>
+                    <section class="result">
+                    </section>
+                `;
+
+                answer(`
+                    <html>
+                        <body>
+                            <a>Link 1</a>
+                            <a>Link 2</a>
+                            <a>Link 3</a>
+                        </body>
+                    </html>
+                `);
+
+                const inject = document.querySelector(".pat-inject");
+
+                pattern.init($(inject));
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                inject.click();
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                const injected = document.querySelectorAll(".result a");
+                expect(injected.length).toBe(3);
+                expect(injected[0].textContent).toBe("Link 1");
+                expect(injected[1].textContent).toBe("Link 2");
+                expect(injected[2].textContent).toBe("Link 3");
+            });
+        });
+
     });
 
     describe("10 - Error handling", () => {
