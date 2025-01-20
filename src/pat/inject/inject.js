@@ -64,7 +64,7 @@ const inject = {
             // if the injection shall add a history entry and HTML5 pushState
             // is missing, then don't initialize the injection.
             log.warn("HTML5 pushState is missing, aborting");
-            return;
+            return $el;
         }
         $el.data("pat-inject", cfgs);
 
@@ -350,6 +350,7 @@ const inject = {
                 return false;
             }
             cfg.$target = this.createTarget(cfg.target);
+            cfg.$created_target = cfg.$target;
         }
         return true;
     },
@@ -453,7 +454,7 @@ const inject = {
         return $target;
     },
 
-    _performInjection(target, $el, $source, cfg, trigger, title) {
+    _performInjection(target, $el, $source, cfg, trigger, $title) {
         /* Called after the XHR has succeeded and we have a new $source
          * element to inject.
          */
@@ -484,13 +485,13 @@ const inject = {
         // Now the injection actually happens.
         if (this._inject(trigger, source_nodes, target, cfg)) {
             // Update history
-            this._update_history(cfg, trigger, title);
+            this._update_history(cfg, trigger, $title);
             // Post-injection
-            this._afterInjection($el, $(source_nodes), cfg);
+            this._afterInjection($el, cfg.$created_target || $(source_nodes), cfg);
         }
     },
 
-    _update_history(cfg, trigger, title) {
+    _update_history(cfg, trigger, $title) {
         // History support. if subform is submitted, append form params
         if (cfg.history !== "record" || !history?.pushState) {
             return;
@@ -502,10 +503,10 @@ const inject = {
         }
         history.pushState({ url: url }, "", url);
         // Also inject title element if we have one
-        if (title) {
+        if ($title.length) {
             const title_el = document.querySelector("title");
             if (title_el) {
-                this._inject(trigger, title, title_el, {
+                this._inject(trigger, $title, title_el, {
                     action: "element",
                 });
             }
@@ -584,14 +585,14 @@ const inject = {
         ]);
         /* pick the title source for dedicated handling later
           Title - if present - is always appended at the end. */
-        let title;
+        let $title;
         if (
             sources$ &&
             sources$[sources$.length - 1] &&
             sources$[sources$.length - 1][0] &&
             sources$[sources$.length - 1][0].nodeName === "TITLE"
         ) {
-            title = sources$[sources$.length - 1];
+            $title = sources$[sources$.length - 1];
         }
         cfgs.forEach((cfg, idx1) => {
             const perform_inject = () => {
@@ -603,7 +604,7 @@ const inject = {
                             sources$[idx1],
                             cfg,
                             ev.target,
-                            title
+                            $title
                         );
                     }
                 }
@@ -674,8 +675,8 @@ const inject = {
 
         // clean up
         for (const cfg of cfgs) {
-            if ("$injected" in cfg) {
-                cfg.$injected.remove();
+            if ("$created_target" in cfg) {
+                cfg.$created_target.remove();
             }
             cfg.$target.removeClass(cfg.loadingClass);
             $el.removeClass(cfg.executingClass);
@@ -779,14 +780,14 @@ const inject = {
         }
     },
 
-    _inject(trigger, source, target, cfg) {
+    _inject(trigger, source_nodes, target, cfg) {
         if (cfg.source === "none") {
             // Special case. Clear the target after ajax call.
             target.replaceWith("");
             return true;
         }
-        if (source.length === 0) {
-            log.warn("Aborting injection, source not found:", source);
+        if (source_nodes.length === 0) {
+            log.warn("Aborting injection, source not found:", source_nodes);
             $(trigger).trigger("pat-inject-missingSource", {
                 url: cfg.url,
                 selector: cfg.source,
@@ -816,7 +817,7 @@ const inject = {
         }[cfg.action];
 
         // Inject the content HERE!
-        target[method](...source);
+        target[method](...source_nodes);
 
         return true;
     },
@@ -966,8 +967,11 @@ const inject = {
         let clean_html = html
             .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
             .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
+            .replace(/<html([^>]*?)>/gi, "")
+            .replace(/<\/html([^>]*?)>/gi, "")
             .replace(/<body([^>]*?)>/gi, '<div id="__original_body">')
             .replace(/<\/body([^>]*?)>/gi, "</div>");
+
         if (title && title.length == 2) {
             clean_html = title[0] + clean_html;
         }
@@ -1108,7 +1112,8 @@ const inject = {
             sources(cfgs, data) {
                 const sources = cfgs.map((cfg) => cfg.source);
                 sources.push("title");
-                return this._sourcesFromHtml(data, cfgs[0].url, sources);
+                const result = this._sourcesFromHtml(data, cfgs[0].url, sources);
+                return result;
             },
         },
     },

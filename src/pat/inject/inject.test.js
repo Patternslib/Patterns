@@ -1557,10 +1557,189 @@ describe("pat-inject", function () {
 
                         expect(catched).toBe(true);
                         expect(pattern.execute).toHaveBeenCalled();
-
                     });
-
                 });
+            });
+        });
+
+        describe("9.3 - inject with not existing target element", function () {
+            let spy_ajax;
+
+            beforeEach(function () {
+                spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            });
+
+            afterEach(function () {
+                spy_ajax.mockRestore();
+            });
+
+            it("9.3.1 - Create non-existing target", async function () {
+                // Test a real-world scenario with modals where the target
+                // element does not exist and the source is implicitly defined
+                // via the href attribue.
+                // NOTE: pat-modal does the injecton part on it's own, so you
+                // normally use the `pat-modal` class and do not specify a
+                // target.
+                // For examples, see the pat-modal pattern.
+
+                document.body.innerHTML = `
+                    <a class="pat-inject"
+                       href="test.html#document-content"
+                       data-pat-inject="target: #pat-modal">link</a>
+                `;
+
+                answer(`
+                    <html>
+                        <body>
+                            <div id="document-content">
+                                <dialog>
+                                    <h1>hello</h1>
+                                </dialog>
+                            </div>
+                        </body>
+                    </html>
+                `);
+
+                const inject = document.querySelector(".pat-inject");
+
+                pattern.init($(inject));
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                inject.click();
+
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                console.log(document.body.innerHTML);
+                const modal = document.querySelector("#pat-modal");
+                expect(modal).toBeTruthy();
+                expect(modal.innerHTML.replace(/\s/g, "")).toBe(
+                    "<dialog><h1>hello</h1></dialog>"
+                );
+            });
+
+            it("9.3.2 - Does not create non-existing target without a target specifier", async function () {
+                document.body.innerHTML = `
+                    <a class="pat-inject"
+                       href="test.html#document-content">link</a>
+                `;
+
+                answer(`
+                    <html>
+                        <body>
+                            <div id="document-content">
+                                <dialog>
+                                    <h1>hello</h1>
+                                </dialog>
+                            </div>
+                        </body>
+                    </html>
+                `);
+
+                const inject = document.querySelector(".pat-inject");
+
+                pattern.init($(inject));
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                inject.click();
+
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                console.log(document.body.innerHTML);
+                const modal = document.querySelector("#pat-modal");
+                expect(modal).toBeFalsy();
+            });
+        });
+
+        describe("9.4 - injecton of the title element.", function () {
+            let spy_ajax;
+
+            beforeEach(function () {
+                spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            });
+
+            afterEach(function () {
+                spy_ajax.mockRestore();
+            });
+
+            it("9.4.1 - Injects a title element with history:record", async function () {
+                document.head.innerHTML = `
+                    <title>test</title>
+                `;
+                document.body.innerHTML = `
+                    <a class="pat-inject"
+                       href="test.html"
+                       data-pat-inject="
+                        source: body;
+                        target: body;
+                        history: record;
+                    ">link</a>
+                `;
+
+                answer(`
+                    <html>
+                        <head>
+                            <title>hello</title>
+                        </head>
+                        <body>
+                            OK
+                        </body>
+                    </html>
+                `);
+
+                const inject = document.querySelector(".pat-inject");
+
+                pattern.init($(inject));
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                inject.click();
+
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                expect(document.body.textContent.trim()).toBe("OK");
+
+                const title = document.head.querySelector("title");
+                expect(title).toBeTruthy();
+                expect(title.textContent.trim()).toBe("hello");
+            });
+
+            it("9.4.2 - Does not inject a title element without history:record", async function () {
+                document.head.innerHTML = `
+                    <title>test</title>
+                `;
+                document.body.innerHTML = `
+                    <a class="pat-inject"
+                       href="test.html"
+                       data-pat-inject="
+                        source: body;
+                        target: body;
+                    ">link</a>
+                `;
+
+                answer(`
+                    <html>
+                        <head>
+                            <title>hello</title>
+                        </head>
+                        <body>
+                            OK
+                        </body>
+                    </html>
+                `);
+
+                const inject = document.querySelector(".pat-inject");
+
+                pattern.init($(inject));
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                inject.click();
+
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                expect(document.body.textContent.trim()).toBe("OK");
+
+                const title = document.head.querySelector("title");
+                expect(title).toBeTruthy();
+                expect(title.textContent.trim()).toBe("test"); // Old title
             });
         });
     });
