@@ -399,9 +399,10 @@ const inject = {
          * Cancel button is pressed (this triggers reset event on the
          * form) you would expect to populate with initial placeholder
          */
-        if (cfg.target === "none")
+        if (cfg.target === "none") {
             // Special case, we don't want to display any return value.
             return;
+        }
         const $form = cfg.$target.parents("form");
         if ($form.length !== 0 && cfg.$target.data("initial-value") === undefined) {
             cfg.$target.data("initial-value", cfg.$target.html());
@@ -454,17 +455,17 @@ const inject = {
         return $target;
     },
 
-    _performInjection(target, $el, $source, cfg, trigger, $title) {
-        /* Called after the XHR has succeeded and we have a new $source
+    _performInjection(target, $el, $sources, cfg, trigger, $title) {
+        /* Called after the XHR has succeeded and we have a new $sources
          * element to inject.
          */
         const wrapper = document.createElement("div");
-        if ($source.length > 0) {
-            if (cfg.sourceMod === "content") {
-                wrapper.innerHTML = $source[0].innerHTML;
-            } else {
-                wrapper.innerHTML = $source[0].outerHTML;
-            }
+        if ($sources.length > 0) {
+            const method = cfg.sourceMod === "content" ? "innerHTML" : "outerHTML";
+            // There might be multiple sources, so we need to loop over them.
+            // Access them with "innerHTML" or "outerHTML" depending on the sourceMod.
+            const sources_string = [...$sources].map(source => source[method]).join("\n");
+            wrapper.innerHTML = sources_string;
 
             for (const img of wrapper.querySelectorAll("img")) {
                 events.add_event_listener(
