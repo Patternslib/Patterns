@@ -64,7 +64,7 @@ const inject = {
             // if the injection shall add a history entry and HTML5 pushState
             // is missing, then don't initialize the injection.
             log.warn("HTML5 pushState is missing, aborting");
-            return;
+            return $el;
         }
         $el.data("pat-inject", cfgs);
 
@@ -350,6 +350,7 @@ const inject = {
                 return false;
             }
             cfg.$target = this.createTarget(cfg.target);
+            cfg.$created_target = cfg.$target;
         }
         return true;
     },
@@ -486,7 +487,7 @@ const inject = {
             // Update history
             this._update_history(cfg, trigger, title);
             // Post-injection
-            this._afterInjection($el, $(source_nodes), cfg);
+            this._afterInjection($el, cfg.$created_target || $(source_nodes), cfg);
         }
     },
 
@@ -505,7 +506,7 @@ const inject = {
         if (title) {
             const title_el = document.querySelector("title");
             if (title_el) {
-                this._inject(trigger, title, title_el, {
+                this._inject(trigger, [title], title_el, {
                     action: "element",
                 });
             }
@@ -674,8 +675,8 @@ const inject = {
 
         // clean up
         for (const cfg of cfgs) {
-            if ("$injected" in cfg) {
-                cfg.$injected.remove();
+            if ("$created_target" in cfg) {
+                cfg.$created_target.remove();
             }
             cfg.$target.removeClass(cfg.loadingClass);
             $el.removeClass(cfg.executingClass);
@@ -779,14 +780,14 @@ const inject = {
         }
     },
 
-    _inject(trigger, source, target, cfg) {
+    _inject(trigger, source_nodes, target, cfg) {
         if (cfg.source === "none") {
             // Special case. Clear the target after ajax call.
             target.replaceWith("");
             return true;
         }
-        if (source.length === 0) {
-            log.warn("Aborting injection, source not found:", source);
+        if (source_nodes.length === 0) {
+            log.warn("Aborting injection, source not found:", source_nodes);
             $(trigger).trigger("pat-inject-missingSource", {
                 url: cfg.url,
                 selector: cfg.source,
@@ -816,7 +817,7 @@ const inject = {
         }[cfg.action];
 
         // Inject the content HERE!
-        target[method](...source);
+        target[method](...source_nodes);
 
         return true;
     },
