@@ -239,9 +239,9 @@ describe("pat-depends", function () {
             const button2 = document.querySelector("[name=extra]");
 
             button1.checked = true;
-            button1.dispatchEvent(new Event("change"));
+            button1.dispatchEvent(new Event("input"));
             button2.checked = true;
-            button2.dispatchEvent(new Event("change"));
+            button2.dispatchEvent(new Event("input"));
 
             expect(dom.is_visible(dep1)).toBe(true);
             expect(dom.is_visible(dep2)).toBe(true);
@@ -250,7 +250,7 @@ describe("pat-depends", function () {
             // Even though button2 is still checked, the visibility of dep2 is
             // hidden.
             button1.checked = false;
-            button1.dispatchEvent(new Event("change"));
+            button1.dispatchEvent(new Event("input"));
 
             expect(dom.is_visible(dep1)).toBe(false);
             expect(dom.is_visible(dep2)).toBe(false);

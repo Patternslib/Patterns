@@ -36,16 +36,14 @@ class Pattern extends BasePattern {
         this.set_state();
 
         for (const input of this.handler.getAllInputs()) {
+            // Note: One input can be a dependency for multiple other dependent
+            // elements. Therefore we need to bind the events not uniquely and
+            // add a uuid to the event bindings id.
+
             events.add_event_listener(
                 input,
-                "change",
-                `pat-depends--change--${this.uuid}`, // We need to support multiple events per dependant ...
-                this.set_state.bind(this)
-            );
-            events.add_event_listener(
-                input,
-                "keyup",
-                `pat-depends--keyup--${this.uuid}`, // ... therefore we need to add a uuid to the event id ...
+                "input",
+                `pat-depends--input--${this.uuid}`,
                 this.set_state.bind(this)
             );
 
@@ -53,7 +51,7 @@ class Pattern extends BasePattern {
                 events.add_event_listener(
                     input.form,
                     "reset",
-                    `pat-depends--reset--${this.uuid}`, // ... to not override previously set event handlers.
+                    `pat-depends--reset--${this.uuid}`,
                     async () => {
                         // TODO: note sure, what this timeout is for.
                         await utils.timeout(50);
@@ -77,8 +75,9 @@ class Pattern extends BasePattern {
         const inputs = dom.find_inputs(this.el);
         for (const input of inputs) {
             input.disabled = false;
-            // Trigger the change event after disabling so that any other bound actions can react on that.
-            input.dispatchEvent(events.change_event());
+            // Trigger the input after disabling so that any other bound
+            // actions can react on that.
+            input.dispatchEvent(events.input_event());
         }
         if (this.el.tagName === "A") {
             events.remove_event_listener(this.el, "pat-depends--click");
@@ -96,8 +95,9 @@ class Pattern extends BasePattern {
         const inputs = dom.find_inputs(this.el);
         for (const input of inputs) {
             input.disabled = true;
-            // Trigger the change event after disabling so that any other bound actions can react on that.
-            input.dispatchEvent(events.change_event());
+            // Trigger the input after disabling so that any other bound
+            // actions can react on that.
+            input.dispatchEvent(events.input_event());
         }
         if (this.el.tagName === "A") {
             events.add_event_listener(this.el, "click", "pat-depends--click", (e) =>
