@@ -4,6 +4,18 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.10.1-alpha.4](https://github.com/Patternslib/patterns/compare/9.10.1-alpha.3...9.10.1-alpha.4) (2025-01-22)
+
+
+### Bug Fixes
+
+
+* **pat-depends:** Listen and dispatch input instead of change events. ([307a336](https://github.com/Patternslib/patterns/commit/307a3366a9c1cdd1991c9126c629e19839cc2d14))
+
+  This is a better and more standard compliant combination than listening on
+input and keyup events. This fixes a problem where a pat-autosuggest selection
+field didn't provoke a change in a pat-depends dependent element.
+
 ## [9.10.1-alpha.3](https://github.com/Patternslib/patterns/compare/9.10.1-alpha.2...9.10.1-alpha.3) (2025-01-20)
 
 
