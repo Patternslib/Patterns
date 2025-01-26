@@ -11,7 +11,7 @@ const log = logging.getLogger("depends");
 
 export const parser = new Parser("depends");
 parser.addArgument("condition");
-parser.addArgument("action", "show", ["show", "enable", "both"]);
+parser.addArgument("action", "both", ["show", "enable", "both"]);
 parser.addArgument("transition", "none", ["none", "css", "fade", "slide"]);
 parser.addArgument("effect-duration", "fast");
 parser.addArgument("effect-easing", "swing");
