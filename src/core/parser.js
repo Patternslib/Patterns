@@ -441,7 +441,7 @@ class ArgumentParser {
             }
             const _parse = this._parse.bind(this);
             if (data.match(/&&/)) {
-                frame = data.split(/\s*&&\s*/).map(_parse);
+                frame = data.split(/\s+&&\s+/).map(_parse);
             } else {
                 frame = _parse(data);
             }
