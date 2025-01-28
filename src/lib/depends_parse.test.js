@@ -1,14 +1,14 @@
-import parser from "./depends_parse";
+import { parse } from "./depends_parse";
 
 describe("Depedency expression parser", function () {
     describe("Simple expressions", function () {
         it("Input has a value", function () {
-            var ast = parser.parse("foo");
+            var ast = parse("foo");
             expect(ast).toEqual({ type: "truthy", input: "foo" });
         });
 
         it("Input has a specific value", function () {
-            var ast = parser.parse("foo=15");
+            var ast = parse("foo=15");
             expect(ast).toEqual({
                 type: "comparison",
                 input: "foo",
@@ -18,7 +18,7 @@ describe("Depedency expression parser", function () {
         });
 
         it("Order comparision", function () {
-            var ast = parser.parse("foo>=15");
+            var ast = parse("foo>=15");
             expect(ast).toEqual({
                 type: "comparison",
                 input: "foo",
@@ -29,12 +29,12 @@ describe("Depedency expression parser", function () {
 
         it("Can not do order comparison to string", function () {
             expect(function () {
-                parser.parse("foo<bar");
+                parse("foo<bar");
             }).toThrowError('Expected number or whitespace but "b" found.');
         });
 
         it("Equality comparison with string", function () {
-            var ast = parser.parse("foo=bar");
+            var ast = parse("foo=bar");
             expect(ast).toEqual({
                 type: "comparison",
                 input: "foo",
@@ -44,7 +44,7 @@ describe("Depedency expression parser", function () {
         });
 
         it("Wrapped simple expression", function () {
-            var ast = parser.parse("(foo=15)");
+            var ast = parse("(foo=15)");
             expect(ast).toEqual({
                 type: "comparison",
                 input: "foo",
@@ -54,7 +54,7 @@ describe("Depedency expression parser", function () {
         });
 
         it("Unicode value", function () {
-            var ast = parser.parse("føø=bar");
+            var ast = parse("føø=bar");
             expect(ast).toEqual({
                 type: "comparison",
                 input: "føø",
@@ -64,7 +64,7 @@ describe("Depedency expression parser", function () {
         });
 
         it("Unicode value", function () {
-            var ast = parser.parse("foo=bær");
+            var ast = parse("foo=bær");
             expect(ast).toEqual({
                 type: "comparison",
                 input: "foo",
@@ -74,17 +74,17 @@ describe("Depedency expression parser", function () {
         });
 
         it("Dashes in name", function () {
-            var ast = parser.parse("foo-bar");
+            var ast = parse("foo-bar");
             expect(ast).toEqual({ type: "truthy", input: "foo-bar" });
         });
 
         it("Colons in name", function () {
-            var ast = parser.parse("foo:bar");
+            var ast = parse("foo:bar");
             expect(ast).toEqual({ type: "truthy", input: "foo:bar" });
         });
 
         it("Single quoted value", function () {
-            var ast = parser.parse("foo='bar buz'");
+            var ast = parse("foo='bar buz'");
             expect(ast).toEqual({
                 type: "comparison",
                 input: "foo",
@@ -94,7 +94,7 @@ describe("Depedency expression parser", function () {
         });
 
         it("Double quoted value", function () {
-            var ast = parser.parse('foo="bar buz"');
+            var ast = parse('foo="bar buz"');
             expect(ast).toEqual({
                 type: "comparison",
                 input: "foo",
@@ -106,7 +106,7 @@ describe("Depedency expression parser", function () {
 
     describe("Expressions", function () {
         it("Negated simple expression", function () {
-            var ast = parser.parse("not foo=15");
+            var ast = parse("not foo=15");
             expect(ast).toEqual({
                 type: "NOT",
                 children: [
@@ -121,7 +121,7 @@ describe("Depedency expression parser", function () {
         });
 
         it("OR two simple expressions", function () {
-            var ast = parser.parse("foo or baf");
+            var ast = parse("foo or baf");
             expect(ast).toEqual({
                 type: "OR",
                 children: [
@@ -132,7 +132,7 @@ describe("Depedency expression parser", function () {
         });
 
         it("Complex expression", function () {
-            var ast = parser.parse("foo or not (bar=1 and buz)");
+            var ast = parse("foo or not (bar=1 and buz)");
             expect(ast).toEqual({
                 type: "OR",
                 children: [
