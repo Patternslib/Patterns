@@ -18,15 +18,14 @@
     }
 
     // Get the current script tag's URL.
-    // See: https://stackoverflow.com/a/984656/1337474
-    const scripts = document.getElementsByTagName("script");
-    const script = scripts[scripts.length - 1];
-    let script_url = script.src;
+    const script_url = document.currentScript.src;
     // Get the base URL of the current script tag's URL.
-    script_url = script_url.substring(0, script_url.lastIndexOf("/")) + "/";
+    let base_url = script_url.substring(0, script_url.lastIndexOf("/")) + "/";
+    // The modernizr script is located outside the chunks directory.
+    base_url = base_url.replace("chunks/", "");
 
     // Inject a new one with the modernizr bundle.
     const script_tag = document.createElement("script");
-    script_tag.src = script_url + "modernizr.min.js";
+    script_tag.src = base_url + "modernizr.min.js";
     document.getElementsByTagName("head")[0].appendChild(script_tag);
 })();

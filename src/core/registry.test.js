@@ -104,4 +104,16 @@ describe("pat-registry: The registry for patterns", function () {
 
         done();
     });
+
+    it("Does nothing with Patterns without a trigger.", function () {
+        registry.register(
+            {
+                name: "pattern-without-trigger"
+            }
+        )
+
+        const el = document.createElement("div");
+        expect(() => { registry.scan(el) }).not.toThrow(DOMException);
+    });
+
 });
