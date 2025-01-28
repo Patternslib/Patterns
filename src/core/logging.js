@@ -46,11 +46,8 @@ function ConsoleWriter() {}
 ConsoleWriter.prototype = {
     output: function (log_name, level, messages) {
         if (log_name) messages.unshift(log_name + ":");
-        if (level <= Level.DEBUG) {
-            // console.debug exists but is deprecated
-            messages.unshift("[DEBUG]");
-            console.log.apply(console, messages);
-        } else if (level <= Level.INFO) console.info.apply(console, messages);
+        if (level <= Level.DEBUG) console.debug.apply(console, messages);
+        else if (level <= Level.INFO) console.info.apply(console, messages);
         else if (level <= Level.WARN) console.warn.apply(console, messages);
         else console.error.apply(console, messages);
     },
