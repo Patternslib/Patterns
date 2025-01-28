@@ -4,6 +4,33 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.10.1-alpha.5](https://github.com/Patternslib/patterns/compare/9.10.1-alpha.4...9.10.1-alpha.5) (2025-01-28)
+
+
+### Bug Fixes
+
+
+* **core feature-detection:** Fix loading of modernizr script. ([c110df8](https://github.com/Patternslib/patterns/commit/c110df8e09c49cdb69a2da390eae0133b188e81f))
+
+  In some situations loading of the modernizr.min.js script failed because
+the base url could be incorrect. That is fixed with a non-IE compatible
+method of getting the current's script URL, which is safe to use.
+The problem surfaced in Plone while loading the Patternslib library and
+in between the protect.js script was loaded. The base url was calculated
+for the protect.js script and the modernizr script could not be loaded.
+
+
+* **core registry:** Do nothing with Patterns without a trigger. ([0e49193](https://github.com/Patternslib/patterns/commit/0e491938c56a84a46cbd04883bce2027843c0df1))
+
+  Patterns without a trigger broke the registry scan method. Now they don't.
+
+
+
+### Maintenance
+
+
+* **core log:** Console.debug is not deprecated. Just use it. ([514e7ff](https://github.com/Patternslib/patterns/commit/514e7ffad98220c307fdfdf0dbb74a052fd388fa))
+
 ## [9.10.1-alpha.4](https://github.com/Patternslib/patterns/compare/9.10.1-alpha.3...9.10.1-alpha.4) (2025-01-22)
 
 
