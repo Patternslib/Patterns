@@ -10,6 +10,8 @@
         html.classList.add("js");
     }
 
+    // NOTE: Modernizr will be removed in an upcoming minor release.
+
     // Do not load modernizr if disabled. It's enabled by default.
     // You might want to disable it for your project by setting:
     // window.__patternslib_disable_modernizr = true;
