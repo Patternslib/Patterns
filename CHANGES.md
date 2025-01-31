@@ -4,6 +4,14 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.10.1-beta.1](https://github.com/Patternslib/patterns/compare/9.10.1-beta.0...9.10.1-beta.1) (2025-01-31)
+
+
+### Bug Fixes
+
+
+* **pat-navigation:** Fix case where no click anchor could be found. ([fcb349f](https://github.com/Patternslib/patterns/commit/fcb349fb73bdb32d2f540c240266bfc603883571))
+
 ## [9.10.1-beta.0](https://github.com/Patternslib/patterns/compare/9.10.1-alpha.5...9.10.1-beta.0) (2025-01-31)
 
 
