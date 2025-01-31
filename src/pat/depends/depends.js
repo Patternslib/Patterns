@@ -16,6 +16,20 @@ parser.addArgument("transition", "none", ["none", "css", "fade", "slide"]);
 parser.addArgument("effect-duration", "fast");
 parser.addArgument("effect-easing", "swing");
 
+
+// A custom input event which differs from the one in `core/events` in that it
+// accepts a `detail` object to pass arbitrary information around.
+// TODO: The events in `core/events` should be refactored to accept a `detail`
+// object.
+const input_event = (detail = {}) => {
+    return new CustomEvent("input", {
+        bubbles: true,
+        cancelable: false,
+        detail: detail,
+    });
+};
+
+
 class Pattern extends BasePattern {
     static name = "depends";
     static trigger = ".pat-depends";
@@ -44,7 +58,14 @@ class Pattern extends BasePattern {
                 input,
                 "input",
                 `pat-depends--input--${this.uuid}`,
-                this.set_state.bind(this)
+                (e) => {
+                    if (e?.detail?.pattern_uuid === this.uuid) {
+                        // Ignore input events invoked from this pattern
+                        // instance to avoid infinite loops.
+                        return;
+                    }
+                    this.set_state();
+                }
             );
 
             if (input.form) {
@@ -74,15 +95,40 @@ class Pattern extends BasePattern {
     enable() {
         const inputs = dom.find_inputs(this.el);
         for (const input of inputs) {
+            if (input.disabled === false) {
+                // Do not re-enable an already enabled input.
+                continue;
+            }
+
+            // Now, enable the input element.
             input.disabled = false;
-            // Trigger the input after disabling so that any other bound
+
+            if (input === this.el) {
+                // Do not re-trigger this pattern on it's own element to avoid
+                // infinite loops.
+                continue;
+            }
+
+            if (dom.is_button(input)) {
+                // Do not trigger the input event on buttons as they do not
+                // support it.
+                continue;
+            }
+
+            // Trigger the input after enabling so that any other bound
             // actions can react on that.
-            input.dispatchEvent(events.input_event());
+            input.dispatchEvent(input_event({ pattern_uuid: this.uuid }));
         }
+
+        // Restore the original click behavior for anchor elements.
         if (this.el.tagName === "A") {
             events.remove_event_listener(this.el, "pat-depends--click");
         }
+
+        // Remove the disabled class from the element.
         this.el.classList.remove("disabled");
+
+        // Trigger the pat-update event to notify other patterns about enabling.
         this.$el.trigger("pat-update", {
             pattern: "depends",
             action: "attribute-changed",
@@ -94,17 +140,42 @@ class Pattern extends BasePattern {
     disable() {
         const inputs = dom.find_inputs(this.el);
         for (const input of inputs) {
+            if (input.disabled === true) {
+                // Do not re-disable an already disabled input.
+                continue;
+            }
+
+            // Now, disable the input element.
             input.disabled = true;
+
+            if (input === this.el) {
+                // Do not re-trigger this pattern on it's own element to avoid
+                // infinite loops.
+                continue;
+            }
+
+            if (dom.is_button(input)) {
+                // Do not trigger the input event on buttons as they do not
+                // support it.
+                continue;
+            }
+
             // Trigger the input after disabling so that any other bound
             // actions can react on that.
-            input.dispatchEvent(events.input_event());
+            input.dispatchEvent(input_event({ pattern_uuid: this.uuid }));
         }
+
+        // Prevent the default click behavior for anchor elements.
         if (this.el.tagName === "A") {
             events.add_event_listener(this.el, "click", "pat-depends--click", (e) =>
                 e.preventDefault()
             );
         }
+
+        // Add the disabled class to the element.
         this.el.classList.add("disabled");
+
+        // Trigger the pat-update event to notify other patterns about disabling.
         this.$el.trigger("pat-update", {
             pattern: "depends",
             action: "attribute-changed",

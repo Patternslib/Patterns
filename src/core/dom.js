@@ -142,6 +142,24 @@ const is_input = (el) => {
 };
 
 /**
+ * Test, if a element is a button-like input type.
+ *
+ * @param {Node} el - The DOM node to test.
+ * @returns {Boolean} - True if the element is a input-type element.
+ */
+const is_button = (el) => {
+    return el.matches(`
+        button,
+        input[type=image],
+        input[type=button],
+        input[type=reset],
+        input[type=submit]
+    `);
+};
+
+
+
+/**
  * Return all direct parents of ``el`` matching ``selector``.
  * This matches against all parents but not the element itself.
  * The order of elements is from the search starting point up to higher
@@ -613,6 +631,7 @@ const dom = {
     acquire_attribute: acquire_attribute,
     is_visible: is_visible,
     is_input: is_input,
+    is_button: is_button,
     create_from_string: create_from_string,
     get_css_value: get_css_value,
     find_scroll_container: find_scroll_container,

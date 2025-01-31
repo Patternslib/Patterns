@@ -50,7 +50,7 @@ describe("pat-depends", function () {
         });
 
         afterEach(function () {
-            $("#lab").remove();
+            document.body.innerHTML = "";
         });
 
         it("Input element", async function () {
@@ -85,6 +85,65 @@ describe("pat-depends", function () {
             instance.disable();
             expect(el.classList.contains("disabled")).toBe(true);
         });
+
+        it("Throw an input event for any contained inputs.", async function () {
+             document.body.innerHTML = `
+                <input
+                    type="checkbox"
+                    id="control"
+                    value="yes"
+                    />
+                <fieldset
+                    class="pat-depends"
+                    data-pat-depends="condition: control; action: both"
+                >
+                    <input disabled />
+                </fieldset>
+            `;
+
+            const el = document.querySelector(".pat-depends");
+            const instance = new pattern(el);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            let called = false;
+            el.addEventListener("input", () => {
+                called = true;
+            });
+
+            instance.enable();
+            utils.timeout(1); // wait a tick for async to settle.
+
+            expect(called).toBe(true);
+        });
+
+        it("Do not throw an input event on the element itself.", async function () {
+             document.body.innerHTML = `
+                <input
+                    type="checkbox"
+                    id="control"
+                    value="yes"
+                    />
+                <input
+                    class="pat-depends"
+                    data-pat-depends="condition: control; action: both"
+                    disabled
+                    />
+            `;
+
+            const el = document.querySelector(".pat-depends");
+            const instance = new pattern(el);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            let called = false;
+            el.addEventListener("input", () => {
+                called = true;
+            });
+
+            instance.enable();
+            utils.timeout(1); // wait a tick for async to settle.
+
+            expect(called).toBe(false);
+        });
     });
 
     describe("3 - enable", function () {
@@ -93,7 +152,7 @@ describe("pat-depends", function () {
         });
 
         afterEach(function () {
-            $("#lab").remove();
+            document.body.innerHTML = "";
         });
 
         it("Input element", async function () {
@@ -127,6 +186,66 @@ describe("pat-depends", function () {
 
             instance.enable();
             expect(el.classList.contains("disabled")).toBe(false);
+        });
+
+        it("Throw an input event for any contained inputs.", async function () {
+             document.body.innerHTML = `
+                <input
+                    type="checkbox"
+                    id="control"
+                    value="yes"
+                    checked
+                    />
+                <fieldset
+                    class="pat-depends"
+                    data-pat-depends="condition: control; action: both"
+                >
+                    <input />
+                </fieldset>
+            `;
+
+            const el = document.querySelector(".pat-depends");
+            const instance = new pattern(el);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            let called = false;
+            el.addEventListener("input", () => {
+                called = true;
+            });
+
+            instance.disable();
+            utils.timeout(1); // wait a tick for async to settle.
+
+            expect(called).toBe(true);
+        });
+
+        it("Do not throw an input event on the element itself.", async function () {
+             document.body.innerHTML = `
+                <input
+                    type="checkbox"
+                    id="control"
+                    value="yes"
+                    checked
+                    />
+                <input
+                    class="pat-depends"
+                    data-pat-depends="condition: control; action: both"
+                    />
+            `;
+
+            const el = document.querySelector(".pat-depends");
+            const instance = new pattern(el);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            let called = false;
+            el.addEventListener("input", () => {
+                called = true;
+            });
+
+            instance.disable();
+            utils.timeout(1); // wait a tick for async to settle.
+
+            expect(called).toBe(false);
         });
     });
 
@@ -255,6 +374,163 @@ describe("pat-depends", function () {
             expect(dom.is_visible(dep1)).toBe(false);
             expect(dom.is_visible(dep2)).toBe(false);
         });
+
+    });
+
+    describe("6 - Prevent various infinite loop situations", function () {
+
+        it("6.1 - Do not call set_state multiple times.", async function () {
+             document.body.innerHTML = `
+                <input
+                    type="checkbox"
+                    id="control"
+                    value="yes"
+                    checked
+                />
+                <input
+                    class="pat-depends"
+                    data-pat-depends="condition: control; action: both"
+                    />
+            `;
+
+            const el = document.querySelector(".pat-depends");
+            const instance = new pattern(el);
+            await utils.timeout(1); // wait a tick for async to settle.
+            const spy = jest.spyOn(instance, "set_state");
+
+            const checkbox = document.querySelector("#control");
+            checkbox.click();
+
+            utils.timeout(1); // wait a tick for async to settle.
+            expect(spy).toHaveBeenCalledTimes(1);
+        });
+
+        it("6.2 - Do not enable already enabled inputs.", async function () {
+
+             document.body.innerHTML = `
+                <input
+                    type="checkbox"
+                    id="control"
+                    value="yes"
+                    checked
+                />
+                <fieldset
+                    class="pat-depends"
+                    data-pat-depends="condition: control; action: both"
+                >
+                    <input />
+                </fieldset>
+            `;
+
+            const el = document.querySelector(".pat-depends");
+            const instance = new pattern(el);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            let called = false;
+            el.addEventListener("input", () => {
+                called = true;
+            });
+
+            instance.enable();
+            utils.timeout(1); // wait a tick for async to settle.
+
+            expect(called).toBe(false);
+        });
+
+        it("6.3 - Do not disable already disabled inputs.", async function () {
+
+             document.body.innerHTML = `
+                <input
+                    type="checkbox"
+                    id="control"
+                    value="yes"
+                />
+                <fieldset
+                    class="pat-depends"
+                    data-pat-depends="condition: control; action: both"
+                >
+                    <input disabled />
+                </fieldset>
+            `;
+
+            const el = document.querySelector(".pat-depends");
+            const instance = new pattern(el);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            let called = false;
+            el.addEventListener("input", () => {
+                called = true;
+            });
+
+            instance.disable();
+            utils.timeout(1); // wait a tick for async to settle.
+
+            expect(called).toBe(false);
+        });
+
+        it("6.4 - Do not throw the input event on buttons when enabling.", async function () {
+
+             document.body.innerHTML = `
+                <input
+                    type="checkbox"
+                    id="control"
+                    value="yes"
+                />
+                <fieldset
+                    class="pat-depends"
+                    data-pat-depends="condition: control; action: both"
+                >
+                    <button />
+                </fieldset>
+            `;
+
+            const el = document.querySelector(".pat-depends");
+            const instance = new pattern(el);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            let called = false;
+            el.addEventListener("input", () => {
+                called = true;
+            });
+
+            instance.enable();
+            utils.timeout(1); // wait a tick for async to settle.
+
+            expect(called).toBe(false);
+        });
+
+        it("6.5 - Do not throw the input event on buttons when disabling.", async function () {
+
+             document.body.innerHTML = `
+                <input
+                    type="checkbox"
+                    id="control"
+                    value="yes"
+                    checked
+                />
+                <fieldset
+                    class="pat-depends"
+                    data-pat-depends="condition: control; action: both"
+                >
+                    <button />
+                </fieldset>
+            `;
+
+            const el = document.querySelector(".pat-depends");
+            const instance = new pattern(el);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            let called = false;
+            el.addEventListener("input", () => {
+                called = true;
+            });
+
+            instance.disable();
+            utils.timeout(1); // wait a tick for async to settle.
+
+            expect(called).toBe(false);
+        });
+
 
     });
 });

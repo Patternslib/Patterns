@@ -547,6 +547,47 @@ describe("core.dom tests", () => {
         });
     });
 
+    describe("is_button", () => {
+        it("checks, if an element is a button-like element or not.", (done) => {
+
+            const button = document.createElement("button");
+            const button_button = document.createElement("button");
+            button_button.setAttribute("type", "button");
+            const button_submit = document.createElement("button");
+            button_submit.setAttribute("type", "submit");
+
+            const input_button = document.createElement("input");
+            input_button.setAttribute("type", "button");
+            const input_submit = document.createElement("input");
+            input_submit.setAttribute("type", "submit");
+            const input_reset = document.createElement("input");
+            input_reset.setAttribute("type", "reset");
+            const input_image = document.createElement("input");
+            input_image.setAttribute("type", "image");
+
+            expect(dom.is_button(button)).toBe(true);
+            expect(dom.is_button(button_button)).toBe(true);
+            expect(dom.is_button(button_submit)).toBe(true);
+            expect(dom.is_button(input_button)).toBe(true);
+            expect(dom.is_button(input_image)).toBe(true);
+            expect(dom.is_button(input_reset)).toBe(true);
+            expect(dom.is_button(input_submit)).toBe(true);
+
+            const input_text = document.createElement("input");
+            input_text.setAttribute("type", "text");
+
+            expect(dom.is_button(input_text)).toBe(false);
+            expect(dom.is_button(document.createElement("input"))).toBe(false);
+            expect(dom.is_button(document.createElement("select"))).toBe(false);
+            expect(dom.is_button(document.createElement("textarea"))).toBe(false);
+            expect(dom.is_button(document.createElement("form"))).toBe(false);
+            expect(dom.is_button(document.createElement("div"))).toBe(false);
+
+            done();
+        });
+    });
+
+
     describe("create_from_string", () => {
         it("Creates a DOM element from a string", (done) => {
             const res = dom.create_from_string(`
