@@ -74,7 +74,7 @@ class Pattern extends BasePattern {
                 // might be a child of the link, e.g. a span wrapped within an
                 // anchor.
                 const target = ev.target.closest("a");
-                if (target.matches(":not(.pat-inject)")) {
+                if (target?.matches(":not(.pat-inject)")) {
 
                     // Remove all set current classes
                     this.clear_items();
