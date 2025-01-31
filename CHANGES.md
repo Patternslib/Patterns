@@ -4,6 +4,52 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.10.1-beta.0](https://github.com/Patternslib/patterns/compare/9.10.1-alpha.5...9.10.1-beta.0) (2025-01-31)
+
+
+### Features
+
+
+* **core dom:** Add method is_button. ([132e42b](https://github.com/Patternslib/patterns/commit/132e42bbb84784f1ab7cd3e897c90ed5e368c666))
+
+  dom.is_button tests, if an element is a button like element.
+Button like elements are the following:
+
+    button,
+    button[type=button],
+    button[type=submit],
+    input[type=image],
+    input[type=button],
+    input[type=reset],
+    input[type=submit]
+
+
+
+### Bug Fixes
+
+
+* **pat-depends:** Fix infinite loop situations. ([af5ecc5](https://github.com/Patternslib/patterns/commit/af5ecc55b7a9c9fd6a01f0d3ca717d26cbd37ff7))
+
+  Fix some situations where infinite loops were created of unnecessary
+function calls were done:
+
+- Do not en/disable already en/disabled inputs.
+- Do not trigger and pat-depends element if the input is the element
+  itself and not a contained sub-input.
+- Do not trigger input events on button-like elements.
+
+
+
+### Maintenance
+
+
+* Add deprecation notice for Modernizr. ([cd84cc7](https://github.com/Patternslib/patterns/commit/cd84cc7c0f05e5c41ae4a642d402eef958cf11a2))
+
+  Modernizr will be removed in an upcoming minor version. It is not really
+necessary anymore. Most browser support almost latest web technology and IE is
+dead.
+A no-js class on the body will still be replaced with a js class.
+
 ## [9.10.1-alpha.5](https://github.com/Patternslib/patterns/compare/9.10.1-alpha.4...9.10.1-alpha.5) (2025-01-28)
 
 
