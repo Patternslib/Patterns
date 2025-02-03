@@ -504,7 +504,7 @@ const inject = {
         }
         history.pushState({ url: url }, "", url);
         // Also inject title element if we have one
-        if ($title.length) {
+        if ($title?.length) {
             const title_el = document.querySelector("title");
             if (title_el) {
                 this._inject(trigger, $title, title_el, {
