@@ -498,8 +498,8 @@ const inject = {
             return;
         }
         let url = cfg.url;
-        const glue = url.indexOf("?") > -1 ? "&" : "?";
         if (cfg.params) {
+            const glue = url.indexOf("?") > -1 ? "&" : "?";
             url = `${url}${glue}${cfg.params}`;
         }
         history.pushState({ url: url }, "", url);
