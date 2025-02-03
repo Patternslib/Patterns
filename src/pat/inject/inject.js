@@ -498,13 +498,13 @@ const inject = {
             return;
         }
         let url = cfg.url;
-        const glue = url.indexOf("?") > -1 ? "&" : "?";
         if (cfg.params) {
+            const glue = url.indexOf("?") > -1 ? "&" : "?";
             url = `${url}${glue}${cfg.params}`;
         }
         history.pushState({ url: url }, "", url);
         // Also inject title element if we have one
-        if ($title.length) {
+        if ($title?.length) {
             const title_el = document.querySelector("title");
             if (title_el) {
                 this._inject(trigger, $title, title_el, {

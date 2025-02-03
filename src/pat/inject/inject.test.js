@@ -1739,6 +1739,84 @@ describe("pat-inject", function () {
                 expect(title).toBeTruthy();
                 expect(title.textContent.trim()).toBe("test"); // Old title
             });
+
+            it("9.4.3 - Does not break, if no title is found in source", async function () {
+                document.head.innerHTML = `
+                    <title>test</title>
+                `;
+                document.body.innerHTML = `
+                    <a class="pat-inject"
+                       href="test.html"
+                       data-pat-inject="
+                        source: body;
+                        target: body;
+                        history: record;
+                    ">link</a>
+                `;
+
+                answer(`
+                    <html>
+                        <body>
+                            OK
+                        </body>
+                    </html>
+                `);
+
+                const inject = document.querySelector(".pat-inject");
+
+                pattern.init($(inject));
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                inject.click();
+
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                expect(document.body.textContent.trim()).toBe("OK");
+
+                // Title in head  target is not modified.
+                const title = document.head.querySelector("title");
+                expect(title).toBeTruthy();
+                expect(title.textContent.trim()).toBe("test"); // Old title
+            });
+
+            it("9.4.4 - Does not break, if no title is found in target", async function () {
+                document.head.innerHTML = "";
+                document.body.innerHTML = `
+                    <a class="pat-inject"
+                       href="test.html"
+                       data-pat-inject="
+                        source: body;
+                        target: body;
+                        history: record;
+                    ">link</a>
+                `;
+
+                answer(`
+                    <html>
+                        <head>
+                            <title>hello</title>
+                        <body>
+                            OK
+                        </body>
+                    </html>
+                `);
+
+                const inject = document.querySelector(".pat-inject");
+
+                pattern.init($(inject));
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                inject.click();
+
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                expect(document.body.textContent.trim()).toBe("OK");
+
+                // There is no title to be updated in target.
+                const title = document.head.querySelector("title");
+                expect(title).toBeFalsy();
+            });
+
         });
 
         describe("9.5 - support multiple source element matches.", function () {
