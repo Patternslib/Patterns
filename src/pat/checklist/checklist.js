@@ -147,6 +147,7 @@ export default Base.extend({
         for (const box of chkbxs) {
             box.checked = true;
             box.dispatchEvent(events.change_event());
+            box.dispatchEvent(events.input_event());
         }
     },
 
@@ -156,6 +157,7 @@ export default Base.extend({
         for (const box of chkbxs) {
             box.checked = false;
             box.dispatchEvent(events.change_event());
+            box.dispatchEvent(events.input_event());
         }
     },
 
@@ -166,6 +168,7 @@ export default Base.extend({
         for (const box of chkbxs) {
             box.checked = checked;
             box.dispatchEvent(events.change_event());
+            box.dispatchEvent(events.input_event());
         }
     },
 
