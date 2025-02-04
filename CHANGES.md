@@ -4,6 +4,27 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.10.1-beta.2](https://github.com/Patternslib/patterns/compare/9.10.1-beta.1...9.10.1-beta.2) (2025-02-04)
+
+
+### Bug Fixes
+
+
+* **pat-checklist:** Dispatch input event along change event. ([3c298f5](https://github.com/Patternslib/patterns/commit/3c298f58d179f7d67aba22274771a99219de80ec))
+
+  pat-depends was not reacting on pat-checklist toggles.
+This is fixed by dispatching an input event just after the change event.
+
+
+* **pat-inject:** Fix error when no title is found. ([3718361](https://github.com/Patternslib/patterns/commit/37183618a9a874960b8eee542189305b5753d730))
+
+
+
+### Maintenance
+
+
+* **pat-inject:** Minor code optimization. ([6c9ad2d](https://github.com/Patternslib/patterns/commit/6c9ad2df0c42155013dbe9536016abe3d6505b30))
+
 ## [9.10.1-beta.1](https://github.com/Patternslib/patterns/compare/9.10.1-beta.0...9.10.1-beta.1) (2025-01-31)
 
 
