@@ -27,18 +27,12 @@ PACKAGE_NAME = "patternslib"
 all:: bundle css
 
 
-.PHONY: install
-stamp-yarn install:
+yarn.lock install:
 	$(YARN) install
-	# Install pre commit hook
-	$(YARN) husky install
-	# We have checked in the .husky files, so no need to add the commitlint hook again.
-	# $(YARN) husky add .husky/commit-msg "npx yarn commitlint --edit $1"
-	touch stamp-yarn
 
 
 .PHONY: watch
-watch: stamp-yarn
+watch: install
 	$(YARN) watch
 
 
@@ -47,7 +41,7 @@ build: bundle css
 
 
 .PHONY: depends-parser
-depends-parser:  stamp-yarn
+depends-parser:  install
 	$(PEGJS) -O size -f es src/lib/depends_parse.pegjs
 
 
