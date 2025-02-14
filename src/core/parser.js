@@ -322,7 +322,7 @@ class ArgumentParser {
         if (parameter.match(this.json_param_pattern)) {
             try {
                 return JSON.parse(parameter);
-            } catch (e) {
+            } catch {
                 this.log.warn(`Invalid JSON argument found: ${parameter}.`);
             }
         }
@@ -348,7 +348,7 @@ class ArgumentParser {
                 try {
                     result[name] = this.parameters[name].value($el, name);
                     this.parameters[name].type = typeof result[name];
-                } catch (e) {
+                } catch {
                     this.log.error(`Default function for ${name} failed.`);
                 }
             } else {

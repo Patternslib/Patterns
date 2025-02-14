@@ -30,7 +30,7 @@ var testutils = {
         var cfg = c || {};
         return $("<input/>", {
             "id": cfg.id || "select2",
-            "data-pat-autosuggest": "" || cfg.data,
+            "data-pat-autosuggest": cfg.data,
             "class": "pat-autosuggest",
             "type": "text",
         }).appendTo($("div#lab"));

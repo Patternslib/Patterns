@@ -55,7 +55,7 @@ export default Base.extend({
         try {
             const response = await fetch(this.options.url);
             data = await response.text();
-        } catch (e) {
+        } catch {
             logger.error(
                 `Could not fetch from ${this.options.url} on push-id ${this.options.pushId}.`
             );
@@ -110,7 +110,7 @@ export default Base.extend({
         try {
             const response = await fetch(this.options.url);
             data = await response.json();
-        } catch (e) {
+        } catch {
             logger.error(
                 `Could not fetch from ${this.options.url} on push-id ${this.options.pushId}.`
             );

@@ -125,7 +125,7 @@ var store = {
 // reported in #326
 try {
     store.supported = typeof window.sessionStorage !== "undefined";
-} catch (e) {
+} catch {
     // just ignore.
 }
 

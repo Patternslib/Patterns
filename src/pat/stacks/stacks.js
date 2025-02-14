@@ -67,7 +67,7 @@ class Pattern extends BasePattern {
         if (selected) {
             try {
                 this.$active = $sheets.filter("#" + selected);
-            } catch (e) {
+            } catch {
                 selected = undefined;
             }
         }

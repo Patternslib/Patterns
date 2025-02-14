@@ -608,10 +608,12 @@ const debounce = (func, ms, timer = { timer: null }, postpone = true) => {
     };
 };
 
+// TODO: Remove in next major release.
 const isIE = () => {
     // See: https://stackoverflow.com/a/9851769/1337474
     // Internet Explorer 6-11
-    return /*@cc_on!@*/ false || !!document.documentMode;
+    // eslint-disable-next-line no-constant-binary-expression
+    return /*@cc_on!@*/false || !!document.documentMode;
 };
 
 const jqToNode = (el) => {

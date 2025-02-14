@@ -23,7 +23,7 @@ const testutils = {
             "id": cfg.id || "tooltip",
             "href": cfg.href || "#anchor",
             "title": cfg.title || "tooltip title attribute",
-            "data-pat-tooltip": "" || cfg.data,
+            "data-pat-tooltip": cfg.data,
             "class": "pat-tooltip",
         })
             .text(cfg.content)
