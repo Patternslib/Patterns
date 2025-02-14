@@ -354,7 +354,7 @@ class Pattern extends BasePattern {
                 });
                 const text = await response.text();
                 content = await handler(text, url, selector);
-            } catch (e) {
+            } catch {
                 log.error("Error on ajax request. ${e}");
             }
         } else if (selector) {

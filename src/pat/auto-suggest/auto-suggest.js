@@ -77,10 +77,14 @@ export default Base.extend({
                     selectionClasses = JSON.parse(this.options.selectionClasses)[
                         obj.text
                     ];
-                } catch (SyntaxError) {
-                    log.error(
-                        "SyntaxError: non-JSON data given to pat-autosuggest (selection-classes)"
-                    );
+                } catch (e) {
+                    if (e instanceof SyntaxError) {
+                        log.error(
+                            "SyntaxError: non-JSON data given to pat-autosuggest (selection-classes)"
+                        );
+                    } else {
+                        throw e;
+                    }
                 }
                 if (selectionClasses) {
                     // According to Cornelis the classes need to be applied on
@@ -161,9 +165,13 @@ export default Base.extend({
         if (this.options.wordsJson?.length) {
             try {
                 words = JSON.parse(this.options.wordsJson);
-            } catch (SyntaxError) {
-                words = [];
-                log.error("SyntaxError: non-JSON data given to pat-autosuggest");
+            } catch (e) {
+                if (e instanceof SyntaxError) {
+                    words = [];
+                    log.error("SyntaxError: non-JSON data given to pat-autosuggest");
+                } else {
+                    throw e;
+                }
             }
             if (!Array.isArray(words)) {
                 words = words.map((v, k) => {
@@ -243,8 +251,12 @@ export default Base.extend({
                     }
                     callback(_data);
                 };
-            } catch (SyntaxError) {
-                log.error("SyntaxError: non-JSON data given to pat-autosuggest");
+            } catch (e) {
+                if (e instanceof SyntaxError) {
+                    log.error("SyntaxError: non-JSON data given to pat-autosuggest");
+                } else {
+                    throw e;
+                }
             }
         }
 

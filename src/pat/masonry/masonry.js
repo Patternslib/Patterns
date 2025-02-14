@@ -96,7 +96,7 @@ export default Base.extend({
         var containerStyle;
         try {
             containerStyle = JSON.parse(this.options.containerStyle);
-        } catch (e) {
+        } catch {
             containerStyle = { position: "relative" };
             log.warn(
                 "Invalid value passed in as containerStyle. Needs to " +

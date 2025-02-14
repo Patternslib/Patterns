@@ -280,7 +280,7 @@ const inject = {
             if (cfg.delay) {
                 try {
                     cfg.delay = utils.parseTime(cfg.delay);
-                } catch (e) {
+                } catch {
                     log.warn("Invalid delay value: ", cfg.delay);
                     cfg.delay = null;
                 }
