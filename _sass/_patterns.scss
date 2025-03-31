@@ -1,42 +1,42 @@
 // Each pattern comes with a mixin. They may also be included seperately
 // in a project and applied on custom markup.
 
-@import "fonts";
-@import "settings";
-@import "mixins";
+@use "fonts";
+@use "settings";
+@use "mixins";
 
 // Individual scss files are imported for each Pattern. These files may
 // also be imported seperately in a project, but always require the Patterns
 // mixins
 
-@import "components/avatar";
-@import "components/button";
-@import "components/button-bar";
-@import "components/form";
-@import "components/icon";
-@import "../src/pat/auto-scale/auto-scale";
-@import "../src/pat/auto-suggest/auto-suggest";
-@import "../src/pat/carousel/carousel";
-@import "../src/pat/checklist/checklist";
-@import "../src/pat/collapsible/collapsible";
-@import "../src/pat/colour-picker/colour-picker";
-@import "../src/pat/date-picker/date-picker";
-@import "../src/pat/datetime-picker/datetime-picker";
-@import "../src/pat/equaliser/equaliser";
-@import "../src/pat/expandable-tree/expandable-tree";
-@import "../src/pat/focus/focus";
-@import "../src/pat/gallery/gallery";
-@import "../src/pat/grid/grid";
-@import "../src/pat/image-crop/image-crop";
-@import "../src/pat/inject/inject";
-@import "../src/pat/inject/injection";
-@import "../src/pat/masonry/masonry";
-@import "../src/pat/menu/menu";
-@import "../src/pat/modal/modal";
-@import "../src/pat/notification/notification";
-@import "../src/pat/sortable/sortable";
-@import "../src/pat/stacks/stacks";
-@import "../src/pat/switch/switch";
-@import "../src/pat/syntax-highlight/syntax-highlight";
-@import "../src/pat/toggle/toggle";
-@import "../src/pat/tooltip/tooltip";
+@use "components/avatar";
+@use "components/button";
+@use "components/button-bar";
+@use "components/form";
+@use "components/icon";
+@use "../src/pat/auto-scale/auto-scale";
+@use "../src/pat/auto-suggest/auto-suggest";
+@use "../src/pat/carousel/carousel";
+@use "../src/pat/checklist/checklist";
+@use "../src/pat/collapsible/collapsible";
+@use "../src/pat/colour-picker/colour-picker";
+@use "../src/pat/date-picker/date-picker";
+@use "../src/pat/datetime-picker/datetime-picker";
+@use "../src/pat/equaliser/equaliser";
+@use "../src/pat/expandable-tree/expandable-tree";
+@use "../src/pat/focus/focus";
+@use "../src/pat/gallery/gallery";
+@use "../src/pat/grid/grid";
+@use "../src/pat/image-crop/image-crop";
+@use "../src/pat/inject/inject";
+@use "../src/pat/inject/injection";
+@use "../src/pat/masonry/masonry";
+@use "../src/pat/menu/menu";
+@use "../src/pat/modal/modal";
+@use "../src/pat/notification/notification";
+@use "../src/pat/sortable/sortable";
+@use "../src/pat/stacks/stacks";
+@use "../src/pat/switch/switch";
+@use "../src/pat/syntax-highlight/syntax-highlight";
+@use "../src/pat/toggle/toggle";
+@use "../src/pat/tooltip/tooltip";

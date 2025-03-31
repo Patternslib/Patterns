@@ -1,6 +1,6 @@
-@import "../../../_sass/settings";
+@use "../../../_sass/settings";
 
 fieldset.focus > .legend,
 label.focus {
-    color: $colour-accent;
+    color: settings.$colour-accent;
 }

@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import "../../../_sass/settings";
+@use "../../../_sass/settings";
 
 .pat-checklist {
     > br {
@@ -15,7 +15,7 @@
         &.checked:before,
         &.unchecked:before {
             font-family: fontello;
-            content: "#{$glyph-checkbox}";
+            content: "#{settings.$glyph-checkbox}";
             float: left;
             position: absolute;
             left: 0;
@@ -23,7 +23,7 @@
         }
 
         &.checked:before {
-            content: "#{$glyph-checkbox-active}";
+            content: "#{settings.$glyph-checkbox-active}";
         }
 
         input[type="checkbox"],
@@ -35,10 +35,10 @@
 
     &.radio label {
         &:before {
-            content: "#{$glyph-radio-button}";
+            content: "#{settings.$glyph-radio-button}";
         }
         &.checked:before {
-            content: "#{$glyph-radio-button-active}";
+            content: "#{settings.$glyph-radio-button-active}";
         }
     }
 

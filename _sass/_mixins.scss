@@ -1,22 +1,25 @@
+@use "sass:color";
+@use "settings";
+
 @mixin screen-size($media) {
     @if $media == small {
-        @media only screen and (max-width: $break-small) {
+        @media only screen and (max-width: settings.$break-small) {
             @content;
         }
     } @else if $media == small-medium {
-        @media only screen and (max-width: $break-large - 1) {
+        @media only screen and (max-width: settings.$break-large - 1) {
             @content;
         }
     } @else if $media == medium {
-        @media only screen and (min-width: $break-small + 1) and (max-width: $break-large - 1) {
+        @media only screen and (min-width: settings.$break-small + 1) and (max-width: settings.$break-large - 1) {
             @content;
         }
     } @else if $media == medium-large {
-        @media only screen and (min-width: $break-small + 1) {
+        @media only screen and (min-width: settings.$break-small + 1) {
             @content;
         }
     } @else if $media == large {
-        @media only screen and (min-width: $break-large) {
+        @media only screen and (min-width: settings.$break-large) {
             @content;
         }
     }
@@ -158,7 +161,7 @@
     display: block;
 
     &.success {
-        background-color: $colour-success;
+        background-color: settings.$colour-success;
         color: white;
 
         a {
@@ -170,10 +173,10 @@
         }
     }
     &.notice {
-        background-color: $colour-notice;
+        background-color: settings.$colour-notice;
     }
     &.warning {
-        background-color: $colour-warning;
+        background-color: settings.$colour-warning;
         color: white;
 
         a {
@@ -235,14 +238,14 @@
     background-color: #efefef;
 
     &.success {
-        background-color: $colour-success;
-        color: darken($colour-success, 50%);
+        background-color: settings.$colour-success;
+        color: color.adjust(settings.$colour-success, $lightness: -50%);
     }
     &.notice {
-        background-color: $colour-notice;
+        background-color: settings.$colour-notice;
     }
     &.warning {
-        background-color: $colour-warning;
+        background-color: settings.$colour-warning;
         color: white;
     }
 }

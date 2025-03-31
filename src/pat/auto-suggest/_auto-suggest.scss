@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import "../../../_sass/settings";
+@use "../../../_sass/settings";
 
 /* @group Auto suggest */
 
@@ -478,7 +478,7 @@ disabled look for disabled choices in the results dropdown
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-        background-color: $colour-accent;
+        background-color: settings.$colour-accent;
         font-size: 0.9em;
         font-weight: normal;
 
@@ -513,7 +513,7 @@ disabled look for disabled choices in the results dropdown
     font-size: 1em;
     outline: none;
     &:before {
-        content: "#{$glyph-close}";
+        content: "#{settings.$glyph-close}";
         color: white;
         font: 1em fontello;
     }
