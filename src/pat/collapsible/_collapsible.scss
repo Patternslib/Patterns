@@ -21,8 +21,6 @@
     }
 
     > *:first-child {
-        @include button.pat-button();
-
         font-weight: normal;
         width: 100%;
 
@@ -30,5 +28,6 @@
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
         // font-size: 0.8em;
+        @include button.pat-button();
     }
 }

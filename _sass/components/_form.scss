@@ -14,13 +14,13 @@ form {
 
     .pat-message,
     .message {
-        @include mixins.pat-message();
-        @include mixins.box-sizing();
-
         display: block;
         clear: both;
         margin-top: 0.5em;
         font-style: normal;
+
+        @include mixins.box-sizing();
+        @include mixins.pat-message();
     }
 
     h2 {
@@ -30,12 +30,13 @@ form {
     input,
     textarea,
     select {
+        @include mixins.box-sizing();
+
         -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
         font-family: settings.$body-font-family;
         display: inline-block;
-        @include mixins.box-sizing();
         padding: 0.2em 0.5em;
         margin: -0.2em 0;
         background-color: rgba(0, 0, 0, 0.09);

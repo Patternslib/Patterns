@@ -357,15 +357,16 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
         display: list-item;
     }
     .select2-disabled {
+        background: #f4f4f4;
+        display: list-item;
+        cursor: default;
+
         &.select2-highlighted {
             color: #666;
             background: #f4f4f4;
             display: list-item;
             cursor: default;
         }
-        background: #f4f4f4;
-        display: list-item;
-        cursor: default;
     }
     .select2-selected {
         display: none;
@@ -377,11 +378,12 @@ disabled look for disabled choices in the results dropdown
 */
 
 .select2-more-results {
+    background: #f4f4f4;
+    display: list-item;
+
     &.select2-active {
         background: #f4f4f4 url("select2-spinner.gif") no-repeat 100%;
     }
-    background: #f4f4f4;
-    display: list-item;
 }
 
 /* disabled styles */
