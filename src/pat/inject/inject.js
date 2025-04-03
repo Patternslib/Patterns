@@ -459,7 +459,7 @@ const inject = {
         /* Called after the XHR has succeeded and we have a new $sources
          * element to inject.
          */
-        const wrapper = document.createElement("div");
+        const wrapper = document.createElement("template");
         if ($sources.length > 0) {
             const method = cfg.sourceMod === "content" ? "innerHTML" : "outerHTML";
             // There might be multiple sources, so we need to loop over them.
@@ -467,7 +467,7 @@ const inject = {
             const sources_string = [...$sources].map(source => source[method]).join("\n");
             wrapper.innerHTML = sources_string;
 
-            for (const img of wrapper.querySelectorAll("img")) {
+            for (const img of wrapper.content.querySelectorAll("img")) {
                 events.add_event_listener(
                     img,
                     "load",
@@ -481,7 +481,7 @@ const inject = {
         }
 
         // Copy, because after insertion wrapper.children is empty.
-        const source_nodes = [...wrapper.childNodes];
+        const source_nodes = [...wrapper.content.childNodes];
 
         // Now the injection actually happens.
         if (this._inject(trigger, source_nodes, target, cfg)) {

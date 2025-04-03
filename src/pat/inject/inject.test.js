@@ -1868,6 +1868,61 @@ describe("pat-inject", function () {
             });
         });
 
+        describe("9.6 - injecting tables.", function () {
+            let spy_ajax;
+
+            beforeEach(function () {
+                spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            });
+
+            afterEach(function () {
+                spy_ajax.mockRestore();
+            });
+
+            it("9.6.1 - Correctly injects table rows", async function () {
+                // Table rows <tr> can only be childs of <tbodys> or <thead> elements.
+                // If they are childs of <table> elements, the browser implicitly adds a <tbody> element.
+                // Table rows cannot be childs of <div> elements or others.
+                // There is one exception though - they can be directly added to <template> elements.
+                // This test checks this problem which popped up during the 9.10 release cycle and was fixed in:
+                // https://github.com/Patternslib/Patterns/pull/1238
+
+                document.body.innerHTML = `
+                    <a class="pat-inject"
+                       href="test.html"
+                       data-pat-inject="
+                        source: tr::element;
+                        target: table;
+                    ">link</a>
+                    <table>
+                    </table>
+                `;
+
+                answer(`
+                    <html>
+                        <body>
+                            <table>
+                                <tr><td>wohoo</td></tr>
+                            </table>
+                        </body>
+                    </html>
+                `);
+
+                const inject = document.querySelector(".pat-inject");
+
+                pattern.init($(inject));
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                inject.click();
+                await utils.timeout(1); // wait a tick for async to settle.
+
+
+                console.log(document.body.outerHTML);
+
+                const injected = document.querySelectorAll("table tr");
+                expect(injected.length).toBe(1);
+            });
+        });
     });
 
     describe("10 - Error handling", () => {
