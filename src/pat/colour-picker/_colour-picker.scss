@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-@import "spectrum-colorpicker/spectrum";
+@use "../../../node_modules/spectrum-colorpicker/spectrum";
 
 .checkNative,
 .checkPattern {

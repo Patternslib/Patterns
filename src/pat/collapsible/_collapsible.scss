@@ -1,5 +1,5 @@
-@import "settings";
-@import "components/button";
+@use "../../../_sass/settings";
+@use "../../../_sass/components/button";
 
 .pat-collapsible {
     margin-bottom: 0.5em;
@@ -21,8 +21,6 @@
     }
 
     > *:first-child {
-        @include pat-button();
-
         font-weight: normal;
         width: 100%;
 
@@ -30,5 +28,6 @@
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
         // font-size: 0.8em;
+        @include button.pat-button();
     }
 }

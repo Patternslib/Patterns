@@ -1,7 +1,9 @@
+@use "../settings";
+
 @charset "UTF-8";
 
 @mixin pat-button() {
-    font-family: $body-font-family;
+    font-family: settings.$body-font-family;
     margin: 0 0.5em 0 0;
     border: 1px solid rgba(0, 0, 0, 0.3);
     cursor: default;
@@ -59,7 +61,7 @@
 
 ::-webkit-search-cancel-button {
     &:hover {
-        color: $colour-accent;
+        color: settings.$colour-accent;
     }
     &::after {
         content: "\e803";

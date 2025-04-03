@@ -1,4 +1,4 @@
-@import "settings";
+@use "../../../_sass/settings";
 
 :fullscreen {
     background-color: transparent;
@@ -24,7 +24,7 @@
     border: none;
 
     &:before {
-        content: "#{$glyph-close}";
+        content: "#{settings.$glyph-close}";
         text-indent: 0;
         position: absolute;
         top: 0;

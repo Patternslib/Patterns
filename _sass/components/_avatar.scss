@@ -1,3 +1,5 @@
+@use "../mixins";
+
 .pat-avatar {
-    @include pat-avatar();
+    @include mixins.pat-avatar();
 }

@@ -1,6 +1,7 @@
 @charset "UTF-8";
-@import "settings";
-@import "components/button";
+@use "sass:color";
+@use "../../../_sass/settings";
+@use "../../../_sass/components/button";
 
 .pat-notification-panel {
     padding: 0.5em;
@@ -15,39 +16,39 @@
     // border: 1px solid white;
 
     button {
-        @include pat-button();
+        @include button.pat-button();
     }
 
     a {
         text-decoration: underline;
     }
     &.notice {
-        background-color: $colour-notice;
+        background-color: settings.$colour-notice;
     }
     &.success {
-        background-color: $colour-success;
-        color: darken($colour-success, 50%);
+        background-color: settings.$colour-success;
+        color: color.adjust(settings.$colour-success, $lightness: -50%);
         * {
-            color: darken($colour-success, 50%) !important;
+            color: color.adjust(settings.$colour-success, $lightness: -50%) !important;
             //Instead of the line below you could use @includetext-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
         }
     }
     &.warning {
-        background-color: $colour-warning;
+        background-color: settings.$colour-warning;
         color: white;
         * {
             color: white !important;
         }
     }
     &.error {
-        background-color: $colour-error;
+        background-color: settings.$colour-error;
         color: white;
         * {
             color: white !important;
         }
     }
     &.info {
-        background-color: $colour-info;
+        background-color: settings.$colour-info;
         color: #247fad;
     }
     p:last-of-type {

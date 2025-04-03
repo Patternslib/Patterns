@@ -1,6 +1,6 @@
 @charset "UTF-8";
-@import "../../../_sass/settings";
-@import "../../../_sass/mixins";
+@use "../../../_sass/settings";
+@use "../../../_sass/mixins";
 
 div.pat-modal {
     -webkit-box-sizing: border-box;
@@ -64,7 +64,7 @@ div.pat-modal {
             outline: none;
 
             &:before {
-                content: "#{$glyph-close}";
+                content: "#{settings.$glyph-close}";
                 text-indent: 0;
                 position: absolute;
                 top: 0;
@@ -186,7 +186,7 @@ div.pat-modal {
         -webkit-animation-fill-mode: forwards;
     }
 
-    @include screen-size(small) {
+    @include mixins.screen-size(small) {
         width: 100% !important;
         height: 100% !important;
         z-index: 10000;
