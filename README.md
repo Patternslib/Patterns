@@ -134,6 +134,18 @@ To facilitate debugging you can change the default log level through the URL que
 - `http://www.example.com/?loglevel-inject=DEBUG` changes the log level for just the inject pattern to `DEBUG`.
 - `http://www.example.com/?loglevel=ERROR&loglevel-inject=INFO` changes the standard log level error, but enables messages at the `INFO` level for the inject pattern.
 
+### Patternslib global variables
+
+There are some global variables that are available and can be used to make
+global settings or access otherwise hidden objects.
+
+| Global variable | Purpose | Default |
+| --------------- | ------- | ------ |
+| window.__patternslib_import_styles | Whether to import pattern-specific styles | false |
+| window.__patternslib_registry | Global access to the Patternslib registry object. | - |
+| window.__patternslib_registry_initialized | True, if the registry has been initialized. | false |
+| window.__patternslib_disable_modernizr (Deprecated) | Disable modernizr, but still write the js/no-js classes to the body. | undefined |
+
 
 ### Bundle build analyzation
 
