@@ -219,6 +219,17 @@ const registry = {
             log.error("Pattern lacks a name.", pattern);
             return false;
         }
+
+        // Do not register blacklisted patterns.
+        let BLACKLIST = window.__patternslib_patterns_blacklist;
+        if (!Array.isArray(BLACKLIST)) {
+            BLACKLIST = [];
+        }
+        if (BLACKLIST.includes(name)) {
+            log.warn(`Pattern name ${name} is blacklisted.`);
+            return false;
+        }
+
         if (registry.patterns[name]) {
             log.debug(`Already have a pattern called ${name}.`);
             return false;
