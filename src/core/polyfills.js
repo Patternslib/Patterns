@@ -3,8 +3,13 @@
 // SubmitEvent.submitter polyfill for Safari < 15.4 and jsDOM
 // Original code: https://stackoverflow.com/a/61110260/1337474
 // Also see: https://caniuse.com/?search=submitter
-//
+// NOTE: the `submitter` property is now widely available except for ancient browsers and jsDOM.
 !(function () {
+    if (window.SubmitEvent && "submitter" in window.SubmitEvent.prototype) {
+        // `submitter` attribute is already supported.
+        return;
+    }
+
     let last_btn = null;
     const submitable_buttons = `button, input[type="button"], input[type="submit"], input[type="image"]`;
     document.addEventListener(
