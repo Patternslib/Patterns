@@ -46,10 +46,6 @@ module.exports = () => {
     config.plugins.push(
         new CopyPlugin({
             patterns: [
-                // Copy polyfills loader to the output path.
-                // TODO: Polyfills not used anymore, remove for next major version.
-                { from: path.resolve(__dirname, "../src/polyfills-loader.js") },
-
                 // Build and copy Modernizr.
                 // We're abusing the CopyPlugin transform method here to build
                 // a Modernizr bundle using the modernizr config. The input
