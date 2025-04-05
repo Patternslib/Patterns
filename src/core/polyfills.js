@@ -38,3 +38,44 @@
         true
     );
 })();
+
+// Navigation polyfill for Firefox and Safari, as of 2024-01-04
+// NOTE: this is a very basic polyfill, it only supports firing a `navigate`
+// event on location change and even that without interception support, etc.
+!(function () {
+    if (window.navigation == undefined) {
+
+        class NavigateEvent extends CustomEvent {
+            constructor() {
+                super("navigate");
+                this.destination = { url: undefined };
+            }
+        }
+
+        // Create a navigation object on the window
+        // We create a DOM element for the navigation object so that we can
+        // attach events on it.
+        window.navigation = document.createElement("div");
+
+        const create_event = (args) => {
+            const event = new NavigateEvent();
+            event.destination.url = args[2];
+            return event;
+        };
+
+        // Patch pushState to trigger an `navigate` event on the navigation
+        // object when the URL changes.
+        const pushState = window.history.pushState;
+        window.history.pushState = function () {
+            pushState.apply(window.history, arguments);
+            window.navigation.dispatchEvent(create_event(arguments));
+        };
+
+        // Same with replaceState
+        const replaceState = window.history.replaceState;
+        window.history.replaceState = function () {
+            replaceState.apply(window.history, arguments);
+            window.navigation.dispatchEvent(create_event(arguments));
+        };
+    }
+})();
