@@ -4,6 +4,114 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.10.1-beta.3](https://github.com/Patternslib/patterns/compare/9.10.1-beta.2...9.10.1-beta.3) (2025-04-06)
+
+
+### Features
+
+
+* **core polyfills:** Add polyfill for navigation API. ([b9c328f](https://github.com/Patternslib/patterns/commit/b9c328f475573cc911a6b9e347366803d98bad96))
+
+  This polyfill adds support for the "navigate" event on the navigation
+object. We path "history.pushState" and "history.replaceState" to send
+the "navigate" event on the "window.navigation" object when the URL
+changes.
+
+This polyfill is for current Firefox and Safari. Chrome based browsers
+already support this.
+
+More information on:
+https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate_event
+
+
+* **core registry:** Allow to disable individual patterns via a global window.__patternslib_patterns_blacklist array. ([2d04c6c](https://github.com/Patternslib/patterns/commit/2d04c6cc3850a46026bcd3eae5a6b32a12678870))
+
+
+* **pat-ajax:** Pass the URL to the pat-ajax-success event payload. ([faa0209](https://github.com/Patternslib/patterns/commit/faa020923942d8e7f1df132fb307b8299d8e2fb3))
+
+  This allows to use the URL in an event handler for certain actions.
+
+
+
+### Bug Fixes
+
+
+* **pat-inject:** Fix problem with inserting table rows. ([2e70a13](https://github.com/Patternslib/patterns/commit/2e70a130ee5d5c1a31064fb9100eba74dc8374f6))
+
+  There was a problem with injecting table rows introduced in: b0f94fb058a7067e19bc9c3101a11dfa49ff8dd2
+The problem occured when setting a table row as content of a temporary
+<div> wrapper. But a <tr> is not a valid child node of a <div>. This
+caused visually destroyed tables.
+
+Using a <template> tag as wrapper instead of a div solved the problem.
+
+
+* Remove also the previously removed polyfills-loader from the webpack config. ([f532648](https://github.com/Patternslib/patterns/commit/f532648308ced867938d4546aa56e4303c5476f9))
+
+
+* **styles:** Fix relative import path of SASS files. ([6a28f02](https://github.com/Patternslib/patterns/commit/6a28f02529ce1aac89d03dfb46d2d0e89cd78f30))
+
+  The SASS docs suggest to use real relative imports - we don't have a load-path definition here.
+sass-migrator also wouldn't migrate with this kind of imports.
+
+
+* **styles:** Fix SASS nesting warnings. ([75701d7](https://github.com/Patternslib/patterns/commit/75701d724f810bfd93dc80c473e4b2d76fb50ea7))
+
+
+* **styles:** Migrate using sass-migrator module. ([1bab49d](https://github.com/Patternslib/patterns/commit/1bab49dab3d1a1957e9eb3c2fc5c414f439480bd))
+
+
+
+### Maintenance
+
+
+* @patternslib/dev upgrade - Adapt Makefile. ([1d2877d](https://github.com/Patternslib/patterns/commit/1d2877d8e34aeabd72258be18c213812990e7042))
+
+
+* @patternslib/dev upgrade - create eslint.config.js. ([e31f9d6](https://github.com/Patternslib/patterns/commit/e31f9d67e41c0fddf499768472b98e27037c2e12))
+
+
+* @patternslib/dev upgrade - remove .husky directory in favor of git hooks. ([61094b8](https://github.com/Patternslib/patterns/commit/61094b8e7a0b09fa75014119ed19ec1cda5bb889))
+
+
+* @patternslib/dev upgrade - remove old .eslintrc.js. ([3eceed2](https://github.com/Patternslib/patterns/commit/3eceed26fd6605c5e00bb11f42eebe9afb1ca0f5))
+
+
+* Document patternslib global variables. ([25dab59](https://github.com/Patternslib/patterns/commit/25dab598352c9bba6fd3f416938925b740ce0e83))
+
+
+* Early exit the SubmitEvent.submitter polyfill, if it is already available. ([93841ba](https://github.com/Patternslib/patterns/commit/93841bae6ec23f0c2b6eebbe1e0d5444791f699d))
+
+
+* Fix eslint errors. ([1d13a7d](https://github.com/Patternslib/patterns/commit/1d13a7d1e0c7974901b3198266c073dd137eee4a))
+
+
+* Remove the polyfills-loader script. ([6fee709](https://github.com/Patternslib/patterns/commit/6fee70943aee3d2d963c7b5765ca5de5684282dc))
+
+  The few necessary polyfills are now loaded by Patternslib itself.
+This script was empty and is now removed.
+
+
+* Remove the public path helper script. ([20dd150](https://github.com/Patternslib/patterns/commit/20dd150319f45b4153830119cc874212e6584e3f))
+
+  The public path helper script did set the webpack public path to find
+the path where the bundle was located and to correctly find the chunk
+directory. The logic was based on finding the URL of the last loaded
+script. This was not even always correct.
+
+It was also possible to override it via `window.__patternslib_public_path__`.
+
+Since quite some thime, this is not necessary anymore as webpack handles
+these path issues on it's own.
+
+This dead code is now removed.
+
+
+* Upgrade @patternslib/dev. ([ea2711e](https://github.com/Patternslib/patterns/commit/ea2711ee8b47da626263a850ff4e78bf9aca9f6c))
+
+
+* Upgrade dependencies. ([2ed29fc](https://github.com/Patternslib/patterns/commit/2ed29fc079566cf9d508b25e6a3ecfbc07ebd702))
+
 ## [9.10.1-beta.2](https://github.com/Patternslib/patterns/compare/9.10.1-beta.1...9.10.1-beta.2) (2025-02-04)
 
 
