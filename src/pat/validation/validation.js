@@ -113,7 +113,7 @@ class Pattern extends BasePattern {
         }
 
         // In any case, clear the custom validity first.
-        this.set_error({ input: input, msg: "" });
+        this.set_error({ input: input, msg: "", skip_event: true });
         const validity_state = input.validity;
 
         if (event?.submitter?.hasAttribute("formnovalidate")) {
@@ -315,7 +315,12 @@ class Pattern extends BasePattern {
                 input_options.message.datetime
             ) {
                 this.set_error({ input: input, msg: input_options.message.datetime });
+            } else {
+                // Still an error, but without customized messages.
+                // Call `emit_update` separately
+                this.emit_update("invalid");
             }
+
         }
 
         if (event?.type === "submit") {
@@ -327,7 +332,7 @@ class Pattern extends BasePattern {
         this.set_error_message(input);
     }
 
-    set_error({ input, msg, attribute = null, min = null, max = null }) {
+    set_error({ input, msg, attribute = null, min = null, max = null, skip_event = false }) {
         // Replace some variables, as like validate.js
         if (attribute) {
             msg = msg.replace(/%{attribute}/g, attribute);
@@ -346,9 +351,12 @@ class Pattern extends BasePattern {
         // (e.g. styled date input).
         input[KEY_ERROR_MSG] = msg;
 
+        if (!skip_event) {
+            this.emit_update("invalid");
+        }
     }
 
-    remove_error(input, all_of_group = false) {
+    remove_error(input, all_of_group = false, skip_event = false) {
         // Remove error message and related referencesfrom input.
 
         let inputs = [input];
@@ -370,6 +378,10 @@ class Pattern extends BasePattern {
                     it.classList.remove("disabled");
                 }
             }
+        }
+
+        if (!skip_event) {
+            this.emit_update("valid");
         }
     }
 
