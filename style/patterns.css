@@ -199,7 +199,7 @@ form .message {
 form .pat-message.success,
 form .message.success {
   background-color: green;
-  color: black;
+  color: hsl(120, 100%, -24.9019607843%);
 }
 form .pat-message.notice,
 form .message.notice {
@@ -4047,10 +4047,10 @@ div.pat-modal:after {
 }
 .pat-notification-panel.success {
   background-color: green;
-  color: black;
+  color: hsl(120, 100%, -24.9019607843%);
 }
 .pat-notification-panel.success * {
-  color: black !important;
+  color: hsl(120, 100%, -24.9019607843%) !important;
 }
 .pat-notification-panel.warning {
   background-color: orange;
