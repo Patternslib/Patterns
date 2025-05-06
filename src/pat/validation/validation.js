@@ -374,7 +374,8 @@ class Pattern extends BasePattern {
     }
 
     set_error_message(input) {
-        this.remove_error(input);
+        // First, remove the old error message.
+        this.remove_error(input, false, true);
 
         // Do not set a error message for a input group like radio buttons or
         // checkboxes where one has already been set.
