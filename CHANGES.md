@@ -6,6 +6,8 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 ## [9.10.1](https://github.com/Patternslib/patterns/compare/9.10.1-beta.3...9.10.1) (2025-05-06)
 
+## [9.10.1](https://github.com/Patternslib/patterns/compare/9.10.1-beta.3...9.10.1) (2025-05-06)
+
 ## [9.10.1-beta.3](https://github.com/Patternslib/patterns/compare/9.10.1-beta.2...9.10.1-beta.3) (2025-04-06)
 
 
