@@ -59,7 +59,7 @@ bundle-pre:
 
 .PHONY: css
 css:
-	@$(SASS) -I style -I _sass -I . _sass/_patterns.scss style/patterns.css
+	@$(SASS) -I style --load-path node_modules/ _sass/_patterns.scss style/patterns.css
 
 
 # Update patterns-site
