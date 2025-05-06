@@ -104,6 +104,16 @@ class BasePattern {
         // Extend this method in your pattern.
     }
 
+    emit_update(action = undefined, options = {}) {
+        options = {
+            pattern: this.name,
+            dom: this.el,
+            action: action,
+            ...options,
+        }
+        this.el.dispatchEvent(events.update_event(options));
+    }
+
     /**
      * Listen to an event on the element only once.
      *
