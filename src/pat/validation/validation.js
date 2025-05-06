@@ -113,7 +113,7 @@ class Pattern extends BasePattern {
         }
 
         // In any case, clear the custom validity first.
-        this.set_validity({ input: input, msg: "" });
+        this.set_error({ input: input, msg: "" });
         const validity_state = input.validity;
 
         if (event?.submitter?.hasAttribute("formnovalidate")) {
@@ -148,7 +148,7 @@ class Pattern extends BasePattern {
                 const message =
                     input_options.message.equality ||
                     `The value is not equal to %{attribute}`;
-                this.set_validity({
+                this.set_error({
                     input: input,
                     msg: message,
                     attribute: input_options.equality,
@@ -216,7 +216,7 @@ class Pattern extends BasePattern {
                             );
                             msg_attr = msg_attr || not_after_el.name;
                         }
-                        this.set_validity({
+                        this.set_error({
                             input: input,
                             msg: msg || msg_default_not_after,
                             attribute: msg_attr.trim(),
@@ -237,7 +237,7 @@ class Pattern extends BasePattern {
                             );
                             msg_attr = msg_attr || not_before_el.name;
                         }
-                        this.set_validity({
+                        this.set_error({
                             input: input,
                             msg: msg || msg_default_not_before,
                             attribute: msg_attr.trim(),
@@ -266,15 +266,15 @@ class Pattern extends BasePattern {
             // Default error cases with custom messages.
 
             if (validity_state.valueMissing && input_options.message.required) {
-                this.set_validity({ input: input, msg: input_options.message.required });
+                this.set_error({ input: input, msg: input_options.message.required });
             } else if (validity_state.rangeUnderflow && input_options.message.min) {
-                this.set_validity({
+                this.set_error({
                     input: input,
                     msg: input_options.message.min,
                     min: input.getAttribute("min"),
                 });
             } else if (validity_state.rangeOverflow && input_options.message.max) {
-                this.set_validity({
+                this.set_error({
                     input: input,
                     msg: input_options.message.max,
                     max: input.getAttribute("max"),
@@ -284,37 +284,37 @@ class Pattern extends BasePattern {
                 input.type === "number" &&
                 input_options.message.number
             ) {
-                this.set_validity({ input: input, msg: input_options.message.number });
+                this.set_error({ input: input, msg: input_options.message.number });
             } else if (
                 validity_state.typeMismatch &&
                 input.type === "email" &&
                 input_options.message.email
             ) {
-                this.set_validity({ input: input, msg: input_options.message.email });
+                this.set_error({ input: input, msg: input_options.message.email });
             } else if (
                 validity_state.rangeUnderflow &&
                 input.type === "date" &&
                 input_options.message.date
             ) {
-                this.set_validity({ input: input, msg: input_options.message.date });
+                this.set_error({ input: input, msg: input_options.message.date });
             } else if (
                 validity_state.rangeOverflow &&
                 input.type === "date" &&
                 input_options.message.date
             ) {
-                this.set_validity({ input: input, msg: input_options.message.date });
+                this.set_error({ input: input, msg: input_options.message.date });
             } else if (
                 validity_state.rangeUnderflow &&
                 input.type === "datetime" &&
                 input_options.message.datetime
             ) {
-                this.set_validity({ input: input, msg: input_options.message.datetime });
+                this.set_error({ input: input, msg: input_options.message.datetime });
             } else if (
                 validity_state.rangeOverflow &&
                 input.type === "datetime" &&
                 input_options.message.datetime
             ) {
-                this.set_validity({ input: input, msg: input_options.message.datetime });
+                this.set_error({ input: input, msg: input_options.message.datetime });
             }
         }
 
@@ -327,7 +327,7 @@ class Pattern extends BasePattern {
         this.set_error_message(input);
     }
 
-    set_validity({ input, msg, attribute = null, min = null, max = null }) {
+    set_error({ input, msg, attribute = null, min = null, max = null }) {
         // Replace some variables, as like validate.js
         if (attribute) {
             msg = msg.replace(/%{attribute}/g, attribute);
@@ -345,6 +345,7 @@ class Pattern extends BasePattern {
         // Hidden inputs do not participate in validation but we need this
         // (e.g. styled date input).
         input[KEY_ERROR_MSG] = msg;
+
     }
 
     remove_error(input, all_of_group = false) {
