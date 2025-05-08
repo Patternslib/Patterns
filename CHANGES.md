@@ -4,6 +4,57 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.10.2](https://github.com/Patternslib/patterns/compare/9.10.1...9.10.2) (2025-05-08)
+
+
+### Bug Fixes
+
+
+* Fix SASS at-use import paths from node_modules. ([57ee457](https://github.com/Patternslib/patterns/commit/57ee457eb80a0ee1a5041b084ecd2c04aecd50d5))
+
+  When using Patternslib in another project the relative node_module at-use rule imports might fail.
+
+This is now fixed as follows:
+
+- For the css Makefile compile target, define node_modules as load-path.
+- For the webpack compiler, the node_modules directory is already defined as load-path.
+- Change the at-use import in scss files for the defined node_modules import path.
+
+
+
+### Technical Changes
+
+
+* **core basepattern:** Provide emit_update helper method on pattern instances to easily emit a pat-update event and already fill the most important properties. Expects an optional action parameter and an optional options object. ([1e07f97](https://github.com/Patternslib/patterns/commit/1e07f976d1c62762e9e541e3b80f00e06e041a73))
+
+
+* **core events:** Add pat-update event factory which initializes itself with options and bubbles up. ([d95a71f](https://github.com/Patternslib/patterns/commit/d95a71f15be4a9ddbc6fd5c07291a9acca127d87))
+
+
+* **pat-validation:** Emit pat-update events with actions invalid and valid after validation checks on inputs. ([2c15de1](https://github.com/Patternslib/patterns/commit/2c15de14364508c1b9c817ec3bc9ebda387c96f6))
+
+
+
+### Maintenance
+
+
+* **pat-date-picker:** Remove obsolete library comparison section from docs and fix Markdown headers. ([813c0f8](https://github.com/Patternslib/patterns/commit/813c0f83835fdda19629bb247e346ae965fb9a4b))
+
+
+* **pat-datetime-picker:** Remove obsolete library comparison section from docs and fix Markdown headers. ([0afe106](https://github.com/Patternslib/patterns/commit/0afe10695afa5209ccc237d000c0ab9106796b4e))
+
+
+* **pat-validation:** Comment for clarity. ([e1c3b59](https://github.com/Patternslib/patterns/commit/e1c3b595a09786971cf2bf59fc5071324ff173af))
+
+
+* **pat-validation:** Rename set_validity to set_error, which better suites the functionality. ([3ce4e4a](https://github.com/Patternslib/patterns/commit/3ce4e4a42fcc0ac879b06a327119cacee46c8e50))
+
+
+* Upgrade @patternslib/dev to 3.8.0. ([a97b1f1](https://github.com/Patternslib/patterns/commit/a97b1f1ff5ab12c9168380df8d70dab6defabbc7))
+
+
+* Upgrade @patternslib/dev to 3.8.1. ([74ae473](https://github.com/Patternslib/patterns/commit/74ae473aa54f7baca9e2a746fda303c3f0880e49))
+
 ## [9.10.1](https://github.com/Patternslib/patterns/compare/9.10.1-beta.3...9.10.1) (2025-05-06)
 
 ## [9.10.1](https://github.com/Patternslib/patterns/compare/9.10.1-beta.3...9.10.1) (2025-05-06)
