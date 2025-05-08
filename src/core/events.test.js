@@ -467,6 +467,26 @@ describe("core.events tests", () => {
             expect(catched).toBe("outer");
         });
 
+        it("update event", async () => {
+            outer.addEventListener("pat-update", () => {
+                catched = "outer";
+            });
+            inner.dispatchEvent(events.update_event());
+            await utils.timeout(1);
+            expect(catched).toBe("outer");
+        });
+
+        it("update event with data", async () => {
+            let event;
+            outer.addEventListener("pat-update", (e) => {
+                event = e;
+            });
+            const data = {"foo": "bar"};
+            inner.dispatchEvent(events.update_event(data));
+            await utils.timeout(1);
+            expect(event.detail).toBe(data);
+        });
+
         it("blur event", async () => {
             outer.addEventListener("blur", () => {
                 catched = "outer";

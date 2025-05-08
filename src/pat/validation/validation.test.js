@@ -503,6 +503,41 @@ describe("pat-validation", function () {
         expect(el.querySelectorAll("em.warning").length).toBe(1);
     });
 
+    it("1.21 - Emits an update event when the validation state changes", async function () {
+        document.body.innerHTML = `
+            <form class="pat-validation">
+                <input name="name" required>
+            </form>
+        `;
+        const el = document.querySelector(".pat-validation");
+        const inp = el.querySelector("[name=name]");
+
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
+
+        let event;
+        el.addEventListener("pat-update", (e) => {
+            event = e;
+        });
+
+        inp.value = "";
+        inp.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(el.querySelectorAll("em.warning").length).toBe(1);
+        expect(event.detail.pattern).toBe("validation");
+        expect(event.detail.dom).toBe(el);
+        expect(event.detail.action).toBe("invalid");
+
+        inp.value = "okay";
+        inp.dispatchEvent(events.change_event());
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(event.detail.pattern).toBe("validation");
+        expect(event.detail.dom).toBe(el);
+        expect(event.detail.action).toBe("valid");
+    });
+
     it("2.1 - validates required inputs", async function () {
         document.body.innerHTML = `
           <form class="pat-validation">

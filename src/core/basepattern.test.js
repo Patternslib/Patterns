@@ -364,4 +364,29 @@ describe("Basepattern class tests", function () {
         // If test reaches this expect statement, the init event catched.
         expect(true).toBe(true);
     });
+
+    it("7 - Emit update event.", async function () {
+        const events = (await import("./events")).default;
+        class Pat extends BasePattern {
+            static name = "example";
+            static trigger = ".example";
+        }
+
+        const el = document.createElement("div");
+        el.classList.add("example");
+
+        const pat = new Pat(el);
+        await events.await_pattern_init(pat);
+
+        let event;
+        el.addEventListener("pat-update", (e) => {
+            event = e;
+        });
+
+        pat.emit_update("test");
+
+        expect(event.detail.pattern).toBe("example");
+        expect(event.detail.dom).toBe(el);
+        expect(event.detail.action).toBe("test");
+    });
 });

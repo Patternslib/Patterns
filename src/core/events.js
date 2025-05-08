@@ -181,6 +181,28 @@ const generic_event = (name) => {
     });
 };
 
+
+/** Patternslib specifc event factories
+ */
+
+class UpdateEvent extends CustomEvent {
+    constructor(options) {
+        super("pat-update", {
+            bubbles: true,
+            cancelable: true,
+            detail: options
+        });
+    }
+}
+
+const update_event = (options) => {
+    return new UpdateEvent(options);
+}
+
+
+/** Web API event factories
+ */
+
 const blur_event = () => {
     return new Event("blur", {
         bubbles: false,
@@ -266,6 +288,7 @@ export default {
     await_event: await_event,
     await_pattern_init: await_pattern_init,
     generic_event: generic_event,
+    update_event: update_event,
     blur_event: blur_event,
     click_event: click_event,
     change_event: change_event,
