@@ -14,17 +14,21 @@ const logger = logging.getLogger("pat-validation");
 
 export const parser = new Parser("validation");
 parser.addArgument("disable-selector", "[type=submit], button:not([type=button])"); // Elements which must be disabled if there are errors
-parser.addArgument("message-date", ""); // "This value must be a valid date");
-parser.addArgument("message-datetime", ""); // "This value must be a valid date and time");
-parser.addArgument("message-email", ""); // "This value must be a valid email address");
-parser.addArgument("message-max", ""); // "This value must be less than or equal to %{count}");
-parser.addArgument("message-min", ""); // "This value must be greater than or equal to %{count}"); // prettier-ignore
-parser.addArgument("message-number", ""); // "This value must be a number");
-parser.addArgument("message-required", ""); // "This field is required");
+parser.addArgument("message-date", ""); // "This value must be a valid date"
+parser.addArgument("message-datetime", ""); // "This value must be a valid date and time"
+parser.addArgument("message-email", ""); // "This value must be a valid email address"
+parser.addArgument("message-max", ""); // "This value must be less than or equal to %{count}"
+parser.addArgument("message-min", ""); // "This value must be greater than or equal to %{count}"
+parser.addArgument("message-number", ""); // "This value must be a number"
+parser.addArgument("message-required", ""); // "This field is required"
 parser.addArgument("message-equality", "is not equal to %{attribute}.");
+parser.addArgument("message-min-values", "You need to select at least %{count} item(s).");
+parser.addArgument("message-max-values", "You need to select at most %{count} item(s).");
 parser.addArgument("not-after", null);
 parser.addArgument("not-before", null);
 parser.addArgument("equality", null);
+parser.addArgument("min-values", null);
+parser.addArgument("max-values", null);
 parser.addArgument("delay", 100); // Delay before validation is done to avoid validating while typing.
 
 // BBB
@@ -254,6 +258,42 @@ class Pattern extends BasePattern {
                 if (!stop && not_before_el) {
                     logger.debug("Check `no-before` input.", not_after_el);
                     this.check_input({ input: not_before_el, stop: true });
+                }
+            } else if (input_options.minValues || input_options.maxValues) {
+
+                const min_values = input_options.minValues !== null && parseInt(input_options.minValues, 10)
+                const max_values = input_options.maxValues !== null && parseInt(input_options.maxValues, 10)
+
+                // This makes only sense for inputs with the same name.
+                const valued_siblings = [...this.el.elements].filter((el) => {
+                    // Filter for siblings with same name.
+                    if (el.name !== input.name) {
+                        return false;
+                    }
+
+                    // Check if checkboxes or radios are selected ...
+                    if (el.type === "checkbox" || el.type === "radio") {
+                        return el.checked;
+                    }
+
+                    // ... or inputs have a value set.
+                    // TODO: are multiple non-check/radio inputs with same name even possible?
+                    return el.value !== undefined;
+                });
+
+                if (max_values !== null && valued_siblings.length > max_values) {
+                    this.set_error({
+                        input: input,
+                        msg: input_options.message["max-values"],
+                        max: max_values,
+                    })
+                }
+                if (min_values !== null && valued_siblings.length < min_values) {
+                    this.set_error({
+                        input: input,
+                        msg: input_options.message["min-values"],
+                        min: min_values,
+                    })
                 }
             }
 
