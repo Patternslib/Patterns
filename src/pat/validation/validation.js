@@ -82,32 +82,32 @@ class Pattern extends BasePattern {
             ...this.el.querySelectorAll(this.options.disableSelector),
         ];
 
-        for (const [cnt, input] of this.inputs.entries()) {
-            // Cancelable debouncer.
-            const debouncer = utils.debounce((e) => {
-                logger.debug("Checking input for event", input, e);
-                this.check_input({ input: input, event: e });
-            }, this.options.delay);
+        // Cancelable debouncer.
+        const debouncer = utils.debounce((e) => {
+            const input = e.target;
+            logger.debug("Checking input for event", input, e);
+            this.check_input({ input: input, event: e });
+        }, this.options.delay);
 
-            events.add_event_listener(
-                input,
-                "input",
-                `pat-validation--input-${input.name}--${cnt}--validator`,
-                (e) => debouncer(e)
-            );
-            events.add_event_listener(
-                input,
-                "change",
-                `pat-validation--change-${input.name}--${cnt}--validator`,
-                (e) => debouncer(e)
-            );
-            events.add_event_listener(
-                input,
-                "blur",
-                `pat-validation--blur-${input.name}--${cnt}--validator`,
-                (e) => debouncer(e)
-            );
-        }
+        events.add_event_listener(
+            this.el,
+            "input",
+            `pat-validation--input--validator`,
+            (e) => dom.is_input(e.target) && debouncer(e)
+        );
+        events.add_event_listener(
+            this.el,
+            "change",
+            `pat-validation--change--validator`,
+            (e) => dom.is_input(e.target) && debouncer(e)
+        );
+        events.add_event_listener(
+            this.el,
+            "blur",
+            `pat-validation--blur--validator`,
+            (e) => dom.is_input(e.target) && debouncer(e)
+        );
+
     }
 
     check_input({ input, event, stop = false }) {
