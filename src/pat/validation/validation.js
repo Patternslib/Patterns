@@ -61,7 +61,11 @@ class Pattern extends BasePattern {
         );
 
         this.initialize_inputs();
-        $(this.el).on("pat-update", () => {
+        $(this.el).on("pat-update", (e) => {
+            if (e.detail.pattern === "validation") {
+                // Don't reinitialize the inputs after a validation change.
+                return;
+            }
             this.initialize_inputs();
         });
 
