@@ -115,6 +115,45 @@
             yellow</label>
         </fieldset>
 
+        <fieldset class="group pat-checklist">
+          <legend>Available moods</legend>
+          <label>
+            Happy
+            <input type="checkbox"
+                   name="moods[]"
+                   value="happy"
+                   data-pat-validation="min-values: 1; max-values: 3"
+            />
+          </label>
+          <label>
+            Sad
+            <input
+                   type="checkbox"
+                   name="moods[]"
+                   value="sad"
+                   data-pat-validation="min-values: 1; max-values: 3"
+            />
+          </label>
+          <label>
+            Friendly
+            <input
+                   type="checkbox"
+                   name="moods[]"
+                   value="friendly"
+                   data-pat-validation="min-values: 1; max-values: 3"
+            />
+          </label>
+          <label>
+            Grumpy
+            <input
+                   type="checkbox"
+                   name="moods[]"
+                   value="grumpy"
+                   data-pat-validation="min-values: 1; max-values: 3"
+            />
+          </label>
+        </fieldset>
+
         <hr />
 
         <label>Planning start
