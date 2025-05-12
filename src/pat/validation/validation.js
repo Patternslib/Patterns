@@ -257,7 +257,7 @@ class Pattern extends BasePattern {
 
             if (!validity_state.customError) {
                 // No error to handle. Return.
-                this.remove_error(input, true);
+                this.remove_error({ input });
                 return;
             }
         } else {
@@ -354,8 +354,13 @@ class Pattern extends BasePattern {
         }
     }
 
-    remove_error(input, all_of_group = false, skip_event = false) {
-        // Remove error message and related referencesfrom input.
+    remove_error({
+        input,
+        all_of_group = true,
+        clear_state = true,
+        skip_event = false,
+    }) {
+        // Remove error message and related references from input.
 
         let inputs = [input];
         if (all_of_group) {
@@ -363,6 +368,9 @@ class Pattern extends BasePattern {
             inputs = this.inputs.filter((it) => it.name === input.name);
         }
         for (const it of inputs) {
+            if (clear_state) {
+                this.set_error({ input: it, msg: "", skip_event: true });
+            }
             const error_node = it[KEY_ERROR_EL];
             it[KEY_ERROR_EL] = null;
             error_node?.remove();
@@ -385,7 +393,12 @@ class Pattern extends BasePattern {
 
     set_error_message(input) {
         // First, remove the old error message.
-        this.remove_error(input, false, true);
+        this.remove_error({
+            input,
+            all_of_group: false,
+            clear_state: false,
+            skip_event: true
+        });
 
         // Do not set a error message for a input group like radio buttons or
         // checkboxes where one has already been set.
