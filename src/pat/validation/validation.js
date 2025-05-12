@@ -47,14 +47,11 @@ class Pattern extends BasePattern {
             this.form,
             "submit",
             `pat-validation--submit--validator`,
-            (e) => {
+            (event) => {
                 // On submit, check all.
                 // Immediate, non-debounced check with submit. Otherwise submit
                 // is not cancelable.
-                for (const input of this.inputs) {
-                    logger.debug("Checking input for submit", input, e);
-                    this.check_input({ input: input, event: e });
-                }
+                this.validate_all(event);
             },
             // Make sure this event handler is run early, in the capturing
             // phase in order to be able to cancel later non-capturing submit
@@ -70,6 +67,13 @@ class Pattern extends BasePattern {
         // Set ``novalidate`` attribute to disable the browser's validation
         // bubbles but not disable the validation API.
         this.form.setAttribute("novalidate", "");
+    }
+
+    validate_all(event) {
+        // Check all inputs.
+        for (const input of this.inputs) {
+            this.check_input({ input: input, event: event, stop: true });
+        }
     }
 
     initialize_inputs() {
@@ -426,10 +430,7 @@ class Pattern extends BasePattern {
         // and after the submit button is disabled there is no way for the user
         // to check the whole form at once.
         if (did_disable) {
-            logger.debug("Checking whole form after element was disabled.");
-            for (const _input of this.inputs.filter((it) => it !== input)) {
-                this.check_input({ input: _input, stop: true });
-            }
+            this.validate_all();
         }
     }
 
