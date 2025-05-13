@@ -538,6 +538,32 @@ describe("pat-validation", function () {
             expect(event.detail.dom).toBe(el);
             expect(event.detail.action).toBe("valid");
         });
+
+        it("1.22 - Supports validation of inputs outside forms.", async function () {
+            document.body.innerHTML = `
+                <input name="outside" form="form" required/>
+                <form class="pat-validation" id="form">
+                </form>
+                <button form="form">submit</button>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const input = document.querySelector("[name=outside]");
+            const button = document.querySelector("button");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            input.value = "";
+            input.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+            // Skip, as jsDOM does not support the `:invalid` or `:valid`
+            // pseudo selectors on forms.
+            //expect(form.matches(":invalid")).toBe(true);
+            expect(input.matches(":invalid")).toBe(true);
+            expect(button.matches(":disabled")).toBe(true);
+        });
     });
 
     describe("2 - required inputs", function () {
