@@ -22,9 +22,13 @@ parser.addArgument("message-min", ""); // "This value must be greater than or eq
 parser.addArgument("message-number", ""); // "This value must be a number"
 parser.addArgument("message-required", ""); // "This field is required"
 parser.addArgument("message-equality", "is not equal to %{attribute}.");
+parser.addArgument("message-min-values", "You need to select at least %{count} item(s).");
+parser.addArgument("message-max-values", "You need to select at most %{count} item(s).");
 parser.addArgument("not-after", null);
 parser.addArgument("not-before", null);
 parser.addArgument("equality", null);
+parser.addArgument("min-values", null);
+parser.addArgument("max-values", null);
 parser.addArgument("delay", 100); // Delay before validation is done to avoid validating while typing.
 
 // Aliases
@@ -260,6 +264,56 @@ class Pattern extends BasePattern {
                     logger.debug("Check `no-before` input.", not_after_el);
                     this.check_input({ input: not_before_el, stop: true });
                 }
+            } else if (input_options.minValues || input_options.maxValues) {
+                const min_values = input_options.minValues !== null && parseInt(input_options.minValues, 10) || null;
+                const max_values = input_options.maxValues !== null && parseInt(input_options.maxValues, 10) || null;
+
+                let number_values = 0;
+                for (const _inp of this.form.elements) {
+                    // Filter for siblings with same name.
+                    if (
+                        // Keep only inputs with same name
+                        _inp.name !== input.name
+                        // Skip all form elements which are no input elements
+                        || ! ["INPUT", "SELECT", "TEXTAREA"].includes(_inp.tagName)
+                    ) {
+                        continue;
+                    }
+
+                    // Check if checkboxes or radios are checked ...
+                    if (_inp.type === "checkbox" || _inp.type === "radio") {
+                        if (_inp.checked) {
+                            number_values++;
+                        }
+                        continue;
+                    }
+
+                    // Select, if select is selected.
+                    if (_inp.tagName === "SELECT") {
+                        number_values += _inp.selectedOptions.length;
+                        continue;
+                    }
+
+                    // For the rest a value must be set.
+                    if (_inp.value === 0 || _inp.value) {
+                        number_values++;
+                    }
+                }
+
+                if (max_values !== null && number_values > max_values) {
+                    this.set_error({
+                        input: input,
+                        msg: input_options.message["max-values"],
+                        max: max_values,
+                    })
+                }
+                if (min_values !== null && number_values < min_values) {
+                    this.set_error({
+                        input: input,
+                        msg: input_options.message["min-values"],
+                        min: min_values,
+                    })
+                }
             }
 
             if (!validity_state.customError) {
@@ -350,7 +404,11 @@ class Pattern extends BasePattern {
         }
         msg = msg.replace(/%{value}/g, JSON.stringify(input.value));
 
-        input.setCustomValidity(msg);
+        // Set the error state the input itself and on all siblings, if any.
+        const inputs = [...this.form.elements].filter((_input) => _input.name === input.name);
+        for (const _input of inputs) {
+            _input.setCustomValidity(msg);
+        }
         // Store the error message on the input.
         // Hidden inputs do not participate in validation but we need this
         // (e.g. styled date input).

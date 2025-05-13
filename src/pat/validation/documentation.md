@@ -20,6 +20,7 @@ These extra validation rules are:
 
 - Equality checking between two fields (e.g. password confirmation).
 - Date and datetime validation for before and after a given date or another input field.
+- Minimum and maximum number of checked, selected or filled-out fields. Most useful for checkboxes, but also works for text-inputs, selects and other form elements.
 
 
 ### HTML form validation framework integration.
@@ -146,7 +147,11 @@ More information on the `form` attribute can be found at [MDN](https://developer
 | message-number   | The error message for numbers.                                                                                             | This value must be a number.                         | String                                 |
 | message-required | The error message for required fields.                                                                                     | This field is required.                              | String                                 |
 | message-equality | The error message for fields required to be equal                                                                          | is not equal to %{attribute}                         | String                                 |
+| message-min-values | The error message when the minimim number of checked, selected or filled-out fields has not been reached.                | You need to select at least %{count} item(s).        | String                                 |
+| message-max-values | The error message when the maximum number of checked, selected or filled-out fields has not been reached.                | You need to select at most %{count} item(s).         | String                                 |
 | equality         | Field-specific extra rule. The name of another input this input should equal to (useful for password confirmation).        |                                                      | String                                 |
 | not-after        | Field-specific extra rule. A lower time limit restriction for date and datetime fields.                                    |                                                      | CSS Selector or a ISO8601 date string. |
 | not-before       | Field-specific extra rule. An upper time limit restriction for date and datetime fields.                                   |                                                      | CSS Selector or a ISO8601 date string. |
+| min-values       | Minimum number of checked, selected or filled out form elements.                                                           | null                                                 | Integer (or null)                      |
+| max-values       | Maximum number of checked, selected or filled out form elements.                                                           | null                                                 | Integer (or null)                      |
 | delay            | Time in milliseconds before validation starts to avoid validating while typing.                                            | 100                                                  | Integer                                |
