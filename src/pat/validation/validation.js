@@ -27,10 +27,8 @@ parser.addArgument("not-before", null);
 parser.addArgument("equality", null);
 parser.addArgument("delay", 100); // Delay before validation is done to avoid validating while typing.
 
-// BBB
-// TODO: deprecated. Will be removed with next major version.
+// Aliases
 parser.addAlias("message-integer", "message-number");
-parser.addArgument("error-template");
 
 const KEY_ERROR_EL = "__patternslib__input__error__el";
 const KEY_ERROR_MSG = "__patternslib__input__error__msg";
