@@ -660,7 +660,6 @@ describe("pat-autosuggest", function () {
             const results_2 = $(
                 document.querySelectorAll(".select2-results .select2-result")
             );
-            console.log(document.body.innerHTML);
             expect(results_2.length).toBe(6);
 
             const load_more_2 = $(

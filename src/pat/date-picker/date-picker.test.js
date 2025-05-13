@@ -212,10 +212,8 @@ describe("pat-date-picker", function () {
             document.body.innerHTML =
                 '<input type="date" class="pat-date-picker" value="2018-10-21" data-pat-date-picker="i18n:/path/to/i18njson" />';
             const el = document.querySelector("input[type=date]");
-            console.log(document.body.innerHTML);
             pattern.init(el);
             await utils.timeout(1); // wait a tick for async to settle.
-            console.log(document.body.innerHTML);
             const display_el = document.querySelector("time");
             display_el.click();
 
