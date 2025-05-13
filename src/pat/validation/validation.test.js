@@ -597,6 +597,50 @@ describe("pat-validation", function () {
             expect(inside.matches(":invalid")).toBe(false);
             expect(document.querySelectorAll("em.warning").length).toBe(0);
         });
+
+        it("1.23 - Puts the warning at the end of same-name inputs.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation" id="form">
+                   <input name="group" type="radio" required/>
+                   <input name="group" type="radio" required/>
+                   <input name="group" type="radio" required/>
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            const warning = form.querySelector("em.warning");
+            expect(warning).toBeTruthy();
+            expect(warning.matches("input:nth-child(3) + em.warning")).toBe(true);
+        });
+
+        it("1.23.1 - Puts the warning after the label of label-wrapped inputs.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation" id="form">
+                    <fieldset>
+                        <label><input name="group" type="radio" required/> One</label>
+                        <label><input name="group" type="radio" required/> Two</label>
+                    </fieldset>
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            const warnings = form.querySelectorAll("em.warning");
+            expect(warnings.length).toBe(1);
+            expect(warnings[0].parentElement.tagName).toBe("FIELDSET");
+            expect(warnings[0].matches("label:nth-child(2) + em.warning")).toBe(true);
+        });
     });
 
     describe("2 - required inputs", function () {

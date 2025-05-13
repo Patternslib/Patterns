@@ -506,15 +506,12 @@ class Pattern extends BasePattern {
             this.error_template(validation_message),
         ).firstChild;
 
-        let fieldset;
-        if (input.type === "radio" || input.type === "checkbox") {
-            fieldset = input.closest("fieldset.pat-checklist");
-        }
-        if (fieldset) {
-            fieldset.append(error_node);
-        } else {
-            input.after(error_node);
-        }
+        // Put error message after the erroneous input or - in case of
+        // multiple inputs with the same name - after the last one of the
+        // group. If the input is wrapped in a label, put the error message
+        // after the label.
+        const last_input = inputs.pop();
+        (last_input.closest("label") || last_input).after(error_node);
         input[KEY_ERROR_EL] = error_node;
 
         let did_disable = false;
