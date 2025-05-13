@@ -89,10 +89,10 @@ In addition both the input element and its label will get an `warning` class.
 </label>
 ```
 
-Checkboxes and radio buttons are treated differently: if they are contained in a fieldset with class `checklist` error messages are added at the end of the fieldset.
+Checkboxes and radio buttons are treated differently: The error message is alywas set after the last element of the inputs with the same name.
 
 ```html
-<fieldset class="checklist radio">
+<fieldset>
     <label><input type="radio" name="radio" /> Strawberry</label>
     <label><input type="radio" name="radio" /> Banana</label>
     <label><input type="radio" name="radio" /> Raspberry</label>
