@@ -10,17 +10,17 @@ import utils from "../../core/utils";
 import registry from "../../core/registry";
 
 const logger = logging.getLogger("pat-validation");
-//logger.setLevel(logging.Level.DEBUG);
+
 
 export const parser = new Parser("validation");
 parser.addArgument("disable-selector", "[type=submit], button:not([type=button])"); // Elements which must be disabled if there are errors
-parser.addArgument("message-date", ""); // "This value must be a valid date");
-parser.addArgument("message-datetime", ""); // "This value must be a valid date and time");
-parser.addArgument("message-email", ""); // "This value must be a valid email address");
-parser.addArgument("message-max", ""); // "This value must be less than or equal to %{count}");
-parser.addArgument("message-min", ""); // "This value must be greater than or equal to %{count}"); // prettier-ignore
-parser.addArgument("message-number", ""); // "This value must be a number");
-parser.addArgument("message-required", ""); // "This field is required");
+parser.addArgument("message-date", ""); // "This value must be a valid date"
+parser.addArgument("message-datetime", ""); // "This value must be a valid date and time"
+parser.addArgument("message-email", ""); // "This value must be a valid email address"
+parser.addArgument("message-max", ""); // "This value must be less than or equal to %{count}"
+parser.addArgument("message-min", ""); // "This value must be greater than or equal to %{count}"
+parser.addArgument("message-number", ""); // "This value must be a number"
+parser.addArgument("message-required", ""); // "This field is required"
 parser.addArgument("message-equality", "is not equal to %{attribute}.");
 parser.addArgument("not-after", null);
 parser.addArgument("not-before", null);
@@ -121,19 +121,7 @@ class Pattern extends BasePattern {
             return;
         }
 
-        logger.debug(`
-            validity_state.badInput ${validity_state.badInput}
-            validity_state.customError ${validity_state.customError}
-            validity_state.patternMismatch ${validity_state.patternMismatch}
-            validity_state.rangeOverflow ${validity_state.rangeOverflow}
-            validity_state.rangeUnderflow ${validity_state.rangeUnderflow}
-            validity_state.stepMismatch ${validity_state.stepMismatch}
-            validity_state.tooLong ${validity_state.tooLong}
-            validity_state.tooShort ${validity_state.tooShort}
-            validity_state.typeMismatch ${validity_state.typeMismatch}
-            validity_state.valid ${validity_state.valid}
-            validity_state.valueMissing ${validity_state.valueMissing}
-        `);
+        logger.debug(`validity_state: `, validity_state);
 
         const input_options = parser.parse(input);
 
