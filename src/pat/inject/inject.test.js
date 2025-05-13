@@ -1916,9 +1916,6 @@ describe("pat-inject", function () {
                 inject.click();
                 await utils.timeout(1); // wait a tick for async to settle.
 
-
-                console.log(document.body.outerHTML);
-
                 const injected = document.querySelectorAll("table tr");
                 expect(injected.length).toBe(1);
             });
