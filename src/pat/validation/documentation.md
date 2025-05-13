@@ -1,7 +1,9 @@
 ## Description
 
-This pattern provides form validation based on the HTML standard and offers extended functionality like custom error messages and extra validation rules.
-
+This pattern provides form validation with standard HTML validation attributes,
+extra validation rules, custom error messages and a custom error template. It
+is based HTML form validation framework and therefor supports form state
+checking via CSS peudo classes like `:valid` and `:invalid`.
 
 ## Documentation
 
@@ -10,13 +12,23 @@ The rest is handled mostly with standard HTML validation attributes.
 
 This patterns offers:
 
-- extra validation rules like checking for equality or checking is one date it after another.
-- custom error messages.
+- Custom error messages for the standard HTML validation attributes.
+- Custom error template to display error messages.
+- Extra validation rules where the standard HTML validation attributes are not enough.
 
-Since it is based on the HTML standard you can still use the `:valid`, `:invalid` and `:out-of-range` CSS pseudo classes.
+These extra validation rules are:
 
-You can use any HTML form validation attributes but here are some examples:
+- Equality checking between two fields (e.g. password confirmation).
+- Date and datetime validation for before and after a given date or another input field.
 
+
+### HTML form validation framework integration.
+
+This pattern uses the [JavaScript Constraint Validation API](https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Constraint_validation).
+Valid formns or inputs can be selected with the `:valid` pseudo class, invalid ones with the `:invalid` pseudo class.
+
+
+### Validation rules
 
 | Name          | Syntax                     | Description                                                  |
 | ------------- | -------------------------- | ------------------------------------------------------------ |
@@ -31,64 +43,94 @@ You can use any HTML form validation attributes but here are some examples:
 > **_NOTE:_**  The form inputs must have a `name` attribute, otherwise the validation would not happen.
 
 
-### Error messages
+### Custom error messages
+
+Error messages are unique per type of validation (e.g. `required`, `email` or `number`) and can be overridden:
+
+```html
+<form method="post" class="pat-validation"
+    data-pat-validation="
+        message-date: This value must be a valid date;
+        message-datetime: This value must be a valid date and time;
+        message-email: This value must be a valid email address;
+        message-number: This value must be a number;
+        message-required: This field is required;">
+    <!-- Form fields come here -->
+</form>
+```
+
+Error messages can also be overridden on a per-field basis, for example:
+
+```html
+<input
+    type="date"
+    name="date"
+    data-pat-validation="
+        not-after: #planning-end-${number};
+        message-date: This date must be on or before the end date.
+    "
+/>
+```
+
+For a list of all available error messages see the [Options reference](#options-reference).
+
+
+### Error message rendering
 
 Error messages are inserted into the DOM as `em` elements with a `message warning` class.
 For most input elements error messages are inserted immediately after the input element.
 In addition both the input element and its label will get an `warning` class.
 
-    <label class="warning">First name
-        <input type="text" required="required" />
-        <em class="message warning">Please fill out this field</em>
-    </label>
+```html
+<label class="warning">First name
+    <input type="text" required="required" />
+    <em class="message warning">Please fill out this field</em>
+</label>
+```
 
 Checkboxes and radio buttons are treated differently: if they are contained in a fieldset with class `checklist` error messages are added at the end of the fieldset.
 
-    <fieldset class="checklist radio">
-        <label><input type="radio" name="radio" /> Strawberry</label>
-        <label><input type="radio" name="radio" /> Banana</label>
-        <label><input type="radio" name="radio" /> Raspberry</label>
-        <em class="message warning">Please make a choice</em>
-    </fieldset>
+```html
+<fieldset class="checklist radio">
+    <label><input type="radio" name="radio" /> Strawberry</label>
+    <label><input type="radio" name="radio" /> Banana</label>
+    <label><input type="radio" name="radio" /> Raspberry</label>
+    <em class="message warning">Please make a choice</em>
+</fieldset>
+```
 
-#### Overriding error messages
+The error message template is be overridden via JavaScript by customizing the error_template method of the Pattern API.
+This is an [example taken from Mockup](https://github.com/plone/mockup/blob/6c93b810b2c07b5bd58eec80cd03f700c9447d8c/src/patterns.js#L67):
 
-Error messages are unique per type of validation (e.g. `required`, `email` or `number`) and can be overridden:
+```javascript
+import { Pattern as ValidationPattern } from "@patternslib/patternslib/src/pat/validation/validation";
 
-    <form method="post" class="pat-validation"
-        data-pat-validation="
-            message-date: This value must be a valid date;
-            message-datetime: This value must be a valid date and time;
-            message-email: This value must be a valid email address;
-            message-number: This value must be a number;
-            message-required: This field is required;">
-
-        <!-- Form fields come here -->
-
-    </form>
-
-Error messages can also be overridden on a per-field basis, for example:
-
-    <input type="date" name="date" data-pat-validation="not-after: #planning-end-${number}; message-date: This date must be on or before the end date."/>
+ValidationPattern.prototype.error_template = (message) =>
+    `<em class="invalid-feedback">${message}</em>`;
+```
 
 ### Options reference
 
-> **_NOTE:_**  The form inputs must have a `name` attribute, otherwise the validation would not happen.
+> **_NOTE:_**  The form inputs must have a `name` attribute, otherwise the
+> validation would not happen.
 
-> **_NOTE:_**  If you need to exclude a submit button from form validation - like a cancel button which actually submits - add the `formnovalidate` attribute to the button.
+> **_NOTE:_**  If you need to exclude a submit button from form validation -
+> like a cancel button which actually submits - add the `formnovalidate`
+> attribute to the button.
 
 
 | Property         | Description                                                                                                                | Default                                              | Type                                   |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------- |
 | disable-selector | A selector for elements that should be disabled when there are errors in the form.                                         |                                                      | CSS Selector                           |
-| equality         | Field-specific. The name of another input this input should equal to (useful for password confirmation).                   |                                                      | String                                 |
 | message-date     | The error message for date fields.                                                                                         | This value must be a valid date                      | String                                 |
 | message-datetime | The error message for datetime fields.                                                                                     | This value must be a valid date and time             | String                                 |
 | message-email    | The error message for email fields.                                                                                        | This value must be a valid email address             | String                                 |
-| message-equality | The error message for fields required to be equal                                                                          | is not equal to %{attribute}                         | String                                 |
-| message-max      | The error message for max number values.                                                                                   | This value must be less than or equal to %{count}    | String                                 |
-| message-min      | The error message for min number values.                                                                                   | This value must be greater than or equal to %{count} | String                                 |
+| message-max      | The error message for number values which are higher than max.                                                             | This value must be less than or equal to %{count}    | String                                 |
+| message-min      | The error message for number values which are lower than min.                                                              | This value must be greater than or equal to %{count} | String                                 |
 | message-number   | The error message for numbers.                                                                                             | This value must be a number.                         | String                                 |
 | message-required | The error message for required fields.                                                                                     | This field is required.                              | String                                 |
-| not-after        | Field-specific. A lower time limit restriction for date and datetime fields.                                               |                                                      | CSS Selector or a ISO8601 date string. |
-| not-before       | Field-specific. An upper time limit restriction for date and datetime fields.                                              |                                                      | CSS Selector or a ISO8601 date string. |
+| message-equality | The error message for fields required to be equal                                                                          | is not equal to %{attribute}                         | String                                 |
+| equality         | Field-specific extra rule. The name of another input this input should equal to (useful for password confirmation).        |                                                      | String                                 |
+| not-after        | Field-specific extra rule. A lower time limit restriction for date and datetime fields.                                    |                                                      | CSS Selector or a ISO8601 date string. |
+| not-before       | Field-specific extra rule. An upper time limit restriction for date and datetime fields.                                   |                                                      | CSS Selector or a ISO8601 date string. |
+| delay            | Time in milliseconds before validation starts to avoid validating while typing.                                            | 100                                                  | Integer                                |
