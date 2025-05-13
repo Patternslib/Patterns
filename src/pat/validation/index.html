@@ -115,8 +115,6 @@
             yellow</label>
         </fieldset>
 
-        <hr />
-
         <label>Planning start
           <input class="pat-date-picker"
                  id="planning-start"
@@ -134,8 +132,7 @@
                  autocomplete="off"
                  name="measure.planning_end:records"
                  type="date"
-                 value="2015-09-10"
-                 data-pat-date-picker="after: #planning-start"
+                 value="2015-09-09"
                  data-pat-validation="not-before: #planning-start; message-date: This date must be on or after the start date."
           />
         </label>
@@ -248,6 +245,154 @@
           <button formnovalidate>Cancel</button>
         </fieldset>
       </fieldset>
+    </form>
+
+    <h2>Demo with max-values / min-values support</h2>
+    <form class="pat-validation pat-checklist"
+          action="."
+          method="post"
+    >
+        <fieldset>
+          <legend>Multi select</legend>
+          <select
+              name="select"
+              multiple
+              required
+              data-pat-validation="
+                min-values: 2;
+                max-values: 3;
+              "
+          >
+              <option value="a">a</option>
+              <option value="b">b</option>
+              <option value="c">c</option>
+              <option value="d">d</option>
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <legend>Multiple checkboxes</legend>
+          <label>
+            a
+            <input
+                type="checkbox"
+                name="checkbox[]"
+                value="a"
+                data-pat-validation="
+                  min-values: 1;
+                  max-values: 3;
+                "
+            />
+          </label>
+          <label>
+            b
+            <input
+                type="checkbox"
+                name="checkbox[]"
+                value="b"
+                data-pat-validation="
+                  min-values: 1;
+                  max-values: 3;
+                "
+            />
+          </label>
+          <label>
+            c
+            <input
+                type="checkbox"
+                name="checkbox[]"
+                value="c"
+                data-pat-validation="
+                  min-values: 1;
+                  max-values: 3;
+                "
+            />
+          </label>
+          <label>
+            d
+            <input
+                type="checkbox"
+                name="checkbox[]"
+                value="d"
+                data-pat-validation="
+                  min-values: 1;
+                  max-values: 3;
+                "
+            />
+          </label>
+        </fieldset>
+
+        <fieldset
+            data-pat-validation="
+                min-values: 2;
+                max-values: 3;
+            "
+        >
+          <legend>Demo with mixed inputs and max/min values support.</legend>
+          <fieldset>
+            <select
+                name="multiple"
+                multiple
+            >
+                <option value="a">a</option>
+                <option value="b">b</option>
+                <option value="c">c</option>
+                <option value="d">d</option>
+            </select>
+          </fieldset>
+          <fieldset>
+            <label>
+              a
+              <input
+                  type="checkbox"
+                  name="multiple"
+                  value="a"
+              />
+            </label>
+            <label>
+              b
+              <input
+                  type="checkbox"
+                  name="multiple"
+                  value="b"
+              />
+            </label>
+            <label>
+              c
+              <input
+                  type="checkbox"
+                  name="multiple"
+                  value="c"
+              />
+            </label>
+            <label>
+              d
+              <input
+                  type="checkbox"
+                  name="multiple"
+                  value="d"
+              />
+            </label>
+          </fieldset>
+          <fieldset>
+            <label>
+              input 1
+              <input name="multiple"/>
+            </label>
+            <label>
+              input 2
+              <input name="multiple"/>
+            </label>
+            <label>
+              input 3
+              <input name="multiple"/>
+            </label>
+          </fieldset>
+        </fieldset>
+        <fieldset class="buttons">
+          <button>Submit</button>
+          <button formnovalidate>Cancel</button>
+        </fieldset>
     </form>
 
     <div class="pat-modal">
