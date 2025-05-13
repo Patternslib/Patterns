@@ -42,8 +42,12 @@ class Pattern extends BasePattern {
     static order = 100;
 
     init() {
+        // The element is the form - make it clearer in the code what we're
+        // referring to.
+        this.form = this.el;
+
         this.add_event_listener(
-            this.el,
+            this.form,
             "submit",
             "submit",
             async (e) => {
@@ -62,19 +66,19 @@ class Pattern extends BasePattern {
         );
 
         this.initialize_inputs();
-        $(this.el).on("pat-update", () => {
+        $(this.form).on("pat-update", () => {
             this.initialize_inputs();
         });
 
         // Set ``novalidate`` attribute to disable the browser's validation
         // bubbles but not disable the validation API.
-        this.el.setAttribute("novalidate", "");
+        this.form.setAttribute("novalidate", "");
     }
 
     initialize_inputs() {
         const previous_inputs = this.inputs || [];
         this.inputs = [
-            ...this.el.querySelectorAll("input[name], select[name], textarea[name]"),
+            ...this.form.querySelectorAll("input[name], select[name], textarea[name]"),
         ];
 
         // Remove the listeners from inputs which are gone.
@@ -86,7 +90,7 @@ class Pattern extends BasePattern {
             }
         }
         this.disabled_elements = [
-            ...this.el.querySelectorAll(this.options.disableSelector),
+            ...this.form.querySelectorAll(this.options.disableSelector),
         ];
 
         for (const input of this.inputs) {
@@ -133,7 +137,7 @@ class Pattern extends BasePattern {
 
             if (
                 input_options.equality &&
-                this.el.querySelector(`[name=${input_options.equality}]`)?.value !==
+                this.form.querySelector(`[name=${input_options.equality}]`)?.value !==
                     input.value
             ) {
                 const message =
@@ -368,7 +372,7 @@ class Pattern extends BasePattern {
         }
 
         // disable selector
-        if (this.el.checkValidity()) {
+        if (this.form.checkValidity()) {
             for (const it of this.disabled_elements) {
                 if (it.disabled) {
                     it.removeAttribute("disabled");
