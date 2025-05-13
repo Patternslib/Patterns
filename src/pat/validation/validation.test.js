@@ -564,6 +564,27 @@ describe("pat-validation", function () {
             expect(input.matches(":invalid")).toBe(true);
             expect(button.matches(":disabled")).toBe(true);
         });
+
+        it("1.23 - Puts the warning at the end of same-name inputs.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation" id="form">
+                   <input name="group" type="radio" required/>
+                   <input name="group" type="radio" required/>
+                   <input name="group" type="radio" required/>
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            const warning = form.querySelector("em.warning");
+            expect(warning).toBeTruthy();
+            expect(warning.matches("input:nth-child(3) + em.warning")).toBe(true);
+        });
     });
 
     describe("2 - required inputs", function () {
