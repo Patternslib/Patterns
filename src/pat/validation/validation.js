@@ -104,7 +104,11 @@ class Pattern extends BasePattern {
         }
     }
 
-    check_input({ input, event, stop = false }) {
+    check_input({
+        input, // Input to check.
+        event = null, // Optional event which triggered the check.
+        stop = false // Stop flag to avoid infinite loops. Will not check dependent inputs.
+    }) {
         if (input.disabled) {
             // No need to check disabled inputs.
             return;
@@ -413,11 +417,10 @@ class Pattern extends BasePattern {
             }
         }
 
-        // Do an initial check of the whole form when a form element (e.g. the
-        // submit button) was disabled. We want to show the user all possible
-        // errors at once and after the submit button is disabled there is no
-        // way to check the whole form at once. ... well we also do not want to
-        // check the whole form when one input was changed....
+        // Check the whole form when a form element (e.g. the submit button)
+        // was disabled. We want to show the user all possible errors at once
+        // and after the submit button is disabled there is no way for the user
+        // to check the whole form at once.
         if (did_disable) {
             logger.debug("Checking whole form after element was disabled.");
             for (const _input of this.inputs.filter((it) => it !== input)) {
