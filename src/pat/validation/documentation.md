@@ -109,6 +109,22 @@ ValidationPattern.prototype.error_template = (message) =>
     `<em class="invalid-feedback">${message}</em>`;
 ```
 
+
+### Form elements outside the form
+
+Input elements outside of form elements are fully supported.
+pat-validation can handle structures like these:
+
+```html
+<input name="outside" form="myform" required>
+<form id="myform">
+</form>
+<button form="myform">submit</button>
+```
+
+More information on the `form` attribute can be found at [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#form).
+
+
 ### Options reference
 
 > **_NOTE:_**  The form inputs must have a `name` attribute, otherwise the

@@ -72,6 +72,20 @@ class Pattern extends BasePattern {
         this.form.setAttribute("novalidate", "");
     }
 
+    get inputs() {
+        // Return all inputs elements
+        return [...this.form.elements].filter((input) =>
+            input.matches("input[name], select[name], textarea[name]"),
+        );
+    }
+
+    get disableable() {
+        // Return all elements, which should be disabled when there are errors.
+        return [...this.form.elements].filter((input) =>
+            input.matches(this.options.disableSelector),
+        );
+    }
+
     async validate_all(event) {
         // Check all inputs.
         for (const input of this.inputs) {
@@ -80,24 +94,19 @@ class Pattern extends BasePattern {
     }
 
     initialize_inputs() {
-        const previous_inputs = this.inputs || [];
-        this.inputs = [
-            ...this.form.querySelectorAll("input[name], select[name], textarea[name]"),
-        ];
+        const inputs = this.inputs;
 
         // Remove the listeners from inputs which are gone.
-        for (const input of previous_inputs) {
-            if (!this.inputs.includes(input)) {
+        for (const input of this._initialized_inputs || []) {
+            if (!inputs.includes(input)) {
                 for (const event_type of ["input", "change", "blur"]) {
                     this.remove_event_listener(input, event_type);
                 }
             }
         }
-        this.disabled_elements = [
-            ...this.form.querySelectorAll(this.options.disableSelector),
-        ];
+        this._initialized_inputs = inputs;
 
-        for (const input of this.inputs) {
+        for (const input of inputs) {
             // Cancelable debouncer.
             const debouncer = utils.debounce((e) => {
                 logger.debug("Checking input for event", input, e);
@@ -141,8 +150,8 @@ class Pattern extends BasePattern {
 
             if (
                 input_options.equality &&
-                this.form.querySelector(`[name=${input_options.equality}]`)?.value !==
-                    input.value
+                this.inputs.find((_input) => _input.name === input_options.equality)
+                    ?.value !== input.value
             ) {
                 const message =
                     input_options.message.equality ||
@@ -372,7 +381,9 @@ class Pattern extends BasePattern {
         let inputs = [input];
         if (all_of_group) {
             // Get all inputs with the same name - e.g. radio buttons, checkboxes.
-            inputs = this.inputs.filter((it) => it.name === input.name);
+            inputs = [...this.form.elements].filter(
+                (_input) => _input.name === input.name,
+            );
         }
         for (const it of inputs) {
             if (clear_state) {
@@ -385,7 +396,7 @@ class Pattern extends BasePattern {
 
         // disable selector
         if (this.form.checkValidity()) {
-            for (const it of this.disabled_elements) {
+            for (const it of this.disableable) {
                 if (it.disabled) {
                     it.removeAttribute("disabled");
                     it.classList.remove("disabled");
@@ -404,12 +415,14 @@ class Pattern extends BasePattern {
             input,
             all_of_group: false,
             clear_state: false,
-            skip_event: true
+            skip_event: true,
         });
 
         // Do not set a error message for a input group like radio buttons or
         // checkboxes where one has already been set.
-        const inputs = this.inputs.filter((it) => it.name === input.name);
+        const inputs = [...this.form.elements].filter(
+            (_input) => _input.name === input.name,
+        );
         if (inputs.length > 1 && inputs.some((it) => !!it[KEY_ERROR_EL])) {
             // error message for input group already set.
             return;
@@ -441,7 +454,7 @@ class Pattern extends BasePattern {
         input[KEY_ERROR_EL] = error_node;
 
         let did_disable = false;
-        for (const it of this.disabled_elements) {
+        for (const it of this.disableable) {
             // Disable for melements if they are not already disabled and which
             // do not have set the `formnovalidate` attribute, e.g.
             // `<button formnovalidate>cancel</button>`.
