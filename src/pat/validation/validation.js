@@ -39,8 +39,12 @@ class Pattern extends BasePattern {
     static parser = parser;
 
     init() {
+        // The element is the form - make it clearer in the code what we're
+        // referring to.
+        this.form = this.el;
+
         events.add_event_listener(
-            this.el,
+            this.form,
             "submit",
             `pat-validation--submit--validator`,
             (e) => {
@@ -59,21 +63,21 @@ class Pattern extends BasePattern {
         );
 
         this.initialize_inputs();
-        $(this.el).on("pat-update", () => {
+        $(this.form).on("pat-update", () => {
             this.initialize_inputs();
         });
 
         // Set ``novalidate`` attribute to disable the browser's validation
         // bubbles but not disable the validation API.
-        this.el.setAttribute("novalidate", "");
+        this.form.setAttribute("novalidate", "");
     }
 
     initialize_inputs() {
         this.inputs = [
-            ...this.el.querySelectorAll("input[name], select[name], textarea[name]"),
+            ...this.form.querySelectorAll("input[name], select[name], textarea[name]"),
         ];
         this.disabled_elements = [
-            ...this.el.querySelectorAll(this.options.disableSelector),
+            ...this.form.querySelectorAll(this.options.disableSelector),
         ];
 
         for (const [cnt, input] of this.inputs.entries()) {
@@ -132,7 +136,7 @@ class Pattern extends BasePattern {
 
             if (
                 input_options.equality &&
-                this.el.querySelector(`[name=${input_options.equality}]`)?.value !==
+                this.form.querySelector(`[name=${input_options.equality}]`)?.value !==
                     input.value
             ) {
                 const message =
@@ -361,7 +365,7 @@ class Pattern extends BasePattern {
         }
 
         // disable selector
-        if (this.el.checkValidity()) {
+        if (this.form.checkValidity()) {
             for (const it of this.disabled_elements) {
                 if (it.disabled) {
                     it.removeAttribute("disabled");
