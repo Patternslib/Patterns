@@ -133,6 +133,16 @@ const registry = {
     },
 
     orderPatterns(patterns) {
+        // Resort patterns and set those with `sort_early` to the beginning.
+        // NOTE: Only use when necessary and it's not guaranteed that a pattern
+        // with `sort_early` is set to the beginning. Last come, first serve.
+        for (const name of [...patterns]) {
+            if (registry[name]?.sort_early) {
+                patterns.splice(patterns.indexOf(name), 1);
+                patterns.unshift(name);
+            }
+        }
+
         // Always add pat-validation as first pattern, so that it can prevent
         // other patterns from reacting to submit events if form validation
         // fails.
@@ -140,6 +150,7 @@ const registry = {
             patterns.splice(patterns.indexOf("validation"), 1);
             patterns.unshift("validation");
         }
+
         // Add clone-code to the very beginning - we want to copy the markup
         // before any other patterns changed the markup.
         if (patterns.includes("clone-code")) {
