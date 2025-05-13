@@ -1,6 +1,5 @@
 // Patterns validate - Form vlidation
 import "../../core/polyfills"; // SubmitEvent.submitter for Safari < 15.4 and jsDOM
-import $ from "jquery";
 import { BasePattern } from "../../core/basepattern";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
@@ -63,10 +62,56 @@ class Pattern extends BasePattern {
             { capture: true }
         );
 
-        this.initialize_inputs();
-        $(this.form).on("pat-update", () => {
-            this.initialize_inputs();
-        });
+        // Input debouncer map:
+        // - key: input element
+        // - value: debouncer function
+        // 1) We want do debounce the validation checks to avoid validating
+        //    while typing.
+        // 2) We want to debounce the input events individually, so that we can
+        //    do multiple checks in parallel and show multiple errors at once.
+        const input_debouncer_map = new Map();
+        const debounce_filter = (e) => {
+            const input = e.target;
+            if (input?.form !== this.form || ! this.inputs.includes(input)) {
+                // Ignore events from other forms or from elements which are
+                // not inputs.
+                return;
+            }
+
+            if (! input_debouncer_map.has(input)) {
+                // Create a new cancelable debouncer for this input.
+                input_debouncer_map.set(input, utils.debounce((e) => {
+                    logger.debug("Checking input for event", input, e);
+                    this.check_input({ input: input, event: e });
+                }, this.options.delay));
+            }
+
+            // Get the debouncer for this input.
+            const debouncer = input_debouncer_map.get(input);
+            // Debounce the validation check.
+            debouncer(input, e);
+        };
+
+        events.add_event_listener(
+            document,
+            "input",
+            `pat-validation--${this.uuid}--input--validator`,
+            (e) => debounce_filter(e)
+        );
+
+        events.add_event_listener(
+            document,
+            "change",
+            `pat-validation--${this.uuid}--change--validator`,
+            (e) => debounce_filter(e)
+        );
+
+        events.add_event_listener(
+            document,
+            "focusout",
+            `pat-validation--${this.uuid}--focusout--validator`,
+            (e) => debounce_filter(e)
+        );
 
         // Set ``novalidate`` attribute to disable the browser's validation
         // bubbles but not disable the validation API.
@@ -91,35 +136,6 @@ class Pattern extends BasePattern {
         // Check all inputs.
         for (const input of this.inputs) {
             this.check_input({ input: input, event: event, stop: true });
-        }
-    }
-
-    initialize_inputs() {
-        for (const [cnt, input] of this.inputs.entries()) {
-            // Cancelable debouncer.
-            const debouncer = utils.debounce((e) => {
-                logger.debug("Checking input for event", input, e);
-                this.check_input({ input: input, event: e });
-            }, this.options.delay);
-
-            events.add_event_listener(
-                input,
-                "input",
-                `pat-validation--input-${input.name}--${cnt}--validator`,
-                (e) => debouncer(e)
-            );
-            events.add_event_listener(
-                input,
-                "change",
-                `pat-validation--change-${input.name}--${cnt}--validator`,
-                (e) => debouncer(e)
-            );
-            events.add_event_listener(
-                input,
-                "blur",
-                `pat-validation--blur-${input.name}--${cnt}--validator`,
-                (e) => debouncer(e)
-            );
         }
     }
 

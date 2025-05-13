@@ -126,6 +126,12 @@ pat-validation can handle structures like these:
 More information on the `form` attribute can be found at [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#form).
 
 
+### Dynamic forms
+
+pat-validation supports dynamic forms where form elements are added after the Pattern was initialized.
+There is no need to re-initialize the pattern or to dispatch a special event.
+
+
 ### Options reference
 
 > **_NOTE:_**  The form inputs must have a `name` attribute, otherwise the
