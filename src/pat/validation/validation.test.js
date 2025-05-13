@@ -477,7 +477,7 @@ describe("pat-validation", function () {
             const instance = new Pattern(el);
             await events.await_pattern_init(instance);
 
-            document.querySelector("[name=i1]").dispatchEvent(events.blur_event());
+            document.querySelector("[name=i1]").dispatchEvent(events.focusout_event());
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect(el.querySelectorAll("em.warning").length).toBe(2);
@@ -498,7 +498,7 @@ describe("pat-validation", function () {
             const instance = new Pattern(el);
             await events.await_pattern_init(instance);
 
-            document.querySelector("[name=i1]").dispatchEvent(events.blur_event());
+            document.querySelector("[name=i1]").dispatchEvent(events.focusout_event());
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
@@ -584,6 +584,41 @@ describe("pat-validation", function () {
             const warning = form.querySelector("em.warning");
             expect(warning).toBeTruthy();
             expect(warning.matches("input:nth-child(3) + em.warning")).toBe(true);
+        });
+
+        it("1.24 - Supports dynamic forms.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation" id="form">
+                   <input name="input1" required/>
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const input1 = form.querySelector("[name=input1]");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+
+            input1.value = "ok";
+            input1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelectorAll("em.warning").length).toBe(0);
+
+            const input2 = document.createElement("input");
+            input2.name = "input2";
+            input2.required = true;
+            form.appendChild(input2);
+
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+            expect(document.querySelector("em.warning").matches("input[name=input2] + em.warning")).toBe(true);
         });
     });
 
