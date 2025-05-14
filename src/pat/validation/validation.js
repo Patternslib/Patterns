@@ -132,6 +132,11 @@ class Pattern extends BasePattern {
         );
     }
 
+    siblings(input) {
+        // Get all siblings of an input with the same name.
+        return this.inputs.filter((_input) => _input.name === input.name);
+    }
+
     validate_all(event) {
         // Check all inputs.
         for (const input of this.inputs) {
@@ -297,17 +302,7 @@ class Pattern extends BasePattern {
                 const max_values = input_options.maxValues !== null && parseInt(input_options.maxValues, 10) || null;
 
                 let number_values = 0;
-                for (const _inp of this.form.elements) {
-                    // Filter for siblings with same name.
-                    if (
-                        // Keep only inputs with same name
-                        _inp.name !== input.name
-                        // Skip all form elements which are no input elements
-                        || ! ["INPUT", "SELECT", "TEXTAREA"].includes(_inp.tagName)
-                    ) {
-                        continue;
-                    }
-
+                for (const _inp of this.siblings(input)) {
                     // Check if checkboxes or radios are checked ...
                     if (_inp.type === "checkbox" || _inp.type === "radio") {
                         if (_inp.checked) {
@@ -433,8 +428,7 @@ class Pattern extends BasePattern {
         msg = msg.replace(/%{value}/g, JSON.stringify(input.value));
 
         // Set the error state the input itself and on all siblings, if any.
-        const inputs = [...this.form.elements].filter((_input) => _input.name === input.name);
-        for (const _input of inputs) {
+        for (const _input of this.siblings(input)) {
             _input.setCustomValidity(msg);
         }
         // Store the error message on the input.
@@ -458,7 +452,7 @@ class Pattern extends BasePattern {
         let inputs = [input];
         if (all_of_group) {
             // Get all inputs with the same name - e.g. radio buttons, checkboxes.
-            inputs = [...this.form.elements].filter((_input) => _input.name === input.name);
+            inputs = this.siblings(input);
         }
         for (const it of inputs) {
             if (clear_state) {
@@ -495,7 +489,7 @@ class Pattern extends BasePattern {
 
         // Do not set a error message for a input group like radio buttons or
         // checkboxes where one has already been set.
-        const inputs = [...this.form.elements].filter((_input) => _input.name === input.name);
+        const inputs = this.siblings(input);
         if (inputs.length > 1 && inputs.some((it) => !!it[KEY_ERROR_EL])) {
             // error message for input group already set.
             return;
