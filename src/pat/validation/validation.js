@@ -178,7 +178,13 @@ class Pattern extends BasePattern {
                     msg: message,
                     attribute: input_options.equality,
                 });
-            } else if (input_options.not.after || input_options.not.before) {
+            }
+
+            if (
+                ! validity_state.customError && // No error from previous checks.
+                input_options.not.after ||
+                input_options.not.before
+            ) {
                 const msg = input_options.message.date || input_options.message.datetime;
                 const msg_default_not_before = "The date must be after %{attribute}";
                 const msg_default_not_after = "The date must be before %{attribute}";
@@ -280,7 +286,13 @@ class Pattern extends BasePattern {
                     logger.debug("Check `no-before` input.", not_after_el);
                     this.check_input({ input: not_before_el, stop: true });
                 }
-            } else if (input_options.minValues || input_options.maxValues) {
+            }
+
+            if (
+                ! validity_state.customError && // No error from previous checks.
+                input_options.minValues ||
+                input_options.maxValues
+            ) {
                 const min_values = input_options.minValues !== null && parseInt(input_options.minValues, 10) || null;
                 const max_values = input_options.maxValues !== null && parseInt(input_options.maxValues, 10) || null;
 
