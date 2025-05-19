@@ -125,7 +125,7 @@ class Pattern extends BasePattern {
         );
     }
 
-    get disableable() {
+    get disableables() {
         // Return all elements, which should be disabled when there are errors.
         return [...this.form.elements].filter((input) =>
             input.matches(this.options.disableSelector)
@@ -302,23 +302,23 @@ class Pattern extends BasePattern {
                 const max_values = input_options.maxValues !== null && parseInt(input_options.maxValues, 10) || null;
 
                 let number_values = 0;
-                for (const _inp of this.siblings(input)) {
+                for (const _input of this.siblings(input)) {
                     // Check if checkboxes or radios are checked ...
-                    if (_inp.type === "checkbox" || _inp.type === "radio") {
-                        if (_inp.checked) {
+                    if (_input.type === "checkbox" || _input.type === "radio") {
+                        if (_input.checked) {
                             number_values++;
                         }
                         continue;
                     }
 
                     // Select, if select is selected.
-                    if (_inp.tagName === "SELECT") {
-                        number_values += _inp.selectedOptions.length;
+                    if (_input.tagName === "SELECT") {
+                        number_values += _input.selectedOptions.length;
                         continue;
                     }
 
                     // For the rest a value must be set.
-                    if (_inp.value === 0 || _inp.value) {
+                    if (_input.value === 0 || _input.value) {
                         number_values++;
                     }
                 }
@@ -454,21 +454,21 @@ class Pattern extends BasePattern {
             // Get all inputs with the same name - e.g. radio buttons, checkboxes.
             inputs = this.siblings(input);
         }
-        for (const it of inputs) {
+        for (const _input of inputs) {
             if (clear_state) {
-                this.set_error({ input: it, msg: "", skip_event: true });
+                this.set_error({ input: _input, msg: "", skip_event: true });
             }
-            const error_node = it[KEY_ERROR_EL];
-            it[KEY_ERROR_EL] = null;
+            const error_node = _input[KEY_ERROR_EL];
+            _input[KEY_ERROR_EL] = null;
             error_node?.remove();
         }
 
         // disable selector
         if (this.form.checkValidity()) {
-            for (const it of this.disableable) {
-                if (it.disabled) {
-                    it.removeAttribute("disabled");
-                    it.classList.remove("disabled");
+            for (const _input of this.disableables) {
+                if (_input.disabled) {
+                    _input.removeAttribute("disabled");
+                    _input.classList.remove("disabled");
                 }
             }
         }
@@ -490,7 +490,7 @@ class Pattern extends BasePattern {
         // Do not set a error message for a input group like radio buttons or
         // checkboxes where one has already been set.
         const inputs = this.siblings(input);
-        if (inputs.length > 1 && inputs.some((it) => !!it[KEY_ERROR_EL])) {
+        if (inputs.length > 1 && inputs.some((_input) => !!_input[KEY_ERROR_EL])) {
             // error message for input group already set.
             return;
         }
@@ -507,15 +507,15 @@ class Pattern extends BasePattern {
         input[KEY_ERROR_EL] = error_node;
 
         let did_disable = false;
-        for (const it of this.disableable) {
+        for (const _input of this.disableables) {
             // Disable for melements if they are not already disabled and which
             // do not have set the `formnovalidate` attribute, e.g.
             // `<button formnovalidate>cancel</button>`.
-            if (!it.disabled && !it.formNoValidate) {
+            if (!_input.disabled && !_input.formNoValidate) {
                 did_disable = true;
-                it.setAttribute("disabled", "disabled");
-                it.classList.add("disabled");
-                logger.debug("Disable element", it);
+                _input.setAttribute("disabled", "disabled");
+                _input.classList.add("disabled");
+                logger.debug("Disable element", _input);
             }
         }
 
