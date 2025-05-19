@@ -338,12 +338,6 @@ class Pattern extends BasePattern {
                     })
                 }
             }
-
-            if (!validity_state.customError) {
-                // No error to handle. Return.
-                this.remove_error({ input });
-                return;
-            }
         } else {
             // Default error cases with custom messages.
 
@@ -403,6 +397,12 @@ class Pattern extends BasePattern {
                 this.emit_update("invalid");
             }
 
+        }
+
+        if (validity_state.valid) {
+            // No error to handle. Remove eventual error and return.
+            this.remove_error({ input });
+            return;
         }
 
         if (event?.type === "submit") {
