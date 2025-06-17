@@ -20,6 +20,7 @@ These extra validation rules are:
 
 - Equality checking between two fields (e.g. password confirmation).
 - Date and datetime validation for before and after a given date or another input field.
+- Minimum and maximum number of checked, selected or filled-out fields. Most useful for checkboxes, but also works for text-inputs, selects and other form elements.
 
 
 ### HTML form validation framework integration.
@@ -88,10 +89,10 @@ In addition both the input element and its label will get an `warning` class.
 </label>
 ```
 
-Checkboxes and radio buttons are treated differently: if they are contained in a fieldset with class `checklist` error messages are added at the end of the fieldset.
+Checkboxes and radio buttons are treated differently: The error message is alywas set after the last element of the inputs with the same name.
 
 ```html
-<fieldset class="checklist radio">
+<fieldset>
     <label><input type="radio" name="radio" /> Strawberry</label>
     <label><input type="radio" name="radio" /> Banana</label>
     <label><input type="radio" name="radio" /> Raspberry</label>
@@ -108,6 +109,28 @@ import { Pattern as ValidationPattern } from "@patternslib/patternslib/src/pat/v
 ValidationPattern.prototype.error_template = (message) =>
     `<em class="invalid-feedback">${message}</em>`;
 ```
+
+
+### Form elements outside the form
+
+Input elements outside of form elements are fully supported.
+pat-validation can handle structures like these:
+
+```html
+<input name="outside" form="myform" required>
+<form id="myform">
+</form>
+<button form="myform">submit</button>
+```
+
+More information on the `form` attribute can be found at [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#form).
+
+
+### Dynamic forms
+
+pat-validation supports dynamic forms where form elements are added after the Pattern was initialized.
+There is no need to re-initialize the pattern or to dispatch a special event.
+
 
 ### Options reference
 
@@ -130,7 +153,11 @@ ValidationPattern.prototype.error_template = (message) =>
 | message-number   | The error message for numbers.                                                                                             | This value must be a number.                         | String                                 |
 | message-required | The error message for required fields.                                                                                     | This field is required.                              | String                                 |
 | message-equality | The error message for fields required to be equal                                                                          | is not equal to %{attribute}                         | String                                 |
+| message-min-values | The error message when the minimim number of checked, selected or filled-out fields has not been reached.                | You need to select at least %{count} item(s).        | String                                 |
+| message-max-values | The error message when the maximum number of checked, selected or filled-out fields has not been reached.                | You need to select at most %{count} item(s).         | String                                 |
 | equality         | Field-specific extra rule. The name of another input this input should equal to (useful for password confirmation).        |                                                      | String                                 |
 | not-after        | Field-specific extra rule. A lower time limit restriction for date and datetime fields.                                    |                                                      | CSS Selector or a ISO8601 date string. |
 | not-before       | Field-specific extra rule. An upper time limit restriction for date and datetime fields.                                   |                                                      | CSS Selector or a ISO8601 date string. |
+| min-values       | Minimum number of checked, selected or filled out form elements.                                                           | null                                                 | Integer (or null)                      |
+| max-values       | Maximum number of checked, selected or filled out form elements.                                                           | null                                                 | Integer (or null)                      |
 | delay            | Time in milliseconds before validation starts to avoid validating while typing.                                            | 100                                                  | Integer                                |
