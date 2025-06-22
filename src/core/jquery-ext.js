@@ -12,7 +12,8 @@ var methods = {
         var settings = {
             time: 3 /* time it will wait before moving to "timeout" after a move event */,
             initialTime: 8 /* time it will wait before first adding the "timeout" class */,
-            exceptionAreas: [] /* IDs of elements that, if the mouse is over them, will reset the timer */,
+            exceptionAreas:
+                [] /* IDs of elements that, if the mouse is over them, will reset the timer */,
         };
         return this.each(function () {
             var $this = $(this),
@@ -156,43 +157,6 @@ $.extend($.expr[":"], {
     },
 });
 
-// Make Visible in scroll
-$.fn.makeVisibleInScroll = function (parent_id) {
-    var absoluteParent = null;
-    if (typeof parent_id === "string") {
-        absoluteParent = $("#" + parent_id);
-    } else if (parent_id) {
-        absoluteParent = $(parent_id);
-    }
-
-    return this.each(function () {
-        var $this = $(this),
-            parent;
-        if (!absoluteParent) {
-            parent = $this.parents(":scrollable");
-            if (parent.length > 0) {
-                parent = $(parent[0]);
-            } else {
-                parent = $(window);
-            }
-        } else {
-            parent = absoluteParent;
-        }
-
-        var elemTop = $this.position().top;
-        var elemBottom = $this.height() + elemTop;
-
-        var viewTop = parent.scrollTop();
-        var viewBottom = parent.height() + viewTop;
-
-        if (elemTop < viewTop) {
-            parent.scrollTop(elemTop);
-        } else if (elemBottom > viewBottom - parent.height() / 2) {
-            parent.scrollTop(elemTop - (parent.height() - $this.height()) / 2);
-        }
-    });
-};
-
 //Work around warning for jQuery 3.x:
 //JQMIGRATE: jQuery.fn.offset() requires an element connected to a document
 $.fn.safeOffset = function () {
@@ -212,89 +176,12 @@ $.fn.safeOffset = function () {
     return $.fn.offset.apply(this, arguments);
 };
 
-//Make absolute location
-$.fn.setPositionAbsolute = function (element, offsettop, offsetleft) {
-    return this.each(function () {
-        // set absolute location for based on the element passed
-        // dynamically since every browser has different settings
-        var $this = $(this);
-        var thiswidth = $(this).width();
-        var pos = element.safeOffset();
-        var width = element.width();
-        var height = element.height();
-        var setleft = pos.left + width - thiswidth + offsetleft;
-        var settop = pos.top + height + offsettop;
-        $this.css({
-            "z-index": 1,
-            "position": "absolute",
-            "marginLeft": 0,
-            "marginTop": 0,
-            "left": setleft + "px",
-            "top": settop + "px",
-            "width": thiswidth,
-        });
-        $this.remove().appendTo("body").show();
-    });
-};
-
-$.fn.positionAncestor = function (selector) {
-    var left = 0;
-    var top = 0;
-    this.each(function () {
-        // check if current element has an ancestor matching a selector
-        // and that ancestor is positioned
-        var $ancestor = $(this).closest(selector);
-        if ($ancestor.length && $ancestor.css("position") !== "static") {
-            var $child = $(this);
-            var childMarginEdgeLeft =
-                $child.safeOffset().left - parseInt($child.css("marginLeft"), 10);
-            var childMarginEdgeTop =
-                $child.safeOffset().top - parseInt($child.css("marginTop"), 10);
-            var ancestorPaddingEdgeLeft =
-                $ancestor.safeOffset().left +
-                parseInt($ancestor.css("borderLeftWidth"), 10);
-            var ancestorPaddingEdgeTop =
-                $ancestor.safeOffset().top +
-                parseInt($ancestor.css("borderTopWidth"), 10);
-            left = childMarginEdgeLeft - ancestorPaddingEdgeLeft;
-            top = childMarginEdgeTop - ancestorPaddingEdgeTop;
-            // we have found the ancestor and computed the position
-            // stop iterating
-            return false;
-        }
-    });
-    return {
-        left: left,
-        top: top,
-    };
-};
-
-$.fn.findInclusive = function (selector) {
-    return this.find("*").addBack().filter(selector);
-};
-
 $.fn.slideIn = function (speed, easing, callback) {
     return this.animate({ width: "show" }, speed, easing, callback);
 };
 
 $.fn.slideOut = function (speed, easing, callback) {
     return this.animate({ width: "hide" }, speed, easing, callback);
-};
-
-// case-insensitive :contains
-$.expr[":"].Contains = function (a, i, m) {
-    return $(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
-};
-
-$.fn.scopedFind = function (selector) {
-    /*  If the selector starts with an object id do a global search,
-     *  otherwise do a local search.
-     */
-    if (selector.indexOf("#") === 0) {
-        return $(selector);
-    } else {
-        return this.find(selector);
-    }
 };
 
 export default undefined;

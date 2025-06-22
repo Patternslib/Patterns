@@ -20,6 +20,7 @@ import $ from "jquery";
 import dom from "./dom";
 import logging from "./logging";
 import utils from "./utils";
+import "./remove";
 
 const log = logging.getLogger("registry");
 const disable_re = /patterns-disable=([^&]+)/g;
