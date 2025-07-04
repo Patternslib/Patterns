@@ -4,6 +4,32 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.10.3](https://github.com/Patternslib/patterns/compare/9.10.2...9.10.3) (2025-07-04)
+
+
+### Maintenance
+
+
+* **Build:** Upgrade pat-tiptap to 4.10.1 plus a few others. ([dc6ef25](https://github.com/Patternslib/patterns/commit/dc6ef2514594a59a5b76c5fbdbbc662110c55698))
+
+
+* **pat-validation:** Improving the documentation. ([9050a49](https://github.com/Patternslib/patterns/commit/9050a49f887257e3da349e1c982f3a6a53f8d06f))
+
+
+* **pat-validation:** Minor code cleanup. ([b09eb26](https://github.com/Patternslib/patterns/commit/b09eb26b0117d9a02b1408b7f7e27214f17cdf51))
+
+
+* **pat-validation:** Remove error-template BBB parameter which has no functionality. ([8354615](https://github.com/Patternslib/patterns/commit/8354615de0e15971ba219ca9edf711f77578bf83))
+
+
+* **pat-validation:** Restructure tests. ([86efb02](https://github.com/Patternslib/patterns/commit/86efb02235c68d31488f39440c38d8134ceac403))
+
+
+* Remove remaining console.log statements. ([3d1c0d4](https://github.com/Patternslib/patterns/commit/3d1c0d43fd5cc637ee4b71a5f1cda455e2f4ee3c))
+
+
+* Update the compatible node version to the current LTS version. ([2dfae89](https://github.com/Patternslib/patterns/commit/2dfae8965e8f9e9da6929a574acdbaf6ad62e2af))
+
 ## [9.10.2](https://github.com/Patternslib/patterns/compare/9.10.1...9.10.2) (2025-05-08)
 
 
