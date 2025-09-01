@@ -819,8 +819,22 @@ const inject = {
             elementbefore: "before",
         }[cfg.action];
 
-        // Inject the content HERE!
         target[method](...source_nodes);
+
+        if (! cfg.removeTags?.includes("script")) {
+            // Find and execute scripts
+            for (const node of source_nodes) {
+                const scripts = node.querySelectorAll?.("script") || [];
+                for (const script of scripts) {
+                    const new_script = document.createElement("script");
+                    for (const attr of [...script.attributes]) {
+                        new_script.setAttribute(attr.name, attr.value)
+                    }
+                    new_script.textContent = script.textContent;
+                    script.replaceWith(new_script);
+                }
+            }
+        }
 
         return true;
     },
