@@ -18,6 +18,7 @@
  */
 import $ from "jquery";
 import dom from "./dom";
+import events from "./events";
 import logging from "./logging";
 import utils from "./utils";
 
@@ -150,7 +151,7 @@ const registry = {
         return patterns;
     },
 
-    scan(content, patterns, trigger) {
+    async scan(content, patterns, trigger) {
         if (!content) {
             return;
         }
@@ -205,12 +206,25 @@ const registry = {
         });
 
         // walk list backwards and initialize patterns inside-out.
+        const pattern_instances = [];
         for (const el of matches.reverse()) {
             for (const name of patterns) {
-                this.initPattern(name, el, trigger);
+                pattern_instances.push(this.initPattern(name, el, trigger));
             }
         }
+
+        // Notify for all patterns loaded.
+        document.dispatchEvent(
+            new Event("patterns-loaded")
+        );
         document.body.classList.add("patterns-loaded");
+
+        // Notify for all Patterns initialized.
+        await Promise.all(pattern_instances);
+        document.dispatchEvent(
+            new Event("patterns-initialized")
+        );
+        document.body.classList.add("patterns-initialized");
     },
 
     register(pattern, name) {
