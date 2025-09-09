@@ -595,7 +595,8 @@ const inject = {
         ) {
             $title = sources$[sources$.length - 1];
         }
-        cfgs.forEach((cfg, idx1) => {
+
+        for (const [idx1, cfg] of cfgs.entries()) {
             const perform_inject = () => {
                 if (cfg.target !== "none") {
                     for (const target of cfg.$target) {
@@ -615,7 +616,7 @@ const inject = {
             } else {
                 perform_inject();
             }
-        });
+        }
         if (cfgs[0].nextHref && $el.is("a")) {
             // In case next-href is specified the anchor's href will
             // be set to it after the injection is triggered.
