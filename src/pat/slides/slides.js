@@ -6,8 +6,6 @@
 import $ from "jquery";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
-import url from "../../core/url";
-import "../../core/remove";
 
 var slides = {
     name: "slides",
@@ -24,9 +22,9 @@ var slides = {
         }
         await import("slides/src/slides"); // loads ``Presentation`` globally.
 
-        var parameters = url.parameters();
-        if (parameters.slides !== undefined) {
-            var requested_ids = slides._collapse_ids(parameters.slides);
+        const parameters = new URL(window.location.href).searchParams;
+        if (parameters.get("slides") !== null) {
+            var requested_ids = slides._collapse_ids(parameters.get("slides"));
             if (requested_ids) slides._remove_slides($el, requested_ids);
         }
         $el.each(function () {
