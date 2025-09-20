@@ -29,7 +29,7 @@ var zoom = {
 
     onZoom: function (event) {
         var $block = event.data;
-        $block.css("zoom", this.value);
+        $block[0].style.zoom = this.value;
     },
 };
 
