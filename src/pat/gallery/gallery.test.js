@@ -39,6 +39,10 @@ describe("pat-gallery", function () {
                 return;
             });
 
+            jest.spyOn(instance, "pswp_options").mockImplementation(function () {
+                return { getThumbBoundsFn: () => ({ x:0, y:0, w:100 }) };
+            });
+
             await utils.timeout(1);
 
             expect(spy_init_trigger).toHaveBeenCalled();
@@ -75,6 +79,10 @@ describe("pat-gallery", function () {
                 e.preventDefault();
                 // Just return without initializing PhotoSwipe
                 return;
+            });
+
+            jest.spyOn(instance, "pswp_options").mockImplementation(function () {
+                return { getThumbBoundsFn: () => ({ x:0, y:0, w:100 }) };
             });
 
             await utils.timeout(1);
