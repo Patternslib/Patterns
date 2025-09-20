@@ -33,6 +33,10 @@ describe("pat-gallery", function () {
             const spy_init_trigger = jest.spyOn(instance, "initialize_trigger");
             const spy_init_gallery = jest.spyOn(instance, "initialize_gallery");
 
+            jest.spyOn(instance, "pswp_options").mockImplementation(function () {
+                return { getThumbBoundsFn: () => ({ x:0, y:0, w:100 }) };
+            });
+
             await utils.timeout(1);
 
             expect(spy_init_trigger).toHaveBeenCalled();
@@ -64,6 +68,10 @@ describe("pat-gallery", function () {
 
             const spy_init_trigger = jest.spyOn(instance, "initialize_trigger");
             const spy_init_gallery = jest.spyOn(instance, "initialize_gallery");
+
+            jest.spyOn(instance, "pswp_options").mockImplementation(function () {
+                return { getThumbBoundsFn: () => ({ x:0, y:0, w:100 }) };
+            });
 
             await utils.timeout(1);
 
