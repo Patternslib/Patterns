@@ -16,7 +16,7 @@ Also see: https://github.com/Patternslib/pat-PATTERN_TEMPLATE
     import registry from "@patternslib/patternslib/src/core/registry";
 
     export const parser = new Parser("test-pattern");
-    parser.addArgument("example-option", "Stranger");
+    parser.addArgument("example-option", "Hollareidulio");
 
     class Pattern extends BasePattern {
         static name = "test-pattern";
@@ -33,14 +33,18 @@ Also see: https://github.com/Patternslib/pat-PATTERN_TEMPLATE
             // The options are automatically created, if parser is defined.
             const example_option = this.options.exampleOption;
             this.el.innerHTML = `
-                <p>hello, ${example_option}, this is pattern ${this.name} speaking.</p>
+                <p>${example_option}, this is the ${this.name} pattern!</p>
             `;
         }
     }
 
-    // Register Pattern class in the global pattern registry
+    // Register Pattern class in the global pattern registry and make it usable there.
     registry.register(Pattern);
 
-    // Make it available
+    // Export Pattern as default export.
+    // You can import it as ``import AnyName from "./{{{ pattern.name }}}";``
     export default Pattern;
+    // Export BasePattern as named export.
+    // You can import it as ``import { Pattern } from "./{{{ pattern.name }}}";``
+    export { Pattern };
 
