@@ -318,7 +318,7 @@ const inject = {
             ) {
                 _confirm = this.elementIsDirty(cfg.$target);
             } else if (cfg.confirm === "class" && cfg.target && cfg.target !== "none") {
-                _confirm = cfg.$target.hasClass("is-dirty");
+                _confirm = cfg.$target?.hasClass("is-dirty");
             }
             if (_confirm) {
                 should_confirm = true;
@@ -411,8 +411,8 @@ const inject = {
             // Special case, we don't want to display any return value.
             return;
         }
-        const $form = cfg.$target.parents("form");
-        if ($form.length !== 0 && cfg.$target.data("initial-value") === undefined) {
+        const $form = cfg.$target?.parents("form");
+        if ($form && $form.length !== 0 && cfg.$target.data("initial-value") === undefined) {
             cfg.$target.data("initial-value", cfg.$target.html());
             $form.on("reset", () => {
                 cfg.$target.html(cfg.$target.data("initial-value"));
@@ -455,7 +455,10 @@ const inject = {
          * appended to the body.
          */
         if (selector.slice(0, 1) !== "#") {
-            log.error("only id supported for non-existing target");
+            log.error(
+                "only id supported for non-existing target. selector: ",
+                selector
+            );
             return null;
         }
         const $target = $("<div />").attr({ id: selector.slice(1) });
@@ -737,7 +740,7 @@ const inject = {
             // Add a loading class to the target.
             // Can be used for loading-spinners.
             if (cfg?.loadingClass && cfg?.target !== "none") {
-                cfg.$target.addClass(cfg.loadingClass);
+                cfg.$target?.addClass(cfg.loadingClass);
             }
         }
 
