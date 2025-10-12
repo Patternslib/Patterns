@@ -361,22 +361,30 @@ const inject = {
          * Extract modifiers such as ::element or ::after.
          * Ensure that a target element exists.
          */
+
         if (cfg.url !== url) {
             // in case of multi-injection, all injections need to use
             // the same url
             log.error("Unsupported different urls for multi-inject");
             return false;
         }
+
         // defaults
         cfg.source = cfg.source || cfg.defaultSelector;
         cfg.target = cfg.target || cfg.defaultSelector;
 
+        // Extract modifiers like ::element, ::before, ::after. These need to
+        // be extracted before `ensureTarget` so that the CSS selectors are
+        // fixed.
         if (!this.extractModifiers(cfg)) {
             return false;
         }
+
+        // Check, if the target can be found in the document to inject into.
         if (!this.ensureTarget(cfg)) {
             return false;
         }
+
         this.listenForFormReset(cfg);
         return true;
     },
