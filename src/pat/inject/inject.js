@@ -314,10 +314,16 @@ const inject = {
             } else if (
                 cfg.confirm === "form-data" &&
                 cfg.target &&
-                cfg.target !== "none"
+                cfg.target !== "none" &&
+                cfg.$target
             ) {
                 _confirm = this.elementIsDirty(cfg.$target);
-            } else if (cfg.confirm === "class" && cfg.target && cfg.target !== "none") {
+            } else if (
+                cfg.confirm === "class" &&
+                cfg.target &&
+                cfg.target !== "none" &&
+                cfg.$target
+            ) {
                 _confirm = cfg.$target?.hasClass("is-dirty");
             }
             if (_confirm) {
@@ -407,11 +413,11 @@ const inject = {
          * Cancel button is pressed (this triggers reset event on the
          * form) you would expect to populate with initial placeholder
          */
-        if (cfg.target === "none") {
+        if (cfg.target === "none" || !cfg.$target) {
             // Special case, we don't want to display any return value.
             return;
         }
-        const $form = cfg.$target?.parents("form");
+        const $form = cfg.$target.parents("form");
         if ($form && $form.length !== 0 && cfg.$target.data("initial-value") === undefined) {
             cfg.$target.data("initial-value", cfg.$target.html());
             $form.on("reset", () => {
@@ -559,7 +565,7 @@ const inject = {
             // 1) finding the scroll container
             // 2) getting the element to scroll to (if not "top")
             const scroll_target = ["top", "target"].includes(cfg.scroll)
-                ? cfg.$target[0]
+                ? cfg?.$target[0]
                 : dom.querySelectorAllAndMe($injected[0], cfg.scroll);
 
             const scroll_container = dom.find_scroll_container(
@@ -609,7 +615,7 @@ const inject = {
 
         for (const [idx1, cfg] of cfgs.entries()) {
             const perform_inject = () => {
-                if (cfg.target !== "none") {
+                if (cfg.target !== "none" && cfg.$target) {
                     for (const target of cfg.$target) {
                         this._performInjection(
                             target,
@@ -691,7 +697,7 @@ const inject = {
             if ("$created_target" in cfg) {
                 cfg.$created_target.remove();
             }
-            cfg.$target.removeClass(cfg.loadingClass);
+            cfg.$target?.removeClass(cfg.loadingClass);
             $el.removeClass(cfg.executingClass);
         }
         $el.off("pat-ajax-success.pat-inject");
@@ -739,7 +745,7 @@ const inject = {
             }
             // Add a loading class to the target.
             // Can be used for loading-spinners.
-            if (cfg?.loadingClass && cfg?.target !== "none") {
+            if (cfg?.loadingClass && cfg?.target !== "none" && cfg.$target) {
                 cfg.$target?.addClass(cfg.loadingClass);
             }
         }
@@ -1144,7 +1150,7 @@ $(document).on("patterns-injected.inject", async (ev, cfg, trigger, injected) =>
         return;
     }
     if (cfg) {
-        cfg.$target.removeClass(cfg.loadingClass);
+        cfg?.$target.removeClass(cfg.loadingClass);
         // Remove the executing class, add the executed class to the element with pat.inject on it.
         $(trigger).removeClass(cfg.executingClass).addClass(cfg.executedClass);
     }
