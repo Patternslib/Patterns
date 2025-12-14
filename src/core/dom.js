@@ -364,8 +364,11 @@ const get_relative_position = (el, reference_el = document.body) => {
     // the relative position of the target.
     // In case of a scroll container of window, we do not have
     // getBoundingClientRect method, so get the body instead.
-    if (reference_el === window) {
+    if (reference_el === window || document) {
         reference_el = document.body;
+    }
+    if (el === window || document) {
+        el = document.body;
     }
 
     // Calculate absolute [¹] position difference between
@@ -407,6 +410,14 @@ const get_relative_position = (el, reference_el = document.body) => {
  * @param {string} [direction="top"] - The direction to scroll to. Can be either "top", "left" or "both".
  */
 const scroll_to_element = (el, scroll_container, offset = 0, direction = "top") => {
+    // Normalize el and scroll_container
+    if (el === window || document) {
+        el = document.body;
+    }
+    if (scroll_container === window || document) {
+        scroll_container = document.body;
+    }
+
     // Get the position of the element relative to the scroll container.
     const position = get_relative_position(el, scroll_container);
 
