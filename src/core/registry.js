@@ -94,7 +94,7 @@ const registry = {
         const transform = pattern.transform || pattern.prototype?.transform;
         if (transform) {
             try {
-                transform($(content));
+                transform.bind(pattern.prototype)($(content));
             } catch (e) {
                 if (dont_catch) {
                     throw e;
