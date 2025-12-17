@@ -30,7 +30,7 @@ describe("Depedency expression parser", function () {
         it("Can not do order comparison to string", function () {
             expect(function () {
                 parser.parse("foo<bar");
-            }).toThrowError('Expected number or whitespace but "b" found.');
+            }).toThrow('Expected number or whitespace but "b" found.');
         });
 
         it("Equality comparison with string", function () {

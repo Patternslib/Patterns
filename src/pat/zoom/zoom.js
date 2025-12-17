@@ -12,10 +12,10 @@ var zoom = {
 
     init: function ($el, opts) {
         return $el.each(function () {
-            var $block = $(this),
-                options = parser.parse($block, opts);
+            const $block = $(this);
+            const options = parser.parse($block, opts);
 
-            let $slider = $("<input/>", {
+            const $slider = $("<input/>", {
                 type: "range",
                 step: "any",
                 value: 1,
@@ -28,8 +28,8 @@ var zoom = {
     },
 
     onZoom: function (event) {
-        var $block = event.data;
-        $block.css("zoom", this.value);
+        const $block = event.data;
+        $block[0].style.zoom = this.value;
     },
 };
 

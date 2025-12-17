@@ -40,7 +40,7 @@ describe("pat-zoom", function () {
             pattern.init($block);
             var $range = $block.prev();
             $range.val("1.5");
-            $range.change();
+            $range.trigger("change");
             // Fairly lax test so it passes in different browsers.
             expect($block[0].style.zoom).toBe("1.5");
         });

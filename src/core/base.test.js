@@ -133,7 +133,7 @@ describe("pat-base: The Base class for patterns", function () {
     });
 
     it("requires that patterns that extend it provide an object of properties", function () {
-        expect(Base.extend).toThrowError(
+        expect(Base.extend).toThrow(
             "Pattern configuration properties required when calling Base.extend"
         );
     });
