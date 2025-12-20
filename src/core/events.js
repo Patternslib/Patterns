@@ -172,7 +172,7 @@ const await_pattern_init = (pattern) => {
  * A event factory for a bubbling and cancelable generic event.
  *
  * @param {string} name - The event name.
- * @returns {Event} - Returns a blur event.
+ * @returns {Event} - Returns a DOM event.
  */
 const generic_event = (name) => {
     return new Event(name, {
@@ -227,6 +227,20 @@ const change_event = () => {
 const focus_event = () => {
     return new Event("focus", {
         bubbles: false,
+        cancelable: false,
+    });
+};
+
+const focusin_event = () => {
+    return new Event("focusin", {
+        bubbles: true,
+        cancelable: false,
+    });
+};
+
+const focusout_event = () => {
+    return new Event("focusout", {
+        bubbles: true,
         cancelable: false,
     });
 };
@@ -293,6 +307,8 @@ export default {
     click_event: click_event,
     change_event: change_event,
     focus_event: focus_event,
+    focusin_event: focusin_event,
+    focusout_event: focusout_event,
     input_event: input_event,
     mousedown_event: mousedown_event,
     mouseup_event: mouseup_event,

@@ -529,6 +529,24 @@ describe("core.events tests", () => {
             expect(catched).toBe("inner");
         });
 
+        it("focusin event", async () => {
+            outer.addEventListener("focusin", () => {
+                catched = "outer";
+            });
+            inner.dispatchEvent(events.focusin_event());
+            await utils.timeout(1);
+            expect(catched).toBe("outer");
+        });
+
+        it("focusout event", async () => {
+            outer.addEventListener("focusout", () => {
+                catched = "outer";
+            });
+            inner.dispatchEvent(events.focusout_event());
+            await utils.timeout(1);
+            expect(catched).toBe("outer");
+        });
+
         it("input event", async () => {
             outer.addEventListener("input", () => {
                 catched = "outer";
