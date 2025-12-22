@@ -383,15 +383,15 @@ const get_relative_position = (el, reference_el = document.body) => {
     //      https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
     const left = Math.abs(
         el.getBoundingClientRect().left +
-            reference_el.scrollLeft -
-            reference_el.getBoundingClientRect().left -
-            dom.get_css_value(reference_el, "border-left-width", true)
+        reference_el.scrollLeft -
+        reference_el.getBoundingClientRect().left -
+        dom.get_css_value(reference_el, "border-left-width", true)
     );
     const top = Math.abs(
         el.getBoundingClientRect().top +
-            reference_el.scrollTop -
-            reference_el.getBoundingClientRect().top -
-            dom.get_css_value(reference_el, "border-top-width", true)
+        reference_el.scrollTop -
+        reference_el.getBoundingClientRect().top -
+        dom.get_css_value(reference_el, "border-top-width", true)
     );
 
     return { top, left };
@@ -535,9 +535,9 @@ const get_visible_ratio = (el, container) => {
         container !== window
             ? container.getBoundingClientRect()
             : {
-                  top: 0,
-                  bottom: window.innerHeight,
-              };
+                top: 0,
+                bottom: window.innerHeight,
+            };
 
     let visible_ratio = 0;
     if (rect.top < container_rect.bottom && rect.bottom > container_rect.top) {
