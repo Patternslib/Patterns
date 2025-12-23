@@ -242,8 +242,8 @@ function hasValue(el) {
     return false;
 }
 
-const hideOrShow = (nodes, visible, options, pattern_name) => {
-    nodes = dom.toNodeArray(nodes);
+const hideOrShow = (elements, visible, options, pattern_name) => {
+    elements = dom.to_element_array(elements);
 
     const transitions = {
         none: { hide: "hide", show: "show" },
@@ -267,7 +267,7 @@ const hideOrShow = (nodes, visible, options, pattern_name) => {
         });
     };
 
-    for (const el of nodes) {
+    for (const el of elements) {
         el.classList.remove("visible");
         el.classList.remove("hidden");
         el.classList.remove("in-progress");
@@ -415,7 +415,7 @@ function isElementInViewport(el, partial = false, offset = 0) {
             rec.top >= 0 &&
             rec.left >= 0 &&
             rec.bottom <=
-                (window.innerHeight || document.documentElement.clientHeight) &&
+            (window.innerHeight || document.documentElement.clientHeight) &&
             rec.right <= (window.innerWidth || document.documentElement.clientWidth)
         );
     }
