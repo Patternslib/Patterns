@@ -904,7 +904,7 @@ describe("core.dom tests", () => {
         });
         it("can be used to store and retrieve arbitrary data on DOM nodes.", function () {
             const el = document.createElement("div");
-            const data = { okay() {} };
+            const data = { okay() { } };
             dom.set_data(el, "test_data", data);
             expect(dom.get_data(el, "test_data")).toBe(data);
         });
