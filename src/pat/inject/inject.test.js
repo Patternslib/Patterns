@@ -7,10 +7,10 @@ import { jest } from "@jest/globals";
 
 const mockFetch =
     (text = "") =>
-    () =>
-        Promise.resolve({
-            text: () => Promise.resolve(text),
-        });
+        () =>
+            Promise.resolve({
+                text: () => Promise.resolve(text),
+            });
 
 describe("pat-inject", function () {
     var deferred;
@@ -498,7 +498,7 @@ describe("pat-inject", function () {
     describe("6 - parseRawHtml", function () {
         it("6.1 - Roundtrip attributes with double quotes", function () {
             var value =
-                    '{"plugins": "paste", "content_css": "/_themes/Style/tiny-body.css"}',
+                '{"plugins": "paste", "content_css": "/_themes/Style/tiny-body.css"}',
                 input = "<a data-tinymce-json='" + value + "'>Test</a>",
                 $output = pattern._parseRawHtml(input, null);
             expect($output.find("a").attr("data-tinymce-json")).toBe(value);
@@ -506,7 +506,7 @@ describe("pat-inject", function () {
 
         it("6.2 - Roundtrip attributes with single quotes", function () {
             var value =
-                    "{'plugins': 'paste', 'content_css': '/_themes/Style/tiny-body.css'}",
+                "{'plugins': 'paste', 'content_css': '/_themes/Style/tiny-body.css'}",
                 input = '<a data-tinymce-json="' + value + '">Test</a>',
                 $output = pattern._parseRawHtml(input, null);
             expect($output.find("a").attr("data-tinymce-json")).toBe(value);
@@ -740,7 +740,7 @@ describe("pat-inject", function () {
     });
 
     describe("9 - DOM tests", function () {
-        beforeEach(function () {});
+        beforeEach(function () { });
 
         describe("9.1 - Injection on an anchor element", function () {
             var $a, $div;
@@ -844,9 +844,9 @@ describe("pat-inject", function () {
                 $a.trigger("click");
                 answer(
                     "<html><body>" +
-                        '<div id="someid1">repl1</div>' +
-                        '<div id="someid2">repl2</div>' +
-                        "</body></html>"
+                    '<div id="someid1">repl1</div>' +
+                    '<div id="someid2">repl2</div>' +
+                    "</body></html>"
                 );
                 await utils.timeout(1); // wait a tick for async to settle.
 
@@ -882,8 +882,8 @@ describe("pat-inject", function () {
                 $a.trigger("click");
                 answer(
                     "<html><body>" +
-                        '<div id="otherid" class="someclass">repl</div>' +
-                        "</body></html>"
+                    '<div id="otherid" class="someclass">repl</div>' +
+                    "</body></html>"
                 );
                 await utils.timeout(1); // wait a tick for async to settle.
 
@@ -901,8 +901,8 @@ describe("pat-inject", function () {
                 $a.trigger("click");
                 answer(
                     "<html><body>" +
-                        '<div id="someid" class="someclass">repl</div>' +
-                        "</body></html>"
+                    '<div id="someid" class="someclass">repl</div>' +
+                    "</body></html>"
                 );
                 await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1073,8 +1073,8 @@ describe("pat-inject", function () {
                 describe("9.2.4.4 - formaction attribute on submit buttons", function () {
                     it("9.2.4.4.1 - use submit button formaction value as action URL", async function () {
                         var $submit1 = $(
-                                '<input type="submit" name="submit" value="default" />'
-                            ),
+                            '<input type="submit" name="submit" value="default" />'
+                        ),
                             $submit2 = $(
                                 '<input type="submit" name="submit" value="special" formaction="other.html" />'
                             );
@@ -1127,8 +1127,8 @@ describe("pat-inject", function () {
 
                     it("9.2.4.4.3 - use fragment in formaction value as source + target selector", async function () {
                         var $submit1 = $(
-                                '<input type="submit" name="submit" value="default" />'
-                            ),
+                            '<input type="submit" name="submit" value="default" />'
+                        ),
                             $submit2 = $(
                                 '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
                             ),
@@ -1144,8 +1144,8 @@ describe("pat-inject", function () {
 
                         answer(
                             "<html><body>" +
-                                '<div id="otherid">other</div>' +
-                                "</body></html>"
+                            '<div id="otherid">other</div>' +
+                            "</body></html>"
                         );
                         await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1159,8 +1159,8 @@ describe("pat-inject", function () {
 
                     it("9.2.4.4.4 - use fragment in formaction value as source selector, respect target", async function () {
                         var $submit1 = $(
-                                '<input type="submit" name="submit" value="default" />'
-                            ),
+                            '<input type="submit" name="submit" value="default" />'
+                        ),
                             $submit2 = $(
                                 '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
                             ),
@@ -1177,8 +1177,8 @@ describe("pat-inject", function () {
 
                         answer(
                             "<html><body>" +
-                                '<div id="otherid">other</div>' +
-                                "</body></html>"
+                            '<div id="otherid">other</div>' +
+                            "</body></html>"
                         );
                         await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1192,8 +1192,8 @@ describe("pat-inject", function () {
 
                     it("9.2.4.4.5 - formaction works with multiple targets", async function () {
                         var $submit1 = $(
-                                '<input type="submit" name="submit" value="default" />'
-                            ),
+                            '<input type="submit" name="submit" value="default" />'
+                        ),
                             $submit2 = $(
                                 '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
                             ),
@@ -1214,8 +1214,8 @@ describe("pat-inject", function () {
 
                         answer(
                             "<html><body>" +
-                                '<div id="otherid">other</div>' +
-                                "</body></html>"
+                            '<div id="otherid">other</div>' +
+                            "</body></html>"
                         );
                         await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1230,8 +1230,8 @@ describe("pat-inject", function () {
 
                     it("9.2.4.4.6 - formaction works with multiple sources", async function () {
                         var $submit1 = $(
-                                '<input type="submit" name="submit" value="default" />'
-                            ),
+                            '<input type="submit" name="submit" value="default" />'
+                        ),
                             $submit2 = $(
                                 '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
                             ),
@@ -1252,9 +1252,9 @@ describe("pat-inject", function () {
 
                         answer(
                             "<html><body>" +
-                                '<div id="someid">some</div>' +
-                                '<div id="otherid">other</div>' +
-                                "</body></html>"
+                            '<div id="someid">some</div>' +
+                            '<div id="otherid">other</div>' +
+                            "</body></html>"
                         );
                         await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1269,8 +1269,8 @@ describe("pat-inject", function () {
 
                     it("9.2.4.4.7 - formaction works source and target on the button", async function () {
                         var $submit1 = $(
-                                '<input type="submit" name="submit" value="default" />'
-                            ),
+                            '<input type="submit" name="submit" value="default" />'
+                        ),
                             $submit2 = $(
                                 '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
                             ),
@@ -1291,9 +1291,9 @@ describe("pat-inject", function () {
 
                         answer(
                             "<html><body>" +
-                                '<div id="someid">some</div>' +
-                                '<div id="otherid">other</div>' +
-                                "</body></html>"
+                            '<div id="someid">some</div>' +
+                            '<div id="otherid">other</div>' +
+                            "</body></html>"
                         );
                         await utils.timeout(1); // wait a tick for async to settle.
 
