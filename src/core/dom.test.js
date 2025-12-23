@@ -88,7 +88,7 @@ describe("core.dom tests", () => {
         });
     });
 
-    describe("toNodeArray tests", () => {
+    describe("to_node_array tests", () => {
         it("returns an array of nodes, if a jQuery object was passed.", (done) => {
             const html = document.createElement("div");
             html.innerHTML = `
@@ -100,7 +100,7 @@ describe("core.dom tests", () => {
             const testee = $("span", html);
             expect(testee.length).toBe(2);
 
-            const ret = dom.toNodeArray(testee);
+            const ret = dom.to_node_array(testee);
 
             expect(ret.jquery).toBeFalsy();
             expect(ret.length).toBe(2);
@@ -127,7 +127,7 @@ describe("core.dom tests", () => {
             const testee = html.querySelectorAll("span");
             expect(testee.length).toBe(2);
 
-            const ret = dom.toNodeArray(testee);
+            const ret = dom.to_node_array(testee);
             expect(ret instanceof NodeList).toBeFalsy();
             expect(ret.length).toBe(2);
             expect(ret[0]).toBe(el1);
@@ -139,7 +139,7 @@ describe("core.dom tests", () => {
         it("returns an array with a single node, if a single node was passed.", (done) => {
             const html = document.createElement("div");
 
-            const ret = dom.toNodeArray(html);
+            const ret = dom.to_node_array(html);
             expect(ret instanceof Array).toBeTruthy();
             expect(ret.length).toBe(1);
             expect(ret[0]).toBe(html);
@@ -148,7 +148,7 @@ describe("core.dom tests", () => {
         });
 
         it("returns an empty array, if nothing was passed", (done) => {
-            const ret = dom.toNodeArray();
+            const ret = dom.to_node_array();
             expect(ret.length).toBe(0);
             expect(ret instanceof Array).toBe(true);
 
@@ -156,6 +156,17 @@ describe("core.dom tests", () => {
         });
 
         it("returns only DOM Nodes", (done) => {
+            const el = document.body;
+            const txt = document.createTextNode("okay");
+            const ret = dom.toNodeArray([1, false, txt, "okay", el]);
+            expect(ret.length).toBe(2);
+            expect(ret[0]).toBe(txt);
+            expect(ret[1]).toBe(el);
+
+            done();
+        });
+
+        it("returns only DOM Nodes, using the deprecated name", (done) => {
             const el = document.body;
             const txt = document.createTextNode("okay");
             const ret = dom.toNodeArray([1, false, txt, "okay", el]);

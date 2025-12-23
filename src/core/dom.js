@@ -41,7 +41,7 @@ const document_ready = (fn) => {
  *
  * @returns {Array} - An array of DOM nodes.
  */
-const toNodeArray = (nodes) => {
+const to_node_array = (nodes) => {
     if (nodes?.jquery || nodes instanceof NodeList) {
         nodes = [...nodes];
     } else if (nodes instanceof Array === false) {
@@ -60,7 +60,7 @@ const toNodeArray = (nodes) => {
  * @returns {Array} - An array of DOM elements.
  */
 const to_element_array = (nodes) => {
-    nodes = toNodeArray(nodes);
+    nodes = to_node_array(nodes);
     // Filter for DOM elements only.
     nodes = nodes.filter((node) => node instanceof Element);
     return nodes;
@@ -635,7 +635,8 @@ const find_inputs = (el) => {
 const dom = {
     document_ready: document_ready,
     to_element_array: to_element_array,
-    toNodeArray: toNodeArray,
+    to_node_array: to_node_array,
+    toNodeArray: to_node_array, // BBB.
     querySelectorAllAndMe: querySelectorAllAndMe,
     wrap: wrap,
     hide: hide,
