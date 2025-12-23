@@ -101,10 +101,17 @@ describe("core.dom tests", () => {
             expect(testee.length).toBe(2);
 
             const ret = dom.toNodeArray(testee);
+
             expect(ret.jquery).toBeFalsy();
             expect(ret.length).toBe(2);
+
             expect(ret[0]).toBe(el1);
+            expect(ret[0].jquery).toBeFalsy();
+            expect(ret[0] instanceof Node).toBe(true);
+
             expect(ret[1]).toBe(el2);
+            expect(ret[1].jquery).toBeFalsy();
+            expect(ret[1] instanceof Node).toBe(true);
 
             done();
         });
@@ -136,6 +143,25 @@ describe("core.dom tests", () => {
             expect(ret instanceof Array).toBeTruthy();
             expect(ret.length).toBe(1);
             expect(ret[0]).toBe(html);
+
+            done();
+        });
+
+        it("returns an empty array, if nothing was passed", (done) => {
+            const ret = dom.toNodeArray();
+            expect(ret.length).toBe(0);
+            expect(ret instanceof Array).toBe(true);
+
+            done();
+        });
+
+        it("returns only DOM Nodes", (done) => {
+            const el = document.body;
+            const txt = document.createTextNode("okay");
+            const ret = dom.toNodeArray([1, false, txt, "okay", el]);
+            expect(ret.length).toBe(2);
+            expect(ret[0]).toBe(txt);
+            expect(ret[1]).toBe(el);
 
             done();
         });
@@ -182,7 +208,6 @@ describe("core.dom tests", () => {
 
             done();
         });
-
     });
 
     describe("wrap tests", () => {
@@ -549,7 +574,6 @@ describe("core.dom tests", () => {
 
     describe("is_button", () => {
         it("checks, if an element is a button-like element or not.", (done) => {
-
             const button = document.createElement("button");
             const button_button = document.createElement("button");
             button_button.setAttribute("type", "button");
@@ -586,7 +610,6 @@ describe("core.dom tests", () => {
             done();
         });
     });
-
 
     describe("create_from_string", () => {
         it("Creates a DOM element from a string", (done) => {
@@ -904,7 +927,7 @@ describe("core.dom tests", () => {
         });
         it("can be used to store and retrieve arbitrary data on DOM nodes.", function () {
             const el = document.createElement("div");
-            const data = { okay() { } };
+            const data = { okay() {} };
             dom.set_data(el, "test_data", data);
             expect(dom.get_data(el, "test_data")).toBe(data);
         });

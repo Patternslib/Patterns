@@ -37,17 +37,18 @@ const document_ready = (fn) => {
 /**
  * Return an array of DOM nodes.
  *
- * @param {Node|NodeList|jQuery} nodes - The DOM node to start the search from.
+ * @param {Node|NodeList|jQuery} nodes - The object which should be returned as array.
  *
  * @returns {Array} - An array of DOM nodes.
  */
 const toNodeArray = (nodes) => {
-    if (nodes.jquery || nodes instanceof NodeList) {
-        // jQuery or document.querySelectorAll
+    if (nodes?.jquery || nodes instanceof NodeList) {
         nodes = [...nodes];
     } else if (nodes instanceof Array === false) {
         nodes = [nodes];
     }
+    // Filter for DOM nodes only.
+    nodes = nodes.filter((node) => node instanceof Node);
     return nodes;
 };
 
