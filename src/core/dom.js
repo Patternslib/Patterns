@@ -53,6 +53,20 @@ const toNodeArray = (nodes) => {
 };
 
 /**
+ * Return an array of DOM elements.
+ *
+ * @param {Node|NodeList|jQuery} nodes - The object which should be returned as array.
+ *
+ * @returns {Array} - An array of DOM elements.
+ */
+const to_element_array = (nodes) => {
+    nodes = toNodeArray(nodes);
+    // Filter for DOM elements only.
+    nodes = nodes.filter((node) => node instanceof Element);
+    return nodes;
+};
+
+/**
  * Like querySelectorAll but including the element where it starts from.
  * Returns an Array, not a NodeList
  *
@@ -620,6 +634,7 @@ const find_inputs = (el) => {
 
 const dom = {
     document_ready: document_ready,
+    to_element_array: to_element_array,
     toNodeArray: toNodeArray,
     querySelectorAllAndMe: querySelectorAllAndMe,
     wrap: wrap,

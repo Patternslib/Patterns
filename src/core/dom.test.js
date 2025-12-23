@@ -167,6 +167,84 @@ describe("core.dom tests", () => {
         });
     });
 
+    describe("to_element_array tests", () => {
+        it("returns an array of DOM elements, if a jQuery object was passed.", (done) => {
+            const html = document.createElement("div");
+            html.innerHTML = `
+                <span id="id1" />
+                <span id="id2" />
+            `;
+            const el1 = html.querySelector("#id1");
+            const el2 = html.querySelector("#id2");
+            const testee = $("span", html);
+            expect(testee.length).toBe(2);
+
+            const ret = dom.to_element_array(testee);
+
+            expect(ret.jquery).toBeFalsy();
+            expect(ret.length).toBe(2);
+
+            expect(ret[0]).toBe(el1);
+            expect(ret[0].jquery).toBeFalsy();
+            expect(ret[0] instanceof Element).toBe(true);
+
+            expect(ret[1]).toBe(el2);
+            expect(ret[1].jquery).toBeFalsy();
+            expect(ret[1] instanceof Element).toBe(true);
+
+            done();
+        });
+
+        it("returns an array of elements, if a NodeList was passed.", (done) => {
+            const html = document.createElement("div");
+            html.innerHTML = `
+                <span id="id1" />
+                <span id="id2" />
+            `;
+            const el1 = html.querySelector("#id1");
+            const el2 = html.querySelector("#id2");
+            const testee = html.querySelectorAll("span");
+            expect(testee.length).toBe(2);
+
+            const ret = dom.to_element_array(testee);
+            expect(ret instanceof NodeList).toBeFalsy();
+            expect(ret.length).toBe(2);
+            expect(ret[0]).toBe(el1);
+            expect(ret[1]).toBe(el2);
+
+            done();
+        });
+
+        it("returns an array with a single element, if a single element was passed.", (done) => {
+            const html = document.createElement("div");
+
+            const ret = dom.to_element_array(html);
+            expect(ret instanceof Array).toBeTruthy();
+            expect(ret.length).toBe(1);
+            expect(ret[0]).toBe(html);
+
+            done();
+        });
+
+        it("returns an empty array, if nothing was passed", (done) => {
+            const ret = dom.to_element_array();
+            expect(ret.length).toBe(0);
+            expect(ret instanceof Array).toBe(true);
+
+            done();
+        });
+
+        it("returns only DOM Elements, no Nodes or others", (done) => {
+            const el = document.body;
+            const txt = document.createTextNode("okay");
+            const ret = dom.to_element_array([1, false, txt, "okay", el]);
+            expect(ret.length).toBe(1);
+            expect(ret[0]).toBe(el);
+
+            done();
+        });
+    });
+
     describe("querySelectorAllAndMe tests", () => {
         it("return also starting node if query matches.", (done) => {
             const el = document.createElement("div");
