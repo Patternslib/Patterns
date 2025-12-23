@@ -70,20 +70,21 @@ const to_element_array = (nodes) => {
  * Like querySelectorAll but including the element where it starts from.
  * Returns an Array, not a NodeList
  *
- * @param {Node} el - The DOM node to start the search from.
+ * @param {Element|NodeList|Array} el - The DOM element, NodeList or array of elements to start the search from.
  *
- * @returns {Array} - The DOM nodes found.
+ * @returns {Array} - The DOM elements found.
  */
 const querySelectorAllAndMe = (el, selector) => {
-    if (!el || !el.querySelectorAll) {
-        return [];
+    // Ensure we have a list of DOM elements.
+    const roots = to_element_array(el);
+    const all = [];
+    for (const root of roots) {
+        all.push(...root.querySelectorAll(selector));
+        if (root.matches(selector)) {
+            all.unshift(root); // root element should be first.
+        }
     }
-
-    const all = [...el.querySelectorAll(selector)];
-    if (el.matches(selector)) {
-        all.unshift(el); // start element should be first.
-    }
-    return all;
+    return [...new Set(all)];
 };
 
 /**

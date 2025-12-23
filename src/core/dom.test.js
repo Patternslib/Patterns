@@ -282,6 +282,63 @@ describe("core.dom tests", () => {
             done();
         });
 
+        it("Support multiple root nodes", (done) => {
+            const el1 = document.createElement("div");
+            el1.className = "el1";
+            const el2 = document.createElement("span");
+            el2.className = "el2";
+            const el3 = document.createElement("div");
+            el3.className = "el3";
+
+            const ret = dom.querySelectorAllAndMe([el1, el2, el3], "div");
+            const ids = ret
+                .map((el) => el.className)
+                .sort()
+                .join(" ");
+
+            expect(ret.length).toBe(2);
+            expect(ids).toBe("el1 el3");
+
+            done();
+        });
+
+        it("Support nesting", (done) => {
+            const el1 = document.createElement("div");
+            el1.className = "el1";
+            el1.innerHTML = '<div class="el11"></div>';
+            const el2 = document.createElement("span");
+            el2.className = "el2";
+            const el3 = document.createElement("div");
+            el3.className = "el3";
+
+            const ret = dom.querySelectorAllAndMe([el1, el2, el3], "div");
+            const ids = ret
+                .map((el) => el.className)
+                .sort()
+                .join(" ");
+
+            expect(ret.length).toBe(3);
+            expect(ids).toBe("el1 el11 el3");
+
+            done();
+        });
+
+        it("Does not return the same element twice", (done) => {
+            const el1 = document.createElement("div");
+            el1.className = "el1";
+
+            const ret = dom.querySelectorAllAndMe([el1, el1, el1], "div");
+            const ids = ret
+                .map((el) => el.className)
+                .sort()
+                .join(" ");
+
+            expect(ret.length).toBe(1);
+            expect(ids).toBe("el1");
+
+            done();
+        });
+
         it("return empty list, if no element is passed.", (done) => {
             const res = dom.querySelectorAllAndMe();
             expect(Array.isArray(res)).toBe(true);
