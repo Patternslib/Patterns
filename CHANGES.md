@@ -2,6 +2,68 @@
 
 See the [history](./docs/history/index.md) for older changelog entries.
 
+
+
+## [9.10.4-alpha.1](https://github.com/Patternslib/patterns/compare/9.10.4-alpha.0...9.10.4-alpha.1) (2025-12-24)
+
+
+### Features
+
+
+* **core dom:** Introduce to_element_array. ([f08b83f](https://github.com/Patternslib/patterns/commit/f08b83fc6efde06c90e3b26848e911e2e0a04819))
+
+  This method can be passed a single object, a NodeList or an array and
+will return an array, filtered for DOM elements.
+
+
+
+### Bug Fixes
+
+
+* **pat-inject:** Fix broken scrolling after injection. ([446cf06](https://github.com/Patternslib/patterns/commit/446cf06f6e9c8232834c25cd0b818d5c6ddd10c6))
+
+  This fixes a problem where scrolling wasn't working after injection
+anymore when the injection result is multiple nodes and not a single
+one.
+
+
+
+### Technical Changes
+
+
+* **code dom:** Rename toNodeArray to to_node_array, keeping the old name for BBB. ([ab78058](https://github.com/Patternslib/patterns/commit/ab78058116ba15445fa47ea0829b9484820a1022))
+
+  This is done to align the names according the naming conventions in
+Patternslib. Also, this is not a breaking change, as toNodeArray is now
+nowhere used (we're using to_element_array instead) and we kept the old
+name as alias for backwards compatibility.
+
+
+* **core dom:** querySelectorAllAndMe - Define the order of results. ([5063f50](https://github.com/Patternslib/patterns/commit/5063f502b09e8de8715b49b5135697859fa41c9f))
+
+  Return the results in the order of the matching root elements, extended
+their matching containing elements.
+Note: not a breaking change, as the support for multiple root nodes was
+added in this release.
+
+
+* **core dom:** querySelectorAllAndMe - Support multiple root nodes. ([ba8ee80](https://github.com/Patternslib/patterns/commit/ba8ee801845fea0404e9b87f8c7292ace19016d3))
+
+  querySelectorAllAndMe supports now multiple root nodes. All of them are searched for a selector match.
+
+
+* **core dom:** toNodeArray - filter for instances of Node only. ([5de555b](https://github.com/Patternslib/patterns/commit/5de555b0e7eb0034265f9662e14ec9cf3b3890e0))
+
+
+
+### Maintenance
+
+
+* **core utils:** hideOrShow - filter for dom elements. ([c20c58a](https://github.com/Patternslib/patterns/commit/c20c58a247a0533527f8a81900cc67505a8a5e68))
+
+  Use dom.to_element_array instead of dom.toNodeArray to filter for DOM
+elements instead of nodes.
+
 ## [9.10.3](https://github.com/Patternslib/patterns/compare/9.10.2...9.10.3) (2025-07-04)
 
 ### Maintenance
