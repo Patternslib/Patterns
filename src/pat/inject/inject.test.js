@@ -947,6 +947,89 @@ describe("pat-inject", function () {
 
                 expect($div.contents().last().text()).toBe("repl");
             });
+
+            it("9.1.13 - injects and scrolls to scroll target, if set.", async function () {
+                const scroll_spy = jest
+                    .spyOn(window, "scrollTo")
+                    .mockImplementation(() => null);
+
+                answer(`
+                    <html>
+                        <body>
+                            <div id="source">
+                            </div>
+                        </body>
+                    </html>
+                `);
+
+                document.body.innerHTML = `
+                    <html>
+                        <body>
+                            <a  class="pat-inject"
+                                href="test.html"
+                                data-pat-inject="
+                                    source: #source::element;
+                                    target: self::element;
+                                    scroll: #source;
+                                "
+                            >inject this</a>
+                        </body>
+                    </html>
+                `;
+
+                const trigger = document.querySelector(".pat-inject");
+
+                pattern.init($(trigger));
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                trigger.click();
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                expect(scroll_spy).toHaveBeenCalledTimes(1);
+            });
+
+            it("9.1.14 - injects and scrolls to scroll target with injection results as a list of jQuery nodes.", async function () {
+                const scroll_spy = jest
+                    .spyOn(window, "scrollTo")
+                    .mockImplementation(() => null);
+
+                answer(`
+                    <html>
+                        <body>
+                            <article id="source">
+                                <section class="paragraph-1"></section>
+                                <section class="paragraph-2"></section>
+                                <section class="paragraph-3"></section>
+                            </article>
+                        </body>
+                    </html>
+                `);
+
+                document.body.innerHTML = `
+                    <html>
+                        <body>
+                            <a  class="pat-inject"
+                                href="test.html"
+                                data-pat-inject="
+                                    source: #source;
+                                    target: self::element;
+                                    scroll: .paragraph-2;
+                                "
+                            >inject this</a>
+                        </body>
+                    </html>
+                `;
+
+                const trigger = document.querySelector(".pat-inject");
+
+                pattern.init($(trigger));
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                trigger.click();
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                expect(scroll_spy).toHaveBeenCalledTimes(1);
+            });
         });
 
         describe("9.2 - inject on forms", function () {

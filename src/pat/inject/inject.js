@@ -557,7 +557,7 @@ const inject = {
             // 2) getting the element to scroll to (if not "top")
             const scroll_target = ["top", "target"].includes(cfg.scroll)
                 ? cfg.$target[0]
-                : dom.querySelectorAllAndMe($injected[0], cfg.scroll);
+                : dom.querySelectorAllAndMe($injected, cfg.scroll)[0];
 
             const scroll_container = dom.find_scroll_container(
                 scroll_target,

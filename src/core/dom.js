@@ -37,17 +37,32 @@ const document_ready = (fn) => {
 /**
  * Return an array of DOM nodes.
  *
- * @param {Node|NodeList|jQuery} nodes - The DOM node to start the search from.
+ * @param {Node|NodeList|jQuery} nodes - The object which should be returned as array.
  *
  * @returns {Array} - An array of DOM nodes.
  */
-const toNodeArray = (nodes) => {
-    if (nodes.jquery || nodes instanceof NodeList) {
-        // jQuery or document.querySelectorAll
+const to_node_array = (nodes) => {
+    if (nodes?.jquery || nodes instanceof NodeList) {
         nodes = [...nodes];
     } else if (nodes instanceof Array === false) {
         nodes = [nodes];
     }
+    // Filter for DOM nodes only.
+    nodes = nodes.filter((node) => node instanceof Node);
+    return nodes;
+};
+
+/**
+ * Return an array of DOM elements.
+ *
+ * @param {Node|NodeList|jQuery} nodes - The object which should be returned as array.
+ *
+ * @returns {Array} - An array of DOM elements.
+ */
+const to_element_array = (nodes) => {
+    nodes = to_node_array(nodes);
+    // Filter for DOM elements only.
+    nodes = nodes.filter((node) => node instanceof Element);
     return nodes;
 };
 
@@ -55,18 +70,28 @@ const toNodeArray = (nodes) => {
  * Like querySelectorAll but including the element where it starts from.
  * Returns an Array, not a NodeList
  *
- * @param {Node} el - The DOM node to start the search from.
+ * @param {Element|NodeList|Array} el - The DOM element, NodeList or array of elements to start the search from.
+ * @param {string} selector - The CSS selector to search for.
  *
- * @returns {Array} - The DOM nodes found.
+ * @returns {Array} - The DOM elements found.
  */
 const querySelectorAllAndMe = (el, selector) => {
-    if (!el || !el.querySelectorAll) {
-        return [];
-    }
+    // Ensure we have a list of DOM elements.
+    const roots = to_element_array(el);
+    const seen = new WeakSet();
+    const all = [];
 
-    const all = [...el.querySelectorAll(selector)];
-    if (el.matches(selector)) {
-        all.unshift(el); // start element should be first.
+    for (const root of roots) {
+        if (root.matches(selector) && !seen.has(root)) {
+            all.push(root);
+            seen.add(root);
+        }
+        for (const match of root.querySelectorAll(selector)) {
+            if (!seen.has(match)) {
+                all.push(match);
+                seen.add(match);
+            }
+        }
     }
     return all;
 };
@@ -156,8 +181,6 @@ const is_button = (el) => {
         input[type=submit]
     `);
 };
-
-
 
 /**
  * Return all direct parents of ``el`` matching ``selector``.
@@ -383,15 +406,15 @@ const get_relative_position = (el, reference_el = document.body) => {
     //      https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
     const left = Math.abs(
         el.getBoundingClientRect().left +
-        reference_el.scrollLeft -
-        reference_el.getBoundingClientRect().left -
-        dom.get_css_value(reference_el, "border-left-width", true)
+            reference_el.scrollLeft -
+            reference_el.getBoundingClientRect().left -
+            dom.get_css_value(reference_el, "border-left-width", true)
     );
     const top = Math.abs(
         el.getBoundingClientRect().top +
-        reference_el.scrollTop -
-        reference_el.getBoundingClientRect().top -
-        dom.get_css_value(reference_el, "border-top-width", true)
+            reference_el.scrollTop -
+            reference_el.getBoundingClientRect().top -
+            dom.get_css_value(reference_el, "border-top-width", true)
     );
 
     return { top, left };
@@ -535,9 +558,9 @@ const get_visible_ratio = (el, container) => {
         container !== window
             ? container.getBoundingClientRect()
             : {
-                top: 0,
-                bottom: window.innerHeight,
-            };
+                  top: 0,
+                  bottom: window.innerHeight,
+              };
 
     let visible_ratio = 0;
     if (rect.top < container_rect.bottom && rect.bottom > container_rect.top) {
@@ -619,7 +642,9 @@ const find_inputs = (el) => {
 
 const dom = {
     document_ready: document_ready,
-    toNodeArray: toNodeArray,
+    to_element_array: to_element_array,
+    to_node_array: to_node_array,
+    toNodeArray: to_node_array, // BBB.
     querySelectorAllAndMe: querySelectorAllAndMe,
     wrap: wrap,
     hide: hide,

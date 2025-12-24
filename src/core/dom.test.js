@@ -88,7 +88,7 @@ describe("core.dom tests", () => {
         });
     });
 
-    describe("toNodeArray tests", () => {
+    describe("to_node_array tests", () => {
         it("returns an array of nodes, if a jQuery object was passed.", (done) => {
             const html = document.createElement("div");
             html.innerHTML = `
@@ -100,11 +100,18 @@ describe("core.dom tests", () => {
             const testee = $("span", html);
             expect(testee.length).toBe(2);
 
-            const ret = dom.toNodeArray(testee);
+            const ret = dom.to_node_array(testee);
+
             expect(ret.jquery).toBeFalsy();
             expect(ret.length).toBe(2);
+
             expect(ret[0]).toBe(el1);
+            expect(ret[0].jquery).toBeFalsy();
+            expect(ret[0] instanceof Node).toBe(true);
+
             expect(ret[1]).toBe(el2);
+            expect(ret[1].jquery).toBeFalsy();
+            expect(ret[1] instanceof Node).toBe(true);
 
             done();
         });
@@ -120,7 +127,7 @@ describe("core.dom tests", () => {
             const testee = html.querySelectorAll("span");
             expect(testee.length).toBe(2);
 
-            const ret = dom.toNodeArray(testee);
+            const ret = dom.to_node_array(testee);
             expect(ret instanceof NodeList).toBeFalsy();
             expect(ret.length).toBe(2);
             expect(ret[0]).toBe(el1);
@@ -132,10 +139,118 @@ describe("core.dom tests", () => {
         it("returns an array with a single node, if a single node was passed.", (done) => {
             const html = document.createElement("div");
 
-            const ret = dom.toNodeArray(html);
+            const ret = dom.to_node_array(html);
             expect(ret instanceof Array).toBeTruthy();
             expect(ret.length).toBe(1);
             expect(ret[0]).toBe(html);
+
+            done();
+        });
+
+        it("returns an empty array, if nothing was passed", (done) => {
+            const ret = dom.to_node_array();
+            expect(ret.length).toBe(0);
+            expect(ret instanceof Array).toBe(true);
+
+            done();
+        });
+
+        it("returns only DOM Nodes", (done) => {
+            const el = document.body;
+            const txt = document.createTextNode("okay");
+            const ret = dom.toNodeArray([1, false, txt, "okay", el]);
+            expect(ret.length).toBe(2);
+            expect(ret[0]).toBe(txt);
+            expect(ret[1]).toBe(el);
+
+            done();
+        });
+
+        it("returns only DOM Nodes, using the deprecated name", (done) => {
+            const el = document.body;
+            const txt = document.createTextNode("okay");
+            const ret = dom.toNodeArray([1, false, txt, "okay", el]);
+            expect(ret.length).toBe(2);
+            expect(ret[0]).toBe(txt);
+            expect(ret[1]).toBe(el);
+
+            done();
+        });
+    });
+
+    describe("to_element_array tests", () => {
+        it("returns an array of DOM elements, if a jQuery object was passed.", (done) => {
+            const html = document.createElement("div");
+            html.innerHTML = `
+                <span id="id1" />
+                <span id="id2" />
+            `;
+            const el1 = html.querySelector("#id1");
+            const el2 = html.querySelector("#id2");
+            const testee = $("span", html);
+            expect(testee.length).toBe(2);
+
+            const ret = dom.to_element_array(testee);
+
+            expect(ret.jquery).toBeFalsy();
+            expect(ret.length).toBe(2);
+
+            expect(ret[0]).toBe(el1);
+            expect(ret[0].jquery).toBeFalsy();
+            expect(ret[0] instanceof Element).toBe(true);
+
+            expect(ret[1]).toBe(el2);
+            expect(ret[1].jquery).toBeFalsy();
+            expect(ret[1] instanceof Element).toBe(true);
+
+            done();
+        });
+
+        it("returns an array of elements, if a NodeList was passed.", (done) => {
+            const html = document.createElement("div");
+            html.innerHTML = `
+                <span id="id1" />
+                <span id="id2" />
+            `;
+            const el1 = html.querySelector("#id1");
+            const el2 = html.querySelector("#id2");
+            const testee = html.querySelectorAll("span");
+            expect(testee.length).toBe(2);
+
+            const ret = dom.to_element_array(testee);
+            expect(ret instanceof NodeList).toBeFalsy();
+            expect(ret.length).toBe(2);
+            expect(ret[0]).toBe(el1);
+            expect(ret[1]).toBe(el2);
+
+            done();
+        });
+
+        it("returns an array with a single element, if a single element was passed.", (done) => {
+            const html = document.createElement("div");
+
+            const ret = dom.to_element_array(html);
+            expect(ret instanceof Array).toBeTruthy();
+            expect(ret.length).toBe(1);
+            expect(ret[0]).toBe(html);
+
+            done();
+        });
+
+        it("returns an empty array, if nothing was passed", (done) => {
+            const ret = dom.to_element_array();
+            expect(ret.length).toBe(0);
+            expect(ret instanceof Array).toBe(true);
+
+            done();
+        });
+
+        it("returns only DOM Elements, no Nodes or others", (done) => {
+            const el = document.body;
+            const txt = document.createTextNode("okay");
+            const ret = dom.to_element_array([1, false, txt, "okay", el]);
+            expect(ret.length).toBe(1);
+            expect(ret[0]).toBe(el);
 
             done();
         });
@@ -167,6 +282,91 @@ describe("core.dom tests", () => {
             done();
         });
 
+        it("Support multiple root nodes", (done) => {
+            const el1 = document.createElement("div");
+            el1.className = "el1";
+            const el2 = document.createElement("span");
+            el2.className = "el2";
+            const el3 = document.createElement("div");
+            el3.className = "el3";
+
+            const ret = dom.querySelectorAllAndMe([el1, el2, el3], "div");
+            const ids = ret
+                .map((el) => el.className)
+                .sort()
+                .join(" ");
+
+            expect(ret.length).toBe(2);
+            expect(ids).toBe("el1 el3");
+
+            done();
+        });
+
+        it("Support nesting", (done) => {
+            const el1 = document.createElement("div");
+            el1.className = "el1";
+            el1.innerHTML = '<div class="el11"></div>';
+            const el2 = document.createElement("span");
+            el2.className = "el2";
+            const el3 = document.createElement("div");
+            el3.className = "el3";
+
+            const ret = dom.querySelectorAllAndMe([el1, el2, el3], "div");
+            const ids = ret
+                .map((el) => el.className)
+                .sort()
+                .join(" ");
+
+            expect(ret.length).toBe(3);
+            expect(ids).toBe("el1 el11 el3");
+
+            done();
+        });
+
+        it("Return root nodes first", (done) => {
+            document.body.innerHTML = `
+                <div id="id1" class="root">
+                    <span id="id11"></span>
+                    <span id="id12"></span>
+                </div>
+                <div id="id2" class="root">
+                    <span id="id21"></span>
+                    <span id="id22"></span>
+                </div>
+                <section id="id3" class="root">
+                    <span id="id31"></span>
+                    <aside id="id32"></aside>
+                </section>
+                <div id="id4" class="root">
+                    <span id="id41"></span>
+                    <span id="id42"></span>
+                </div>
+            `;
+
+            const roots = document.querySelectorAll(".root");
+            const results = dom.querySelectorAllAndMe(roots, "span, div");
+            const ids = results.map((element) => element.id).join(" ");
+            expect(ids).toBe("id1 id11 id12 id2 id21 id22 id31 id4 id41 id42");
+
+            done();
+        });
+
+        it("Does not return the same element twice", (done) => {
+            const el1 = document.createElement("div");
+            el1.className = "el1";
+
+            const ret = dom.querySelectorAllAndMe([el1, el1, el1], "div");
+            const ids = ret
+                .map((el) => el.className)
+                .sort()
+                .join(" ");
+
+            expect(ret.length).toBe(1);
+            expect(ids).toBe("el1");
+
+            done();
+        });
+
         it("return empty list, if no element is passed.", (done) => {
             const res = dom.querySelectorAllAndMe();
             expect(Array.isArray(res)).toBe(true);
@@ -182,7 +382,6 @@ describe("core.dom tests", () => {
 
             done();
         });
-
     });
 
     describe("wrap tests", () => {
@@ -549,7 +748,6 @@ describe("core.dom tests", () => {
 
     describe("is_button", () => {
         it("checks, if an element is a button-like element or not.", (done) => {
-
             const button = document.createElement("button");
             const button_button = document.createElement("button");
             button_button.setAttribute("type", "button");
@@ -586,7 +784,6 @@ describe("core.dom tests", () => {
             done();
         });
     });
-
 
     describe("create_from_string", () => {
         it("Creates a DOM element from a string", (done) => {
@@ -904,7 +1101,7 @@ describe("core.dom tests", () => {
         });
         it("can be used to store and retrieve arbitrary data on DOM nodes.", function () {
             const el = document.createElement("div");
-            const data = { okay() { } };
+            const data = { okay() {} };
             dom.set_data(el, "test_data", data);
             expect(dom.get_data(el, "test_data")).toBe(data);
         });
