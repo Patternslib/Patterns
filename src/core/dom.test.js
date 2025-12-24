@@ -323,6 +323,30 @@ describe("core.dom tests", () => {
             done();
         });
 
+        it("Return root nodes first", (done) => {
+            document.body.innerHTML = `
+                <div id="id1">
+                    <span id="id11"></span>
+                    <span id="id12"></span>
+                </div>
+                <div id="id2">
+                    <span id="id21"></span>
+                    <span id="id22"></span>
+                </div>
+                <div id="id3">
+                    <span id="id31"></span>
+                    <span id="id32"></span>
+                </div>
+            `;
+
+            const roots = document.querySelectorAll("div");
+            const results = dom.querySelectorAllAndMe(roots, "span, div");
+            const ids = results.map((element) => element.id).join(" ");
+            expect(ids).toBe("id1 id2 id3 id11 id12 id21 id22 id31 id32");
+
+            done();
+        });
+
         it("Does not return the same element twice", (done) => {
             const el1 = document.createElement("div");
             el1.className = "el1";
