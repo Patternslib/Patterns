@@ -325,24 +325,28 @@ describe("core.dom tests", () => {
 
         it("Return root nodes first", (done) => {
             document.body.innerHTML = `
-                <div id="id1">
+                <div id="id1" class="root">
                     <span id="id11"></span>
                     <span id="id12"></span>
                 </div>
-                <div id="id2">
+                <div id="id2" class="root">
                     <span id="id21"></span>
                     <span id="id22"></span>
                 </div>
-                <div id="id3">
+                <section id="id3" class="root">
                     <span id="id31"></span>
-                    <span id="id32"></span>
+                    <aside id="id32"></aside>
+                </section>
+                <div id="id4" class="root">
+                    <span id="id41"></span>
+                    <span id="id42"></span>
                 </div>
             `;
 
-            const roots = document.querySelectorAll("div");
+            const roots = document.querySelectorAll(".root");
             const results = dom.querySelectorAllAndMe(roots, "span, div");
             const ids = results.map((element) => element.id).join(" ");
-            expect(ids).toBe("id1 id2 id3 id11 id12 id21 id22 id31 id32");
+            expect(ids).toBe("id1 id11 id12 id2 id21 id22 id31 id4 id41 id42");
 
             done();
         });

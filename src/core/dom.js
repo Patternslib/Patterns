@@ -73,28 +73,27 @@ const to_element_array = (nodes) => {
  * @param {Element|NodeList|Array} el - The DOM element, NodeList or array of elements to start the search from.
  * @param {string} selector - The CSS selector to search for.
  *
- * @returns {Array} - The DOM elements found, with root elements first.
+ * @returns {Array} - The DOM elements found.
  */
 const querySelectorAllAndMe = (el, selector) => {
     // Ensure we have a list of DOM elements.
     const roots = to_element_array(el);
     const seen = new WeakSet();
-    const firsts = [];
-    const others = [];
+    const all = [];
 
     for (const root of roots) {
         if (root.matches(selector) && !seen.has(root)) {
-            firsts.push(root);
+            all.push(root);
             seen.add(root);
         }
         for (const match of root.querySelectorAll(selector)) {
             if (!seen.has(match)) {
-                others.push(match);
+                all.push(match);
                 seen.add(match);
             }
         }
     }
-    return [...firsts, ...others];
+    return all;
 };
 
 /**
