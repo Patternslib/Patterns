@@ -43,7 +43,14 @@
                  type="text"
           /></label>
 
-        <label>Age
+        <label>
+          Toggle age
+          <input type="checkbox" name="toggle_age" />
+        </label>
+
+        <label class="pat-depends"
+               data-pat-depends="condition: toggle_age; action: both"
+        >Age
           <input autocomplete="off"
                  max="65"
                  min="16"
