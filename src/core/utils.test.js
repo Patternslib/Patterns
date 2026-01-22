@@ -650,6 +650,13 @@ describe("core.utils tests", () => {
 
             done();
         });
+
+        it("it returns the empty value, if no element was passed.", (done) => {
+            expect(utils.jqToNode(null)).toBe(null);
+            expect(utils.jqToNode(undefined)).toBe(undefined);
+
+            done();
+        });
     });
 
     describe("ensureArray tests", () => {

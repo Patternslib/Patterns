@@ -14,15 +14,15 @@ describe("The mockup-parser", function () {
     it("parses the data attribute of nested nodes", function () {
         const $el = $(`
             <div data-pat-testpattern="parentOption1: value1; parentOption2: value2">
-                <span data-pat-testpattern="option1: subvalue1; option2: subvalue2">
+                <span class="pat-testpattern" data-pat-testpattern="option1: subvalue1; option2: subvalue2">
                     nested mockup parser test
                 </span>
             </div>`);
-        const options = mockupParser.getOptions($el, "testpattern");
+        const options = mockupParser.getOptions($(".pat-testpattern", $el), "testpattern");
         expect(options.parentOption1).toBe("value1");
         expect(options.parentOption2).toBe("value2");
-        expect(options.option1).toBe(undefined);
-        expect(options.option2).toBe(undefined);
+        expect(options.option1).toBe("subvalue1");
+        expect(options.option2).toBe("subvalue2");
     });
     it("parses the data attribute of a single node and preserves injected options", function () {
         const $el = $(`

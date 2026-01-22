@@ -618,7 +618,7 @@ const isIE = () => {
 
 const jqToNode = (el) => {
     // Return a DOM node if a jQuery node was passed.
-    if (el.jquery) {
+    if (el?.jquery) {
         el = el[0];
     }
     return el;
