@@ -1,4 +1,3 @@
-import $ from "jquery";
 
 var parser = {
     getOptions($el, patternName, options) {
@@ -12,7 +11,7 @@ var parser = {
          */
         options = options || {};
         // get options from parent element first, stop if element tag name is 'body'
-        if ($el.length !== 0 && !$.nodeName($el[0], "body")) {
+        if ($el.length !== 0 && $el[0].nodeName !== "BODY") {
             options = this.getOptions($el.parent(), patternName, options);
         }
         // collect all options from element
@@ -23,7 +22,7 @@ var parser = {
                 // parse options if string
                 if (typeof elOptions === "string") {
                     const tmpOptions = {};
-                    $.each(elOptions.split(";"), function (i, item) {
+                    elOptions.split(";").forEach(item => {
                         item = item.split(":");
                         item.reverse();
                         let key = item.pop();
@@ -37,7 +36,10 @@ var parser = {
                 }
             }
         }
-        return $.extend(true, {}, options, elOptions);
+        return {
+            ...options,
+            ...elOptions,
+        }
     },
 };
 
