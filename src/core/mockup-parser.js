@@ -1,6 +1,7 @@
+import utils from "./utils";
 
-var parser = {
-    getOptions($el, patternName, options) {
+const parser = {
+    getOptions(el, pattern_name, options) {
         /* This is the Mockup parser. An alternative parser for Patternslib
          * patterns.
          *
@@ -9,37 +10,42 @@ var parser = {
          *
          * It parses a DOM element for pattern configuration options.
          */
+
+        el = utils.jqToNode(el);
         options = options || {};
+        if (!el) {
+            return options;
+        }
+
         // get options from parent element first, stop if element tag name is 'body'
-        if ($el.length !== 0 && $el[0].nodeName !== "BODY") {
-            options = this.getOptions($el.parent(), patternName, options);
+        if (el.nodeName !== "BODY") {
+            options = this.getOptions(el.parentElement, pattern_name, options);
         }
         // collect all options from element
-        let elOptions = {};
-        if ($el.length !== 0) {
-            elOptions = $el.data("pat-" + patternName);
-            if (elOptions) {
-                // parse options if string
-                if (typeof elOptions === "string") {
-                    const tmpOptions = {};
-                    elOptions.split(";").forEach(item => {
-                        item = item.split(":");
-                        item.reverse();
-                        let key = item.pop();
-                        key = key.replace(/^\s+|\s+$/g, ""); // trim
-                        item.reverse();
-                        let value = item.join(":");
-                        value = value.replace(/^\s+|\s+$/g, ""); // trim
-                        tmpOptions[key] = value;
-                    });
-                    elOptions = tmpOptions;
-                }
+        let el_options = {};
+        // Use `getAttribute` over `dataset` because dataset uses camelCasing of data attributes.
+        el_options = el.getAttribute(`data-pat-${pattern_name}`);
+        if (el_options) {
+            // parse options if string
+            if (typeof el_options === "string") {
+                const tmp_options = {};
+                el_options.split(";").forEach((item) => {
+                    item = item.split(":");
+                    item.reverse();
+                    let key = item.pop();
+                    key = key.replace(/^\s+|\s+$/g, ""); // trim
+                    item.reverse();
+                    let value = item.join(":");
+                    value = value.replace(/^\s+|\s+$/g, ""); // trim
+                    tmp_options[key] = value;
+                });
+                el_options = tmp_options;
             }
         }
         return {
             ...options,
-            ...elOptions,
-        }
+            ...el_options,
+        };
     },
 };
 
