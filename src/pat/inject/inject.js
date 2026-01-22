@@ -1110,7 +1110,7 @@ const inject = {
 
     async callTypeHandler(type, fn, context, params) {
         type = type || "html";
-        if (this.handlers[type] && $.isFunction(this.handlers[type][fn])) {
+        if (this.handlers[type] && typeof this.handlers[type][fn] === "function") {
             return await this.handlers[type][fn].bind(this)(...params);
         } else {
             return null;
