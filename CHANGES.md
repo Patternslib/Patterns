@@ -4,6 +4,33 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.10.5-alpha.0](https://github.com/Patternslib/patterns/compare/9.10.4...9.10.5-alpha.0) (2026-01-23)
+
+
+### Bug Fixes
+
+
+* **core utils:** jqToNode: Don't break when nothing was passed. ([a8bd678](https://github.com/Patternslib/patterns/commit/a8bd678c0fd5dbfbdfb337bc6ba132e5502f95ad))
+
+
+
+### Maintenance
+
+
+* **core mockup-parser:** fix parsing JSON values in data attributes ([94f2ef3](https://github.com/Patternslib/patterns/commit/94f2ef343e9e8ff110ed0d8fbd640654fe31254e))
+
+
+* **core mockup-parser:** Modernize code. ([ef0add0](https://github.com/Patternslib/patterns/commit/ef0add052385b793fef0ff2f9cf1cdffcf0343a6))
+
+
+* **core mockup-parser:** Remove jQuery and outdated $.nodeName usage. ([f064bcc](https://github.com/Patternslib/patterns/commit/f064bcc84531625c1fa32cd73e1b30cf69deb887))
+
+
+* **core mockup-parser:** Remove jQuery dependency from tests. ([ea7569f](https://github.com/Patternslib/patterns/commit/ea7569f03ad1b30d03e998db5e83835a5161cc2e))
+
+
+* **pat-inject:** Replace deprecated jQuery.isFunction with native JavaScript call. ([a71bb8a](https://github.com/Patternslib/patterns/commit/a71bb8aed964dbeb8b1752aaa9df2a2cc98be8c0))
+
 ## [9.10.4](https://github.com/Patternslib/patterns/compare/9.10.4-alpha.1...9.10.4) (2026-01-14)
 
 ## [9.10.4-alpha.1](https://github.com/Patternslib/patterns/compare/9.10.4-alpha.0...9.10.4-alpha.1) (2025-12-24)
