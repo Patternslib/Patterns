@@ -44,4 +44,16 @@ describe("The mockup-parser", function () {
         expect(options.option2).toBe("value2");
         expect(options.injectedOption).toBe("injectedValue");
     });
+    it("parses JSON data attribute of a single node", function () {
+        const el = document.createElement("div");
+        el.setAttribute(
+            "data-pat-testpattern",
+            '{"option1": "value1", "option2": "value2"}'
+        );
+
+        const options = mockupParser.getOptions(el, "testpattern");
+
+        expect(options.option1).toBe("value1");
+        expect(options.option2).toBe("value2");
+    });
 });
