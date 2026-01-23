@@ -27,7 +27,10 @@ const parser = {
         el_options = el.getAttribute(`data-pat-${pattern_name}`);
         if (el_options) {
             // parse options if string
-            if (typeof el_options === "string") {
+            try {
+                el_options = JSON.parse(el_options);
+            } catch {
+                // not JSON, try to parse it as semi-colon/colon list
                 const tmp_options = {};
                 el_options.split(";").forEach((item) => {
                     item = item.split(":");
