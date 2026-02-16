@@ -60,7 +60,13 @@ const registry = {
     // registration just registers a pattern. Once init is called,
     // the DOM is scanned. After that registering a new pattern
     // results in rescanning the DOM only for this pattern.
-    init() {
+    init(patterns) {
+        // Extend this registries patterns object.
+        // This is a way to inject lazy loading patterns.
+        if (typeof patterns === "object") {
+            this.patterns = { ...this.patterns, ...patterns };
+        }
+
         dom.document_ready(() => {
             if (window.__patternslib_registry_initialized) {
                 // Do not reinitialize a already initialized registry.
@@ -108,27 +114,46 @@ const registry = {
         /* Initialize the pattern with the provided name and in the context
          * of the passed in DOM element.
          */
-        const $el = $(el);
         const pattern = registry.patterns[name];
-        const plog = logging.getLogger(`pat.${name}`);
         if (el.matches(pattern.trigger)) {
-            plog.debug("Initialising.", el);
-            try {
-                if (pattern.init) {
-                    // old style initialisation
-                    pattern.init($el, null, trigger);
-                } else {
-                    // class based pattern initialisation
-                    new pattern($el, null, trigger);
-                }
+            if (pattern.importer) {
+                const observer = new IntersectionObserver(async (entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting) {
+                            const _pattern = await pattern.importer();
+                            this.patterns[name] = _pattern;
+                            this.initPattern__initializer(_pattern, name, el, trigger);
+                            observer.unobserve(el);
+                        }
+                    }
+                });
 
-                plog.debug("done.");
-            } catch (e) {
-                if (dont_catch) {
-                    throw e;
-                }
-                plog.error("Caught error:", e);
+                observer.observe(el);
+            } else {
+                this.initPattern__initializer(pattern, name, el, trigger);
             }
+        }
+    },
+
+    initPattern__initializer(pattern, name, el, trigger) {
+        const $el = $(el);
+        const logger = logging.getLogger(`pat.${name}`);
+        logger.debug("Initialising.", el);
+        try {
+            if (pattern.init) {
+                // old style initialisation
+                pattern.init($el, null, trigger);
+            } else {
+                // class based pattern initialisation
+                new pattern($el, null, trigger);
+            }
+
+            logger.debug("done.");
+        } catch (e) {
+            if (dont_catch) {
+                throw e;
+            }
+            logger.error("Caught error:", e);
         }
     },
 
@@ -177,20 +202,17 @@ const registry = {
         // Clean up selectors:
         // - Remove whitespace,
         // - Remove trailing commas,
-        // - Join to selecto string.
-        const selector_string = selectors.map(
-            (selector) => selector.trim().replace(/,$/, "")
-        ).join(",");
+        // - Join to selector string.
+        const selector_string = selectors
+            .map((selector) => selector.trim().replace(/,$/, ""))
+            .join(",");
 
         // Exit, if no selector.
         if (!selector_string) {
             return;
         }
 
-        let matches = dom.querySelectorAllAndMe(
-            content,
-            selector_string
-        );
+        let matches = dom.querySelectorAllAndMe(content, selector_string);
         matches = matches.filter((el) => {
             // Filter out patterns:
             // - with class ``.disable-patterns`` or wrapped within.
