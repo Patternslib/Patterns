@@ -21,6 +21,7 @@ class BasePattern {
     parser_group_options = true;
     parser_multiple = undefined;
     parser_inherit = true;
+    init_lazy = false;
 
     constructor(el, options = {}) {
         // Make static variables available on instance.
@@ -59,45 +60,62 @@ class BasePattern {
         // Both limitations are gone in next tick.
         //
         window.setTimeout(async () => {
-            if (typeof this.el[`pattern-${this.name}`] !== "undefined") {
-                // Do not reinstantiate
-                log.debug(`Not reinstatiating the pattern ${this.name}.`, this.el);
+            if (this.init_lazy === true) {
+                const observer = new IntersectionObserver(async (entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting) {
+                            await this.pattern_init(options);
+                            observer.unobserve(entry.target);
+                        }
+                    }
+                });
 
-                // Notify that not instantiated
-                this.el.dispatchEvent(
-                    new Event(`not-init.${this.name}.patterns`, {
-                        bubbles: true,
-                        cancelable: false,
-                    })
-                );
-                return;
+                observer.observe(this.el);
+            } else {
+                await this.pattern_init(options);
             }
+        }, 0);
+    }
 
-            // Create the options object by parsing the element and using the
-            // optional options as default.
-            this.options =
-                this.parser?.parse(
-                    this.el,
-                    options,
-                    this.parser_multiple,
-                    this.parser_inherit,
-                    this.parser_group_options
-                ) ?? options;
+    async pattern_init(options) {
+        if (typeof this.el[`pattern-${this.name}`] !== "undefined") {
+            // Do not reinstantiate
+            log.debug(`Not reinstatiating the pattern ${this.name}.`, this.el);
 
-            // Store pattern instance on element
-            this.el[`pattern-${this.name}`] = this;
-
-            // Initialize the pattern
-            await this.init();
-
-            // Notify that now ready
+            // Notify that not instantiated
             this.el.dispatchEvent(
-                new Event(`init.${this.name}.patterns`, {
+                new Event(`not-init.${this.name}.patterns`, {
                     bubbles: true,
-                    cancelable: true,
+                    cancelable: false,
                 })
             );
-        }, 0);
+            return;
+        }
+
+        // Create the options object by parsing the element and using the
+        // optional options as default.
+        this.options =
+            this.parser?.parse(
+                this.el,
+                options,
+                this.parser_multiple,
+                this.parser_inherit,
+                this.parser_group_options
+            ) ?? options;
+
+        // Store pattern instance on element
+        this.el[`pattern-${this.name}`] = this;
+
+        // Initialize the pattern
+        await this.init();
+
+        // Notify that now ready
+        this.el.dispatchEvent(
+            new Event(`init.${this.name}.patterns`, {
+                bubbles: true,
+                cancelable: true,
+            })
+        );
     }
 
     async init() {
@@ -110,7 +128,7 @@ class BasePattern {
             dom: this.el,
             action: action,
             ...options,
-        }
+        };
         this.el.dispatchEvent(events.update_event(options));
     }
 
