@@ -41,15 +41,15 @@ const lazy_patterns = {
     },
     "autofocus": {
         trigger: `
-        input.pat-autofocus,
-        input[autofocus],
-        select.pat-autofocus,
-        select[autofocus],
-        textarea.pat-autofocus,
-        textarea[autofocus],
-        button.pat-autofocus,
-        button[autofocus]
-    `,
+            input.pat-autofocus,
+            input[autofocus],
+            select.pat-autofocus,
+            select[autofocus],
+            textarea.pat-autofocus,
+            textarea[autofocus],
+            button.pat-autofocus,
+            button[autofocus]
+        `,
         importer: async () => (await import("./pat/autofocus/autofocus")).default,
     },
     "breadcrumbs": {
