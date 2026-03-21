@@ -110,7 +110,7 @@ class BasePattern {
             dom: this.el,
             action: action,
             ...options,
-        }
+        };
         this.el.dispatchEvent(events.update_event(options));
     }
 

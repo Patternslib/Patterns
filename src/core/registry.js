@@ -178,19 +178,16 @@ const registry = {
         // - Remove whitespace,
         // - Remove trailing commas,
         // - Join to selecto string.
-        const selector_string = selectors.map(
-            (selector) => selector.trim().replace(/,$/, "")
-        ).join(",");
+        const selector_string = selectors
+            .map((selector) => selector.trim().replace(/,$/, ""))
+            .join(",");
 
         // Exit, if no selector.
         if (!selector_string) {
             return;
         }
 
-        let matches = dom.querySelectorAllAndMe(
-            content,
-            selector_string
-        );
+        let matches = dom.querySelectorAllAndMe(content, selector_string);
         matches = matches.filter((el) => {
             // Filter out patterns:
             // - with class ``.disable-patterns`` or wrapped within.

@@ -11,7 +11,6 @@ import registry from "../../core/registry";
 
 const logger = logging.getLogger("pat-validation");
 
-
 export const parser = new Parser("validation");
 parser.addArgument("disable-selector", "[type=submit], button:not([type=button])"); // Elements which must be disabled if there are errors
 parser.addArgument("message-date", ""); // "This value must be a valid date"
@@ -306,7 +305,6 @@ class Pattern extends BasePattern {
                 // Call `emit_update` separately
                 this.emit_update("invalid");
             }
-
         }
 
         if (event?.type === "submit") {
@@ -318,7 +316,14 @@ class Pattern extends BasePattern {
         this.set_error_message(input);
     }
 
-    set_error({ input, msg, attribute = null, min = null, max = null, skip_event = false }) {
+    set_error({
+        input,
+        msg,
+        attribute = null,
+        min = null,
+        max = null,
+        skip_event = false,
+    }) {
         // Replace some variables, as like validate.js
         if (attribute) {
             msg = msg.replace(/%{attribute}/g, attribute);
