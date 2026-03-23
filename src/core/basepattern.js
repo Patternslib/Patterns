@@ -16,6 +16,7 @@ class BasePattern {
     static name; // name of pattern used in Registry.
     static trigger; // A CSS selector to match elements that should trigger the pattern instantiation.
     static parser; // Options parser.
+    static order = 1000; // Registry pattern sorting.
 
     // Parser options
     parser_group_options = true;
