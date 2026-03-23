@@ -2780,6 +2780,85 @@ describe("pat-inject", function () {
                 expect(base).toBeTruthy();
                 expect(base.getAttribute("href")).toBe("/new/");
             });
+
+            it("9.4.5 - Dispatches pat-inject-before-history-update event after head modifications but before history.pushState", async function () {
+                // Mock history.pushState to track when it's called
+                const original_push_state = history.pushState;
+                let push_state_called = false;
+                let event_dispatched = false;
+                let head_modified_when_event_fired = false;
+
+                history.pushState = function (...args) {
+                    push_state_called = true;
+                    return original_push_state.apply(this, args);
+                };
+
+                // Set up event listener to track when the event is dispatched
+                const event_handler = function (event) {
+                    event_dispatched = true;
+                    // Check if the head title has already been updated when the event fires
+                    const title = document.head.querySelector("title");
+                    head_modified_when_event_fired =
+                        title && title.textContent.trim() === "new page";
+                    // Ensure history.pushState hasn't been called yet
+                    expect(push_state_called).toBe(false);
+                    // Check that event is fired on document
+                    expect(event.target).toBe(document);
+                    expect(event.type).toBe("pat-inject-before-history-update");
+                };
+                document.addEventListener(
+                    "pat-inject-before-history-update",
+                    event_handler
+                );
+
+                document.head.innerHTML = `
+                        <title>old title</title>
+                    `;
+                document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                answer(`
+                        <html>
+                            <head>
+                                <title>new page</title>
+                            </head>
+                            <body>
+                                New content
+                            </body>
+                        </html>
+                    `);
+
+                const inject = document.querySelector(".pat-inject");
+
+                pattern.init($(inject));
+                await utils.timeout(1);
+
+                inject.click();
+                await utils.timeout(1);
+
+                // Cleanup
+                document.removeEventListener(
+                    "pat-inject-before-history-update",
+                    event_handler
+                );
+                history.pushState = original_push_state;
+
+                // Verify the event was dispatched
+                expect(event_dispatched).toBe(true);
+                // Verify the head was modified before the event was fired
+                expect(head_modified_when_event_fired).toBe(true);
+                // Verify history.pushState was eventually called
+                expect(push_state_called).toBe(true);
+                // Verify the content was injected
+                expect(document.body.textContent.trim()).toBe("New content");
+            });
         });
 
         describe("9.5 - support multiple source element matches.", function () {

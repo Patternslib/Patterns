@@ -387,5 +387,6 @@ pat-inject fires several JavaScript events which bubble up the DOM tree:
 | `pat-inject-content-loaded`        | jQuery     | images within injected content     | true    | Triggered on images within the injected content when those images are loaded.                                                               |
 | `pat-inject-missingSource`         | jQuery     | trigger which caused the injection | true    | Triggered when no to-be-injected source could be found.                                                                                     |
 | `pat-inject-missingTarget`         | jQuery     | trigger which caused the injection | true    | Triggered when no target could be found.                                                                                                    |
+| `pat-inject-before-history-update` | JavaScript | document                           | true    | Trigger just before the history is update, if `history: record` is set.                                                                     |
 
 Please note: `jQuery.trigger` events can be catched with jQuery only while JavaScript `dispatchEvent` events can be catched with bare JavaScript `addEventListener` and `jQuery.on`.

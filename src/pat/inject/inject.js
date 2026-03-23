@@ -535,6 +535,10 @@ const inject = {
         // Base: update/add/remove as needed
         this._update_head(source_base, target_base, true);
 
+        document.dispatchEvent(
+            new Event("pat-inject-before-history-update", { detail: { ajax_event: ev } })
+        );
+
         // At last position - other patterns can react on already changed title,
         // canonical or base.
         let url = cfg.url;
