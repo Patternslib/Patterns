@@ -258,7 +258,7 @@ to build infinite lists, where the injection element replaces itself with the ne
 
 A injection may be delayed, by providing a `delay` argument in `data-pat-inject`.
 The delay is specified in milliseconds.
-This is useful to build a polling loop or to prevent multiple injections happen at once by giving different delays to injections with an ``autoload`` trigger.
+This is useful to build a polling loop or to prevent multiple injections happen at once by giving different delays to injections with an `autoload` trigger.
 
     <a href="sources.html#id" class="pat-inject"
        data-pat-inject="trigger: autoload">Autoloads as soon as initialised</a>
@@ -269,12 +269,10 @@ This is useful to build a polling loop or to prevent multiple injections happen 
     <a href="sources.html#id" class="pat-inject"
        data-pat-inject="trigger: autoload; delay: 2000">Autoloads 2 seconds after the page is initialised.</a>
 
-
-For ``trigger: autoload-visible`` injections, the default delay is 200ms.
+For `trigger: autoload-visible` injections, the default delay is 200ms.
 This allows for long pages to scroll over and past items witn an autoload-visible trigger without loading them.
 If the item with the autoload-visible trigger is within the viewport for 200ms, the item is loaded.
-You can set this to ``0`` or any other delay time by configuring the delay parameter.
-
+You can set this to `0` or any other delay time by configuring the delay parameter.
 
 <!--
 XXX: example infinite list
@@ -337,17 +335,17 @@ After injection was triggered:
 ### Configurable error pages.
 
 In cases of AJAX errors, you can provide custom error pages by providing custom meta tags.
-For example, if you add this meta tag to the html ``<head>``:
+For example, if you add this meta tag to the html `<head>`:
 
     <meta name="pat-inject-status-404" content="/test_404.html" />
 
-Then, in case of a ``404`` error, it will try to retrieve the error page and replace the document body contents with the body contents of the error page.
-The code looks for a meta tag with the name ``pat-inject-status-`` plus the HTTP status code.
+Then, in case of a `404` error, it will try to retrieve the error page and replace the document body contents with the body contents of the error page.
+The code looks for a meta tag with the name `pat-inject-status-` plus the HTTP status code.
 
-Another example: You can present the user with a login page in case the session has expired (``401`` error).
+Another example: You can present the user with a login page in case the session has expired (`401` error).
 
 You can disable this behavior for debugging by adding the following parameter to the query string:
-``pat-inject-errorhandler.off``.
+`pat-inject-errorhandler.off`.
 
 ### Options reference
 
@@ -374,21 +372,20 @@ You can customise the behaviour of injection through options in the `data-pat-in
 | `history`         |                                             | `none` `record`                         | If set to `record` then injection will update the URL history and the title tag of the HTML page.                                                                                                                                                                                                                                                                                               | String or null.                              |
 | `scroll`          |                                             | `none`, `top`, `target`, CSS selector   | After injection is done, scroll to to given position. The default or `none` is to not do any scrolling. `top` scrolls to the top of the scroll container. `target` scrolls to the pat-inject target. CSS selector scrolls to the given selector. Note: You have to define a scroll container by setting overflow classes, otherwise `window` is used.                                           | String, CSS selector                         |
 
-
 ## Developer documentation
 
 pat-inject fires several JavaScript events which bubble up the DOM tree:
 
-| Event name | Type | Triggered on | Bubbles | Description |
-| --- | --- | --- | --- | --- |
-| `patterns-inject-triggered` | jQuery | pat-inject-element | true | Triggered, right after injection has been triggered. This can be on click, on submit, automatically and so on. |
-| `pat-ajax-success` | jQuery | pat-inject element | true | Triggered after successful ajax call but before the response is injected into the document |
-| `patterns-injected` | jQuery | parent of injected content | true | Triggered after successful injection |
-| `pat-inject-success` | JavaScript | pat-inject element | true | Triggered after successful injection, right after `patterns-injected` but on the pat-inject element and not on the injected content itself. |
-| `patterns-injected-scanned` | jQuery | injected content | true | Triggered after injected content was scanned by Pattern registry for new patterns. |
-| `patterns-injected-delayed` | JavaScript | injected content | true | Triggered 10ms after `patterns-injected-scanned` |
-| `pat-inject-content-loaded` | jQuery | images within injected content | true | Triggered on images within the injected content when those images are loaded. |
-| `pat-inject-missingSource` | jQuery | trigger which caused the injection | true | Triggered when no to-be-injected source could be found. |
-| `pat-inject-missingTarget` | jQuery | trigger which caused the injection | true | Triggered when no target could be found. |
+| Event name                         | Type       | Triggered on                       | Bubbles | Description                                                                                                                                 |
+| ---------------------------------- | ---------- | ---------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `patterns-inject-triggered`        | jQuery     | pat-inject-element                 | true    | Triggered, right after injection has been triggered. This can be on click, on submit, automatically and so on.                              |
+| `pat-ajax-success`                 | jQuery     | pat-inject element                 | true    | Triggered after successful ajax call but before the response is injected into the document                                                  |
+| `patterns-injected`                | jQuery     | parent of injected content         | true    | Triggered after successful injection                                                                                                        |
+| `pat-inject-success`               | JavaScript | pat-inject element                 | true    | Triggered after successful injection, right after `patterns-injected` but on the pat-inject element and not on the injected content itself. |
+| `patterns-injected-scanned`        | jQuery     | injected content                   | true    | Triggered after injected content was scanned by Pattern registry for new patterns.                                                          |
+| `patterns-injected-delayed`        | JavaScript | injected content                   | true    | Triggered 10ms after `patterns-injected-scanned`                                                                                            |
+| `pat-inject-content-loaded`        | jQuery     | images within injected content     | true    | Triggered on images within the injected content when those images are loaded.                                                               |
+| `pat-inject-missingSource`         | jQuery     | trigger which caused the injection | true    | Triggered when no to-be-injected source could be found.                                                                                     |
+| `pat-inject-missingTarget`         | jQuery     | trigger which caused the injection | true    | Triggered when no target could be found.                                                                                                    |
 
 Please note: `jQuery.trigger` events can be catched with jQuery only while JavaScript `dispatchEvent` events can be catched with bare JavaScript `addEventListener` and `jQuery.on`.
