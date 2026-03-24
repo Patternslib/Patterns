@@ -463,7 +463,7 @@ const inject = {
         return $target;
     },
 
-    _performInjection(target, $el, $sources, cfg, trigger, $title) {
+    _performInjection(target, $el, $sources, cfg, trigger, ev) {
         /* Called after the XHR has succeeded and we have a new $sources
          * element to inject.
          */
@@ -472,7 +472,9 @@ const inject = {
             const method = cfg.sourceMod === "content" ? "innerHTML" : "outerHTML";
             // There might be multiple sources, so we need to loop over them.
             // Access them with "innerHTML" or "outerHTML" depending on the sourceMod.
-            const sources_string = [...$sources].map(source => source[method]).join("\n");
+            const sources_string = [...$sources]
+                .map((source) => source[method])
+                .join("\n");
             wrapper.innerHTML = sources_string;
 
             for (const img of wrapper.content.querySelectorAll("img")) {
@@ -494,32 +496,88 @@ const inject = {
         // Now the injection actually happens.
         if (this._inject(trigger, source_nodes, target, cfg)) {
             // Update history
-            this._update_history(cfg, trigger, $title);
+            this._update_history(cfg, ev);
             // Post-injection
             this._afterInjection($el, cfg.$created_target || $(source_nodes), cfg);
         }
     },
 
-    _update_history(cfg, trigger, $title) {
+    _update_history(cfg, ev) {
         // History support. if subform is submitted, append form params
         if (cfg.history !== "record" || !history?.pushState) {
             return;
         }
+
+        // We have a URL changing injection. We also need to update other data:
+        // - title
+        // - canonical link
+        // - base url
+
+        const html = ev?.jqxhr?.responseText;
+
+        // Update the document's title.
+        const source_title = html?.match(/<title\b[^>]*>(.*?)<\/title>/i)?.[0];
+        const target_title = document.querySelector("head title");
+        // Title: update/add but never remove
+        this._update_head(source_title, target_title, false);
+
+        // Update the <link rel="canonical"> element.
+        const source_canonical = html?.match(
+            /<link\b[^>]*\brel\s*=\s*["']canonical["'][^>]*>/i
+        )?.[0];
+        const target_canonical = document.querySelector("head link[rel=canonical]");
+        // Canonical: update/add/remove as needed
+        this._update_head(source_canonical, target_canonical, true);
+
+        // Update the base tag.
+        const source_base = html?.match(/<base\b[^>]*>/i)?.[0];
+        const target_base = document.querySelector("head base");
+        // Base: update/add/remove as needed
+        this._update_head(source_base, target_base, true);
+
+        // At last position - other patterns can react on already changed title,
+        // canonical or base.
         let url = cfg.url;
         if (cfg.params) {
             const glue = url.indexOf("?") > -1 ? "&" : "?";
             url = `${url}${glue}${cfg.params}`;
         }
         history.pushState({ url: url }, "", url);
-        // Also inject title element if we have one
-        if ($title?.length) {
-            const title_el = document.querySelector("title");
-            if (title_el) {
-                this._inject(trigger, $title, title_el, {
-                    action: "element",
-                });
+    },
+
+    _update_head(source_string, target_el, delete_when_empty = true) {
+        if (!source_string) {
+            // No source element found in the HTML
+            if (target_el && delete_when_empty) {
+                // Source doesn't have the target element equivalent. Remove the
+                // target. This prevents incorrect canonical and base URLs after a
+                // navigation URL change.
+                target_el.remove();
             }
+            // (If delete_when_empty is false, keep the target - used for title)
+            // (If no target_el exists, nothing to do)
+            return;
         }
+
+        const parser = new DOMParser();
+        const parsed = parser.parseFromString(source_string, "text/html");
+        // Head elements (title, link, base) are placed in parsed.head.
+        const source_el = parsed.head.children[0];
+
+        if (source_el) {
+            // Source is present - update or add
+            if (target_el) {
+                // Replace existing target element
+                target_el.replaceWith(source_el);
+            } else {
+                // Add new element to head
+                document.head.prepend(source_el);
+            }
+        } else if (target_el && delete_when_empty) {
+            // Source string exists but doesn't parse to an element. Remove target.
+            target_el.remove();
+        }
+        // (If source doesn't parse to element AND no target, do nothing)
     },
 
     _afterInjection($el, $injected, cfg) {
@@ -592,17 +650,6 @@ const inject = {
             data,
             ev,
         ]);
-        /* pick the title source for dedicated handling later
-          Title - if present - is always appended at the end. */
-        let $title;
-        if (
-            sources$ &&
-            sources$[sources$.length - 1] &&
-            sources$[sources$.length - 1][0] &&
-            sources$[sources$.length - 1][0].nodeName === "TITLE"
-        ) {
-            $title = sources$[sources$.length - 1];
-        }
 
         for (const [idx1, cfg] of cfgs.entries()) {
             const perform_inject = () => {
@@ -614,7 +661,7 @@ const inject = {
                             sources$[idx1],
                             cfg,
                             ev.target,
-                            $title
+                            ev
                         );
                     }
                 }
@@ -834,19 +881,20 @@ const inject = {
 
     _sourcesFromHtml(html, url, sources) {
         const $html = this._parseRawHtml(html, url);
-        return sources.map((source) => {
+        const $sources = sources.map((source) => {
+            // Special case for body
             if (source === "body") {
                 source = "#__original_body";
             }
+
+            // Special case for "none";
             if (source === "none") {
                 return $("<!-- -->");
             }
             const $source = $html.find(source);
 
             if ($source.length === 0) {
-                if (source != "title") {
-                    log.warn("No source elements for selector:", source, $html);
-                }
+                log.warn("No source elements for selector:", source, $html);
             }
 
             $source.find('a[href^="#"]').each((idx, el_) => {
@@ -868,6 +916,7 @@ const inject = {
             });
             return $source;
         });
+        return $sources;
     },
 
     _rebaseAttrs: {
@@ -973,7 +1022,6 @@ const inject = {
 
     _parseRawHtml(html, url = "") {
         // remove script tags and head and replace body by a div
-        const title = html.match(/\<title\>(.*)\<\/title\>/);
         let clean_html = html
             .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
             .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
@@ -982,14 +1030,12 @@ const inject = {
             .replace(/<body([^>]*?)>/gi, '<div id="__original_body">')
             .replace(/<\/body([^>]*?)>/gi, "</div>");
 
-        if (title && title.length == 2) {
-            clean_html = title[0] + clean_html;
-        }
         try {
             clean_html = this._rebaseHTML(url, clean_html);
         } catch (e) {
             log.error("Error rebasing urls", e);
         }
+
         const $html = $("<div/>").html(clean_html);
         if ($html.children().length === 0) {
             log.warn("Parsing html resulted in empty jquery object:", clean_html);
@@ -1121,7 +1167,6 @@ const inject = {
         html: {
             sources(cfgs, data) {
                 const sources = cfgs.map((cfg) => cfg.source);
-                sources.push("title");
                 const result = this._sourcesFromHtml(data, cfgs[0].url, sources);
                 return result;
             },

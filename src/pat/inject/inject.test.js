@@ -1731,7 +1731,7 @@ describe("pat-inject", function () {
             });
         });
 
-        describe("9.4 - injecton of the title element.", function () {
+        describe("9.4 - history:record DOM updates.", function () {
             let spy_ajax;
 
             beforeEach(function () {
@@ -1742,9 +1742,997 @@ describe("pat-inject", function () {
                 spy_ajax.mockRestore();
             });
 
-            it("9.4.1 - Injects a title element with history:record", async function () {
+            describe("9.4.1 - title element updates", function () {
+                it("9.4.1.1 - Injects a title element with history:record", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>hello</title>
+                            </head>
+                            <body>
+                                OK
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    pattern.init($(inject));
+                    await utils.timeout(1); // wait a tick for async to settle.
+
+                    inject.click();
+
+                    await utils.timeout(1); // wait a tick for async to settle.
+
+                    expect(document.body.textContent.trim()).toBe("OK");
+
+                    const title = document.head.querySelector("title");
+                    expect(title).toBeTruthy();
+                    expect(title.textContent.trim()).toBe("hello");
+                });
+
+                it("9.4.1.2 - Does not inject a title element without history:record", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>hello</title>
+                            </head>
+                            <body>
+                                OK
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    pattern.init($(inject));
+                    await utils.timeout(1); // wait a tick for async to settle.
+
+                    inject.click();
+
+                    await utils.timeout(1); // wait a tick for async to settle.
+
+                    expect(document.body.textContent.trim()).toBe("OK");
+
+                    const title = document.head.querySelector("title");
+                    expect(title).toBeTruthy();
+                    expect(title.textContent.trim()).toBe("test"); // Old title
+                });
+
+                it("9.4.1.3 - Does not break, if no title is found in source", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <body>
+                                OK
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    pattern.init($(inject));
+                    await utils.timeout(1); // wait a tick for async to settle.
+
+                    inject.click();
+
+                    await utils.timeout(1); // wait a tick for async to settle.
+
+                    expect(document.body.textContent.trim()).toBe("OK");
+
+                    // Title in head  target is not modified.
+                    const title = document.head.querySelector("title");
+                    expect(title).toBeTruthy();
+                    expect(title.textContent.trim()).toBe("test"); // Old title
+                });
+
+                it("9.4.1.4 - Adds title when not present in target but present in source", async function () {
+                    document.head.innerHTML = "";
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>hello</title>
+                            <body>
+                                OK
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    pattern.init($(inject));
+                    await utils.timeout(1); // wait a tick for async to settle.
+
+                    inject.click();
+
+                    await utils.timeout(1); // wait a tick for async to settle.
+
+                    expect(document.body.textContent.trim()).toBe("OK");
+
+                    // Title should be added when source has one but target doesn't
+                    const title = document.head.querySelector("title");
+                    expect(title).toBeTruthy();
+                    expect(title.textContent.trim()).toBe("hello");
+                });
+
+                it("9.4.1.5 - Never removes title when source doesn't have one but target does", async function () {
+                    document.head.innerHTML = `
+                        <title>existing title</title>
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <!-- No title in source -->
+                            </head>
+                            <body>
+                                Content without title
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    pattern.init($(inject));
+                    await utils.timeout(1);
+
+                    inject.click();
+                    await utils.timeout(1);
+
+                    expect(document.body.textContent.trim()).toBe(
+                        "Content without title"
+                    );
+
+                    // Title should be preserved even when source doesn't have one
+                    const title = document.head.querySelector("title");
+                    expect(title).toBeTruthy();
+                    expect(title.textContent.trim()).toBe("existing title");
+                });
+            });
+
+            describe("9.4.2 - canonical link updates", function () {
+                it("9.4.2.1 - Injects canonical link with history:record", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                        <link rel="canonical" href="/old-page" />
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>new page</title>
+                                <link rel="canonical" href="/new-page" />
+                            </head>
+                            <body>
+                                New content
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    pattern.init($(inject));
+                    await utils.timeout(1);
+
+                    inject.click();
+                    await utils.timeout(1);
+
+                    expect(document.body.textContent.trim()).toBe("New content");
+
+                    const canonical = document.head.querySelector("link[rel=canonical]");
+                    expect(canonical).toBeTruthy();
+                    expect(canonical.getAttribute("href")).toBe("/new-page");
+                });
+
+                it("9.4.2.2 - Does not inject canonical link without history:record", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                        <link rel="canonical" href="/old-page" />
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>new page</title>
+                                <link rel="canonical" href="/new-page" />
+                            </head>
+                            <body>
+                                New content
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    pattern.init($(inject));
+                    await utils.timeout(1);
+
+                    inject.click();
+                    await utils.timeout(1);
+
+                    expect(document.body.textContent.trim()).toBe("New content");
+
+                    const canonical = document.head.querySelector("link[rel=canonical]");
+                    expect(canonical).toBeTruthy();
+                    expect(canonical.getAttribute("href")).toBe("/old-page"); // Old canonical preserved
+                });
+
+                it("9.4.2.3 - Does not break if no canonical link in source", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                        <link rel="canonical" href="/old-page" />
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>new page</title>
+                            </head>
+                            <body>
+                                New content
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    pattern.init($(inject));
+                    await utils.timeout(1);
+
+                    inject.click();
+                    await utils.timeout(1);
+
+                    expect(document.body.textContent.trim()).toBe("New content");
+
+                    const canonical = document.head.querySelector("link[rel=canonical]");
+                    expect(canonical).toBe(null); // Canonical removed when not in source
+                });
+
+                it("9.4.2.4 - Does not break if no canonical link in target", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>new page</title>
+                                <link rel="canonical" href="/new-page" />
+                            </head>
+                            <body>
+                                New content
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    pattern.init($(inject));
+                    await utils.timeout(1);
+
+                    inject.click();
+                    await utils.timeout(1);
+
+                    expect(document.body.textContent.trim()).toBe("New content");
+
+                    // Canonical link was added from source to target
+                    const canonical = document.head.querySelector("link[rel=canonical]");
+                    expect(canonical).toBeTruthy();
+                    expect(canonical.getAttribute("href")).toBe("/new-page");
+                });
+
+                it("9.4.2.4 - Handles canonical link with different quote styles", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                        <link rel="canonical" href="/old-page" />
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>new page</title>
+                                <link rel='canonical' href='/new-page' />
+                            </head>
+                            <body>
+                                New content
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    pattern.init($(inject));
+                    await utils.timeout(1);
+
+                    inject.click();
+                    await utils.timeout(1);
+
+                    expect(document.body.textContent.trim()).toBe("New content");
+
+                    const canonical = document.head.querySelector("link[rel=canonical]");
+                    expect(canonical).toBeTruthy();
+                    expect(canonical.getAttribute("href")).toBe("/new-page");
+                });
+
+                it("9.4.2.5 - Handles mixed case and extra attributes in canonical link", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                        <link rel="canonical" href="/old-page" />
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>new page</title>
+                                <link REL="Canonical" href="/new-page" type="text/html" />
+                            </head>
+                            <body>
+                                New content
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    pattern.init($(inject));
+                    await utils.timeout(1);
+
+                    inject.click();
+                    await utils.timeout(1);
+
+                    expect(document.body.textContent.trim()).toBe("New content");
+
+                    const canonical = document.head.querySelector("link[rel=canonical]");
+                    expect(canonical).toBeTruthy();
+                    expect(canonical.getAttribute("href")).toBe("/new-page");
+                });
+
+                it("9.4.2.6 - Removes canonical link when source doesn't have one but target does", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                        <link rel="canonical" href="/old-page" />
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>new page</title>
+                            </head>
+                            <body>
+                                New content without canonical
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    // Verify canonical exists before injection
+                    expect(
+                        document.head.querySelector("link[rel=canonical]")
+                    ).toBeTruthy();
+
+                    pattern.init($(inject));
+                    await utils.timeout(1);
+
+                    inject.click();
+                    await utils.timeout(1);
+
+                    expect(document.body.textContent.trim()).toBe(
+                        "New content without canonical"
+                    );
+
+                    // Verify canonical is removed after injection
+                    const canonical = document.head.querySelector("link[rel=canonical]");
+                    expect(canonical).toBe(null);
+                });
+
+                it("9.4.2.7 - Adds canonical link when source has one but target doesn't", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>new page</title>
+                                <link rel="canonical" href="/new-canonical" />
+                            </head>
+                            <body>
+                                New content with canonical
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    // Verify canonical doesn't exist before injection
+                    expect(document.head.querySelector("link[rel=canonical]")).toBe(
+                        null
+                    );
+
+                    pattern.init($(inject));
+                    await utils.timeout(1);
+
+                    inject.click();
+                    await utils.timeout(1);
+
+                    expect(document.body.textContent.trim()).toBe(
+                        "New content with canonical"
+                    );
+
+                    // Verify canonical is added after injection
+                    const canonical = document.head.querySelector("link[rel=canonical]");
+                    expect(canonical).toBeTruthy();
+                    expect(canonical.getAttribute("href")).toBe("/new-canonical");
+                });
+
+                it("9.4.2.8 - Full navigation sequence: remove then add canonical", async function () {
+                    document.head.innerHTML = `
+                        <title>initial</title>
+                        <link rel="canonical" href="/initial-page" />
+                    `;
+                    document.body.innerHTML = `
+                        <div id="content">
+                            <a class="pat-inject first"
+                            href="first.html"
+                            data-pat-inject="
+                                source: body;
+                                target: #content;
+                                history: record;
+                            ">first link</a>
+                        </div>
+                    `;
+
+                    const inject_first = document.querySelector(".pat-inject.first");
+
+                    // Step 1: Navigate to page without canonical
+                    answer(`
+                        <html>
+                            <head>
+                                <title>first page</title>
+                            </head>
+                            <body>
+                                <a class="pat-inject second"
+                                href="second.html"
+                                data-pat-inject="
+                                    source: body;
+                                    target: #content;
+                                    history: record;
+                                ">second link</a>
+                            </body>
+                        </html>
+                    `);
+
+                    pattern.init($(inject_first));
+                    await utils.timeout(1);
+
+                    inject_first.click();
+                    await utils.timeout(1);
+
+                    // Verify canonical was removed
+                    expect(document.head.querySelector("link[rel=canonical]")).toBe(
+                        null
+                    );
+                    expect(document.head.querySelector("title").textContent.trim()).toBe(
+                        "first page"
+                    );
+
+                    // Step 2: Navigate to page with canonical again
+                    const inject_second = document.querySelector(".pat-inject.second");
+
+                    // Reset deferred for second request
+                    deferred = new $.Deferred();
+                    spy_ajax.mockImplementation(() => deferred);
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>second page</title>
+                                <link rel="canonical" href="/second-canonical" />
+                            </head>
+                            <body>
+                                Final content
+                            </body>
+                        </html>
+                    `);
+
+                    pattern.init($(inject_second));
+                    await utils.timeout(1);
+
+                    inject_second.click();
+                    await utils.timeout(1);
+
+                    // Verify canonical was added back
+                    const canonical = document.head.querySelector("link[rel=canonical]");
+                    expect(canonical).toBeTruthy();
+                    expect(canonical.getAttribute("href")).toBe("/second-canonical");
+                    expect(document.head.querySelector("title").textContent.trim()).toBe(
+                        "second page"
+                    );
+                    expect(document.querySelector("#content").textContent.trim()).toBe(
+                        "Final content"
+                    );
+                });
+            });
+
+            describe("9.4.3 - base tag updates", function () {
+                it("9.4.3.1 - Injects base tag with history:record", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                        <base href="/old/" />
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>new page</title>
+                                <base href="/new/" />
+                            </head>
+                            <body>
+                                New content
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    pattern.init($(inject));
+                    await utils.timeout(1);
+
+                    inject.click();
+                    await utils.timeout(1);
+
+                    expect(document.body.textContent.trim()).toBe("New content");
+
+                    const base = document.head.querySelector("base");
+                    expect(base).toBeTruthy();
+                    expect(base.getAttribute("href")).toBe("/new/");
+                });
+
+                it("9.4.3.2 - Does not inject base tag without history:record", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                        <base href="/old/" />
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>new page</title>
+                                <base href="/new/" />
+                            </head>
+                            <body>
+                                New content
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    pattern.init($(inject));
+                    await utils.timeout(1);
+
+                    inject.click();
+                    await utils.timeout(1);
+
+                    expect(document.body.textContent.trim()).toBe("New content");
+
+                    const base = document.head.querySelector("base");
+                    expect(base).toBeTruthy();
+                    expect(base.getAttribute("href")).toBe("/old/"); // Old base preserved
+                });
+
+                it("9.4.3.3 - Does not break if no base tag in source", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                        <base href="/old/" />
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>new page</title>
+                            </head>
+                            <body>
+                                New content
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    pattern.init($(inject));
+                    await utils.timeout(1);
+
+                    inject.click();
+                    await utils.timeout(1);
+
+                    expect(document.body.textContent.trim()).toBe("New content");
+
+                    const base = document.head.querySelector("base");
+                    expect(base).toBe(null); // Base removed when not in source
+                });
+
+                it("9.4.3.4 - Does not break if no base tag in target", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>new page</title>
+                                <base href="/new/" />
+                            </head>
+                            <body>
+                                New content
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    pattern.init($(inject));
+                    await utils.timeout(1);
+
+                    inject.click();
+                    await utils.timeout(1);
+
+                    expect(document.body.textContent.trim()).toBe("New content");
+
+                    // Base tag was added from source to target
+                    const base = document.head.querySelector("base");
+                    expect(base).toBeTruthy();
+                    expect(base.getAttribute("href")).toBe("/new/");
+                });
+
+                it("9.4.3.5 - Removes base tag when source doesn't have one but target does", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                        <base href="/old/" />
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>new page</title>
+                            </head>
+                            <body>
+                                New content without base
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    // Verify base exists before injection
+                    expect(document.head.querySelector("base")).toBeTruthy();
+
+                    pattern.init($(inject));
+                    await utils.timeout(1);
+
+                    inject.click();
+                    await utils.timeout(1);
+
+                    expect(document.body.textContent.trim()).toBe(
+                        "New content without base"
+                    );
+
+                    // Verify base is removed after injection
+                    const base = document.head.querySelector("base");
+                    expect(base).toBe(null);
+                });
+
+                it("9.4.3.6 - Adds base tag when source has one but target doesn't", async function () {
+                    document.head.innerHTML = `
+                        <title>test</title>
+                    `;
+                    document.body.innerHTML = `
+                        <a class="pat-inject"
+                        href="test.html"
+                        data-pat-inject="
+                            source: body;
+                            target: body;
+                            history: record;
+                        ">link</a>
+                    `;
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>new page</title>
+                                <base href="/new-base/" />
+                            </head>
+                            <body>
+                                New content with base
+                            </body>
+                        </html>
+                    `);
+
+                    const inject = document.querySelector(".pat-inject");
+
+                    // Verify base doesn't exist before injection
+                    expect(document.head.querySelector("base")).toBe(null);
+
+                    pattern.init($(inject));
+                    await utils.timeout(1);
+
+                    inject.click();
+                    await utils.timeout(1);
+
+                    expect(document.body.textContent.trim()).toBe(
+                        "New content with base"
+                    );
+
+                    // Verify base is added after injection
+                    const base = document.head.querySelector("base");
+                    expect(base).toBeTruthy();
+                    expect(base.getAttribute("href")).toBe("/new-base/");
+                });
+
+                it("9.4.3.7 - Full navigation sequence: remove then add base tag", async function () {
+                    document.head.innerHTML = `
+                        <title>initial</title>
+                        <base href="/initial/" />
+                    `;
+                    document.body.innerHTML = `
+                        <div id="content">
+                            <a class="pat-inject first"
+                            href="first.html"
+                            data-pat-inject="
+                                source: body;
+                                target: #content;
+                                history: record;
+                            ">first link</a>
+                        </div>
+                    `;
+
+                    const inject_first = document.querySelector(".pat-inject.first");
+
+                    // Step 1: Navigate to page without base
+                    answer(`
+                        <html>
+                            <head>
+                                <title>first page</title>
+                            </head>
+                            <body>
+                                <a class="pat-inject second"
+                                href="second.html"
+                                data-pat-inject="
+                                    source: body;
+                                    target: #content;
+                                    history: record;
+                                ">second link</a>
+                            </body>
+                        </html>
+                    `);
+
+                    pattern.init($(inject_first));
+                    await utils.timeout(1);
+
+                    inject_first.click();
+                    await utils.timeout(1);
+
+                    // Verify base was removed
+                    expect(document.head.querySelector("base")).toBe(null);
+                    expect(document.head.querySelector("title").textContent.trim()).toBe(
+                        "first page"
+                    );
+
+                    // Step 2: Navigate to page with base again
+                    const inject_second = document.querySelector(".pat-inject.second");
+
+                    // Reset deferred for second request
+                    deferred = new $.Deferred();
+                    spy_ajax.mockImplementation(() => deferred);
+
+                    answer(`
+                        <html>
+                            <head>
+                                <title>second page</title>
+                                <base href="/second-base/" />
+                            </head>
+                            <body>
+                                Final content
+                            </body>
+                        </html>
+                    `);
+
+                    pattern.init($(inject_second));
+                    await utils.timeout(1);
+
+                    inject_second.click();
+                    await utils.timeout(1);
+
+                    // Verify base was added back
+                    const base = document.head.querySelector("base");
+                    expect(base).toBeTruthy();
+                    expect(base.getAttribute("href")).toBe("/second-base/");
+                    expect(document.head.querySelector("title").textContent.trim()).toBe(
+                        "second page"
+                    );
+                    expect(document.querySelector("#content").textContent.trim()).toBe(
+                        "Final content"
+                    );
+                });
+            });
+
+            it("9.4.4 - Injects all metadata (title, canonical, base) together", async function () {
                 document.head.innerHTML = `
-                    <title>test</title>
+                    <title>old title</title>
+                    <link rel="canonical" href="/old-page" />
+                    <base href="/old/" />
                 `;
                 document.body.innerHTML = `
                     <a class="pat-inject"
@@ -1759,10 +2747,12 @@ describe("pat-inject", function () {
                 answer(`
                     <html>
                         <head>
-                            <title>hello</title>
+                            <title>new title</title>
+                            <link rel="canonical" href="/new-page" />
+                            <base href="/new/" />
                         </head>
                         <body>
-                            OK
+                            New content
                         </body>
                     </html>
                 `);
@@ -1770,136 +2760,26 @@ describe("pat-inject", function () {
                 const inject = document.querySelector(".pat-inject");
 
                 pattern.init($(inject));
-                await utils.timeout(1); // wait a tick for async to settle.
+                await utils.timeout(1);
 
                 inject.click();
+                await utils.timeout(1);
 
-                await utils.timeout(1); // wait a tick for async to settle.
+                expect(document.body.textContent.trim()).toBe("New content");
 
-                expect(document.body.textContent.trim()).toBe("OK");
-
+                // All metadata should be updated
                 const title = document.head.querySelector("title");
                 expect(title).toBeTruthy();
-                expect(title.textContent.trim()).toBe("hello");
+                expect(title.textContent.trim()).toBe("new title");
+
+                const canonical = document.head.querySelector("link[rel=canonical]");
+                expect(canonical).toBeTruthy();
+                expect(canonical.getAttribute("href")).toBe("/new-page");
+
+                const base = document.head.querySelector("base");
+                expect(base).toBeTruthy();
+                expect(base.getAttribute("href")).toBe("/new/");
             });
-
-            it("9.4.2 - Does not inject a title element without history:record", async function () {
-                document.head.innerHTML = `
-                    <title>test</title>
-                `;
-                document.body.innerHTML = `
-                    <a class="pat-inject"
-                       href="test.html"
-                       data-pat-inject="
-                        source: body;
-                        target: body;
-                    ">link</a>
-                `;
-
-                answer(`
-                    <html>
-                        <head>
-                            <title>hello</title>
-                        </head>
-                        <body>
-                            OK
-                        </body>
-                    </html>
-                `);
-
-                const inject = document.querySelector(".pat-inject");
-
-                pattern.init($(inject));
-                await utils.timeout(1); // wait a tick for async to settle.
-
-                inject.click();
-
-                await utils.timeout(1); // wait a tick for async to settle.
-
-                expect(document.body.textContent.trim()).toBe("OK");
-
-                const title = document.head.querySelector("title");
-                expect(title).toBeTruthy();
-                expect(title.textContent.trim()).toBe("test"); // Old title
-            });
-
-            it("9.4.3 - Does not break, if no title is found in source", async function () {
-                document.head.innerHTML = `
-                    <title>test</title>
-                `;
-                document.body.innerHTML = `
-                    <a class="pat-inject"
-                       href="test.html"
-                       data-pat-inject="
-                        source: body;
-                        target: body;
-                        history: record;
-                    ">link</a>
-                `;
-
-                answer(`
-                    <html>
-                        <body>
-                            OK
-                        </body>
-                    </html>
-                `);
-
-                const inject = document.querySelector(".pat-inject");
-
-                pattern.init($(inject));
-                await utils.timeout(1); // wait a tick for async to settle.
-
-                inject.click();
-
-                await utils.timeout(1); // wait a tick for async to settle.
-
-                expect(document.body.textContent.trim()).toBe("OK");
-
-                // Title in head  target is not modified.
-                const title = document.head.querySelector("title");
-                expect(title).toBeTruthy();
-                expect(title.textContent.trim()).toBe("test"); // Old title
-            });
-
-            it("9.4.4 - Does not break, if no title is found in target", async function () {
-                document.head.innerHTML = "";
-                document.body.innerHTML = `
-                    <a class="pat-inject"
-                       href="test.html"
-                       data-pat-inject="
-                        source: body;
-                        target: body;
-                        history: record;
-                    ">link</a>
-                `;
-
-                answer(`
-                    <html>
-                        <head>
-                            <title>hello</title>
-                        <body>
-                            OK
-                        </body>
-                    </html>
-                `);
-
-                const inject = document.querySelector(".pat-inject");
-
-                pattern.init($(inject));
-                await utils.timeout(1); // wait a tick for async to settle.
-
-                inject.click();
-
-                await utils.timeout(1); // wait a tick for async to settle.
-
-                expect(document.body.textContent.trim()).toBe("OK");
-
-                // There is no title to be updated in target.
-                const title = document.head.querySelector("title");
-                expect(title).toBeFalsy();
-            });
-
         });
 
         describe("9.5 - support multiple source element matches.", function () {
