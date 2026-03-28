@@ -477,7 +477,7 @@ describe("pat-validation", function () {
             const instance = new Pattern(el);
             await events.await_pattern_init(instance);
 
-            document.querySelector("[name=i1]").dispatchEvent(events.blur_event());
+            document.querySelector("[name=i1]").dispatchEvent(events.focusout_event());
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect(el.querySelectorAll("em.warning").length).toBe(2);
@@ -498,7 +498,7 @@ describe("pat-validation", function () {
             const instance = new Pattern(el);
             await events.await_pattern_init(instance);
 
-            document.querySelector("[name=i1]").dispatchEvent(events.blur_event());
+            document.querySelector("[name=i1]").dispatchEvent(events.focusout_event());
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
@@ -537,6 +537,155 @@ describe("pat-validation", function () {
             expect(event.detail.pattern).toBe("validation");
             expect(event.detail.dom).toBe(el);
             expect(event.detail.action).toBe("valid");
+        });
+
+        it("1.22 - Supports validation of inputs outside forms.", async function () {
+            document.body.innerHTML = `
+                <input name="outside" form="form" required/>
+                <form class="pat-validation" id="form">
+                </form>
+                <button form="form">submit</button>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const input = document.querySelector("[name=outside]");
+            const button = document.querySelector("button");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            input.value = "";
+            input.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+            // Skip, as jsDOM does not support the `:invalid` or `:valid`
+            // pseudo selectors on forms.
+            //expect(form.matches(":invalid")).toBe(true);
+            expect(input.matches(":invalid")).toBe(true);
+            expect(button.matches(":disabled")).toBe(true);
+        });
+
+        it("1.23 - Puts the warning at the end of same-name inputs.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation" id="form">
+                   <input name="group" type="radio" required/>
+                   <input name="group" type="radio" required/>
+                   <input name="group" type="radio" required/>
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            const warning = form.querySelector("em.warning");
+            expect(warning).toBeTruthy();
+            expect(warning.matches("input:nth-child(3) + em.warning")).toBe(true);
+        });
+
+        it("1.24 - Supports dynamic forms.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation" id="form">
+                   <input name="input1" required/>
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const input1 = form.querySelector("[name=input1]");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+
+            input1.value = "ok";
+            input1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelectorAll("em.warning").length).toBe(0);
+
+            const input2 = document.createElement("input");
+            input2.name = "input2";
+            input2.required = true;
+            form.appendChild(input2);
+
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+            expect(document.querySelector("em.warning").matches("input[name=input2] + em.warning")).toBe(true);
+        });
+
+        it("1.25 - Can combine multiple custom validation rules.", async function () {
+            document.body.innerHTML = `
+                <form
+                    class="pat-validation"
+                    data-pat-validation="
+                        message-required: is required;
+                        message-equality: not equal;
+                        message-min-values: too few;
+                    "
+                >
+                    <fieldset data-pat-validation="min-values: 2">
+                        <input id="i1" name="textinput" data-pat-validation="equality: extrainput" required>
+                        <input id="i2" name="textinput">
+                    </fieldset>
+                    <input id="i3" name="extrainput">
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const input1 = document.querySelector("#i1");
+            const input2 = document.querySelector("#i2");
+            const input3 = document.querySelector("#i3");
+            const button = document.querySelector("button");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            input1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // form is invalid due to input1's required attribute
+            expect(input1.matches(":invalid")).toBe(true);
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+            expect(document.querySelectorAll("em.warning")[0].textContent).toBe(
+                "is required"
+            );
+
+            input1.value = "ok";
+            input1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // form is invalid due to input1's equality constraint
+            expect(input1.matches(":invalid")).toBe(true);
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+            expect(document.querySelectorAll("em.warning")[0].textContent).toBe(
+                "not equal"
+            );
+
+            input3.value = "ok";
+            input1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // form is invalid due to input1's equality constraint
+            expect(input1.matches(":invalid")).toBe(true);
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+            expect(document.querySelectorAll("em.warning")[0].textContent).toBe(
+                "too few"
+            );
+
+            input2.value = "ok";
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // form is now valid.
+            expect(input1.matches(":invalid")).toBe(false);
+            expect(document.querySelectorAll("em.warning").length).toBe(0);
         });
     });
 
@@ -1509,4 +1658,213 @@ describe("pat-validation", function () {
             expect(el.querySelector("#form-buttons-create").disabled).toBe(false);
         });
     });
+
+    describe("8 - min/max value validation", function () {
+        it("8.1 - validate min and max number of checked checkboxes", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <fieldset
+                    data-pat-validation="
+                        min-values: 2;
+                        max-values: 3;
+                        message-min-values: Please select at least 2 options;
+                        message-max-values: Please select at most 3 options;
+                    "
+                  >
+                    <input type="checkbox" name="check" value="1">
+                    <input type="checkbox" name="check" value="2">
+                    <input type="checkbox" name="check" value="3">
+                    <input type="checkbox" name="check" value="4">
+                </fieldset>
+              </form>
+            `;
+
+            const form = document.querySelector("form");
+            const check1 = form.querySelector("[name=check][value='1']");
+            const check2 = form.querySelector("[name=check][value='2']");
+            const check3 = form.querySelector("[name=check][value='3']");
+            const check4 = form.querySelector("[name=check][value='4']");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            check1.checked = true;
+            check1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(check1.matches(":invalid")).toBe(true);
+            expect(check2.matches(":invalid")).toBe(true);
+            expect(check3.matches(":invalid")).toBe(true);
+            expect(check4.matches(":invalid")).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+            expect(form.querySelectorAll("em.warning")[0].textContent).toBe(
+                "Please select at least 2 options"
+            );
+
+            check2.checked = true;
+            check2.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(check1.matches(":invalid")).toBe(false);
+            expect(check2.matches(":invalid")).toBe(false);
+            expect(check3.matches(":invalid")).toBe(false);
+            expect(check4.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+
+            check3.checked = true;
+            check3.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(check1.matches(":invalid")).toBe(false);
+            expect(check2.matches(":invalid")).toBe(false);
+            expect(check3.matches(":invalid")).toBe(false);
+            expect(check4.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+
+            check4.checked = true;
+            check4.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(check1.matches(":invalid")).toBe(true);
+            expect(check2.matches(":invalid")).toBe(true);
+            expect(check3.matches(":invalid")).toBe(true);
+            expect(check4.matches(":invalid")).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+            expect(form.querySelectorAll("em.warning")[0].textContent).toBe(
+                "Please select at most 3 options"
+            );
+
+            check4.checked = false;
+            check4.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(check1.matches(":invalid")).toBe(false);
+            expect(check2.matches(":invalid")).toBe(false);
+            expect(check3.matches(":invalid")).toBe(false);
+            expect(check4.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+        });
+
+        it("8.2 - validate min and max number with mixed inputs", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <fieldset
+                    data-pat-validation="
+                        min-values: 2;
+                        max-values: 3;
+                        message-min-values: Please select at least 2 options;
+                        message-max-values: Please select at most 3 options;
+                    "
+                  >
+                    <input id="i1" name="multiple" type="radio" value="1">
+                    <input id="i2" name="multiple" type="checkbox" value="4">
+                    <select id="i3" name="multiple" multiple>
+                        <option id="i31" value="5">1</option>
+                    </select>
+                    <input id="i4" name="multiple">
+                    <textarea id="i5" name="multiple"></textarea>
+                </fieldset>
+              </form>
+            `;
+
+            const form = document.querySelector("form");
+            const id1 = form.querySelector("#i1");
+            const id2 = form.querySelector("#i2");
+            const id3 = form.querySelector("#i3");
+            const id31 = form.querySelector("#i31");
+            const id4 = form.querySelector("#i4");
+            const id5 = form.querySelector("#i5");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            id1.checked = true;
+            id1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(id1.matches(":invalid")).toBe(true);
+            expect(id2.matches(":invalid")).toBe(true);
+            expect(id3.matches(":invalid")).toBe(true);
+            expect(id4.matches(":invalid")).toBe(true);
+            expect(id5.matches(":invalid")).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+            expect(form.querySelectorAll("em.warning")[0].textContent).toBe(
+                "Please select at least 2 options"
+            );
+
+            id2.checked = true;
+            id2.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(id1.matches(":invalid")).toBe(false);
+            expect(id2.matches(":invalid")).toBe(false);
+            expect(id3.matches(":invalid")).toBe(false);
+            expect(id4.matches(":invalid")).toBe(false);
+            expect(id5.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+
+            id31.selected = true;
+            id3.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(id1.matches(":invalid")).toBe(false);
+            expect(id2.matches(":invalid")).toBe(false);
+            expect(id3.matches(":invalid")).toBe(false);
+            expect(id4.matches(":invalid")).toBe(false);
+            expect(id5.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+
+            id4.value = "okay";
+            id4.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(id1.matches(":invalid")).toBe(true);
+            expect(id2.matches(":invalid")).toBe(true);
+            expect(id3.matches(":invalid")).toBe(true);
+            expect(id4.matches(":invalid")).toBe(true);
+            expect(id5.matches(":invalid")).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+            expect(form.querySelectorAll("em.warning")[0].textContent).toBe(
+                "Please select at most 3 options"
+            );
+
+            id2.checked = false;
+            id2.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(id1.matches(":invalid")).toBe(false);
+            expect(id2.matches(":invalid")).toBe(false);
+            expect(id3.matches(":invalid")).toBe(false);
+            expect(id4.matches(":invalid")).toBe(false);
+            expect(id5.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+
+            id5.value = "okay";
+            id4.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(id1.matches(":invalid")).toBe(true);
+            expect(id2.matches(":invalid")).toBe(true);
+            expect(id3.matches(":invalid")).toBe(true);
+            expect(id4.matches(":invalid")).toBe(true);
+            expect(id5.matches(":invalid")).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+            expect(form.querySelectorAll("em.warning")[0].textContent).toBe(
+                "Please select at most 3 options"
+            );
+
+            id4.value = "";
+            id4.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(id1.matches(":invalid")).toBe(false);
+            expect(id2.matches(":invalid")).toBe(false);
+            expect(id3.matches(":invalid")).toBe(false);
+            expect(id4.matches(":invalid")).toBe(false);
+            expect(id5.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+        });
+
+    });
+
 });
