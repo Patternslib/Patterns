@@ -458,6 +458,7 @@ describe("pat-validation", function () {
             await events.await_pattern_init(instance);
 
             document.querySelector("button").click();
+            await utils.timeout(1); // wait a tick for async to settle.
 
             expect(el.querySelectorAll("em.warning").length).toBe(2);
         });
@@ -1507,6 +1508,247 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(0);
             expect(el.querySelector("#form-buttons-create").disabled).toBe(false);
+        });
+    });
+
+    describe("8 - security tests", function () {
+        it("8.1 - sanitizes malicious script content in validation messages", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <input type="text" name="malicious" required>
+              </form>
+            `;
+            const el = document.querySelector(".pat-validation");
+            const inp = el.querySelector("[name=malicious]");
+
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            // Use the pattern's set_error method which would eventually call set_error_message
+            // This simulates setting a custom error message with malicious content
+            const malicious_message =
+                "Please fill out this field: <script>alert(33)</script>";
+            instance.set_error({ input: inp, msg: malicious_message });
+
+            // Manually trigger set_error_message to test the sanitization
+            await instance.set_error_message(inp);
+
+            // Check that an error message is shown
+            expect(el.querySelectorAll("em.warning").length).toBe(1);
+
+            // Verify the script tag has been sanitized/removed
+            const warning_text = el.querySelector("em.warning").textContent;
+            expect(warning_text).not.toContain("<script>");
+            expect(warning_text).not.toContain("</script>");
+            expect(warning_text).not.toContain("alert(33)");
+
+            // The sanitized message should still contain the safe text
+            expect(warning_text).toContain("Please fill out this field");
+
+            // Ensure no script elements were actually added to the DOM
+            expect(el.querySelectorAll("script").length).toBe(0);
+        });
+
+        it("8.2 - sanitizes malicious HTML content in validation messages", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <input type="text" name="malicious" required>
+              </form>
+            `;
+            const el = document.querySelector(".pat-validation");
+            const inp = el.querySelector("[name=malicious]");
+
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            // Set malicious HTML content that could execute JavaScript
+            const malicious_message =
+                'Please fill out this field: <img src="x" onerror="alert(33)">';
+            instance.set_error({ input: inp, msg: malicious_message });
+
+            // Manually trigger set_error_message to test the sanitization
+            await instance.set_error_message(inp);
+
+            // Check that an error message is shown
+            expect(el.querySelectorAll("em.warning").length).toBe(1);
+
+            // Verify the malicious HTML has been sanitized
+            const warning_element = el.querySelector("em.warning");
+            const warning_text = warning_element.textContent;
+            const warning_html = warning_element.innerHTML;
+
+            // The text should not contain the malicious content
+            expect(warning_text).not.toContain("onerror");
+            expect(warning_text).not.toContain("alert(33)");
+
+            // The HTML should also be sanitized - the dangerous onerror attribute should be removed
+            // DOMPurify keeps safe <img> tags but removes dangerous event handlers
+            expect(warning_html).not.toContain("onerror");
+            expect(warning_html).not.toContain("alert(33)");
+
+            // The safe text should remain
+            expect(warning_text).toContain("Please fill out this field");
+
+            // Ensure no img elements with onerror were added
+            const imgs_with_onerror = document.querySelectorAll("img[onerror]");
+            expect(imgs_with_onerror.length).toBe(0);
+        });
+
+        it("8.3 - preserves safe HTML content in validation messages", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <input type="text" name="safe" required>
+              </form>
+            `;
+            const el = document.querySelector(".pat-validation");
+            const inp = el.querySelector("[name=safe]");
+
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            // Set a validation message with safe HTML content (like emphasis)
+            const safe_message =
+                "This field is <strong>required</strong> and must be filled out.";
+            instance.set_error({ input: inp, msg: safe_message });
+
+            // Trigger set_error_message
+            await instance.set_error_message(inp);
+
+            // Check that an error message is shown
+            expect(el.querySelectorAll("em.warning").length).toBe(1);
+
+            const warning_element = el.querySelector("em.warning");
+            const warning_text = warning_element.textContent;
+            const warning_html = warning_element.innerHTML;
+
+            // The text content should contain the message without HTML tags
+            expect(warning_text).toContain(
+                "This field is required and must be filled out."
+            );
+
+            // The innerHTML should contain the safe HTML (DOMPurify allows <strong> by default)
+            expect(warning_html).toContain("<strong>required</strong>");
+        });
+
+        it("8.4 - handles validation messages from browser's built-in validation", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <input type="email" name="email" required>
+              </form>
+            `;
+            const el = document.querySelector(".pat-validation");
+            const inp = el.querySelector("[name=email]");
+
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            // Set an invalid email that would trigger browser validation
+            // and potentially include the malicious input in the validation message
+            inp.value = '<script>alert("xss")</script>@example.com';
+
+            // Trigger validation
+            inp.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // Check that an error message is shown
+            expect(el.querySelectorAll("em.warning").length).toBe(1);
+
+            const warning_text = el.querySelector("em.warning").textContent;
+
+            // Verify the script content has been sanitized from the validation message
+            expect(warning_text).not.toContain("<script>");
+            expect(warning_text).not.toContain("</script>");
+            expect(warning_text).not.toContain('alert("xss")');
+
+            // Ensure no script elements were added to the DOM
+            expect(el.querySelectorAll("script").length).toBe(0);
+        });
+
+        it("8.5 - sanitizes example malicious script that would execute", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <input type="text" name="example" required>
+              </form>
+            `;
+            const el = document.querySelector(".pat-validation");
+            const inp = el.querySelector("[name=example]");
+
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            // Set the exact example from the user's request
+            const malicious_message = "Value is invalid: <script>alert(33)</script>";
+            instance.set_error({ input: inp, msg: malicious_message });
+
+            // Trigger set_error_message to test the sanitization
+            await instance.set_error_message(inp);
+
+            // Check that an error message is shown
+            expect(el.querySelectorAll("em.warning").length).toBe(1);
+
+            // Verify the script content has been completely sanitized
+            const warning_element = el.querySelector("em.warning");
+            const warning_text = warning_element.textContent;
+            const warning_html = warning_element.innerHTML;
+
+            // Verify no script execution
+            expect(warning_text).not.toContain("<script>");
+            expect(warning_text).not.toContain("</script>");
+            expect(warning_text).not.toContain("alert(33)");
+
+            // HTML should also be clean
+            expect(warning_html).not.toContain("<script>");
+            expect(warning_html).not.toContain("</script>");
+
+            // The safe part of the message should remain
+            expect(warning_text).toContain("Value is invalid");
+
+            // Ensure no script elements were added to the DOM
+            expect(document.querySelectorAll("script").length).toBe(0);
+        });
+
+        it("8.6 - sanitizes malicious content in browser validationMessage property", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <input type="text" name="browser" required>
+              </form>
+            `;
+            const el = document.querySelector(".pat-validation");
+            const inp = el.querySelector("[name=browser]");
+
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            // Simulate browser validation message with malicious content
+            // This could happen if browser includes user input in validation message
+            inp.value = "";
+
+            // Mock the validationMessage property to contain malicious content
+            // This simulates what Chrome might do
+            Object.defineProperty(inp, "validationMessage", {
+                value: 'Please fill out this field. Input: <script>alert("malicious")</script>',
+                configurable: true,
+            });
+
+            // Trigger validation through the pattern
+            instance.check_input({ input: inp });
+            await utils.timeout(1); // wait for async to settle.
+
+            // Check that an error message is shown
+            expect(el.querySelectorAll("em.warning").length).toBe(1);
+
+            const warning_text = el.querySelector("em.warning").textContent;
+
+            // Verify the script has been sanitized
+            expect(warning_text).not.toContain("<script>");
+            expect(warning_text).not.toContain("</script>");
+            expect(warning_text).not.toContain('alert("malicious")');
+
+            // Safe content should remain
+            expect(warning_text).toContain("Please fill out this field");
+
+            // No scripts should be in the DOM
+            expect(document.querySelectorAll("script").length).toBe(0);
         });
     });
 });

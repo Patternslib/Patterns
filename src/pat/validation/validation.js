@@ -42,18 +42,26 @@ class Pattern extends BasePattern {
     // validation fails (e.g. pat-inject).
     static order = 100;
 
+    _dompurify = null;
+    async get_dompurify() {
+        if (!this._dompurify) {
+            this._dompurify = (await import("dompurify")).default;
+        }
+        return this._dompurify;
+    }
+
     init() {
         events.add_event_listener(
             this.el,
             "submit",
             `pat-validation--submit--validator`,
-            (e) => {
+            async (e) => {
                 // On submit, check all.
                 // Immediate, non-debounced check with submit. Otherwise submit
                 // is not cancelable.
                 for (const input of this.inputs) {
                     logger.debug("Checking input for submit", input, e);
-                    this.check_input({ input: input, event: e });
+                    await this.check_input({ input: input, event: e });
                 }
             },
             // Make sure this event handler is run early, in the capturing
@@ -108,7 +116,7 @@ class Pattern extends BasePattern {
         }
     }
 
-    check_input({ input, event, stop = false }) {
+    async check_input({ input, event, stop = false }) {
         if (input.disabled) {
             // No need to check disabled inputs.
             return;
@@ -239,11 +247,11 @@ class Pattern extends BasePattern {
                 // do not re-check when stop is set to avoid infinite loops
                 if (!stop && not_after_el) {
                     logger.debug("Check `not-after` input.", not_after_el);
-                    this.check_input({ input: not_after_el, stop: true });
+                    await this.check_input({ input: not_after_el, stop: true });
                 }
                 if (!stop && not_before_el) {
                     logger.debug("Check `no-before` input.", not_after_el);
-                    this.check_input({ input: not_before_el, stop: true });
+                    await this.check_input({ input: not_before_el, stop: true });
                 }
             }
 
@@ -318,7 +326,7 @@ class Pattern extends BasePattern {
             event.stopPropagation();
             event.stopImmediatePropagation();
         }
-        this.set_error_message(input);
+        await this.set_error_message(input);
     }
 
     set_error({
@@ -381,7 +389,7 @@ class Pattern extends BasePattern {
         }
     }
 
-    set_error_message(input) {
+    async set_error_message(input) {
         // First, remove the old error message.
         this.remove_error(input, false, true);
 
@@ -393,8 +401,16 @@ class Pattern extends BasePattern {
             return;
         }
 
-        // Create the validation error DOM node from the template
-        const validation_message = input.validationMessage || input[KEY_ERROR_MSG];
+        // Create the validation error DOM node from the template.
+        // Sanitize the validation message to keep malicious input from being
+        // executed. Chrome includes the input value in it's browser validation
+        // message. When placing that into the DOM, malicious input could get
+        // executed within the web page context.
+        const dompurify = await this.get_dompurify();
+        const validation_message = dompurify.sanitize(
+            input.validationMessage || input[KEY_ERROR_MSG]
+        );
+
         const error_node = dom.create_from_string(
             this.error_template(validation_message)
         ).firstChild;
@@ -431,7 +447,7 @@ class Pattern extends BasePattern {
         if (did_disable) {
             logger.debug("Checking whole form after element was disabled.");
             for (const _input of this.inputs.filter((it) => it !== input)) {
-                this.check_input({ input: _input, stop: true });
+                await this.check_input({ input: _input, stop: true });
             }
         }
     }
