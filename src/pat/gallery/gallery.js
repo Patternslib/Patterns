@@ -65,6 +65,20 @@ export default Base.extend({
         return template;
     },
 
+    pswp_options() {
+        return {
+            scaleMode: this.options.scaleMethod,
+            loop: this.options.loop,
+            slideshowDelay: this.options.delay,
+            hideAnimationDuration: this.options.effectDuration,
+            showAnimationDuration: this.options.effectDuration,
+            pinchToClose: false,
+            closeOnScroll: false,
+            // Fix reload on gallery close which was induced by a history back call.
+            history: false,
+        };
+    },
+
     initialize_trigger() {
         const image_wrapper_els = dom.querySelectorAllAndMe(
             this.el,
@@ -108,6 +122,7 @@ export default Base.extend({
         // Now - when all is set - prevent default action.
         e.preventDefault();
 
+        // Get the index of the clicked gallery item in the list of images.
         const index =
             this.images
                 .map((it) => it.src)
@@ -115,21 +130,10 @@ export default Base.extend({
                     trigger_el.getAttribute("href") || trigger_el.getAttribute("src")
                 ) || 0;
 
-        const options = {
-            // Get the index of the clicked gallery item in the list of images.
-            index: index,
-            scaleMode: this.options.scaleMethod,
-            loop: this.options.loop,
-            slideshowDelay: this.options.delay,
-            hideAnimationDuration: this.options.effectDuration,
-            showAnimationDuration: this.options.effectDuration,
-            pinchToClose: false,
-            closeOnScroll: false,
-            // Fix reload on gallery close which was induced by a history back call.
-            history: false,
-        };
+        const pswp_options = this.pswp_options();
+        pswp_options.index = index; // start at clicked image
 
-        const gallery = new PhotoSwipe(pswp_el, PhotoSwipeUI, this.images, options);
+        const gallery = new PhotoSwipe(pswp_el, PhotoSwipeUI, this.images, pswp_options);
 
         const gallery_reinit_sizes_debouncer = utils.debounce(() => {
             gallery.updateSize(true); // reinit Items
