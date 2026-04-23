@@ -22,7 +22,7 @@ const parser = {
             options = this.getOptions(el.parentElement, pattern_name, options);
         }
         // collect all options from element
-        let el_options = {};
+        let el_options;
         // Use `getAttribute` over `dataset` because dataset uses camelCasing of data attributes.
         el_options = el.getAttribute(`data-pat-${pattern_name}`);
         if (el_options) {
@@ -47,7 +47,7 @@ const parser = {
         }
         return {
             ...options,
-            ...el_options,
+            ...(el_options || {}),
         };
     },
 };

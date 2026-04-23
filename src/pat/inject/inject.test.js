@@ -7,10 +7,10 @@ import { jest } from "@jest/globals";
 
 const mockFetch =
     (text = "") =>
-        () =>
-            Promise.resolve({
-                text: () => Promise.resolve(text),
-            });
+    () =>
+        Promise.resolve({
+            text: () => Promise.resolve(text),
+        });
 
 describe("pat-inject", function () {
     var deferred;
@@ -20,6 +20,21 @@ describe("pat-inject", function () {
     };
 
     beforeEach(function () {
+        // Ensure window.location.search exists without mutating the real Location object.
+        if (!global.window.location) {
+            Object.defineProperty(global.window, "location", {
+                value: { search: "" },
+                configurable: true,
+                writable: true,
+            });
+        } else if (typeof global.window.location.search === "undefined") {
+            Object.defineProperty(global.window.location, "search", {
+                value: "",
+                configurable: true,
+                writable: true,
+            });
+        }
+
         deferred = new $.Deferred();
         document.body.innerHTML = `<div id="lab"></div>`;
     });
@@ -498,7 +513,7 @@ describe("pat-inject", function () {
     describe("6 - parseRawHtml", function () {
         it("6.1 - Roundtrip attributes with double quotes", function () {
             var value =
-                '{"plugins": "paste", "content_css": "/_themes/Style/tiny-body.css"}',
+                    '{"plugins": "paste", "content_css": "/_themes/Style/tiny-body.css"}',
                 input = "<a data-tinymce-json='" + value + "'>Test</a>",
                 $output = pattern._parseRawHtml(input, null);
             expect($output.find("a").attr("data-tinymce-json")).toBe(value);
@@ -506,7 +521,7 @@ describe("pat-inject", function () {
 
         it("6.2 - Roundtrip attributes with single quotes", function () {
             var value =
-                "{'plugins': 'paste', 'content_css': '/_themes/Style/tiny-body.css'}",
+                    "{'plugins': 'paste', 'content_css': '/_themes/Style/tiny-body.css'}",
                 input = '<a data-tinymce-json="' + value + '">Test</a>',
                 $output = pattern._parseRawHtml(input, null);
             expect($output.find("a").attr("data-tinymce-json")).toBe(value);
@@ -740,7 +755,7 @@ describe("pat-inject", function () {
     });
 
     describe("9 - DOM tests", function () {
-        beforeEach(function () { });
+        beforeEach(function () {});
 
         describe("9.1 - Injection on an anchor element", function () {
             var $a, $div;
@@ -844,9 +859,9 @@ describe("pat-inject", function () {
                 $a.trigger("click");
                 answer(
                     "<html><body>" +
-                    '<div id="someid1">repl1</div>' +
-                    '<div id="someid2">repl2</div>' +
-                    "</body></html>"
+                        '<div id="someid1">repl1</div>' +
+                        '<div id="someid2">repl2</div>' +
+                        "</body></html>"
                 );
                 await utils.timeout(1); // wait a tick for async to settle.
 
@@ -882,8 +897,8 @@ describe("pat-inject", function () {
                 $a.trigger("click");
                 answer(
                     "<html><body>" +
-                    '<div id="otherid" class="someclass">repl</div>' +
-                    "</body></html>"
+                        '<div id="otherid" class="someclass">repl</div>' +
+                        "</body></html>"
                 );
                 await utils.timeout(1); // wait a tick for async to settle.
 
@@ -901,8 +916,8 @@ describe("pat-inject", function () {
                 $a.trigger("click");
                 answer(
                     "<html><body>" +
-                    '<div id="someid" class="someclass">repl</div>' +
-                    "</body></html>"
+                        '<div id="someid" class="someclass">repl</div>' +
+                        "</body></html>"
                 );
                 await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1037,7 +1052,11 @@ describe("pat-inject", function () {
             let spy_ajax;
 
             beforeEach(function () {
-                spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
+                spy_ajax = jest.spyOn($, "ajax").mockImplementation((options) => {
+                    // Store the options for later inspection
+                    spy_ajax.lastCall = options;
+                    return deferred;
+                });
                 $form = $('<form class="pat-inject" action="test.html#someid" />');
                 $div = $('<div id="someid" />');
                 $("#lab").append($form).append($div);
@@ -1051,7 +1070,13 @@ describe("pat-inject", function () {
                 pattern.init($form);
                 await utils.timeout(1); // wait a tick for async to settle.
 
-                $form.trigger("submit");
+                // Create and dispatch a proper submit event instead of using jQuery trigger
+                const submitEvent = new Event("submit", {
+                    bubbles: true,
+                    cancelable: true,
+                });
+                $form[0].dispatchEvent(submitEvent);
+
                 answer(
                     "<html><body>" + '<div id="someid">repl</div>' + "</body></html>"
                 );
@@ -1067,11 +1092,15 @@ describe("pat-inject", function () {
                 pattern.init($form);
                 await utils.timeout(1); // wait a tick for async to settle.
 
-                $form.trigger("submit");
+                // Create and dispatch a proper submit event instead of using jQuery trigger
+                const submitEvent = new Event("submit", {
+                    bubbles: true,
+                    cancelable: true,
+                });
+                $form[0].dispatchEvent(submitEvent);
 
-                var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
                 expect($.ajax).toHaveBeenCalled();
-                expect(ajaxargs.data).toContain("param=somevalue");
+                expect(spy_ajax.lastCall.data).toContain("param=somevalue");
             });
 
             it("9.2.3 - pass post form parameters in ajax call as data", async function () {
@@ -1081,11 +1110,15 @@ describe("pat-inject", function () {
                 pattern.init($form);
                 await utils.timeout(1); // wait a tick for async to settle.
 
-                $form.trigger("submit");
+                // Create and dispatch a proper submit event instead of using jQuery trigger
+                const submitEvent = new Event("submit", {
+                    bubbles: true,
+                    cancelable: true,
+                });
+                $form[0].dispatchEvent(submitEvent);
 
-                var ajaxargs = $.ajax.mock.calls[$.ajax.mock.calls.length - 1][0];
                 expect($.ajax).toHaveBeenCalled();
-                expect(ajaxargs.data.get("param")).toContain("somevalue");
+                expect(spy_ajax.lastCall.data.get("param")).toContain("somevalue");
             });
 
             describe("9.2.4 - submit button tests", function () {
@@ -1156,8 +1189,8 @@ describe("pat-inject", function () {
                 describe("9.2.4.4 - formaction attribute on submit buttons", function () {
                     it("9.2.4.4.1 - use submit button formaction value as action URL", async function () {
                         var $submit1 = $(
-                            '<input type="submit" name="submit" value="default" />'
-                        ),
+                                '<input type="submit" name="submit" value="default" />'
+                            ),
                             $submit2 = $(
                                 '<input type="submit" name="submit" value="special" formaction="other.html" />'
                             );
@@ -1210,8 +1243,8 @@ describe("pat-inject", function () {
 
                     it("9.2.4.4.3 - use fragment in formaction value as source + target selector", async function () {
                         var $submit1 = $(
-                            '<input type="submit" name="submit" value="default" />'
-                        ),
+                                '<input type="submit" name="submit" value="default" />'
+                            ),
                             $submit2 = $(
                                 '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
                             ),
@@ -1227,8 +1260,8 @@ describe("pat-inject", function () {
 
                         answer(
                             "<html><body>" +
-                            '<div id="otherid">other</div>' +
-                            "</body></html>"
+                                '<div id="otherid">other</div>' +
+                                "</body></html>"
                         );
                         await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1242,8 +1275,8 @@ describe("pat-inject", function () {
 
                     it("9.2.4.4.4 - use fragment in formaction value as source selector, respect target", async function () {
                         var $submit1 = $(
-                            '<input type="submit" name="submit" value="default" />'
-                        ),
+                                '<input type="submit" name="submit" value="default" />'
+                            ),
                             $submit2 = $(
                                 '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
                             ),
@@ -1260,8 +1293,8 @@ describe("pat-inject", function () {
 
                         answer(
                             "<html><body>" +
-                            '<div id="otherid">other</div>' +
-                            "</body></html>"
+                                '<div id="otherid">other</div>' +
+                                "</body></html>"
                         );
                         await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1275,8 +1308,8 @@ describe("pat-inject", function () {
 
                     it("9.2.4.4.5 - formaction works with multiple targets", async function () {
                         var $submit1 = $(
-                            '<input type="submit" name="submit" value="default" />'
-                        ),
+                                '<input type="submit" name="submit" value="default" />'
+                            ),
                             $submit2 = $(
                                 '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
                             ),
@@ -1297,8 +1330,8 @@ describe("pat-inject", function () {
 
                         answer(
                             "<html><body>" +
-                            '<div id="otherid">other</div>' +
-                            "</body></html>"
+                                '<div id="otherid">other</div>' +
+                                "</body></html>"
                         );
                         await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1313,8 +1346,8 @@ describe("pat-inject", function () {
 
                     it("9.2.4.4.6 - formaction works with multiple sources", async function () {
                         var $submit1 = $(
-                            '<input type="submit" name="submit" value="default" />'
-                        ),
+                                '<input type="submit" name="submit" value="default" />'
+                            ),
                             $submit2 = $(
                                 '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
                             ),
@@ -1335,9 +1368,9 @@ describe("pat-inject", function () {
 
                         answer(
                             "<html><body>" +
-                            '<div id="someid">some</div>' +
-                            '<div id="otherid">other</div>' +
-                            "</body></html>"
+                                '<div id="someid">some</div>' +
+                                '<div id="otherid">other</div>' +
+                                "</body></html>"
                         );
                         await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1352,8 +1385,8 @@ describe("pat-inject", function () {
 
                     it("9.2.4.4.7 - formaction works source and target on the button", async function () {
                         var $submit1 = $(
-                            '<input type="submit" name="submit" value="default" />'
-                        ),
+                                '<input type="submit" name="submit" value="default" />'
+                            ),
                             $submit2 = $(
                                 '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
                             ),
@@ -1374,9 +1407,9 @@ describe("pat-inject", function () {
 
                         answer(
                             "<html><body>" +
-                            '<div id="someid">some</div>' +
-                            '<div id="otherid">other</div>' +
-                            "</body></html>"
+                                '<div id="someid">some</div>' +
+                                '<div id="otherid">other</div>' +
+                                "</body></html>"
                         );
                         await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1899,7 +1932,6 @@ describe("pat-inject", function () {
                 const title = document.head.querySelector("title");
                 expect(title).toBeFalsy();
             });
-
         });
 
         describe("9.5 - support multiple source element matches.", function () {
@@ -2111,14 +2143,14 @@ describe("pat-inject", function () {
         });
 
         it("10.4 - Doesnt get error page from meta tags if query string present", async () => {
-            const _window_location = global.window.location;
-            delete global.window.location;
-            global.window.location = {
-                search: "?something=nothing&pat-inject-errorhandler.off",
-            };
-
-            global.fetch = jest.fn().mockImplementation(
-                mockFetch(`
+            // Mock URLSearchParams to return the parameter that disables error handling
+            const originalURLSearchParams = global.URLSearchParams;
+            global.URLSearchParams = jest.fn().mockImplementation(() => ({
+                get: (key) => (key === "pat-inject-errorhandler.off" ? "" : null),
+            }));
+            try {
+                global.fetch = jest.fn().mockImplementation(
+                    mockFetch(`
                         <!DOCTYPE html>
                         <html>
                           <head>
@@ -2129,29 +2161,41 @@ describe("pat-inject", function () {
                           </body>
                         </html>
                     `)
-            );
+                );
 
-            // apparently <head> is empty if we do not set it.
-            document.head.innerHTML = `
+                // apparently <head> is empty if we do not set it.
+                document.head.innerHTML = `
                 <meta name="pat-inject-status-404" content="/404.html" />
             `;
 
-            pattern.init($a);
-            await utils.timeout(1); // wait a tick for async to settle.
+                // Set up the DOM with the necessary elements
+                document.body.innerHTML = `
+                <div id="lab">
+                    <a class="pat-inject" href="test.html#someid">link</a>
+                </div>
+            `;
 
-            // Invoke error case
-            pattern._onInjectError($a, [], {
-                jqxhr: { status: 404 },
-            });
-            await utils.timeout(1); // wait a tick for async to settle.
+                const $a = document.querySelector(".pat-inject");
 
-            expect(document.body.querySelector("#lab")).toBeTruthy();
-            // In this case, the normal error reporting is used
-            expect(document.body.hasAttribute("data-error-message")).toBeTruthy();
+                pattern.init($($a));
+                await utils.timeout(1); // wait a tick for async to settle.
 
-            global.fetch.mockClear();
-            delete global.fetch;
-            global.window.location = _window_location;
+                // Invoke error case
+                pattern._onInjectError($($a), [], {
+                    jqxhr: { status: 404 },
+                });
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                expect(document.body.querySelector("#lab")).toBeTruthy();
+                // In this case, the normal error reporting is used
+                expect(document.body.hasAttribute("data-error-message")).toBeTruthy();
+
+                global.fetch.mockClear();
+                delete global.fetch;
+            } finally {
+                // Restore URLSearchParams
+                global.URLSearchParams = originalURLSearchParams;
+            }
         });
 
         it("10.5 - Injects an error message from the error response.", async () => {

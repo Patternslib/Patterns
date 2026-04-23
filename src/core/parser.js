@@ -296,13 +296,16 @@ class ArgumentParser {
                 flag = part;
             }
             if (flag in this.parameters && this.parameters[flag].type === "boolean") {
-                positional = false;
+                positional = false; // eslint-disable-line no-useless-assignment
                 this._set(opts, flag, sense);
             } else if (flag in this.enum_values) {
-                positional = false;
+                positional = false; // eslint-disable-line no-useless-assignment
                 this._set(opts, this.enum_values[flag], flag);
-            } else if (positional) this._set(opts, this.order[i], part);
-            else {
+            } else if (positional) {
+                // TODO: This branch is always executed, the next else clause will never.
+                // eslint complains about no-useless-assignment for `positional`.
+                this._set(opts, this.order[i], part);
+            } else {
                 parts.unshift(part);
                 break;
             }

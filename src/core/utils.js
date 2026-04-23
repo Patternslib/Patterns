@@ -303,12 +303,12 @@ function addURLQueryParameter(fullURL, param, value) {
      *
      * Taken from http://stackoverflow.com/questions/7640270/adding-modify-query-string-get-variables-in-a-url-with-javascript
      */
-    var val = new RegExp("(\\?|\\&)" + param + "=.*?(?=(&|$))"),
-        parts = fullURL.toString().split("#"),
-        url = parts[0],
-        hash = parts[1],
-        qstring = /\?.+$/,
-        newURL = url;
+    const val = new RegExp("(\\?|\\&)" + param + "=.*?(?=(&|$))");
+    const parts = fullURL.toString().split("#");
+    const url = parts[0];
+    const hash = parts[1];
+    const qstring = /\?.+$/;
+    let newURL;
     // Check if the parameter exists
     if (val.test(url)) {
         // if it does, replace it, using the captured group
@@ -415,7 +415,7 @@ function isElementInViewport(el, partial = false, offset = 0) {
             rec.top >= 0 &&
             rec.left >= 0 &&
             rec.bottom <=
-            (window.innerHeight || document.documentElement.clientHeight) &&
+                (window.innerHeight || document.documentElement.clientHeight) &&
             rec.right <= (window.innerWidth || document.documentElement.clientWidth)
         );
     }
@@ -530,7 +530,7 @@ function checkInputSupport(type, invalid_value) {
     /* Check input type support.
      *  See: https://stackoverflow.com/a/10199306/1337474
      */
-    let support = false;
+    let support;
     const input = document.createElement("input");
     input.setAttribute("type", type);
     support = input.type == type;
@@ -613,7 +613,7 @@ const isIE = () => {
     // See: https://stackoverflow.com/a/9851769/1337474
     // Internet Explorer 6-11
     // eslint-disable-next-line no-constant-binary-expression
-    return /*@cc_on!@*/false || !!document.documentMode;
+    return /*@cc_on!@*/ false || !!document.documentMode;
 };
 
 const jqToNode = (el) => {
