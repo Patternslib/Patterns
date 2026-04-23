@@ -107,7 +107,7 @@ export default Base.extend({
     },
 
     find_checkboxes(ref_el, sel) {
-        let chkbxs = [];
+        let chkbxs;
         if (this.options.select.indexOf("#") === 0) {
             chkbxs = this.el.querySelectorAll(sel);
         } else {

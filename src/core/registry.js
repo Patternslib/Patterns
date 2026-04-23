@@ -33,7 +33,7 @@ while ((match = disable_re.exec(window.location.search)) !== null) {
     log.info("Pattern disabled via url config:", match[1]);
 }
 
-while ((match = dont_catch_re.exec(window.location.search)) !== null) {
+while (dont_catch_re.exec(window.location.search) !== null) {
     dont_catch = true;
     log.info("I will not catch init exceptions");
 }

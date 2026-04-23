@@ -176,31 +176,30 @@ describe("1 - Calendar tests", () => {
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         el.querySelector(".view-week").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         el.querySelector(".view-day").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         el.querySelector(".view-month").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         el.querySelector(".jump-next").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         el.querySelector(".jump-prev").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         el.querySelector(".jump-today").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
     });
 
     it("Changes views when clicked", async () => {
@@ -507,31 +506,30 @@ describe("2 - Calendar tests with calendar controls outside pat-calendar", () =>
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         document.querySelector(".view-week").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         document.querySelector(".view-day").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         document.querySelector(".view-month").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         document.querySelector(".jump-next").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         document.querySelector(".jump-prev").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         document.querySelector(".jump-today").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
     });
 
     it("2.2 - Changes views when clicked", async () => {
@@ -617,30 +615,29 @@ describe("3 - Calendar tests with calendar controls outside pat-calendar but tit
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         document.querySelector(".view-week").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         document.querySelector(".view-day").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         document.querySelector(".view-month").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         document.querySelector(".jump-next").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         document.querySelector(".jump-prev").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
 
+        title = title_el.innerHTML;
         document.querySelector(".jump-today").click();
         expect(title_el.innerHTML === title).toBeFalsy();
-        title = title_el.innerHTML;
     });
 });

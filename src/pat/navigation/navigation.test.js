@@ -172,29 +172,6 @@ describe("2 - Navigation pattern tests - mark after navigation injection", funct
         Pattern.prototype.base_url = _originalBaseUrl;
     });
 
-    const set_url = (url, portal_url) => {
-        // Mock the location by creating a mock object
-        const urlObj = new URL(url);
-        const mockLocation = {
-            href: url,
-            protocol: urlObj.protocol,
-            host: urlObj.host,
-            hostname: urlObj.hostname,
-            port: urlObj.port,
-            pathname: urlObj.pathname,
-            search: urlObj.search,
-            hash: urlObj.hash,
-            origin: urlObj.origin,
-        };
-
-        // Replace the window.location object
-        global.window.location = mockLocation;
-
-        portal_url = portal_url || url;
-
-        document.body.dataset.portalUrl = portal_url;
-    };
-
     it("navigation roundtrip", async () => {
         document.body.innerHTML = `
           <div id="injected_nav">
@@ -262,29 +239,6 @@ describe("3 - Navigation pattern tests - Mark items based on URL", () => {
         global.window.location = _window_location;
         Pattern.prototype.base_url = _originalBaseUrl;
     });
-
-    const set_url = (url, portal_url) => {
-        // Mock the location by creating a mock object
-        const urlObj = new URL(url);
-        const mockLocation = {
-            href: url,
-            protocol: urlObj.protocol,
-            host: urlObj.host,
-            hostname: urlObj.hostname,
-            port: urlObj.port,
-            pathname: urlObj.pathname,
-            search: urlObj.search,
-            hash: urlObj.hash,
-            origin: urlObj.origin,
-        };
-
-        // Replace the window.location object
-        global.window.location = mockLocation;
-
-        portal_url = portal_url || url;
-
-        document.body.dataset.portalUrl = portal_url;
-    };
 
     it("navigation roundtrip", async () => {
         document.body.innerHTML = `
