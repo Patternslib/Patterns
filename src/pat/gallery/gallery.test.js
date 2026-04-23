@@ -31,7 +31,13 @@ describe("pat-gallery", function () {
             const instance = new pattern(el);
 
             const spy_init_trigger = jest.spyOn(instance, "initialize_trigger");
-            const spy_init_gallery = jest.spyOn(instance, "initialize_gallery");
+
+            // Create a spy that prevents the actual PhotoSwipe initialization
+            const spy_init_gallery = jest.spyOn(instance, "initialize_gallery").mockImplementation((e) => {
+                e.preventDefault();
+                // Just return without initializing PhotoSwipe
+                return;
+            });
 
             await utils.timeout(1);
 
@@ -63,7 +69,13 @@ describe("pat-gallery", function () {
             const instance = new pattern(el);
 
             const spy_init_trigger = jest.spyOn(instance, "initialize_trigger");
-            const spy_init_gallery = jest.spyOn(instance, "initialize_gallery");
+
+            // Create a spy that prevents the actual PhotoSwipe initialization
+            const spy_init_gallery = jest.spyOn(instance, "initialize_gallery").mockImplementation((e) => {
+                e.preventDefault();
+                // Just return without initializing PhotoSwipe
+                return;
+            });
 
             await utils.timeout(1);
 

@@ -155,22 +155,40 @@ describe("1 - Navigation pattern tests", function () {
 
 describe("2 - Navigation pattern tests - mark after navigation injection", function () {
     let _window_location;
+    let _originalBaseUrl;
 
     beforeEach(() => {
         _window_location = global.window.location;
-        delete global.window.location;
         document.body.innerHTML = "";
+        _originalBaseUrl = Pattern.prototype.base_url;
+        Pattern.prototype.base_url = function () {
+            return "https://patternslib.com/path/to/test";
+        };
     });
 
     afterEach(() => {
         global.window.location = _window_location;
         document.body.innerHTML = "";
+        Pattern.prototype.base_url = _originalBaseUrl;
     });
 
     const set_url = (url, portal_url) => {
-        global.window.location = {
+        // Mock the location by creating a mock object
+        const urlObj = new URL(url);
+        const mockLocation = {
             href: url,
+            protocol: urlObj.protocol,
+            host: urlObj.host,
+            hostname: urlObj.hostname,
+            port: urlObj.port,
+            pathname: urlObj.pathname,
+            search: urlObj.search,
+            hash: urlObj.hash,
+            origin: urlObj.origin,
         };
+
+        // Replace the window.location object
+        global.window.location = mockLocation;
 
         portal_url = portal_url || url;
 
@@ -198,7 +216,8 @@ describe("2 - Navigation pattern tests - mark after navigation injection", funct
           </nav>
         `;
 
-        set_url("https://patternslib.com/path/to/test");
+        // Set portal URL directly on document body
+        document.body.dataset.portalUrl = "https://patternslib.com";
 
         Registry.scan(document.body);
         await utils.timeout(1); // wait a tick for async to settle.
@@ -227,21 +246,40 @@ describe("2 - Navigation pattern tests - mark after navigation injection", funct
 
 describe("3 - Navigation pattern tests - Mark items based on URL", () => {
     let _window_location;
+    let _originalBaseUrl;
 
     beforeEach(() => {
         _window_location = global.window.location;
         delete global.window.location;
         document.body.innerHTML = "";
+        _originalBaseUrl = Pattern.prototype.base_url;
+        Pattern.prototype.base_url = function () {
+            return "https://patternslib.com/";
+        };
     });
 
     afterEach(() => {
         global.window.location = _window_location;
+        Pattern.prototype.base_url = _originalBaseUrl;
     });
 
     const set_url = (url, portal_url) => {
-        global.window.location = {
+        // Mock the location by creating a mock object
+        const urlObj = new URL(url);
+        const mockLocation = {
             href: url,
+            protocol: urlObj.protocol,
+            host: urlObj.host,
+            hostname: urlObj.hostname,
+            port: urlObj.port,
+            pathname: urlObj.pathname,
+            search: urlObj.search,
+            hash: urlObj.hash,
+            origin: urlObj.origin,
         };
+
+        // Replace the window.location object
+        global.window.location = mockLocation;
 
         portal_url = portal_url || url;
 
@@ -291,7 +329,8 @@ describe("3 - Navigation pattern tests - Mark items based on URL", () => {
           </nav>
         `;
 
-        set_url("https://patternslib.com/");
+        // Set portal URL directly on document body
+        document.body.dataset.portalUrl = "https://patternslib.com";
 
         const instance = new Pattern(document.querySelector(".pat-navigation"));
         await events.await_pattern_init(instance);
