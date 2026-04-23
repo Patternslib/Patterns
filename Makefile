@@ -46,7 +46,8 @@ depends-parser:  install
 
 
 # Unlink any linked dependencies before building a bundle.
-bundle-pre:
+# Also run parent @patternslib/dev `bundle-pre` (double colon `::`)
+bundle-pre::
 	-$(YARN) unlink @patternslib/dev
 	-$(YARN) unlink @patternslib/pat-content-mirror
 	-$(YARN) unlink @patternslib/pat-doclock
