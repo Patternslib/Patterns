@@ -42,14 +42,6 @@ class Pattern extends BasePattern {
     // validation fails (e.g. pat-inject).
     static order = 100;
 
-    _dompurify = null;
-    async get_dompurify() {
-        if (!this._dompurify) {
-            this._dompurify = (await import("dompurify")).default;
-        }
-        return this._dompurify;
-    }
-
     init() {
         events.add_event_listener(
             this.el,
@@ -406,7 +398,7 @@ class Pattern extends BasePattern {
         // executed. Chrome includes the input value in it's browser validation
         // message. When placing that into the DOM, malicious input could get
         // executed within the web page context.
-        const dompurify = await this.get_dompurify();
+        const dompurify = (await import("dompurify")).default;
         const validation_message = dompurify.sanitize(
             input.validationMessage || input[KEY_ERROR_MSG]
         );
