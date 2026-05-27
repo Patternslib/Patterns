@@ -472,7 +472,9 @@ const inject = {
             const method = cfg.sourceMod === "content" ? "innerHTML" : "outerHTML";
             // There might be multiple sources, so we need to loop over them.
             // Access them with "innerHTML" or "outerHTML" depending on the sourceMod.
-            const sources_string = [...$sources].map(source => source[method]).join("\n");
+            const sources_string = [...$sources]
+                .map((source) => source[method])
+                .join("\n");
             wrapper.innerHTML = sources_string;
 
             for (const img of wrapper.content.querySelectorAll("img")) {
@@ -832,25 +834,32 @@ const inject = {
         return true;
     },
 
-    _sourcesFromHtml(html, url, sources) {
-        const $html = this._parseRawHtml(html, url);
-        return sources.map((source) => {
-            if (source === "body") {
-                source = "#__original_body";
+    async _sourcesFromHtml(html, url, sources) {
+        const source_dom = await this._parseRawHtml(html, url);
+        const $html = $(source_dom);
+
+        return sources.map((source_selector) => {
+            if (source_selector === "body") {
+                source_selector = "body";
             }
-            if (source === "none") {
+            if (source_selector === "none") {
                 return $("<!-- -->");
             }
-            const $source = $html.find(source);
 
-            if ($source.length === 0) {
-                if (source != "title") {
-                    log.warn("No source elements for selector:", source, $html);
+            const source_result = dom.querySelectorAllAndMe(source_dom, source_selector);
+            const $source = $html.find(source_selector);
+
+            if (source_result.length === 0) {
+                if (source_selector != "title") {
+                    log.warn("No source elements for selector:", source_selector, $html);
                 }
             }
 
-            $source.find('a[href^="#"]').each((idx, el_) => {
-                const href = el_.getAttribute("href");
+            for (const anchor in dom.querySelectorAllAndMe(
+                source_result,
+                'a[href^="#"]'
+            )) {
+                const href = anchor.getAttribute("href");
                 if (href.indexOf("#{1}") !== -1) {
                     // We ignore hrefs containing #{1} because they're not
                     // valid and only applicable in the context of
@@ -861,11 +870,11 @@ const inject = {
                 // this fragment.
                 if (href.length === 1) {
                     // Special case for top-of-page links
-                    el_.href = url;
+                    anchor.href = url;
                 } else if (!$source.find(href).length) {
-                    el_.href = url + href;
+                    anchor.href = url + href;
                 }
-            });
+            }
             return $source;
         });
     },
@@ -895,15 +904,15 @@ const inject = {
         return base.slice(0, base.lastIndexOf("/") + 1) + url;
     },
 
-    _rebaseHTML(base, html) {
-        if (html === "") {
+    _rebaseHTML(base, page) {
+        if (!page) {
             // Special case, source is none
             return "";
         }
 
         // Parse the html string into a DOM tree.
-        const page = document.createElement("div");
-        page.innerHTML = html;
+        //const page = document.createElement("div");
+        //page.innerHTML = html;
 
         // Create efficient selector for any tag with it's corresponding
         // attribute from _rebaseAttrs. Note: the current data structure allows
@@ -968,10 +977,19 @@ const inject = {
             }
         }
 
-        return page.innerHTML.trim();
+        return page;
+        //return page.innerHTML.trim();
     },
 
-    _parseRawHtml(html, url = "") {
+    async _parseRawHtml(html, url = "") {
+        const dompurify = (await import("dompurify")).default;
+        const sanitized = dompurify.sanitize(html, {
+            WHOLE_DOCUMENT: true,
+            RETURN_DOM: true,
+        });
+        const rebased = this._rebaseHTML(sanitized);
+        return rebased;
+
         // remove script tags and head and replace body by a div
         const title = html.match(/\<title\>(.*)\<\/title\>/);
         let clean_html = html
@@ -1119,10 +1137,10 @@ const inject = {
 
     handlers: {
         html: {
-            sources(cfgs, data) {
+            async sources(cfgs, data) {
                 const sources = cfgs.map((cfg) => cfg.source);
                 sources.push("title");
-                const result = this._sourcesFromHtml(data, cfgs[0].url, sources);
+                const result = await this._sourcesFromHtml(data, cfgs[0].url, sources);
                 return result;
             },
         },
