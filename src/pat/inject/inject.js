@@ -987,32 +987,8 @@ const inject = {
             WHOLE_DOCUMENT: true,
             RETURN_DOM: true,
         });
-        const rebased = this._rebaseHTML(sanitized);
+        const rebased = this._rebaseHTML(url, sanitized);
         return rebased;
-
-        // remove script tags and head and replace body by a div
-        const title = html.match(/\<title\>(.*)\<\/title\>/);
-        let clean_html = html
-            .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-            .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
-            .replace(/<html([^>]*?)>/gi, "")
-            .replace(/<\/html([^>]*?)>/gi, "")
-            .replace(/<body([^>]*?)>/gi, '<div id="__original_body">')
-            .replace(/<\/body([^>]*?)>/gi, "</div>");
-
-        if (title && title.length == 2) {
-            clean_html = title[0] + clean_html;
-        }
-        try {
-            clean_html = this._rebaseHTML(url, clean_html);
-        } catch (e) {
-            log.error("Error rebasing urls", e);
-        }
-        const $html = $("<div/>").html(clean_html);
-        if ($html.children().length === 0) {
-            log.warn("Parsing html resulted in empty jquery object:", clean_html);
-        }
-        return $html;
     },
 
     _initAutoloadVisible($el, cfgs) {
