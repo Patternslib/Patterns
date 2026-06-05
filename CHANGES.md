@@ -2,6 +2,17 @@
 
 See the [history](./docs/history/index.md) for older changelog entries.
 
+## [9.10.6](https://github.com/Patternslib/Patterns/compare/9.10.5...9.10.6) (2026-06-05)
+
+### Maintenance
+
+-   **core mockup-parser:** Extend the tests. ([031f3d1](https://github.com/Patternslib/Patterns/commit/031f3d143ff0cd63dd7fce7b7dc2498792c1a61b))
+
+    Extend the mockup parser tests with tests showing that native JSON
+    values are converted to their JavaScript equivalent.
+
+-   Upgrade pat-tiptap, dompurify and moment-timezone. ([e543872](https://github.com/Patternslib/Patterns/commit/e5438727ba762af0c52e987b8b9f615c53d5f52a))
+
 ## [9.10.5](https://github.com/Patternslib/Patterns/compare/9.10.5-alpha.0...9.10.5) (2026-04-23)
 
 ### Features
