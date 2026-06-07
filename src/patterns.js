@@ -12,6 +12,7 @@ import "./pat/auto-scale/auto-scale";
 import "./pat/auto-submit/auto-submit";
 import "./pat/auto-suggest/auto-suggest";
 import "./pat/autofocus/autofocus";
+import "./pat/bind/bind";
 import "./pat/breadcrumbs/breadcrumbs";
 import "./pat/bumper/bumper";
 import "./pat/calendar/calendar";

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>pat-bind</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="/style/common.css" />
+        <script src="/bundle.min.js"></script>
+    </head>
+    <body>
+        <h1>pat-bind</h1>
+        <p>
+            Declarative data binding between DOM elements. Elements sharing a
+            <em>channel</em> (the <code>key</code>) stay in sync — no JavaScript
+            required.
+        </p>
+
+        <section>
+            <h2>A source drives a target</h2>
+            <p>Pick a colour; the label and the swatch follow.</p>
+            <div class="pat-clone-code">
+              <form>
+                <fieldset class="vertical">
+                    <label>
+                        Colour:
+                        <select
+                            class="pat-bind"
+                            data-pat-bind="key: color"
+                        >
+                            <option value="rebeccapurple">Purple</option>
+                            <option value="crimson">Crimson</option>
+                            <option value="seagreen">Green</option>
+                        </select>
+                    </label>
+                    <p>
+                        You picked:
+                        <strong
+                            class="pat-bind"
+                            data-pat-bind="key: color; value: ::text"
+                        ></strong>
+                    </p>
+                    <p>
+                        … and it is mirrored onto a
+                        <code>title</code> attribute:
+                        <span
+                            class="pat-bind"
+                            data-pat-bind="key: color; value: [title]"
+                            >hover me</span
+                        >
+                    </p>
+                </fieldset>
+              </form>
+            </div>
+        </section>
+
+        <section>
+            <h2>Two-way binding</h2>
+            <p>
+                Form controls on the same channel mirror each other. Type in
+                either field.
+            </p>
+            <div class="pat-clone-code">
+              <form>
+                <fieldset class="vertical">
+                  <label>
+                    Name:
+                    <input class="pat-bind" data-pat-bind="key: name" />
+                  </label>
+                  <label>
+                    Same name:
+                    <input class="pat-bind" data-pat-bind="key: name" />
+                  </label>
+                  <p>
+                    Hello,
+                    <span
+                        class="pat-bind"
+                        data-pat-bind="key: name; value: ::text"
+                    >
+                    </span>!
+                  </p>
+                </fieldset>
+              </form>
+            </div>
+        </section>
+
+        <section>
+          <h2>Binding an attribute</h2>
+          <p>A checkbox drives the <code>disabled</code> state of a button.</p>
+          <div class="pat-clone-code">
+            <form>
+              <fieldset class="vertical">
+                  <label>
+                      <input
+                          type="checkbox"
+                          class="pat-bind"
+                          data-pat-bind="key: locked"
+                      />
+                      Lock the button
+                  </label>
+                  <button
+                      type="button"
+                      class="pat-button pat-bind"
+                      data-pat-bind="key: locked; value: [disabled]"
+                  >
+                      I follow the checkbox
+                  </button>
+              </fieldset>
+            </form>
+          </div>
+        </section>
+
+        <section>
+            <h2>Editable HTML (::html)</h2>
+            <p>
+                Edit the region below; its sanitized HTML is mirrored into the
+                preview. The <code>::html</code> accessor sanitizes with
+                DOMPurify on write.
+            </p>
+            <div class="pat-clone-code">
+              <div
+                  contenteditable
+                  class="pat-bind"
+                  data-pat-bind="key: note; value: ::html; direction: both"
+                  style="border: 1px solid #ccc; padding: 0.5em; min-height: 3em"
+              >
+                  Try <b>bold</b> or <i>italic</i> text…
+              </div>
+              <p>Preview:</p>
+              <div
+                  class="pat-bind"
+                  data-pat-bind="key: note; value: ::html"
+                  style="border: 1px solid #ccc; padding: 0.5em; min-height: 3em"
+              >
+              </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Scope</h2>
+            <p>
+                Each card is its own scope (<code>data-pat-bind-scope</code>), so
+                the reused <code>price</code> channel stays local to the card.
+            </p>
+            <div class="pat-clone-code">
+              <div class="card" data-pat-bind-scope>
+                  <h3>Card A</h3>
+                  <label>
+                      Price:
+                      <input
+                          type="number"
+                          class="pat-bind"
+                          data-pat-bind="key: price"
+                          value="10"
+                      />
+                  </label>
+                  <p>
+                      €<span
+                          class="pat-bind"
+                          data-pat-bind="key: price; value: ::text"
+                      ></span>
+                  </p>
+              </div>
+              <div class="card" data-pat-bind-scope>
+                  <h3>Card B</h3>
+                  <label>
+                      Price:
+                      <input
+                          type="number"
+                          class="pat-bind"
+                          data-pat-bind="key: price"
+                          value="42"
+                      />
+                  </label>
+                  <p>
+                      €<span
+                          class="pat-bind"
+                          data-pat-bind="key: price; value: ::text"
+                      ></span>
+                  </p>
+              </div>
+            </div>
+        </section>
+    </body>
+</html>
