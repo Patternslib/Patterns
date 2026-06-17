@@ -1,11 +1,12 @@
 // helper functions to make all input elements
 import $ from "jquery";
 import logging from "../core/logging";
+
 const namespace = "input-change-events";
 const log = logging.getLogger(namespace);
 
 const _ = {
-    setup: function ($el, pat) {
+    setup($el, pat) {
         if (!pat) {
             log.error("The name of the calling pattern has to be set.");
             return;
@@ -28,20 +29,30 @@ const _ = {
         }
     },
 
-    setupInputHandlers: function ($el) {
-        if (!$el.is(":input")) {
-            // We've been given an element that is not a form input. We
-            // therefore assume that it's a container of form inputs and
-            // register handlers for its children.
-            $el.findInclusive(":input").each(_.registerHandlersForElement);
-        } else {
+    setupInputHandlers($el) {
+        if ($el.is(":input")) {
             // The element itself is an input, se we simply register a
             // handler fot it.
             _.registerHandlersForElement.bind($el)();
+        } else {
+            // We've been given an element that is not a form input. We
+            // therefore assume that it's a container of form inputs and
+            // register handlers for its children.
+            for (const _el of $el[0].closest("form").elements) {
+                // Search for all form elements, also those outside the form
+                // container.
+                _.registerHandlersForElement.bind(_el)();
+            }
         }
     },
 
-    registerHandlersForElement: function () {
+    registerHandlersForElement() {
+        let el_within_form = true;
+        const $form = $(this.form);
+        if (this.closest("form") !== this.form) {
+            el_within_form = false;
+        }
+
         const $el = $(this);
         const isNumber = $el.is("input[type=number]");
         const isText = $el.is("input:text, input[type=search], textarea");
@@ -52,28 +63,28 @@ const _ = {
             if ("onkeyup" in window) {
                 $el.on("keyup." + namespace, function () {
                     log.debug("translating keyup");
-                    $el.trigger("input-change");
+                    (el_within_form ? $el : $form).trigger("input-change");
                 });
             }
         }
         if (isText || isNumber) {
             $el.on("input." + namespace, function () {
                 log.debug("translating input");
-                $el.trigger("input-change");
+                (el_within_form ? $el : $form).trigger("input-change");
             });
         } else {
             $el.on("change." + namespace, function () {
                 log.debug("translating change");
-                $el.trigger("input-change");
+                (el_within_form ? $el : $form).trigger("input-change");
             });
         }
 
         $el.on("blur", function () {
-            $el.trigger("input-defocus");
+            (el_within_form ? $el : $form).trigger("input-defocus");
         });
     },
 
-    remove: function ($el, pat) {
+    remove($el, pat) {
         let patterns = $el.data(namespace) || [];
         if (patterns.indexOf(pat) === -1) {
             log.warn("input-change-events were never installed for " + pat);
