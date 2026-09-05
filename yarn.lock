@@ -2153,10 +2153,10 @@
     "@parcel/watcher-win32-ia32" "2.5.6"
     "@parcel/watcher-win32-x64" "2.5.6"
 
-"@patternslib/dev@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@patternslib/dev/-/dev-4.0.0.tgz#6fe1043d61ba0646917a38e84162fabdc4ab2e8d"
-  integrity sha512-WERspi16UWUfZZoeFgWGEPJ3rportsaLp6dy5UjPop4N6K4/T2OJeAjblhJ18L/BeXx1rRLXHh91dQd07GEsYw==
+"@patternslib/dev@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@patternslib/dev/-/dev-4.0.2.tgz#0113dac81efeb049274e686b663ec4eba171f6a0"
+  integrity sha512-93QINnDXBVAurYMyQkx+kI9RpiG0be2lvmaVp5WhjUgXNN8NCR7jtQJ1lLRmRKUHc9zd52MX2SL1SNkp/JDOHA==
   dependencies:
     "@babel/core" "^7.29.0"
     "@babel/preset-env" "^7.29.2"
@@ -2165,7 +2165,6 @@
     "@eslint/js" "^10.0.1"
     "@release-it/conventional-changelog" "^10.0.6"
     babel-loader "^10.1.1"
-    caniuse-lite "1.0.30001790"
     css-loader "^7.1.4"
     eslint "^10.2.1"
     eslint-config-prettier "^10.1.8"
@@ -3803,11 +3802,6 @@ camelcase@^6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-6.3.0.tgz#5685b95eb209ac9c0c177467778c9c84df58ba9a"
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
-
-caniuse-lite@1.0.30001790:
-  version "1.0.30001790"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001790.tgz#04660c7de15f445d86dd10ac88a8936ac0698e45"
-  integrity sha512-bOoxfJPyYo+ds6W0YfptaCWbFnJYjh2Y1Eow5lRv+vI2u8ganPZqNm1JwNh0t2ELQCqIWg4B3dWEusgAmsoyOw==
 
 caniuse-lite@^1.0.30001782:
   version "1.0.30001793"
