@@ -2,6 +2,17 @@
 
 See the [history](./docs/history/index.md) for older changelog entries.
 
+
+
+## [9.10.7](https://github.com/Patternslib/Patterns/compare/9.10.6...9.10.7) (2026-09-05)
+
+### Maintenance
+
+
+* Upgrade to 4.0.2. ([32418d2](https://github.com/Patternslib/Patterns/commit/32418d29a2b53bc638bbc3d1087533f6bbd7e404))
+
+  This change should also include the dist/ directorie again, which can then be used to serve Patternslib from CDNs like jsDelivr.
+
 ## [9.10.6](https://github.com/Patternslib/Patterns/compare/9.10.5...9.10.6) (2026-06-05)
 
 ### Maintenance
