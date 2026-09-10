@@ -55,3 +55,37 @@ registry.register(Pattern);
 // Make it available
 export default Pattern;
 ```
+
+## Replacing a registered pattern
+
+The first registration of a pattern name wins — registering another pattern
+under an already used name is refused. To override a pattern, e.g. a core
+pattern from an add-on bundle, pass ``replace: true``:
+
+```javascript
+import registry from "@patternslib/patternslib/src/core/registry";
+import { Pattern as OriginalPattern } from "some-bundle/src/pat/example/example";
+
+class Pattern extends OriginalPattern {
+    // Keep the original name and trigger, so that existing markup and
+    // options (``data-pat-example``) keep working.
+    static name = "example";
+    static trigger = ".pat-example";
+
+    async init() {
+        // Customize, then let the original do the rest.
+        await super.init();
+    }
+}
+
+registry.register(Pattern, Pattern.name, { replace: true });
+```
+
+For old-style ``Base.extend`` patterns pass ``replace: true`` along with the
+pattern properties.
+
+The registry waits for Module Federation remote bundles before its initial
+DOM scan, so a replacement registered by a remote bundle is in place for the
+initial scan no matter whether the remote or the core bundle registered
+first. Elements which were already initialized with the previous pattern
+keep it; only elements initialized afterwards get the replacement.

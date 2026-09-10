@@ -141,7 +141,11 @@ Base.extend = function (patternProps) {
             `The pattern ${patternProps.name} does not have a trigger attribute, it will not be registered.`
         );
     } else if (patternProps.autoregister !== false) {
-        Registry.register(child, patternProps.name);
+        // ``replace: true`` replaces an already registered pattern with the
+        // same name, e.g. to override a core pattern from an add-on bundle.
+        Registry.register(child, patternProps.name, {
+            replace: patternProps.replace === true,
+        });
     }
     return child;
 };

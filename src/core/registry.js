@@ -259,7 +259,17 @@ const registry = {
         document.body.classList.add("patterns-loaded");
     },
 
-    register(pattern, name) {
+    register(pattern, name, { replace = false } = {}) {
+        // Register a pattern under ``name`` (defaults to ``pattern.name``).
+        //
+        // By default the first registration wins: registering another
+        // pattern under an already used name is refused. With
+        // ``replace: true`` an existing registration is replaced instead —
+        // the way for add-on bundles to override a core pattern. Together
+        // with the registry waiting for Module Federation remotes before
+        // the initial scan (see ``init()``), the replacement is in place for
+        // the initial scan no matter whether the add-on or the core bundle
+        // registered first.
         name = name || pattern.name;
         if (!name) {
             log.error("Pattern lacks a name.", pattern);
@@ -277,8 +287,19 @@ const registry = {
         }
 
         if (registry.patterns[name]) {
-            log.debug(`Already have a pattern called ${name}.`);
-            return false;
+            if (!replace) {
+                log.debug(`Already have a pattern called ${name}.`);
+                return false;
+            }
+            if (window.__patternslib_registry_initialized) {
+                // Elements which were already initialized with the previous
+                // pattern keep it. Only new elements get the replacement.
+                log.warn(
+                    `Replacing pattern ${name} after the registry was initialized. Already initialized elements keep the previous pattern.`
+                );
+            } else {
+                log.debug(`Replacing pattern ${name}.`, pattern);
+            }
         }
         // register pattern to be used for scanning new content
         registry.patterns[name] = pattern;
