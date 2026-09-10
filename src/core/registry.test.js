@@ -1,6 +1,7 @@
 import Base from "./base";
 import BasePattern from "./basepattern";
 import registry from "./registry";
+import utils from "./utils";
 
 describe("pat-registry: The registry for patterns", function () {
     const patterns = registry.patterns;
@@ -332,4 +333,81 @@ describe("pat-registry: The registry for patterns", function () {
         });
     });
 
+
+    describe("init with Module Federation", function () {
+        let scan_spy;
+
+        const reset = () => {
+            window.__patternslib_registry_initialized = false;
+            delete window.__patternslib_registry_initializing;
+            delete window.__patternslib_mf_initialized;
+            delete window.__patternslib_mf_init_timeout;
+        };
+
+        beforeEach(function () {
+            reset();
+            scan_spy = jest.spyOn(registry, "scan").mockImplementation(() => {});
+        });
+
+        afterEach(function () {
+            reset();
+            jest.restoreAllMocks();
+        });
+
+        it("Scans immediately when no Module Federation host is present", async function () {
+            registry.init();
+            await utils.timeout(10);
+
+            expect(scan_spy).toHaveBeenCalledWith(document.body);
+            expect(window.__patternslib_registry_initialized).toBe(true);
+        });
+
+        it("Defers the initial scan until the Module Federation bundles are initialized", async function () {
+            let resolve_initialized;
+            window.__patternslib_mf_initialized = new Promise((resolve) => {
+                resolve_initialized = resolve;
+            });
+
+            registry.init();
+            await utils.timeout(10);
+
+            expect(scan_spy).not.toHaveBeenCalled();
+            expect(window.__patternslib_registry_initialized).toBe(false);
+
+            resolve_initialized([]);
+            await utils.timeout(1);
+
+            expect(scan_spy).toHaveBeenCalledWith(document.body);
+            expect(window.__patternslib_registry_initialized).toBe(true);
+        });
+
+        it("Scans anyway after the timeout when the bundles do not initialize", async function () {
+            window.__patternslib_mf_initialized = new Promise(() => {});
+            window.__patternslib_mf_init_timeout = 20;
+
+            registry.init();
+            await utils.timeout(10);
+            expect(scan_spy).not.toHaveBeenCalled();
+
+            await utils.timeout(30);
+            expect(scan_spy).toHaveBeenCalledWith(document.body);
+            expect(window.__patternslib_registry_initialized).toBe(true);
+        });
+
+        it("Does not scan twice when init is called again while waiting", async function () {
+            let resolve_initialized;
+            window.__patternslib_mf_initialized = new Promise((resolve) => {
+                resolve_initialized = resolve;
+            });
+
+            registry.init();
+            registry.init();
+            await utils.timeout(10);
+
+            resolve_initialized([]);
+            await utils.timeout(1);
+
+            expect(scan_spy).toHaveBeenCalledTimes(1);
+        });
+    });
 });
