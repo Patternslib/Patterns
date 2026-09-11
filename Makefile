@@ -20,20 +20,26 @@ export
 
 PEGJS		?= npx pegjs
 SASS		?= npx sass
-YARN		?= npx yarn
+PNPM		?= npx pnpm
 
 PACKAGE_NAME = "patternslib"
 
 all:: bundle css
 
 
-yarn.lock install:
-	$(YARN) install
+.PHONY: install
+pnpm-lock.yaml install: .git/hooks/commit-msg
+	$(PNPM) install
+
+
+.git/hooks/commit-msg:
+	echo "npx commitlint --edit" > .git/hooks/commit-msg
+	chmod u+x .git/hooks/commit-msg
 
 
 .PHONY: watch
 watch: install
-	$(YARN) watch
+	$(PNPM) run watch
 
 
 .PHONY: build
@@ -48,14 +54,8 @@ depends-parser:  install
 # Unlink any linked dependencies before building a bundle.
 # Also run parent @patternslib/dev `bundle-pre` (double colon `::`)
 bundle-pre::
-	-$(YARN) unlink @patternslib/dev
-	-$(YARN) unlink @patternslib/pat-content-mirror
-	-$(YARN) unlink @patternslib/pat-doclock
-	-$(YARN) unlink @patternslib/pat-shopping-cart
-	-$(YARN) unlink @patternslib/pat-sortable-table
-	-$(YARN) unlink @patternslib/pat-tiptap
-	-$(YARN) unlink @patternslib/pat-upload
-	$(YARN) install --force
+	-$(PNPM) unlink --recursive
+	$(MAKE) install
 
 
 .PHONY: css
@@ -73,7 +73,7 @@ Patterns-site/Makefile:
 .PHONY: update-patternslib-site
 update-patternslib-site: Patterns-site/Makefile
 	# something
-	cd Patterns-site && git pull &&	make update-patternslib && git push
+	cd Patterns-site && git pull &&	$(MAKE) update-patternslib && git push
 
 
 # Overrides release + Update https://patternslib.com
@@ -81,17 +81,17 @@ update-patternslib-site: Patterns-site/Makefile
 
 .PHONY: release-major
 release-major:
-	make LEVEL=major release
-	make update-patternslib-site
+	$(MAKE) LEVEL=major release
+	$(MAKE) update-patternslib-site
 
 
 .PHONY: release-minor
 release-minor:
-	make LEVEL=minor release
-	make update-patternslib-site
+	$(MAKE) LEVEL=minor release
+	$(MAKE) update-patternslib-site
 
 
 .PHONY: release-patch
 release-patch:
-	make LEVEL=patch release
-	make update-patternslib-site
+	$(MAKE) LEVEL=patch release
+	$(MAKE) update-patternslib-site

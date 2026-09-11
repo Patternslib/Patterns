@@ -1,0 +1,9 @@
+# no nested node_modules - needed by module federation
+shamefullyHoist: true
+# Allow dependencies directly from GitHub
+blockExoticSubdeps: false
+allowBuilds:
+  '@parcel/watcher': true
+  '@patternslib/dev': true
+  unrs-resolver: true
+  yarn: true
