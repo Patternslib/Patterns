@@ -4,6 +4,55 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.11.0-alpha.0](https://github.com/Patternslib/Patterns/compare/9.10.7...9.11.0-alpha.0) (2026-09-11)
+
+### Features
+
+
+* Allow await bundle registration. ([57aaa54](https://github.com/Patternslib/Patterns/commit/57aaa545f40e3b48d471224b935e006fabfa5ba9))
+
+  Allow the module federation loader to await the registration of the
+Patterns in this bundle.
+
+
+* **core registry:** replace option to override an already registered pattern ([11bf659](https://github.com/Patternslib/Patterns/commit/11bf65955a2d6e3c3a5baa288dfa9583ce221a15))
+
+  The first registration of a pattern name wins, so an add-on bundle
+could not override a core pattern under its own name — it had to
+blacklist the original and register a replacement under a different
+name with the original trigger, and then bridge the original's
+options by hand.
+
+``registry.register(pattern, name, { replace: true })`` now replaces an
+existing registration; ``Base.extend`` accepts ``replace: true`` as
+pattern property. Together with the registry waiting for Module
+Federation remotes before the initial scan, the replacement is in
+place for the initial scan no matter whether the remote or the core
+bundle registered first. Replacing after the registry was initialized
+logs a warning: already initialized elements keep the previous
+pattern, only new elements get the replacement. The blacklist still
+wins over a replacement.
+
+Also documents the new Module Federation globals in the README.
+
+
+* **core registry:** wait for Module Federation remotes before the initial scan ([f353956](https://github.com/Patternslib/Patterns/commit/f353956c345d2b0c79fca2b3c71a4517103e3331))
+
+  Module Federation remote bundles (add-ons) register their patterns and
+components asynchronously after document ready, while the registry
+scanned the DOM right at document ready. Whether an add-on's pattern
+override or component registration was in place for the initial scan
+was a race between the remote's chunk loading and the host's own
+initialization — usually won by the remote, but not guaranteed.
+
+``registry.init()`` now awaits ``window.__patternslib_mf_initialized``,
+the promise provided by the Module Federation helper of
+@patternslib/dev, before the initial scan. Without a Module Federation
+host on the page nothing changes. A timeout (default 5000ms,
+``window.__patternslib_mf_init_timeout``) makes sure a broken or slow
+remote cannot block the page; the scan then runs anyway with a
+warning. Repeated ``init()`` calls while waiting are ignored.
+
 ## [9.10.7](https://github.com/Patternslib/Patterns/compare/9.10.6...9.10.7) (2026-09-05)
 
 ### Maintenance
