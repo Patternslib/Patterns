@@ -54,6 +54,11 @@ if (typeof window.__patternslib_registry_initialized === "undefined") {
     window.__patternslib_registry_initialized = false;
 }
 
+// Maximum time in milliseconds to wait for Module Federation remote bundles
+// to initialize before the initial DOM scan is done anyway.
+// Can be overridden via ``window.__patternslib_mf_init_timeout``.
+const MF_INIT_TIMEOUT = 5000;
+
 const registry = {
     patterns: PATTERN_REGISTRY, // reference to global patterns registry
     // as long as the registry is not initialized, pattern
@@ -61,16 +66,53 @@ const registry = {
     // the DOM is scanned. After that registering a new pattern
     // results in rescanning the DOM only for this pattern.
     init() {
-        dom.document_ready(() => {
-            if (window.__patternslib_registry_initialized) {
+        dom.document_ready(async () => {
+            if (
+                window.__patternslib_registry_initialized ||
+                window.__patternslib_registry_initializing
+            ) {
                 // Do not reinitialize a already initialized registry.
                 return;
             }
+            window.__patternslib_registry_initializing = true;
+
+            await registry.wait_for_module_federation();
+
             window.__patternslib_registry_initialized = true;
+            window.__patternslib_registry_initializing = false;
             log.debug("Loaded: " + Object.keys(registry.patterns).sort().join(", "));
             registry.scan(document.body);
             log.debug("Finished initial scan.");
         });
+    },
+
+    async wait_for_module_federation(timeout) {
+        // Defer the initial DOM scan until all Module Federation remote
+        // bundles are loaded and initialized. Remote bundles register their
+        // patterns and components asynchronously; scanning before they are
+        // done would initialize patterns without the remote's additions and
+        // overrides.
+        //
+        // The Module Federation helper of @patternslib/dev provides the
+        // promise ``window.__patternslib_mf_initialized``. Without a Module
+        // Federation host on the page there is nothing to wait for.
+        const mf_initialized = window.__patternslib_mf_initialized;
+        if (!mf_initialized) {
+            return;
+        }
+        timeout = timeout ?? window.__patternslib_mf_init_timeout ?? MF_INIT_TIMEOUT;
+        let timed_out = false;
+        await Promise.race([
+            mf_initialized,
+            utils.timeout(timeout).then(() => {
+                timed_out = true;
+            }),
+        ]);
+        if (timed_out) {
+            log.warn(
+                `Module Federation bundles did not initialize within ${timeout}ms. Scanning the DOM anyway.`
+            );
+        }
     },
 
     clear() {
@@ -217,7 +259,17 @@ const registry = {
         document.body.classList.add("patterns-loaded");
     },
 
-    register(pattern, name) {
+    register(pattern, name, { replace = false } = {}) {
+        // Register a pattern under ``name`` (defaults to ``pattern.name``).
+        //
+        // By default the first registration wins: registering another
+        // pattern under an already used name is refused. With
+        // ``replace: true`` an existing registration is replaced instead —
+        // the way for add-on bundles to override a core pattern. Together
+        // with the registry waiting for Module Federation remotes before
+        // the initial scan (see ``init()``), the replacement is in place for
+        // the initial scan no matter whether the add-on or the core bundle
+        // registered first.
         name = name || pattern.name;
         if (!name) {
             log.error("Pattern lacks a name.", pattern);
@@ -235,8 +287,19 @@ const registry = {
         }
 
         if (registry.patterns[name]) {
-            log.debug(`Already have a pattern called ${name}.`);
-            return false;
+            if (!replace) {
+                log.debug(`Already have a pattern called ${name}.`);
+                return false;
+            }
+            if (window.__patternslib_registry_initialized) {
+                // Elements which were already initialized with the previous
+                // pattern keep it. Only new elements get the replacement.
+                log.warn(
+                    `Replacing pattern ${name} after the registry was initialized. Already initialized elements keep the previous pattern.`
+                );
+            } else {
+                log.debug(`Replacing pattern ${name}.`, pattern);
+            }
         }
         // register pattern to be used for scanning new content
         registry.patterns[name] = pattern;

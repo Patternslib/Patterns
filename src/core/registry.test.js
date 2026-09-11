@@ -1,6 +1,7 @@
 import Base from "./base";
 import BasePattern from "./basepattern";
 import registry from "./registry";
+import utils from "./utils";
 
 describe("pat-registry: The registry for patterns", function () {
     const patterns = registry.patterns;
@@ -332,4 +333,182 @@ describe("pat-registry: The registry for patterns", function () {
         });
     });
 
+
+    describe("register with replace", function () {
+        const reset = () => {
+            window.__patternslib_registry_initialized = false;
+            delete window.__patternslib_patterns_blacklist;
+        };
+
+        beforeEach(reset);
+        afterEach(function () {
+            reset();
+            jest.restoreAllMocks();
+        });
+
+        const make_pattern = (text) =>
+            class extends BasePattern {
+                static name = "example";
+                static trigger = ".pat-example";
+                init() {
+                    this.el.innerHTML = text;
+                }
+            };
+
+        it("Refuses to register a pattern under an already used name by default", function () {
+            const first = make_pattern("first");
+            const second = make_pattern("second");
+
+            expect(registry.register(first)).toBe(true);
+            expect(registry.register(second)).toBe(false);
+            expect(registry.patterns.example).toBe(first);
+        });
+
+        it("Replaces an existing pattern with replace: true", function () {
+            const first = make_pattern("first");
+            const second = make_pattern("second");
+
+            registry.register(first);
+            expect(registry.register(second, "example", { replace: true })).toBe(true);
+            expect(registry.patterns.example).toBe(second);
+        });
+
+        it("Uses the replacement when scanning", async function () {
+            registry.register(make_pattern("first"));
+            registry.register(make_pattern("second"), "example", { replace: true });
+
+            const tree = document.createElement("div");
+            tree.setAttribute("class", "pat-example");
+            registry.scan(tree);
+            await utils.timeout(1);
+
+            expect(tree.textContent).toBe("second");
+        });
+
+        it("Base.extend replaces an existing pattern with replace: true", function () {
+            const first = Base.extend({
+                name: "example",
+                trigger: ".pat-example",
+                init: function () {},
+            });
+            const second = Base.extend({
+                name: "example",
+                trigger: ".pat-example",
+                replace: true,
+                init: function () {},
+            });
+
+            expect(registry.patterns.example).not.toBe(first);
+            expect(registry.patterns.example).toBe(second);
+        });
+
+        it("Base.extend without replace keeps the first registration", function () {
+            const first = Base.extend({
+                name: "example",
+                trigger: ".pat-example",
+                init: function () {},
+            });
+            Base.extend({
+                name: "example",
+                trigger: ".pat-example",
+                init: function () {},
+            });
+
+            expect(registry.patterns.example).toBe(first);
+        });
+
+        it("Re-scans for a replaced pattern when the registry is already initialized", function () {
+            registry.register(make_pattern("first"));
+            window.__patternslib_registry_initialized = true;
+            const scan_spy = jest.spyOn(registry, "scan").mockImplementation(() => {});
+
+            registry.register(make_pattern("second"), "example", { replace: true });
+
+            expect(scan_spy).toHaveBeenCalledWith(document.body, ["example"]);
+        });
+
+        it("Does not replace a blacklisted pattern", function () {
+            registry.register(make_pattern("first"));
+            window.__patternslib_patterns_blacklist = ["example"];
+
+            expect(registry.register(make_pattern("second"), "example", { replace: true })).toBe(false);
+        });
+    });
+
+    describe("init with Module Federation", function () {
+        let scan_spy;
+
+        const reset = () => {
+            window.__patternslib_registry_initialized = false;
+            delete window.__patternslib_registry_initializing;
+            delete window.__patternslib_mf_initialized;
+            delete window.__patternslib_mf_init_timeout;
+        };
+
+        beforeEach(function () {
+            reset();
+            scan_spy = jest.spyOn(registry, "scan").mockImplementation(() => {});
+        });
+
+        afterEach(function () {
+            reset();
+            jest.restoreAllMocks();
+        });
+
+        it("Scans immediately when no Module Federation host is present", async function () {
+            registry.init();
+            await utils.timeout(10);
+
+            expect(scan_spy).toHaveBeenCalledWith(document.body);
+            expect(window.__patternslib_registry_initialized).toBe(true);
+        });
+
+        it("Defers the initial scan until the Module Federation bundles are initialized", async function () {
+            let resolve_initialized;
+            window.__patternslib_mf_initialized = new Promise((resolve) => {
+                resolve_initialized = resolve;
+            });
+
+            registry.init();
+            await utils.timeout(10);
+
+            expect(scan_spy).not.toHaveBeenCalled();
+            expect(window.__patternslib_registry_initialized).toBe(false);
+
+            resolve_initialized([]);
+            await utils.timeout(1);
+
+            expect(scan_spy).toHaveBeenCalledWith(document.body);
+            expect(window.__patternslib_registry_initialized).toBe(true);
+        });
+
+        it("Scans anyway after the timeout when the bundles do not initialize", async function () {
+            window.__patternslib_mf_initialized = new Promise(() => {});
+            window.__patternslib_mf_init_timeout = 20;
+
+            registry.init();
+            await utils.timeout(10);
+            expect(scan_spy).not.toHaveBeenCalled();
+
+            await utils.timeout(30);
+            expect(scan_spy).toHaveBeenCalledWith(document.body);
+            expect(window.__patternslib_registry_initialized).toBe(true);
+        });
+
+        it("Does not scan twice when init is called again while waiting", async function () {
+            let resolve_initialized;
+            window.__patternslib_mf_initialized = new Promise((resolve) => {
+                resolve_initialized = resolve;
+            });
+
+            registry.init();
+            registry.init();
+            await utils.timeout(10);
+
+            resolve_initialized([]);
+            await utils.timeout(1);
+
+            expect(scan_spy).toHaveBeenCalledTimes(1);
+        });
+    });
 });
