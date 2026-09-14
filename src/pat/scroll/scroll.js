@@ -52,12 +52,15 @@ class Pattern extends BasePattern {
             await utils.timeout(this.options.delay);
         }
 
-        const target = this.get_target();
-        const scroll_container = dom.find_scroll_container(
-            target.parentElement,
-            this.options.direction === "top" ? "y" : "x",
-            window
-        );
+        const target = this.get_target() || document.body;
+        const scroll_container =
+            target === document.body
+                ? document.body
+                : dom.find_scroll_container(
+                      target.parentElement,
+                      this.options.direction === "top" ? "y" : "x",
+                      window
+                  );
 
         // Set/remove classes on beginning and end of scroll
         this.el.classList.add("pat-scroll-animated");
