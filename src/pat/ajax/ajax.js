@@ -92,13 +92,14 @@ const _ = {
             });
         };
         const seqNumber = xhrCount.inc(cfg.url);
+        let native_xhr;
         const onSuccess = function (data, status, jqxhr) {
             log.debug("success: jqxhr:", jqxhr);
             if (seqNumber === xhrCount.get(cfg.url)) {
                 // if this url is requested multiple time, only return the last result
                 $el.trigger({
                     type: "pat-ajax-success",
-                    jqxhr: {"url": cfg.url, ...jqxhr},
+                    jqxhr: {"url": cfg.url, ...jqxhr, "responseURL": native_xhr?.responseURL || cfg.url},
                 });
             } else {
                 // ignore
@@ -113,6 +114,10 @@ const _ = {
             url: cfg.url,
             method: $el.attr("method") ? $el.attr("method") : "GET",
             cache: cfg.browserCache === "cache" ? true : false,
+            xhr: function () {
+                native_xhr = $.ajaxSettings.xhr();
+                return native_xhr;
+            },
         };
 
         if (cfg.accept) {
