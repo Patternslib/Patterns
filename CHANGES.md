@@ -4,6 +4,13 @@ See the [history](./docs/history/index.md) for older changelog entries.
 
 
 
+## [9.11.0](https://github.com/Patternslib/Patterns/compare/9.11.0-alpha.0...9.11.0) (2026-09-16)
+
+### Maintenance
+
+
+* **Build:** Upgrade to @patternslib/dev 4.1.0. ([e233816](https://github.com/Patternslib/Patterns/commit/e2338161b43e0410c706050b372b608a50f429a6))
+
 ## [9.11.0-alpha.0](https://github.com/Patternslib/Patterns/compare/9.10.7...9.11.0-alpha.0) (2026-09-11)
 
 ### Features
