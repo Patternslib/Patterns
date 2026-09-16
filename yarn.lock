@@ -2153,10 +2153,10 @@
     "@parcel/watcher-win32-ia32" "2.5.6"
     "@parcel/watcher-win32-x64" "2.5.6"
 
-"@patternslib/dev@^4.0.2":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@patternslib/dev/-/dev-4.0.2.tgz#0113dac81efeb049274e686b663ec4eba171f6a0"
-  integrity sha512-93QINnDXBVAurYMyQkx+kI9RpiG0be2lvmaVp5WhjUgXNN8NCR7jtQJ1lLRmRKUHc9zd52MX2SL1SNkp/JDOHA==
+"@patternslib/dev@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@patternslib/dev/-/dev-4.1.0.tgz#3fea100cf0e3510b426cc68d67a5d4addb34a2c9"
+  integrity sha512-Hsbo2DimUujT7Tkcjvln3YeGxLnrFTyBvStgpNWzNmuM5oO9z6jJlMMEc0+EK86QDud43kCKGBjt03VtXMbmeQ==
   dependencies:
     "@babel/core" "^7.29.0"
     "@babel/preset-env" "^7.29.2"
