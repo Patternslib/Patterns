@@ -1,0 +1,15 @@
+allowBuilds:
+  '@parcel/watcher': true
+  '@patternslib/dev': true
+  unrs-resolver: true
+  yarn: false
+
+minimumReleaseAgeExclude:
+  # Trust our own @patternslib/dev
+  - '@patternslib/dev'
+
+# Allow dependencies directly from GitHub
+blockExoticSubdeps: false
+
+# no nested node_modules - needed by module federation
+shamefullyHoist: true
