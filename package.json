@@ -43,9 +43,7 @@
         "@patternslib/pat-sortable-table": "^3.1.0",
         "@patternslib/pat-tiptap": "^4.11.0",
         "@patternslib/pat-upload": "^3.1.1",
-        "copy-webpack-plugin": "^14.0.0",
         "css.escape": "^1.5.1",
-        "modernizr": "^3.13.1",
         "pegjs": "0.11.0-master.b7b87ea"
     },
     "resolutions": {
