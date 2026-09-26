@@ -1,5 +1,4 @@
-// Load modernizr and the `html.js` feature class.
-// NOTE: Modernizr will be removed in an upcoming minor release.
+// Load `html.js` feature class.
 import "./core/feature-detection";
 
 // Webpack entry point for module federation.

@@ -418,10 +418,6 @@ body.component-index #component-index > div {
 	background-position: 0 -100px;
 }
 
-.component-index a.modernizr:before {
-	background-position: -100px -100px;
-}
-
 .component-index a.ajax:before {
 	background-position: -300px 0;
 }

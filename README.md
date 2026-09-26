@@ -138,7 +138,6 @@ global settings or access otherwise hidden objects.
 | window.\_\_patternslib_registry_initializing          | True, while the registry waits for Module Federation remotes before the initial scan. | undefined |
 | window.\_\_patternslib_mf_initialized                 | Promise provided by the Module Federation helper of `@patternslib/dev`, resolved once all remote bundles are initialized. The registry waits for it before the initial scan. | undefined |
 | window.\_\_patternslib_mf_init_timeout                | Maximum time in milliseconds the registry waits for Module Federation remotes before scanning anyway. | 5000      |
-| window.\_\_patternslib_disable_modernizr (Deprecated) | Disable modernizr, but still write the js/no-js classes to the body. | undefined |
 
 ### Bundle build analyzation
 

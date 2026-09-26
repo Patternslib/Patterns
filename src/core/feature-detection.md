@@ -1,6 +1,6 @@
 # Feature detection
 
-This module adds the `js` class to the HTML root node and loads Modernizr for more feature detection.
+This module adds the `js` class to the HTML root node.
 
 ---
 ** Note **
@@ -44,28 +44,3 @@ When the JavaScript is loaded, the `no-js` class is removed and the `js` class i
         </body>
     </html>
 ```
-
-
-## Loading Modernizr
-
-Modernizr is loaded for more feature detection.
-
-To disable Modernizr you can set `window.__patternslib_disable_modernizr = true;` just before you load the Patternslib bundle:
-
-```
-    <html class="no-js">
-        <head>
-            <script>window.__patternslib_disable_modernizr = true;</script>
-            <script src="https://cdn.jsdelivr.net/npm/@patternslib/patternslib@9.8.0-beta.3/dist/bundle.min.js"></script>
-        </head>
-        <body>
-        </body>
-    </html>
-```
-
----
-** Note **
-
-The Modernizr feature detection is being phased out and might be removed in a future version of Patternslib.
-
----
