@@ -184,6 +184,9 @@ importers:
       showdown-prettify:
         specifier: ^1.3.0
         version: 1.3.0
+      signal-polyfill:
+        specifier: ^0.2.2
+        version: 0.2.2
       slick-carousel:
         specifier: git+https://github.com/kenwheeler/slick.git#d0716f19aa730006ee80ab026625fb1107816a97
         version: https://codeload.github.com/kenwheeler/slick/tar.gz/d0716f19aa730006ee80ab026625fb1107816a97(jquery@3.7.1)
@@ -4901,6 +4904,9 @@ packages:
   signal-exit@4.1.0:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
+
+  signal-polyfill@0.2.2:
+    resolution: {integrity: sha512-p63Y4Er5/eMQ9RHg0M0Y64NlsQKpiu6MDdhBXpyywRuWiPywhJTpKJ1iB5K2hJEbFZ0BnDS7ZkJ+0AfTuL37Rg==}
 
   sirv@3.0.2:
     resolution: {integrity: sha512-2wcC/oGxHis/BoHkkPwldgiPSYcpZK3JU28WoMVv55yHJgcZ8rlXvuG9iZggz+sU1d4bRgIGASwyWqjxu3FM0g==}
@@ -10749,6 +10755,8 @@ snapshots:
   signal-exit@3.0.7: {}
 
   signal-exit@4.1.0: {}
+
+  signal-polyfill@0.2.2: {}
 
   sirv@3.0.2:
     dependencies:
