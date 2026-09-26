@@ -2,6 +2,28 @@
 
 See the [history](./docs/history/index.md) for older changelog entries.
 
+## [9.12.0-alpha.0](https://github.com/Patternslib/Patterns/compare/9.11.1...9.12.0-alpha.0) (2026-09-26)
+
+### Features
+
+-   **core signals:** Add a TC39 signals polyfill. ([0aaf81b](https://github.com/Patternslib/Patterns/commit/0aaf81b1ea0a212ca2f6cf3aa79a8c6b5b3aafc1))
+
+    The TC39 signals specification for data binding.
+
+    See: https://github.com/tc39/proposal-signals
+    Uses: https://github.com/proposal-signals/signal-polyfill
+
+-   **pat-bind:** Add new pattern for data binding. ([3ffce05](https://github.com/Patternslib/Patterns/commit/3ffce050f88e8ae1605cfd7f8d07d962a497bf8c))
+
+### Maintenance
+
+-   Remove support for Modernizr. ([6135014](https://github.com/Patternslib/Patterns/commit/6135014c7e229a6bae5f59a1656143ac6f384e4f))
+
+    Remove Modernizr, as announced in 9.10.1 that it will be done for an
+    upcoming minor version.
+
+-   Switch to pnpm. ([71b31a2](https://github.com/Patternslib/Patterns/commit/71b31a285a88f70031dc1fc9e3a339d6d4113d5d))
+
 ## [9.11.1](https://github.com/Patternslib/Patterns/compare/9.11.0...9.11.1) (2026-09-19)
 
 ### Maintenance
