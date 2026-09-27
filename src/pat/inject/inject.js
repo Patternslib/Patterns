@@ -38,6 +38,7 @@ parser.addArgument("class"); // Add a class to the injected content.
 parser.addArgument("history", "none", ["none", "record"]);
 parser.addArgument("push-marker");
 parser.addArgument("scroll");
+parser.addArgument("remove-tags", "script", [], true);
 
 // Note: this should not be here but the parser would bail on unknown
 // parameters and expand/collapsible need to pass the url to us.
@@ -826,14 +827,28 @@ const inject = {
             elementbefore: "before",
         }[cfg.action];
 
-        // Inject the content HERE!
         target[method](...source_nodes);
+
+        if (! cfg.removeTags?.includes("script")) {
+            // Find and execute scripts
+            for (const node of source_nodes) {
+                const scripts = node.querySelectorAll?.("script") || [];
+                for (const script of scripts) {
+                    const new_script = document.createElement("script");
+                    for (const attr of [...script.attributes]) {
+                        new_script.setAttribute(attr.name, attr.value)
+                    }
+                    new_script.textContent = script.textContent;
+                    script.replaceWith(new_script);
+                }
+            }
+        }
 
         return true;
     },
 
-    _sourcesFromHtml(html, url, sources) {
-        const $html = this._parseRawHtml(html, url);
+    _sourcesFromHtml(html, url, sources, cfg) {
+        const $html = this._parseRawHtml(html, url, cfg);
         return sources.map((source) => {
             if (source === "body") {
                 source = "#__original_body";
@@ -971,16 +986,20 @@ const inject = {
         return page.innerHTML.trim();
     },
 
-    _parseRawHtml(html, url = "") {
+    _parseRawHtml(html, url = "", cfg = {}) {
         // remove script tags and head and replace body by a div
         const title = html.match(/\<title\>(.*)\<\/title\>/);
         let clean_html = html
-            .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
             .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
             .replace(/<html([^>]*?)>/gi, "")
             .replace(/<\/html([^>]*?)>/gi, "")
             .replace(/<body([^>]*?)>/gi, '<div id="__original_body">')
             .replace(/<\/body([^>]*?)>/gi, "</div>");
+
+        for (const tag of cfg.removeTags || []) {
+            const re = RegExp(String.raw`<${tag}\b[^<]*(?:(?!<\/${tag}>)<[^<]*)*<\/${tag}>`, "gi")
+            clean_html = clean_html.replace(re, "");
+        }
 
         if (title && title.length == 2) {
             clean_html = title[0] + clean_html;
@@ -1122,7 +1141,7 @@ const inject = {
             sources(cfgs, data) {
                 const sources = cfgs.map((cfg) => cfg.source);
                 sources.push("title");
-                const result = this._sourcesFromHtml(data, cfgs[0].url, sources);
+                const result = this._sourcesFromHtml(data, cfgs[0].url, sources, cfgs[0]);
                 return result;
             },
         },
