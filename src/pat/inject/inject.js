@@ -1,5 +1,6 @@
 import "../../core/polyfills"; // SubmitEvent.submitter for Safari < 15.4 and jsDOM
 import $ from "jquery";
+import DOMPurify from "dompurify";
 import ajax from "../ajax/ajax";
 import dom from "../../core/dom";
 import events from "../../core/events";
@@ -473,7 +474,7 @@ const inject = {
             // There might be multiple sources, so we need to loop over them.
             // Access them with "innerHTML" or "outerHTML" depending on the sourceMod.
             const sources_string = [...$sources].map(source => source[method]).join("\n");
-            wrapper.innerHTML = sources_string;
+            wrapper.innerHTML = DOMPurify.sanitize(sources_string);
 
             for (const img of wrapper.content.querySelectorAll("img")) {
                 events.add_event_listener(
@@ -665,7 +666,7 @@ const inject = {
 
             if (error_page_fragment) {
                 error_page = document.createElement("html");
-                error_page.innerHTML = event.jqxhr.responseText;
+                error_page.innerHTML = DOMPurify.sanitize(event.jqxhr.responseText);
                 error_page = error_page.querySelector(error_page_fragment);
             }
 
@@ -675,7 +676,7 @@ const inject = {
                         method: "GET",
                     });
                     error_page = document.createElement("html");
-                    error_page.innerHTML = await error_page_response.text();
+                    error_page.innerHTML = DOMPurify.sanitize(await error_page_response.text());
                     error_page = error_page.querySelector(error_page_fragment || "body");
                 } catch {
                     // fall back to standard error message and ignore.
