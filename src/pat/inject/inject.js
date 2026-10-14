@@ -467,29 +467,32 @@ const inject = {
         /* Called after the XHR has succeeded and we have a new $sources
          * element to inject.
          */
-        const wrapper = document.createElement("template");
-        if ($sources.length > 0) {
-            const method = cfg.sourceMod === "content" ? "innerHTML" : "outerHTML";
-            // There might be multiple sources, so we need to loop over them.
-            // Access them with "innerHTML" or "outerHTML" depending on the sourceMod.
-            const sources_string = [...$sources].map(source => source[method]).join("\n");
-            wrapper.innerHTML = sources_string;
-
-            for (const img of wrapper.content.querySelectorAll("img")) {
-                events.add_event_listener(
-                    img,
-                    "load",
-                    "inject_img_load",
-                    (e) => {
-                        $(e.currentTarget).trigger("pat-inject-content-loaded");
-                    },
-                    { once: true }
-                );
+        const fragment = document.createDocumentFragment();
+        for (const [index, source] of [...$sources].entries()) {
+            if (index > 0) {
+                fragment.append(document.createTextNode("\n"));
+            }
+            const content = source.nodeName === "TEMPLATE" ? source.content : source;
+            const nodes = cfg.sourceMod === "content" ? content.childNodes : [source];
+            for (const node of nodes) {
+                fragment.append(node.cloneNode(true));
             }
         }
 
-        // Copy, because after insertion wrapper.children is empty.
-        const source_nodes = [...wrapper.content.childNodes];
+        for (const img of fragment.querySelectorAll("img")) {
+            events.add_event_listener(
+                img,
+                "load",
+                "inject_img_load",
+                (e) => {
+                    $(e.currentTarget).trigger("pat-inject-content-loaded");
+                },
+                { once: true }
+            );
+        }
+
+        // Keep references before insertion empties the fragment.
+        const source_nodes = [...fragment.childNodes];
 
         // Now the injection actually happens.
         if (this._inject(trigger, source_nodes, target, cfg)) {
@@ -664,8 +667,7 @@ const inject = {
             error_page_fragment = error_page_fragment ? `#${error_page_fragment}` : null;
 
             if (error_page_fragment) {
-                error_page = document.createElement("html");
-                error_page.innerHTML = event.jqxhr.responseText;
+                error_page = await this._sanitizeHtml(event.jqxhr.responseText || "");
                 error_page = error_page.querySelector(error_page_fragment);
             }
 
@@ -674,8 +676,9 @@ const inject = {
                     const error_page_response = await fetch(error_page_url, {
                         method: "GET",
                     });
-                    error_page = document.createElement("html");
-                    error_page.innerHTML = await error_page_response.text();
+                    error_page = await this._sanitizeHtml(
+                        await error_page_response.text()
+                    );
                     error_page = error_page.querySelector(error_page_fragment || "body");
                 } catch {
                     // fall back to standard error message and ignore.
@@ -696,7 +699,7 @@ const inject = {
 
         if (error_page) {
             const error_zone = document.querySelector(error_page_fragment || "body");
-            error_zone.innerHTML = error_page.innerHTML;
+            error_zone.replaceChildren(...error_page.childNodes);
             registry.scan(error_zone); // initialize any patterns in error page
         } else {
             const msg_attr = `${explanation} Status is ${status} ${event.jqxhr.statusText}, time was ${timestamp}. You can click to close this.`;
@@ -832,40 +835,47 @@ const inject = {
         return true;
     },
 
-    _sourcesFromHtml(html, url, sources) {
-        const $html = this._parseRawHtml(html, url);
-        return sources.map((source) => {
-            if (source === "body") {
-                source = "#__original_body";
-            }
-            if (source === "none") {
+    async _sourcesFromHtml(html, url, sources) {
+        const source_dom = await this._parseRawHtml(html, url);
+
+        return sources.map((source_selector) => {
+            if (source_selector === "none") {
                 return $("<!-- -->");
             }
-            const $source = $html.find(source);
 
-            if ($source.length === 0) {
-                if (source != "title") {
-                    log.warn("No source elements for selector:", source, $html);
+            const source_result = dom.querySelectorAllAndMe(source_dom, source_selector);
+            const $source = $(source_result);
+
+            if (source_result.length === 0) {
+                if (source_selector != "title") {
+                    log.warn(
+                        "No source elements for selector:",
+                        source_selector,
+                        source_dom
+                    );
                 }
             }
 
-            $source.find('a[href^="#"]').each((idx, el_) => {
-                const href = el_.getAttribute("href");
+            for (const anchor of dom.querySelectorAllAndMe(
+                source_result,
+                'a[href^="#"]'
+            )) {
+                const href = anchor.getAttribute("href");
                 if (href.indexOf("#{1}") !== -1) {
                     // We ignore hrefs containing #{1} because they're not
                     // valid and only applicable in the context of
                     // pat-clone.
-                    return;
+                    continue;
                 }
                 // Skip in-document links pointing to an id that is inside
                 // this fragment.
                 if (href.length === 1) {
                     // Special case for top-of-page links
-                    el_.href = url;
-                } else if (!$source.find(href).length) {
-                    el_.href = url + href;
+                    anchor.href = url;
+                } else if (!dom.querySelectorAllAndMe(source_result, href).length) {
+                    anchor.href = url + href;
                 }
-            });
+            }
             return $source;
         });
     },
@@ -895,15 +905,11 @@ const inject = {
         return base.slice(0, base.lastIndexOf("/") + 1) + url;
     },
 
-    _rebaseHTML(base, html) {
-        if (html === "") {
+    _rebaseHTML(base, page) {
+        if (!page) {
             // Special case, source is none
             return "";
         }
-
-        // Parse the html string into a DOM tree.
-        const page = document.createElement("div");
-        page.innerHTML = html;
 
         // Create efficient selector for any tag with it's corresponding
         // attribute from _rebaseAttrs. Note: the current data structure allows
@@ -968,33 +974,20 @@ const inject = {
             }
         }
 
-        return page.innerHTML.trim();
+        return page;
     },
 
-    _parseRawHtml(html, url = "") {
-        // remove script tags and head and replace body by a div
-        const title = html.match(/\<title\>(.*)\<\/title\>/);
-        let clean_html = html
-            .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-            .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
-            .replace(/<html([^>]*?)>/gi, "")
-            .replace(/<\/html([^>]*?)>/gi, "")
-            .replace(/<body([^>]*?)>/gi, '<div id="__original_body">')
-            .replace(/<\/body([^>]*?)>/gi, "</div>");
+    async _sanitizeHtml(html) {
+        const dompurify = (await import("dompurify")).default;
+        return dompurify.sanitize(html, {
+            WHOLE_DOCUMENT: true,
+            RETURN_DOM: true,
+        });
+    },
 
-        if (title && title.length == 2) {
-            clean_html = title[0] + clean_html;
-        }
-        try {
-            clean_html = this._rebaseHTML(url, clean_html);
-        } catch (e) {
-            log.error("Error rebasing urls", e);
-        }
-        const $html = $("<div/>").html(clean_html);
-        if ($html.children().length === 0) {
-            log.warn("Parsing html resulted in empty jquery object:", clean_html);
-        }
-        return $html;
+    async _parseRawHtml(html, url = "") {
+        const sanitized = await this._sanitizeHtml(html);
+        return this._rebaseHTML(url, sanitized);
     },
 
     _initAutoloadVisible($el, cfgs) {
@@ -1119,10 +1112,10 @@ const inject = {
 
     handlers: {
         html: {
-            sources(cfgs, data) {
+            async sources(cfgs, data) {
                 const sources = cfgs.map((cfg) => cfg.source);
                 sources.push("title");
-                const result = this._sourcesFromHtml(data, cfgs[0].url, sources);
+                const result = await this._sourcesFromHtml(data, cfgs[0].url, sources);
                 return result;
             },
         },
