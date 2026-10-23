@@ -29,7 +29,7 @@ const all_positions = [
 parser.addArgument("position-list", [], all_positions, true);
 parser.addArgument("position-policy", "auto", ["auto", "force"]);
 parser.addArgument("trigger", "click", ["click", "hover", "none"]);
-parser.addArgument("source", "title", ["ajax", "content", "title"]);
+parser.addArgument("source", "title", ["ajax", "aria-label", "content", "title"]);
 parser.addArgument("ajax-data-type", "html", ["html", "markdown"]);
 parser.addArgument("closing", "auto", ["auto", "sticky", "close-button"]);
 parser.addArgument("delay");
@@ -206,6 +206,9 @@ class Pattern extends BasePattern {
                 if (opts.source === "title") {
                     // Tooltip content from title attribute
                     content = this.el.getAttribute("title");
+                } else if (opts.source === "aria-label") {
+                    // Tooltip content from aria-label attribute
+                    content = this.el.getAttribute("aria-label");
                 } else if (opts.source === "content") {
                     // Tooltip content from trigger childs.
                     content = this.el.innerHTML;

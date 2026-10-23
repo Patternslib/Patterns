@@ -1285,6 +1285,36 @@ describe("pat-tooltip", () => {
             global.fetch.mockRestore();
             delete global.fetch;
         });
+
+        it("6.9 - source: aria-label.", async () => {
+            const tooltip_content = "this button deserves to be clicked.";
+
+            document.body.innerHTML = `
+                <button
+                    class="pat-tooltip"
+                    type="button"
+                    aria-label="${tooltip_content}"
+                    data-pat-tooltip="
+                      source: aria-label;
+                      trigger: click">
+                  click me
+                </button>
+            `;
+
+            const el = document.body.querySelector(".pat-tooltip");
+
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+            await utils.timeout(1);
+
+            el.click();
+            await utils.timeout(1); // wait a tick
+
+            const expected = document.querySelector(
+                ".tooltip-container .tippy-content"
+            ).textContent;
+            expect(expected).toBe(tooltip_content);
+        });
     });
 
     describe(`7 - if the 'source' parameter is 'ajax'`, () => {
