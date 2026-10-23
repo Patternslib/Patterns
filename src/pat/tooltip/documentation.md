@@ -13,6 +13,33 @@ Tooltips are intended to display contextual information and function about the t
           class="pat-tooltip">More information</a>
     </label>
 
+By default, the tooltip uses the `title` attribute as its source. To use the
+`aria-label` attribute instead, set `source: aria-label`:
+
+    <button type="button" class="pat-tooltip" aria-label="Save changes"
+            data-pat-tooltip="source: aria-label">
+      Save changes
+    </button>
+
+The label is displayed as plain text and remains on the trigger element to
+provide its accessible name.
+
+To use the trigger's text without its child markup, set `source: content-text`.
+This includes visually hidden text, making it useful for icon links with a
+screen-reader label:
+
+    <a href="/settings" class="pat-tooltip"
+       data-pat-tooltip="source: content-text; trigger: hover">
+      <svg aria-hidden="true"><use href="#icon-settings"></use></svg>
+      <span class="sr-only">Settings</span>
+    </a>
+
+The tooltip displays `Settings` as plain text, without copying the SVG or the
+label's styling. Define `sr-only` in your site's CSS to visually hide the label.
+Leading and trailing whitespace is removed; the original contents remain in place.
+This source uses `textContent`, so text inside an SVG (such as a `<title>`) is
+also included, even when the SVG has `aria-hidden="true"`.
+
 ### Display
 
 Tooltips are shown when clicking on the triggering element.
@@ -104,7 +131,6 @@ option:
 This will load the contents of the `#myTip` element of
 balloon-contents.html and display it in a tooltip.
 
-
 ### Generated markup
 
 The first time the tooltip is shown the tip itself will be wrapped in a
@@ -154,15 +180,15 @@ be temporarily shown with a progress indicator:
 The tooltip can be configured through a `data-pat-tooltip` attribute.
 The available options are:
 
-| Property          | Default value | Values                                                      | Description                                                                                                                                                                                                                                                                                                          | Type               |
-| ----------------- | ------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| `position-list`   | `auto`        | `tl` `tm` `tr` `rt` `rm` `rb` `br` `bm` `bl` `lb` `lm` `lt` | The priority in which the pattern will try to position the tooltip. With the tooltip is positioned where the most space is on the screen. The two letters indicate the position of the triangle as opposed to the tooltip body. Adding `force` will force the tooltip position, even if it would end up out of view. | Multiple value     |
-| `position-policy` | `auto`        | `auto` `force`                                              | Policy used to place a tooltip: either always use a listed position, or allow other positions if no space is available for the listed positions.                                                                                                                                                                     | Mutually exclusive |
-| `trigger`         | `click`       | `click` `hover`                                             | Sets which user action should make the tooltip appear.                                                                                                                                                                                                                                                               | Mutually exclusive |
-| `source`          | `title`       | `ajax` `content` `title`                                    | Select where the contents of the tooltip is taken from: `ajax` load the tooltip contents from the link target url or from a selector given by the `href` attrobite. `content`: tooltip contents are the tooltip elements children. ``title``: tooltip content is the title attribute value.                          | Mutually exclusive |
-| `delay`           | `0`           | _time_                                                      | The delay for the tooltip to appear, expressed in milliseconds or with `m` (minutes), `s` (seconds), `ms` (milliseconds) units.                                                                                                                                                                                                                                                      | Time               |
-| `mark-inactive`   | `true`        | `true` `false`                                              | Should we add inactive class to the tooltip trigger?                                                                                                                                                                                                                                                                 | Bool               |
-| `closing`         | `auto`        | `auto` `sticky` `close-button`                              | Auto means that the tooltip will disappear when the user clicks out of the tooltip, or — in case of hover triggered tooltips — hovers away from the trigger element. `close-button` will add a close button to the tooltip which must be used to close the tooltip.                                                  | Mutually exclusive |
-| `class`           | _none_        | _class value_                                               | Assigns a class to the tooltip. For instance to give a specific tooltip a different colour                                                                                                                                                                                                                           |                    |
-| `ajax-data-type`  | `html`        | `html` `markdown`                                           | Data type of content to be loaded when AJAX is used as source.                                                                                                                                                                                                                                                       | Mutually exclusive |
-| `target`          | `body`        | _selector_                                                  | Selects where the tooltip container is appended in the DOM                                                                                                                                                                                                                                                           |                    |
+| Property          | Default value | Values                                                      | Description                                                                                                                                                                                                                                                                                                             | Type               |
+| ----------------- | ------------- | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| `position-list`   | `auto`        | `tl` `tm` `tr` `rt` `rm` `rb` `br` `bm` `bl` `lb` `lm` `lt` | The priority in which the pattern will try to position the tooltip. With the tooltip is positioned where the most space is on the screen. The two letters indicate the position of the triangle as opposed to the tooltip body. Adding `force` will force the tooltip position, even if it would end up out of view.    | Multiple value     |
+| `position-policy` | `auto`        | `auto` `force`                                              | Policy used to place a tooltip: either always use a listed position, or allow other positions if no space is available for the listed positions.                                                                                                                                                                        | Mutually exclusive |
+| `trigger`         | `click`       | `click` `hover`                                             | Sets which user action should make the tooltip appear.                                                                                                                                                                                                                                                                  | Mutually exclusive |
+| `source`          | `title`       | `ajax` `content` `content-text` `title` `aria-label`                      | Select where the contents of the tooltip is taken from: `ajax` load the tooltip contents from the link target url or from a selector given by the `href` attrobite. `content`: tooltip contents are the tooltip elements children. `content-text`: trimmed text content of the trigger, including visually hidden text, displayed as plain text. `title`, `aria-label`: tooltip content is the title resp aria-label attribute value. | Mutually exclusive |
+| `delay`           | `0`           | _time_                                                      | The delay for the tooltip to appear, expressed in milliseconds or with `m` (minutes), `s` (seconds), `ms` (milliseconds) units.                                                                                                                                                                                         | Time               |
+| `mark-inactive`   | `true`        | `true` `false`                                              | Should we add inactive class to the tooltip trigger?                                                                                                                                                                                                                                                                    | Bool               |
+| `closing`         | `auto`        | `auto` `sticky` `close-button`                              | Auto means that the tooltip will disappear when the user clicks out of the tooltip, or — in case of hover triggered tooltips — hovers away from the trigger element. `close-button` will add a close button to the tooltip which must be used to close the tooltip.                                                     | Mutually exclusive |
+| `class`           | _none_        | _class value_                                               | Assigns a class to the tooltip. For instance to give a specific tooltip a different colour                                                                                                                                                                                                                              |                    |
+| `ajax-data-type`  | `html`        | `html` `markdown`                                           | Data type of content to be loaded when AJAX is used as source.                                                                                                                                                                                                                                                          | Mutually exclusive |
+| `target`          | `body`        | _selector_                                                  | Selects where the tooltip container is appended in the DOM                                                                                                                                                                                                                                                              |                    |

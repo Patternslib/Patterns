@@ -1285,6 +1285,72 @@ describe("pat-tooltip", () => {
             global.fetch.mockRestore();
             delete global.fetch;
         });
+
+        it("6.9 - source: aria-label.", async () => {
+            const tooltip_content = "this button deserves to be clicked.";
+
+            document.body.innerHTML = `
+                <button
+                    class="pat-tooltip"
+                    type="button"
+                    aria-label="${tooltip_content}"
+                    data-pat-tooltip="
+                      source: aria-label;
+                      trigger: click">
+                  click me
+                </button>
+            `;
+
+            const el = document.body.querySelector(".pat-tooltip");
+
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+            await utils.timeout(1);
+
+            el.click();
+            await utils.timeout(1); // wait a tick
+
+            const expected = document.querySelector(
+                ".tooltip-container .tippy-content"
+            ).textContent;
+            expect(expected).toBe(tooltip_content);
+        });
+
+        describe("6.10 - source: content-text", () => {
+            it.each([
+                [
+                    "6.10.1 - extracts the visually hidden label without SVG markup",
+                    '<svg aria-hidden="true"><path d="M0 0h10v10z" /></svg><span class="sr-only" style="position: absolute; clip: rect(0, 0, 0, 0)">Save changes</span>',
+                    "Save changes",
+                ],
+                [
+                    "6.10.2 - renders nested markup and escaped HTML as plain text",
+                    "<span>&lt;strong&gt;Save&lt;/strong&gt; &amp; <em>close</em></span>",
+                    "<strong>Save</strong> & close",
+                ],
+                ["6.10.3 - trims whitespace-only content to an empty string", "   ", ""],
+            ])("%s", async (_description, markup, expected) => {
+                document.body.innerHTML = `
+                    <a class="pat-tooltip" href="#save"
+                    data-pat-tooltip="source: content-text; trigger: hover">
+                        ${markup}
+                    </a>
+                `;
+                const el = document.querySelector(".pat-tooltip");
+                const original_markup = el.innerHTML;
+                const instance = new Pattern(el);
+                await events.await_pattern_init(instance);
+
+                el.dispatchEvent(new Event("focus"));
+                await utils.timeout(1);
+
+                const content = instance.tippy.popper.querySelector(".tippy-content");
+                expect(content.textContent).toBe(expected);
+                expect(content.children).toHaveLength(0);
+                expect(el.innerHTML).toBe(original_markup);
+                instance.destroy();
+            });
+        });
     });
 
     describe(`7 - if the 'source' parameter is 'ajax'`, () => {
