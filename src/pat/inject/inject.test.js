@@ -338,9 +338,16 @@ describe("pat-inject", function () {
     });
 
     describe("5 - rebaseHTML", function () {
+        const rebaseHtml = (url, html) => {
+            const page = new DOMParser().parseFromString(html, "text/html");
+            const root = page.documentElement;
+            expect(pattern._rebaseHTML(url, root)).toBe(root);
+            return page.body.innerHTML.trim();
+        };
+
         it("5.1 - Basic markup with DOCTYPE", function () {
             expect(
-                pattern._rebaseHTML(
+                rebaseHtml(
                     "base",
                     "<!DOCTYPE html>\n<p>This is a simple <em>test</em></p>"
                 )
@@ -348,20 +355,20 @@ describe("pat-inject", function () {
         });
 
         it("5.2 - Basic markup", function () {
-            expect(
-                pattern._rebaseHTML("base", "<p>This is a simple <em>test</em></p>")
-            ).toBe("<p>This is a simple <em>test</em></p>");
+            expect(rebaseHtml("base", "<p>This is a simple <em>test</em></p>")).toBe(
+                "<p>This is a simple <em>test</em></p>"
+            );
         });
 
         it("5.3 - Recover from unclosed tags", function () {
-            expect(pattern._rebaseHTML("base", "<p>This is a simple <em>test</p>")).toBe(
+            expect(rebaseHtml("base", "<p>This is a simple <em>test</p>")).toBe(
                 "<p>This is a simple <em>test</em></p>"
             );
         });
 
         it("5.4 - Anchor element without href attribute", function () {
             var spy_rebaseURL = jest.spyOn(pattern, "_rebaseURL");
-            expect(pattern._rebaseHTML("base", "<a>This is a test</a>")).toBe(
+            expect(rebaseHtml("base", "<a>This is a test</a>")).toBe(
                 "<a>This is a test</a>"
             );
             expect(spy_rebaseURL).not.toHaveBeenCalled();
@@ -371,7 +378,7 @@ describe("pat-inject", function () {
 
         it("5.5 - Anchor element with href attribute", function () {
             expect(
-                pattern._rebaseHTML(
+                rebaseHtml(
                     "http://example.com/test/",
                     '<a href="subsite/page.html">This is a test</a>'
                 )
@@ -382,7 +389,7 @@ describe("pat-inject", function () {
 
         it("5.6 - Automatically fix casing of attribute", function () {
             expect(
-                pattern._rebaseHTML(
+                rebaseHtml(
                     "http://example.com/test/",
                     '<a HrEF="subsite/page.html">This is a test</a>'
                 )
@@ -392,14 +399,14 @@ describe("pat-inject", function () {
         });
 
         it("5.7 - Check if image is rebased correctly", function () {
-            expect(
-                pattern._rebaseHTML("http://example.com/test/", '<img src="image.png">')
-            ).toBe('<img src="http://example.com/test/image.png">');
+            expect(rebaseHtml("http://example.com/test/", '<img src="image.png">')).toBe(
+                '<img src="http://example.com/test/image.png">'
+            );
         });
 
         it("5.8 - Leave non attribute occurences of src intact", function () {
             expect(
-                pattern._rebaseHTML(
+                rebaseHtml(
                     "base",
                     "<p>This string has    src = \"foo\" , src= bar , and SrC='foo'</p>"
                 )
@@ -412,7 +419,7 @@ describe("pat-inject", function () {
             await import("../date-picker/date-picker");
             await import("../datetime-picker/datetime-picker");
 
-            const res = pattern._rebaseHTML(
+            const res = rebaseHtml(
                 "https://example.com/test/",
                 `<div class="test1" data-pat-inject="loading-class:yeah;url:./index.html;class:hoy"/>
                  <div class="test2" data-pat-calendar="url: ./calendar.html; event-sources: ../calendar2.json, ./test/calendar3.json"/>
@@ -449,7 +456,7 @@ describe("pat-inject", function () {
             // tests for an error where a semicolon at the end of a pattern
             // config as well as multiple configs were not correctly parsed.
 
-            const res = pattern._rebaseHTML(
+            const res = rebaseHtml(
                 "https://example.com/test/",
                 `<div
                     class="test1"
@@ -491,7 +498,7 @@ describe("pat-inject", function () {
         it("5.11 - doesn't rebase invalid pattern configuration options", async () => {
             await import("../calendar/calendar");
 
-            const res = pattern._rebaseHTML(
+            const res = rebaseHtml(
                 "https://example.com/test/",
                 '<div id="test" data-pat-calendar="url: ; event-sources: ../calendar2.json"/>'
             );
@@ -511,21 +518,126 @@ describe("pat-inject", function () {
     });
 
     describe("6 - parseRawHtml", function () {
-        it("6.1 - Roundtrip attributes with double quotes", function () {
+        it("6.1 - Roundtrip attributes with double quotes", async function () {
             var value =
                     '{"plugins": "paste", "content_css": "/_themes/Style/tiny-body.css"}',
                 input = "<a data-tinymce-json='" + value + "'>Test</a>",
-                $output = pattern._parseRawHtml(input, null);
-            expect($output.find("a").attr("data-tinymce-json")).toBe(value);
+                output = await pattern._parseRawHtml(input, null);
+            expect(output.querySelector("a").getAttribute("data-tinymce-json")).toBe(
+                value
+            );
         });
 
-        it("6.2 - Roundtrip attributes with single quotes", function () {
+        it("6.2 - Roundtrip attributes with single quotes", async function () {
             var value =
                     "{'plugins': 'paste', 'content_css': '/_themes/Style/tiny-body.css'}",
                 input = '<a data-tinymce-json="' + value + '">Test</a>',
-                $output = pattern._parseRawHtml(input, null);
-            expect($output.find("a").attr("data-tinymce-json")).toBe(value);
+                output = await pattern._parseRawHtml(input, null);
+            expect(output.querySelector("a").getAttribute("data-tinymce-json")).toBe(
+                value
+            );
         });
+    });
+
+    describe("Sanitized response sources", () => {
+        it("removes unsafe markup before rebasing and preserves pattern attributes", async () => {
+            const rebase = pattern._rebaseHTML.bind(pattern);
+            jest.spyOn(pattern, "_rebaseHTML").mockImplementation((url, root) => {
+                expect(root.querySelector("script")).toBeNull();
+                expect(root.querySelector("img").hasAttribute("onerror")).toBe(false);
+                expect(root.querySelector("a").hasAttribute("href")).toBe(false);
+                return rebase(url, root);
+            });
+            const root = await pattern._parseRawHtml(
+                `
+                <title>Safe title</title>
+                <div class="pat-example" data-pat-example="value: test" aria-label="Example">
+                    <script>alert(1)</script>
+                    <img src="image.png" onerror="alert(1)">
+                    <a href="javascript:alert(1)">Link</a>
+                </div>
+            `,
+                "https://example.com/page"
+            );
+            expect(root.querySelector("title").textContent).toBe("Safe title");
+            expect(
+                root.querySelector(".pat-example").getAttribute("data-pat-example")
+            ).toBe("value: test");
+            expect(root.querySelector(".pat-example").getAttribute("aria-label")).toBe(
+                "Example"
+            );
+            expect(root.querySelector("img").getAttribute("src")).toBe(
+                "https://example.com/image.png"
+            );
+        });
+
+        it("rebases hash links while preserving local targets and clone placeholders", async () => {
+            const [source] = await pattern._sourcesFromHtml(
+                `
+                <section id="source">
+                    <a href="#{1}">Clone</a>
+                    <a href="#">Top</a>
+                    <a href="#outside">Outside</a>
+                    <a href="#inside">Inside</a>
+                    <a href="#source">Source root</a>
+                    <span id="inside"></span>
+                </section>
+            `,
+                "https://example.com/page",
+                ["#source"]
+            );
+            expect(
+                [...source[0].querySelectorAll("a")].map((a) => a.getAttribute("href"))
+            ).toEqual([
+                "#{1}",
+                "https://example.com/page",
+                "https://example.com/page#outside",
+                "#inside",
+                "#source",
+            ]);
+        });
+
+        it("rebases an anchor selected as the source itself", async () => {
+            const [source] = await pattern._sourcesFromHtml(
+                '<a id="source" href="#outside">Link</a>',
+                "https://example.com/page",
+                ["#source"]
+            );
+            expect(source[0].getAttribute("href")).toBe(
+                "https://example.com/page#outside"
+            );
+        });
+
+        it.each(["content", "element"])(
+            "clones %s independently for multiple targets",
+            async (sourceMod) => {
+                const [source] = await pattern._sourcesFromHtml(
+                    '<section id="source">Text<!-- comment --><strong>Safe</strong></section>',
+                    "/page",
+                    ["#source"]
+                );
+                jest.spyOn(pattern, "_afterInjection").mockImplementation(() => {});
+                jest.spyOn(pattern, "_update_history").mockImplementation(() => {});
+                const targets = [
+                    document.createElement("div"),
+                    document.createElement("div"),
+                ];
+                for (const target of targets) {
+                    pattern._performInjection(target, $(), source, {
+                        sourceMod,
+                        action: "content",
+                    });
+                }
+                const expected =
+                    sourceMod === "content" ? source[0].innerHTML : source[0].outerHTML;
+                expect(targets[0].innerHTML).toBe(expected);
+                expect(targets[1].innerHTML).toBe(expected);
+                expect(targets[0].firstChild).not.toBe(targets[1].firstChild);
+                targets[0].querySelector("strong").textContent = "Changed";
+                expect(targets[1].querySelector("strong").textContent).toBe("Safe");
+                expect(source[0].querySelector("strong").textContent).toBe("Safe");
+            }
+        );
     });
 
     describe("7 - Functional tests", function () {
@@ -2344,6 +2456,43 @@ describe("pat-inject", function () {
             global.fetch.mockClear();
             delete global.fetch;
         });
+    });
+
+    describe("Sanitized error pages", () => {
+        it.each(["response", "fallback"])(
+            "sanitizes the %s before inserting its error fragment",
+            async (kind) => {
+                const html =
+                    '<section id="error-zone"><strong>Error</strong><img src="/bad" onerror="alert(1)"><script>alert(1)</script><a href="javascript:alert(1)">Link</a></section>';
+                document.head.innerHTML =
+                    '<meta name="pat-inject-status-404" content="/404#error-zone">';
+                document.body.innerHTML =
+                    '<a id="trigger"></a><div id="error-zone"></div>';
+                const originalFetch = global.fetch;
+                global.fetch = jest.fn().mockImplementation(mockFetch(html));
+                try {
+                    await pattern._onInjectError($("#trigger"), [], {
+                        jqxhr: {
+                            status: 404,
+                            responseText: kind === "response" ? html : "",
+                        },
+                    });
+                    const zone = document.querySelector("#error-zone");
+                    expect(zone.querySelector("strong").textContent).toBe("Error");
+                    expect(zone.querySelector("script")).toBeNull();
+                    expect(zone.querySelector("img").hasAttribute("onerror")).toBe(
+                        false
+                    );
+                    expect(zone.querySelector("a").hasAttribute("href")).toBe(false);
+                    expect(global.fetch).toHaveBeenCalledTimes(
+                        kind === "fallback" ? 1 : 0
+                    );
+                } finally {
+                    global.fetch = originalFetch;
+                    document.head.innerHTML = "";
+                }
+            }
+        );
     });
 
     describe("11 - Test triggers", function () {
