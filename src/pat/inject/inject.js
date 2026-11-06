@@ -24,6 +24,7 @@ parser.addArgument("source");
 parser.addArgument("trigger", "default", [
     "default",
     "autoload",
+    "autoload-navigate",
     "autoload-visible",
     "idle",
 ]);
@@ -39,8 +40,9 @@ parser.addArgument("history", "none", ["none", "record"]);
 parser.addArgument("push-marker");
 parser.addArgument("scroll");
 
-// Note: this should not be here but the parser would bail on unknown
-// parameters and expand/collapsible need to pass the url to us.
+// URL takes precedence over `href` or `action`.
+// Use it only, if a semantically richer item like `<a>` or `<form>` does not
+// make sense.
 parser.addArgument("url");
 
 const inject = {
@@ -56,6 +58,8 @@ const inject = {
         // from pat-inject. Waiting a tick in pat-inject solves this -
         // pat-validation's event handlers are initialized first.
         await utils.timeout(1);
+
+        this.uuid = create_uuid();
 
         const el = utils.jqToNode($el);
 
@@ -138,8 +142,7 @@ const inject = {
                         this.onTrigger({ currentTarget: el });
                     } else {
                         // generate UUID
-                        const uuid = create_uuid();
-                        el.setAttribute("data-pat-inject-uuid", uuid);
+                        el.setAttribute("data-pat-inject-uuid", this.uuid);
 
                         // function to trigger the autoload and mark as triggered
                         const delayed_trigger = (uuid_) => {
@@ -158,13 +161,16 @@ const inject = {
                             return true;
                         };
                         window.setTimeout(
-                            delayed_trigger.bind(null, uuid),
+                            delayed_trigger.bind(null, this.uuid),
                             cfgs[0].delay
                         );
                     }
                     break;
                 case "autoload-visible":
                     this._initAutoloadVisible($el, cfgs);
+                    break;
+                case "autoload-navigate":
+                    this._initAutoloadNavigate($el, cfgs);
                     break;
                 case "idle":
                     this._initIdleTrigger($el, cfgs[0].delay);
@@ -472,7 +478,9 @@ const inject = {
             const method = cfg.sourceMod === "content" ? "innerHTML" : "outerHTML";
             // There might be multiple sources, so we need to loop over them.
             // Access them with "innerHTML" or "outerHTML" depending on the sourceMod.
-            const sources_string = [...$sources].map(source => source[method]).join("\n");
+            const sources_string = [...$sources]
+                .map((source) => source[method])
+                .join("\n");
             wrapper.innerHTML = sources_string;
 
             for (const img of wrapper.content.querySelectorAll("img")) {
@@ -1047,6 +1055,17 @@ const inject = {
             }
         }, intersection_observer_config);
         observer.observe(el);
+    },
+
+    _initAutoloadNavigate($el, cfgs) {
+        const el = utils.jqToNode($el);
+
+        events.add_event_listener(
+            window.navigation,
+            "navigate",
+            `pat-inject-autoload-navigate--${this.uuid}`,
+            this.onTrigger({ currentTarget: el })
+        );
     },
 
     _initIdleTrigger($el, delay) {
