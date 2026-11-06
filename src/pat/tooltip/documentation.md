@@ -24,6 +24,22 @@ By default, the tooltip uses the `title` attribute as its source. To use the
 The label is displayed as plain text and remains on the trigger element to
 provide its accessible name.
 
+To use the trigger's text without its child markup, set `source: content-text`.
+This includes visually hidden text, making it useful for icon links with a
+screen-reader label:
+
+    <a href="/settings" class="pat-tooltip"
+       data-pat-tooltip="source: content-text; trigger: hover">
+      <svg aria-hidden="true"><use href="#icon-settings"></use></svg>
+      <span class="sr-only">Settings</span>
+    </a>
+
+The tooltip displays `Settings` as plain text, without copying the SVG or the
+label's styling. Define `sr-only` in your site's CSS to visually hide the label.
+Leading and trailing whitespace is removed; the original contents remain in place.
+This source uses `textContent`, so text inside an SVG (such as a `<title>`) is
+also included, even when the SVG has `aria-hidden="true"`.
+
 ### Display
 
 Tooltips are shown when clicking on the triggering element.
@@ -169,7 +185,7 @@ The available options are:
 | `position-list`   | `auto`        | `tl` `tm` `tr` `rt` `rm` `rb` `br` `bm` `bl` `lb` `lm` `lt` | The priority in which the pattern will try to position the tooltip. With the tooltip is positioned where the most space is on the screen. The two letters indicate the position of the triangle as opposed to the tooltip body. Adding `force` will force the tooltip position, even if it would end up out of view.    | Multiple value     |
 | `position-policy` | `auto`        | `auto` `force`                                              | Policy used to place a tooltip: either always use a listed position, or allow other positions if no space is available for the listed positions.                                                                                                                                                                        | Mutually exclusive |
 | `trigger`         | `click`       | `click` `hover`                                             | Sets which user action should make the tooltip appear.                                                                                                                                                                                                                                                                  | Mutually exclusive |
-| `source`          | `title`       | `ajax` `content` `title`, `aria-label`                      | Select where the contents of the tooltip is taken from: `ajax` load the tooltip contents from the link target url or from a selector given by the `href` attrobite. `content`: tooltip contents are the tooltip elements children. `title`, `aria-label`: tooltip content is the title resp aria-label attribute value. | Mutually exclusive |
+| `source`          | `title`       | `ajax` `content` `content-text` `title` `aria-label`                      | Select where the contents of the tooltip is taken from: `ajax` load the tooltip contents from the link target url or from a selector given by the `href` attrobite. `content`: tooltip contents are the tooltip elements children. `content-text`: trimmed text content of the trigger, including visually hidden text, displayed as plain text. `title`, `aria-label`: tooltip content is the title resp aria-label attribute value. | Mutually exclusive |
 | `delay`           | `0`           | _time_                                                      | The delay for the tooltip to appear, expressed in milliseconds or with `m` (minutes), `s` (seconds), `ms` (milliseconds) units.                                                                                                                                                                                         | Time               |
 | `mark-inactive`   | `true`        | `true` `false`                                              | Should we add inactive class to the tooltip trigger?                                                                                                                                                                                                                                                                    | Bool               |
 | `closing`         | `auto`        | `auto` `sticky` `close-button`                              | Auto means that the tooltip will disappear when the user clicks out of the tooltip, or — in case of hover triggered tooltips — hovers away from the trigger element. `close-button` will add a close button to the tooltip which must be used to close the tooltip.                                                     | Mutually exclusive |
