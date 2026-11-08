@@ -1064,7 +1064,7 @@ const inject = {
             window.navigation,
             "navigate",
             `pat-inject-autoload-navigate--${uuid}`,
-            this.onTrigger({ currentTarget: el })
+            () => this.onTrigger({ currentTarget: el })
         );
     },
 
