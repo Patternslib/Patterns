@@ -59,8 +59,6 @@ const inject = {
         // pat-validation's event handlers are initialized first.
         await utils.timeout(1);
 
-        this.uuid = create_uuid();
-
         const el = utils.jqToNode($el);
 
         const cfgs = this.extractConfig($el, opts);
@@ -142,7 +140,8 @@ const inject = {
                         this.onTrigger({ currentTarget: el });
                     } else {
                         // generate UUID
-                        el.setAttribute("data-pat-inject-uuid", this.uuid);
+                        const uuid = create_uuid();
+                        el.setAttribute("data-pat-inject-uuid", uuid);
 
                         // function to trigger the autoload and mark as triggered
                         const delayed_trigger = (uuid_) => {
@@ -161,7 +160,7 @@ const inject = {
                             return true;
                         };
                         window.setTimeout(
-                            delayed_trigger.bind(null, this.uuid),
+                            delayed_trigger.bind(null, uuid),
                             cfgs[0].delay
                         );
                     }
@@ -1059,11 +1058,12 @@ const inject = {
 
     _initAutoloadNavigate($el, cfgs) {
         const el = utils.jqToNode($el);
+        const uuid = create_uuid();
 
         events.add_event_listener(
             window.navigation,
             "navigate",
-            `pat-inject-autoload-navigate--${this.uuid}`,
+            `pat-inject-autoload-navigate--${uuid}`,
             this.onTrigger({ currentTarget: el })
         );
     },
