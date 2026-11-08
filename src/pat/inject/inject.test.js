@@ -2534,6 +2534,18 @@ describe("pat-inject", function () {
             expect(spy_trigger).not.toHaveBeenCalled();
         });
 
+        it("11b.4 - debounces rapid navigations with delay", async () => {
+            await setup("delay: 20ms");
+
+            history.pushState(null, "", "/page-1");
+            history.pushState(null, "", "/page-2");
+            history.pushState(null, "", "/page-3");
+            await utils.timeout(1);
+            expect(spy_trigger).not.toHaveBeenCalled();
+            await utils.timeout(30);
+            expect(spy_trigger).toHaveBeenCalledTimes(1);
+        });
+
         it("11b.5 - unregisters when the element is removed", async () => {
             const el = await setup();
             el.remove();
@@ -2545,6 +2557,22 @@ describe("pat-inject", function () {
             history.pushState(null, "", "/page-2");
             await utils.timeout(1);
             expect(spy_trigger).not.toHaveBeenCalled();
+        });
+
+        it("11b.6 - re-triggers once after an in-progress injection", async () => {
+            const el = await setup();
+            $(el).data("pat-inject-triggered", true); // Injection in progress.
+
+            history.pushState(null, "", "/page-1");
+            await utils.timeout(1);
+            history.pushState(null, "", "/page-2");
+            await utils.timeout(1);
+            expect(spy_trigger).not.toHaveBeenCalled();
+
+            $(el).removeData("pat-inject-triggered");
+            $(el).trigger("pat-ajax-success");
+            await utils.timeout(2);
+            expect(spy_trigger).toHaveBeenCalledTimes(1);
         });
 
         it("11b.7 - is not initialized together with history: record", async () => {

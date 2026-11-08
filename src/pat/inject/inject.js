@@ -1092,6 +1092,7 @@ const inject = {
         const strip_hash = (url) => url.split("#")[0];
         let last_url = strip_hash(window.location.href);
 
+        let pending = false;
         const trigger = () => {
             if (!el.isConnected) {
                 // The element was removed from the DOM, e.g. replaced by an
@@ -1099,15 +1100,36 @@ const inject = {
                 events.remove_event_listener(window.navigation, event_id);
                 return;
             }
+            if ($el.data("pat-inject-triggered")) {
+                // An injection is in progress. Re-trigger after it is done,
+                // so that the latest navigation state is reflected.
+                if (!pending) {
+                    pending = true;
+                    $el.one(
+                        "pat-ajax-success.pat-inject-navigate pat-ajax-error.pat-inject-navigate",
+                        async () => {
+                            // Wait for the inject's own handlers to finish.
+                            await utils.timeout(1);
+                            pending = false;
+                            trigger();
+                        }
+                    );
+                }
+                return;
+            }
             this.onTrigger({ currentTarget: el });
         };
+        // Debounce, to not fire one request per navigation on rapid
+        // successive navigations.
+        const debounced_trigger = utils.debounce(trigger, cfgs[0].delay || 0);
+
         events.add_event_listener(window.navigation, "navigatesuccess", event_id, () => {
             const current_url = strip_hash(window.location.href);
             if (current_url === last_url) {
                 return;
             }
             last_url = current_url;
-            trigger();
+            debounced_trigger();
         });
     },
 
