@@ -2533,6 +2533,14 @@ describe("pat-inject", function () {
             await utils.timeout(1);
             expect(spy_trigger).not.toHaveBeenCalled();
         });
+
+        it("11b.7 - is not initialized together with history: record", async () => {
+            await setup("history: record");
+
+            history.pushState(null, "", "/page-1");
+            await utils.timeout(1);
+            expect(spy_trigger).not.toHaveBeenCalled();
+        });
     });
 
     describe("12 - caching", () => {

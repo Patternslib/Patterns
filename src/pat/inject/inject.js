@@ -1067,6 +1067,17 @@ const inject = {
          */
         const el = utils.jqToNode($el);
 
+        if (cfgs.some((cfg) => cfg.history === "record")) {
+            // Recording history would push a new history entry, which in turn
+            // would fire a navigation event and re-trigger this injection
+            // over and over again.
+            log.error(
+                "`trigger: autoload-navigate` cannot be combined with `history: record`. Not initializing.",
+                el
+            );
+            return;
+        }
+
         if (!window.navigation) {
             log.warn("Navigation API not available. Not initializing.", el);
             return;
