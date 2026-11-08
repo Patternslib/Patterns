@@ -2534,6 +2534,19 @@ describe("pat-inject", function () {
             expect(spy_trigger).not.toHaveBeenCalled();
         });
 
+        it("11b.5 - unregisters when the element is removed", async () => {
+            const el = await setup();
+            el.remove();
+
+            history.pushState(null, "", "/page-1");
+            await utils.timeout(1);
+            expect(spy_trigger).not.toHaveBeenCalled();
+
+            history.pushState(null, "", "/page-2");
+            await utils.timeout(1);
+            expect(spy_trigger).not.toHaveBeenCalled();
+        });
+
         it("11b.7 - is not initialized together with history: record", async () => {
             await setup("history: record");
 

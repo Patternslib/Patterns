@@ -1092,13 +1092,22 @@ const inject = {
         const strip_hash = (url) => url.split("#")[0];
         let last_url = strip_hash(window.location.href);
 
+        const trigger = () => {
+            if (!el.isConnected) {
+                // The element was removed from the DOM, e.g. replaced by an
+                // injection. Clean up.
+                events.remove_event_listener(window.navigation, event_id);
+                return;
+            }
+            this.onTrigger({ currentTarget: el });
+        };
         events.add_event_listener(window.navigation, "navigatesuccess", event_id, () => {
             const current_url = strip_hash(window.location.href);
             if (current_url === last_url) {
                 return;
             }
             last_url = current_url;
-            this.onTrigger({ currentTarget: el });
+            trigger();
         });
     },
 
