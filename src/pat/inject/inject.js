@@ -1057,15 +1057,38 @@ const inject = {
     },
 
     _initAutoloadNavigate($el, cfgs) {
+        /* Re-trigger the injection after each successful same-document
+         * navigation which changed the URL.
+         *
+         * We listen to `navigatesuccess` instead of `navigate`, as the latter
+         * is fired before the navigation is committed - the URL is not yet
+         * updated and the navigation might still be cancelled or unload the
+         * page.
+         */
         const el = utils.jqToNode($el);
-        const uuid = create_uuid();
 
-        events.add_event_listener(
-            window.navigation,
-            "navigate",
-            `pat-inject-autoload-navigate--${uuid}`,
-            () => this.onTrigger({ currentTarget: el })
-        );
+        if (!window.navigation) {
+            log.warn("Navigation API not available. Not initializing.", el);
+            return;
+        }
+
+        const uuid = create_uuid();
+        const event_id = `pat-inject--autoload-navigate--${uuid}`;
+
+        // Only re-trigger on actual URL changes, ignoring hash changes and
+        // replaceState calls on the same URL, like the "pageload" and
+        // "anchor" history state markers set by pat-inject.
+        const strip_hash = (url) => url.split("#")[0];
+        let last_url = strip_hash(window.location.href);
+
+        events.add_event_listener(window.navigation, "navigatesuccess", event_id, () => {
+            const current_url = strip_hash(window.location.href);
+            if (current_url === last_url) {
+                return;
+            }
+            last_url = current_url;
+            this.onTrigger({ currentTarget: el });
+        });
     },
 
     _initIdleTrigger($el, delay) {
