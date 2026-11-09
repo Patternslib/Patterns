@@ -351,6 +351,10 @@ const inject = {
                 return false;
             }
             cfg.$target = this.createTarget(cfg.target);
+            if (!cfg.$target) {
+                // The target could not be created.
+                return false;
+            }
             cfg.$created_target = cfg.$target;
         }
         return true;

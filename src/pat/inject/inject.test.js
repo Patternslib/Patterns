@@ -798,6 +798,7 @@ describe("pat-inject", function () {
             document.body.innerHTML = `
                <a class="pat-inject" href="test.html#someid">link</a>
                <div id="someid"></div>
+               <a class="invalid" href="test.html">link</a>
             `;
             const el = document.querySelector(".pat-inject");
 
@@ -805,6 +806,15 @@ describe("pat-inject", function () {
             expect(pattern.execute(pattern.extractConfig($(el)), $(el))).toBe(true);
             // Already in progress.
             expect(pattern.execute(pattern.extractConfig($(el)), $(el))).toBe(false);
+
+            // Invalid configuration - non-id target cannot be created.
+            const invalid = document.querySelector(".invalid");
+            expect(
+                pattern.execute(
+                    pattern.extractConfig($(invalid), { target: ".nonexisting" }),
+                    $(invalid)
+                )
+            ).toBe(false);
 
             spy_ajax.mockRestore();
         });
