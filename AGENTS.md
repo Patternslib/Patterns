@@ -18,24 +18,9 @@
 - We make heavy use of Module Federation to share libraries between individual Patternslib addons and not to load dependencies twice.
 - We use "release-it" for releasing packages on npm.
 
-### Build output goes into its own "Compiled." commit
-
-Build output is everything under `./dist/`.
-
-- Source commits contain no build output.
-- After the last source commit of a batch, before pushing, rebuild with
-  `make all` and commit all build output in one commit with the message
-  `Compiled.`. If you know exactly which output a change affects, you may
-  run only its target, but the
-  result still goes into that single `Compiled.` commit. If the build
-  changes nothing, there is no `Compiled.` commit.
-- On a merge or rebase conflict in build output, do not resolve it by hand.
-  While the rebase runs, take either side and continue. Once it is done,
-  rebuild with `make all` at the tip and commit the result as `Compiled.`.
-
 ### Commit message style
 
-- We use "conventionalchangelog" changelog generation when releasing. The format is `category(subtitle): commit message`, where category is one of `breaking`, `feat`, `maint` or `tech`. Subtitle should define the Pattern or module we were working on, e.g. "pat-inject". The commit message title is a concise summary of what was done. A more elaborate body can be given.
+- We use "conventionalchangelog" changelog generation when releasing. The format is `category(subtitle): commit message`, where category is one of `breaking`, `feat`, `fix`, `maint` or `tech`. Subtitle should define the Pattern or module we were working on, e.g. "pat-inject". The commit message title is a concise summary of what was done. A more elaborate body can be given.
     Example:
 
 ```
@@ -84,10 +69,10 @@ Decision Records (ADRs) in `./docs/adr/`.
   code. Q&A, reviews and trivial fixes need none. If unsure, ask.
 - Start with a draft ADR, so that it can be referenced from source commits.
 - One ADR per decision, not per session. Write it when the decision is
-  implemented, before committing.
+  implemented, before committing. This is not a strict rule.
 - File name: `NNNN-short-kebab-title.md`, numbered consecutively.
 - Sections: title, `Status: <Proposed|Accepted|Superseded by NNNN> (YYYY-MM-DD)`,
-  Context, Decision, Consequences. See `0001-*.md` as an example.
+  Context, Decision, Consequences. See `./docs/adr/0004-pat-inject-execute-returns-a-promise.md` as an example.
 - Unpushed ADRs may be rewritten freely. Once pushed, an accepted ADR is
   only changed for typos and clarifications; to revise the decision, write
   a new ADR and mark the old one `Superseded by NNNN`.
