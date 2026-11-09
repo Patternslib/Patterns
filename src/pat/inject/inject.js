@@ -24,7 +24,6 @@ parser.addArgument("source");
 parser.addArgument("trigger", "default", [
     "default",
     "autoload",
-    "autoload-navigate",
     "autoload-visible",
     "idle",
 ]);
@@ -167,9 +166,6 @@ const inject = {
                     break;
                 case "autoload-visible":
                     this._initAutoloadVisible($el, cfgs);
-                    break;
-                case "autoload-navigate":
-                    this._initAutoloadNavigate($el, cfgs);
                     break;
                 case "idle":
                     this._initIdleTrigger($el, cfgs[0].delay);
@@ -1054,83 +1050,6 @@ const inject = {
             }
         }, intersection_observer_config);
         observer.observe(el);
-    },
-
-    _initAutoloadNavigate($el, cfgs) {
-        /* Re-trigger the injection after each successful same-document
-         * navigation which changed the URL.
-         *
-         * We listen to `navigatesuccess` instead of `navigate`, as the latter
-         * is fired before the navigation is committed - the URL is not yet
-         * updated and the navigation might still be cancelled or unload the
-         * page.
-         */
-        const el = utils.jqToNode($el);
-
-        if (cfgs.some((cfg) => cfg.history === "record")) {
-            // Recording history would push a new history entry, which in turn
-            // would fire a navigation event and re-trigger this injection
-            // over and over again.
-            log.error(
-                "`trigger: autoload-navigate` cannot be combined with `history: record`. Not initializing.",
-                el
-            );
-            return;
-        }
-
-        if (!window.navigation) {
-            log.warn("Navigation API not available. Not initializing.", el);
-            return;
-        }
-
-        const uuid = create_uuid();
-        const event_id = `pat-inject--autoload-navigate--${uuid}`;
-
-        // Only re-trigger on actual URL changes, ignoring hash changes and
-        // replaceState calls on the same URL, like the "pageload" and
-        // "anchor" history state markers set by pat-inject.
-        const strip_hash = (url) => url.split("#")[0];
-        let last_url = strip_hash(window.location.href);
-
-        let pending = false;
-        const trigger = () => {
-            if (!el.isConnected) {
-                // The element was removed from the DOM, e.g. replaced by an
-                // injection. Clean up.
-                events.remove_event_listener(window.navigation, event_id);
-                return;
-            }
-            if ($el.data("pat-inject-triggered")) {
-                // An injection is in progress. Re-trigger after it is done,
-                // so that the latest navigation state is reflected.
-                if (!pending) {
-                    pending = true;
-                    $el.one(
-                        "pat-ajax-success.pat-inject-navigate pat-ajax-error.pat-inject-navigate",
-                        async () => {
-                            // Wait for the inject's own handlers to finish.
-                            await utils.timeout(1);
-                            pending = false;
-                            trigger();
-                        }
-                    );
-                }
-                return;
-            }
-            this.onTrigger({ currentTarget: el });
-        };
-        // Debounce, to not fire one request per navigation on rapid
-        // successive navigations.
-        const debounced_trigger = utils.debounce(trigger, cfgs[0].delay || 0);
-
-        events.add_event_listener(window.navigation, "navigatesuccess", event_id, () => {
-            const current_url = strip_hash(window.location.href);
-            if (current_url === last_url) {
-                return;
-            }
-            last_url = current_url;
-            debounced_trigger();
-        });
     },
 
     _initIdleTrigger($el, delay) {

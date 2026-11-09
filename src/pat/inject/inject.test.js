@@ -4,7 +4,6 @@ import events from "../../core/events";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 import { jest } from "@jest/globals";
-import "../../core/polyfills"; // window.navigation for jsdom
 
 const mockFetch =
     (text = "") =>
@@ -2473,114 +2472,6 @@ describe("pat-inject", function () {
             expect(spy_trigger).toHaveBeenCalled();
 
             spy_trigger.mockRestore();
-        });
-    });
-
-    describe("11b - Test trigger: autoload-navigate", function () {
-        let spy_trigger;
-        let initial_url;
-
-        beforeEach(() => {
-            initial_url = window.location.href;
-            spy_trigger = jest.spyOn(pattern, "onTrigger").mockImplementation(() => {});
-        });
-
-        afterEach(() => {
-            spy_trigger.mockRestore();
-            events.remove_event_listener(
-                window.navigation,
-                "pat-inject--autoload-navigate--*"
-            );
-            history.replaceState(null, "", initial_url);
-            document.body.innerHTML = "";
-        });
-
-        const setup = async (config = "") => {
-            document.body.innerHTML = `
-                <a class="pat-inject"
-                    href="toolbar.html"
-                    data-pat-inject="trigger: autoload-navigate; ${config}">toolbar</a>
-            `;
-            const el = document.querySelector(".pat-inject");
-            pattern.init($(el));
-            await utils.timeout(1);
-            return el;
-        };
-
-        it("11b.1 - does not trigger on initialization", async () => {
-            await setup();
-            expect(spy_trigger).not.toHaveBeenCalled();
-        });
-
-        it("11b.2 - triggers on URL changes", async () => {
-            const el = await setup();
-
-            history.pushState(null, "", "/page-1");
-            await utils.timeout(1);
-            expect(spy_trigger).toHaveBeenCalledTimes(1);
-            expect(spy_trigger.mock.calls[0][0].currentTarget).toBe(el);
-
-            history.pushState(null, "", "/page-2");
-            await utils.timeout(1);
-            expect(spy_trigger).toHaveBeenCalledTimes(2);
-        });
-
-        it("11b.3 - ignores hash changes and same-URL replaceState", async () => {
-            await setup();
-
-            history.pushState(null, "", "#anchor");
-            history.replaceState("anchor", "", window.location.href);
-            await utils.timeout(1);
-            expect(spy_trigger).not.toHaveBeenCalled();
-        });
-
-        it("11b.4 - debounces rapid navigations with delay", async () => {
-            await setup("delay: 20ms");
-
-            history.pushState(null, "", "/page-1");
-            history.pushState(null, "", "/page-2");
-            history.pushState(null, "", "/page-3");
-            await utils.timeout(1);
-            expect(spy_trigger).not.toHaveBeenCalled();
-            await utils.timeout(30);
-            expect(spy_trigger).toHaveBeenCalledTimes(1);
-        });
-
-        it("11b.5 - unregisters when the element is removed", async () => {
-            const el = await setup();
-            el.remove();
-
-            history.pushState(null, "", "/page-1");
-            await utils.timeout(1);
-            expect(spy_trigger).not.toHaveBeenCalled();
-
-            history.pushState(null, "", "/page-2");
-            await utils.timeout(1);
-            expect(spy_trigger).not.toHaveBeenCalled();
-        });
-
-        it("11b.6 - re-triggers once after an in-progress injection", async () => {
-            const el = await setup();
-            $(el).data("pat-inject-triggered", true); // Injection in progress.
-
-            history.pushState(null, "", "/page-1");
-            await utils.timeout(1);
-            history.pushState(null, "", "/page-2");
-            await utils.timeout(1);
-            expect(spy_trigger).not.toHaveBeenCalled();
-
-            $(el).removeData("pat-inject-triggered");
-            $(el).trigger("pat-ajax-success");
-            await utils.timeout(2);
-            expect(spy_trigger).toHaveBeenCalledTimes(1);
-        });
-
-        it("11b.7 - is not initialized together with history: record", async () => {
-            await setup("history: record");
-
-            history.pushState(null, "", "/page-1");
-            await utils.timeout(1);
-            expect(spy_trigger).not.toHaveBeenCalled();
         });
     });
 
