@@ -228,7 +228,7 @@ const inject = {
         }
 
         $el.trigger("patterns-inject-triggered");
-        this.execute(cfgs, $el);
+        this.execute(cfgs, $el).catch((error) => log.debug(error));
     },
 
     submitSubform($sub) {
@@ -247,7 +247,7 @@ const inject = {
         } catch (e) {
             log.error("patterns-inject-triggered", e);
         }
-        this.execute(cfgs, $el);
+        this.execute(cfgs, $el).catch((error) => log.debug(error));
     },
 
     extractConfig($el, options = {}) {
@@ -588,7 +588,7 @@ const inject = {
         let data = ev?.jqxhr?.responseText;
         if (!data) {
             log.warn("No response content, aborting", ev);
-            return;
+            return false;
         }
         if (cfgs[0].source === "none") {
             // Special case, we want to call something, but we don't want to inject anything
@@ -611,6 +611,7 @@ const inject = {
             $title = sources$[sources$.length - 1];
         }
 
+        const delayed_injections = [];
         for (const [idx1, cfg] of cfgs.entries()) {
             const perform_inject = () => {
                 if (cfg.target !== "none") {
@@ -627,7 +628,9 @@ const inject = {
                 }
             };
             if (cfg.processDelay) {
-                setTimeout(() => perform_inject(), cfg.processDelay);
+                delayed_injections.push(
+                    utils.timeout(cfg.processDelay).then(() => perform_inject())
+                );
             } else {
                 perform_inject();
             }
@@ -640,6 +643,10 @@ const inject = {
         }
         $el.off("pat-ajax-success.pat-inject");
         $el.off("pat-ajax-error.pat-inject");
+
+        // Wait for injections with a process delay.
+        await Promise.all(delayed_injections);
+        return true;
     },
 
     async _onInjectError($el, cfgs, event) {
@@ -721,25 +728,40 @@ const inject = {
          * Either by making an ajax request or by spoofing an ajax
          * request when the content is readily available in the current page.
          *
-         * Returns `true` if the injection was started, `false` otherwise -
-         * e.g. if the configuration is invalid, the confirmation was denied
-         * or an injection is already in progress.
+         * Returns a Promise which settles when the injection has finished:
+         *
+         * - Resolves to `true` if the content was injected.
+         * - Resolves to `false` if the injection was not started - e.g. if
+         *   the configuration is invalid, the confirmation was denied or an
+         *   injection is already in progress - or if there was nothing to
+         *   inject.
+         * - Rejects with an error if the request failed, e.g. with a network
+         *   error or an HTTP error status. The error's `cause` is the jqXHR
+         *   object. pat-inject's own error handling is done before.
          *
          * When the injection has finished - successfully or not - a native
-         * `pat-inject-finished` event is dispatched on the element.
+         * `pat-inject-finished` event is dispatched on the element, right
+         * before the Promise settles.
+         *
+         * Usage:
+         *     try {
+         *         const injected = await inject.execute(cfgs, $el);
+         *     } catch (error) {
+         *         log.warn("Could not load.", error);
+         *     }
          */
         const el = utils.jqToNode($el);
         // get a kinda deep copy, we scribble on it
         cfgs = cfgs.map((cfg) => $.extend({}, cfg));
         if (!this.verifyConfig(cfgs)) {
-            return false;
+            return Promise.resolve(false);
         }
         if (!this.askForConfirmation(cfgs)) {
-            return false;
+            return Promise.resolve(false);
         }
         if ($el.data("pat-inject-triggered")) {
             // Prevent double triggers;
-            return false;
+            return Promise.resolve(false);
         }
         $el.data("pat-inject-triggered", true);
 
@@ -755,8 +777,32 @@ const inject = {
             }
         }
 
+        // Settle the returned Promise after the injection has finished.
+        let resolve_injection, reject_injection;
+        const injection = new Promise((resolve, reject) => {
+            resolve_injection = resolve;
+            reject_injection = reject;
+        });
+        const finish = async (handler) => {
+            let result;
+            let error;
+            try {
+                result = await handler;
+            } catch (e) {
+                error = e;
+            }
+            el.dispatchEvent(
+                new Event("pat-inject-finished", { bubbles: true, cancelable: false })
+            );
+            if (error) {
+                reject_injection(error);
+            } else {
+                resolve_injection(result);
+            }
+        };
+
         $el.on("pat-ajax-success.pat-inject", async (e) => {
-            this._onInjectSuccess($el, cfgs, e);
+            finish(this._onInjectSuccess($el, cfgs, e));
 
             // Wait for the next tick to ensure that the close-panel listener
             // is called before this one, even for non-async local injects.
@@ -772,15 +818,22 @@ const inject = {
                 );
             }
         });
-        $el.on("pat-ajax-error.pat-inject", this._onInjectError.bind(this, $el, cfgs));
-        $el.on("pat-ajax-success.pat-inject pat-ajax-error.pat-inject", async () => {
-            $el.removeData("pat-inject-triggered");
-            // Wait for the success and error handlers to finish.
-            await utils.timeout(1);
-            el.dispatchEvent(
-                new Event("pat-inject-finished", { bubbles: true, cancelable: false })
+        $el.on("pat-ajax-error.pat-inject", (e) => {
+            finish(
+                this._onInjectError($el, cfgs, e).then(() => {
+                    const status = e.jqxhr?.status;
+                    throw new Error(
+                        `Injection from ${cfgs[0].url} failed with status ${status} ${
+                            e.jqxhr?.statusText || ""
+                        }`.trim(),
+                        { cause: e.jqxhr }
+                    );
+                })
             );
         });
+        $el.on("pat-ajax-success.pat-inject pat-ajax-error.pat-inject", () =>
+            $el.removeData("pat-inject-triggered")
+        );
 
         // Prevent closing the panel while injection is in progress.
         let do_close_panel = false;
@@ -807,7 +860,7 @@ const inject = {
                 },
             });
         }
-        return true;
+        return injection;
     },
 
     _inject(trigger, source_nodes, target, cfg) {
