@@ -716,19 +716,26 @@ const inject = {
          *
          * Either by making an ajax request or by spoofing an ajax
          * request when the content is readily available in the current page.
+         *
+         * Returns `true` if the injection was started, `false` otherwise -
+         * e.g. if the configuration is invalid, the confirmation was denied
+         * or an injection is already in progress.
+         *
+         * When the injection has finished - successfully or not - a native
+         * `pat-inject-finished` event is dispatched on the element.
          */
         const el = utils.jqToNode($el);
         // get a kinda deep copy, we scribble on it
         cfgs = cfgs.map((cfg) => $.extend({}, cfg));
         if (!this.verifyConfig(cfgs)) {
-            return;
+            return false;
         }
         if (!this.askForConfirmation(cfgs)) {
-            return;
+            return false;
         }
         if ($el.data("pat-inject-triggered")) {
             // Prevent double triggers;
-            return;
+            return false;
         }
         $el.data("pat-inject-triggered", true);
 
@@ -762,9 +769,14 @@ const inject = {
             }
         });
         $el.on("pat-ajax-error.pat-inject", this._onInjectError.bind(this, $el, cfgs));
-        $el.on("pat-ajax-success.pat-inject pat-ajax-error.pat-inject", () =>
-            $el.removeData("pat-inject-triggered")
-        );
+        $el.on("pat-ajax-success.pat-inject pat-ajax-error.pat-inject", async () => {
+            $el.removeData("pat-inject-triggered");
+            // Wait for the success and error handlers to finish.
+            await utils.timeout(1);
+            el.dispatchEvent(
+                new Event("pat-inject-finished", { bubbles: true, cancelable: false })
+            );
+        });
 
         // Prevent closing the panel while injection is in progress.
         let do_close_panel = false;
@@ -791,6 +803,7 @@ const inject = {
                 },
             });
         }
+        return true;
     },
 
     _inject(trigger, source_nodes, target, cfg) {

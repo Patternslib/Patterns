@@ -752,6 +752,62 @@ describe("pat-inject", function () {
 
             spy_ajax.mockRestore();
         });
+
+        it("8.7 - dispatches a native pat-inject-finished event after a successful injection", async function () {
+            const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            document.body.innerHTML = `
+               <a class="pat-inject" href="test.html#someid">link</a>
+               <div id="someid"></div>
+            `;
+            const el = document.querySelector(".pat-inject");
+            const callback = jest.fn();
+            el.addEventListener("pat-inject-finished", callback);
+
+            const started = pattern.execute(pattern.extractConfig($(el)), $(el));
+            expect(started).toBe(true);
+            expect(callback).not.toHaveBeenCalled();
+
+            answer('<html><body><div id="someid">repl</div></body></html>');
+            await utils.timeout(2);
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(document.querySelector("#someid").textContent).toBe("repl");
+
+            spy_ajax.mockRestore();
+        });
+
+        it("8.8 - dispatches a native pat-inject-finished event after a failed injection", async function () {
+            const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            document.body.innerHTML = `
+               <a class="pat-inject" href="test.html#someid">link</a>
+               <div id="someid"></div>
+            `;
+            const el = document.querySelector(".pat-inject");
+            const callback = jest.fn();
+            el.addEventListener("pat-inject-finished", callback);
+
+            pattern.execute(pattern.extractConfig($(el)), $(el));
+            deferred.reject({ status: 500, statusText: "error" }, "error", "error");
+            await utils.timeout(2);
+            expect(callback).toHaveBeenCalledTimes(1);
+
+            spy_ajax.mockRestore();
+        });
+
+        it("8.9 - execute returns false if the injection was not started", async function () {
+            const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
+            document.body.innerHTML = `
+               <a class="pat-inject" href="test.html#someid">link</a>
+               <div id="someid"></div>
+            `;
+            const el = document.querySelector(".pat-inject");
+
+            // Started.
+            expect(pattern.execute(pattern.extractConfig($(el)), $(el))).toBe(true);
+            // Already in progress.
+            expect(pattern.execute(pattern.extractConfig($(el)), $(el))).toBe(false);
+
+            spy_ajax.mockRestore();
+        });
     });
 
     describe("9 - DOM tests", function () {
