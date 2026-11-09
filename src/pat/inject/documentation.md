@@ -376,16 +376,45 @@ You can customise the behaviour of injection through options in the `data-pat-in
 
 pat-inject fires several JavaScript events which bubble up the DOM tree:
 
-| Event name                         | Type       | Triggered on                       | Bubbles | Description                                                                                                                                 |
-| ---------------------------------- | ---------- | ---------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `patterns-inject-triggered`        | jQuery     | pat-inject-element                 | true    | Triggered, right after injection has been triggered. This can be on click, on submit, automatically and so on.                              |
-| `pat-ajax-success`                 | jQuery     | pat-inject element                 | true    | Triggered after successful ajax call but before the response is injected into the document                                                  |
-| `patterns-injected`                | jQuery     | parent of injected content         | true    | Triggered after successful injection                                                                                                        |
-| `pat-inject-success`               | JavaScript | pat-inject element                 | true    | Triggered after successful injection, right after `patterns-injected` but on the pat-inject element and not on the injected content itself. |
-| `patterns-injected-scanned`        | jQuery     | injected content                   | true    | Triggered after injected content was scanned by Pattern registry for new patterns.                                                          |
-| `patterns-injected-delayed`        | JavaScript | injected content                   | true    | Triggered 10ms after `patterns-injected-scanned`                                                                                            |
-| `pat-inject-content-loaded`        | jQuery     | images within injected content     | true    | Triggered on images within the injected content when those images are loaded.                                                               |
-| `pat-inject-missingSource`         | jQuery     | trigger which caused the injection | true    | Triggered when no to-be-injected source could be found.                                                                                     |
-| `pat-inject-missingTarget`         | jQuery     | trigger which caused the injection | true    | Triggered when no target could be found.                                                                                                    |
+| Event name                  | Type       | Triggered on                       | Bubbles | Description                                                                                                                                 |
+| --------------------------- | ---------- | ---------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `patterns-inject-triggered` | jQuery     | pat-inject-element                 | true    | Triggered, right after injection has been triggered. This can be on click, on submit, automatically and so on.                              |
+| `pat-ajax-success`          | jQuery     | pat-inject element                 | true    | Triggered after successful ajax call but before the response is injected into the document                                                  |
+| `patterns-injected`         | jQuery     | parent of injected content         | true    | Triggered after successful injection                                                                                                        |
+| `pat-inject-success`        | JavaScript | pat-inject element                 | true    | Triggered after successful injection, right after `patterns-injected` but on the pat-inject element and not on the injected content itself. |
+| `pat-inject-finished`       | JavaScript | pat-inject element                 | true    | Triggered after the injection has finished - successfully or not. Also after errors, unlike `pat-inject-success`.                           |
+| `patterns-injected-scanned` | jQuery     | injected content                   | true    | Triggered after injected content was scanned by Pattern registry for new patterns.                                                          |
+| `patterns-injected-delayed` | JavaScript | injected content                   | true    | Triggered 10ms after `patterns-injected-scanned`                                                                                            |
+| `pat-inject-content-loaded` | jQuery     | images within injected content     | true    | Triggered on images within the injected content when those images are loaded.                                                               |
+| `pat-inject-missingSource`  | jQuery     | trigger which caused the injection | true    | Triggered when no to-be-injected source could be found.                                                                                     |
+| `pat-inject-missingTarget`  | jQuery     | trigger which caused the injection | true    | Triggered when no target could be found.                                                                                                    |
 
 Please note: `jQuery.trigger` events can be catched with jQuery only while JavaScript `dispatchEvent` events can be catched with bare JavaScript `addEventListener` and `jQuery.on`.
+
+### JavaScript API
+
+Injections can be started programmatically with `inject.execute(cfgs, $el)`.
+It returns a Promise which settles when the injection has finished:
+
+-   It resolves to `true` if the content was injected.
+-   It resolves to `false` if the injection was not started - e.g. if the
+    configuration is invalid, the confirmation was denied or an injection is
+    already in progress on the element - or if there was nothing to inject.
+-   It rejects with an `Error` if the request failed, e.g. with a network error
+    or an HTTP error status. The error's `cause` is the jqXHR object.
+    pat-inject's own error handling - like showing an error page - is done
+    before.
+
+```javascript
+import inject from "@patternslib/patternslib/src/pat/inject/inject";
+
+const cfgs = inject.extractConfig($el, { url: "/some/url#content" });
+try {
+    const injected = await inject.execute(cfgs, $el);
+} catch (error) {
+    log.warn("Could not load.", error);
+}
+```
+
+Note: Always handle the rejection, e.g. with `try`/`catch` or `.catch()`.
+Otherwise failed requests result in unhandled Promise rejections.

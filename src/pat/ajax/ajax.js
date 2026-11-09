@@ -26,14 +26,10 @@ parser.addArgument("url", function ($el) {
 });
 parser.addArgument("browser-cache", "no-cache", ["cache", "no-cache"]); // Cache ajax requests
 
-const xhrCount = {};
-xhrCount.get = function (a) {
-    return this[a] !== undefined ? this[a] : 0;
-};
-xhrCount.inc = function (a) {
-    this[a] = this.get(a) + 1;
-    return this.get(a);
-};
+// Sequence number of the latest request per element.
+// Used to only handle the result of the latest request of an element, e.g.
+// when a search form is submitted multiple times in a row.
+const request_sequence = new WeakMap();
 
 const _ = {
     name: "ajax",
@@ -91,18 +87,21 @@ const _ = {
                 jqxhr: jqxhr,
             });
         };
-        const seqNumber = xhrCount.inc(cfg.url);
+        const el = $el[0];
+        const seq_number = (request_sequence.get(el) || 0) + 1;
+        request_sequence.set(el, seq_number);
         const onSuccess = function (data, status, jqxhr) {
             log.debug("success: jqxhr:", jqxhr);
-            if (seqNumber === xhrCount.get(cfg.url)) {
-                // if this url is requested multiple time, only return the last result
-                $el.trigger({
-                    type: "pat-ajax-success",
-                    jqxhr: {"url": cfg.url, ...jqxhr},
-                });
-            } else {
-                // ignore
+            if (seq_number !== request_sequence.get(el)) {
+                // This element has made a newer request in the meantime.
+                // Only handle the result of the latest request.
+                log.debug("Ignoring outdated response for", cfg.url);
+                return;
             }
+            $el.trigger({
+                type: "pat-ajax-success",
+                jqxhr: { url: cfg.url, ...jqxhr },
+            });
         };
         const temp = $el.data("pat-ajax.clicked-data");
         const clickedData = temp ? $.param(temp) : "";
