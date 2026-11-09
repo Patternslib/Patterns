@@ -73,13 +73,6 @@ class Pattern extends BasePattern {
         this.reloading = false;
         this.pending = false;
 
-        events.add_event_listener(
-            this.el,
-            "pat-inject-finished",
-            this.event_id,
-            this.on_inject_finished.bind(this)
-        );
-
         const debounced_reload = utils.debounce(() => this.reload(), this.delay);
         events.add_event_listener(
             this.event_source,
@@ -133,7 +126,7 @@ class Pattern extends BasePattern {
     /**
      * Reload the content via pat-inject.
      */
-    reload() {
+    async reload() {
         if (!this.el.isConnected) {
             this.destroy();
             return;
@@ -154,24 +147,19 @@ class Pattern extends BasePattern {
             // body - which is pat-inject's default.
             cfg.target = cfg.target || "self";
         }
-        log.debug("Reloading from", cfgs[0].url);
-        this.reloading = inject.execute(cfgs, $el) === true;
-    }
 
-    /**
-     * Handle the end of an injection started by this pattern.
-     *
-     * @param {Event} event - The `pat-inject-finished` event.
-     */
-    on_inject_finished(event) {
-        if (event.target !== this.el) {
-            // Ignore bubbling events from injections within this element.
-            return;
+        log.debug("Reloading from", cfgs[0].url);
+        this.reloading = true;
+        try {
+            await inject.execute(cfgs, $el);
+        } catch (error) {
+            log.warn("Could not reload.", error);
         }
         this.reloading = false;
+
         if (this.pending) {
             this.pending = false;
-            this.reload();
+            await this.reload();
         }
     }
 
@@ -180,7 +168,6 @@ class Pattern extends BasePattern {
             // Guard: Without element and id, `remove_event_listener` would
             // remove all registered event listeners.
             events.remove_event_listener(this.event_source, this.event_id);
-            events.remove_event_listener(this.el, this.event_id);
         }
         super.destroy();
     }

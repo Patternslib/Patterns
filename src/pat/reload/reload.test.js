@@ -182,17 +182,24 @@ describe("pat-reload", () => {
             expect(ajax_urls.length).toBe(2);
         });
 
-        it("2.7 - ignores finished events from injections within the element", async () => {
-            const { el, instance } = await setup("url: @@render-toolbar#toolbar");
-            instance.reloading = true;
-            instance.pending = true;
+        it("2.7 - continues reloading after a failed reload", async () => {
+            const { el } = await setup("url: @@render-toolbar#toolbar");
+            spy_ajax.mockImplementationOnce((args) => {
+                ajax_urls.push(args.url);
+                const deferred = $.Deferred();
+                deferred.reject({ status: 500, statusText: "Error" }, "error", "Error");
+                return deferred;
+            });
 
-            el.innerHTML = `<span></span>`;
-            el.firstElementChild.dispatchEvent(
-                new Event("pat-inject-finished", { bubbles: true })
-            );
-            expect(instance.reloading).toBe(true);
-            expect(spy_ajax).not.toHaveBeenCalled();
+            history.pushState(null, "", "/page-1");
+            await utils.timeout(5);
+            expect(el.textContent).toBe("initial");
+            document.body.removeAttribute("data-error-message");
+
+            history.pushState(null, "", "/page-2");
+            await utils.timeout(5);
+            expect(ajax_urls.length).toBe(2);
+            expect(el.textContent).toBe("reloaded 2");
         });
 
         it("2.8 - unregisters when the element is removed", async () => {
