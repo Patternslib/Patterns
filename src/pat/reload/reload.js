@@ -70,7 +70,15 @@ class Pattern extends BasePattern {
 
         this.event_id = `pat-reload--${this.uuid}`;
         this.last_url = strip_url(window.location.href);
+        this.reloading = false;
         this.pending = false;
+
+        events.add_event_listener(
+            this.el,
+            "pat-inject-finished",
+            this.event_id,
+            this.on_inject_finished.bind(this)
+        );
 
         const debounced_reload = utils.debounce(() => this.reload(), this.delay);
         events.add_event_listener(
@@ -131,26 +139,15 @@ class Pattern extends BasePattern {
             return;
         }
 
-        const $el = $(this.el);
-        if ($el.data("pat-inject-triggered")) {
-            // An injection is in progress, which would drop this reload.
-            // Re-trigger after it is done, so that the latest state is
-            // reflected.
-            if (!this.pending) {
-                this.pending = true;
-                $el.one(
-                    "pat-ajax-success.pat-reload pat-ajax-error.pat-reload",
-                    async () => {
-                        // Wait for pat-inject's own handlers to finish.
-                        await utils.timeout(1);
-                        this.pending = false;
-                        this.reload();
-                    }
-                );
-            }
+        if (this.reloading) {
+            // A reload is in progress. Reload once more after it has
+            // finished, so that the latest state is reflected.
+            this.pending = true;
             return;
         }
 
+        // Note: pat-inject's API expects jQuery objects.
+        const $el = $(this.el);
         const cfgs = inject.extractConfig($el, { url: this.get_url() });
         for (const cfg of cfgs) {
             // Inject into the element itself by default instead of into the
@@ -158,7 +155,24 @@ class Pattern extends BasePattern {
             cfg.target = cfg.target || "self";
         }
         log.debug("Reloading from", cfgs[0].url);
-        inject.execute(cfgs, $el);
+        this.reloading = inject.execute(cfgs, $el) === true;
+    }
+
+    /**
+     * Handle the end of an injection started by this pattern.
+     *
+     * @param {Event} event - The `pat-inject-finished` event.
+     */
+    on_inject_finished(event) {
+        if (event.target !== this.el) {
+            // Ignore bubbling events from injections within this element.
+            return;
+        }
+        this.reloading = false;
+        if (this.pending) {
+            this.pending = false;
+            this.reload();
+        }
     }
 
     destroy() {
@@ -166,8 +180,8 @@ class Pattern extends BasePattern {
             // Guard: Without element and id, `remove_event_listener` would
             // remove all registered event listeners.
             events.remove_event_listener(this.event_source, this.event_id);
+            events.remove_event_listener(this.el, this.event_id);
         }
-        $(this.el).off(".pat-reload");
         super.destroy();
     }
 }

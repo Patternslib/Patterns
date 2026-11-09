@@ -142,25 +142,60 @@ describe("pat-reload", () => {
             ]);
         });
 
-        it("2.6 - re-triggers once after an in-progress injection", async () => {
+        it("2.6 - reloads once more after a running reload", async () => {
+            // Hold back the responses until resolved manually.
+            const deferreds = [];
+            spy_ajax.mockImplementation((args) => {
+                ajax_urls.push(args.url);
+                const deferred = $.Deferred();
+                deferreds.push(deferred);
+                return deferred;
+            });
+            const respond = (html) =>
+                deferreds.at(-1).resolve(html, "ok", { responseText: html });
+
             const { el } = await setup("url: @@render-toolbar#toolbar");
-            $(el).data("pat-inject-triggered", true); // Injection in progress.
 
             history.pushState(null, "", "/page-1");
             await utils.timeout(1);
             history.pushState(null, "", "/page-2");
             await utils.timeout(1);
-            expect(spy_ajax).not.toHaveBeenCalled();
-
-            $(el).removeData("pat-inject-triggered");
-            $(el).trigger("pat-ajax-success");
-            await utils.timeout(5);
+            history.pushState(null, "", "/page-3");
+            await utils.timeout(1);
+            // Only the first reload is running.
             expect(ajax_urls).toEqual([
-                `${window.location.origin}/page-2/@@render-toolbar`,
+                `${window.location.origin}/page-1/@@render-toolbar`,
             ]);
+
+            respond(`<div id="toolbar">page 1</div>`);
+            await utils.timeout(5);
+            expect(el.textContent).toBe("page 1");
+            // Exactly one more reload for the latest URL.
+            expect(ajax_urls).toEqual([
+                `${window.location.origin}/page-1/@@render-toolbar`,
+                `${window.location.origin}/page-3/@@render-toolbar`,
+            ]);
+
+            respond(`<div id="toolbar">page 3</div>`);
+            await utils.timeout(5);
+            expect(el.textContent).toBe("page 3");
+            expect(ajax_urls.length).toBe(2);
         });
 
-        it("2.7 - unregisters when the element is removed", async () => {
+        it("2.7 - ignores finished events from injections within the element", async () => {
+            const { el, instance } = await setup("url: @@render-toolbar#toolbar");
+            instance.reloading = true;
+            instance.pending = true;
+
+            el.innerHTML = `<span></span>`;
+            el.firstElementChild.dispatchEvent(
+                new Event("pat-inject-finished", { bubbles: true })
+            );
+            expect(instance.reloading).toBe(true);
+            expect(spy_ajax).not.toHaveBeenCalled();
+        });
+
+        it("2.8 - unregisters when the element is removed", async () => {
             const { el, instance } = await setup("url: @@render-toolbar#toolbar");
             const spy_destroy = jest.spyOn(instance, "destroy");
             el.remove();
