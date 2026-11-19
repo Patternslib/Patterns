@@ -4,7 +4,7 @@
     "title": "Markup patterns to drive behaviour.",
     "description": "Patternslib is a JavaScript library that enables designers to build rich interactive prototypes without the need for writing any Javascript. All events are triggered by classes and other attributes in the HTML, without abusing the HTML as a programming language. Accessibility, SEO and well structured HTML are core values of Patterns.",
     "license": "BSD-3-Clause",
-    "packageManager": "pnpm@12.3.4",
+    "packageManager": "pnpm@12.21.0",
     "dependencies": {
         "@fullcalendar/adaptive": "^5.11.3",
         "@fullcalendar/core": "^5.11.3",
