@@ -154,11 +154,9 @@ describe("1 - Navigation pattern tests", function () {
 });
 
 describe("2 - Navigation pattern tests - mark after navigation injection", function () {
-    let _window_location;
     let _originalBaseUrl;
 
     beforeEach(() => {
-        _window_location = global.window.location;
         document.body.innerHTML = "";
         _originalBaseUrl = Pattern.prototype.base_url;
         Pattern.prototype.base_url = function () {
@@ -167,7 +165,6 @@ describe("2 - Navigation pattern tests - mark after navigation injection", funct
     });
 
     afterEach(() => {
-        global.window.location = _window_location;
         document.body.innerHTML = "";
         Pattern.prototype.base_url = _originalBaseUrl;
     });
@@ -222,12 +219,9 @@ describe("2 - Navigation pattern tests - mark after navigation injection", funct
 });
 
 describe("3 - Navigation pattern tests - Mark items based on URL", () => {
-    let _window_location;
     let _originalBaseUrl;
 
     beforeEach(() => {
-        _window_location = global.window.location;
-        delete global.window.location;
         document.body.innerHTML = "";
         _originalBaseUrl = Pattern.prototype.base_url;
         Pattern.prototype.base_url = function () {
@@ -236,7 +230,6 @@ describe("3 - Navigation pattern tests - Mark items based on URL", () => {
     });
 
     afterEach(() => {
-        global.window.location = _window_location;
         Pattern.prototype.base_url = _originalBaseUrl;
     });
 
