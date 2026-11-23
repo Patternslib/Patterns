@@ -19,6 +19,15 @@ module.exports = () => {
 
     config.output.path = path.resolve(__dirname, "../dist/");
 
+    // Webpack resolves dynamic import contexts as directories before applying
+    // highlight.js's per-file exports (webpack/webpack#13865).
+    const highlight_path = path.dirname(require.resolve("highlight.js/package.json"));
+    config.resolve.alias["highlight.js/lib/languages$"] = path.join(
+        highlight_path,
+        "es/languages"
+    );
+    config.resolve.alias["highlight.js/styles$"] = path.join(highlight_path, "styles");
+
     // Module federation
     config.plugins.push(
         mf_config({
