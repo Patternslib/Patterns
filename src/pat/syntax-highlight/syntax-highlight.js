@@ -33,7 +33,12 @@ class Pattern extends BasePattern {
             theme = this.options.theme;
         }
 
-        import(`highlight.js/styles/${theme}.css`);
+        // Map both spellings to one stylesheet so Webpack emits it once.
+        const theme_name = String(theme).replace(/\.min$/, "");
+        import(
+            /* webpackExclude: /\.min\.css$/ */
+            `highlight.js/styles/${theme_name}.css`
+        );
         const hljs = (await import("highlight.js/lib/core")).default;
 
         // Get the language
@@ -69,7 +74,10 @@ class Pattern extends BasePattern {
                 };
                 const lang_file = import_path_mapping[language] || language;
                 const hljs_language = (
-                    await import(`highlight.js/lib/languages/${lang_file}`)
+                    await import(
+                        /* webpackExclude: /\.js\.js$/ */
+                        `highlight.js/lib/languages/${lang_file}`
+                    )
                 ).default;
                 hljs.registerLanguage(language, hljs_language);
                 high = hljs.highlight(value, { language: language }).value;
