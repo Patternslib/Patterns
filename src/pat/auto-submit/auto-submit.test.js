@@ -266,4 +266,60 @@ describe("pat-autosubmit", function () {
             expect(pat.options.delay).toBe("defocus");
         });
     });
+
+    describe("controls associated with a form outside the form element", function () {
+        it.each([
+            ["input", events.input_event],
+            ["textarea", events.input_event],
+            ["select", events.change_event],
+        ])("submits when a form-level pattern observes an external %s", (tag, event) => {
+            document.body.innerHTML = `
+                <form id="owner" class="pat-auto-submit" data-pat-autosubmit="delay: 0"></form>
+            `;
+            const form = document.querySelector("form");
+            const control = document.createElement(tag);
+            control.setAttribute("form", form.id);
+            document.body.append(control);
+            const submitters = [];
+            form.addEventListener("submit", (e) => submitters.push(e.submitter));
+            new Pattern(form);
+
+            control.dispatchEvent(event());
+
+            expect(submitters).toEqual([control]);
+        });
+
+        it("lets a direct pattern handle the change once when both elements have the pattern", () => {
+            document.body.innerHTML = `
+                <form id="owner" class="pat-autosubmit" data-pat-autosubmit="delay: 0"></form>
+                <input form="owner" class="pat-autosubmit" data-pat-autosubmit="delay: 0">
+            `;
+            const form = document.querySelector("form");
+            const control = document.querySelector("input");
+            const submitters = [];
+            form.addEventListener("submit", (e) => submitters.push(e.submitter));
+            new Pattern(form);
+            new Pattern(control);
+
+            control.dispatchEvent(events.input_event());
+
+            expect(submitters).toEqual([control]);
+        });
+
+        it("submits when a directly configured external textarea loses focus", () => {
+            document.body.innerHTML = `
+                <form id="owner"></form>
+                <textarea form="owner" class="pat-autosubmit" data-pat-autosubmit="defocus"></textarea>
+            `;
+            const form = document.querySelector("form");
+            const control = document.querySelector("textarea");
+            const submitters = [];
+            form.addEventListener("submit", (e) => submitters.push(e.submitter));
+            new Pattern(control);
+
+            control.dispatchEvent(events.blur_event());
+
+            expect(submitters).toEqual([control]);
+        });
+    });
 });
