@@ -1,4 +1,5 @@
 import Pattern from "./clone-code";
+import events from "@patternslib/patternslib/src/core/events";
 import utils from "@patternslib/patternslib/src/core/utils";
 
 describe("pat-clone-code", () => {
@@ -87,9 +88,8 @@ describe("pat-clone-code", () => {
 </div>
         `;
         const el = document.querySelector(".pat-clone-code");
-
-        new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
 
         const _el = document.body.querySelector(
             ".pat-clone-code pre code.language-html"

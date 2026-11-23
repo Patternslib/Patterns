@@ -200,8 +200,8 @@ importers:
         specifier: ^7.5.0
         version: 7.5.0
       dompurify:
-        specifier: ^3.4.18
-        version: 3.4.18
+        specifier: ^3.5.0
+        version: 3.5.0
       highlight.js:
         specifier: ^11.12.0
         version: 11.12.0
@@ -218,8 +218,8 @@ importers:
         specifier: 3.7.2
         version: 3.7.2
       marked:
-        specifier: ^15.0.6
-        version: 15.0.12
+        specifier: ^18.2.1
+        version: 18.2.1
       masonry-layout:
         specifier: ^4.2.2
         version: 4.2.2
@@ -236,8 +236,8 @@ importers:
         specifier: ^1.8.0
         version: 1.8.2
       prettier:
-        specifier: ^2.8.8
-        version: 2.8.8
+        specifier: ^3.10.1
+        version: 3.10.1
       screenfull:
         specifier: ^6.0.2
         version: 6.0.2
@@ -3072,8 +3072,8 @@ packages:
     resolution: {integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==}
     engines: {node: '>=6.0.0'}
 
-  dompurify@3.4.18:
-    resolution: {integrity: sha512-ofe3wI/uNm68HInABYFJYqQxRw1EaKAjNdrFVKqjUY+UZurvNd2L/HuQe097s/4RivWiZyP6tT7aoT8atjfhwg==}
+  dompurify@3.5.0:
+    resolution: {integrity: sha512-LYC0ZkE8P1V42JsRYTwMdme/2ET8SpOc5AA2eOFjP/IadvRd2fwiT4TVz5vkfy0XUx12aS2UaRkTnfVPNOv9vw==}
 
   dotenv@17.4.2:
     resolution: {integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==}
@@ -4068,6 +4068,11 @@ packages:
   marked@15.0.12:
     resolution: {integrity: sha512-8dD6FusOQSrpv9Z1rdNMdlSgQOIP880DHqnohobOmYLElGEqAL/JvxvuxZO16r4HtjTlfPRDC1hbvxC9dPN2nA==}
     engines: {node: '>= 18'}
+    hasBin: true
+
+  marked@18.2.1:
+    resolution: {integrity: sha512-ii4bxCTCqqwpT86XZWgJNs+ZnAIZksmLGYMViWA7PDIXYIeNo1x6cDdX3JOip9NM/cI6p8z57FxliACboTruMA==}
+    engines: {node: '>= 20'}
     hasBin: true
 
   masonry-layout@4.2.2:
@@ -7373,7 +7378,7 @@ snapshots:
       '@fullcalendar/luxon2': 5.11.5(luxon@3.7.2)
       '@fullcalendar/timegrid': 5.11.5
       '@stomp/stompjs': 7.5.0
-      dompurify: 3.4.18
+      dompurify: 3.5.0
       highlight.js: 10.7.3
       imagesloaded: 4.1.4
       jquery: 3.7.1
@@ -8683,7 +8688,7 @@ snapshots:
     dependencies:
       esutils: 2.0.3
 
-  dompurify@3.4.18:
+  dompurify@3.5.0:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -9862,6 +9867,8 @@ snapshots:
       uc.micro: 2.1.0
 
   marked@15.0.12: {}
+
+  marked@18.2.1: {}
 
   masonry-layout@4.2.2:
     dependencies:

@@ -57,9 +57,9 @@ class Pattern extends BasePattern {
 
         if (this.options.features?.includes("format")) {
             // Format the markup.
-            const prettier = (await import("prettier/standalone")).default;
-            const parser_html = (await import("prettier/parser-html")).default;
-            markup = prettier.format(markup, {
+            const format = (await import("prettier/standalone")).format;
+            const parser_html = await import("prettier/plugins/html");
+            markup = await format(markup, {
                 parser: "html",
                 plugins: [parser_html],
             });
