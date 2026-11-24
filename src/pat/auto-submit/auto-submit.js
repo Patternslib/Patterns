@@ -1,5 +1,4 @@
 import "../../core/jquery-ext";
-import $ from "jquery";
 import Base from "../../core/base";
 import dom from "../../core/dom";
 import events from "../../core/events";
@@ -9,6 +8,7 @@ import Parser from "../../core/parser";
 import utils from "../../core/utils";
 
 const log = logging.getLogger("autosubmit");
+const trigger = ".pat-autosubmit, .pat-auto-submit";
 
 export const parser = new Parser("autosubmit");
 // - 400ms -> 400
@@ -18,7 +18,7 @@ parser.addArgument("delay", "400ms");
 
 export default Base.extend({
     name: "autosubmit",
-    trigger: ".pat-autosubmit, .pat-auto-submit",
+    trigger,
 
     init() {
         this.options = parser.parse(this.el, this.options);
@@ -39,9 +39,13 @@ export default Base.extend({
             this.onInputChange.bind(this)
         );
         this.registerSubformListeners();
-        this.$el.on("patterns-injected", this.refreshListeners.bind(this));
-        this.$el.on("pat-update", (e, data) => {
-            // Refresh on some pat-update events.
+        this.$el.on("patterns-injected.pat-autosubmit", () => {
+            this.registerSubformListeners();
+        });
+        this.$el.on("pat-update.pat-autosubmit", (e, data) => {
+            if (data?.pattern === "clone") {
+                this.refreshListeners();
+            }
             if (
                 (data?.pattern === "clone" && data?.action === "removed") ||
                 data?.pattern === "sortable"
@@ -51,9 +55,6 @@ export default Base.extend({
                 log.debug(
                     `triggered by pat-update, pattern: ${data.pattern}, action: ${data.action}`
                 );
-            } else if (data?.pattern === "clone") {
-                // Refresh listeners on cloning.
-                this.refreshListeners(e, null, null, data.dom);
             }
         });
     },
@@ -80,10 +81,9 @@ export default Base.extend({
         }
     },
 
-    refreshListeners(ev, cfg, el, injected) {
+    refreshListeners() {
         this.registerSubformListeners();
-        // Register change event handlers for new inputs injected into this form
-        input_change_events.setup($(injected), "autosubmit");
+        input_change_events.setup(this.$el, "autosubmit");
     },
 
     registerTriggers() {
@@ -95,11 +95,16 @@ export default Base.extend({
             return this.$el;
         }
 
-        function trigger_event(ev) {
-            if (ev.target.closest(".pat-autosubmit") !== this) {
+        function trigger_event(ev, submitter = ev.target) {
+            if ((submitter.closest(trigger) || ev.target.closest(trigger)) !== this) {
                 return;
             }
-            ev.target.dispatchEvent(events.generic_event("input-change-delayed"));
+            const delayed_event = new CustomEvent("input-change-delayed", {
+                bubbles: true,
+                cancelable: true,
+                detail: { submitter },
+            });
+            ev.target.dispatchEvent(delayed_event);
         }
         if (this.options.delay === "defocus") {
             this.$el.on("input-defocus.pat-autosubmit", trigger_event);
@@ -113,28 +118,20 @@ export default Base.extend({
         }
     },
 
-    destroy($el) {
+    destroy($el = this.$el) {
         input_change_events.remove($el, "autosubmit");
-        if (this.$el.is("form")) {
-            this.$el
-                .find(".pat-subform")
-                .addBack(this.$el)
-                .each((idx, el) => {
-                    $(el).off(".pat-autosubmit");
-                });
-        } else {
-            $el.off(".pat-autosubmit");
-        }
+        $el.off(".pat-autosubmit");
+        events.remove_event_listener(this.el, "pat-autosubmit--input-change-delayed");
     },
 
     onInputChange(e) {
         e.stopPropagation();
-        dom.find_form(e.target).dispatchEvent(
-            events.submit_event({ submitter: e.target })
-        );
+        const submitter = e.detail?.submitter ?? e.target;
+        const form = e.target.matches("form") ? e.target : dom.find_form(e.target);
+        form.dispatchEvent(events.submit_event({ submitter }));
         log.debug(
             `submit event triggered by event ${e.type} by submitter (1) on (2)`,
-            e.target,
+            submitter,
             this.el
         );
     },
