@@ -33,7 +33,6 @@ parser.addAlias("behaviour", "behavior");
 
 export const storage = store.session("pat-date-picker");
 
-
 export default Base.extend({
     name: "date-picker",
     trigger: ".pat-date-picker",
@@ -95,7 +94,7 @@ export default Base.extend({
                     "pat-date-picker--label",
                     (e) => {
                         e.preventDefault();
-                    }
+                    },
                 );
             }
 
@@ -195,7 +194,9 @@ export default Base.extend({
                     i18n = await response.json();
                     storage.set(this.options.i18n, i18n);
                 } catch {
-                    log.error(`date-picker could not load i18n for ${this.options.i18n}`);
+                    log.error(
+                        `date-picker could not load i18n for ${this.options.i18n}`,
+                    );
                 }
             }
             if (i18n) {
