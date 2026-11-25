@@ -21,6 +21,10 @@ parser.addArgument("slides-to-scroll", 1);
 parser.addArgument("dots", "show");
 parser.addArgument("append-dots", "");
 parser.addArgument("infinite", false);
+parser.addArgument("breakpoint1", "");
+parser.addArgument("breakpoint2", "");
+parser.addArgument("breakpoint1-slides-to-show", 1);
+parser.addArgument("breakpoint2-slides-to-show", 1);
 
 export default Base.extend({
     name: "carousel",
@@ -48,6 +52,25 @@ export default Base.extend({
         if (this.options.appendDots) {
             this.settings.appendDots = this.options.appendDots;
         }
+
+        var responsive_options = [];
+        if (this.options['breakpoint1']) {
+            responsive_options.push({
+                breakpoint: this.options['breakpoint1'],
+                settings: {
+                    slidesToShow: this.options['breakpoint1SlidesToShow']
+                }
+            });
+        }
+        if (this.options['breakpoint2']) {
+            responsive_options.push({
+                breakpoint: this.options['breakpoint2'],
+                settings: {
+                    slidesToShow: this.options['breakpoint2SlidesToShow']
+                }
+            });
+        }
+        this.settings.responsive = responsive_options;
 
         ImagesLoaded(this.el, () => this.setup());
     },
