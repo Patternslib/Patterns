@@ -25,6 +25,18 @@ the URL of a JSON file containing the calendar translations. Use
     <input class="pat-datetime-picker" type="datetime-local" value="2015-01-01T12:34"
            data-pat-datetime-picker="behavior: styled; i18n: /src/pat/date-picker/i18n.json; output-format: Do MMMM YYYY; locale: de">
 
+#### Typing a date or choosing one from a translated calendar
+
+With `behavior: editable`, the pattern shows a text field for the date and a
+separate browser time field. Users can type the date in `YYYY-MM-DD` format or
+choose one from the JavaScript calendar. The `i18n` option translates the
+calendar. The browser treats the visible date field as plain text for constraint
+validation. The original `datetime-local` field still holds the combined value
+for validation and submission.
+
+    <input class="pat-datetime-picker" type="datetime-local" value="2015-01-01T12:34"
+           data-pat-datetime-picker="behavior: editable; i18n: /src/pat/date-picker/i18n.json">
+
 #### Specifying date and time limits
 
 Set `min` and `max` on the original input as local date-time values. In split
@@ -50,7 +62,7 @@ Pass these options to `data-pat-datetime-picker`.
 
 | Property | Type | Default | Available values | Description |
 | --- | --- | --- | --- | --- |
-| **behavior** (or **behaviour**) | String | `native` | `native`, `styled` | `native` uses the browser's date-time control when available. `styled` displays a formatted date that opens the JavaScript calendar, alongside a time field. |
+| **behavior** (or **behaviour**) | String | `native` | `native`, `styled`, `editable` | `native` uses the browser's date-time control when available. `styled` displays a formatted date that opens the JavaScript calendar. `editable` lets users type the date or select it from that calendar. Both JavaScript modes use a separate time field. |
 | **week-numbers** | String | `hide` | `show`, `hide` | Show week numbers in the JavaScript calendar. |
 | **i18n** | URL | | | URL of a JSON file containing translations for the JavaScript calendar. |
 | **first-day** | Integer | `0` | `0`–`6` | First day of the week in the JavaScript calendar, starting with Sunday at `0`. |

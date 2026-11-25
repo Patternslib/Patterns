@@ -168,6 +168,42 @@ describe("pat-datetime-picker", function () {
         expect(document.querySelector(".pat-datetime-picker__wrapper")).toBeNull();
     });
 
+    it("opens a localized calendar on an editable date when native controls are supported", async () => {
+        jest.spyOn(utils, "checkInputSupport").mockReturnValue(true);
+        storage.set("/datetime-i18n.json", i18n);
+        document.body.innerHTML = `
+            <form>
+                <input type="datetime-local" name="event" class="pat-datetime-picker"
+                       value="2021-10-21T12:34"
+                       data-pat-datetime-picker="behavior: editable; i18n: /datetime-i18n.json">
+            </form>
+        `;
+        const input = document.querySelector("[name=event]");
+        await events.await_pattern_init(pattern.init(input));
+
+        const date = document.querySelector(".pat-datetime-picker__date");
+        const time = document.querySelector("input[type=time]");
+        expect(date.type).toBe("text");
+        expect(date.value).toBe("2021-10-21");
+        expect(time.value).toBe("12:34");
+        expect(document.querySelector(".output-field")).toBeNull();
+
+        date.click();
+        const calendar = document.querySelector(".pika-single:not(.is-hidden)");
+        const month = calendar.querySelector(".pika-select-month option:checked");
+        expect(month.textContent).toBe("Oktober");
+        calendar
+            .querySelector('[data-pika-day="22"]')
+            .dispatchEvent(new Event("mousedown"));
+        expect(new FormData(input.form).get("event")).toBe("2021-10-22T12:34");
+
+        date.value = "2021-10-23";
+        date.dispatchEvent(new Event("change", { bubbles: true }));
+        time.value = "15:45";
+        time.dispatchEvent(new Event("change", { bubbles: true }));
+        expect(new FormData(input.form).get("event")).toBe("2021-10-23T15:45");
+    });
+
     it("localizes the styled date, constrains selection, and submits the combined value", async () => {
         jest.spyOn(utils, "checkInputSupport").mockReturnValue(true);
         storage.set("/datetime-i18n.json", i18n);

@@ -6,7 +6,7 @@ import dom from "../../core/dom";
 import events from "../../core/events";
 
 export const parser = new Parser("datetime-picker");
-parser.addArgument("behavior", "native", ["native", "styled"]);
+parser.addArgument("behavior", "native", ["native", "styled", "editable"]);
 parser.addAlias("behaviour", "behavior");
 parser.addArgument("format", "YYYY-MM-DD");
 parser.addArgument("week-numbers", [], ["show", "hide"]);
