@@ -30,24 +30,24 @@ describe("pat-datetime-picker", function () {
 
         expect(
             document.querySelector(
-                '.pika-lendar .pika-select-year option[selected="selected"]'
-            ).textContent
+                '.pika-lendar .pika-select-year option[selected="selected"]',
+            ).textContent,
         ).toBe(year);
 
         expect(
             document.querySelector(
-                '.pika-lendar .pika-select-month option[selected="selected"]'
-            ).value
+                '.pika-lendar .pika-select-month option[selected="selected"]',
+            ).value,
         ).toBe(month);
 
         expect(
             document
                 .querySelector(".pika-lendar td.is-today button")
-                .getAttribute("data-pika-day")
+                .getAttribute("data-pika-day"),
         ).toBe(day);
 
         expect(
-            document.querySelector(".pika-lendar th:first-child abbr").textContent
+            document.querySelector(".pika-lendar th:first-child abbr").textContent,
         ).toBe("Sun");
     });
 
@@ -66,7 +66,7 @@ describe("pat-datetime-picker", function () {
         document.querySelector("input[type=text]").click();
 
         expect(
-            document.querySelector(".pika-lendar th:first-child abbr").textContent
+            document.querySelector(".pika-lendar th:first-child abbr").textContent,
         ).toBe("Mon");
     });
 
@@ -86,20 +86,20 @@ describe("pat-datetime-picker", function () {
 
         expect(
             document.querySelector(
-                '.pika-lendar .pika-select-year option[selected="selected"]'
-            ).textContent
+                '.pika-lendar .pika-select-year option[selected="selected"]',
+            ).textContent,
         ).toBe("1900");
 
         expect(
             document.querySelector(
-                '.pika-lendar .pika-select-month option[selected="selected"]'
-            ).value
+                '.pika-lendar .pika-select-month option[selected="selected"]',
+            ).value,
         ).toBe("0");
 
         expect(
             document
                 .querySelector(".pika-lendar td.is-selected button")
-                .getAttribute("data-pika-day")
+                .getAttribute("data-pika-day"),
         ).toBe("1");
     });
 
@@ -118,7 +118,7 @@ describe("pat-datetime-picker", function () {
         document.querySelector("input[type=text]").click();
 
         expect(document.querySelectorAll(".pika-lendar .pika-week")[0].textContent).toBe(
-            "35"
+            "35",
         );
     });
 

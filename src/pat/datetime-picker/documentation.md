@@ -9,7 +9,7 @@ for browsers which don't yet support the HTML5 date input.
 
 ### Examples
 
-#### Enforcing the styled non-HTML5 picker universally.
+#### Enforcing the styled non-HTML5 picker universally
 
 By default this pattern will NOT defer to the browser's HTML5 picker.
 
@@ -19,11 +19,11 @@ By default this pattern will NOT defer to the browser's HTML5 picker.
 
     <input class="pat-date-picker" type="date" value="2015-01-01">
 
-#### Specifying the "min" and "max" attributes.
+#### Specifying the "min" and "max" attributes
 
     <input class="pat-date-picker" min="2015-01-01" max="2015-12-31" type="date">
 
-#### Show the week number.
+#### Show the week number
 
     <input class="pat-date-picker" data-pat-date-picker="week-numbers: show;" type="date">
 
@@ -43,7 +43,6 @@ Here are all the i18n values in JSON format:
        "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
        "weekdaysShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
      }
-
 
 ### Option reference
 
