@@ -83,9 +83,8 @@ export default Base.extend({
             }
             el.insertAdjacentElement("beforebegin", display_el);
 
-            // Disable click on label, as this invokes a click on the invisible
-            // input field which opens the calendar in Firefox and masks a
-            // click on display_el on Chrome.
+            // Suppress label activation of the hidden date input while keeping
+            // clicks on other controls, such as a companion time field.
             const label = display_el.closest("label");
             if (label) {
                 events.add_event_listener(
@@ -93,7 +92,11 @@ export default Base.extend({
                     "click",
                     "pat-date-picker--label",
                     (e) => {
-                        e.preventDefault();
+                        if (
+                            !e.target.closest("input, button, select, textarea, a[href]")
+                        ) {
+                            e.preventDefault();
+                        }
                     },
                 );
             }
@@ -183,10 +186,10 @@ export default Base.extend({
         };
 
         if (el.getAttribute("min")) {
-            config.minDate = new Date(el.getAttribute("min"));
+            config.minDate = new Date(`${el.getAttribute("min")}T00:00:00`);
         }
         if (el.getAttribute("max")) {
-            config.maxDate = new Date(el.getAttribute("max"));
+            config.maxDate = new Date(`${el.getAttribute("max")}T00:00:00`);
         }
 
         if (this.options.i18n) {
