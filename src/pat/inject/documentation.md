@@ -302,9 +302,9 @@ after:
     </div>
     <a class="next-month pat-inject" ref="calendar.html#2012-06"
        data-pat-inject="post: #2012-05; next-href: #2012-06">Next month</a>
-    	…
+     …
     <div class="month" id="2012-05">
-    	…
+     …
     </div>
 
 ### Modals
@@ -332,7 +332,7 @@ After injection was triggered:
 
     <a class="pat-inject" href="modal-source.html" data-pat-inject="type: modal">
 
-### Configurable error pages.
+### Configurable error pages
 
 In cases of AJAX errors, you can provide custom error pages by providing custom meta tags.
 For example, if you add this meta tag to the html `<head>`:

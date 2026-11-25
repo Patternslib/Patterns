@@ -78,12 +78,12 @@ const inject = {
             if (el.nodeName === "A" && $(cfgs[0].nextHref).length > 0) {
                 log.debug(
                     "Skipping as next href is anchor, which already exists",
-                    cfgs[0].nextHref
+                    cfgs[0].nextHref,
                 );
                 // TODO: reconsider how the injection enters exhausted state
                 el.setAttribute(
                     "href",
-                    (window.location.href.split("#")[0] || "") + cfgs[0].nextHref
+                    (window.location.href.split("#")[0] || "") + cfgs[0].nextHref,
                 );
                 return $el;
             }
@@ -117,7 +117,7 @@ const inject = {
                             (e) => {
                                 if (
                                     e.submitter?.matches(
-                                        "[type=submit], button:not([type=button]), [type=image]"
+                                        "[type=submit], button:not([type=button]), [type=image]",
                                     )
                                 ) {
                                     // make sure the submitting button is sent
@@ -125,7 +125,7 @@ const inject = {
                                     ajax.onClickSubmit(e);
                                 }
                                 this.onTrigger(e);
-                            }
+                            },
                         );
                     } else if (el?.matches(".pat-subform")) {
                         log.debug("Initializing subform with injection");
@@ -145,7 +145,7 @@ const inject = {
                         const delayed_trigger = (uuid_) => {
                             // Check if the element has been removed from the dom
                             const still_there = document.querySelector(
-                                `[data-pat-inject-uuid="${uuid_}"]`
+                                `[data-pat-inject-uuid="${uuid_}"]`,
                             );
                             if (!still_there) {
                                 return false;
@@ -159,7 +159,7 @@ const inject = {
                         };
                         window.setTimeout(
                             delayed_trigger.bind(null, uuid),
-                            cfgs[0].delay
+                            cfgs[0].delay,
                         );
                     }
                     break;
@@ -472,7 +472,9 @@ const inject = {
             const method = cfg.sourceMod === "content" ? "innerHTML" : "outerHTML";
             // There might be multiple sources, so we need to loop over them.
             // Access them with "innerHTML" or "outerHTML" depending on the sourceMod.
-            const sources_string = [...$sources].map(source => source[method]).join("\n");
+            const sources_string = [...$sources]
+                .map((source) => source[method])
+                .join("\n");
             wrapper.innerHTML = sources_string;
 
             for (const img of wrapper.content.querySelectorAll("img")) {
@@ -483,7 +485,7 @@ const inject = {
                     (e) => {
                         $(e.currentTarget).trigger("pat-inject-content-loaded");
                     },
-                    { once: true }
+                    { once: true },
                 );
             }
         }
@@ -562,7 +564,7 @@ const inject = {
             const scroll_container = dom.find_scroll_container(
                 scroll_target,
                 null,
-                window
+                window,
             );
 
             if (cfg.scroll === "top") {
@@ -573,7 +575,7 @@ const inject = {
         }
 
         el.dispatchEvent(
-            new Event("pat-inject-success", { bubbles: true, cancelable: true })
+            new Event("pat-inject-success", { bubbles: true, cancelable: true }),
         );
     },
 
@@ -614,7 +616,7 @@ const inject = {
                             sources$[idx1],
                             cfg,
                             ev.target,
-                            $title
+                            $title,
                         );
                     }
                 }
@@ -754,13 +756,13 @@ const inject = {
                 do_close_panel = false;
                 // Re-trigger close-panel event if it was caught while injection was in progress.
                 el.dispatchEvent(
-                    new Event("close-panel", { bubbles: true, cancelable: true })
+                    new Event("close-panel", { bubbles: true, cancelable: true }),
                 );
             }
         });
         $el.on("pat-ajax-error.pat-inject", this._onInjectError.bind(this, $el, cfgs));
         $el.on("pat-ajax-success.pat-inject pat-ajax-error.pat-inject", () =>
-            $el.removeData("pat-inject-triggered")
+            $el.removeData("pat-inject-triggered"),
         );
 
         // Prevent closing the panel while injection is in progress.
@@ -935,7 +937,7 @@ const inject = {
         for (const [pattern_name, opts] of Object.entries(this._rebaseOptions)) {
             for (const el_ of dom.querySelectorAllAndMe(
                 page,
-                `[data-pat-${pattern_name}]`
+                `[data-pat-${pattern_name}]`,
             )) {
                 const pattern = registry.patterns?.[pattern_name];
                 const pattern_parser = pattern?.parser;
@@ -962,7 +964,7 @@ const inject = {
                 if (changed) {
                     el_.setAttribute(
                         `data-pat-${pattern_name}`,
-                        JSON.stringify(options.length === 1 ? options[0] : options)
+                        JSON.stringify(options.length === 1 ? options[0] : options),
                     );
                 }
             }
@@ -1157,7 +1159,7 @@ $(document).on("patterns-injected.inject", async (ev, cfg, trigger, injected) =>
                 detail: {
                     injected: injected,
                 },
-            })
+            }),
         );
     }
 });
