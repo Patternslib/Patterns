@@ -9,18 +9,30 @@ for browsers which don't yet support the HTML5 date input.
 
 ### Examples
 
-#### Falling back to the browser's HTML5 picker if available.
+#### Falling back to the browser's HTML5 picker if available
 
 Set the `behavior` option to `native` to use the browser's HTML5 date input
 rendering when available.
 
     <input class="pat-date-picker" type="date" data-pat-date-picker="behavior: native">
 
-#### Enforcing the styled non-HTML5 picker universally.
+#### Choosing a date with the styled picker
 
-By default this pattern will NOT defer to the browser's HTML5 picker.
+The default `styled` behavior displays the date in a `<time>` element that opens
+the JavaScript calendar for selection.
 
     <input class="pat-date-picker" type="date">
+
+#### Typing a date or choosing one from a translated calendar
+
+With `behavior: editable`, the pattern changes the `type="date"` field to
+`type="text"` when it initializes. Users can type a date in `YYYY-MM-DD` format
+or choose one from the JavaScript calendar. Set `i18n` to the URL of a JSON file
+to translate the calendar. The browser treats typed values as plain text for
+constraint validation.
+
+    <input class="pat-date-picker" type="date"
+           data-pat-date-picker="behavior: editable; i18n: /src/pat/date-picker/i18n.json">
 
 #### Default value
 
@@ -30,11 +42,11 @@ By default this pattern will NOT defer to the browser's HTML5 picker.
 
     <input class="pat-date-picker" type="date" value="2015-01-01" data-pat-date-picker="first-day: 1">
 
-#### Specifying the "min" and "max" attributes.
+#### Specifying the "min" and "max" attributes
 
     <input class="pat-date-picker" min="2015-01-01" max="2015-12-31" type="date">
 
-#### Show the week number.
+#### Show the week number
 
     <input class="pat-date-picker" data-pat-date-picker="week-numbers: show;" type="date">
 
@@ -72,16 +84,16 @@ The locale option allows you to define the language in which the formatted date 
 
     <input class="pat-date-picker" data-pat-date-picker="output-format: Do MMMM YYYY; locale: de" type="date" />
 
-
 ### Option reference
 
-The HTML5 attributes `min` and `max` will be honoured.
+The `min` and `max` attributes constrain calendar selections. In `editable`
+mode, typed values are outside the scope of native date range validation.
 
 In addition, the following options can be passed to `data-pat-date-picker`:
 
 | Property                    | Type    | Default Value | Available values | Description                                                  |
 | --------------------------- | ------- | ------------- | ---------------- | ------------------------------------------------------------ |
-| **behavior** (or behaviour) | string  | styled        | native, styled   | Styled will always show the styled date picker. Native will use the system native date picker, provided the browser supports this. |
+| **behavior** (or behaviour) | string  | `styled`      | `native`, `styled`, `editable` | `styled` displays the date in a `<time>` element and opens the JavaScript calendar for selection. `native` uses the browser’s date picker when available and falls back to the JavaScript calendar with a text field. `editable` lets users type a date directly or choose one from the JavaScript calendar. |
 | **week-numbers**            | string  | hide          | show, hide       | "show" will show the weeks' numbers in a leftmost column.    |
 | **i18n**                    | URL     |               |                  | Provide a URL to a JSON resource which gives the i18n values. |
 | **first-day**               | Integer | 0             |                  | Set the first day of the week (0 -> Sunday, 1-> Monday, ...). |

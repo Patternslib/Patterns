@@ -1,11 +1,12 @@
 .pat-datetime-picker__wrapper {
-    input[type="date"],
+    .pat-datetime-picker__date,
+    .output-field,
     input[type="time"] {
         position: relative;
         display: inline-block;
         margin-right: 0.5em;
     }
-    input[type="date"] {
+    .pat-datetime-picker__date {
         width: auto;
     }
     input[type="time"] {

@@ -577,6 +577,46 @@ describe("pat-date-picker", function () {
         expect(el.value).toBe(isodate);
     });
 
+    it("opens a localized picker on an editable field even with native date input support", async () => {
+        jest.spyOn(utils, "checkInputSupport").mockReturnValue(true);
+        document.body.innerHTML = `
+            <form>
+                <input
+                    type="date"
+                    name="date"
+                    class="pat-date-picker"
+                    value="2021-10-21"
+                    data-pat-date-picker="behavior: editable; i18n: /keyboard-i18n.json"
+                />
+            </form>
+        `;
+        const response = await mock_fetch_i18n();
+        storage.set("/keyboard-i18n.json", await response.json());
+        const el = document.querySelector("input");
+        const instance = new pattern(el);
+
+        try {
+            await events.await_pattern_init(instance);
+
+            expect(el.type).toBe("text");
+            expect(el.value).toBe("2021-10-21");
+            expect(el.style.display).not.toBe("none");
+            expect(document.querySelector("time")).toBeNull();
+
+            el.click();
+            const calendar = document.querySelector(".pika-single:not(.is-hidden)");
+            const month = calendar.querySelector(".pika-select-month option:checked");
+            expect(month.textContent).toBe("Oktober");
+
+            const day = calendar.querySelector('button[data-pika-day="22"]');
+            day.dispatchEvent(new Event("mousedown", { bubbles: true }));
+            expect(new FormData(el.form).get("date")).toBe("2021-10-22");
+        } finally {
+            instance.pikaday?.destroy();
+            storage.remove("/keyboard-i18n.json");
+        }
+    });
+
     it("12 - does not initialize the date picker in styled behavior when disabled", async () => {
         document.body.innerHTML = `
             <input

@@ -11,7 +11,7 @@ import utils from "../../core/utils";
 const log = logging.getLogger("date-picker");
 
 export const parser = new Parser("date-picker");
-parser.addArgument("behavior", "styled", ["native", "styled"]);
+parser.addArgument("behavior", "styled", ["native", "styled", "editable"]);
 parser.addArgument("week-numbers", [], ["show", "hide"]);
 parser.addArgument("i18n"); // URL pointing to JSON resource with i18n values
 parser.addArgument("first-day", 0);
@@ -32,7 +32,6 @@ parser.addAlias("behaviour", "behavior");
  * } */
 
 export const storage = store.session("pat-date-picker");
-
 
 export default Base.extend({
     name: "date-picker",
@@ -84,9 +83,8 @@ export default Base.extend({
             }
             el.insertAdjacentElement("beforebegin", display_el);
 
-            // Disable click on label, as this invokes a click on the invisible
-            // input field which opens the calendar in Firefox and masks a
-            // click on display_el on Chrome.
+            // Suppress label activation of the hidden date input while keeping
+            // clicks on other controls, such as a companion time field.
             const label = display_el.closest("label");
             if (label) {
                 events.add_event_listener(
@@ -94,8 +92,12 @@ export default Base.extend({
                     "click",
                     "pat-date-picker--label",
                     (e) => {
-                        e.preventDefault();
-                    }
+                        if (
+                            !e.target.closest("input, button, select, textarea, a[href]")
+                        ) {
+                            e.preventDefault();
+                        }
+                    },
                 );
             }
 
@@ -150,7 +152,10 @@ export default Base.extend({
             }
         } else if (disabled) {
             return;
-        } else if (utils.checkInputSupport("date", "invalid date")) {
+        } else if (
+            this.options.behavior !== "editable" &&
+            utils.checkInputSupport("date", "invalid date")
+        ) {
             // behavior native with native support.
             return;
         } else if (el.getAttribute("type") === "date") {
@@ -181,10 +186,10 @@ export default Base.extend({
         };
 
         if (el.getAttribute("min")) {
-            config.minDate = new Date(el.getAttribute("min"));
+            config.minDate = new Date(`${el.getAttribute("min")}T00:00:00`);
         }
         if (el.getAttribute("max")) {
-            config.maxDate = new Date(el.getAttribute("max"));
+            config.maxDate = new Date(`${el.getAttribute("max")}T00:00:00`);
         }
 
         if (this.options.i18n) {
@@ -195,7 +200,9 @@ export default Base.extend({
                     i18n = await response.json();
                     storage.set(this.options.i18n, i18n);
                 } catch {
-                    log.error(`date-picker could not load i18n for ${this.options.i18n}`);
+                    log.error(
+                        `date-picker could not load i18n for ${this.options.i18n}`,
+                    );
                 }
             }
             if (i18n) {

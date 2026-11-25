@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>pat-date-picker demo page</title>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="/style/common.css" />
-        <script src="/bundle.min.js"></script>
-        <style>
+  <head>
+    <title>pat-date-picker demo page</title>
+    <meta charset="utf-8" />
+    <link href="/style/common.css"
+          rel="stylesheet"
+    />
+    <script src="/bundle.min.js"></script>
+    <style>
           time.output-field {
             min-width: 6em;
             height: 2em;
@@ -25,86 +27,82 @@
             margin-left: 0.2em;
             background-color: red;
           }
-        </style>
-    </head>
-    <body>
-        <form action="">
-            <fieldset class="vertical">
+    </style>
+  </head>
+  <body>
+    <form action="">
+      <fieldset class="vertical">
 
-                <label
-                    >Falling back to the browser's HTML5 picker if available.
-                    <input
-                        class="pat-date-picker"
-                        type="date"
-                        data-pat-date-picker="behavior: native"
-                    /> </label
-                ><br />
+        <label>Falling back to the browser's HTML5 picker if available.
+          <input class="pat-date-picker"
+                 type="date"
+                 data-pat-date-picker="behavior: native"
+          />
+        </label><br />
 
-                <label
-                    >Enforcing the styled non-HTML5 picker universally.
-                    <input class="pat-date-picker" type="date" /> </label
-                ><br />
+        <label>Enforcing the styled non-HTML5 picker universally.
+          <input class="pat-date-picker"
+                 type="date"
+          />
+        </label><br />
 
-                <label
-                    >Default value
-                    <input
-                        class="pat-date-picker"
-                        type="date"
-                        value="2015-01-01"
-                        required
-                    /> </label
-                ><br />
+        <label>Using the JavaScript date picker together with an input field which can be edited with the keyboard directly.
+          <input class="pat-date-picker"
+                 type="date"
+                 data-pat-date-picker="behavior: editable"
+          />
+        </label><br />
 
-                <label
-                    >First day on Monday
-                    <input
-                        class="pat-date-picker"
-                        type="date"
-                        value="2015-01-01"
-                        data-pat-date-picker="first-day: 1"
-                        required
-                    /> </label
-                ><br />
+        <label>Default value
+          <input class="pat-date-picker"
+                 required
+                 type="date"
+                 value="2015-01-01"
+          />
+        </label><br />
 
-                <label>Not required, allows for deletion of value.
-                    <input
-                        class="pat-date-picker"
-                        type="date"
-                        value="2021-03-29"
-                    />
-                </label>
-                <br />
+        <label>First day on Monday
+          <input class="pat-date-picker"
+                 required
+                 type="date"
+                 value="2015-01-01"
+                 data-pat-date-picker="first-day: 1"
+          />
+        </label><br />
 
-                <label>Placeholder support.
-                    <input
-                        class="pat-date-picker"
-                        type="date"
-                        placeholder="YYYY-MM-DD"
-                    />
-                </label>
-                <br />
+        <label>Not required, allows for deletion of value.
+          <input class="pat-date-picker"
+                 type="date"
+                 value="2021-03-29"
+          />
+        </label>
+        <br />
 
-                <label
-                    >Show the week number.
-                    <input
-                        class="pat-date-picker"
-                        data-pat-date-picker="week-numbers: show;"
-                        type="date"
-                    /> </label
-                ><br />
+        <label>Placeholder support.
+          <input class="pat-date-picker"
+                 placeholder="YYYY-MM-DD"
+                 type="date"
+          />
+        </label>
+        <br />
 
-                <label
-                    >Specifying the "min" and "max" attributes.
-                    <input
-                        class="pat-date-picker demo-minmax"
-                        min="2015-01-01"
-                        max="2015-12-31"
-                        type="date"
-                    />
-                    <small>+/- 2 months from today</small>
-                </label>
-                <br />
-                <script charset="utf-8">
+        <label>Show the week number.
+          <input class="pat-date-picker"
+                 type="date"
+                 data-pat-date-picker="week-numbers: show;"
+          />
+        </label><br />
+
+        <label>Specifying the "min" and "max" attributes.
+          <input class="pat-date-picker demo-minmax"
+                 max="2015-12-31"
+                 min="2015-01-01"
+                 type="date"
+          />
+          <small>+/- 2 months from today</small>
+        </label>
+        <br />
+        <script charset="utf-8">
                   var date_arithmetics = function (addsub) {
                     return new Date(
                       new Date().setMonth(
@@ -115,85 +113,99 @@
                   var input_minmax = document.querySelector(".demo-minmax");
                   input_minmax.setAttribute("min", date_arithmetics(-2));
                   input_minmax.setAttribute("max", date_arithmetics(+2));
-                </script>
+        </script>
 
-                <label
-                    >Formatted
+        <label>Formatted
 
-                    <input
-                        class="pat-date-picker"
-                        type="date"
-                        value="2015-01-01"
-                        data-pat-date-picker="output-format: MMMM Do YYYY"
-                    />
-                    <small>hide &lt;input&gt; and show formatted &lt;time&gt;. Still use iso format for &lt;input&gt;.</small>
-                </label>
-                <br />
+          <input class="pat-date-picker"
+                 type="date"
+                 value="2015-01-01"
+                 data-pat-date-picker="output-format: MMMM Do YYYY"
+          />
+          <small>hide &lt;input&gt; and show formatted &lt;time&gt;. Still use iso format for &lt;input&gt;.</small>
+        </label>
+        <br />
 
-                <label
-                    >Multilingual support with German translations
-                    <input
-                        class="pat-date-picker"
-                        data-pat-date-picker="i18n: ./i18n.json; output-format: Do MMMM YYYY; locale: de"
-                        type="date"
-                    />
-                </label>
-                <br />
+        <label>Multilingual support with German translations
+          <input class="pat-date-picker"
+                 type="date"
+                 data-pat-date-picker="i18n: ./i18n.json; output-format: Do MMMM YYYY; locale: de"
+          />
+        </label>
+        <br />
 
-                <label>Start
-                    <input name="start" class="pat-date-picker" type="date"/>
-                </label>
-                <label>End after start, automatically updated.
-                    <input name="end"   class="pat-date-picker" type="date" data-pat-date-picker="after: input[name=start]; offset-days: 2;"/>
-                </label>
-                <br />
+        <label>Start
+          <input class="pat-date-picker"
+                 name="start"
+                 type="date"
+          />
+        </label>
+        <label>End after start, automatically updated.
+          <input class="pat-date-picker"
+                 name="end"
+                 type="date"
+                 data-pat-date-picker="after: input[name=start]; offset-days: 2;"
+          />
+        </label>
+        <br />
 
-                <label>Start, formatted
-                    <input name="startf" class="pat-date-picker" type="date"
-                        data-pat-date-picker="output-format: MMMM Do YYYY"
-                    />
-                </label>
-                <label>End after start, automatically updated and formatted.
-                    <input name="endf"   class="pat-date-picker" type="date"
-                        data-pat-date-picker="after: input[name=startf]; offset-days: 2; output-format: MMMM Do YYYY"
-                        />
-                </label>
-                <br />
+        <label>Start, formatted
+          <input class="pat-date-picker"
+                 name="startf"
+                 type="date"
+                 data-pat-date-picker="output-format: MMMM Do YYYY"
+          />
+        </label>
+        <label>End after start, automatically updated and formatted.
+          <input class="pat-date-picker"
+                 name="endf"
+                 type="date"
+                 data-pat-date-picker="after: input[name=startf]; offset-days: 2; output-format: MMMM Do YYYY"
+          />
+        </label>
+        <br />
 
-                <hr />
-                <label>Disabled input
-                    <input name="disabled_date" class="pat-date-picker" type="date"
-                        data-pat-date-picker="output-format: MMMM Do YYYY"
-                        value="2021-04-21"
-                        disabled
-                    />
-                </label>
-                <br />
+        <hr />
+        <label>Disabled input
+          <input class="pat-date-picker"
+                 disabled
+                 name="disabled_date"
+                 type="date"
+                 value="2021-04-21"
+                 data-pat-date-picker="output-format: MMMM Do YYYY"
+          />
+        </label>
+        <br />
 
-                <hr />
-                <div
-                    class="pat-clone"
-                    data-pat-clone="template: #clone-template; trigger-element: .clone-trigger; max: 5">
-                    <fieldset id="clone-template" hidden>
-                        <label>Copied field #{1}
-                            <input
-                                name="date-#{1}"
-                                type="date"
-                                class="pat-date-picker"
-                                data-pat-date-picker="output-format: Do MMMM YYYY;"
-                                placeholder="Completion date"
-                            />
-                        </label>
-                        <button type="button" class="remove-clone">
+        <hr />
+        <div class="pat-clone"
+             data-pat-clone="template: #clone-template; trigger-element: .clone-trigger; max: 5"
+        >
+          <fieldset id="clone-template"
+                    hidden
+          >
+            <label>Copied field #{1}
+              <input class="pat-date-picker"
+                     name="date-#{1}"
+                     placeholder="Completion date"
+                     type="date"
+                     data-pat-date-picker="output-format: Do MMMM YYYY;"
+              />
+            </label>
+            <button class="remove-clone"
+                    type="button"
+            >
                             Remove
-                        </button>
-                    </fieldset>
-                </div>
-                <button type="button" class="clone-trigger">
+            </button>
+          </fieldset>
+        </div>
+        <button class="clone-trigger"
+                type="button"
+        >
                     Add an extra measure
-                </button>
+        </button>
 
-            </fieldset>
-        </form>
-    </body>
+      </fieldset>
+    </form>
+  </body>
 </html>
