@@ -38,6 +38,7 @@ parser.addArgument("class"); // Add a class to the injected content.
 parser.addArgument("history", "none", ["none", "record"]);
 parser.addArgument("push-marker");
 parser.addArgument("scroll");
+parser.addArgument("on-redirect", "follow", ["follow", "reload"]);
 
 // Note: this should not be here but the parser would bail on unknown
 // parameters and expand/collapsible need to pass the url to us.
@@ -577,7 +578,26 @@ const inject = {
         );
     },
 
+    _navigateTo(url) {
+        window.location.href = url;
+    },
+
     async _onInjectSuccess($el, cfgs, ev) {
+        const response_url = ev?.jqxhr?.responseURL;
+        if (response_url) {
+            const requested_url = new URL(cfgs[0].url, window.location.href).href;
+            if (response_url !== requested_url) {
+                if (cfgs[0].onRedirect === "reload") {
+                    this._navigateTo(response_url);
+                    return;
+                }
+                // on-redirect: follow — update the URL so rebasing uses the correct base
+                for (const cfg of cfgs) {
+                    cfg.url = response_url;
+                }
+            }
+        }
+
         let data = ev?.jqxhr?.responseText;
         if (!data) {
             log.warn("No response content, aborting", ev);

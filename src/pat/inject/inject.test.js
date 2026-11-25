@@ -2548,4 +2548,81 @@ describe("pat-inject", function () {
             spy_ajax.mockRestore();
         });
     });
+
+    describe("13 - on-redirect option", function () {
+        it("13.1 - default value is 'follow'", function () {
+            document.body.innerHTML = `
+                <a class="pat-inject" href="/source.html" data-pat-inject="target: #target">link</a>
+                <div id="target"></div>
+            `;
+            const cfgs = pattern.extractConfig($(".pat-inject"), {});
+            expect(cfgs[0].onRedirect).toBe("follow");
+        });
+
+        it("13.2 - on-redirect: follow injects content and updates the base URL to the redirect target", async function () {
+            document.body.innerHTML = `
+                <a class="pat-inject" href="/source.html" data-pat-inject="target: #target; on-redirect: follow">link</a>
+                <div id="target"></div>
+            `;
+            const $a = $(".pat-inject");
+            const cfgs = pattern.extractConfig($a, {});
+            pattern.verifyConfig(cfgs);
+
+            await pattern._onInjectSuccess($a, cfgs, {
+                jqxhr: {
+                    responseText: `<html><body><div id="target">injected from redirect</div></body></html>`,
+                    responseURL: "http://localhost/redirect-target.html",
+                },
+            });
+            await utils.timeout(1);
+
+            expect(cfgs[0].url).toBe("http://localhost/redirect-target.html");
+            expect(document.querySelector("#target").textContent).toBe("injected from redirect");
+        });
+
+        it("13.3 - on-redirect: reload navigates to the redirect URL without injecting content", async function () {
+            document.body.innerHTML = `
+                <a class="pat-inject" href="/source.html" data-pat-inject="target: #target; on-redirect: reload">link</a>
+                <div id="target">original</div>
+            `;
+            const $a = $(".pat-inject");
+            const cfgs = pattern.extractConfig($a, {});
+            pattern.verifyConfig(cfgs);
+
+            const spy_navigate = jest.spyOn(pattern, "_navigateTo").mockImplementation(() => {});
+
+            await pattern._onInjectSuccess($a, cfgs, {
+                jqxhr: {
+                    responseText: `<html><body><div id="target">should not be injected</div></body></html>`,
+                    responseURL: "http://localhost/redirect-target.html",
+                },
+            });
+
+            expect(spy_navigate).toHaveBeenCalledWith("http://localhost/redirect-target.html");
+            expect(document.querySelector("#target").textContent).toBe("original");
+        });
+
+        it("13.4 - no redirect handling when responseURL matches the requested URL", async function () {
+            document.body.innerHTML = `
+                <a class="pat-inject" href="/source.html" data-pat-inject="target: #target">link</a>
+                <div id="target"></div>
+            `;
+            const $a = $(".pat-inject");
+            const cfgs = pattern.extractConfig($a, {});
+            pattern.verifyConfig(cfgs);
+
+            const original_url = cfgs[0].url;
+
+            await pattern._onInjectSuccess($a, cfgs, {
+                jqxhr: {
+                    responseText: `<html><body><div id="target">normal content</div></body></html>`,
+                    responseURL: new URL(original_url, window.location.href).href,
+                },
+            });
+            await utils.timeout(1);
+
+            expect(cfgs[0].url).toBe(original_url);
+            expect(document.querySelector("#target").textContent).toBe("normal content");
+        });
+    });
 });
