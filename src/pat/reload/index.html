@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>pat-reload demo</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="/style/common.css" />
+        <script src="/bundle.min.js"></script>
+    </head>
+    <body>
+        <h1>pat-reload demo</h1>
+
+        <h2>Reload on navigation</h2>
+        <p>
+            Click the buttons to change the URL via <code>history.pushState</code>. The
+            box below reloads from <code>reload-content.html#content</code> after each
+            URL change.
+        </p>
+        <button
+            type="button"
+            onclick="history.pushState(null, '', '/src/pat/reload/index.html?page=1')"
+        >
+            Navigate to page 1
+        </button>
+        <button
+            type="button"
+            onclick="history.pushState(null, '', '/src/pat/reload/index.html?page=2')"
+        >
+            Navigate to page 2
+        </button>
+
+        <div
+            class="pat-reload"
+            data-pat-reload="url: /src/pat/reload/reload-content.html#content"
+        >
+            Not yet reloaded.
+        </div>
+
+        <h2>Reload on a custom event</h2>
+        <button type="button" onclick="document.dispatchEvent(new Event('my-reload'))">
+            Fire <code>my-reload</code>
+        </button>
+
+        <div
+            class="pat-reload"
+            data-pat-reload="url: /src/pat/reload/reload-content.html#content; trigger-event: my-reload"
+        >
+            Not yet reloaded.
+        </div>
+    </body>
+</html>

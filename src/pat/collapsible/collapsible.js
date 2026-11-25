@@ -164,7 +164,8 @@ class Pattern extends BasePattern {
                 dataType: "html",
             },
         ];
-        inject.execute(opts, $el);
+        // Errors are already handled by pat-inject.
+        inject.execute(opts, $el).catch((error) => log.debug(error));
     }
 
     // jQuery method to force loading of content.

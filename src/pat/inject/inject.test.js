@@ -752,6 +752,91 @@ describe("pat-inject", function () {
 
             spy_ajax.mockRestore();
         });
+
+        describe("8.7 - execute returns a Promise", function () {
+            let spy_ajax;
+            let el;
+
+            beforeEach(function () {
+                spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
+                document.body.innerHTML = `
+                   <a class="pat-inject" href="test.html#someid">link</a>
+                   <div id="someid"></div>
+                `;
+                el = document.querySelector(".pat-inject");
+            });
+
+            afterEach(function () {
+                spy_ajax.mockRestore();
+            });
+
+            it("8.7.1 - resolves to true after a successful injection", async function () {
+                const finished = jest.fn();
+                el.addEventListener("pat-inject-finished", finished);
+
+                const injection = pattern.execute(pattern.extractConfig($(el)), $(el));
+                expect(injection).toBeInstanceOf(Promise);
+
+                answer('<html><body><div id="someid">repl</div></body></html>');
+                expect(await injection).toBe(true);
+                expect(document.querySelector("#someid").textContent).toBe("repl");
+                expect(finished).toHaveBeenCalledTimes(1);
+            });
+
+            it("8.7.2 - rejects with an error after a failed request", async function () {
+                const finished = jest.fn();
+                el.addEventListener("pat-inject-finished", finished);
+
+                const injection = pattern.execute(pattern.extractConfig($(el)), $(el));
+                const jqxhr = { status: 404, statusText: "Not Found", responseText: "" };
+                deferred.reject(jqxhr, "error", "Not Found");
+
+                let error;
+                try {
+                    await injection;
+                } catch (e) {
+                    error = e;
+                }
+                expect(error).toBeInstanceOf(Error);
+                expect(error.message).toBe(
+                    "Injection from test.html failed with status 404 Not Found"
+                );
+                expect(error.cause).toBe(jqxhr);
+                expect(finished).toHaveBeenCalledTimes(1);
+
+                // pat-inject's own error handling was done.
+                expect(document.body.hasAttribute("data-error-message")).toBe(true);
+                document.body.removeAttribute("data-error-message");
+            });
+
+            it("8.7.3 - resolves to false if the injection was not started", async function () {
+                // Started.
+                const injection = pattern.execute(pattern.extractConfig($(el)), $(el));
+                // Already in progress.
+                expect(await pattern.execute(pattern.extractConfig($(el)), $(el))).toBe(
+                    false
+                );
+
+                answer('<html><body><div id="someid">repl</div></body></html>');
+                expect(await injection).toBe(true);
+            });
+
+            it("8.7.4 - resolves to false if there is nothing to inject", async function () {
+                const injection = pattern.execute(pattern.extractConfig($(el)), $(el));
+                answer("");
+                expect(await injection).toBe(false);
+            });
+
+            it("8.7.5 - resolves after delayed injections", async function () {
+                const cfgs = pattern.extractConfig($(el));
+                cfgs[0].processDelay = 20;
+                const injection = pattern.execute(cfgs, $(el));
+
+                answer('<html><body><div id="someid">repl</div></body></html>');
+                expect(await injection).toBe(true);
+                expect(document.querySelector("#someid").textContent).toBe("repl");
+            });
+        });
     });
 
     describe("9 - DOM tests", function () {

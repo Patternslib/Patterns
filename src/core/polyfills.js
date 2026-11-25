@@ -41,7 +41,10 @@
 
 // Navigation polyfill for Firefox and Safari, as of 2024-01-04
 // NOTE: this is a very basic polyfill, it only supports firing a `navigate`
-// event on location change and even that without interception support, etc.
+// and `navigatesuccess` event on pushState/replaceState and even that without
+// interception support, etc.
+// Note: Unlike the native implementation, `navigate` is fired after the URL
+// has changed.
 !(function () {
     if (window.navigation == undefined) {
 
@@ -69,6 +72,7 @@
         window.history.pushState = function () {
             pushState.apply(window.history, arguments);
             window.navigation.dispatchEvent(create_event(arguments));
+            window.navigation.dispatchEvent(new Event("navigatesuccess"));
         };
 
         // Same with replaceState
@@ -76,6 +80,7 @@
         window.history.replaceState = function () {
             replaceState.apply(window.history, arguments);
             window.navigation.dispatchEvent(create_event(arguments));
+            window.navigation.dispatchEvent(new Event("navigatesuccess"));
         };
     }
 })();

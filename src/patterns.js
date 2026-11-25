@@ -44,6 +44,7 @@ import "./pat/modal/modal";
 import "./pat/navigation/navigation";
 import "./pat/notification/notification";
 import "./pat/push/push";
+import "./pat/reload/reload";
 import "./pat/scroll-box/scroll-box";
 import "./pat/scroll/scroll";
 import "./pat/scroll-marker/scroll-marker";

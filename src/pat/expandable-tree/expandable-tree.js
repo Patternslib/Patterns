@@ -1,7 +1,10 @@
 import $ from "jquery";
 import inject from "../inject/inject";
+import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
+
+const log = logging.getLogger("pat.expandable-tree");
 
 export const parser = new Parser("expandable");
 parser.addArgument("load-content");
@@ -55,7 +58,8 @@ var _ = {
                         dataType: "html",
                     },
                 ];
-            inject.execute(opts, $el);
+            // Errors are already handled by pat-inject.
+            inject.execute(opts, $el).catch((error) => log.debug(error));
         });
     },
 };

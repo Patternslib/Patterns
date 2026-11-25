@@ -221,4 +221,64 @@ describe("pat-ajax", function () {
             spy_ajax.mockRestore();
         });
     });
+
+    describe("concurrent requests", function () {
+        let deferreds;
+
+        beforeEach(function () {
+            deferreds = [];
+            jest.spyOn($, "ajax").mockImplementation(() => {
+                const deferred = $.Deferred();
+                deferreds.push(deferred);
+                return deferred;
+            });
+        });
+
+        afterEach(function () {
+            document.body.innerHTML = "";
+            jest.restoreAllMocks();
+        });
+
+        const respond = (deferred, html) =>
+            deferred.resolve(html, "success", { responseText: html });
+
+        it("handles requests of different elements to the same URL", function () {
+            document.body.innerHTML = `
+                <a class="a1" href="same.html">1</a>
+                <a class="a2" href="same.html">2</a>
+            `;
+            const $a1 = $(".a1");
+            const $a2 = $(".a2");
+            const success1 = jest.fn();
+            const success2 = jest.fn();
+            $a1.on("pat-ajax-success", success1);
+            $a2.on("pat-ajax-success", success2);
+
+            pattern.request($a1);
+            pattern.request($a2);
+            respond(deferreds[0], "response 1");
+            respond(deferreds[1], "response 2");
+
+            expect(success1).toHaveBeenCalledTimes(1);
+            expect(success1.mock.calls[0][0].jqxhr.responseText).toBe("response 1");
+            expect(success2).toHaveBeenCalledTimes(1);
+            expect(success2.mock.calls[0][0].jqxhr.responseText).toBe("response 2");
+        });
+
+        it("only handles the latest response of the same element", function () {
+            document.body.innerHTML = `<a class="a1" href="same.html">1</a>`;
+            const $a1 = $(".a1");
+            const success = jest.fn();
+            $a1.on("pat-ajax-success", success);
+
+            pattern.request($a1);
+            pattern.request($a1);
+            // The newer request finishes first, the outdated one later.
+            respond(deferreds[1], "newer");
+            respond(deferreds[0], "outdated");
+
+            expect(success).toHaveBeenCalledTimes(1);
+            expect(success.mock.calls[0][0].jqxhr.responseText).toBe("newer");
+        });
+    });
 });
