@@ -351,6 +351,10 @@ const inject = {
                 return false;
             }
             cfg.$target = this.createTarget(cfg.target);
+            if (!cfg.$target) {
+                // Target could not be created. Abort.
+                return false;
+            }
             cfg.$created_target = cfg.$target;
         }
         return true;
@@ -456,7 +460,7 @@ const inject = {
          * appended to the body.
          */
         if (selector.slice(0, 1) !== "#") {
-            log.error("only id supported for non-existing target");
+            log.error("only id supported for non-existing target. selector: ", selector);
             return null;
         }
         const $target = $("<div />").attr({ id: selector.slice(1) });

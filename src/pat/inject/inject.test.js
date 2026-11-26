@@ -1769,6 +1769,29 @@ describe("pat-inject", function () {
                 const modal = document.querySelector("#pat-modal");
                 expect(modal).toBeFalsy();
             });
+
+            it("9.3.3 - Abort if a non-existing target cannot be created", async function () {
+                // Only id selectors can be created. For other selectors the
+                // injection is aborted before any request is made.
+                document.body.innerHTML = `
+                    <a class="pat-inject"
+                       href="test.html#document-content"
+                       data-pat-inject="target: .not-existing">link</a>
+                `;
+
+                const inject = document.querySelector(".pat-inject");
+
+                pattern.init($(inject));
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                inject.click();
+
+                await utils.timeout(1); // wait a tick for async to settle.
+
+                expect(spy_ajax).not.toHaveBeenCalled();
+                expect(inject.classList.contains("executing")).toBe(false);
+                expect(document.querySelector(".not-existing")).toBe(null);
+            });
         });
 
         describe("9.4 - injecton of the title element.", function () {
