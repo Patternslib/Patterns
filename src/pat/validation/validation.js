@@ -138,8 +138,42 @@ class Pattern extends BasePattern {
         );
     }
 
+    group_root(input) {
+        // Return the closest ancestor element of an input - up to and
+        // including the form - which itself defines `min-values` or
+        // `max-values`. All inputs within this element form a group.
+        // Return null if there is no such element or if the input itself
+        // defines these options.
+        for (let el = input; el; el = el.parentElement) {
+            if (el.hasAttribute(parser.attribute)) {
+                // Parse only the options defined on this element.
+                const options = parser.parse(el, {}, false, false);
+                if (
+                    (options.minValues ?? null) !== null ||
+                    (options.maxValues ?? null) !== null
+                ) {
+                    return el === input ? null : el;
+                }
+            }
+            if (el === this.form) {
+                break;
+            }
+        }
+        return null;
+    }
+
     siblings(input) {
-        // Get all siblings of an input with the same name.
+        // Get all inputs which belong to the same group as the given input.
+        // If a wrapper element defines `min-values` or `max-values`, all
+        // inputs within that wrapper form a group. Otherwise all inputs with
+        // the same name form a group.
+        const group_root = this.group_root(input);
+        if (group_root === this.form) {
+            return this.inputs;
+        }
+        if (group_root) {
+            return this.inputs.filter((_input) => group_root.contains(_input));
+        }
         return this.inputs.filter((_input) => _input.name === input.name);
     }
 

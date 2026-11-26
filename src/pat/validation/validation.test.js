@@ -2340,6 +2340,166 @@ describe("pat-validation", function () {
             expect(check1.matches(":invalid")).toBe(false);
             expect(form.querySelectorAll("em.warning").length).toBe(0);
         });
+
+        it("10.4 - validates a group of differently named inputs defined by a wrapper", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <fieldset
+                    data-pat-validation="
+                        min-values: 1;
+                        max-values: 2;
+                        message-min-values: Select at least one;
+                        message-max-values: Select at most two;
+                    "
+                  >
+                    <label><input id="c1" type="checkbox" name="a"> A</label>
+                    <label><input id="c2" type="checkbox" name="b"> B</label>
+                    <label><input id="c3" type="checkbox" name="c"> C</label>
+                </fieldset>
+                <input id="other" name="other" required>
+              </form>
+            `;
+
+            const form = document.querySelector("form");
+            const fieldset = form.querySelector("fieldset");
+            const c1 = form.querySelector("#c1");
+            const c2 = form.querySelector("#c2");
+            const c3 = form.querySelector("#c3");
+            const other = form.querySelector("#other");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            // Nothing checked.
+            c1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(c1.matches(":invalid")).toBe(true);
+            expect(c2.matches(":invalid")).toBe(true);
+            expect(c3.matches(":invalid")).toBe(true);
+            // The input outside the group is not affected.
+            expect(other.matches(":invalid")).toBe(true); // required
+            expect(fieldset.querySelectorAll("em.warning").length).toBe(1);
+            expect(fieldset.querySelector("em.warning").textContent).toBe(
+                "Select at least one"
+            );
+            // The error message is placed after the label of the last input.
+            expect(
+                fieldset.querySelector("label:nth-of-type(3) + em.warning")
+            ).toBeTruthy();
+
+            // One checked - valid.
+            c2.checked = true;
+            c2.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(c1.matches(":invalid")).toBe(false);
+            expect(c2.matches(":invalid")).toBe(false);
+            expect(c3.matches(":invalid")).toBe(false);
+            expect(fieldset.querySelectorAll("em.warning").length).toBe(0);
+
+            // Two checked - valid.
+            c3.checked = true;
+            c3.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(c1.matches(":invalid")).toBe(false);
+            expect(fieldset.querySelectorAll("em.warning").length).toBe(0);
+
+            // Three checked - invalid.
+            c1.checked = true;
+            c1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(c1.matches(":invalid")).toBe(true);
+            expect(c2.matches(":invalid")).toBe(true);
+            expect(c3.matches(":invalid")).toBe(true);
+            expect(fieldset.querySelectorAll("em.warning").length).toBe(1);
+            expect(fieldset.querySelector("em.warning").textContent).toBe(
+                "Select at most two"
+            );
+
+            // Back to two checked - valid.
+            c1.checked = false;
+            c1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(c1.matches(":invalid")).toBe(false);
+            expect(c2.matches(":invalid")).toBe(false);
+            expect(c3.matches(":invalid")).toBe(false);
+            expect(fieldset.querySelectorAll("em.warning").length).toBe(0);
+        });
+
+        it("10.5 - validates a wrapper group on submit", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <div data-pat-validation="min-values: 2; message-min-values: Too few">
+                    <input id="c1" type="checkbox" name="a" checked>
+                    <input id="c2" type="checkbox" name="b">
+                </div>
+                <button>submit</button>
+              </form>
+            `;
+
+            const form = document.querySelector("form");
+            const c2 = form.querySelector("#c2");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            const submit_event = events.submit_event();
+            form.dispatchEvent(submit_event);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(submit_event.defaultPrevented).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+            expect(form.querySelector("#c2 + em.warning")).toBeTruthy();
+            expect(form.querySelector("button").disabled).toBe(true);
+
+            c2.checked = true;
+            c2.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+            expect(form.querySelector("button").disabled).toBe(false);
+        });
+
+        it("10.6 - groups by name if the input itself defines min/max values", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <fieldset data-pat-validation="max-values: 1">
+                    <input id="a1" type="checkbox" name="a" checked>
+                    <input id="b1" type="checkbox" name="b" checked
+                        data-pat-validation="min-values: 1; max-values: 2">
+                    <input id="b2" type="checkbox" name="b"
+                        data-pat-validation="min-values: 1; max-values: 2">
+                </fieldset>
+              </form>
+            `;
+
+            const form = document.querySelector("form");
+            const b1 = form.querySelector("#b1");
+            const b2 = form.querySelector("#b2");
+            const a1 = form.querySelector("#a1");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            // The b group is checked by name: 1 of b checked - valid.
+            b1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(b1.matches(":invalid")).toBe(false);
+            expect(b2.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+
+            // The fieldset group: a1 and b1 checked - max-values 1 exceeded.
+            a1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(a1.matches(":invalid")).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+        });
     });
 
 });

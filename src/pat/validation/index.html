@@ -389,6 +389,18 @@
             </label>
           </fieldset>
         </fieldset>
+
+        <fieldset
+            data-pat-validation="
+                min-values: 1;
+                max-values: 2;
+            "
+        >
+          <legend>Demo with a group of differently named checkboxes (min 1, max 2).</legend>
+          <label><input type="checkbox" name="newsletter" /> Newsletter</label>
+          <label><input type="checkbox" name="updates" /> Product updates</label>
+          <label><input type="checkbox" name="events" /> Event invitations</label>
+        </fieldset>
         <fieldset class="buttons">
           <button>Submit</button>
           <button formnovalidate>Cancel</button>
