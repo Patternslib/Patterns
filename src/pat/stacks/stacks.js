@@ -47,11 +47,15 @@ class Pattern extends BasePattern {
         }
 
         this._setupStack();
-        $(this.document).on("click", "a", this._onClick.bind(this));
+        // Use an instance specific event namespace to be able to remove only
+        // this instance's handler again.
+        this._click_event = `click.pat-stacks--${this.uuid}`;
+        $(document).on(this._click_event, "a", this._onClick.bind(this));
     }
 
     destroy() {
-        $(this.document).off("click", "a", this._onClick.bind(this));
+        $(document).off(this._click_event);
+        super.destroy();
     }
 
     _setupStack() {
