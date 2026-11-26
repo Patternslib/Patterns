@@ -7,6 +7,7 @@ import $ from "jquery";
 import Base from "../../core/base";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
+import utils from "../../core/utils";
 
 const log = logging.getLogger("pat.carousel");
 
@@ -31,7 +32,6 @@ export default Base.extend({
             import("slick-carousel/slick/slick.scss");
         }
         await import("slick-carousel");
-        const ImagesLoaded = (await import("imagesloaded")).default;
 
         this.options = parser.parse(this.el, this.options);
         this.settings = {
@@ -49,7 +49,19 @@ export default Base.extend({
             this.settings.appendDots = this.options.appendDots;
         }
 
-        ImagesLoaded(this.el, () => this.setup());
+        this.setup();
+
+        // Recalculate the carousel dimensions whenever an image within has
+        // been loaded or failed loading. The load and error events do not
+        // bubble, but can be captured. This also catches images which are
+        // added later.
+        const update = utils.debounce(() => {
+            if (this.el.classList.contains("slick-initialized")) {
+                $(this.el).slick("setPosition");
+            }
+        }, 100);
+        this.el.addEventListener("load", update, true);
+        this.el.addEventListener("error", update, true);
     },
 
     setup() {

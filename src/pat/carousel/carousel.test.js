@@ -84,5 +84,29 @@ describe("carousel-plugin", function () {
             expect(options.autoplaySpeed).toBe(345);
             expect(options.adaptiveHeight).toBe(true);
         });
+        it("Recalculates the dimensions after images have been loaded.", async () => {
+            $("#lab").html(
+                "<ul class='pat-carousel'>" +
+                    "  <li><img src='a.png' /></li>" +
+                    "  <li><img src='b.png' /></li>" +
+                    "</ul>"
+            );
+            const carousel = document.querySelector("#lab ul");
+            pattern.init($(carousel));
+            await utils.timeout(20); // wait a bit for all to settle.
+
+            // Initialized immediately, without waiting for images.
+            expect(carousel.classList.contains("slick-initialized")).toBe(true);
+
+            const spy_slick = jest.spyOn($.fn, "slick");
+            const images = carousel.querySelectorAll("img");
+            images[0].dispatchEvent(new Event("load"));
+            images[1].dispatchEvent(new Event("error"));
+            await utils.timeout(150); // debounce
+
+            // Debounced, only called once.
+            expect(spy_slick).toHaveBeenCalledTimes(1);
+            expect(spy_slick).toHaveBeenCalledWith("setPosition");
+        });
     });
 });
