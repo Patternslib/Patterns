@@ -371,6 +371,27 @@ describe("core.events tests", () => {
             expect(event_listener_map.size).toBe(0);
         });
 
+        it("Supports namespacing by id prefix.", () => {
+            const cb_a1 = jest.fn();
+            const cb_a2 = jest.fn();
+            const cb_b1 = jest.fn();
+
+            events.add_event_listener(document, "keydown", "a--1", cb_a1);
+            events.add_event_listener(document, "keydown", "a--2", cb_a2);
+            events.add_event_listener(document, "keydown", "b--1", cb_b1);
+
+            events.remove_event_listener(null, "a--*");
+
+            expect([...event_listener_map.get(document).keys()]).toEqual(["b--1"]);
+
+            document.dispatchEvent(new KeyboardEvent("keydown"));
+            expect(cb_a1).not.toHaveBeenCalled();
+            expect(cb_a2).not.toHaveBeenCalled();
+            expect(cb_b1).toHaveBeenCalledTimes(1);
+
+            events.remove_event_listener(document);
+        });
+
         it("Continues removing on other elements after an invalid map key.", () => {
             const el = document.createElement("div");
             const cb = jest.fn();

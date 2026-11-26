@@ -3,8 +3,15 @@ import utils from "./utils";
 // Event related methods and event factories
 
 // Event listener registration for easy-to-remove event listeners.
-// once Safari supports the ``signal`` option for addEventListener we can abort
-// event handlers by calling AbortController.abort().
+//
+// The id can be used as a namespace by giving it a prefix, e.g.
+// ``<namespace>--<name>``. Listeners with different ids coexist on the same
+// event type. All listeners of a namespace on all elements can be removed with
+// ``remove_event_listener(null, "<namespace>--*")``.
+//
+// The event_listener_map keeps a reference to the element until its listeners
+// are removed. Listeners on elements which may be removed from the DOM must be
+// removed explicitly, otherwise the element cannot be garbage collected.
 export const event_listener_map = new Map();
 
 /**
