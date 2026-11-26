@@ -34,6 +34,37 @@ describe("pat-scroll", function () {
         expect(this.spy_scrollTo).toHaveBeenCalledTimes(2);
     });
 
+    it("1.1 - with trigger 'auto' waits for the page to be loaded before scrolling", async function () {
+        const spy_ready_state = jest
+            .spyOn(document, "readyState", "get")
+            .mockReturnValue("interactive");
+
+        document.body.innerHTML = `
+            <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>
+            <p id="p1"></p>
+        `;
+        const el = document.querySelector(".pat-scroll");
+
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        // Page not loaded yet - no scrolling.
+        expect(this.spy_scrollTo).toHaveBeenCalledTimes(0);
+
+        spy_ready_state.mockReturnValue("complete");
+        window.dispatchEvent(new Event("load"));
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(this.spy_scrollTo).toHaveBeenCalledTimes(1);
+
+        // Only once.
+        window.dispatchEvent(new Event("load"));
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(this.spy_scrollTo).toHaveBeenCalledTimes(1);
+    });
+
     it("2 - will scroll to an anchor on click if the trigger is set to 'click'", async function () {
         document.body.innerHTML = `
             <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click">p1</a>

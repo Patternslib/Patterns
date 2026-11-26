@@ -22,14 +22,20 @@ class Pattern extends BasePattern {
 
     parser_group_options = false;
 
-    async init() {
+    init() {
         if (this.options.delay) {
             this.options.delay = utils.parseTime(this.options.delay);
         }
         if (this.options.trigger === "auto") {
-            const ImagesLoaded = (await import("imagesloaded")).default;
-            // Only calculate the offset when all images are loaded
-            ImagesLoaded(document.body, this.scrollTo.bind(this));
+            // Only calculate the offset when the page including all images
+            // is loaded.
+            if (document.readyState === "complete") {
+                this.scrollTo();
+            } else {
+                window.addEventListener("load", () => this.scrollTo(), {
+                    once: true,
+                });
+            }
         }
         if (this.options.trigger === "auto" || this.options.trigger === "click") {
             this.el.addEventListener("click", this.scrollTo.bind(this));
