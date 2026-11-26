@@ -43,31 +43,24 @@ export default Base.extend({
 
     async init($el, opts) {
         Masonry = (await import("masonry-layout")).default;
-        const ImagesLoaded = (await import("imagesloaded")).default;
 
         this.options = parser.parse(this.$el, opts);
         // Initialize
         this.initMasonry();
 
-        const imgLoad = await ImagesLoaded(this.$el);
-        imgLoad.on(
-            "progress",
-            function () {
-                if (!this.msnry) {
-                    this.initMasonry();
-                }
-                this.quicklayout();
-            }.bind(this)
-        );
-        imgLoad.on(
-            "always",
-            function () {
-                if (!this.msnry) {
-                    this.initMasonry();
-                }
-                this.layout();
-            }.bind(this)
-        );
+        // Re-layout whenever an image within has been loaded or failed
+        // loading. The load and error events do not bubble, but can be
+        // captured. This also catches images which are added later.
+        // When all images are loaded, do a full layout which sets the
+        // ``masonry-ready`` class.
+        this.is_images_loaded = false;
+        const on_image_loaded = () => {
+            this.quicklayout();
+            this.layout_when_images_loaded();
+        };
+        this.el.addEventListener("load", on_image_loaded, true);
+        this.el.addEventListener("error", on_image_loaded, true);
+        this.layout_when_images_loaded();
 
         // Update if something gets injected inside the pat-masonry
         this.$el
@@ -140,14 +133,28 @@ export default Base.extend({
 
     layout: function () {
         this.$el.removeClass("masonry-ready");
-        this.msnry.on(
-            "layoutComplete",
-            function () {
-                this.$el.addClass("masonry-ready");
-            }.bind(this)
-        );
+        this.msnry.once("layoutComplete", () => {
+            this.$el.addClass("masonry-ready");
+        });
         this.msnry.layout();
         this.quicklayout();
+    },
+
+    layout_when_images_loaded() {
+        // Do a full layout once all images are loaded or failed loading.
+        if (this.is_images_loaded) {
+            return;
+        }
+        // Ignore lazy loading images, which might only be loaded when
+        // scrolled into view.
+        const is_images_loaded = [...this.el.querySelectorAll("img")].every(
+            (img) => img.complete || img.getAttribute("loading") === "lazy"
+        );
+        if (!is_images_loaded) {
+            return;
+        }
+        this.is_images_loaded = true;
+        this.layout();
     },
 
     getTypeCastedValue: function (original) {
