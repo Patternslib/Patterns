@@ -184,7 +184,12 @@ class Pattern extends BasePattern {
                     msg: message,
                     attribute: input_options.equality,
                 });
-            } else if (input_options.not.after || input_options.not.before) {
+            }
+
+            if (
+                !validity_state.customError && // No error from previous checks.
+                (input_options.not.after || input_options.not.before)
+            ) {
                 const msg = input_options.message.date || input_options.message.datetime;
                 const msg_default_not_before = "The date must be after %{attribute}";
                 const msg_default_not_after = "The date must be before %{attribute}";
@@ -286,7 +291,12 @@ class Pattern extends BasePattern {
                     logger.debug("Check `no-before` input.", not_after_el);
                     await this.check_input({ input: not_before_el, stop: true });
                 }
-            } else if (input_options.minValues || input_options.maxValues) {
+            }
+
+            if (
+                !validity_state.customError && // No error from previous checks.
+                (input_options.minValues || input_options.maxValues)
+            ) {
                 const min_values =
                     input_options.minValues === null
                         ? null
@@ -342,12 +352,6 @@ class Pattern extends BasePattern {
                         min: min_values,
                     });
                 }
-            }
-
-            if (!validity_state.customError) {
-                // No error to handle. Return.
-                this.remove_error({ input });
-                return;
             }
         } else {
             // Default error cases with custom messages.
@@ -407,6 +411,12 @@ class Pattern extends BasePattern {
                 // Call `emit_update` separately
                 this.emit_update("invalid");
             }
+        }
+
+        if (validity_state.valid) {
+            // No error to handle. Remove eventual error and return.
+            this.remove_error({ input });
+            return;
         }
 
         if (event?.type === "submit") {

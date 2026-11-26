@@ -728,6 +728,103 @@ describe("pat-validation", function () {
             expect(submit_event.defaultPrevented).toBe(false);
             expect(document.querySelectorAll("em.warning").length).toBe(0);
         });
+
+        it("1.25 - Can combine multiple custom validation rules.", async function () {
+            document.body.innerHTML = `
+                <form
+                    class="pat-validation"
+                    data-pat-validation="
+                        message-required: is required;
+                        message-equality: not equal;
+                        message-min-values: too few;
+                    "
+                >
+                    <fieldset data-pat-validation="min-values: 2">
+                        <input id="i1" name="textinput" data-pat-validation="equality: extrainput" required>
+                        <input id="i2" name="textinput">
+                    </fieldset>
+                    <input id="i3" name="extrainput">
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const input1 = document.querySelector("#i1");
+            const input2 = document.querySelector("#i2");
+            const input3 = document.querySelector("#i3");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            input1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // form is invalid due to input1's required attribute
+            expect(input1.matches(":invalid")).toBe(true);
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+            expect(document.querySelectorAll("em.warning")[0].textContent).toBe(
+                "is required"
+            );
+
+            input1.value = "ok";
+            input1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // form is invalid due to input1's equality constraint
+            expect(input1.matches(":invalid")).toBe(true);
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+            expect(document.querySelectorAll("em.warning")[0].textContent).toBe(
+                "not equal"
+            );
+
+            input3.value = "ok";
+            input1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // form is invalid due to input1's equality constraint
+            expect(input1.matches(":invalid")).toBe(true);
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+            expect(document.querySelectorAll("em.warning")[0].textContent).toBe(
+                "too few"
+            );
+
+            input2.value = "ok";
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // form is now valid.
+            expect(input1.matches(":invalid")).toBe(false);
+            expect(document.querySelectorAll("em.warning").length).toBe(0);
+        });
+
+        it("1.25.1 - Does not overwrite a previous custom validation error.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation">
+                    <input
+                        name="a"
+                        value="x"
+                        data-pat-validation="
+                            equality: b;
+                            message-equality: not equal;
+                            not-before: 2000-01-01;
+                            max-values: 0;
+                            message-max-values: too many;
+                        "
+                    >
+                    <input name="b" value="y">
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const input_a = form.querySelector("[name=a]");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            input_a.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(input_a.matches(":invalid")).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+            expect(form.querySelector("em.warning").textContent).toBe("not equal");
+        });
     });
 
     describe("2 - required inputs", function () {
