@@ -58,7 +58,7 @@ class Pattern extends BasePattern {
             // Make sure this event handler is run early, in the capturing
             // phase in order to be able to cancel later non-capturing submit
             // events.
-            { capture: true }
+            { capture: true },
         );
 
         this.initialize_inputs();
@@ -99,7 +99,7 @@ class Pattern extends BasePattern {
             // Registering again under the same name replaces the listener.
             for (const event_type of ["input", "change", "blur"]) {
                 this.add_event_listener(input, event_type, event_type, (e) =>
-                    debouncer(e)
+                    debouncer(e),
                 );
             }
         }
@@ -199,7 +199,7 @@ class Pattern extends BasePattern {
                             // with a single space.
                             msg_attr = not_after_el?.labels?.[0]?.textContent.replace(
                                 /\s\s+/g, // replace all whitespace
-                                " " // with a single space
+                                " ", // with a single space
                             );
                             msg_attr = msg_attr || not_after_el.name;
                         }
@@ -220,7 +220,7 @@ class Pattern extends BasePattern {
                             // with a single space.
                             msg_attr = not_before_el?.labels?.[0]?.textContent.replace(
                                 /\s\s+/g, // replace all whitespace
-                                " " // with a single space
+                                " ", // with a single space
                             );
                             msg_attr = msg_attr || not_before_el.name;
                         }
@@ -397,11 +397,11 @@ class Pattern extends BasePattern {
         // executed within the web page context.
         const dompurify = (await import("dompurify")).default;
         const validation_message = dompurify.sanitize(
-            input.validationMessage || input[KEY_ERROR_MSG]
+            input.validationMessage || input[KEY_ERROR_MSG],
         );
 
         const error_node = dom.create_from_string(
-            this.error_template(validation_message)
+            this.error_template(validation_message),
         ).firstChild;
 
         let fieldset;

@@ -206,7 +206,7 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "This value must be an integer."
+                "This value must be an integer.",
             );
             expect(el.querySelector("#form-buttons-create").disabled).toBe(true);
 
@@ -241,7 +241,7 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("div.validation-error").length).toBe(1);
             expect(el.querySelectorAll("div.validation-error")[0].textContent).toBe(
-                "need this"
+                "need this",
             );
         });
 
@@ -637,7 +637,7 @@ describe("pat-validation", function () {
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelector("em.warning").textContent).toBe(
-                "I'm sorry Dave, I can't let you do that."
+                "I'm sorry Dave, I can't let you do that.",
             );
         });
 
@@ -684,7 +684,7 @@ describe("pat-validation", function () {
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelector("em.warning").textContent).toBe(
-                "This value must be a valid email address."
+                "This value must be a valid email address.",
             );
 
             inp.value = "person@mail.com";
@@ -722,7 +722,7 @@ describe("pat-validation", function () {
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelector("em.warning").textContent).toBe(
-                "This value must be greater than or equal to 5"
+                "This value must be greater than or equal to 5",
             );
 
             inp_min.value = 6;
@@ -739,7 +739,7 @@ describe("pat-validation", function () {
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelector("em.warning").textContent).toBe(
-                "This value must be less than or equal to 5"
+                "This value must be less than or equal to 5",
             );
 
             inp_max.value = 5;
@@ -862,7 +862,7 @@ describe("pat-validation", function () {
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The value must be an integer."
+                "The value must be an integer.",
             );
 
             inp.value = 5;
@@ -892,7 +892,7 @@ describe("pat-validation", function () {
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The value must be an integer."
+                "The value must be an integer.",
             );
 
             inp.value = 5;
@@ -1076,7 +1076,7 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The date must be after 2011-11-11"
+                "The date must be after 2011-11-11",
             );
 
             inp.value = "2023-02-23";
@@ -1084,7 +1084,7 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The date must be before 2022-02-22"
+                "The date must be before 2022-02-22",
             );
 
             inp.value = "2022-01-01";
@@ -1131,11 +1131,11 @@ describe("pat-validation", function () {
             expect(el.querySelectorAll("em.warning").length).toBe(2);
 
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The date must be before woo date"
+                "The date must be before woo date",
             );
 
             expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
-                "The date must be after ye date"
+                "The date must be after ye date",
             );
         });
 
@@ -1172,11 +1172,11 @@ describe("pat-validation", function () {
             expect(el.querySelectorAll("em.warning").length).toBe(2);
 
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The date must be before date2"
+                "The date must be before date2",
             );
 
             expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
-                "The date must be after date1"
+                "The date must be after date1",
             );
         });
 
@@ -1222,10 +1222,10 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(2);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The start date must on or before the end date."
+                "The start date must on or before the end date.",
             );
             expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
-                "The end date must on or before the start date."
+                "The end date must on or before the start date.",
             );
 
             // Fulfill the before/after constraint - same date
@@ -1242,10 +1242,10 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(2);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The start date must on or before the end date."
+                "The start date must on or before the end date.",
             );
             expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
-                "The end date must on or before the start date."
+                "The end date must on or before the start date.",
             );
 
             // Fulfill the before/after constraint - start before end
@@ -1316,7 +1316,7 @@ describe("pat-validation", function () {
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "This field is required"
+                "This field is required",
             );
         });
 
@@ -1362,10 +1362,10 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(2);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The start date/time must on or before the end date/time."
+                "The start date/time must on or before the end date/time.",
             );
             expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
-                "The end date/time must on or before the start date/time."
+                "The end date/time must on or before the start date/time.",
             );
 
             // Fulfill the before/after constraint - same date
@@ -1382,10 +1382,10 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(2);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The start date/time must on or before the end date/time."
+                "The start date/time must on or before the end date/time.",
             );
             expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
-                "The end date/time must on or before the start date/time."
+                "The end date/time must on or before the start date/time.",
             );
 
             // Fulfill the before/after constraint - start before end
@@ -1454,7 +1454,7 @@ describe("pat-validation", function () {
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "This field is required"
+                "This field is required",
             );
 
             inps[0].checked = true;
@@ -1500,7 +1500,7 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "I would like this to be equal to password"
+                "I would like this to be equal to password",
             );
             expect(el.querySelector("#form-buttons-create").disabled).toBe(true);
 
@@ -1624,7 +1624,7 @@ describe("pat-validation", function () {
 
             // The text content should contain the message without HTML tags
             expect(warning_text).toContain(
-                "This field is required and must be filled out."
+                "This field is required and must be filled out.",
             );
 
             // The innerHTML should contain the safe HTML (DOMPurify allows <strong> by default)
