@@ -83,6 +83,60 @@ describe("core.events tests", () => {
             expect(event_listener_map.has(el)).toBe(false);
         });
 
+        it("Removes the entry from the event_listener_map when the signal is aborted.", () => {
+            const el = document.createElement("div");
+            const cb = jest.fn();
+            const controller = new AbortController();
+
+            events.add_event_listener(el, "test", "test_signal", cb, {
+                signal: controller.signal,
+            });
+            expect(event_listener_map.get(el).has("test_signal")).toBe(true);
+
+            controller.abort();
+            el.dispatchEvent(new Event("test"));
+
+            expect(cb).not.toHaveBeenCalled();
+            expect(event_listener_map.has(el)).toBe(false);
+        });
+
+        it("Does not register anything for an already aborted signal.", () => {
+            const el = document.createElement("div");
+            const cb = jest.fn();
+            const controller = new AbortController();
+            controller.abort();
+
+            events.add_event_listener(el, "test", "test_signal", cb, {
+                signal: controller.signal,
+            });
+            el.dispatchEvent(new Event("test"));
+
+            expect(cb).not.toHaveBeenCalled();
+            expect(event_listener_map.has(el)).toBe(false);
+        });
+
+        it("Keeps a re-registered entry when the old signal is aborted.", () => {
+            const el = document.createElement("div");
+            const cb_old = jest.fn();
+            const cb_new = jest.fn();
+            const controller_old = new AbortController();
+            const controller_new = new AbortController();
+
+            events.add_event_listener(el, "test", "test_signal", cb_old, {
+                signal: controller_old.signal,
+            });
+            events.add_event_listener(el, "test", "test_signal", cb_new, {
+                signal: controller_new.signal,
+            });
+
+            controller_old.abort();
+            expect(event_listener_map.get(el)?.has("test_signal")).toBe(true);
+
+            el.dispatchEvent(new Event("test"));
+            expect(cb_old).not.toHaveBeenCalled();
+            expect(cb_new).toHaveBeenCalledTimes(1);
+        });
+
         it("Removes a specific event listener.", () => {
             const el = document.createElement("div");
 

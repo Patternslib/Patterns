@@ -42,6 +42,10 @@ const add_event_listener = (el, event_type, id, cb, opts = {}) => {
     }
     remove_event_listener(el, id); // do not register one listener twice.
 
+    if (opts?.signal?.aborted) {
+        return; // addEventListener would not register the listener either.
+    }
+
     // Create event_listener_map entry if not existent.
     if (!event_listener_map.has(el)) {
         event_listener_map.set(el, new Map());
@@ -59,6 +63,20 @@ const add_event_listener = (el, event_type, id, cb, opts = {}) => {
         .get(el)
         .set(id, [event_type, _cb, opts.capture ? opts : undefined]);
     el.addEventListener(event_type, _cb, opts);
+
+    if (opts?.signal) {
+        // The signal removes the listener. Also remove the map entry, but
+        // only if it was not replaced by a later registration under this id.
+        opts.signal.addEventListener(
+            "abort",
+            () => {
+                if (event_listener_map.get(el)?.get(id)?.[1] === _cb) {
+                    _delete_entry(el, id);
+                }
+            },
+            { once: true }
+        );
+    }
 };
 
 /**
