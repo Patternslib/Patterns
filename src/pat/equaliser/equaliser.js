@@ -17,27 +17,51 @@ var equaliser = {
     name: "equaliser",
     trigger: ".pat-equaliser, .pat-equalizer",
 
-    async init($el, opts) {
-        const ImagesLoaded = (await import("imagesloaded")).default;
-
+    init($el, opts) {
         return $el.each(function () {
-            var $container = $(this),
-                options = parser.parse($container, opts);
+            const container = this;
+            const $container = $(container);
+            const options = parser.parse($container, opts);
             $container.data("pat-equaliser", options);
             $(window).on(
                 "resize.pat-equaliser",
                 null,
-                this,
-                utils.debounce(equaliser._onEvent, 100)
+                container,
+                utils.debounce(equaliser._onEvent, 100),
             );
-            ImagesLoaded(
-                this,
-                $.proxy(function () {
-                    equaliser._update(this);
-                }, this)
-            );
-            const callback = utils.debounce(equaliser._update.bind(this), 100);
-            const observer = new MutationObserver(callback);
+
+            const update = utils.debounce(() => {
+                if (container.isConnected) {
+                    equaliser._update(container);
+                }
+            }, 100);
+
+            // Re-equalise when images within the container have been loaded.
+            // The load and error events do not bubble, but can be captured.
+            // This also catches images which are added later.
+            container.addEventListener("load", update, true);
+            container.addEventListener("error", update, true);
+
+            const observer = new MutationObserver((mutations) => {
+                if (!container.isConnected) {
+                    // The container was removed from the DOM. Stop observing.
+                    observer.disconnect();
+                    return;
+                }
+                // Ignore the changes done by any equaliser itself on its
+                // children, otherwise we end up in an infinite loop.
+                const is_relevant = mutations.some(
+                    (mutation) =>
+                        !(
+                            mutation.type === "attributes" &&
+                            ["style", "class"].includes(mutation.attributeName) &&
+                            $(mutation.target.parentElement).data("pat-equaliser")
+                        ),
+                );
+                if (is_relevant) {
+                    update();
+                }
+            });
             const config = {
                 childList: true,
                 subtree: true,
@@ -45,6 +69,8 @@ var equaliser = {
                 attributes: true,
             };
             observer.observe(document.body, config);
+
+            equaliser._update(container);
         });
     },
 
@@ -77,7 +103,7 @@ var equaliser = {
                     options.effect.easing,
                     function () {
                         $(this).addClass("equalised");
-                    }
+                    },
                 );
                 break;
         }

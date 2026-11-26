@@ -1,5 +1,7 @@
 import $ from "jquery";
 import pattern from "./equaliser";
+import utils from "../../core/utils";
+import { jest } from "@jest/globals";
 
 describe("pat-equaliser", function () {
     beforeEach(function () {
@@ -75,6 +77,99 @@ describe("pat-equaliser", function () {
             expect(data.pattern).toBe("equaliser");
             expect(data.action).toBe("attribute-changed");
             expect(data.dom).toBe($container[0]);
+        });
+    });
+    describe("init", function () {
+        afterEach(function () {
+            jest.restoreAllMocks();
+        });
+
+        it("Equalises on initialization.", function () {
+            document.body.innerHTML = `
+                <div class="pat-equaliser"
+                     data-pat-equaliser="transition: none">
+                    <div style="height: 50px"></div>
+                    <div style="height: 100px"></div>
+                </div>
+            `;
+            const container = document.querySelector(".pat-equaliser");
+            const spy_update = jest.spyOn(pattern, "_update");
+
+            pattern.init($(container));
+
+            expect(spy_update).toHaveBeenCalledTimes(1);
+            expect(spy_update).toHaveBeenCalledWith(container);
+            for (const child of container.children) {
+                expect(child.classList.contains("equalised")).toBe(true);
+            }
+        });
+
+        it("Re-equalises after an image has been loaded or failed loading.", async function () {
+            document.body.innerHTML = `
+                <div class="pat-equaliser"
+                     data-pat-equaliser="transition: none">
+                    <div><img src="a.png" /></div>
+                    <div><img src="b.png" /></div>
+                </div>
+            `;
+            const container = document.querySelector(".pat-equaliser");
+            pattern.init($(container));
+            await utils.timeout(150); // wait for the debounced observer.
+
+            const spy_update = jest.spyOn(pattern, "_update");
+            const [img1, img2] = container.querySelectorAll("img");
+
+            img1.dispatchEvent(new Event("load"));
+            await utils.timeout(150); // debounce
+            expect(spy_update).toHaveBeenCalledTimes(1);
+            expect(spy_update).toHaveBeenCalledWith(container);
+
+            img2.dispatchEvent(new Event("error"));
+            await utils.timeout(150); // debounce
+            expect(spy_update).toHaveBeenCalledTimes(2);
+        });
+
+        it("Re-equalises when the DOM changes.", async function () {
+            document.body.innerHTML = `
+                <div class="pat-equaliser"
+                     data-pat-equaliser="transition: none">
+                    <div></div>
+                    <div></div>
+                </div>
+            `;
+            const container = document.querySelector(".pat-equaliser");
+            pattern.init($(container));
+            await utils.timeout(150); // wait for the debounced observer.
+
+            const spy_update = jest.spyOn(pattern, "_update");
+
+            container.children[0].innerHTML = "<p>new content</p>";
+            await utils.timeout(150); // debounce
+            expect(spy_update).toHaveBeenCalledTimes(1);
+            expect(spy_update).toHaveBeenCalledWith(container);
+        });
+
+        it("Does not re-equalise because of its own changes.", async function () {
+            document.body.innerHTML = `
+                <div class="pat-equaliser"
+                     data-pat-equaliser="transition: none">
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="pat-equaliser"
+                     data-pat-equaliser="transition: none">
+                    <div></div>
+                    <div></div>
+                </div>
+            `;
+            const spy_update = jest.spyOn(pattern, "_update");
+            pattern.init($(".pat-equaliser"));
+            // Initial update for both.
+            expect(spy_update).toHaveBeenCalledTimes(2);
+
+            await utils.timeout(500);
+            // No further updates.
+            expect(spy_update).toHaveBeenCalledTimes(2);
         });
     });
 });
