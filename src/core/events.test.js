@@ -67,7 +67,20 @@ describe("core.events tests", () => {
             expect(event_listener_map.get(el).get("test_once_event")).toBeDefined();
             el.dispatchEvent(new Event("test"));
 
-            expect(event_listener_map.get(el).get("test_once_event")).not.toBeDefined();
+            expect(event_listener_map.get(el)?.get("test_once_event")).not.toBeDefined();
+        });
+
+        it("Removes the element from the event_listener_map after a once-event fired.", () => {
+            const el = document.createElement("div");
+            const cb = jest.fn();
+
+            events.add_event_listener(el, "test", "test_once_event", cb, {
+                once: true,
+            });
+            el.dispatchEvent(new Event("test"));
+
+            expect(cb).toHaveBeenCalledTimes(1);
+            expect(event_listener_map.has(el)).toBe(false);
         });
 
         it("Removes a specific event listener.", () => {

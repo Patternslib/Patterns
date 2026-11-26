@@ -8,6 +8,24 @@ import utils from "./utils";
 export const event_listener_map = new Map();
 
 /**
+ * Delete an entry from the event_listener_map.
+ * Also delete the element key if no more entries are registered for it.
+ *
+ * @param {DOM Node} el - The element.
+ * @param {string} id - The id of the entry to delete.
+ */
+const _delete_entry = (el, id) => {
+    const el_events = event_listener_map.get(el);
+    if (!el_events) {
+        return;
+    }
+    el_events.delete(id);
+    if (!el_events.size) {
+        event_listener_map.delete(el);
+    }
+};
+
+/**
  * Add an event listener to a DOM element under a unique id.
  * If a event is registered under the same id for the same element, the old handler is removed first.
  *
@@ -32,7 +50,7 @@ const add_event_listener = (el, event_type, id, cb, opts = {}) => {
     if (opts?.once === true) {
         // For `once` events, also remove the entry from the event_listener_map.
         _cb = (e) => {
-            event_listener_map.get(el)?.delete(id);
+            _delete_entry(el, id);
             cb(e);
         };
     }
@@ -84,12 +102,8 @@ const remove_event_listener = (el, id) => {
         for (const entry of entries || []) {
             // Remove event listener
             el.removeEventListener(entry[1][0], entry[1][1], entry[1][2]);
-            // Delete entry from event_listener_map
-            event_listener_map.get(el).delete(entry[0]);
-            // Delete element from event_listener_map if no more events are registered.
-            if (!event_listener_map.get(el).size) {
-                event_listener_map.delete(el);
-            }
+            // Delete entry and, if empty, the element from event_listener_map.
+            _delete_entry(el, entry[0]);
         }
     }
 };
