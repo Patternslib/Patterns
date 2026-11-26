@@ -38,6 +38,7 @@ parser.addArgument("class"); // Add a class to the injected content.
 parser.addArgument("history", "none", ["none", "record"]);
 parser.addArgument("push-marker");
 parser.addArgument("scroll");
+parser.addArgument("scripts", "remove", ["remove", "execute"]);
 
 // Note: this should not be here but the parser would bail on unknown
 // parameters and expand/collapsible need to pass the url to us.
@@ -468,6 +469,7 @@ const inject = {
          * element to inject.
          */
         const wrapper = document.createElement("template");
+        let content = wrapper.content;
         if ($sources.length > 0) {
             const method = cfg.sourceMod === "content" ? "innerHTML" : "outerHTML";
             // There might be multiple sources, so we need to loop over them.
@@ -477,7 +479,16 @@ const inject = {
                 .join("\n");
             wrapper.innerHTML = sources_string;
 
-            for (const img of wrapper.content.querySelectorAll("img")) {
+            if (cfg.scripts === "execute") {
+                // Import into the current document and recreate the scripts
+                // before insertion. Parsed scripts would not be executed.
+                content = document.importNode(content, true);
+                this._recreateScripts(content);
+            } else {
+                this._removeScripts(content);
+            }
+
+            for (const img of content.querySelectorAll("img")) {
                 events.add_event_listener(
                     img,
                     "load",
@@ -490,8 +501,8 @@ const inject = {
             }
         }
 
-        // Copy, because after insertion wrapper.children is empty.
-        const source_nodes = [...wrapper.content.childNodes];
+        // Copy, because after insertion content.childNodes is empty.
+        const source_nodes = [...content.childNodes];
 
         // Now the injection actually happens.
         if (this._inject(trigger, source_nodes, target, cfg)) {
@@ -499,6 +510,36 @@ const inject = {
             this._update_history(cfg, trigger, $title);
             // Post-injection
             this._afterInjection($el, cfg.$created_target || $(source_nodes), cfg);
+        }
+    },
+
+    _recreateScripts(root) {
+        for (const script of root.querySelectorAll("script")) {
+            // Keep the namespace, so that SVG scripts stay SVG scripts.
+            const new_script = document.createElementNS(script.namespaceURI, "script");
+            for (const attr of script.attributes) {
+                new_script.setAttributeNS(attr.namespaceURI, attr.name, attr.value);
+            }
+            if (new_script instanceof HTMLScriptElement && !script.hasAttribute("async")) {
+                // Script-inserted scripts are async by default. Run external
+                // scripts in document order, like parser-inserted scripts.
+                new_script.async = false;
+            }
+            new_script.textContent = script.textContent;
+            script.replaceWith(new_script);
+        }
+    },
+
+    _removeScripts(root) {
+        const fragments = [root];
+        for (const fragment of fragments) {
+            for (const script of fragment.querySelectorAll("script")) {
+                script.remove();
+            }
+            // Template contents are separate fragments and may be inserted later.
+            for (const template of fragment.querySelectorAll("template")) {
+                fragments.push(template.content);
+            }
         }
     },
 
@@ -828,7 +869,6 @@ const inject = {
             elementbefore: "before",
         }[cfg.action];
 
-        // Inject the content HERE!
         target[method](...source_nodes);
 
         return true;
@@ -877,6 +917,7 @@ const inject = {
         form: "action",
         img: "src",
         object: "data",
+        script: "src",
         source: "src",
         video: "src",
     },
@@ -897,16 +938,7 @@ const inject = {
         return base.slice(0, base.lastIndexOf("/") + 1) + url;
     },
 
-    _rebaseHTML(base, html) {
-        if (html === "") {
-            // Special case, source is none
-            return "";
-        }
-
-        // Parse the html string into a DOM tree.
-        const page = document.createElement("div");
-        page.innerHTML = html;
-
+    _rebaseElements(base, page) {
         // Create efficient selector for any tag with it's corresponding
         // attribute from _rebaseAttrs. Note: the current data structure allows
         // only for one attribute to be rebased per tag.
@@ -914,8 +946,19 @@ const inject = {
             .map(([tag, attr]) => `${tag}[${attr}]`)
             .join(", ");
         for (const el_ of page.querySelectorAll(rebase_selector)) {
-            const attr = this._rebaseAttrs[el_.nodeName.toLowerCase()];
+            const tag = el_.nodeName.toLowerCase();
+            const attr = this._rebaseAttrs[tag];
             let value = el_.getAttribute(attr);
+
+            if (tag === "script" && value) {
+                try {
+                    const response_base = new URL(base || "", document.baseURI);
+                    el_.setAttribute(attr, new URL(value, response_base).href);
+                } catch (e) {
+                    log.warn("Could not resolve script URL:", value, e);
+                }
+                continue;
+            }
 
             if (
                 value &&
@@ -935,10 +978,7 @@ const inject = {
         }
 
         for (const [pattern_name, opts] of Object.entries(this._rebaseOptions)) {
-            for (const el_ of dom.querySelectorAllAndMe(
-                page,
-                `[data-pat-${pattern_name}]`,
-            )) {
+            for (const el_ of page.querySelectorAll(`[data-pat-${pattern_name}]`)) {
                 const pattern = registry.patterns?.[pattern_name];
                 const pattern_parser = pattern?.parser;
                 if (!pattern_parser) {
@@ -969,32 +1009,37 @@ const inject = {
                 }
             }
         }
-
-        return page.innerHTML.trim();
     },
 
     _parseRawHtml(html, url = "") {
-        // remove script tags and head and replace body by a div
-        const title = html.match(/\<title\>(.*)\<\/title\>/);
-        let clean_html = html
-            .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-            .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
-            .replace(/<html([^>]*?)>/gi, "")
-            .replace(/<\/html([^>]*?)>/gi, "")
-            .replace(/<body([^>]*?)>/gi, '<div id="__original_body">')
-            .replace(/<\/body([^>]*?)>/gi, "</div>");
-
-        if (title && title.length == 2) {
-            clean_html = title[0] + clean_html;
+        const template = document.createElement("template");
+        const page = template.content.ownerDocument.createElement("div");
+        // Only parse document-shaped responses as documents. Fragment parsing
+        // keeps leading elements such as script and style in the fragment.
+        const is_document =
+            /^(?:\s|<!--[\s\S]*?-->)*<(?:!doctype\s|(?:html|head|body)(?=[\s/>]))/i.test(html);
+        if (is_document) {
+            const doc = new DOMParser().parseFromString(html, "text/html");
+            const title = doc.head.querySelector("title");
+            if (title) {
+                page.append(title);
+            }
+            const body = page.ownerDocument.createElement("div");
+            body.id = "__original_body";
+            body.append(...doc.body.childNodes);
+            page.append(body);
+        } else {
+            page.innerHTML = html.trim();
         }
+
         try {
-            clean_html = this._rebaseHTML(url, clean_html);
+            this._rebaseElements(url, page);
         } catch (e) {
             log.error("Error rebasing urls", e);
         }
-        const $html = $("<div/>").html(clean_html);
+        const $html = $(page);
         if ($html.children().length === 0) {
-            log.warn("Parsing html resulted in empty jquery object:", clean_html);
+            log.warn("Parsing html resulted in empty jquery object:", page.innerHTML);
         }
         return $html;
     },
@@ -1124,8 +1169,7 @@ const inject = {
             sources(cfgs, data) {
                 const sources = cfgs.map((cfg) => cfg.source);
                 sources.push("title");
-                const result = this._sourcesFromHtml(data, cfgs[0].url, sources);
-                return result;
+                return this._sourcesFromHtml(data, cfgs[0].url, sources);
             },
         },
     },
