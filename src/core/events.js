@@ -101,11 +101,11 @@ const remove_event_listener = (el, id) => {
     const els = el ? [el] : event_listener_map.keys();
     for (const el of els) {
         if (!el?.removeEventListener) {
-            return; // nothing to do.
+            continue; // nothing to do.
         }
         const el_events = event_listener_map.get(el);
         if (!el_events) {
-            return;
+            continue;
         }
         let entries;
         if (id) {

@@ -371,6 +371,21 @@ describe("core.events tests", () => {
             expect(event_listener_map.size).toBe(0);
         });
 
+        it("Continues removing on other elements after an invalid map key.", () => {
+            const el = document.createElement("div");
+            const cb = jest.fn();
+
+            // An invalid key, inserted before the valid one.
+            event_listener_map.set({}, new Map([["test_event", []]]));
+            events.add_event_listener(el, "test", "test_event", cb);
+
+            events.remove_event_listener(null, "test_event");
+            el.dispatchEvent(new Event("test"));
+
+            expect(cb).not.toHaveBeenCalled();
+            expect(event_listener_map.has(el)).toBe(false);
+        });
+
         it("Remove wildcard matching event listeners.", () => {
             const el = document.createElement("div");
 
