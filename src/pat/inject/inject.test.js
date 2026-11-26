@@ -47,7 +47,7 @@ describe("pat-inject", function () {
     describe("1 - The next-href argument", function () {
         it("1.1 - allows you to specify the href to be applied to the clicked element after injection", async function () {
             var $a = $(
-                '<a class="pat-inject" data-pat-inject="next-href: http://patternslib.com" href="/src/pat/inject/inject-sources.html#pos-1">link</a>'
+                '<a class="pat-inject" data-pat-inject="next-href: http://patternslib.com" href="/src/pat/inject/inject-sources.html#pos-1">link</a>',
             );
             var $div = $('<div id="pos-1" />');
             $("#lab").append($a).append($div);
@@ -98,7 +98,7 @@ describe("pat-inject", function () {
         it("2.2 - can be set to another string value which then gets added to the target while content is still loading'", async function () {
             const spy_ajax = jest.spyOn($, "ajax").mockImplementation(() => deferred);
             var $a = $(
-                '<a class="pat-inject" data-pat-inject="loading-class: other-class;" href="test.html#someid">link</a>'
+                '<a class="pat-inject" data-pat-inject="loading-class: other-class;" href="test.html#someid">link</a>',
             );
             var $div = $('<div id="someid" />');
             $("#lab").empty().append($a).append($div);
@@ -123,7 +123,7 @@ describe("pat-inject", function () {
         it("2.3 - can be set to an empty string value so that nothing gets added to the target while content is still loading'", async function () {
             const spy_ajax = jest.spyOn($, "ajax");
             var $a = $(
-                '<a class="pat-inject" data-pat-inject="loading-class: ;" href="test.html#someid">link</a>'
+                '<a class="pat-inject" data-pat-inject="loading-class: ;" href="test.html#someid">link</a>',
             );
             var $div = $('<div id="someid" />');
             $("#lab").empty().append($a).append($div);
@@ -173,7 +173,7 @@ describe("pat-inject", function () {
 
         it("3.2 - can be set to 'never' to never ask for confirmation", async function () {
             var $a = $(
-                '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: never">link</a>'
+                '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: never">link</a>',
             );
             var $div = $('<div id="someid" />');
             $("#lab").empty().append($a).append($div);
@@ -200,7 +200,7 @@ describe("pat-inject", function () {
 
         it("3.3 - can be set to 'always' to always ask for confirmation before injecting", async function () {
             var $a = $(
-                '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: always">link</a>'
+                '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: always">link</a>',
             );
             var $div = $('<div id="someid" />');
             $("#lab").empty().append($a).append($div);
@@ -227,7 +227,7 @@ describe("pat-inject", function () {
 
         it("3.4 - can be set to 'form-data' to ask for confirmation before injecting over form fields changed by the user", async function () {
             var $a = $(
-                '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: form-data">link</a>'
+                '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: form-data">link</a>',
             );
             var $div = $('<form id="someid"><input type="text" name="name"/></form>');
             $("#lab").empty().append($a).append($div);
@@ -261,7 +261,7 @@ describe("pat-inject", function () {
         describe("3.5 - The confirm-message argument", function () {
             it("3.5.1 - can be used to provide a custom confirmation prompt message", async function () {
                 var $a = $(
-                    '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: always; confirm-message: Hello world">link</a>'
+                    '<a class="pat-inject" href="test.html#someid" data-pat-inject="confirm: always; confirm-message: Hello world">link</a>',
                 );
                 var $div = $('<div id="someid" />');
                 $("#lab").empty().append($a).append($div);
@@ -291,7 +291,7 @@ describe("pat-inject", function () {
     describe("4 - rebaseURL", function () {
         it("4.1 - Keep URL with scheme", function () {
             expect(
-                pattern._rebaseURL("http://example.com/foo/", "http://other.com/me")
+                pattern._rebaseURL("http://example.com/foo/", "http://other.com/me"),
             ).toBe("http://other.com/me");
         });
 
@@ -301,13 +301,13 @@ describe("pat-inject", function () {
 
         it("4.3 - Rebase to base with filename", function () {
             expect(
-                pattern._rebaseURL("http://example.com/foo/index.html", "me/page.html")
+                pattern._rebaseURL("http://example.com/foo/index.html", "me/page.html"),
             ).toBe("http://example.com/foo/me/page.html");
         });
 
         it("4.4 - Rebase to base with directory path", function () {
             expect(pattern._rebaseURL("http://example.com/foo/", "me/page.html")).toBe(
-                "http://example.com/foo/me/page.html"
+                "http://example.com/foo/me/page.html",
             );
         });
 
@@ -315,7 +315,7 @@ describe("pat-inject", function () {
             expect(
                 pattern
                     ._rebaseURL("/foo/", "me/page.html")
-                    .indexOf("/foo/me/page.html") > 0
+                    .indexOf("/foo/me/page.html") > 0,
             ).toBe(true);
         });
 
@@ -323,7 +323,7 @@ describe("pat-inject", function () {
             expect(
                 pattern
                     ._rebaseURL("example.com/foo/", "me/page.html")
-                    .indexOf("example.com/foo/me/page.html") > 0
+                    .indexOf("example.com/foo/me/page.html") > 0,
             ).toBe(true);
         });
 
@@ -331,38 +331,45 @@ describe("pat-inject", function () {
             expect(
                 pattern._rebaseURL(
                     "http://example.com/foo/",
-                    "data:image-base64gibberish"
-                )
+                    "data:image-base64gibberish",
+                ),
             ).toBe("data:image-base64gibberish");
         });
     });
 
-    describe("5 - rebaseHTML", function () {
+    describe("5 - rebaseElements", function () {
+        const rebaseHTML = (base, html) => {
+            const template = document.createElement("template");
+            template.innerHTML = html;
+            pattern._rebaseElements(base, template.content);
+            return template.innerHTML.trim();
+        };
+
         it("5.1 - Basic markup with DOCTYPE", function () {
             expect(
-                pattern._rebaseHTML(
+                rebaseHTML(
                     "base",
-                    "<!DOCTYPE html>\n<p>This is a simple <em>test</em></p>"
-                )
+                    "<!DOCTYPE html>\n<p>This is a simple <em>test</em></p>",
+                ),
             ).toBe("<p>This is a simple <em>test</em></p>");
         });
 
         it("5.2 - Basic markup", function () {
-            expect(
-                pattern._rebaseHTML("base", "<p>This is a simple <em>test</em></p>")
-            ).toBe("<p>This is a simple <em>test</em></p>");
+            expect(rebaseHTML("base", "<p>This is a simple <em>test</em></p>")).toBe(
+                "<p>This is a simple <em>test</em></p>",
+            );
         });
 
         it("5.3 - Recover from unclosed tags", function () {
-            expect(pattern._rebaseHTML("base", "<p>This is a simple <em>test</p>")).toBe(
-                "<p>This is a simple <em>test</em></p>"
+            expect(rebaseHTML("base", "<p>This is a simple <em>test</p>")).toBe(
+                "<p>This is a simple <em>test</em></p>",
             );
         });
 
         it("5.4 - Anchor element without href attribute", function () {
             var spy_rebaseURL = jest.spyOn(pattern, "_rebaseURL");
-            expect(pattern._rebaseHTML("base", "<a>This is a test</a>")).toBe(
-                "<a>This is a test</a>"
+            expect(rebaseHTML("base", "<a>This is a test</a>")).toBe(
+                "<a>This is a test</a>",
             );
             expect(spy_rebaseURL).not.toHaveBeenCalled();
 
@@ -371,38 +378,38 @@ describe("pat-inject", function () {
 
         it("5.5 - Anchor element with href attribute", function () {
             expect(
-                pattern._rebaseHTML(
+                rebaseHTML(
                     "http://example.com/test/",
-                    '<a href="subsite/page.html">This is a test</a>'
-                )
+                    '<a href="subsite/page.html">This is a test</a>',
+                ),
             ).toBe(
-                '<a href="http://example.com/test/subsite/page.html">This is a test</a>'
+                '<a href="http://example.com/test/subsite/page.html">This is a test</a>',
             );
         });
 
         it("5.6 - Automatically fix casing of attribute", function () {
             expect(
-                pattern._rebaseHTML(
+                rebaseHTML(
                     "http://example.com/test/",
-                    '<a HrEF="subsite/page.html">This is a test</a>'
-                )
+                    '<a HrEF="subsite/page.html">This is a test</a>',
+                ),
             ).toBe(
-                '<a href="http://example.com/test/subsite/page.html">This is a test</a>'
+                '<a href="http://example.com/test/subsite/page.html">This is a test</a>',
             );
         });
 
         it("5.7 - Check if image is rebased correctly", function () {
-            expect(
-                pattern._rebaseHTML("http://example.com/test/", '<img src="image.png">')
-            ).toBe('<img src="http://example.com/test/image.png">');
+            expect(rebaseHTML("http://example.com/test/", '<img src="image.png">')).toBe(
+                '<img src="http://example.com/test/image.png">',
+            );
         });
 
         it("5.8 - Leave non attribute occurences of src intact", function () {
             expect(
-                pattern._rebaseHTML(
+                rebaseHTML(
                     "base",
-                    "<p>This string has    src = \"foo\" , src= bar , and SrC='foo'</p>"
-                )
+                    "<p>This string has    src = \"foo\" , src= bar , and SrC='foo'</p>",
+                ),
             ).toBe("<p>This string has    src = \"foo\" , src= bar , and SrC='foo'</p>");
         });
 
@@ -412,7 +419,7 @@ describe("pat-inject", function () {
             await import("../date-picker/date-picker");
             await import("../datetime-picker/datetime-picker");
 
-            const res = pattern._rebaseHTML(
+            const res = rebaseHTML(
                 "https://example.com/test/",
                 `<div class="test1" data-pat-inject="loading-class:yeah;url:./index.html;class:hoy"/>
                  <div class="test2" data-pat-calendar="url: ./calendar.html; event-sources: ../calendar2.json, ./test/calendar3.json"/>
@@ -420,7 +427,7 @@ describe("pat-inject", function () {
                      data-pat-date-picker="i18n:./i18n"
                      data-pat-datetime-picker="i18n:./path/to/i18n"
                      data-pat-collapsible="load-content:../load/content/from/here"
-                 />`
+                 />`,
             );
 
             const el = document.createElement("div");
@@ -449,7 +456,7 @@ describe("pat-inject", function () {
             // tests for an error where a semicolon at the end of a pattern
             // config as well as multiple configs were not correctly parsed.
 
-            const res = pattern._rebaseHTML(
+            const res = rebaseHTML(
                 "https://example.com/test/",
                 `<div
                     class="test1"
@@ -466,7 +473,7 @@ describe("pat-inject", function () {
 
 
                         "/>
-                `
+                `,
             );
 
             const el = document.createElement("div");
@@ -482,7 +489,7 @@ describe("pat-inject", function () {
             expect(test1_config[0].source).toEqual("#one");
             expect(test1_config[0].target).toEqual(".two");
             expect(test1_config[1].url).toEqual(
-                "https://example.com/test/./index2.html"
+                "https://example.com/test/./index2.html",
             );
             expect(test1_config[1].source).toEqual("#okay");
             expect(test1_config[2]["loading-class"]).toEqual("some");
@@ -491,9 +498,9 @@ describe("pat-inject", function () {
         it("5.11 - doesn't rebase invalid pattern configuration options", async () => {
             await import("../calendar/calendar");
 
-            const res = pattern._rebaseHTML(
+            const res = rebaseHTML(
                 "https://example.com/test/",
-                '<div id="test" data-pat-calendar="url: ; event-sources: ../calendar2.json"/>'
+                '<div id="test" data-pat-calendar="url: ; event-sources: ../calendar2.json"/>',
             );
 
             const el = document.createElement("div");
@@ -839,7 +846,7 @@ describe("pat-inject", function () {
 
                 $a.trigger("click");
                 answer(
-                    '<html><body><div id="someid">new replacement</div></body></html>'
+                    '<html><body><div id="someid">new replacement</div></body></html>',
                 );
                 await utils.timeout(1); // wait a tick for async to settle.
                 expect($div.html()).toBe("new replacement");
@@ -861,7 +868,7 @@ describe("pat-inject", function () {
                     "<html><body>" +
                         '<div id="someid1">repl1</div>' +
                         '<div id="someid2">repl2</div>' +
-                        "</body></html>"
+                        "</body></html>",
                 );
                 await utils.timeout(1); // wait a tick for async to settle.
 
@@ -880,7 +887,7 @@ describe("pat-inject", function () {
 
                 $a.trigger("click");
                 answer(
-                    "<html><body>" + '<div id="someid">repl</div>' + "</body></html>"
+                    "<html><body>" + '<div id="someid">repl</div>' + "</body></html>",
                 );
                 await utils.timeout(1); // wait a tick for async to settle.
 
@@ -898,7 +905,7 @@ describe("pat-inject", function () {
                 answer(
                     "<html><body>" +
                         '<div id="otherid" class="someclass">repl</div>' +
-                        "</body></html>"
+                        "</body></html>",
                 );
                 await utils.timeout(1); // wait a tick for async to settle.
 
@@ -917,7 +924,7 @@ describe("pat-inject", function () {
                 answer(
                     "<html><body>" +
                         '<div id="someid" class="someclass">repl</div>' +
-                        "</body></html>"
+                        "</body></html>",
                 );
                 await utils.timeout(1); // wait a tick for async to settle.
 
@@ -928,7 +935,7 @@ describe("pat-inject", function () {
             it("9.1.11 - allows ::before and ::after in target selector", async function () {
                 $a.attr(
                     "data-pat-inject",
-                    "target: #target1::after && target: #target2::before"
+                    "target: #target1::after && target: #target2::before",
                 );
                 var $target1 = $('<div id="target1">content</div>'),
                     $target2 = $('<div id="target2">content</div>');
@@ -939,7 +946,7 @@ describe("pat-inject", function () {
 
                 $a.trigger("click");
                 answer(
-                    "<html><body>" + '<div id="someid">repl</div>' + "</body></html>"
+                    "<html><body>" + '<div id="someid">repl</div>' + "</body></html>",
                 );
                 await utils.timeout(1); // wait a tick for async to settle.
 
@@ -956,7 +963,7 @@ describe("pat-inject", function () {
 
                 $a.trigger("click");
                 answer(
-                    "<html><body>" + '<div id="someid">repl</div>' + "</body></html>"
+                    "<html><body>" + '<div id="someid">repl</div>' + "</body></html>",
                 );
                 await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1078,7 +1085,7 @@ describe("pat-inject", function () {
                 $form[0].dispatchEvent(submitEvent);
 
                 answer(
-                    "<html><body>" + '<div id="someid">repl</div>' + "</body></html>"
+                    "<html><body>" + '<div id="someid">repl</div>' + "</body></html>",
                 );
                 await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1189,10 +1196,10 @@ describe("pat-inject", function () {
                 describe("9.2.4.4 - formaction attribute on submit buttons", function () {
                     it("9.2.4.4.1 - use submit button formaction value as action URL", async function () {
                         var $submit1 = $(
-                                '<input type="submit" name="submit" value="default" />'
+                                '<input type="submit" name="submit" value="default" />',
                             ),
                             $submit2 = $(
-                                '<input type="submit" name="submit" value="special" formaction="other.html" />'
+                                '<input type="submit" name="submit" value="special" formaction="other.html" />',
                             );
 
                         $form.append($submit1).append($submit2);
@@ -1227,7 +1234,7 @@ describe("pat-inject", function () {
                         $submit[0].addEventListener("click", async () => {
                             await utils.timeout(1); // wait a tick for click event reaching form before submitting.
                             $submit[0].form.dispatchEvent(
-                                events.submit_event({ submitter: $submit[0] })
+                                events.submit_event({ submitter: $submit[0] }),
                             );
                         });
 
@@ -1243,10 +1250,10 @@ describe("pat-inject", function () {
 
                     it("9.2.4.4.3 - use fragment in formaction value as source + target selector", async function () {
                         var $submit1 = $(
-                                '<input type="submit" name="submit" value="default" />'
+                                '<input type="submit" name="submit" value="default" />',
                             ),
                             $submit2 = $(
-                                '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
+                                '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />',
                             ),
                             $target = $('<div id="otherid" />');
 
@@ -1261,7 +1268,7 @@ describe("pat-inject", function () {
                         answer(
                             "<html><body>" +
                                 '<div id="otherid">other</div>' +
-                                "</body></html>"
+                                "</body></html>",
                         );
                         await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1275,10 +1282,10 @@ describe("pat-inject", function () {
 
                     it("9.2.4.4.4 - use fragment in formaction value as source selector, respect target", async function () {
                         var $submit1 = $(
-                                '<input type="submit" name="submit" value="default" />'
+                                '<input type="submit" name="submit" value="default" />',
                             ),
                             $submit2 = $(
-                                '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
+                                '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />',
                             ),
                             $target = $('<div id="othertarget" />');
 
@@ -1294,7 +1301,7 @@ describe("pat-inject", function () {
                         answer(
                             "<html><body>" +
                                 '<div id="otherid">other</div>' +
-                                "</body></html>"
+                                "</body></html>",
                         );
                         await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1308,17 +1315,17 @@ describe("pat-inject", function () {
 
                     it("9.2.4.4.5 - formaction works with multiple targets", async function () {
                         var $submit1 = $(
-                                '<input type="submit" name="submit" value="default" />'
+                                '<input type="submit" name="submit" value="default" />',
                             ),
                             $submit2 = $(
-                                '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
+                                '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />',
                             ),
                             $target1 = $('<div id="target1" />'),
                             $target2 = $('<div id="target2" />');
 
                         $form.attr(
                             "data-pat-inject",
-                            "target: #target1 && target: #target2"
+                            "target: #target1 && target: #target2",
                         );
                         $form.append($submit1).append($submit2);
                         $div.append($target1).append($target2);
@@ -1331,7 +1338,7 @@ describe("pat-inject", function () {
                         answer(
                             "<html><body>" +
                                 '<div id="otherid">other</div>' +
-                                "</body></html>"
+                                "</body></html>",
                         );
                         await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1346,17 +1353,17 @@ describe("pat-inject", function () {
 
                     it("9.2.4.4.6 - formaction works with multiple sources", async function () {
                         var $submit1 = $(
-                                '<input type="submit" name="submit" value="default" />'
+                                '<input type="submit" name="submit" value="default" />',
                             ),
                             $submit2 = $(
-                                '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
+                                '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />',
                             ),
                             $target1 = $('<div id="target1" />'),
                             $target2 = $('<div id="target2" />');
 
                         $form.attr(
                             "data-pat-inject",
-                            "#someid #target1 && #otherid #target2"
+                            "#someid #target1 && #otherid #target2",
                         );
                         $form.append($submit1).append($submit2);
                         $div.append($target1).append($target2);
@@ -1370,7 +1377,7 @@ describe("pat-inject", function () {
                             "<html><body>" +
                                 '<div id="someid">some</div>' +
                                 '<div id="otherid">other</div>' +
-                                "</body></html>"
+                                "</body></html>",
                         );
                         await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1385,17 +1392,17 @@ describe("pat-inject", function () {
 
                     it("9.2.4.4.7 - formaction works source and target on the button", async function () {
                         var $submit1 = $(
-                                '<input type="submit" name="submit" value="default" />'
+                                '<input type="submit" name="submit" value="default" />',
                             ),
                             $submit2 = $(
-                                '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />'
+                                '<input type="submit" name="submit" value="special" formaction="other.html#otherid" />',
                             ),
                             $target1 = $('<div id="target1" />'),
                             $target2 = $('<div id="target2" />');
 
                         $submit2.attr(
                             "data-pat-inject",
-                            "#someid #target1 && #otherid #target2"
+                            "#someid #target1 && #otherid #target2",
                         );
                         $form.append($submit1).append($submit2);
                         $div.append($target1).append($target2);
@@ -1409,7 +1416,7 @@ describe("pat-inject", function () {
                             "<html><body>" +
                                 '<div id="someid">some</div>' +
                                 '<div id="otherid">other</div>' +
-                                "</body></html>"
+                                "</body></html>",
                         );
                         await utils.timeout(1); // wait a tick for async to settle.
 
@@ -1453,7 +1460,7 @@ describe("pat-inject", function () {
                         await utils.timeout(1); // wait a tick for async to settle.
 
                         expect(document.querySelector("form").innerHTML.trim()).toBe(
-                            "other"
+                            "other",
                         );
                     });
 
@@ -1482,7 +1489,7 @@ describe("pat-inject", function () {
                         await utils.timeout(1); // wait a tick for async to settle.
 
                         expect(
-                            document.querySelector("form span").innerHTML.trim()
+                            document.querySelector("form span").innerHTML.trim(),
                         ).toBe("other");
                     });
 
@@ -1728,7 +1735,7 @@ describe("pat-inject", function () {
                 const modal = document.querySelector("#pat-modal");
                 expect(modal).toBeTruthy();
                 expect(modal.innerHTML.replace(/\s/g, "")).toBe(
-                    "<dialog><h1>hello</h1></dialog>"
+                    "<dialog><h1>hello</h1></dialog>",
                 );
             });
 
@@ -2035,6 +2042,217 @@ describe("pat-inject", function () {
                 expect(injected.length).toBe(1);
             });
         });
+
+        describe("9.7 - scripts", () => {
+            it("9.7.1 - preserves inline script text when parsing an HTML document", () => {
+                const script = 'const markup = "<body><p>Content</p></body>";';
+                const html = `<!DOCTYPE html><html>
+                <head><title>Response</title><script>const inHead = true;</script></head>
+                <body><script>${script}</script></body>
+            </html>`;
+                const $parsed = pattern._parseRawHtml(html, "/page.html");
+
+                expect($parsed.find("title").text()).toBe("Response");
+                expect($parsed.find("script")).toHaveLength(1);
+                expect($parsed.find("#__original_body > script").text()).toBe(script);
+            });
+
+            it("9.7.2 - keeps a leading script in a fragment", () => {
+                const $parsed = pattern._parseRawHtml(
+                    '<script type="application/json">{}</script>',
+                    "/page.html",
+                );
+
+                expect($parsed.children("script").text()).toBe("{}");
+            });
+
+            it("9.7.3 - strips scripts from nested template contents", () => {
+                const wrapper = document.createElement("template");
+                wrapper.innerHTML =
+                    '<template><template><script type="application/json">{}</script><p>Content</p></template></template>';
+                pattern._removeScripts(wrapper.content);
+                const inner = wrapper.content
+                    .querySelector("template")
+                    .content.querySelector("template");
+
+                expect(inner.content.querySelector("script")).toBeNull();
+                expect(inner.content.querySelector("p").textContent).toBe("Content");
+            });
+
+            it.each([
+                ["widget.js", "https://example.com/fragments/widget.js"],
+                ["/widget.js", "https://example.com/widget.js"],
+                [
+                    "https://static.example.com/widget.js",
+                    "https://static.example.com/widget.js",
+                ],
+            ])(
+                "9.7.4 - resolves script src %s against the requested URL",
+                (src, expected) => {
+                    const $parsed = pattern._parseRawHtml(
+                        `<script src="${src}"></script>`,
+                        "https://example.com/fragments/page.html?path=/other/",
+                    );
+
+                    expect($parsed.find("script").attr("src")).toBe(expected);
+                },
+            );
+
+            it.each([
+                ["a top-level", ""],
+                ["a nested", "div"],
+            ])(
+                "9.7.5 - executes %s script when allowed",
+                async (_placement, wrapper) => {
+                    const script =
+                        '<script>document.querySelector("#target").dataset.executed = "yes";</script>';
+                    const source = wrapper
+                        ? `<${wrapper}>${script}</${wrapper}>`
+                        : script;
+                    const $trigger = $(
+                        '<a href="/page.html#source" data-pat-inject="target: #target; scripts: execute; class: injected"></a>',
+                    ).appendTo("#lab");
+                    const target = $("<div id='target'></div>").appendTo("#lab")[0];
+                    const cfgs = pattern.extractConfig($trigger);
+                    expect(pattern.verifyConfig(cfgs)).toBe(true);
+
+                    await pattern._onInjectSuccess($trigger, cfgs, {
+                        target: $trigger[0],
+                        jqxhr: { responseText: `<div id="source">${source}</div>` },
+                    });
+
+                    expect(target.dataset.executed).toBe("yes");
+                    expect(target.firstElementChild.classList.contains("injected")).toBe(
+                        true,
+                    );
+                },
+            );
+
+            it("9.7.6 - keeps external scripts in document order unless async", async () => {
+                const $trigger = $(
+                    '<a href="/page.html#source" data-pat-inject="target: #target; scripts: execute"></a>',
+                ).appendTo("#lab");
+                const target = $("<div id='target'></div>").appendTo("#lab")[0];
+                const cfgs = pattern.extractConfig($trigger);
+                expect(pattern.verifyConfig(cfgs)).toBe(true);
+
+                await pattern._onInjectSuccess($trigger, cfgs, {
+                    target: $trigger[0],
+                    jqxhr: {
+                        responseText: `<div id="source">
+                        <script type="application/json" class="ordered"></script>
+                        <script type="application/json" class="async" async></script>
+                    </div>`,
+                    },
+                });
+
+                expect(target.querySelector(".ordered").async).toBe(false);
+                expect(target.querySelector(".async").hasAttribute("async")).toBe(true);
+            });
+
+            it("9.7.7 - keeps the namespace of allowed SVG scripts", async () => {
+                const $trigger = $(
+                    '<a href="/page.html#source" data-pat-inject="target: #target; scripts: execute"></a>',
+                ).appendTo("#lab");
+                const target = $("<div id='target'></div>").appendTo("#lab")[0];
+                const cfgs = pattern.extractConfig($trigger);
+                expect(pattern.verifyConfig(cfgs)).toBe(true);
+
+                await pattern._onInjectSuccess($trigger, cfgs, {
+                    target: $trigger[0],
+                    jqxhr: {
+                        responseText: `<div id="source">
+                        <svg><script xlink:href="widget.js"></script></svg>
+                    </div>`,
+                    },
+                });
+
+                const script = target.querySelector("svg script");
+                expect(script.namespaceURI).toBe("http://www.w3.org/2000/svg");
+                expect(
+                    script.getAttributeNS("http://www.w3.org/1999/xlink", "href"),
+                ).toBe("widget.js");
+            });
+
+            it("9.7.8 - executes an allowed script once and keeps its attributes", async () => {
+                window.__inject_script_runs = 0;
+                const $trigger = $(
+                    '<a href="/page.html#source" data-pat-inject="target: #target; scripts: execute"></a>',
+                ).appendTo("#lab");
+                const target = $("<div id='target'></div>").appendTo("#lab")[0];
+                const cfgs = pattern.extractConfig($trigger);
+                expect(pattern.verifyConfig(cfgs)).toBe(true);
+
+                await pattern._onInjectSuccess($trigger, cfgs, {
+                    target: $trigger[0],
+                    jqxhr: {
+                        responseText: `<div id="source">
+                        <script nonce="abc" data-test="yes">
+                            window.__inject_script_runs += 1;
+                        </script>
+                    </div>`,
+                    },
+                });
+
+                const script = target.querySelector("script");
+                expect(window.__inject_script_runs).toBe(1);
+                expect(script.nonce).toBe("abc");
+                expect(script.dataset.test).toBe("yes");
+
+                delete window.__inject_script_runs;
+            });
+
+            it.each(["remove", "run", "script"])(
+                "9.7.9 - removes scripts with scripts: %s",
+                async (value) => {
+                    const $trigger = $('<a href="/page.html#source"></a>')
+                        .attr("data-pat-inject", `target: #target; scripts: ${value}`)
+                        .appendTo("#lab");
+                    const target = $("<div id='target'></div>").appendTo("#lab")[0];
+                    const cfgs = pattern.extractConfig($trigger);
+                    expect(pattern.verifyConfig(cfgs)).toBe(true);
+
+                    await pattern._onInjectSuccess($trigger, cfgs, {
+                        target: $trigger[0],
+                        jqxhr: {
+                            responseText: `<div id="source"><p>Content</p><script type="application/json">{}</script></div>`,
+                        },
+                    });
+
+                    expect(target.querySelector("script")).toBeNull();
+                    expect(target.querySelector("p").textContent).toBe("Content");
+                },
+            );
+
+            it.each([true, false])(
+                "9.7.10 - filters scripts per rule with the opt-in first: %s",
+                async (allowedFirst) => {
+                    const allowed =
+                        "source: #source; target: #allowed; scripts: execute";
+                    const blocked = "source: #source; target: #blocked";
+                    const rules = allowedFirst ? [allowed, blocked] : [blocked, allowed];
+                    const $trigger = $('<a href="/page.html"></a>')
+                        .attr("data-pat-inject", rules.join(" && "))
+                        .appendTo("#lab");
+                    $("#lab").append('<div id="allowed"></div><div id="blocked"></div>');
+                    const cfgs = pattern.extractConfig($trigger);
+                    expect(pattern.verifyConfig(cfgs)).toBe(true);
+
+                    await pattern._onInjectSuccess($trigger, cfgs, {
+                        target: $trigger[0],
+                        jqxhr: {
+                            responseText: `<div id="source"><p>Content</p><script type="application/json">{}</script></div>`,
+                        },
+                    });
+
+                    expect(document.querySelector("#allowed script")).not.toBeNull();
+                    expect(document.querySelector("#blocked script")).toBeNull();
+                    expect(document.querySelector("#blocked p").textContent).toBe(
+                        "Content",
+                    );
+                },
+            );
+        });
     });
 
     describe("10 - Error handling", () => {
@@ -2085,7 +2303,7 @@ describe("pat-inject", function () {
                             <h1>oh-nose!</h1>
                           </body>
                         </html>
-                    `)
+                    `),
             );
 
             // apparently <head> is empty if we do not set it.
@@ -2134,7 +2352,7 @@ describe("pat-inject", function () {
                 ],
                 {
                     jqxhr: { status: 404 },
-                }
+                },
             );
             await utils.timeout(1); // wait a tick for async to settle.
 
@@ -2160,7 +2378,7 @@ describe("pat-inject", function () {
                             <h1>oh-nose!</h1>
                           </body>
                         </html>
-                    `)
+                    `),
                 );
 
                 // apparently <head> is empty if we do not set it.
@@ -2240,7 +2458,7 @@ describe("pat-inject", function () {
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect(document.querySelector("#error-message").innerHTML.trim()).toEqual(
-                "<h1>oh no, what did you do?!</h1>"
+                "<h1>oh no, what did you do?!</h1>",
             );
         });
 
@@ -2259,7 +2477,7 @@ describe("pat-inject", function () {
                       </section>
                     </body>
                   </html>
-                `)
+                `),
             );
 
             // Configure fallback error page with a error zone selector #error-message
@@ -2300,7 +2518,7 @@ describe("pat-inject", function () {
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect(document.querySelector("#error-message").innerHTML.trim()).toEqual(
-                "<h1>this is a message from your operator.</h1>"
+                "<h1>this is a message from your operator.</h1>",
             );
 
             global.fetch.mockClear();
@@ -2336,7 +2554,7 @@ describe("pat-inject", function () {
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect(document.querySelector("#error-message").innerHTML.trim()).toEqual(
-                ""
+                "",
             );
 
             expect(document.body.hasAttribute("data-error-message")).toBeTruthy();

@@ -302,9 +302,9 @@ after:
     </div>
     <a class="next-month pat-inject" ref="calendar.html#2012-06"
        data-pat-inject="post: #2012-05; next-href: #2012-06">Next month</a>
-    	…
+     …
     <div class="month" id="2012-05">
-    	…
+     …
     </div>
 
 ### Modals
@@ -332,7 +332,7 @@ After injection was triggered:
 
     <a class="pat-inject" href="modal-source.html" data-pat-inject="type: modal">
 
-### Configurable error pages.
+### Configurable error pages
 
 In cases of AJAX errors, you can provide custom error pages by providing custom meta tags.
 For example, if you add this meta tag to the html `<head>`:
@@ -371,6 +371,41 @@ You can customise the behaviour of injection through options in the `data-pat-in
 | `loading-class`   | 'injecting'                                 |                                         | A class which will be added to the injection target while content is still being loaded. Multiple classes can be specified (separated with spaces), or leave empty if no class should be added.                                                                                                                                                                                                 | String                                       |
 | `history`         |                                             | `none` `record`                         | If set to `record` then injection will update the URL history and the title tag of the HTML page.                                                                                                                                                                                                                                                                                               | String or null.                              |
 | `scroll`          |                                             | `none`, `top`, `target`, CSS selector   | After injection is done, scroll to to given position. The default or `none` is to not do any scrolling. `top` scrolls to the top of the scroll container. `target` scrolls to the pat-inject target. CSS selector scrolls to the given selector. Note: You have to define a scroll container by setting overflow classes, otherwise `window` is used.                                           | String, CSS selector                         |
+| `scripts`         | `remove`                                    | `remove`, `execute`                     | What to do with scripts in the injected content. `remove` removes them. `execute` injects and runs them. See [Executing scripts](#executing-scripts).                                                                                                                                                                                                                                           | String                                       |
+
+#### Executing scripts
+
+By default, scripts are removed from the injected content (`scripts: remove`).
+With `scripts: execute`, they are injected and executed.
+With `&&`, set the option on each injection rule that needs it.
+
+    <a href="/widgets.html#widget" class="pat-inject"
+       data-pat-inject="target: #widget; scripts: execute">
+      Load widget
+    </a>
+
+`scripts: execute` lets scripts in the injected fragment execute in the current page,
+subject to its Content Security Policy. Relative script URLs resolve against the
+requested page URL.
+
+Some details:
+
+-   Only scripts within the selected source are injected. Scripts in the `<head>` of a
+    full HTML document response are always dropped.
+-   External scripts run in document order, unless they have an `async` attribute.
+    Inline scripts run right away and do not wait for earlier external scripts to load.
+-   Inline scripts run before patterns are initialized on the injected content. External
+    scripts usually run afterwards, once they are loaded.
+-   With a nonce-based Content Security Policy, injected scripts only run if they carry
+    the nonce of the current page, which a separately requested response usually does not.
+-   Without a `url`, the source is taken from the current page. Choose the source
+    carefully, so the page's own scripts are not executed a second time.
+
+Use pat-inject with trusted HTML. Other active content, including inline event handlers
+and embedded documents, can remain with the default settings. Enable scripts only in
+application-controlled markup and only for responses you trust to execute code in the
+current page. Set the option on the trigger where possible, since descendant triggers
+can inherit it from an ancestor.
 
 ## Developer documentation
 
