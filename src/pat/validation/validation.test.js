@@ -1,4 +1,3 @@
-import $ from "jquery";
 import Pattern, { parser } from "./validation";
 import events, { event_listener_map } from "../../core/events";
 import utils from "../../core/utils";
@@ -479,7 +478,7 @@ describe("pat-validation", function () {
             const instance = new Pattern(el);
             await events.await_pattern_init(instance);
 
-            document.querySelector("[name=i1]").dispatchEvent(events.blur_event());
+            document.querySelector("[name=i1]").dispatchEvent(events.focusout_event());
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect(el.querySelectorAll("em.warning").length).toBe(2);
@@ -500,7 +499,7 @@ describe("pat-validation", function () {
             const instance = new Pattern(el);
             await events.await_pattern_init(instance);
 
-            document.querySelector("[name=i1]").dispatchEvent(events.blur_event());
+            document.querySelector("[name=i1]").dispatchEvent(events.focusout_event());
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
@@ -640,6 +639,94 @@ describe("pat-validation", function () {
             expect(warnings.length).toBe(1);
             expect(warnings[0].parentElement.tagName).toBe("FIELDSET");
             expect(warnings[0].matches("label:nth-child(2) + em.warning")).toBe(true);
+        });
+
+        it("1.24 - Supports dynamic forms.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation" id="form">
+                   <input name="input1" required/>
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const input1 = form.querySelector("[name=input1]");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+
+            input1.value = "ok";
+            input1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelectorAll("em.warning").length).toBe(0);
+
+            const input2 = document.createElement("input");
+            input2.name = "input2";
+            input2.required = true;
+            form.appendChild(input2);
+
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+            expect(document.querySelector("em.warning").matches("input[name=input2] + em.warning")).toBe(true);
+        });
+
+        it("1.24.1 - Passes the triggering event to check_input.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation" id="form">
+                   <input name="input1" required/>
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const input1 = form.querySelector("[name=input1]");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            const spy = jest.spyOn(instance, "check_input");
+            const event = events.change_event();
+            input1.dispatchEvent(event);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(spy).toHaveBeenCalledTimes(1);
+            expect(spy.mock.calls[0][0].input).toBe(input1);
+            expect(spy.mock.calls[0][0].event).toBe(event);
+        });
+
+        it("1.24.2 - Removes the event listeners on destroy.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation" id="form">
+                   <input name="input1" required/>
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const input1 = form.querySelector("[name=input1]");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            instance.destroy();
+
+            const spy = jest.spyOn(instance, "check_input");
+            input1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(spy).not.toHaveBeenCalled();
+            expect(document.querySelectorAll("em.warning").length).toBe(0);
+
+            // Submit is not validated anymore.
+            const submit_event = events.submit_event();
+            form.dispatchEvent(submit_event);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(spy).not.toHaveBeenCalled();
+            expect(submit_event.defaultPrevented).toBe(false);
+            expect(document.querySelectorAll("em.warning").length).toBe(0);
         });
     });
 
@@ -1859,6 +1946,11 @@ describe("pat-validation", function () {
             document.body.innerHTML = "";
         });
 
+        const document_listener_ids = (instance) =>
+            [...(event_listener_map.get(document)?.keys() || [])].filter((id) =>
+                id.startsWith(`validation--${instance.uuid}--`),
+            );
+
         it("9.1 - Removing the form removes all listeners.", async function () {
             document.body.innerHTML = `
                 <form class="pat-validation">
@@ -1871,42 +1963,44 @@ describe("pat-validation", function () {
             const instance = new Pattern(el);
             await events.await_pattern_init(instance);
 
+            // The submit listener on the form.
             expect(event_listener_map.get(el).size).toBe(1);
-            expect(event_listener_map.get(i1).size).toBe(3);
-            expect(event_listener_map.get(i2).size).toBe(3);
+            // No listeners on the inputs - events are delegated.
+            expect(event_listener_map.has(i1)).toBe(false);
+            expect(event_listener_map.has(i2)).toBe(false);
+            // The input, change and focusout listeners on the document.
+            expect(document_listener_ids(instance).length).toBe(3);
 
             el.remove();
             await utils.timeout(1);
 
             expect(instance.destroyed).toBe(true);
             expect(event_listener_map.has(el)).toBe(false);
-            expect(event_listener_map.has(i1)).toBe(false);
-            expect(event_listener_map.has(i2)).toBe(false);
+            expect(document_listener_ids(instance).length).toBe(0);
         });
 
-        it("9.2 - Re-initializing the inputs does not duplicate listeners and removes them from removed inputs.", async function () {
+        it("9.2 - Inputs added later are validated without own listeners.", async function () {
             document.body.innerHTML = `
                 <form class="pat-validation">
                     <input name="i1" required />
-                    <input name="i2" required />
                 </form>
             `;
             const el = document.querySelector(".pat-validation");
-            const [i1, i2] = el.querySelectorAll("[name]");
             const instance = new Pattern(el);
             await events.await_pattern_init(instance);
 
-            // Remove the first input, so that the second one changes its position.
-            i1.remove();
-            $(el).trigger("pat-update");
-
-            expect(event_listener_map.has(i1)).toBe(false);
-            expect(event_listener_map.get(i2).size).toBe(3);
+            const i2 = document.createElement("input");
+            i2.name = "i2";
+            i2.required = true;
+            el.appendChild(i2);
 
             const spy_check_input = jest.spyOn(instance, "check_input");
-            i2.dispatchEvent(new Event("input"));
+            i2.dispatchEvent(events.input_event());
             await utils.timeout(instance.options.delay + 1); // wait for the debouncer.
+
             expect(spy_check_input).toHaveBeenCalledTimes(1);
+            expect(spy_check_input.mock.calls[0][0].input).toBe(i2);
+            expect(event_listener_map.has(i2)).toBe(false);
         });
     });
 

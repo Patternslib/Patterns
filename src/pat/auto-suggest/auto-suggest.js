@@ -122,9 +122,9 @@ export default Base.extend({
             const val = $sel2.select2("val");
             if (val?.length === 0) {
                 // catches "" and []
-                // blur the input field so that pat-validate can kick in when
-                // nothing was selected.
-                this.el.dispatchEvent(events.blur_event());
+                // focus-out the input field so that pat-validate can kick in
+                // when nothing was selected.
+                this.el.dispatchEvent(events.focusout_event());
             }
         };
         this.$el.on("select2-close", initiate_empty_check.bind(this));

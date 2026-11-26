@@ -1,6 +1,5 @@
 // Patterns validate - Form vlidation
 import "../../core/polyfills"; // SubmitEvent.submitter for Safari < 15.4 and jsDOM
-import $ from "jquery";
 import { BasePattern } from "../../core/basepattern";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
@@ -20,7 +19,10 @@ parser.addArgument("message-min", ""); // "This value must be greater than or eq
 parser.addArgument("message-number", ""); // "This value must be a number"
 parser.addArgument("message-required", ""); // "This field is required"
 parser.addArgument("message-equality", "is not equal to %{attribute}.");
-parser.addArgument("message-min-values", "You need to select at least %{count} item(s).");
+parser.addArgument(
+    "message-min-values",
+    "You need to select at least %{count} item(s).",
+);
 parser.addArgument("message-max-values", "You need to select at most %{count} item(s).");
 parser.addArgument("not-after", null);
 parser.addArgument("not-before", null);
@@ -66,10 +68,54 @@ class Pattern extends BasePattern {
             { capture: true },
         );
 
-        this.initialize_inputs();
-        $(this.form).on("pat-update", () => {
-            this.initialize_inputs();
-        });
+        // Input debouncer map:
+        // - key: input element
+        // - value: debouncer function
+        // 1) We want do debounce the validation checks to avoid validating
+        //    while typing.
+        // 2) We want to debounce the input events individually, so that we can
+        //    do multiple checks in parallel and show multiple errors at once.
+        const input_debouncer_map = new Map();
+        const debounce_filter = (e) => {
+            const input = e.target;
+            if (input?.form !== this.form || !this.inputs.includes(input)) {
+                // Ignore events from other forms or from elements which are
+                // not inputs.
+                return;
+            }
+
+            if (!input_debouncer_map.has(input)) {
+                // Create a new cancelable debouncer for this input.
+                input_debouncer_map.set(
+                    input,
+                    utils.debounce((e) => {
+                        logger.debug("Checking input for event", input, e);
+                        this.check_input({ input: input, event: e });
+                    }, this.options.delay),
+                );
+            }
+
+            // Get the debouncer for this input.
+            const debouncer = input_debouncer_map.get(input);
+            // Debounce the validation check.
+            debouncer(e);
+        };
+
+        this.add_event_listener(document, "input", "input--validator", debounce_filter);
+
+        this.add_event_listener(
+            document,
+            "change",
+            "change--validator",
+            debounce_filter,
+        );
+
+        this.add_event_listener(
+            document,
+            "focusout",
+            "focusout--validator",
+            debounce_filter,
+        );
 
         // Set ``novalidate`` attribute to disable the browser's validation
         // bubbles but not disable the validation API.
@@ -94,35 +140,6 @@ class Pattern extends BasePattern {
         // Check all inputs.
         for (const input of this.inputs) {
             await this.check_input({ input: input, event: event, stop: true });
-        }
-    }
-
-    initialize_inputs() {
-        const inputs = this.inputs;
-
-        // Remove the listeners from inputs which are gone.
-        for (const input of this._initialized_inputs || []) {
-            if (!inputs.includes(input)) {
-                for (const event_type of ["input", "change", "blur"]) {
-                    this.remove_event_listener(input, event_type);
-                }
-            }
-        }
-        this._initialized_inputs = inputs;
-
-        for (const input of inputs) {
-            // Cancelable debouncer.
-            const debouncer = utils.debounce((e) => {
-                logger.debug("Checking input for event", input, e);
-                this.check_input({ input: input, event: e });
-            }, this.options.delay);
-
-            // Registering again under the same name replaces the listener.
-            for (const event_type of ["input", "change", "blur"]) {
-                this.add_event_listener(input, event_type, event_type, (e) =>
-                    debouncer(e),
-                );
-            }
         }
     }
 
@@ -282,9 +299,9 @@ class Pattern extends BasePattern {
                     // Filter for siblings with same name.
                     if (
                         // Keep only inputs with same name
-                        _inp.name !== input.name
+                        _inp.name !== input.name ||
                         // Skip all form elements which are no input elements
-                        || ! ["INPUT", "SELECT", "TEXTAREA"].includes(_inp.tagName)
+                        !["INPUT", "SELECT", "TEXTAREA"].includes(_inp.tagName)
                     ) {
                         continue;
                     }
@@ -314,14 +331,14 @@ class Pattern extends BasePattern {
                         input: input,
                         msg: input_options.message["max-values"],
                         max: max_values,
-                    })
+                    });
                 }
                 if (min_values !== null && number_values < min_values) {
                     this.set_error({
                         input: input,
                         msg: input_options.message["min-values"],
                         min: min_values,
-                    })
+                    });
                 }
             }
 
@@ -420,7 +437,9 @@ class Pattern extends BasePattern {
         msg = msg.replace(/%{value}/g, JSON.stringify(input.value));
 
         // Set the error state the input itself and on all siblings, if any.
-        const inputs = [...this.form.elements].filter((_input) => _input.name === input.name);
+        const inputs = [...this.form.elements].filter(
+            (_input) => _input.name === input.name,
+        );
         for (const _input of inputs) {
             _input.setCustomValidity(msg);
         }

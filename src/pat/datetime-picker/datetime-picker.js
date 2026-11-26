@@ -117,7 +117,9 @@ export default Base.extend({
         for (const input of [this.el_date, this.el_time]) {
             input.addEventListener("blur", (event) => {
                 if (!el_wrapper.contains(event.relatedTarget)) {
-                    el.dispatchEvent(events.blur_event());
+                    // focus-out the input field so that pat-validate can kick
+                    // in when nothing was selected.
+                    el.dispatchEvent(events.focusout_event());
                 }
             });
         }
