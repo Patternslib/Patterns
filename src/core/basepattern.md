@@ -56,6 +56,36 @@ registry.register(Pattern);
 export default Pattern;
 ```
 
+## Instance scoped event listeners
+
+Use ``this.add_event_listener`` to register event listeners which belong to a
+pattern instance, e.g. on ``document`` or ``window``:
+
+```javascript
+class Pattern extends BasePattern {
+    static name = "test-pattern";
+    static trigger = ".pat-test-pattern";
+
+    async init() {
+        this.add_event_listener(document, "keydown", "close-on-escape", (e) => {
+            if (e.key === "Escape") {
+                this.close();
+            }
+        });
+    }
+}
+```
+
+The listener is registered with ``events.add_event_listener`` under the id
+``<pattern name>--<instance uuid>--<name>``. Registering again under the same
+name replaces the previous listener. ``destroy()`` removes all listeners of
+the instance, but not those of other instances of the same pattern. If you
+override ``destroy()``, call ``super.destroy()``.
+
+Note: ``destroy()`` is not called automatically when the pattern's element is
+removed from the DOM. Until it is called, the listeners and the element stay
+referenced.
+
 ## Replacing a registered pattern
 
 The first registration of a pattern name wins — registering another pattern
