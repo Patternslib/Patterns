@@ -99,6 +99,7 @@ const add_event_listener = (el, event_type, id, cb, opts = {}) => {
  */
 const remove_event_listener = (el, id) => {
     const els = el ? [el] : event_listener_map.keys();
+    const id_regexp = id ? utils.regexp_from_wildcard(id) : null;
     for (const el of els) {
         if (!el?.removeEventListener) {
             continue; // nothing to do.
@@ -111,7 +112,7 @@ const remove_event_listener = (el, id) => {
         if (id) {
             // remove event listener with matching id
             entries = [...el_events.entries()].filter((entry) =>
-                utils.regexp_from_wildcard(id).test(entry[0])
+                id_regexp.test(entry[0])
             );
         } else {
             // remove all event listeners of element
