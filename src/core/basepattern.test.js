@@ -747,6 +747,27 @@ describe("Basepattern class tests", function () {
             expect(lifecycle.is_tracked(pat)).toBe(false);
         });
 
+        it("9.13.1 - Listeners registered after a destroy during init are removed.", async function () {
+            const cb = jest.fn();
+            class AsyncPat extends BasePattern {
+                static name = "example-async";
+                static trigger = ".example";
+                async init() {
+                    await utils.timeout(1);
+                    this.add_event_listener(document, "keydown", "key", cb);
+                }
+            }
+
+            document.body.innerHTML = `<div class="example"></div>`;
+            const pat = new AsyncPat(document.querySelector(".example"));
+            await utils.timeout(1); // init has started.
+            pat.destroy();
+            await events.await_pattern_init(pat);
+
+            document.dispatchEvent(new KeyboardEvent("keydown"));
+            expect(cb).not.toHaveBeenCalled();
+        });
+
         it("9.14 - Errors in destroy do not prevent destroying other patterns.", async function () {
             class FailingPat extends BasePattern {
                 static name = "example-failing";

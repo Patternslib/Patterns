@@ -47,7 +47,9 @@ patterns whose elements are removed from the document.
     calling ``super.destroy()`` are not destroyed repeatedly.
 -   A pattern destroyed before its initialization starts is not initialized
     and throws ``not-init``. A pattern whose element is removed during
-    ``init()`` is destroyed after ``init()``.
+    ``init()`` is destroyed after ``init()``. Listeners registered with
+    ``add_event_listener`` after a ``destroy()`` during ``init()`` are removed
+    after ``init()``.
 -   ``destroy()`` only removes the ``pattern-<name>`` reference on the
     element if it points to the destroyed instance.
 -   The root element is observed instead of ``document.body``, so that

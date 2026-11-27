@@ -110,7 +110,11 @@ class BasePattern {
             // Initialize the pattern
             await this.init();
 
-            if (!this.destroyed) {
+            if (this.destroyed) {
+                // Destroyed while initializing. Remove the listeners which
+                // were registered after the destroy.
+                events.remove_event_listener(null, `${this.name}--${this.uuid}--*`);
+            } else {
                 if (this.el.isConnected) {
                     // Destroy the pattern when the element is removed from
                     // the document.
