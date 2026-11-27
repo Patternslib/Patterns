@@ -1,7 +1,7 @@
 import $ from "jquery";
 import autosubmit from "../auto-submit/auto-submit";
 import { BasePattern } from "../../core/basepattern";
-import events from "../../core/events";
+import events, { event_listener_map } from "../../core/events";
 import lifecycle from "../../core/lifecycle";
 import Pattern from "./tooltip";
 import registry from "../../core/registry";
@@ -1914,6 +1914,34 @@ this will be extracted.
             expect(instance.destroyed).toBe(true);
             expect(dummy.destroyed).toBe(true);
             expect(lifecycle.is_tracked(dummy)).toBe(false);
+        });
+
+        it("11.5 - The listeners on the element and the popper are removed on destroy.", async () => {
+            global.fetch = jest.fn().mockImplementation(mockFetch("Content"));
+
+            const $el = testutils.createTooltip({
+                data: "source: ajax; trigger: click",
+                href: "http://test.com",
+            });
+            const el = $el[0];
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
+
+            testutils.click($el);
+            await utils.timeout(1);
+            const popper = instance.tippy.popper;
+            expect(event_listener_map.has(el)).toBe(true);
+            expect(event_listener_map.has(popper)).toBe(true);
+
+            el.remove();
+            await utils.timeout(1);
+
+            expect(instance.destroyed).toBe(true);
+            expect(event_listener_map.has(el)).toBe(false);
+            expect(event_listener_map.has(popper)).toBe(false);
+
+            global.fetch.mockRestore();
+            delete global.fetch;
         });
     });
 });

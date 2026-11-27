@@ -110,10 +110,10 @@ class Pattern extends BasePattern {
 
         if (this.options.trigger === "click" && this.options.source === "ajax") {
             // prevent default action for "click" and "mouseenter click"
-            events.add_event_listener(
+            this.add_event_listener(
                 el,
                 "click",
-                "pat-tooltip--click-prevent-default",
+                "click-prevent-default",
                 (event) => {
                     event.preventDefault();
                     event.stopPropagation();
@@ -320,10 +320,10 @@ class Pattern extends BasePattern {
         }
 
         // Store reference to method for closing panels on the tooltip element instance.
-        events.add_event_listener(
+        this.add_event_listener(
             this.tippy.popper,
             "close-panel",
-            "pat-tooltip--close-panel",
+            "close-panel",
             () => this.hide()
         );
 
