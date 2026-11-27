@@ -25,7 +25,11 @@ class Pattern extends BasePattern {
         }
 
         // Re-focus after relevant DOM changes.
-        $(document).on("pat-update", (e, data) => {
+        // pat-update is mostly triggered via jQuery, which does not reach
+        // native event listeners. Use an instance specific event namespace to
+        // be able to remove only this instance's handler again.
+        this._update_event = `pat-update.pat-autofocus--${this.uuid}`;
+        $(document).on(this._update_event, (e, data) => {
             const updated = data?.dom;
             if (updated?.contains(this.el)) {
                 // Only focus if the updated element is a parent of this autofocus element.
@@ -34,6 +38,13 @@ class Pattern extends BasePattern {
         });
 
         this.set_focus();
+    }
+
+    destroy() {
+        if (this._update_event) {
+            $(document).off(this._update_event);
+        }
+        super.destroy();
     }
 
     set_focus() {

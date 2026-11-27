@@ -1,5 +1,6 @@
+import $ from "jquery";
 import Pattern, { parser } from "./validation";
-import events from "../../core/events";
+import events, { event_listener_map } from "../../core/events";
 import utils from "../../core/utils";
 import { jest } from "@jest/globals";
 
@@ -1749,6 +1750,62 @@ describe("pat-validation", function () {
 
             // No scripts should be in the DOM
             expect(document.querySelectorAll("script").length).toBe(0);
+        });
+    });
+
+    describe("9 - Listeners", function () {
+        afterEach(function () {
+            document.body.innerHTML = "";
+        });
+
+        it("9.1 - Removing the form removes all listeners.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation">
+                    <input name="i1" required />
+                    <select name="i2" required><option value="">-</option></select>
+                </form>
+            `;
+            const el = document.querySelector(".pat-validation");
+            const [i1, i2] = el.querySelectorAll("[name]");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            expect(event_listener_map.get(el).size).toBe(1);
+            expect(event_listener_map.get(i1).size).toBe(3);
+            expect(event_listener_map.get(i2).size).toBe(3);
+
+            el.remove();
+            await utils.timeout(1);
+
+            expect(instance.destroyed).toBe(true);
+            expect(event_listener_map.has(el)).toBe(false);
+            expect(event_listener_map.has(i1)).toBe(false);
+            expect(event_listener_map.has(i2)).toBe(false);
+        });
+
+        it("9.2 - Re-initializing the inputs does not duplicate listeners and removes them from removed inputs.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation">
+                    <input name="i1" required />
+                    <input name="i2" required />
+                </form>
+            `;
+            const el = document.querySelector(".pat-validation");
+            const [i1, i2] = el.querySelectorAll("[name]");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            // Remove the first input, so that the second one changes its position.
+            i1.remove();
+            $(el).trigger("pat-update");
+
+            expect(event_listener_map.has(i1)).toBe(false);
+            expect(event_listener_map.get(i2).size).toBe(3);
+
+            const spy_check_input = jest.spyOn(instance, "check_input");
+            i2.dispatchEvent(new Event("input"));
+            await utils.timeout(instance.options.delay + 1); // wait for the debouncer.
+            expect(spy_check_input).toHaveBeenCalledTimes(1);
         });
     });
 });

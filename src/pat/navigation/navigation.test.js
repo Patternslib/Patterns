@@ -1,7 +1,7 @@
 import "../inject/inject";
 import Pattern from "./navigation";
 import Registry from "../../core/registry";
-import events from "../../core/events";
+import events, { event_listener_map } from "../../core/events";
 import utils from "../../core/utils";
 
 describe("1 - Navigation pattern tests", function () {
@@ -463,5 +463,75 @@ describe("4 - Navigation pattern tests - Mark items based based clicking without
         expect(document.querySelectorAll(".current").length).toBe(2);
         expect(document.querySelectorAll(".inPath").length).toBe(4);
         expect(document.querySelector(".current a")).toBe(it222);
+    });
+});
+
+describe("5 - Navigation pattern tests - Destroy.", () => {
+    const listener_ids = (el, name) =>
+        [...(event_listener_map.get(el)?.keys() || [])].filter((id) =>
+            id.includes(name)
+        );
+
+    afterEach(() => {
+        document.body.innerHTML = "";
+    });
+
+    it("5.1 - Removing the navigation removes its listeners.", async () => {
+        document.body.innerHTML = `
+          <nav class="pat-navigation">
+            <ul>
+              <li><a href="#s1" class="scroll-trigger">s1</a></li>
+              <li><a href="#s2" class="scroll-trigger">s2</a></li>
+            </ul>
+          </nav>
+          <section id="s1"></section>
+          <section id="s2"></section>
+        `;
+
+        const nav = document.querySelector(".pat-navigation");
+        const instance = new Pattern(nav);
+        await events.await_pattern_init(instance);
+        await events.await_pattern_init(instance.scroll_marker);
+
+        expect(listener_ids(nav, "navigation--").length).toBe(1);
+
+        // Clicking a scroll trigger temporarily disables the scroll marker
+        // and listens for scroll events on the scroll container.
+        document.querySelector("a[href='#s1']").click();
+        expect(instance.scroll_marker.set_current_disabled).toBe(true);
+        expect(listener_ids(document, "scroll-marker-enable").length).toBe(1);
+
+        nav.remove();
+        await utils.timeout(1);
+
+        expect(instance.destroyed).toBe(true);
+        expect(instance.scroll_marker.destroyed).toBe(true);
+        expect(listener_ids(nav, "navigation--").length).toBe(0);
+        expect(listener_ids(document, "scroll-marker-enable").length).toBe(0);
+    });
+
+    it("5.2 - The scroll marker is re-enabled after scrolling.", async () => {
+        document.body.innerHTML = `
+          <nav class="pat-navigation">
+            <ul>
+              <li><a href="#s1" class="scroll-trigger">s1</a></li>
+            </ul>
+          </nav>
+          <section id="s1"></section>
+        `;
+
+        const nav = document.querySelector(".pat-navigation");
+        const instance = new Pattern(nav);
+        await events.await_pattern_init(instance);
+        await events.await_pattern_init(instance.scroll_marker);
+
+        document.querySelector("a[href='#s1']").click();
+        expect(instance.scroll_marker.set_current_disabled).toBe(true);
+
+        document.dispatchEvent(new Event("scroll"));
+        await utils.timeout(210); // Wait for the debounced enabler.
+
+        expect(instance.scroll_marker.set_current_disabled).toBe(false);
+        expect(listener_ids(document, "scroll-marker-enable").length).toBe(0);
     });
 });

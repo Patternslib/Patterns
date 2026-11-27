@@ -4,7 +4,6 @@ import $ from "jquery";
 import { BasePattern } from "../../core/basepattern";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
-import events from "../../core/events";
 import logging from "../../core/logging";
 import utils from "../../core/utils";
 import registry from "../../core/registry";
@@ -43,10 +42,10 @@ class Pattern extends BasePattern {
     static order = 100;
 
     init() {
-        events.add_event_listener(
+        this.add_event_listener(
             this.el,
             "submit",
-            `pat-validation--submit--validator`,
+            "submit",
             async (e) => {
                 // On submit, check all.
                 // Immediate, non-debounced check with submit. Otherwise submit
@@ -73,38 +72,36 @@ class Pattern extends BasePattern {
     }
 
     initialize_inputs() {
+        const previous_inputs = this.inputs || [];
         this.inputs = [
             ...this.el.querySelectorAll("input[name], select[name], textarea[name]"),
         ];
+
+        // Remove the listeners from inputs which are gone.
+        for (const input of previous_inputs) {
+            if (!this.inputs.includes(input)) {
+                for (const event_type of ["input", "change", "blur"]) {
+                    this.remove_event_listener(input, event_type);
+                }
+            }
+        }
         this.disabled_elements = [
             ...this.el.querySelectorAll(this.options.disableSelector),
         ];
 
-        for (const [cnt, input] of this.inputs.entries()) {
+        for (const input of this.inputs) {
             // Cancelable debouncer.
             const debouncer = utils.debounce((e) => {
                 logger.debug("Checking input for event", input, e);
                 this.check_input({ input: input, event: e });
             }, this.options.delay);
 
-            events.add_event_listener(
-                input,
-                "input",
-                `pat-validation--input-${input.name}--${cnt}--validator`,
-                (e) => debouncer(e)
-            );
-            events.add_event_listener(
-                input,
-                "change",
-                `pat-validation--change-${input.name}--${cnt}--validator`,
-                (e) => debouncer(e)
-            );
-            events.add_event_listener(
-                input,
-                "blur",
-                `pat-validation--blur-${input.name}--${cnt}--validator`,
-                (e) => debouncer(e)
-            );
+            // Registering again under the same name replaces the listener.
+            for (const event_type of ["input", "change", "blur"]) {
+                this.add_event_listener(input, event_type, event_type, (e) =>
+                    debouncer(e)
+                );
+            }
         }
     }
 

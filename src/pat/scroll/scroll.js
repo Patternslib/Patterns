@@ -1,6 +1,5 @@
 import { BasePattern } from "../../core/basepattern";
 import dom from "../../core/dom";
-import events from "../../core/events";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
@@ -50,6 +49,9 @@ class Pattern extends BasePattern {
     async scrollTo() {
         if (this.options.delay) {
             await utils.timeout(this.options.delay);
+            if (this.destroyed) {
+                return;
+            }
         }
 
         const target = this.get_target();
@@ -61,16 +63,17 @@ class Pattern extends BasePattern {
 
         // Set/remove classes on beginning and end of scroll
         this.el.classList.add("pat-scroll-animated");
+        const scroll_event_el = scroll_container === window ? document : scroll_container;
         const debounced_scroll_end = utils.debounce(() => {
             this.el.classList.remove("pat-scroll-animated");
-            events.remove_event_listener(this.el, "pat-scroll__scroll_end");
+            this.remove_event_listener(scroll_event_el, "scroll-end");
             log.debug("scroll_end");
         }, 100);
-        events.add_event_listener(
-            scroll_container === window ? document : scroll_container,
+        this.add_event_listener(
+            scroll_event_el,
             "scroll",
-            "pat-scroll__scroll_end",
-            debounced_scroll_end.bind(this)
+            "scroll-end",
+            debounced_scroll_end
         );
         debounced_scroll_end();
 

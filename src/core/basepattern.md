@@ -82,9 +82,78 @@ name replaces the previous listener. ``destroy()`` removes all listeners of
 the instance, but not those of other instances of the same pattern. If you
 override ``destroy()``, call ``super.destroy()``.
 
-Note: ``destroy()`` is not called automatically when the pattern's element is
-removed from the DOM. Until it is called, the listeners and the element stay
-referenced.
+To remove a single listener before the pattern is destroyed, use
+``this.remove_event_listener(el, name)`` with the same element and name. The
+name can be a wildcard. Without a name, all listeners of the instance on that
+element are removed.
+
+The listeners are managed by an event listener scope (see
+``src/core/events.md``).
+
+## Automatic destroy
+
+``destroy()`` is called automatically when the pattern's element is removed
+from the document — either directly or by removing or replacing one of its
+ancestors. A single ``MutationObserver`` on the document checks all live
+pattern instances whenever nodes are removed (see ``src/core/lifecycle.js``).
+
+-   Only instances whose element is part of the document after ``init()`` are
+    tracked. Patterns initialized on detached DOM are not destroyed
+    automatically.
+-   Moving an element within the same task (e.g. ``appendChild`` of an
+    existing node, or ``remove()`` followed by re-inserting it) does not
+    destroy the pattern. Detaching an element and re-inserting it in a later
+    task (e.g. after an ``await``) destroys the pattern.
+-   Destruction happens asynchronously in a microtask after the removal. In
+    tests, wait a tick after removing an element, e.g. ``await utils.timeout(1)``.
+-   A pattern which is destroyed before its initialization starts is not
+    initialized and throws ``not-init`` instead of ``init``. A pattern whose
+    element is removed while ``init()`` runs is destroyed after ``init()``.
+-   ``destroy()`` can be called multiple times, only the first call has an
+    effect. Afterwards ``this.destroyed`` is ``true``. Asynchronous code in
+    your pattern should check ``this.destroyed`` after an ``await`` and stop
+    if the pattern was destroyed in the meantime.
+-   If you override ``destroy()``, call ``super.destroy()``.
+-   Only class based patterns (``BasePattern``) are destroyed automatically,
+    not patterns based on ``src/core/base.js``.
+-   Removals inside shadow roots are not observed.
+
+### Self managed containers
+
+Components which detach and re-attach their own DOM can opt out of the
+automatic destroy for their content. pat-tooltip does this for its popper,
+which Tippy removes from the document while the tooltip is hidden.
+
+Mark the container with the ``data-pat-lifecycle-managed`` attribute
+(``lifecycle.MANAGED_ATTRIBUTE``). Patterns which are still inside such a
+container are not destroyed while the container is detached. Patterns removed
+from within the container are destroyed as usual.
+
+The component is then responsible for destroying the patterns in its
+container, e.g. in its own ``destroy()`` or when it replaces the content:
+
+```javascript
+import lifecycle from "@patternslib/patternslib/src/core/lifecycle";
+
+class Pattern extends BasePattern {
+    async init() {
+        this.container = this.create_container();
+        this.container.setAttribute(lifecycle.MANAGED_ATTRIBUTE, "");
+    }
+
+    destroy() {
+        if (this.destroyed) {
+            return;
+        }
+        super.destroy();
+        lifecycle.destroy_patterns(this.container);
+    }
+}
+```
+
+``lifecycle.destroy_patterns(root)`` destroys all tracked patterns within
+``root``, including ``root`` itself, whether ``root`` is part of the document
+or not.
 
 ## Replacing a registered pattern
 

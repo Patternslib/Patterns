@@ -374,4 +374,44 @@ describe("pat-scroll-marker", () => {
             expect(id3.classList.contains("scroll-marker-current")).toBe(false);
         });
     });
+
+    describe("3: Destroy", () => {
+        it("3.1: Removing the element disconnects the observer and cleans up the content elements", async () => {
+            const { instance, el, id1, id2, id3 } = await create_scroll_marker();
+            const spy_disconnect = jest.spyOn(instance.observer, "disconnect");
+            const current = () =>
+                [id1, id2, id3].filter((it) =>
+                    it.classList.contains("scroll-marker-current")
+                );
+
+            expect(current().length).toBe(1);
+
+            el.remove();
+            await utils.timeout(1);
+
+            expect(instance.destroyed).toBe(true);
+            expect(spy_disconnect).toHaveBeenCalled();
+            expect(current().length).toBe(0);
+        });
+
+        it("3.2: A pending debounced update does not run after destroy", async () => {
+            const { instance, el, id1, id2, id3 } = await create_scroll_marker();
+
+            instance.scroll_marker_callback([
+                { target: id1, isIntersecting: false },
+                { target: id2, isIntersecting: true },
+                { target: id3, isIntersecting: true },
+            ]);
+            el.remove();
+            await utils.timeout(1);
+            expect(instance.destroyed).toBe(true);
+
+            // wait for the debounced_scroll_marker_current_callback
+            await utils.timeout(200);
+
+            for (const target of [id1, id2, id3]) {
+                expect(target.classList.contains("scroll-marker-current")).toBe(false);
+            }
+        });
+    });
 });

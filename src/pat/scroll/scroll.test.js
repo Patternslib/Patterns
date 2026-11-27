@@ -1,5 +1,5 @@
 import Pattern from "./scroll";
-import events from "../../core/events";
+import events, { event_listener_map } from "../../core/events";
 import utils from "../../core/utils";
 import { jest } from "@jest/globals";
 
@@ -229,5 +229,94 @@ describe("pat-scroll", function () {
 
         pat.options.selector = null; // Using href target
         expect(pat.get_target()).toBe(el_3);
+    });
+
+    describe("10 - Scroll end listener", function () {
+        const scroll_end_ids = (el) =>
+            [...(event_listener_map.get(el)?.keys() || [])].filter((id) =>
+                id.includes("scroll-end")
+            );
+
+        afterEach(function () {
+            document.body.innerHTML = "";
+        });
+
+        it("10.1 - is removed from the scroll container after scrolling.", async function () {
+            document.body.innerHTML = `
+                <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click">p1</a>
+                <p id="p1"></p>
+            `;
+            const el = document.querySelector(".pat-scroll");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            el.click();
+            await utils.timeout(1);
+            expect(el.classList.contains("pat-scroll-animated")).toBe(true);
+            expect(scroll_end_ids(document).length).toBe(1);
+
+            await utils.timeout(110); // wait for the scroll end debouncer.
+            expect(el.classList.contains("pat-scroll-animated")).toBe(false);
+            expect(scroll_end_ids(document).length).toBe(0);
+        });
+
+        it("10.2 - is separate for each instance.", async function () {
+            document.body.innerHTML = `
+                <a href="#p1" class="pat-scroll one" data-pat-scroll="trigger: click">p1</a>
+                <a href="#p1" class="pat-scroll two" data-pat-scroll="trigger: click">p1</a>
+                <p id="p1"></p>
+            `;
+            const el1 = document.querySelector(".one");
+            const el2 = document.querySelector(".two");
+            const instance1 = new Pattern(el1);
+            const instance2 = new Pattern(el2);
+            await events.await_pattern_init(instance1);
+            await events.await_pattern_init(instance2);
+
+            el1.click();
+            el2.click();
+            await utils.timeout(1);
+            expect(scroll_end_ids(document).length).toBe(2);
+
+            await utils.timeout(110); // wait for the scroll end debouncer.
+            expect(scroll_end_ids(document).length).toBe(0);
+        });
+
+        it("10.3 - is removed on destroy.", async function () {
+            document.body.innerHTML = `
+                <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click">p1</a>
+                <p id="p1"></p>
+            `;
+            const el = document.querySelector(".pat-scroll");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            el.click();
+            await utils.timeout(1);
+            expect(scroll_end_ids(document).length).toBe(1);
+
+            el.remove();
+            await utils.timeout(1);
+            expect(instance.destroyed).toBe(true);
+            expect(scroll_end_ids(document).length).toBe(0);
+        });
+
+        it("10.4 - A delayed scroll does not run after destroy.", async function () {
+            document.body.innerHTML = `
+                <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click; delay: 50">p1</a>
+                <p id="p1"></p>
+            `;
+            const el = document.querySelector(".pat-scroll");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            el.click();
+            el.remove();
+            await utils.timeout(60);
+
+            expect(instance.destroyed).toBe(true);
+            expect(this.spy_scrollTo).not.toHaveBeenCalled();
+            expect(scroll_end_ids(document).length).toBe(0);
+        });
     });
 });

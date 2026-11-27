@@ -7,6 +7,7 @@
  * For usage, see basepattern.md
  */
 import events from "./events";
+import lifecycle from "./lifecycle";
 import logging from "./logging";
 import create_uuid from "./uuid";
 
@@ -23,6 +24,10 @@ class BasePattern {
     parser_multiple = undefined;
     parser_inherit = true;
 
+    // Instance scoped event listeners, removed on destroy.
+    // A private field, so that it cannot collide with subclass properties.
+    #listeners = null;
+
     constructor(el, options = {}) {
         // Make static variables available on instance.
         this.name = this.constructor.name;
@@ -38,6 +43,14 @@ class BasePattern {
         }
         this.el = el;
         this.uuid = create_uuid();
+
+        this.#listeners = events.listener_scope(`${this.name}--${this.uuid}`);
+        this.destroyed = false;
+
+        // Remember if the element was part of the document at construction
+        // time. Used to destroy the pattern if the element was removed while
+        // the pattern was initializing.
+        const was_connected = el.isConnected;
 
         // Notify pre-init
         this.el.dispatchEvent(
@@ -60,6 +73,18 @@ class BasePattern {
         // Both limitations are gone in next tick.
         //
         window.setTimeout(async () => {
+            if (this.destroyed) {
+                // Destroyed before initialization.
+                log.debug(`Not initializing destroyed pattern ${this.name}.`, this.el);
+                this.el.dispatchEvent(
+                    new Event(`not-init.${this.name}.patterns`, {
+                        bubbles: true,
+                        cancelable: false,
+                    })
+                );
+                return;
+            }
+
             if (typeof this.el[`pattern-${this.name}`] !== "undefined") {
                 // Do not reinstantiate
                 log.debug(`Not reinstatiating the pattern ${this.name}.`, this.el);
@@ -90,6 +115,21 @@ class BasePattern {
 
             // Initialize the pattern
             await this.init();
+
+            if (this.destroyed) {
+                // Destroyed while initializing. Remove the listeners which
+                // were registered after the destroy.
+                this.#listeners.remove_all();
+            } else {
+                if (this.el.isConnected) {
+                    // Destroy the pattern when the element is removed from
+                    // the document.
+                    lifecycle.track(this);
+                } else if (was_connected) {
+                    // The element was removed while initializing.
+                    this.destroy();
+                }
+            }
 
             // Notify that now ready
             this.el.dispatchEvent(
@@ -147,23 +187,46 @@ class BasePattern {
      * @param {Object} [opts] - Options for the addEventListener API.
      */
     add_event_listener(el, event_type, name, cb, opts = {}) {
-        events.add_event_listener(
-            el,
-            event_type,
-            `${this.name}--${this.uuid}--${name}`,
-            cb,
-            opts
-        );
+        this.#listeners?.add(el, event_type, name, cb, opts);
+    }
+
+    /**
+     * Remove an event listener which was registered with ``add_event_listener``.
+     *
+     * Only removes listeners of this pattern instance.
+     *
+     * @param {Node|Window} el - The element the event listener was registered on.
+     * @param {string} [name] - The name of the listener, as passed to
+     *                          ``add_event_listener``. Can be a wildcard
+     *                          string. Without a name, all listeners of this
+     *                          instance on the element are removed.
+     */
+    remove_event_listener(el, name) {
+        this.#listeners?.remove(el, name);
     }
 
     /**
      * Destroy/remove/unload the pattern from the element.
      *
      * Also removes all event listeners registered with ``add_event_listener``.
+     *
+     * Called automatically when the pattern's element is removed from the
+     * document. Calling it more than once has no further effect.
+     *
+     * If you override this method, call ``super.destroy()``.
      */
     destroy() {
-        events.remove_event_listener(null, `${this.name}--${this.uuid}--*`);
-        delete this.el[`pattern-${this.name}`];
+        if (this.destroyed) {
+            return;
+        }
+        this.destroyed = true;
+        lifecycle.untrack(this);
+        this.#listeners?.remove_all();
+        if (this.el[`pattern-${this.name}`] === this) {
+            // Only remove the reference if it points to this instance and not
+            // to another instance which was initialized on the element.
+            delete this.el[`pattern-${this.name}`];
+        }
     }
 }
 

@@ -1,7 +1,9 @@
 import $ from "jquery";
 import dom from "../../core/dom";
+import events, { event_listener_map } from "../../core/events";
 import pattern from "./depends";
 import utils from "../../core/utils";
+import { jest } from "@jest/globals";
 
 describe("pat-depends", function () {
     describe("1 - init", function () {
@@ -530,7 +532,133 @@ describe("pat-depends", function () {
 
             expect(called).toBe(false);
         });
+    });
 
+    describe("7 - Form reset", function () {
+        afterEach(function () {
+            document.body.innerHTML = "";
+        });
 
+        it("7.1 - Updates the state after a form reset.", async function () {
+            document.body.innerHTML = `
+                <form>
+                    <input type="checkbox" id="control" value="yes" />
+                    <div class="pat-depends" data-pat-depends="condition: control">
+                        Dependent
+                    </div>
+                </form>
+            `;
+
+            const el = document.querySelector(".pat-depends");
+            const control = document.querySelector("#control");
+            const instance = new pattern(el);
+            await events.await_pattern_init(instance);
+            expect(el.style.display).toBe("none");
+
+            control.checked = true;
+            control.dispatchEvent(new Event("input"));
+            expect(el.style.display).not.toBe("none");
+
+            // The reset restores the unchecked default state without
+            // throwing an input event.
+            document.querySelector("form").reset();
+            expect(control.checked).toBe(false);
+            await utils.timeout(60);
+
+            expect(el.style.display).toBe("none");
+        });
+    });
+
+    describe("8 - Destroy", function () {
+        afterEach(function () {
+            document.body.innerHTML = "";
+        });
+
+        it("8.1 - Removing the element stops reacting to the inputs.", async function () {
+            document.body.innerHTML = `
+                <form>
+                    <input type="checkbox" id="control" value="yes" />
+                    <div class="pat-depends" data-pat-depends="condition: control">
+                        Dependent
+                    </div>
+                </form>
+            `;
+
+            const el = document.querySelector(".pat-depends");
+            const control = document.querySelector("#control");
+            const form = document.querySelector("form");
+            const instance = new pattern(el);
+            await events.await_pattern_init(instance);
+
+            const spy_set_state = jest.spyOn(instance, "set_state");
+
+            el.remove();
+            await utils.timeout(1);
+            expect(instance.destroyed).toBe(true);
+
+            control.checked = true;
+            control.dispatchEvent(new Event("input"));
+            form.reset();
+            await utils.timeout(60);
+
+            expect(spy_set_state).not.toHaveBeenCalled();
+            expect(event_listener_map.has(control)).toBe(false);
+            expect(event_listener_map.has(form)).toBe(false);
+        });
+
+        it("8.2 - Other instances depending on the same input keep working.", async function () {
+            document.body.innerHTML = `
+                <input type="checkbox" id="control" value="yes" />
+                <div class="pat-depends" id="one" data-pat-depends="condition: control">
+                    One
+                </div>
+                <div class="pat-depends" id="two" data-pat-depends="condition: control">
+                    Two
+                </div>
+            `;
+
+            const el1 = document.querySelector("#one");
+            const el2 = document.querySelector("#two");
+            const control = document.querySelector("#control");
+            const instance1 = new pattern(el1);
+            const instance2 = new pattern(el2);
+            await events.await_pattern_init(instance1);
+            await events.await_pattern_init(instance2);
+
+            el1.remove();
+            await utils.timeout(1);
+
+            control.checked = true;
+            control.dispatchEvent(new Event("input"));
+
+            expect(el2.style.display).not.toBe("none");
+        });
+
+        it("8.3 - Anchors: enabling removes the click blocker.", async function () {
+            document.body.innerHTML = `
+                <input type="checkbox" id="control" value="yes" />
+                <a href="#" class="pat-depends" data-pat-depends="condition: control; action: enable">
+                    Link
+                </a>
+            `;
+
+            const el = document.querySelector(".pat-depends");
+            const control = document.querySelector("#control");
+            const instance = new pattern(el);
+            await events.await_pattern_init(instance);
+
+            // Disabled: click is prevented.
+            const click1 = new MouseEvent("click", { cancelable: true });
+            el.dispatchEvent(click1);
+            expect(click1.defaultPrevented).toBe(true);
+
+            control.checked = true;
+            control.dispatchEvent(new Event("input"));
+
+            // Enabled: click is not prevented anymore.
+            const click2 = new MouseEvent("click", { cancelable: true });
+            el.dispatchEvent(click2);
+            expect(click2.defaultPrevented).toBe(false);
+        });
     });
 });

@@ -91,7 +91,7 @@ class Pattern extends BasePattern {
         // For debugging.
         this.callback_cnt = 0;
 
-        const observer = new IntersectionObserver(
+        this.observer = new IntersectionObserver(
             this.scroll_marker_callback.bind(this),
             {
                 root: this.scroll_container === window ? null : this.scroll_container,
@@ -99,7 +99,20 @@ class Pattern extends BasePattern {
             }
         );
         for (const it of this.observables.values()) {
-            observer.observe(it.target);
+            this.observer.observe(it.target);
+        }
+    }
+
+    destroy() {
+        if (this.destroyed) {
+            return;
+        }
+        super.destroy();
+        this.observer?.disconnect();
+        // Remove the current class from the content elements, which are
+        // usually not part of the removed pattern element.
+        for (const item of this.observables?.values() || []) {
+            item.target.classList.remove(this.options["current-content-class"]);
         }
     }
 
@@ -133,6 +146,11 @@ class Pattern extends BasePattern {
 
     scroll_marker_current_callback() {
         // Set the item which is nearest to the scroll container's middle to current.
+
+        if (this.destroyed) {
+            // Debounced call after the pattern was destroyed.
+            return;
+        }
 
         // First, set all to non-current.
         for (const item of this.observables.values()) {

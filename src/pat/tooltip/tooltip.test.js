@@ -1,6 +1,8 @@
 import $ from "jquery";
 import autosubmit from "../auto-submit/auto-submit";
-import events from "../../core/events";
+import { BasePattern } from "../../core/basepattern";
+import events, { event_listener_map } from "../../core/events";
+import lifecycle from "../../core/lifecycle";
 import Pattern from "./tooltip";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
@@ -1316,6 +1318,46 @@ describe("pat-tooltip", () => {
             expect(expected).toBe(tooltip_content);
         });
 
+        it("6.9.1 - source: ajax does not fail when destroyed while fetching.", async () => {
+            let resolve_fetch;
+            global.fetch = jest.fn().mockImplementation(
+                () =>
+                    new Promise((resolve) => {
+                        resolve_fetch = () =>
+                            resolve({ text: () => Promise.resolve("Fetched.") });
+                    })
+            );
+
+            const $el = testutils.createTooltip({
+                data: "source: ajax",
+                href: "http://test.com",
+            });
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
+
+            const spy_initialize = jest.spyOn(instance, "_initialize_content");
+            const spy_set_content = jest.spyOn(instance.tippy, "setContent");
+
+            testutils.click($el);
+            await utils.timeout(1);
+            expect(global.fetch).toHaveBeenCalled();
+
+            // Remove the tooltip while the request is pending.
+            $el.remove();
+            await utils.timeout(1);
+            expect(instance.destroyed).toBe(true);
+
+            resolve_fetch();
+            await utils.timeout(10);
+
+            // The fetched content is not set on the destroyed tippy instance.
+            expect(spy_set_content).not.toHaveBeenCalledWith("Fetched.");
+            expect(spy_initialize).not.toHaveBeenCalled();
+
+            global.fetch.mockRestore();
+            delete global.fetch;
+        });
+
         describe("6.10 - source: content-text", () => {
             it.each([
                 [
@@ -1748,6 +1790,158 @@ this will be extracted.
             expect(document.querySelector(".pat-tooltip").title).toBe(
                 "This is the title attribute"
             );
+        });
+    });
+
+    describe("11 - Lifecycle of patterns in the tooltip content", () => {
+        class Dummy extends BasePattern {
+            static name = "tooltip-test-dummy";
+            static trigger = ".pat-tooltip-test-dummy";
+        }
+
+        const get_dummy = () =>
+            document.querySelector(".tippy-content .pat-tooltip-test-dummy");
+
+        beforeEach(() => {
+            registry.register(Dummy);
+        });
+
+        afterEach(() => {
+            delete registry.patterns["tooltip-test-dummy"];
+        });
+
+        it("11.1 - The popper is marked as self managed.", async () => {
+            const $el = testutils.createTooltip({ data: "trigger: click" });
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
+
+            expect(instance.tippy.popper.hasAttribute(lifecycle.MANAGED_ATTRIBUTE)).toBe(
+                true
+            );
+        });
+
+        it("11.2 - Patterns in static content survive hiding and showing.", async () => {
+            document.body.innerHTML = `
+                <a class="pat-tooltip"
+                   data-pat-tooltip="source: content; trigger: click"
+                ><span class="pat-tooltip-test-dummy">Dummy</span></a>
+            `;
+            const el = document.querySelector(".pat-tooltip");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            // Show
+            el.click();
+            await utils.timeout(1);
+            await utils.timeout(1); // Wait for dummy init.
+            const dummy_el = get_dummy();
+            const dummy = dummy_el["pattern-tooltip-test-dummy"];
+            expect(dummy).toBeInstanceOf(Dummy);
+            expect(lifecycle.is_tracked(dummy)).toBe(true);
+
+            // Hide - the popper is removed from the document.
+            instance.tippy.hide();
+            await utils.timeout(1);
+            expect(instance.tippy.popper.isConnected).toBe(false);
+            expect(dummy.destroyed).toBe(false);
+
+            // Trigger the observer with another removal.
+            document.body.appendChild(document.createElement("div")).remove();
+            await utils.timeout(1);
+            expect(dummy.destroyed).toBe(false);
+
+            // Show again - same element, same instance.
+            el.click();
+            await utils.timeout(1);
+            await utils.timeout(1);
+            expect(get_dummy()).toBe(dummy_el);
+            expect(dummy_el["pattern-tooltip-test-dummy"]).toBe(dummy);
+            expect(dummy.destroyed).toBe(false);
+        });
+
+        it("11.3 - Patterns in ajax content are destroyed on hide.", async () => {
+            global.fetch = jest
+                .fn()
+                .mockImplementation(
+                    mockFetch(`<span class="pat-tooltip-test-dummy">Dummy</span>`)
+                );
+
+            const $el = testutils.createTooltip({
+                data: "source: ajax",
+                href: "http://test.com",
+            });
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
+            const spy_get_content = jest.spyOn(instance, "_get_content");
+
+            testutils.click($el);
+            await utils.timeout(1);
+            await spy_get_content.mock.results[0].value; // wait for the fetch
+            await utils.timeout(1); // wait for dummy init
+            const dummy = get_dummy()["pattern-tooltip-test-dummy"];
+            expect(dummy).toBeInstanceOf(Dummy);
+
+            instance.tippy.hide();
+            await utils.timeout(1);
+            expect(dummy.destroyed).toBe(true);
+            expect(lifecycle.is_tracked(dummy)).toBe(false);
+
+            global.fetch.mockRestore();
+            delete global.fetch;
+        });
+
+        it("11.4 - Patterns in the tooltip content are destroyed with the tooltip.", async () => {
+            document.body.innerHTML = `
+                <a class="pat-tooltip"
+                   data-pat-tooltip="source: content; trigger: click"
+                ><span class="pat-tooltip-test-dummy">Dummy</span></a>
+            `;
+            const el = document.querySelector(".pat-tooltip");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            el.click();
+            await utils.timeout(1);
+            await utils.timeout(1);
+            const dummy = get_dummy()["pattern-tooltip-test-dummy"];
+
+            // Hide, then remove the tooltip trigger element.
+            instance.tippy.hide();
+            await utils.timeout(1);
+            el.remove();
+            await utils.timeout(1);
+
+            expect(instance.destroyed).toBe(true);
+            expect(dummy.destroyed).toBe(true);
+            expect(lifecycle.is_tracked(dummy)).toBe(false);
+        });
+
+        it("11.5 - The listeners on the element and the popper are removed on destroy.", async () => {
+            global.fetch = jest.fn().mockImplementation(mockFetch("Content"));
+
+            const $el = testutils.createTooltip({
+                data: "source: ajax; trigger: click",
+                href: "http://test.com",
+            });
+            const el = $el[0];
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
+
+            testutils.click($el);
+            await utils.timeout(1);
+            const popper = instance.tippy.popper;
+            expect(event_listener_map.has(el)).toBe(true);
+            expect(event_listener_map.has(popper)).toBe(true);
+
+            el.remove();
+            await utils.timeout(1);
+
+            expect(instance.destroyed).toBe(true);
+            expect(event_listener_map.has(el)).toBe(false);
+            expect(event_listener_map.has(popper)).toBe(false);
+
+            global.fetch.mockRestore();
+            delete global.fetch;
         });
     });
 });

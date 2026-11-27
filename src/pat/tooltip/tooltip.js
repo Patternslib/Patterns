@@ -3,6 +3,7 @@ import { BasePattern } from "../../core/basepattern";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import events from "../../core/events";
+import lifecycle from "../../core/lifecycle";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 
@@ -95,6 +96,12 @@ class Pattern extends BasePattern {
         Tippy.setDefaultProps(defaultProps);
         this.tippy = new Tippy(el, this.tippy_options);
 
+        // Tippy removes the popper from the document while the tooltip is
+        // hidden and re-inserts it on show. Do not destroy the patterns in
+        // the tooltip content when it is hidden. They are destroyed with the
+        // tooltip or when the content is replaced.
+        this.tippy.popper.setAttribute(lifecycle.MANAGED_ATTRIBUTE, "");
+
         if (this.options.source === "title") {
             // Remove ``title`` attribute when source is set to ``title`` to
             // disable the browser's built-in tooltip feature
@@ -103,10 +110,10 @@ class Pattern extends BasePattern {
 
         if (this.options.trigger === "click" && this.options.source === "ajax") {
             // prevent default action for "click" and "mouseenter click"
-            events.add_event_listener(
+            this.add_event_listener(
                 el,
                 "click",
-                "pat-tooltip--click-prevent-default",
+                "click-prevent-default",
                 (event) => {
                     event.preventDefault();
                     event.stopPropagation();
@@ -131,13 +138,23 @@ class Pattern extends BasePattern {
     async hide() {
         // Hide this tooltip
         await utils.timeout(1); // wait a tick for event being processed by other handlers.
+        if (this.destroyed) {
+            return;
+        }
         this.tippy.hide();
     }
 
     destroy() {
         // Remove this tooltip
+        if (this.destroyed) {
+            return;
+        }
         super.destroy(); // Unregister
-        this.tippy.destroy();
+        if (this.tippy) {
+            // Destroy the patterns in the tooltip content.
+            lifecycle.destroy_patterns(this.tippy.popper);
+            this.tippy.destroy();
+        }
     }
 
     parseOptionsForTippy(opts) {
@@ -303,10 +320,10 @@ class Pattern extends BasePattern {
         }
 
         // Store reference to method for closing panels on the tooltip element instance.
-        events.add_event_listener(
+        this.add_event_listener(
             this.tippy.popper,
             "close-panel",
-            "pat-tooltip--close-panel",
+            "close-panel",
             () => this.hide()
         );
 
@@ -324,6 +341,10 @@ class Pattern extends BasePattern {
 
         if (this.options.source === "ajax") {
             await this._get_content();
+            if (this.destroyed) {
+                // Destroyed while fetching the content.
+                return;
+            }
         }
 
         // Notify parent patterns about injected content.
@@ -350,6 +371,9 @@ class Pattern extends BasePattern {
         }
 
         if (this.options.source === "ajax") {
+            // The content is fetched again on the next show. Destroy the
+            // patterns in the current content.
+            lifecycle.destroy_patterns(this.tippy.popper);
             this.tippy.setContent(document.createElement("progress"));
         }
     }
@@ -378,16 +402,26 @@ class Pattern extends BasePattern {
             content = document.querySelector(selector);
             content = content?.innerHTML || undefined;
         }
+        if (this.destroyed) {
+            // Destroyed while fetching the content.
+            return;
+        }
         if (content) {
             this.tippy.setContent(content);
             await utils.timeout(1); // Wait a tick before forceUpdate. Might fail due to unset popperInstance.
-            this.tippy.popperInstance.forceUpdate(); // re-position tippy after content is known.
+            if (this.destroyed) {
+                return;
+            }
+            this.tippy.popperInstance?.forceUpdate(); // re-position tippy after content is known.
         }
     }
 
     async get_content(url = this.options.url) {
         // API method: _get_content + _initialize_content
         await this._get_content(url);
+        if (this.destroyed) {
+            return;
+        }
         this._initialize_content();
     }
 
