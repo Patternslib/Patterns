@@ -2406,4 +2406,63 @@ describe("pat-validation", function () {
         });
     });
 
+    describe("12 - siblings", function () {
+        it("12.1 - returns the inputs with the same name, also outside the form", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation" id="form">
+                <input type="checkbox" name="a" id="a1">
+                <input type="checkbox" name="b" id="a">
+                <fieldset>
+                  <input type="checkbox" name="a" id="a2">
+                </fieldset>
+                <button name="a">Submit</button>
+              </form>
+              <input type="checkbox" name="a" id="a3" form="form">
+              <input type="checkbox" name="a" id="a4">
+            `;
+            const el = document.querySelector(".pat-validation");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            // Not the input with the id "a", not the button with the name "a"
+            // and not the input which is not associated with the form.
+            const siblings = instance.siblings(document.querySelector("#a1"));
+            expect(siblings.map((it) => it.id)).toEqual(["a1", "a2", "a3"]);
+        });
+
+        it("12.2 - returns a single input or select", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <input name="a" id="a">
+                <select name="s" id="s" multiple>
+                  <option>1</option>
+                  <option>2</option>
+                </select>
+              </form>
+            `;
+            const el = document.querySelector(".pat-validation");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            const input = document.querySelector("#a");
+            const select = document.querySelector("#s");
+            expect(instance.siblings(input)).toEqual([input]);
+            expect(instance.siblings(select)).toEqual([select]);
+        });
+
+        it("12.3 - returns only the input itself if it has no name", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <input id="a">
+                <input id="b">
+              </form>
+            `;
+            const el = document.querySelector(".pat-validation");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            const input = document.querySelector("#a");
+            expect(instance.siblings(input)).toEqual([input]);
+        });
+    });
 });

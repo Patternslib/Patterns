@@ -139,8 +139,22 @@ class Pattern extends BasePattern {
     }
 
     siblings(input) {
-        // Get all siblings of an input with the same name.
-        return this.inputs.filter((_input) => _input.name === input.name);
+        // Get all siblings of an input with the same name, including the
+        // input itself.
+        if (!input.name) {
+            return [input];
+        }
+        // Use the form's named lookup instead of filtering all form
+        // elements. It returns the elements with this name or id - also
+        // those outside the form which are associated via the ``form``
+        // attribute - as a single element or a ``RadioNodeList``.
+        const named = this.form.elements.namedItem(input.name);
+        const candidates = named instanceof Element ? [named] : [...(named || [])];
+        return candidates.filter(
+            (_input) =>
+                _input.name === input.name &&
+                _input.matches("input[name], select[name], textarea[name]"),
+        );
     }
 
     async validate_all(event) {
@@ -472,7 +486,11 @@ class Pattern extends BasePattern {
         }
         for (const _input of inputs) {
             if (clear_state) {
-                this.set_error({ input: _input, msg: "", skip_event: true });
+                // Clear the error state directly instead of via
+                // ``set_error``, which would get the siblings of each sibling
+                // again.
+                _input.setCustomValidity("");
+                _input[KEY_ERROR_MSG] = "";
             }
             const error_node = _input[KEY_ERROR_EL];
             _input[KEY_ERROR_EL] = null;
