@@ -75,7 +75,9 @@ class Pattern extends BasePattern {
         //    while typing.
         // 2) We want to debounce the input events individually, so that we can
         //    do multiple checks in parallel and show multiple errors at once.
-        const input_debouncer_map = new Map();
+        // A WeakMap does not keep inputs alive which were removed from the
+        // form.
+        const input_debouncer_map = new WeakMap();
         const debounce_filter = (e) => {
             const input = e.target;
             if (input?.form !== this.form || !this.inputs.includes(input)) {
