@@ -7,6 +7,7 @@
  * For usage, see basepattern.md
  */
 import events from "./events";
+import lifecycle from "./lifecycle";
 import logging from "./logging";
 import create_uuid from "./uuid";
 
@@ -38,6 +39,12 @@ class BasePattern {
         }
         this.el = el;
         this.uuid = create_uuid();
+        this.destroyed = false;
+
+        // Remember if the element was part of the document at construction
+        // time. Used to destroy the pattern if the element was removed while
+        // the pattern was initializing.
+        const was_connected = el.isConnected;
 
         // Notify pre-init
         this.el.dispatchEvent(
@@ -60,6 +67,18 @@ class BasePattern {
         // Both limitations are gone in next tick.
         //
         window.setTimeout(async () => {
+            if (this.destroyed) {
+                // Destroyed before initialization.
+                log.debug(`Not initializing destroyed pattern ${this.name}.`, this.el);
+                this.el.dispatchEvent(
+                    new Event(`not-init.${this.name}.patterns`, {
+                        bubbles: true,
+                        cancelable: false,
+                    })
+                );
+                return;
+            }
+
             if (typeof this.el[`pattern-${this.name}`] !== "undefined") {
                 // Do not reinstantiate
                 log.debug(`Not reinstatiating the pattern ${this.name}.`, this.el);
@@ -90,6 +109,17 @@ class BasePattern {
 
             // Initialize the pattern
             await this.init();
+
+            if (!this.destroyed) {
+                if (this.el.isConnected) {
+                    // Destroy the pattern when the element is removed from
+                    // the document.
+                    lifecycle.track(this);
+                } else if (was_connected) {
+                    // The element was removed while initializing.
+                    this.destroy();
+                }
+            }
 
             // Notify that now ready
             this.el.dispatchEvent(
@@ -160,10 +190,24 @@ class BasePattern {
      * Destroy/remove/unload the pattern from the element.
      *
      * Also removes all event listeners registered with ``add_event_listener``.
+     *
+     * Called automatically when the pattern's element is removed from the
+     * document. Calling it more than once has no further effect.
+     *
+     * If you override this method, call ``super.destroy()``.
      */
     destroy() {
+        if (this.destroyed) {
+            return;
+        }
+        this.destroyed = true;
+        lifecycle.untrack(this);
         events.remove_event_listener(null, `${this.name}--${this.uuid}--*`);
-        delete this.el[`pattern-${this.name}`];
+        if (this.el[`pattern-${this.name}`] === this) {
+            // Only remove the reference if it points to this instance and not
+            // to another instance which was initialized on the element.
+            delete this.el[`pattern-${this.name}`];
+        }
     }
 }
 

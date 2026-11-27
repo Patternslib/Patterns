@@ -473,4 +473,291 @@ describe("Basepattern class tests", function () {
             ]);
         });
     });
+
+    describe("9 - Automatic destroy on removal from the DOM.", function () {
+        let lifecycle;
+        let events;
+
+        class Pat extends BasePattern {
+            static name = "example";
+            static trigger = ".example";
+        }
+
+        beforeEach(async function () {
+            ({ default: lifecycle } = await import("./lifecycle"));
+            ({ default: events } = await import("./events"));
+        });
+
+        afterEach(function () {
+            document.body.innerHTML = "";
+        });
+
+        it("9.1 - Connected instances are tracked after init.", async function () {
+            document.body.innerHTML = `<div class="example"></div>`;
+            const el = document.querySelector(".example");
+            const pat = new Pat(el);
+            await events.await_pattern_init(pat);
+
+            expect(pat.destroyed).toBe(false);
+            expect(lifecycle.is_tracked(pat)).toBe(true);
+        });
+
+        it("9.2 - Detached instances are not tracked and not destroyed.", async function () {
+            const el = document.createElement("div");
+            const pat = new Pat(el);
+            await events.await_pattern_init(pat);
+
+            expect(lifecycle.is_tracked(pat)).toBe(false);
+
+            // Trigger the observer with an unrelated removal.
+            document.body.innerHTML = `<div></div>`;
+            document.body.innerHTML = "";
+            await utils.timeout(1);
+
+            expect(pat.destroyed).toBe(false);
+            expect(el["pattern-example"]).toBe(pat);
+        });
+
+        it("9.3 - Removing the element destroys the pattern.", async function () {
+            document.body.innerHTML = `<div class="example"></div>`;
+            const el = document.querySelector(".example");
+            const pat = new Pat(el);
+            await events.await_pattern_init(pat);
+
+            const cb = jest.fn();
+            pat.add_event_listener(document, "keydown", "key", cb);
+            const destroy_spy = jest.spyOn(pat, "destroy");
+
+            el.remove();
+            await utils.timeout(1);
+
+            expect(destroy_spy).toHaveBeenCalledTimes(1);
+            expect(pat.destroyed).toBe(true);
+            expect(lifecycle.is_tracked(pat)).toBe(false);
+            expect(el["pattern-example"]).toBe(undefined);
+
+            document.dispatchEvent(new KeyboardEvent("keydown"));
+            expect(cb).not.toHaveBeenCalled();
+        });
+
+        it("9.4 - Removing an ancestor destroys the pattern.", async function () {
+            document.body.innerHTML = `
+                <section>
+                    <div><div class="example"></div></div>
+                </section>
+            `;
+            const el = document.querySelector(".example");
+            const pat = new Pat(el);
+            await events.await_pattern_init(pat);
+
+            document.querySelector("section").remove();
+            await utils.timeout(1);
+
+            expect(pat.destroyed).toBe(true);
+        });
+
+        it("9.5 - Replacing the content destroys the pattern.", async function () {
+            document.body.innerHTML = `<div class="example"></div>`;
+            const pat = new Pat(document.querySelector(".example"));
+            await events.await_pattern_init(pat);
+
+            document.body.innerHTML = `<div class="other"></div>`;
+            await utils.timeout(1);
+
+            expect(pat.destroyed).toBe(true);
+        });
+
+        it("9.6 - Moving the element within the same task does not destroy the pattern.", async function () {
+            document.body.innerHTML = `
+                <div class="a"><div class="example"></div></div>
+                <div class="b"></div>
+            `;
+            const el = document.querySelector(".example");
+            const pat = new Pat(el);
+            await events.await_pattern_init(pat);
+
+            // appendChild removes and re-inserts the node.
+            document.querySelector(".b").appendChild(el);
+            // Explicit detach and re-attach in the same task.
+            el.remove();
+            document.querySelector(".a").appendChild(el);
+            await utils.timeout(1);
+
+            expect(pat.destroyed).toBe(false);
+            expect(lifecycle.is_tracked(pat)).toBe(true);
+        });
+
+        it("9.7 - Detaching and re-attaching in a later task destroys the pattern.", async function () {
+            document.body.innerHTML = `<div class="example"></div>`;
+            const el = document.querySelector(".example");
+            const pat = new Pat(el);
+            await events.await_pattern_init(pat);
+
+            el.remove();
+            await utils.timeout(1);
+            document.body.appendChild(el);
+            await utils.timeout(1);
+
+            expect(pat.destroyed).toBe(true);
+            expect(el["pattern-example"]).toBe(undefined);
+        });
+
+        it("9.8 - Only the removed instances are destroyed.", async function () {
+            document.body.innerHTML = `
+                <div class="example" id="one"></div>
+                <div class="example" id="two"></div>
+            `;
+            const pat1 = new Pat(document.querySelector("#one"));
+            const pat2 = new Pat(document.querySelector("#two"));
+            await events.await_pattern_init(pat1);
+            await events.await_pattern_init(pat2);
+
+            pat1.el.remove();
+            await utils.timeout(1);
+
+            expect(pat1.destroyed).toBe(true);
+            expect(pat2.destroyed).toBe(false);
+        });
+
+        it("9.9 - destroy() is idempotent and untracks the instance.", async function () {
+            document.body.innerHTML = `<div class="example"></div>`;
+            const el = document.querySelector(".example");
+            const pat = new Pat(el);
+            await events.await_pattern_init(pat);
+
+            pat.destroy();
+            expect(lifecycle.is_tracked(pat)).toBe(false);
+
+            // A new instance on the same element must not be unregistered by
+            // destroying the old instance again.
+            const pat2 = new Pat(el);
+            await events.await_pattern_init(pat2);
+            pat.destroy();
+            expect(el["pattern-example"]).toBe(pat2);
+
+            // Removing the element destroys the new instance only once.
+            const destroy_spy = jest.spyOn(pat2, "destroy");
+            el.remove();
+            await utils.timeout(1);
+            expect(destroy_spy).toHaveBeenCalledTimes(1);
+        });
+
+        it("9.10 - destroy() of a not-initialized instance keeps the reference to the initialized one.", async function () {
+            const el = document.createElement("div");
+            const pat1 = new Pat(el);
+            await events.await_pattern_init(pat1);
+
+            const pat2 = new Pat(el);
+            await expect(events.await_pattern_init(pat2)).rejects.toBeDefined();
+
+            pat2.destroy();
+            expect(el["pattern-example"]).toBe(pat1);
+        });
+
+        it("9.11 - A pattern destroyed before init is not initialized.", async function () {
+            const init_spy = jest.spyOn(Pat.prototype, "init");
+
+            document.body.innerHTML = `<div class="example"></div>`;
+            const el = document.querySelector(".example");
+            const pat = new Pat(el);
+            pat.destroy();
+
+            await expect(events.await_pattern_init(pat)).rejects.toBeDefined();
+
+            expect(init_spy).not.toHaveBeenCalled();
+            expect(el["pattern-example"]).toBe(undefined);
+            expect(lifecycle.is_tracked(pat)).toBe(false);
+        });
+
+        it("9.12 - A pattern removed while initializing is destroyed after init.", async function () {
+            class AsyncPat extends BasePattern {
+                static name = "example-async";
+                static trigger = ".example";
+                async init() {
+                    // Element is removed while initializing.
+                    this.el.remove();
+                    await utils.timeout(1);
+                }
+            }
+
+            document.body.innerHTML = `<div class="example"></div>`;
+            const el = document.querySelector(".example");
+            const pat = new AsyncPat(el);
+            await events.await_pattern_init(pat);
+
+            expect(pat.destroyed).toBe(true);
+            expect(lifecycle.is_tracked(pat)).toBe(false);
+            expect(el["pattern-example-async"]).toBe(undefined);
+        });
+
+        it("9.13 - A pattern destroyed while initializing is not tracked.", async function () {
+            class AsyncPat extends BasePattern {
+                static name = "example-async";
+                static trigger = ".example";
+                async init() {
+                    await utils.timeout(1);
+                }
+            }
+
+            document.body.innerHTML = `<div class="example"></div>`;
+            const el = document.querySelector(".example");
+            const pat = new AsyncPat(el);
+            await utils.timeout(1); // init has started.
+            pat.destroy();
+            await events.await_pattern_init(pat);
+
+            expect(pat.destroyed).toBe(true);
+            expect(lifecycle.is_tracked(pat)).toBe(false);
+        });
+
+        it("9.14 - Errors in destroy do not prevent destroying other patterns.", async function () {
+            class FailingPat extends BasePattern {
+                static name = "example-failing";
+                static trigger = ".failing";
+                destroy() {
+                    super.destroy();
+                    throw new Error("destroy failed");
+                }
+            }
+
+            document.body.innerHTML = `
+                <div class="failing"></div>
+                <div class="example"></div>
+            `;
+            const pat1 = new FailingPat(document.querySelector(".failing"));
+            const pat2 = new Pat(document.querySelector(".example"));
+            await events.await_pattern_init(pat1);
+            await events.await_pattern_init(pat2);
+
+            document.body.innerHTML = "";
+            await utils.timeout(1);
+
+            expect(pat1.destroyed).toBe(true);
+            expect(pat2.destroyed).toBe(true);
+        });
+
+        it("9.15 - A subclass not calling super.destroy() is destroyed only once.", async function () {
+            const destroy_cb = jest.fn();
+            class BadPat extends BasePattern {
+                static name = "example-bad";
+                static trigger = ".bad";
+                destroy() {
+                    destroy_cb();
+                }
+            }
+
+            document.body.innerHTML = `<div class="bad"></div>`;
+            const pat = new BadPat(document.querySelector(".bad"));
+            await events.await_pattern_init(pat);
+
+            document.body.innerHTML = "";
+            await utils.timeout(1);
+            document.body.innerHTML = `<div></div>`;
+            document.body.innerHTML = "";
+            await utils.timeout(1);
+
+            expect(destroy_cb).toHaveBeenCalledTimes(1);
+            expect(lifecycle.is_tracked(pat)).toBe(false);
+        });
+    });
 });

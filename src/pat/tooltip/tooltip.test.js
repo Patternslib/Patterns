@@ -1316,6 +1316,46 @@ describe("pat-tooltip", () => {
             expect(expected).toBe(tooltip_content);
         });
 
+        it("6.9.1 - source: ajax does not fail when destroyed while fetching.", async () => {
+            let resolve_fetch;
+            global.fetch = jest.fn().mockImplementation(
+                () =>
+                    new Promise((resolve) => {
+                        resolve_fetch = () =>
+                            resolve({ text: () => Promise.resolve("Fetched.") });
+                    })
+            );
+
+            const $el = testutils.createTooltip({
+                data: "source: ajax",
+                href: "http://test.com",
+            });
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
+
+            const spy_initialize = jest.spyOn(instance, "_initialize_content");
+            const spy_set_content = jest.spyOn(instance.tippy, "setContent");
+
+            testutils.click($el);
+            await utils.timeout(1);
+            expect(global.fetch).toHaveBeenCalled();
+
+            // Remove the tooltip while the request is pending.
+            $el.remove();
+            await utils.timeout(1);
+            expect(instance.destroyed).toBe(true);
+
+            resolve_fetch();
+            await utils.timeout(10);
+
+            // The fetched content is not set on the destroyed tippy instance.
+            expect(spy_set_content).not.toHaveBeenCalledWith("Fetched.");
+            expect(spy_initialize).not.toHaveBeenCalled();
+
+            global.fetch.mockRestore();
+            delete global.fetch;
+        });
+
         describe("6.10 - source: content-text", () => {
             it.each([
                 [

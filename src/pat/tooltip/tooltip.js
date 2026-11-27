@@ -131,13 +131,19 @@ class Pattern extends BasePattern {
     async hide() {
         // Hide this tooltip
         await utils.timeout(1); // wait a tick for event being processed by other handlers.
+        if (this.destroyed) {
+            return;
+        }
         this.tippy.hide();
     }
 
     destroy() {
         // Remove this tooltip
+        if (this.destroyed) {
+            return;
+        }
         super.destroy(); // Unregister
-        this.tippy.destroy();
+        this.tippy?.destroy();
     }
 
     parseOptionsForTippy(opts) {
@@ -324,6 +330,10 @@ class Pattern extends BasePattern {
 
         if (this.options.source === "ajax") {
             await this._get_content();
+            if (this.destroyed) {
+                // Destroyed while fetching the content.
+                return;
+            }
         }
 
         // Notify parent patterns about injected content.
@@ -378,16 +388,26 @@ class Pattern extends BasePattern {
             content = document.querySelector(selector);
             content = content?.innerHTML || undefined;
         }
+        if (this.destroyed) {
+            // Destroyed while fetching the content.
+            return;
+        }
         if (content) {
             this.tippy.setContent(content);
             await utils.timeout(1); // Wait a tick before forceUpdate. Might fail due to unset popperInstance.
-            this.tippy.popperInstance.forceUpdate(); // re-position tippy after content is known.
+            if (this.destroyed) {
+                return;
+            }
+            this.tippy.popperInstance?.forceUpdate(); // re-position tippy after content is known.
         }
     }
 
     async get_content(url = this.options.url) {
         // API method: _get_content + _initialize_content
         await this._get_content(url);
+        if (this.destroyed) {
+            return;
+        }
         this._initialize_content();
     }
 
