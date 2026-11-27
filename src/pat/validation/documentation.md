@@ -89,7 +89,7 @@ In addition both the input element and its label will get an `warning` class.
 </label>
 ```
 
-Checkboxes and radio buttons are treated differently: The error message is always set after the last element of the inputs with the same name - or of the group of inputs, see [Minimum and maximum number of values](#minimum-and-maximum-number-of-values). If that input is wrapped in a label, the error message is set after the label.
+Checkboxes and radio buttons are treated differently: The error message is always set after the last element of the inputs with the same name. If that input is wrapped in a label, the error message is set after the label.
 
 ```html
 <fieldset>
@@ -109,31 +109,6 @@ import { Pattern as ValidationPattern } from "@patternslib/patternslib/src/pat/v
 ValidationPattern.prototype.error_template = (message) =>
     `<em class="invalid-feedback">${message}</em>`;
 ```
-
-
-### Minimum and maximum number of values
-
-With `min-values` and `max-values` you can define how many inputs of a group must be checked, selected or filled out.
-This is most useful for checkboxes, but also works for text inputs, selects and other form elements.
-
-A group is defined either:
-
-- by the inputs with the same name, if the options are defined on the input itself, or
-- by all inputs within a wrapper element, if the options are defined on a wrapper element like a fieldset.
-  In this case the inputs do not need to share the same name.
-
-```html
-<fieldset data-pat-validation="min-values: 1; max-values: 2">
-    <label><input type="checkbox" name="newsletter" /> Newsletter</label>
-    <label><input type="checkbox" name="updates" /> Product updates</label>
-    <label><input type="checkbox" name="events" /> Event invitations</label>
-</fieldset>
-```
-
-All inputs of a group share the same validation state and the error message is placed after the last input of the group.
-Therefore a wrapper element should only contain the inputs of the group.
-If `min-values` or `max-values` is defined on the form itself, all inputs of the form form one group.
-Define `min-values` and `max-values` on the same element.
 
 
 ### Form elements outside the form
@@ -183,6 +158,6 @@ There is no need to re-initialize the pattern or to dispatch a special event.
 | equality         | Field-specific extra rule. The name of another input this input should equal to (useful for password confirmation).        |                                                      | String                                 |
 | not-after        | Field-specific extra rule. A lower time limit restriction for date and datetime fields.                                    |                                                      | CSS Selector or a ISO8601 date string. |
 | not-before       | Field-specific extra rule. An upper time limit restriction for date and datetime fields.                                   |                                                      | CSS Selector or a ISO8601 date string. |
-| min-values       | Minimum number of checked, selected or filled out form elements of a group (same name or wrapper element).                 | null                                                 | Integer (or null)                      |
-| max-values       | Maximum number of checked, selected or filled out form elements of a group (same name or wrapper element).                 | null                                                 | Integer (or null)                      |
+| min-values       | Minimum number of checked, selected or filled out form elements.                                                           | null                                                 | Integer (or null)                      |
+| max-values       | Maximum number of checked, selected or filled out form elements.                                                           | null                                                 | Integer (or null)                      |
 | delay            | Time in milliseconds before validation starts to avoid validating while typing.                                            | 100                                                  | Integer                                |
