@@ -1,5 +1,6 @@
 import logging from "./logging";
 import utils from "./utils";
+import create_uuid from "./uuid";
 
 const log = logging.getLogger("events");
 
@@ -138,6 +139,121 @@ const remove_event_listener = (el, id) => {
         // Delete entry and, if empty, the element from event_listener_map.
         _delete_entry(el, entry[0]);
     }
+};
+
+/**
+ * A scope for event listeners, which can be removed all at once.
+ *
+ * Listeners are registered via ``add_event_listener`` under the id
+ * ``<namespace>--<name>``. The scope remembers the elements and names of its
+ * listeners, so that ``remove_all`` can remove all of them on all elements -
+ * which is not possible with ``remove_event_listener`` alone, as the
+ * event_listener_map cannot be iterated.
+ *
+ * A scope only removes listeners it registered itself. It keeps its elements
+ * referenced until their listeners are removed via the scope. Give a scope
+ * the lifetime of its owner, e.g. a pattern instance, and call
+ * ``remove_all`` when the owner is destroyed.
+ *
+ * Usage:
+ *     const listeners = events.listener_scope("my-modal");
+ *     listeners.add(document, "keydown", "close", on_keydown);
+ *     listeners.add(window, "resize", "position", on_resize);
+ *     listeners.remove(document, "close");
+ *     listeners.remove_all();
+ */
+class ListenerScope {
+    /**
+     * @param {string} namespace - The namespace. Must not contain ``*``.
+     */
+    constructor(namespace) {
+        this.namespace = namespace;
+        // element -> Set of listener names.
+        this._listeners = new Map();
+    }
+
+    /**
+     * The elements with listeners of this scope.
+     *
+     * @returns {Set} - A copy of the set of elements.
+     */
+    get elements() {
+        return new Set(this._listeners.keys());
+    }
+
+    _id(name) {
+        return `${this.namespace}--${name}`;
+    }
+
+    /**
+     * Add an event listener.
+     *
+     * Adding a listener under the same name on the same element replaces the
+     * previous one.
+     *
+     * @param {Node|Window} el - The element to register the event listener on.
+     * @param {string} event_type - The event type to listen for.
+     * @param {string} name - A name for the listener, unique within this scope.
+     * @param {function} cb - The event handler / callback function.
+     * @param {Object} [opts] - Options for the addEventListener API.
+     */
+    add(el, event_type, name, cb, opts = {}) {
+        if (!el?.addEventListener) {
+            return; // nothing to do.
+        }
+        add_event_listener(el, event_type, this._id(name), cb, opts);
+        if (!this._listeners.has(el)) {
+            this._listeners.set(el, new Set());
+        }
+        this._listeners.get(el).add(name);
+    }
+
+    /**
+     * Remove event listeners of this scope from an element.
+     *
+     * @param {Node|Window} el - The element the event listeners were registered on.
+     * @param {string} [name] - The name of the listener. Can be a wildcard
+     *                          string. Without a name, all listeners of this
+     *                          scope on the element are removed.
+     */
+    remove(el, name) {
+        const names = this._listeners.get(el);
+        if (!names) {
+            return;
+        }
+        const name_regexp = name ? utils.regexp_from_wildcard(name) : null;
+        for (const it of [...names]) {
+            if (name_regexp && !name_regexp.test(it)) {
+                continue;
+            }
+            remove_event_listener(el, this._id(it));
+            names.delete(it);
+        }
+        if (!names.size) {
+            this._listeners.delete(el);
+        }
+    }
+
+    /**
+     * Remove all event listeners of this scope from all elements.
+     */
+    remove_all() {
+        for (const el of [...this._listeners.keys()]) {
+            this.remove(el);
+        }
+    }
+}
+
+/**
+ * Create a scope for event listeners, which can be removed all at once.
+ *
+ * @param {string} [namespace] - The namespace. Must not contain ``*``.
+ *                               Defaults to a generated unique id.
+ *
+ * @returns {ListenerScope} - The listener scope.
+ */
+const listener_scope = (namespace) => {
+    return new ListenerScope(namespace || create_uuid());
 };
 
 /**
@@ -331,6 +447,7 @@ const dragend_event = () => {
 export default {
     add_event_listener: add_event_listener,
     remove_event_listener: remove_event_listener,
+    listener_scope: listener_scope,
     await_event: await_event,
     await_pattern_init: await_pattern_init,
     generic_event: generic_event,
@@ -347,3 +464,5 @@ export default {
     dragstart_event: dragstart_event,
     dragend_event: dragend_event,
 };
+
+export { ListenerScope };

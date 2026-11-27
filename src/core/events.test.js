@@ -1,6 +1,6 @@
 import Base from "./base";
 import { BasePattern } from "./basepattern";
-import events, { event_listener_map } from "./events";
+import events, { event_listener_map, ListenerScope } from "./events";
 import logging from "./logging";
 import utils from "./utils";
 
@@ -675,6 +675,150 @@ describe("core.events tests", () => {
             await utils.timeout(1);
 
             expect(counter).toBe(2);
+        });
+    });
+
+    describe("6 - Listener scopes", () => {
+        afterEach(() => {
+            events.remove_event_listener(document);
+            events.remove_event_listener(window);
+        });
+
+        it("6.1 - Creates a scope with the given or a generated namespace.", () => {
+            const scope = events.listener_scope("ns");
+            expect(scope).toBeInstanceOf(ListenerScope);
+            expect(scope.namespace).toBe("ns");
+
+            const scope_a = events.listener_scope();
+            const scope_b = events.listener_scope();
+            expect(scope_a.namespace).toBeTruthy();
+            expect(scope_a.namespace).not.toBe(scope_b.namespace);
+        });
+
+        it("6.2 - Registers listeners under namespaced ids.", () => {
+            const scope = events.listener_scope("ns");
+            const cb = jest.fn();
+
+            scope.add(document, "keydown", "key", cb);
+
+            expect([...event_listener_map.get(document).keys()]).toEqual(["ns--key"]);
+            expect([...scope.elements]).toEqual([document]);
+
+            document.dispatchEvent(new KeyboardEvent("keydown"));
+            expect(cb).toHaveBeenCalledTimes(1);
+        });
+
+        it("6.3 - Passes options on to addEventListener.", () => {
+            const scope = events.listener_scope("ns");
+            const el = document.createElement("div");
+            const cb = jest.fn();
+
+            scope.add(el, "test", "once", cb, { once: true });
+            el.dispatchEvent(new Event("test"));
+            el.dispatchEvent(new Event("test"));
+
+            expect(cb).toHaveBeenCalledTimes(1);
+        });
+
+        it("6.4 - remove removes a single listener and forgets the element after the last one.", () => {
+            const scope = events.listener_scope("ns");
+            const cb_key = jest.fn();
+            const cb_up = jest.fn();
+
+            scope.add(document, "keydown", "key", cb_key);
+            scope.add(document, "keyup", "up", cb_up);
+
+            scope.remove(document, "key");
+            expect(scope.elements.has(document)).toBe(true);
+
+            document.dispatchEvent(new KeyboardEvent("keydown"));
+            document.dispatchEvent(new KeyboardEvent("keyup"));
+            expect(cb_key).not.toHaveBeenCalled();
+            expect(cb_up).toHaveBeenCalledTimes(1);
+
+            scope.remove(document, "up");
+            expect(scope.elements.has(document)).toBe(false);
+        });
+
+        it("6.5 - remove supports wildcards and removes all listeners of the scope on an element without a name.", () => {
+            const scope = events.listener_scope("ns");
+            const el1 = document.createElement("div");
+            const el2 = document.createElement("div");
+
+            scope.add(el1, "test", "a-1", () => {});
+            scope.add(el1, "test", "a-2", () => {});
+            scope.add(el1, "test", "b-1", () => {});
+            scope.add(el2, "test", "a-1", () => {});
+
+            scope.remove(el1, "a-*");
+            expect([...event_listener_map.get(el1).keys()]).toEqual(["ns--b-1"]);
+            expect(event_listener_map.get(el2).has("ns--a-1")).toBe(true);
+
+            scope.remove(el1);
+            expect(event_listener_map.has(el1)).toBe(false);
+            expect([...scope.elements]).toEqual([el2]);
+        });
+
+        it("6.6 - remove_all removes all listeners of the scope on all elements.", () => {
+            const scope = events.listener_scope("ns");
+            const el = document.createElement("div");
+            const cb_doc = jest.fn();
+            const cb_win = jest.fn();
+            const cb_el = jest.fn();
+
+            scope.add(document, "keydown", "key", cb_doc);
+            scope.add(window, "resize", "resize", cb_win);
+            scope.add(el, "test", "test", cb_el);
+
+            scope.remove_all();
+
+            document.dispatchEvent(new KeyboardEvent("keydown"));
+            window.dispatchEvent(new Event("resize"));
+            el.dispatchEvent(new Event("test"));
+            expect(cb_doc).not.toHaveBeenCalled();
+            expect(cb_win).not.toHaveBeenCalled();
+            expect(cb_el).not.toHaveBeenCalled();
+            expect(scope.elements.size).toBe(0);
+            expect(event_listener_map.has(el)).toBe(false);
+        });
+
+        it("6.7 - Scopes do not touch each other's or other listeners.", () => {
+            const scope_a = events.listener_scope("a");
+            const scope_ab = events.listener_scope("a--b");
+            const cb_a = jest.fn();
+            const cb_ab = jest.fn();
+            const cb_other = jest.fn();
+
+            scope_a.add(document, "keydown", "key", cb_a);
+            scope_ab.add(document, "keydown", "key", cb_ab);
+            events.add_event_listener(document, "keydown", "other", cb_other);
+
+            scope_a.remove(document, "key");
+            scope_a.remove_all();
+
+            document.dispatchEvent(new KeyboardEvent("keydown"));
+            expect(cb_a).not.toHaveBeenCalled();
+            expect(cb_ab).toHaveBeenCalledTimes(1);
+            expect(cb_other).toHaveBeenCalledTimes(1);
+        });
+
+        it("6.8 - Ignores missing elements and elements without event listener support.", () => {
+            const scope = events.listener_scope("ns");
+
+            scope.add(null, "test", "test", () => {});
+            scope.add({}, "test", "test", () => {});
+            expect(scope.elements.size).toBe(0);
+
+            expect(() => scope.remove(null, "test")).not.toThrow();
+            expect(() => scope.remove({}, "test")).not.toThrow();
+        });
+
+        it("6.9 - elements returns a copy.", () => {
+            const scope = events.listener_scope("ns");
+            scope.add(document, "keydown", "key", () => {});
+
+            scope.elements.clear();
+            expect(scope.elements.has(document)).toBe(true);
         });
     });
 });
