@@ -74,9 +74,10 @@ class Pattern extends BasePattern {
                     "reset",
                     `pat-depends--reset--${this.uuid}`,
                     async () => {
-                        // TODO: note sure, what this timeout is for.
+                        // Wait for the form reset to restore the default
+                        // values. The reset event is thrown before.
                         await utils.timeout(50);
-                        this.set_state.bind(this);
+                        this.set_state();
                     }
                 );
             }

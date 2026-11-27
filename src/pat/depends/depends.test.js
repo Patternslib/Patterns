@@ -1,5 +1,6 @@
 import $ from "jquery";
 import dom from "../../core/dom";
+import events from "../../core/events";
 import pattern from "./depends";
 import utils from "../../core/utils";
 
@@ -530,7 +531,40 @@ describe("pat-depends", function () {
 
             expect(called).toBe(false);
         });
+    });
 
+    describe("7 - Form reset", function () {
+        afterEach(function () {
+            document.body.innerHTML = "";
+        });
 
+        it("7.1 - Updates the state after a form reset.", async function () {
+            document.body.innerHTML = `
+                <form>
+                    <input type="checkbox" id="control" value="yes" />
+                    <div class="pat-depends" data-pat-depends="condition: control">
+                        Dependent
+                    </div>
+                </form>
+            `;
+
+            const el = document.querySelector(".pat-depends");
+            const control = document.querySelector("#control");
+            const instance = new pattern(el);
+            await events.await_pattern_init(instance);
+            expect(el.style.display).toBe("none");
+
+            control.checked = true;
+            control.dispatchEvent(new Event("input"));
+            expect(el.style.display).not.toBe("none");
+
+            // The reset restores the unchecked default state without
+            // throwing an input event.
+            document.querySelector("form").reset();
+            expect(control.checked).toBe(false);
+            await utils.timeout(60);
+
+            expect(el.style.display).toBe("none");
+        });
     });
 });
