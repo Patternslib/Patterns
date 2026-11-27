@@ -4,7 +4,6 @@ import Parser from "../../core/parser";
 import ScrollMarker from "../scroll-marker/scroll-marker";
 import dom from "../../core/dom";
 import logging from "../../core/logging";
-import events from "../../core/events";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 
@@ -49,11 +48,11 @@ class Pattern extends BasePattern {
             this.debounced_scroll_marker_enabler = utils.debounce(() => {
                 log.debug("Enable scroll-marker.");
                 this.scroll_marker.set_current_disabled = false;
-                events.remove_event_listener(
+                this.remove_event_listener(
                     this.scroll_marker.scroll_container === window
                         ? document
                         : this.scroll_marker.scroll_container,
-                    "pat-navigation__scroll_marker_enable"
+                    "scroll-marker-enable"
                 );
             }, 200);
         }
@@ -65,10 +64,10 @@ class Pattern extends BasePattern {
     init_listeners() {
         const current = this.options["current-class"];
 
-        events.add_event_listener(
+        this.add_event_listener(
             this.el,
             "click",
-            "pat_navigation_click_handler",
+            "click",
             (ev) => {
                 // Get the click target's anchor element. The click target
                 // might be a child of the link, e.g. a span wrapped within an
@@ -92,13 +91,13 @@ class Pattern extends BasePattern {
                     log.debug("Disable scroll-marker.");
                     this.scroll_marker.set_current_disabled = true;
                     this.debounced_scroll_marker_enabler();
-                    events.add_event_listener(
+                    this.add_event_listener(
                         this.scroll_marker.scroll_container === window
                             ? document
                             : this.scroll_marker.scroll_container,
                         "scroll",
-                        "pat-navigation__scroll_marker_enable",
-                        this.debounced_scroll_marker_enabler.bind(this)
+                        "scroll-marker-enable",
+                        this.debounced_scroll_marker_enabler
                     );
                 }
             }
