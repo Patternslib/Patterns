@@ -389,4 +389,88 @@ describe("Basepattern class tests", function () {
         expect(event.detail.dom).toBe(el);
         expect(event.detail.action).toBe("test");
     });
+
+    describe("8 - Instance scoped event listeners", function () {
+        let events;
+        let event_listener_map;
+
+        class Pat extends BasePattern {
+            static name = "example";
+            static trigger = ".example";
+        }
+
+        beforeEach(async function () {
+            ({ default: events, event_listener_map } = await import("./events"));
+        });
+
+        afterEach(function () {
+            events.remove_event_listener();
+        });
+
+        it("8.1 - Registers a listener under an instance namespaced id.", async function () {
+            const el = document.createElement("div");
+            const pat = new Pat(el);
+            await events.await_pattern_init(pat);
+
+            const cb = jest.fn();
+            pat.add_event_listener(document, "keydown", "close", cb);
+
+            expect(
+                event_listener_map
+                    .get(document)
+                    .has(`example--${pat.uuid}--close`)
+            ).toBe(true);
+
+            document.dispatchEvent(new KeyboardEvent("keydown"));
+            expect(cb).toHaveBeenCalledTimes(1);
+        });
+
+        it("8.2 - Passes options on to addEventListener.", async function () {
+            const el = document.createElement("div");
+            const pat = new Pat(el);
+            await events.await_pattern_init(pat);
+
+            const cb = jest.fn();
+            pat.add_event_listener(el, "test", "once", cb, { once: true });
+
+            el.dispatchEvent(new Event("test"));
+            el.dispatchEvent(new Event("test"));
+            expect(cb).toHaveBeenCalledTimes(1);
+        });
+
+        it("8.3 - destroy() removes the instance listeners but not those of other instances.", async function () {
+            const el1 = document.createElement("div");
+            const el2 = document.createElement("div");
+            const pat1 = new Pat(el1);
+            const pat2 = new Pat(el2);
+            await events.await_pattern_init(pat1);
+            await events.await_pattern_init(pat2);
+
+            const cb1_doc = jest.fn();
+            const cb1_win = jest.fn();
+            const cb2_doc = jest.fn();
+            const cb2_win = jest.fn();
+            pat1.add_event_listener(document, "keydown", "key", cb1_doc);
+            pat1.add_event_listener(window, "resize", "resize", cb1_win);
+            pat2.add_event_listener(document, "keydown", "key", cb2_doc);
+            pat2.add_event_listener(window, "resize", "resize", cb2_win);
+
+            pat1.destroy();
+
+            document.dispatchEvent(new KeyboardEvent("keydown"));
+            window.dispatchEvent(new Event("resize"));
+
+            expect(cb1_doc).not.toHaveBeenCalled();
+            expect(cb1_win).not.toHaveBeenCalled();
+            expect(cb2_doc).toHaveBeenCalledTimes(1);
+            expect(cb2_win).toHaveBeenCalledTimes(1);
+
+            expect([...event_listener_map.get(document).keys()]).toEqual([
+                `example--${pat2.uuid}--key`,
+            ]);
+            expect([...event_listener_map.get(window).keys()]).toEqual([
+                `example--${pat2.uuid}--resize`,
+            ]);
+        });
+    });
 });

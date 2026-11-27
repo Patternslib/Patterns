@@ -3,9 +3,34 @@ import utils from "./utils";
 // Event related methods and event factories
 
 // Event listener registration for easy-to-remove event listeners.
-// once Safari supports the ``signal`` option for addEventListener we can abort
-// event handlers by calling AbortController.abort().
+//
+// The id can be used as a namespace by giving it a prefix, e.g.
+// ``<namespace>--<name>``. Listeners with different ids coexist on the same
+// event type. All listeners of a namespace on all elements can be removed with
+// ``remove_event_listener(null, "<namespace>--*")``.
+//
+// The event_listener_map keeps a reference to the element until its listeners
+// are removed. Listeners on elements which may be removed from the DOM must be
+// removed explicitly, otherwise the element cannot be garbage collected.
 export const event_listener_map = new Map();
+
+/**
+ * Delete an entry from the event_listener_map.
+ * Also delete the element key if no more entries are registered for it.
+ *
+ * @param {DOM Node} el - The element.
+ * @param {string} id - The id of the entry to delete.
+ */
+const _delete_entry = (el, id) => {
+    const el_events = event_listener_map.get(el);
+    if (!el_events) {
+        return;
+    }
+    el_events.delete(id);
+    if (!el_events.size) {
+        event_listener_map.delete(el);
+    }
+};
 
 /**
  * Add an event listener to a DOM element under a unique id.
@@ -24,6 +49,10 @@ const add_event_listener = (el, event_type, id, cb, opts = {}) => {
     }
     remove_event_listener(el, id); // do not register one listener twice.
 
+    if (opts?.signal?.aborted) {
+        return; // addEventListener would not register the listener either.
+    }
+
     // Create event_listener_map entry if not existent.
     if (!event_listener_map.has(el)) {
         event_listener_map.set(el, new Map());
@@ -32,7 +61,7 @@ const add_event_listener = (el, event_type, id, cb, opts = {}) => {
     if (opts?.once === true) {
         // For `once` events, also remove the entry from the event_listener_map.
         _cb = (e) => {
-            event_listener_map.get(el)?.delete(id);
+            _delete_entry(el, id);
             cb(e);
         };
     }
@@ -41,6 +70,20 @@ const add_event_listener = (el, event_type, id, cb, opts = {}) => {
         .get(el)
         .set(id, [event_type, _cb, opts.capture ? opts : undefined]);
     el.addEventListener(event_type, _cb, opts);
+
+    if (opts?.signal) {
+        // The signal removes the listener. Also remove the map entry, but
+        // only if it was not replaced by a later registration under this id.
+        opts.signal.addEventListener(
+            "abort",
+            () => {
+                if (event_listener_map.get(el)?.get(id)?.[1] === _cb) {
+                    _delete_entry(el, id);
+                }
+            },
+            { once: true }
+        );
+    }
 };
 
 /**
@@ -63,19 +106,20 @@ const add_event_listener = (el, event_type, id, cb, opts = {}) => {
  */
 const remove_event_listener = (el, id) => {
     const els = el ? [el] : event_listener_map.keys();
+    const id_regexp = id ? utils.regexp_from_wildcard(id) : null;
     for (const el of els) {
         if (!el?.removeEventListener) {
-            return; // nothing to do.
+            continue; // nothing to do.
         }
         const el_events = event_listener_map.get(el);
         if (!el_events) {
-            return;
+            continue;
         }
         let entries;
         if (id) {
             // remove event listener with matching id
             entries = [...el_events.entries()].filter((entry) =>
-                utils.regexp_from_wildcard(id).test(entry[0])
+                id_regexp.test(entry[0])
             );
         } else {
             // remove all event listeners of element
@@ -84,12 +128,8 @@ const remove_event_listener = (el, id) => {
         for (const entry of entries || []) {
             // Remove event listener
             el.removeEventListener(entry[1][0], entry[1][1], entry[1][2]);
-            // Delete entry from event_listener_map
-            event_listener_map.get(el).delete(entry[0]);
-            // Delete element from event_listener_map if no more events are registered.
-            if (!event_listener_map.get(el).size) {
-                event_listener_map.delete(el);
-            }
+            // Delete entry and, if empty, the element from event_listener_map.
+            _delete_entry(el, entry[0]);
         }
     }
 };

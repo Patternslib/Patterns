@@ -67,7 +67,74 @@ describe("core.events tests", () => {
             expect(event_listener_map.get(el).get("test_once_event")).toBeDefined();
             el.dispatchEvent(new Event("test"));
 
-            expect(event_listener_map.get(el).get("test_once_event")).not.toBeDefined();
+            expect(event_listener_map.get(el)?.get("test_once_event")).not.toBeDefined();
+        });
+
+        it("Removes the element from the event_listener_map after a once-event fired.", () => {
+            const el = document.createElement("div");
+            const cb = jest.fn();
+
+            events.add_event_listener(el, "test", "test_once_event", cb, {
+                once: true,
+            });
+            el.dispatchEvent(new Event("test"));
+
+            expect(cb).toHaveBeenCalledTimes(1);
+            expect(event_listener_map.has(el)).toBe(false);
+        });
+
+        it("Removes the entry from the event_listener_map when the signal is aborted.", () => {
+            const el = document.createElement("div");
+            const cb = jest.fn();
+            const controller = new AbortController();
+
+            events.add_event_listener(el, "test", "test_signal", cb, {
+                signal: controller.signal,
+            });
+            expect(event_listener_map.get(el).has("test_signal")).toBe(true);
+
+            controller.abort();
+            el.dispatchEvent(new Event("test"));
+
+            expect(cb).not.toHaveBeenCalled();
+            expect(event_listener_map.has(el)).toBe(false);
+        });
+
+        it("Does not register anything for an already aborted signal.", () => {
+            const el = document.createElement("div");
+            const cb = jest.fn();
+            const controller = new AbortController();
+            controller.abort();
+
+            events.add_event_listener(el, "test", "test_signal", cb, {
+                signal: controller.signal,
+            });
+            el.dispatchEvent(new Event("test"));
+
+            expect(cb).not.toHaveBeenCalled();
+            expect(event_listener_map.has(el)).toBe(false);
+        });
+
+        it("Keeps a re-registered entry when the old signal is aborted.", () => {
+            const el = document.createElement("div");
+            const cb_old = jest.fn();
+            const cb_new = jest.fn();
+            const controller_old = new AbortController();
+            const controller_new = new AbortController();
+
+            events.add_event_listener(el, "test", "test_signal", cb_old, {
+                signal: controller_old.signal,
+            });
+            events.add_event_listener(el, "test", "test_signal", cb_new, {
+                signal: controller_new.signal,
+            });
+
+            controller_old.abort();
+            expect(event_listener_map.get(el)?.has("test_signal")).toBe(true);
+
+            el.dispatchEvent(new Event("test"));
+            expect(cb_old).not.toHaveBeenCalled();
+            expect(cb_new).toHaveBeenCalledTimes(1);
         });
 
         it("Removes a specific event listener.", () => {
@@ -302,6 +369,42 @@ describe("core.events tests", () => {
             // Remove all event listeners
             events.remove_event_listener();
             expect(event_listener_map.size).toBe(0);
+        });
+
+        it("Supports namespacing by id prefix.", () => {
+            const cb_a1 = jest.fn();
+            const cb_a2 = jest.fn();
+            const cb_b1 = jest.fn();
+
+            events.add_event_listener(document, "keydown", "a--1", cb_a1);
+            events.add_event_listener(document, "keydown", "a--2", cb_a2);
+            events.add_event_listener(document, "keydown", "b--1", cb_b1);
+
+            events.remove_event_listener(null, "a--*");
+
+            expect([...event_listener_map.get(document).keys()]).toEqual(["b--1"]);
+
+            document.dispatchEvent(new KeyboardEvent("keydown"));
+            expect(cb_a1).not.toHaveBeenCalled();
+            expect(cb_a2).not.toHaveBeenCalled();
+            expect(cb_b1).toHaveBeenCalledTimes(1);
+
+            events.remove_event_listener(document);
+        });
+
+        it("Continues removing on other elements after an invalid map key.", () => {
+            const el = document.createElement("div");
+            const cb = jest.fn();
+
+            // An invalid key, inserted before the valid one.
+            event_listener_map.set({}, new Map([["test_event", []]]));
+            events.add_event_listener(el, "test", "test_event", cb);
+
+            events.remove_event_listener(null, "test_event");
+            el.dispatchEvent(new Event("test"));
+
+            expect(cb).not.toHaveBeenCalled();
+            expect(event_listener_map.has(el)).toBe(false);
         });
 
         it("Remove wildcard matching event listeners.", () => {

@@ -134,9 +134,35 @@ class BasePattern {
     }
 
     /**
+     * Add an event listener which is scoped to this pattern instance.
+     *
+     * The listener is registered via ``events.add_event_listener`` under the
+     * id ``<pattern name>--<instance uuid>--<name>`` and removed when the
+     * pattern is destroyed.
+     *
+     * @param {Node|Window} el - The element to register the event listener on.
+     * @param {string} event_type - The event type to listen for.
+     * @param {string} name - A name for the listener, unique within this instance.
+     * @param {function} cb - The event handler / callback function.
+     * @param {Object} [opts] - Options for the addEventListener API.
+     */
+    add_event_listener(el, event_type, name, cb, opts = {}) {
+        events.add_event_listener(
+            el,
+            event_type,
+            `${this.name}--${this.uuid}--${name}`,
+            cb,
+            opts
+        );
+    }
+
+    /**
      * Destroy/remove/unload the pattern from the element.
+     *
+     * Also removes all event listeners registered with ``add_event_listener``.
      */
     destroy() {
+        events.remove_event_listener(null, `${this.name}--${this.uuid}--*`);
         delete this.el[`pattern-${this.name}`];
     }
 }

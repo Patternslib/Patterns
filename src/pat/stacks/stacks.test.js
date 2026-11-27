@@ -226,4 +226,54 @@ describe("pat-stacks", function () {
             expect(this.spy_scrollTo).not.toHaveBeenCalled();
         });
     });
+
+    describe("6 - destroy", function () {
+        beforeEach(function () {
+            document.body.innerHTML = `
+                <a id="l1" href="#s1">1</a>
+                <a id="l2" href="#s2">2</a>
+                <a id="l3" href="#s3">3</a>
+                <a id="l4" href="#s4">4</a>
+                <div class="pat-stacks" id="stack1">
+                    <section id="s1"></section>
+                    <section id="s2"></section>
+                </div>
+                <div class="pat-stacks" id="stack2">
+                    <section id="s3"></section>
+                    <section id="s4"></section>
+                </div>
+            `;
+        });
+
+        it("6.1 - Removes the click handler and unregisters the pattern.", async function () {
+            const el = document.querySelector("#stack1");
+            const instance = new Stacks(el);
+            await events.await_pattern_init(instance);
+            const spy_switch = jest.spyOn(instance, "_switch");
+
+            document.querySelector("#l2").click();
+            expect(spy_switch).toHaveBeenCalledTimes(1);
+
+            instance.destroy();
+
+            document.querySelector("#l1").click();
+            expect(spy_switch).toHaveBeenCalledTimes(1);
+            expect(el["pattern-stacks"]).toBeUndefined();
+        });
+
+        it("6.2 - Does not remove the click handler of other instances.", async function () {
+            const instance1 = new Stacks(document.querySelector("#stack1"));
+            const instance2 = new Stacks(document.querySelector("#stack2"));
+            await events.await_pattern_init(instance1);
+            await events.await_pattern_init(instance2);
+            const spy_switch = jest.spyOn(instance2, "_switch");
+
+            instance1.destroy();
+
+            document.querySelector("#l4").click();
+            expect(spy_switch).toHaveBeenCalledTimes(1);
+
+            instance2.destroy();
+        });
+    });
 });
