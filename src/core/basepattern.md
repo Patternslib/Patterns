@@ -83,7 +83,12 @@ the instance, but not those of other instances of the same pattern. If you
 override ``destroy()``, call ``super.destroy()``.
 
 To remove a single listener before the pattern is destroyed, use
-``this.remove_event_listener(el, name)`` with the same element and name.
+``this.remove_event_listener(el, name)`` with the same element and name. The
+name can be a wildcard. Without a name, all listeners of the instance on that
+element are removed.
+
+The listeners are managed by an event listener scope (see
+``src/core/events.md``).
 
 ## Automatic destroy
 

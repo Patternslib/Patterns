@@ -497,36 +497,85 @@ describe("Basepattern class tests", function () {
             expect(cb2_key).toHaveBeenCalledTimes(1);
         });
 
-        it("8.4.1 - Elements are only remembered while the instance has listeners on them.", async function () {
+        it("8.4.1 - destroy() removes the remaining listeners after single listeners were removed.", async function () {
             const el = document.createElement("div");
             const pat = new Pat(el);
             await events.await_pattern_init(pat);
 
+            const cb_up = jest.fn();
+            const cb_resize = jest.fn();
             pat.add_event_listener(document, "keydown", "key", () => {});
-            pat.add_event_listener(document, "keyup", "key-up", () => {});
-            pat.add_event_listener(window, "resize", "resize", () => {});
-            expect([...pat._listener_els]).toEqual([document, window]);
+            pat.add_event_listener(document, "keyup", "key-up", cb_up);
+            pat.add_event_listener(window, "resize", "resize", cb_resize);
 
             pat.remove_event_listener(document, "key");
-            expect(pat._listener_els.has(document)).toBe(true);
-
-            pat.remove_event_listener(document, "key-up");
-            expect(pat._listener_els.has(document)).toBe(false);
-            expect(pat._listener_els.has(window)).toBe(true);
-
             pat.destroy();
-            expect(pat._listener_els.size).toBe(0);
+
+            document.dispatchEvent(new KeyboardEvent("keyup"));
+            window.dispatchEvent(new Event("resize"));
+            expect(cb_up).not.toHaveBeenCalled();
+            expect(cb_resize).not.toHaveBeenCalled();
+            expect(event_listener_map.has(document)).toBe(false);
             expect(event_listener_map.has(window)).toBe(false);
         });
 
-        it("8.4.2 - Elements without event listener support are not remembered.", async function () {
+        it("8.4.2 - Missing elements and elements without event listener support are ignored.", async function () {
             const el = document.createElement("div");
             const pat = new Pat(el);
             await events.await_pattern_init(pat);
 
-            pat.add_event_listener(null, "keydown", "key", () => {});
-            pat.add_event_listener({}, "keydown", "key", () => {});
-            expect(pat._listener_els.size).toBe(0);
+            expect(() => {
+                pat.add_event_listener(null, "keydown", "key", () => {});
+                pat.add_event_listener({}, "keydown", "key", () => {});
+                pat.remove_event_listener(null, "key");
+                pat.remove_event_listener({}, "key");
+                pat.destroy();
+            }).not.toThrow();
+        });
+
+        it("8.4.4 - Subclass properties do not collide with the listener scope.", async function () {
+            class SubPat extends Pat {
+                _listeners = [];
+                listeners = [];
+            }
+            const el = document.createElement("div");
+            const pat = new SubPat(el);
+            await events.await_pattern_init(pat);
+
+            const cb = jest.fn();
+            pat.add_event_listener(document, "keydown", "key", cb);
+            pat.destroy();
+
+            document.dispatchEvent(new KeyboardEvent("keydown"));
+            expect(cb).not.toHaveBeenCalled();
+        });
+
+        it("8.4.3 - remove_event_listener without a name removes all listeners of the instance on the element.", async function () {
+            const el1 = document.createElement("div");
+            const el2 = document.createElement("div");
+            const pat1 = new Pat(el1);
+            const pat2 = new Pat(el2);
+            await events.await_pattern_init(pat1);
+            await events.await_pattern_init(pat2);
+
+            const cb1_key = jest.fn();
+            const cb1_up = jest.fn();
+            const cb1_resize = jest.fn();
+            const cb2_key = jest.fn();
+            pat1.add_event_listener(document, "keydown", "key", cb1_key);
+            pat1.add_event_listener(document, "keyup", "up", cb1_up);
+            pat1.add_event_listener(window, "resize", "resize", cb1_resize);
+            pat2.add_event_listener(document, "keydown", "key", cb2_key);
+
+            pat1.remove_event_listener(document);
+
+            document.dispatchEvent(new KeyboardEvent("keydown"));
+            document.dispatchEvent(new KeyboardEvent("keyup"));
+            window.dispatchEvent(new Event("resize"));
+            expect(cb1_key).not.toHaveBeenCalled();
+            expect(cb1_up).not.toHaveBeenCalled();
+            expect(cb1_resize).toHaveBeenCalledTimes(1);
+            expect(cb2_key).toHaveBeenCalledTimes(1);
         });
 
         it("8.5 - remove_event_listener without an element does nothing.", async function () {
