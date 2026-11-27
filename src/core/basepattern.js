@@ -6,7 +6,7 @@
  *
  * For usage, see basepattern.md
  */
-import events from "./events";
+import events, { event_listener_map } from "./events";
 import lifecycle from "./lifecycle";
 import logging from "./logging";
 import create_uuid from "./uuid";
@@ -23,6 +23,11 @@ class BasePattern {
     parser_group_options = true;
     parser_multiple = undefined;
     parser_inherit = true;
+
+    // Elements with listeners registered via ``add_event_listener``.
+    // The event listener registry is a WeakMap which cannot be iterated, so
+    // remember the elements to remove the listeners on destroy.
+    _listener_els = new Set();
 
     constructor(el, options = {}) {
         // Make static variables available on instance.
@@ -113,7 +118,7 @@ class BasePattern {
             if (this.destroyed) {
                 // Destroyed while initializing. Remove the listeners which
                 // were registered after the destroy.
-                events.remove_event_listener(null, `${this.name}--${this.uuid}--*`);
+                this._remove_all_event_listeners();
             } else {
                 if (this.el.isConnected) {
                     // Destroy the pattern when the element is removed from
@@ -181,13 +186,11 @@ class BasePattern {
      * @param {Object} [opts] - Options for the addEventListener API.
      */
     add_event_listener(el, event_type, name, cb, opts = {}) {
-        events.add_event_listener(
-            el,
-            event_type,
-            `${this.name}--${this.uuid}--${name}`,
-            cb,
-            opts
-        );
+        if (!el?.addEventListener) {
+            return; // nothing to do.
+        }
+        events.add_event_listener(el, event_type, this._listener_id(name), cb, opts);
+        this._listener_els.add(el);
     }
 
     /**
@@ -200,11 +203,27 @@ class BasePattern {
      */
     remove_event_listener(el, name) {
         if (!el) {
-            // Without an element, events.remove_event_listener would remove
-            // the listener from all elements.
             return;
         }
-        events.remove_event_listener(el, `${this.name}--${this.uuid}--${name}`);
+        events.remove_event_listener(el, this._listener_id(name));
+
+        // Forget the element if this instance has no more listeners on it.
+        const prefix = this._listener_id("");
+        const ids = event_listener_map.get(el)?.keys() || [];
+        if (![...ids].some((id) => id.startsWith(prefix))) {
+            this._listener_els.delete(el);
+        }
+    }
+
+    _listener_id(name) {
+        return `${this.name}--${this.uuid}--${name}`;
+    }
+
+    _remove_all_event_listeners() {
+        for (const el of this._listener_els) {
+            events.remove_event_listener(el, this._listener_id("*"));
+        }
+        this._listener_els.clear();
     }
 
     /**
@@ -223,7 +242,7 @@ class BasePattern {
         }
         this.destroyed = true;
         lifecycle.untrack(this);
-        events.remove_event_listener(null, `${this.name}--${this.uuid}--*`);
+        this._remove_all_event_listeners();
         if (this.el[`pattern-${this.name}`] === this) {
             // Only remove the reference if it points to this instance and not
             // to another instance which was initialized on the element.

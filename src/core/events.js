@@ -1,4 +1,7 @@
+import logging from "./logging";
 import utils from "./utils";
+
+const log = logging.getLogger("events");
 
 // Event related methods and event factories
 
@@ -6,13 +9,14 @@ import utils from "./utils";
 //
 // The id can be used as a namespace by giving it a prefix, e.g.
 // ``<namespace>--<name>``. Listeners with different ids coexist on the same
-// event type. All listeners of a namespace on all elements can be removed with
-// ``remove_event_listener(null, "<namespace>--*")``.
+// event type. All listeners of a namespace on an element can be removed with
+// ``remove_event_listener(el, "<namespace>--*")``.
 //
-// The event_listener_map keeps a reference to the element until its listeners
-// are removed. Listeners on elements which may be removed from the DOM must be
-// removed explicitly, otherwise the element cannot be garbage collected.
-export const event_listener_map = new Map();
+// The event_listener_map is a WeakMap and does not keep the elements alive.
+// Elements which are removed from the DOM and not referenced otherwise can be
+// garbage collected together with their listeners. As a WeakMap cannot be
+// iterated, listeners can only be removed per element.
+export const event_listener_map = new WeakMap();
 
 /**
  * Delete an entry from the event_listener_map.
@@ -91,46 +95,48 @@ const add_event_listener = (el, event_type, id, cb, opts = {}) => {
  *
  * If an element and id are given, the event listeners for the given element matching the id are removed.
  * If an element but no id is given, all event listeners for that element are removed.
- * If an id but no element is given, all event listeners for any element matching the id are removed.
- * If no element and no id are given, all event listeners are removed.
+ * Without an element nothing is removed. Listeners cannot be removed from all
+ * elements at once, because the event_listener_map is a WeakMap.
  *
  * The id can be a wildcard string, e.g. `test-*-event`, which would match any
  * event which starts with "test-" and ends with "-event". The wildcard "*" can
  * be anywhere in the string and also be used multiple times. If no wildcard is
  * present the search string is used for an exact match.
  *
- * @param {DOM Node} [el] - The element to register the event for.
+ * @param {DOM Node} el - The element the event listener was registered on.
  * @param {string} [id] - A unique id under which the event is registered.
  *                        Can be a wildcard string.
  *
  */
 const remove_event_listener = (el, id) => {
-    const els = el ? [el] : event_listener_map.keys();
-    const id_regexp = id ? utils.regexp_from_wildcard(id) : null;
-    for (const el of els) {
-        if (!el?.removeEventListener) {
-            continue; // nothing to do.
-        }
-        const el_events = event_listener_map.get(el);
-        if (!el_events) {
-            continue;
-        }
-        let entries;
-        if (id) {
-            // remove event listener with matching id
-            entries = [...el_events.entries()].filter((entry) =>
-                id_regexp.test(entry[0])
-            );
-        } else {
-            // remove all event listeners of element
-            entries = el_events.entries();
-        }
-        for (const entry of entries || []) {
-            // Remove event listener
-            el.removeEventListener(entry[1][0], entry[1][1], entry[1][2]);
-            // Delete entry and, if empty, the element from event_listener_map.
-            _delete_entry(el, entry[0]);
-        }
+    if (!el) {
+        log.warn(
+            "remove_event_listener needs an element. Listeners cannot be removed from all elements at once.",
+            id
+        );
+        return;
+    }
+    if (!el.removeEventListener) {
+        return; // nothing to do.
+    }
+    const el_events = event_listener_map.get(el);
+    if (!el_events) {
+        return;
+    }
+    let entries;
+    if (id) {
+        // remove event listener with matching id
+        const id_regexp = utils.regexp_from_wildcard(id);
+        entries = [...el_events.entries()].filter((entry) => id_regexp.test(entry[0]));
+    } else {
+        // remove all event listeners of element
+        entries = [...el_events.entries()];
+    }
+    for (const entry of entries) {
+        // Remove event listener
+        el.removeEventListener(entry[1][0], entry[1][1], entry[1][2]);
+        // Delete entry and, if empty, the element from event_listener_map.
+        _delete_entry(el, entry[0]);
     }
 };
 

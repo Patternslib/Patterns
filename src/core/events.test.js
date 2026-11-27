@@ -1,13 +1,19 @@
 import Base from "./base";
 import { BasePattern } from "./basepattern";
 import events, { event_listener_map } from "./events";
+import logging from "./logging";
 import utils from "./utils";
 
 describe("core.events tests", () => {
     describe("1 - add / remove event listener", () => {
         afterEach(() => {
-            // Clear event_listener_map after each test.
-            event_listener_map.clear();
+            // Remove listeners on the long living elements after each test.
+            events.remove_event_listener(document);
+            events.remove_event_listener(window);
+        });
+
+        it("Uses a WeakMap, which does not keep the elements alive.", () => {
+            expect(event_listener_map).toBeInstanceOf(WeakMap);
         });
 
         it("Registers events only once and unregisters events.", (done) => {
@@ -187,8 +193,6 @@ describe("core.events tests", () => {
             expect(event_listener_map.get(el1).get("test_event_3")).toBeDefined();
             expect(event_listener_map.get(el2).get("test_event_4")).toBeDefined();
 
-            expect(event_listener_map.size).toBe(2);
-
             el1.dispatchEvent(new Event("test1"));
             expect(cnt1).toBe(1);
             expect(cnt2).toBe(0);
@@ -220,7 +224,6 @@ describe("core.events tests", () => {
             expect(event_listener_map.get(el1).get("test_event_2")).toBeDefined();
             expect(event_listener_map.get(el1).get("test_event_3")).toBeDefined();
             expect(event_listener_map.get(el2).get("test_event_4")).toBeDefined();
-            expect(event_listener_map.size).toBe(2);
 
             // Counter should not increase anymore on event "test1"
             el1.dispatchEvent(new Event("test1"));
@@ -238,8 +241,8 @@ describe("core.events tests", () => {
 
             // Remove all event handlers on el1
             events.remove_event_listener(el1);
-            expect(event_listener_map.get(el1)).not.toBeDefined();
-            expect(event_listener_map.size).toBe(1);
+            expect(event_listener_map.has(el1)).toBe(false);
+            expect(event_listener_map.has(el2)).toBe(true);
 
             // Counter should not increase anymore on el1
             el1.dispatchEvent(new Event("test1"));
@@ -256,119 +259,24 @@ describe("core.events tests", () => {
             expect(cnt3).toBe(3);
         });
 
-        it("Remove all events matching exactly an id from any element.", () => {
-            const el1 = document.createElement("div");
-            const el2 = document.createElement("div");
+        it("Does not remove anything without an element.", () => {
+            const el = document.createElement("div");
+            const cb = jest.fn();
+            const log = logging.getLogger("events");
+            const spy_warn = jest.spyOn(log, "warn").mockImplementation(() => {});
 
-            let cnt1 = 0;
-            let cnt2 = 0;
-            let cnt3 = 0;
+            events.add_event_listener(el, "test", "test_event", cb);
 
-            const shared_cb = () => {
-                cnt1++;
-            };
-
-            // register the event handlers
-            events.add_event_listener(el1, "test1", "test_event_1", shared_cb);
-            events.add_event_listener(el1, "test2", "test_event_2", shared_cb);
-            events.add_event_listener(el1, "test3", "test_event_3", () => cnt2++);
-            events.add_event_listener(el2, "test4", "test_event_4", () => cnt3++);
-
-            expect(event_listener_map.get(el1).get("test_event_1")).toBeDefined();
-            expect(event_listener_map.get(el1).get("test_event_2")).toBeDefined();
-            expect(event_listener_map.get(el1).get("test_event_3")).toBeDefined();
-            expect(event_listener_map.get(el2).get("test_event_4")).toBeDefined();
-
-            expect(event_listener_map.size).toBe(2);
-
-            el1.dispatchEvent(new Event("test1"));
-            expect(cnt1).toBe(1);
-            expect(cnt2).toBe(0);
-            expect(cnt3).toBe(0);
-
-            el1.dispatchEvent(new Event("test1"));
-            expect(cnt1).toBe(2);
-            expect(cnt2).toBe(0);
-            expect(cnt3).toBe(0);
-
-            el1.dispatchEvent(new Event("test2"));
-            expect(cnt1).toBe(3);
-            expect(cnt2).toBe(0);
-            expect(cnt3).toBe(0);
-
-            el1.dispatchEvent(new Event("test3"));
-            expect(cnt1).toBe(3);
-            expect(cnt2).toBe(1);
-            expect(cnt3).toBe(0);
-
-            el2.dispatchEvent(new Event("test4"));
-            expect(cnt1).toBe(3);
-            expect(cnt2).toBe(1);
-            expect(cnt3).toBe(1);
-
-            // Remove only test_event_1
-            events.remove_event_listener(undefined, "test_event_1");
-            expect(event_listener_map.get(el1).get("test_event_1")).not.toBeDefined();
-            expect(event_listener_map.get(el1).get("test_event_2")).toBeDefined();
-            expect(event_listener_map.get(el1).get("test_event_3")).toBeDefined();
-            expect(event_listener_map.get(el2).get("test_event_4")).toBeDefined();
-            expect(event_listener_map.size).toBe(2);
-
-            // Counter should not increase anymore on event "test1"
-            el1.dispatchEvent(new Event("test1"));
-            expect(cnt1).toBe(3);
-            expect(cnt2).toBe(1);
-            expect(cnt3).toBe(1);
-
-            // Rest should not be affected.
-            el1.dispatchEvent(new Event("test2"));
-            el1.dispatchEvent(new Event("test3"));
-            el2.dispatchEvent(new Event("test4"));
-            expect(cnt1).toBe(4);
-            expect(cnt2).toBe(2);
-            expect(cnt3).toBe(2);
-
-            // Remove rest of event handlers on el1
-            events.remove_event_listener(undefined, "test_event_2");
-            events.remove_event_listener(undefined, "test_event_3");
-            expect(event_listener_map.get(el1)).not.toBeDefined();
-            expect(event_listener_map.size).toBe(1);
-
-            // Counter should not increase anymore on el1
-            el1.dispatchEvent(new Event("test1"));
-            el1.dispatchEvent(new Event("test2"));
-            el1.dispatchEvent(new Event("test3"));
-            expect(cnt1).toBe(4);
-            expect(cnt2).toBe(2);
-            expect(cnt3).toBe(2);
-
-            // But el2 should still work.
-            el2.dispatchEvent(new Event("test4"));
-            expect(cnt1).toBe(4);
-            expect(cnt2).toBe(2);
-            expect(cnt3).toBe(3);
-        });
-
-        it("Remove all event listeners at once.", () => {
-            const el1 = document.createElement("div");
-            const el2 = document.createElement("div");
-
-            // register the event handlers
-            events.add_event_listener(el1, "test1", "test_event_1", () => {});
-            events.add_event_listener(el1, "test2", "test_event_2", () => {});
-            events.add_event_listener(el1, "test3", "test_event_3", () => {});
-            events.add_event_listener(el2, "test4", "test_event_4", () => {});
-
-            expect(event_listener_map.get(el1).get("test_event_1")).toBeDefined();
-            expect(event_listener_map.get(el1).get("test_event_2")).toBeDefined();
-            expect(event_listener_map.get(el1).get("test_event_3")).toBeDefined();
-            expect(event_listener_map.get(el2).get("test_event_4")).toBeDefined();
-
-            expect(event_listener_map.size).toBe(2);
-
-            // Remove all event listeners
+            events.remove_event_listener(null, "test_event");
+            events.remove_event_listener(undefined, "test_event");
             events.remove_event_listener();
-            expect(event_listener_map.size).toBe(0);
+
+            el.dispatchEvent(new Event("test"));
+            expect(cb).toHaveBeenCalledTimes(1);
+            expect(event_listener_map.get(el).has("test_event")).toBe(true);
+            expect(spy_warn).toHaveBeenCalledTimes(3);
+
+            spy_warn.mockRestore();
         });
 
         it("Supports namespacing by id prefix.", () => {
@@ -380,7 +288,7 @@ describe("core.events tests", () => {
             events.add_event_listener(document, "keydown", "a--2", cb_a2);
             events.add_event_listener(document, "keydown", "b--1", cb_b1);
 
-            events.remove_event_listener(null, "a--*");
+            events.remove_event_listener(document, "a--*");
 
             expect([...event_listener_map.get(document).keys()]).toEqual(["b--1"]);
 
@@ -392,19 +300,9 @@ describe("core.events tests", () => {
             events.remove_event_listener(document);
         });
 
-        it("Continues removing on other elements after an invalid map key.", () => {
-            const el = document.createElement("div");
-            const cb = jest.fn();
-
-            // An invalid key, inserted before the valid one.
-            event_listener_map.set({}, new Map([["test_event", []]]));
-            events.add_event_listener(el, "test", "test_event", cb);
-
-            events.remove_event_listener(null, "test_event");
-            el.dispatchEvent(new Event("test"));
-
-            expect(cb).not.toHaveBeenCalled();
-            expect(event_listener_map.has(el)).toBe(false);
+        it("Ignores elements which do not support event listeners.", () => {
+            expect(() => events.add_event_listener({}, "test", "id", () => {})).not.toThrow();
+            expect(() => events.remove_event_listener({}, "id")).not.toThrow();
         });
 
         it("Remove wildcard matching event listeners.", () => {

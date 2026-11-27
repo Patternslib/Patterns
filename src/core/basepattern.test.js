@@ -404,7 +404,8 @@ describe("Basepattern class tests", function () {
         });
 
         afterEach(function () {
-            events.remove_event_listener();
+            events.remove_event_listener(document);
+            events.remove_event_listener(window);
         });
 
         it("8.1 - Registers a listener under an instance namespaced id.", async function () {
@@ -494,6 +495,38 @@ describe("Basepattern class tests", function () {
             expect(cb1_key).not.toHaveBeenCalled();
             expect(cb1_other).toHaveBeenCalledTimes(1);
             expect(cb2_key).toHaveBeenCalledTimes(1);
+        });
+
+        it("8.4.1 - Elements are only remembered while the instance has listeners on them.", async function () {
+            const el = document.createElement("div");
+            const pat = new Pat(el);
+            await events.await_pattern_init(pat);
+
+            pat.add_event_listener(document, "keydown", "key", () => {});
+            pat.add_event_listener(document, "keyup", "key-up", () => {});
+            pat.add_event_listener(window, "resize", "resize", () => {});
+            expect([...pat._listener_els]).toEqual([document, window]);
+
+            pat.remove_event_listener(document, "key");
+            expect(pat._listener_els.has(document)).toBe(true);
+
+            pat.remove_event_listener(document, "key-up");
+            expect(pat._listener_els.has(document)).toBe(false);
+            expect(pat._listener_els.has(window)).toBe(true);
+
+            pat.destroy();
+            expect(pat._listener_els.size).toBe(0);
+            expect(event_listener_map.has(window)).toBe(false);
+        });
+
+        it("8.4.2 - Elements without event listener support are not remembered.", async function () {
+            const el = document.createElement("div");
+            const pat = new Pat(el);
+            await events.await_pattern_init(pat);
+
+            pat.add_event_listener(null, "keydown", "key", () => {});
+            pat.add_event_listener({}, "keydown", "key", () => {});
+            expect(pat._listener_els.size).toBe(0);
         });
 
         it("8.5 - remove_event_listener without an element does nothing.", async function () {
