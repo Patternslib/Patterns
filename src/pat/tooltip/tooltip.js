@@ -3,6 +3,7 @@ import { BasePattern } from "../../core/basepattern";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import events from "../../core/events";
+import lifecycle from "../../core/lifecycle";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 
@@ -95,6 +96,12 @@ class Pattern extends BasePattern {
         Tippy.setDefaultProps(defaultProps);
         this.tippy = new Tippy(el, this.tippy_options);
 
+        // Tippy removes the popper from the document while the tooltip is
+        // hidden and re-inserts it on show. Do not destroy the patterns in
+        // the tooltip content when it is hidden. They are destroyed with the
+        // tooltip or when the content is replaced.
+        this.tippy.popper.setAttribute(lifecycle.MANAGED_ATTRIBUTE, "");
+
         if (this.options.source === "title") {
             // Remove ``title`` attribute when source is set to ``title`` to
             // disable the browser's built-in tooltip feature
@@ -143,7 +150,11 @@ class Pattern extends BasePattern {
             return;
         }
         super.destroy(); // Unregister
-        this.tippy?.destroy();
+        if (this.tippy) {
+            // Destroy the patterns in the tooltip content.
+            lifecycle.destroy_patterns(this.tippy.popper);
+            this.tippy.destroy();
+        }
     }
 
     parseOptionsForTippy(opts) {
@@ -360,6 +371,9 @@ class Pattern extends BasePattern {
         }
 
         if (this.options.source === "ajax") {
+            // The content is fetched again on the next show. Destroy the
+            // patterns in the current content.
+            lifecycle.destroy_patterns(this.tippy.popper);
             this.tippy.setContent(document.createElement("progress"));
         }
     }

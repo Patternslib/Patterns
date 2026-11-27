@@ -1,6 +1,8 @@
 import $ from "jquery";
 import autosubmit from "../auto-submit/auto-submit";
+import { BasePattern } from "../../core/basepattern";
 import events from "../../core/events";
+import lifecycle from "../../core/lifecycle";
 import Pattern from "./tooltip";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
@@ -1788,6 +1790,130 @@ this will be extracted.
             expect(document.querySelector(".pat-tooltip").title).toBe(
                 "This is the title attribute"
             );
+        });
+    });
+
+    describe("11 - Lifecycle of patterns in the tooltip content", () => {
+        class Dummy extends BasePattern {
+            static name = "tooltip-test-dummy";
+            static trigger = ".pat-tooltip-test-dummy";
+        }
+
+        const get_dummy = () =>
+            document.querySelector(".tippy-content .pat-tooltip-test-dummy");
+
+        beforeEach(() => {
+            registry.register(Dummy);
+        });
+
+        afterEach(() => {
+            delete registry.patterns["tooltip-test-dummy"];
+        });
+
+        it("11.1 - The popper is marked as self managed.", async () => {
+            const $el = testutils.createTooltip({ data: "trigger: click" });
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
+
+            expect(instance.tippy.popper.hasAttribute(lifecycle.MANAGED_ATTRIBUTE)).toBe(
+                true
+            );
+        });
+
+        it("11.2 - Patterns in static content survive hiding and showing.", async () => {
+            document.body.innerHTML = `
+                <a class="pat-tooltip"
+                   data-pat-tooltip="source: content; trigger: click"
+                ><span class="pat-tooltip-test-dummy">Dummy</span></a>
+            `;
+            const el = document.querySelector(".pat-tooltip");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            // Show
+            el.click();
+            await utils.timeout(1);
+            await utils.timeout(1); // Wait for dummy init.
+            const dummy_el = get_dummy();
+            const dummy = dummy_el["pattern-tooltip-test-dummy"];
+            expect(dummy).toBeInstanceOf(Dummy);
+            expect(lifecycle.is_tracked(dummy)).toBe(true);
+
+            // Hide - the popper is removed from the document.
+            instance.tippy.hide();
+            await utils.timeout(1);
+            expect(instance.tippy.popper.isConnected).toBe(false);
+            expect(dummy.destroyed).toBe(false);
+
+            // Trigger the observer with another removal.
+            document.body.appendChild(document.createElement("div")).remove();
+            await utils.timeout(1);
+            expect(dummy.destroyed).toBe(false);
+
+            // Show again - same element, same instance.
+            el.click();
+            await utils.timeout(1);
+            await utils.timeout(1);
+            expect(get_dummy()).toBe(dummy_el);
+            expect(dummy_el["pattern-tooltip-test-dummy"]).toBe(dummy);
+            expect(dummy.destroyed).toBe(false);
+        });
+
+        it("11.3 - Patterns in ajax content are destroyed on hide.", async () => {
+            global.fetch = jest
+                .fn()
+                .mockImplementation(
+                    mockFetch(`<span class="pat-tooltip-test-dummy">Dummy</span>`)
+                );
+
+            const $el = testutils.createTooltip({
+                data: "source: ajax",
+                href: "http://test.com",
+            });
+            const instance = new Pattern($el);
+            await events.await_pattern_init(instance);
+            const spy_get_content = jest.spyOn(instance, "_get_content");
+
+            testutils.click($el);
+            await utils.timeout(1);
+            await spy_get_content.mock.results[0].value; // wait for the fetch
+            await utils.timeout(1); // wait for dummy init
+            const dummy = get_dummy()["pattern-tooltip-test-dummy"];
+            expect(dummy).toBeInstanceOf(Dummy);
+
+            instance.tippy.hide();
+            await utils.timeout(1);
+            expect(dummy.destroyed).toBe(true);
+            expect(lifecycle.is_tracked(dummy)).toBe(false);
+
+            global.fetch.mockRestore();
+            delete global.fetch;
+        });
+
+        it("11.4 - Patterns in the tooltip content are destroyed with the tooltip.", async () => {
+            document.body.innerHTML = `
+                <a class="pat-tooltip"
+                   data-pat-tooltip="source: content; trigger: click"
+                ><span class="pat-tooltip-test-dummy">Dummy</span></a>
+            `;
+            const el = document.querySelector(".pat-tooltip");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            el.click();
+            await utils.timeout(1);
+            await utils.timeout(1);
+            const dummy = get_dummy()["pattern-tooltip-test-dummy"];
+
+            // Hide, then remove the tooltip trigger element.
+            instance.tippy.hide();
+            await utils.timeout(1);
+            el.remove();
+            await utils.timeout(1);
+
+            expect(instance.destroyed).toBe(true);
+            expect(dummy.destroyed).toBe(true);
+            expect(lifecycle.is_tracked(dummy)).toBe(false);
         });
     });
 });
