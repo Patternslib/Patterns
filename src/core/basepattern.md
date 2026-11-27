@@ -110,6 +110,43 @@ pattern instances whenever nodes are removed (see ``src/core/lifecycle.js``).
     not patterns based on ``src/core/base.js``.
 -   Removals inside shadow roots are not observed.
 
+### Self managed containers
+
+Components which detach and re-attach their own DOM can opt out of the
+automatic destroy for their content. pat-tooltip does this for its popper,
+which Tippy removes from the document while the tooltip is hidden.
+
+Mark the container with the ``data-pat-lifecycle-managed`` attribute
+(``lifecycle.MANAGED_ATTRIBUTE``). Patterns which are still inside such a
+container are not destroyed while the container is detached. Patterns removed
+from within the container are destroyed as usual.
+
+The component is then responsible for destroying the patterns in its
+container, e.g. in its own ``destroy()`` or when it replaces the content:
+
+```javascript
+import lifecycle from "@patternslib/patternslib/src/core/lifecycle";
+
+class Pattern extends BasePattern {
+    async init() {
+        this.container = this.create_container();
+        this.container.setAttribute(lifecycle.MANAGED_ATTRIBUTE, "");
+    }
+
+    destroy() {
+        if (this.destroyed) {
+            return;
+        }
+        super.destroy();
+        lifecycle.destroy_patterns(this.container);
+    }
+}
+```
+
+``lifecycle.destroy_patterns(root)`` destroys all tracked patterns within
+``root``, including ``root`` itself, whether ``root`` is part of the document
+or not.
+
 ## Replacing a registered pattern
 
 The first registration of a pattern name wins — registering another pattern

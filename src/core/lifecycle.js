@@ -13,10 +13,25 @@
  * re-inserted before the observer callback runs).
  *
  * Nodes which are detached and re-inserted in a later task are destroyed.
+ *
+ * Self managed containers
+ * -----------------------
+ *
+ * Some components detach and re-attach their own DOM, e.g. pat-tooltip,
+ * whose popper is removed from the document while the tooltip is hidden.
+ * Such components mark their container with the ``data-pat-lifecycle-managed``
+ * attribute (see ``MANAGED_ATTRIBUTE``). Disconnected instances which are
+ * still inside such a container are not destroyed. The component is
+ * responsible for destroying them via ``destroy_patterns``.
+ *
+ * Instances removed from within a managed container are not inside it
+ * anymore and are destroyed as usual.
  */
 import logging from "./logging";
 
 const log = logging.getLogger("lifecycle");
+
+export const MANAGED_ATTRIBUTE = "data-pat-lifecycle-managed";
 
 const live_instances = new Set();
 let observer = null;
@@ -35,6 +50,10 @@ function destroy_instance(instance) {
 function destroy_disconnected() {
     for (const instance of live_instances) {
         if (instance.el.isConnected) {
+            continue;
+        }
+        if (instance.el.closest(`[${MANAGED_ATTRIBUTE}]`)) {
+            // Inside a detached, self managed container.
             continue;
         }
         destroy_instance(instance);
@@ -85,6 +104,30 @@ export function untrack(instance) {
 }
 
 /**
+ * Destroy all tracked pattern instances within a DOM subtree.
+ *
+ * Works for connected and detached subtrees. Used by components which manage
+ * the lifecycle of their own DOM, see ``MANAGED_ATTRIBUTE``.
+ *
+ * Also destroys tracked instances which were removed from a detached managed
+ * container. Those removals are not observed, because the container is not
+ * part of the document.
+ *
+ * @param {Node} root - The root of the subtree. Included in the search.
+ */
+export function destroy_patterns(root) {
+    if (!root) {
+        return;
+    }
+    for (const instance of live_instances) {
+        if (root.contains(instance.el)) {
+            destroy_instance(instance);
+        }
+    }
+    destroy_disconnected();
+}
+
+/**
  * Check if a pattern instance is tracked.
  *
  * @param {BasePattern} instance - The pattern instance.
@@ -94,4 +137,10 @@ export function is_tracked(instance) {
     return live_instances.has(instance);
 }
 
-export default { track, untrack, is_tracked };
+export default {
+    MANAGED_ATTRIBUTE,
+    track,
+    untrack,
+    destroy_patterns,
+    is_tracked,
+};

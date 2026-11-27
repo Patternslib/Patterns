@@ -760,4 +760,136 @@ describe("Basepattern class tests", function () {
             expect(lifecycle.is_tracked(pat)).toBe(false);
         });
     });
+
+    describe("10 - Self managed containers.", function () {
+        let lifecycle;
+        let events;
+
+        class Pat extends BasePattern {
+            static name = "example";
+            static trigger = ".example";
+        }
+
+        const setup = async () => {
+            document.body.innerHTML = `
+                <div class="managed" data-pat-lifecycle-managed>
+                    <div class="wrapper">
+                        <div class="example" id="one"></div>
+                    </div>
+                    <div class="example" id="two"></div>
+                </div>
+                <div class="example" id="outside"></div>
+            `;
+            const pat1 = new Pat(document.querySelector("#one"));
+            const pat2 = new Pat(document.querySelector("#two"));
+            const pat_outside = new Pat(document.querySelector("#outside"));
+            await events.await_pattern_init(pat1);
+            await events.await_pattern_init(pat2);
+            await events.await_pattern_init(pat_outside);
+            return {
+                managed: document.querySelector(".managed"),
+                pat1,
+                pat2,
+                pat_outside,
+            };
+        };
+
+        // Trigger the observer with an unrelated removal.
+        const trigger_observer = async () => {
+            document.body.appendChild(document.createElement("div")).remove();
+            await utils.timeout(1);
+        };
+
+        beforeEach(async function () {
+            ({ default: lifecycle } = await import("./lifecycle"));
+            ({ default: events } = await import("./events"));
+        });
+
+        afterEach(function () {
+            document.body.innerHTML = "";
+        });
+
+        it("10.1 - Patterns in a detached managed container are not destroyed.", async function () {
+            const { managed, pat1, pat2 } = await setup();
+
+            managed.remove();
+            await utils.timeout(1);
+            await trigger_observer();
+
+            expect(pat1.destroyed).toBe(false);
+            expect(pat2.destroyed).toBe(false);
+            expect(lifecycle.is_tracked(pat1)).toBe(true);
+
+            // Re-attach in a later task.
+            document.body.appendChild(managed);
+            await utils.timeout(1);
+            expect(pat1.destroyed).toBe(false);
+            expect(pat1.el["pattern-example"]).toBe(pat1);
+        });
+
+        it("10.2 - Patterns removed from within a managed container are destroyed.", async function () {
+            const { pat1, pat2 } = await setup();
+
+            document.querySelector(".wrapper").remove();
+            await utils.timeout(1);
+
+            expect(pat1.destroyed).toBe(true);
+            expect(pat2.destroyed).toBe(false);
+        });
+
+        it("10.3 - destroy_patterns destroys the patterns within a subtree.", async function () {
+            const { managed, pat1, pat2, pat_outside } = await setup();
+
+            managed.remove();
+            await utils.timeout(1);
+
+            lifecycle.destroy_patterns(managed);
+
+            expect(pat1.destroyed).toBe(true);
+            expect(pat2.destroyed).toBe(true);
+            expect(lifecycle.is_tracked(pat1)).toBe(false);
+            expect(lifecycle.is_tracked(pat2)).toBe(false);
+            expect(pat_outside.destroyed).toBe(false);
+        });
+
+        it("10.4 - destroy_patterns includes the root element.", async function () {
+            const { pat1, pat2 } = await setup();
+
+            lifecycle.destroy_patterns(pat1.el);
+
+            expect(pat1.destroyed).toBe(true);
+            expect(pat2.destroyed).toBe(false);
+        });
+
+        it("10.5 - Patterns removed from a detached managed container are destroyed with the next sweep.", async function () {
+            const { managed, pat1, pat2 } = await setup();
+
+            managed.remove();
+            await utils.timeout(1);
+
+            // Not observed - the container is not part of the document.
+            managed.querySelector(".wrapper").remove();
+            await utils.timeout(1);
+            expect(pat1.destroyed).toBe(false);
+
+            // Swept on the next observed removal.
+            await trigger_observer();
+            expect(pat1.destroyed).toBe(true);
+            expect(pat2.destroyed).toBe(false);
+        });
+
+        it("10.6 - destroy_patterns also sweeps patterns removed from a detached managed container.", async function () {
+            const { managed, pat1, pat2 } = await setup();
+
+            managed.remove();
+            await utils.timeout(1);
+            const wrapper = managed.querySelector(".wrapper");
+            wrapper.remove();
+
+            lifecycle.destroy_patterns(managed);
+
+            expect(pat1.destroyed).toBe(true);
+            expect(pat2.destroyed).toBe(true);
+        });
+    });
 });
