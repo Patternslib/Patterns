@@ -1,6 +1,5 @@
 import $ from "jquery";
 import { BasePattern } from "@patternslib/patternslib/src/core/basepattern";
-import events from "../../core/events";
 import dom from "../../core/dom";
 import logging from "../../core/logging";
 import Parser from "@patternslib/patternslib/src/core/parser";
@@ -51,13 +50,13 @@ class Pattern extends BasePattern {
 
         for (const input of this.handler.getAllInputs()) {
             // Note: One input can be a dependency for multiple other dependent
-            // elements. Therefore we need to bind the events not uniquely and
-            // add a uuid to the event bindings id.
+            // elements. The listeners are scoped to this pattern instance and
+            // removed when it is destroyed.
 
-            events.add_event_listener(
+            this.add_event_listener(
                 input,
                 "input",
-                `pat-depends--input--${this.uuid}`,
+                "input",
                 (e) => {
                     if (e?.detail?.pattern_uuid === this.uuid) {
                         // Ignore input events invoked from this pattern
@@ -69,10 +68,10 @@ class Pattern extends BasePattern {
             );
 
             if (input.form) {
-                events.add_event_listener(
+                this.add_event_listener(
                     input.form,
                     "reset",
-                    `pat-depends--reset--${this.uuid}`,
+                    "reset",
                     async () => {
                         // Wait for the form reset to restore the default
                         // values. The reset event is thrown before.
@@ -123,7 +122,7 @@ class Pattern extends BasePattern {
 
         // Restore the original click behavior for anchor elements.
         if (this.el.tagName === "A") {
-            events.remove_event_listener(this.el, "pat-depends--click");
+            this.remove_event_listener(this.el, "click");
         }
 
         // Remove the disabled class from the element.
@@ -168,9 +167,7 @@ class Pattern extends BasePattern {
 
         // Prevent the default click behavior for anchor elements.
         if (this.el.tagName === "A") {
-            events.add_event_listener(this.el, "click", "pat-depends--click", (e) =>
-                e.preventDefault()
-            );
+            this.add_event_listener(this.el, "click", "click", (e) => e.preventDefault());
         }
 
         // Add the disabled class to the element.
