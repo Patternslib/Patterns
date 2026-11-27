@@ -156,4 +156,46 @@ describe("pat-bumper", function () {
             expect(el.classList.contains("bumped-left")).toBe(false);
         });
     });
+
+    describe("Scroll listeners", function () {
+        it("Multiple bumpers in the same scroll container are all updated.", async function () {
+            document.body.innerHTML = `
+                <div id="bump1" class="pat-bumper"></div>
+                <div id="bump2" class="pat-bumper"></div>
+            `;
+            const instance1 = new Bumper(document.getElementById("bump1"));
+            const instance2 = new Bumper(document.getElementById("bump2"));
+            await events.await_pattern_init(instance1);
+            await events.await_pattern_init(instance2);
+
+            const spy1 = jest.spyOn(instance1, "set_bumping_classes");
+            const spy2 = jest.spyOn(instance2, "set_bumping_classes");
+
+            document.dispatchEvent(events.scroll_event());
+            await utils.animation_frame();
+
+            expect(spy1).toHaveBeenCalledTimes(1);
+            expect(spy2).toHaveBeenCalledTimes(1);
+        });
+
+        it("The scroll listener is removed on destroy.", async function () {
+            document.body.innerHTML = `
+                <div id="bump1" class="pat-bumper"></div>
+            `;
+            const el = document.getElementById("bump1");
+            const instance = new Bumper(el);
+            await events.await_pattern_init(instance);
+
+            const spy = jest.spyOn(instance, "set_bumping_classes");
+
+            el.remove();
+            await utils.timeout(1);
+            expect(instance.destroyed).toBe(true);
+
+            document.dispatchEvent(events.scroll_event());
+            await utils.animation_frame();
+
+            expect(spy).not.toHaveBeenCalled();
+        });
+    });
 });

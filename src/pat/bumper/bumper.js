@@ -1,6 +1,5 @@
 import { BasePattern } from "@patternslib/patternslib/src/core/basepattern";
 import dom from "../../core/dom";
-import events from "../../core/events";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
@@ -33,10 +32,12 @@ class Pattern extends BasePattern {
 
         const containers = new Set([this.container_x, this.container_y]);
         for (const container of containers) {
-            events.add_event_listener(
+            // Scoped to this instance - multiple bumpers can share the same
+            // scroll container.
+            this.add_event_listener(
                 container || document,
                 "scroll",
-                "pat_bumper__scroll",
+                "scroll",
                 async () => {
                     if (!this.ticking) {
                         this.ticking = true;
