@@ -3,6 +3,7 @@ import "./autofocus";
 import events from "../../core/events";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
+import { jest } from "@jest/globals";
 
 describe("pat-autofocus", function () {
     it("1 - Focus the first element.", async () => {
@@ -125,6 +126,60 @@ describe("pat-autofocus", function () {
             el_inject.click();
             await events.await_event(el_inject, "pat-inject-success");
             await utils.timeout(2); // Wait even more.
+            await utils.timeout(100); // Wait for autofocus timeout.
+
+            expect(document.activeElement).toBe(
+                document.querySelector("input[name=i2]")
+            );
+        });
+    });
+
+    describe("5 - Destroy", function () {
+        it("5.1 - Removing the element removes the pat-update handler.", async () => {
+            document.body.innerHTML = `
+                <div id="c1">
+                    <input name="i1" type="text" class="pat-autofocus"/>
+                </div>
+                <input name="other" type="text"/>
+            `;
+            const input = document.querySelector("input[name=i1]");
+            registry.scan(document.body);
+            await utils.timeout(1); // Wait for async pattern initialization.
+            await utils.timeout(100); // Wait for autofocus timeout.
+
+            const instance = input["pattern-autofocus"];
+            const spy_set_focus = jest.spyOn(instance, "set_focus");
+            const handlers_before = $._data(document, "events")?.["pat-update"]?.length;
+
+            document.querySelector("#c1").remove();
+            await utils.timeout(1);
+            expect(instance.destroyed).toBe(true);
+            expect($._data(document, "events")?.["pat-update"]?.length || 0).toBe(
+                handlers_before - 1
+            );
+
+            $(document).trigger("pat-update", { dom: document.body });
+            expect(spy_set_focus).not.toHaveBeenCalled();
+        });
+
+        it("5.2 - Other instances keep their pat-update handler.", async () => {
+            document.body.innerHTML = `
+                <div id="c1">
+                    <input name="i1" type="text" class="pat-autofocus"/>
+                </div>
+                <div id="c2">
+                    <input name="i2" type="text" class="pat-autofocus" hidden/>
+                </div>
+            `;
+            registry.scan(document.body);
+            await utils.timeout(1); // Wait for async pattern initialization.
+            await utils.timeout(100); // Wait for autofocus timeout.
+
+            document.querySelector("#c1").remove();
+            await utils.timeout(1);
+
+            document.querySelector("input[name=i2]").removeAttribute("hidden");
+            $(document).trigger("pat-update", { dom: document.querySelector("#c2") });
             await utils.timeout(100); // Wait for autofocus timeout.
 
             expect(document.activeElement).toBe(
