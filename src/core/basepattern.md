@@ -82,6 +82,9 @@ name replaces the previous listener. ``destroy()`` removes all listeners of
 the instance, but not those of other instances of the same pattern. If you
 override ``destroy()``, call ``super.destroy()``.
 
+To remove a single listener before the pattern is destroyed, use
+``this.remove_event_listener(el, name)`` with the same element and name.
+
 ## Automatic destroy
 
 ``destroy()`` is called automatically when the pattern's element is removed

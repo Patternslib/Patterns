@@ -472,6 +472,43 @@ describe("Basepattern class tests", function () {
                 `example--${pat2.uuid}--resize`,
             ]);
         });
+
+        it("8.4 - remove_event_listener removes only the named listener of this instance.", async function () {
+            const el1 = document.createElement("div");
+            const el2 = document.createElement("div");
+            const pat1 = new Pat(el1);
+            const pat2 = new Pat(el2);
+            await events.await_pattern_init(pat1);
+            await events.await_pattern_init(pat2);
+
+            const cb1_key = jest.fn();
+            const cb1_other = jest.fn();
+            const cb2_key = jest.fn();
+            pat1.add_event_listener(document, "keydown", "key", cb1_key);
+            pat1.add_event_listener(document, "keydown", "other", cb1_other);
+            pat2.add_event_listener(document, "keydown", "key", cb2_key);
+
+            pat1.remove_event_listener(document, "key");
+
+            document.dispatchEvent(new KeyboardEvent("keydown"));
+            expect(cb1_key).not.toHaveBeenCalled();
+            expect(cb1_other).toHaveBeenCalledTimes(1);
+            expect(cb2_key).toHaveBeenCalledTimes(1);
+        });
+
+        it("8.5 - remove_event_listener without an element does nothing.", async function () {
+            const el = document.createElement("div");
+            const pat = new Pat(el);
+            await events.await_pattern_init(pat);
+
+            const cb = jest.fn();
+            pat.add_event_listener(document, "keydown", "key", cb);
+
+            pat.remove_event_listener(null, "key");
+
+            document.dispatchEvent(new KeyboardEvent("keydown"));
+            expect(cb).toHaveBeenCalledTimes(1);
+        });
     });
 
     describe("9 - Automatic destroy on removal from the DOM.", function () {

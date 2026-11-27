@@ -187,6 +187,23 @@ class BasePattern {
     }
 
     /**
+     * Remove an event listener which was registered with ``add_event_listener``.
+     *
+     * Only removes listeners of this pattern instance.
+     *
+     * @param {Node|Window} el - The element the event listener was registered on.
+     * @param {string} name - The name of the listener, as passed to ``add_event_listener``.
+     */
+    remove_event_listener(el, name) {
+        if (!el) {
+            // Without an element, events.remove_event_listener would remove
+            // the listener from all elements.
+            return;
+        }
+        events.remove_event_listener(el, `${this.name}--${this.uuid}--${name}`);
+    }
+
+    /**
      * Destroy/remove/unload the pattern from the element.
      *
      * Also removes all event listeners registered with ``add_event_listener``.
