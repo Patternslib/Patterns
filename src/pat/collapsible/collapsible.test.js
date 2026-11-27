@@ -283,4 +283,86 @@ describe("pat-collapsible", function () {
             })
         );
     });
+
+    describe("10 - Destroy", function () {
+        it("10.1 - Removing the element removes the open and close trigger handlers.", async function () {
+            document.body.innerHTML = `
+                <div class="pat-collapsible closed"
+                     data-pat-collapsible="open-trigger: #open; close-trigger: #close">
+                    <h3>Trigger header</h3>
+                    <p>Collapsible content</p>
+                </div>
+                <button id="open">open</button>
+                <button id="close">close</button>
+            `;
+            const el = document.querySelector(".pat-collapsible");
+            const instance = new Pattern(el, { transition: "none" });
+            await events.await_pattern_init(instance);
+
+            const spy_toggle = jest.spyOn(instance, "toggle");
+
+            el.remove();
+            await utils.timeout(1);
+            expect(instance.destroyed).toBe(true);
+
+            document.querySelector("#open").click();
+            document.querySelector("#close").click();
+            expect(spy_toggle).not.toHaveBeenCalled();
+            expect($._data(document, "events")?.click).toBeUndefined();
+        });
+
+        it("10.2 - Removing the element removes the handlers on an external trigger.", async function () {
+            document.body.innerHTML = `
+                <button id="trigger">toggle</button>
+                <div class="pat-collapsible closed"
+                     data-pat-collapsible="trigger: #trigger">
+                    <p>Collapsible content</p>
+                </div>
+            `;
+            const el = document.querySelector(".pat-collapsible");
+            const trigger = document.querySelector("#trigger");
+            const instance = new Pattern(el, { transition: "none" });
+            await events.await_pattern_init(instance);
+
+            const spy_toggle = jest.spyOn(instance, "toggle");
+            trigger.click();
+            expect(spy_toggle).toHaveBeenCalledTimes(1);
+
+            el.remove();
+            await utils.timeout(1);
+
+            trigger.click();
+            expect(spy_toggle).toHaveBeenCalledTimes(1);
+            expect($._data(trigger, "events")).toBeUndefined();
+        });
+
+        it("10.3 - Other instances keep their open trigger handlers.", async function () {
+            document.body.innerHTML = `
+                <div class="pat-collapsible closed c1"
+                     data-pat-collapsible="open-trigger: #open">
+                    <h3>Trigger header</h3>
+                    <p>Collapsible content</p>
+                </div>
+                <div class="pat-collapsible closed c2"
+                     data-pat-collapsible="open-trigger: #open">
+                    <h3>Trigger header</h3>
+                    <p>Collapsible content</p>
+                </div>
+                <button id="open">open</button>
+            `;
+            const el1 = document.querySelector(".c1");
+            const el2 = document.querySelector(".c2");
+            const instance1 = new Pattern(el1, { transition: "none" });
+            const instance2 = new Pattern(el2, { transition: "none" });
+            await events.await_pattern_init(instance1);
+            await events.await_pattern_init(instance2);
+
+            el1.remove();
+            await utils.timeout(1);
+
+            document.querySelector("#open").click();
+            await utils.timeout(1);
+            expect(el2.classList.contains("open")).toBe(true);
+        });
+    });
 });

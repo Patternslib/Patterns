@@ -94,16 +94,22 @@ class Pattern extends BasePattern {
             this.$panel.show();
         }
 
+        // Use an instance specific event namespace to be able to remove only
+        // this instance's handlers again. The trigger might be outside of the
+        // pattern element and the open and close triggers are delegated from
+        // the document.
+        const ns = (this._event_namespace = `pat-collapsible--${this.uuid}`);
+
         this.$trigger
             .off(".pat-collapsible")
-            .on("click.pat-collapsible", null, $el, this._onClick.bind(this))
-            .on("keypress.pat-collapsible", null, $el, this._onKeyPress.bind(this));
+            .on(`click.pat-collapsible.${ns}`, null, $el, this._onClick.bind(this))
+            .on(`keypress.pat-collapsible.${ns}`, null, $el, this._onKeyPress.bind(this)); // prettier-ignore
 
         if (this.options.closeTrigger) {
-            $(document).on("click", this.options.closeTrigger, this.close.bind(this));
+            $(document).on(`click.${ns}`, this.options.closeTrigger, this.close.bind(this)); // prettier-ignore
         }
         if (this.options.openTrigger) {
-            $(document).on("click", this.options.openTrigger, this.open.bind(this));
+            $(document).on(`click.${ns}`, this.options.openTrigger, this.open.bind(this)); // prettier-ignore
         }
 
         // pat-scroll support
@@ -125,6 +131,14 @@ class Pattern extends BasePattern {
         }
 
         return $el;
+    }
+
+    destroy() {
+        if (this._event_namespace) {
+            $(document).off(`.${this._event_namespace}`);
+            this.$trigger.off(`.${this._event_namespace}`);
+        }
+        super.destroy();
     }
 
     open() {
