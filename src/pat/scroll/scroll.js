@@ -29,16 +29,24 @@ class Pattern extends BasePattern {
         if (this.options.trigger === "auto") {
             // Only calculate the offset when the page including all images
             // is loaded.
+            // The listener is removed when the pattern is destroyed, so that
+            // removed elements do not scroll anymore.
             if (document.readyState === "complete") {
                 this.scrollTo();
             } else {
-                window.addEventListener("load", () => this.scrollTo(), {
-                    once: true,
-                });
+                this.add_event_listener(
+                    window,
+                    "load",
+                    "scroll-on-load",
+                    () => this.scrollTo(),
+                    { once: true }
+                );
             }
         }
         if (this.options.trigger === "auto" || this.options.trigger === "click") {
-            this.el.addEventListener("click", this.scrollTo.bind(this));
+            this.add_event_listener(this.el, "click", "scroll-on-click", () =>
+                this.scrollTo()
+            );
         }
     }
 
