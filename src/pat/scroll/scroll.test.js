@@ -34,6 +34,70 @@ describe("pat-scroll", function () {
         expect(this.spy_scrollTo).toHaveBeenCalledTimes(2);
     });
 
+    it("1.1 - with trigger 'auto' waits for all images to be loaded before scrolling", async function () {
+        // jsdom does not load images. Images with a src are not complete.
+        document.body.innerHTML = `
+            <img src="a.png" />
+            <img src="b.png" />
+            <img src="lazy.png" loading="lazy" />
+            <img src="done.png" />
+            <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>
+            <p id="p1"></p>
+        `;
+        const [img1, img2, , img_done] = document.querySelectorAll("img");
+        // Already loaded.
+        Object.defineProperty(img_done, "complete", { value: true });
+        const el = document.querySelector(".pat-scroll");
+
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        // Images not loaded yet - no scrolling.
+        expect(this.spy_scrollTo).toHaveBeenCalledTimes(0);
+
+        img1.dispatchEvent(new Event("load"));
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(this.spy_scrollTo).toHaveBeenCalledTimes(0);
+
+        // Failed images count as done too. The lazy image is not waited for.
+        img2.dispatchEvent(new Event("error"));
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(this.spy_scrollTo).toHaveBeenCalledTimes(1);
+
+        // Only once.
+        img1.dispatchEvent(new Event("load"));
+        await utils.timeout(1); // wait a tick for async to settle.
+        expect(this.spy_scrollTo).toHaveBeenCalledTimes(1);
+    });
+
+    it("1.2 - with trigger 'auto' does not scroll if the element was removed before the images were loaded", async function () {
+        document.body.innerHTML = `
+            <img src="a.png" />
+            <div id="section">
+                <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>
+                <p id="p1"></p>
+            </div>
+        `;
+        const img = document.querySelector("img");
+        const el = document.querySelector(".pat-scroll");
+
+        const instance = new Pattern(el);
+        await events.await_pattern_init(instance);
+
+        // Remove the element. The pattern gets destroyed.
+        document.querySelector("#section").remove();
+        await utils.timeout(1); // wait a tick for the lifecycle observer.
+        expect(instance.destroyed).toBe(true);
+        // Waiting for the images was stopped.
+        expect(instance.abort_controller.signal.aborted).toBe(true);
+
+        img.dispatchEvent(new Event("load"));
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(this.spy_scrollTo).toHaveBeenCalledTimes(0);
+    });
+
     it("2 - will scroll to an anchor on click if the trigger is set to 'click'", async function () {
         document.body.innerHTML = `
             <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click">p1</a>

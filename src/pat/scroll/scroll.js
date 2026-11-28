@@ -21,19 +21,52 @@ class Pattern extends BasePattern {
     static parser = parser;
 
     parser_group_options = false;
+    abort_controller = null;
 
-    async init() {
+    init() {
         if (this.options.delay) {
             this.options.delay = utils.parseTime(this.options.delay);
         }
         if (this.options.trigger === "auto") {
-            const ImagesLoaded = (await import("imagesloaded")).default;
-            // Only calculate the offset when all images are loaded
-            ImagesLoaded(document.body, this.scrollTo.bind(this));
+            // Only calculate the offset when all images are loaded.
+            this.scroll_when_images_loaded();
         }
         if (this.options.trigger === "auto" || this.options.trigger === "click") {
-            this.el.addEventListener("click", this.scrollTo.bind(this));
+            this.add_event_listener(this.el, "click", "scroll-on-click", () =>
+                this.scrollTo()
+            );
         }
+    }
+
+    /**
+     * Scroll after all images in the document are loaded or failed loading.
+     *
+     * Images which are added later - e.g. via injection - and which are
+     * above the target would otherwise move the target out of view.
+     *
+     * Lazy loading images are not waited for, as they might only be loaded
+     * when scrolled into view.
+     */
+    async scroll_when_images_loaded() {
+        // Stop waiting when the pattern is destroyed.
+        this.abort_controller = new AbortController();
+        try {
+            await dom.images_loaded(document.body, {
+                signal: this.abort_controller.signal,
+            });
+        } catch {
+            // Aborted, the pattern was destroyed.
+            return;
+        }
+        if (this.destroyed) {
+            return;
+        }
+        this.scrollTo();
+    }
+
+    destroy() {
+        this.abort_controller?.abort();
+        super.destroy();
     }
 
     get_target() {

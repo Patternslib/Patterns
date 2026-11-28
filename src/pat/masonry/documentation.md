@@ -8,6 +8,18 @@ fitting stones in a wall. You’ve probably seen it in use all over the Internet
 
 ## Documentation
 
+### Images, videos and the `masonry-ready` class
+
+The layout is updated whenever an image within the masonry container has been
+loaded or failed loading and whenever a video has loaded its metadata - also
+for images and videos which are added later.
+When all initially present images are loaded, the class `masonry-ready` is set
+on the container. The default styles hide the items until then.
+
+Images with `loading="lazy"` are not waited for, as they might only be loaded
+when scrolled into view. Set the `width` and `height` attributes on such images
+to avoid layout shifts.
+
 ### Options reference
 
 | Property            | Default Value                               | Description                                                                                                                                                                                                                                                                                                      |

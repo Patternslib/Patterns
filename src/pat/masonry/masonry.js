@@ -6,6 +6,7 @@ import $ from "jquery";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import Base from "../../core/base";
+import dom from "../../core/dom";
 import utils from "../../core/utils";
 
 // Lazy loading modules.
@@ -43,31 +44,17 @@ export default Base.extend({
 
     async init($el, opts) {
         Masonry = (await import("masonry-layout")).default;
-        const ImagesLoaded = (await import("imagesloaded")).default;
 
         this.options = parser.parse(this.$el, opts);
         // Initialize
         this.initMasonry();
 
-        const imgLoad = await ImagesLoaded(this.$el);
-        imgLoad.on(
-            "progress",
-            function () {
-                if (!this.msnry) {
-                    this.initMasonry();
-                }
-                this.quicklayout();
-            }.bind(this)
-        );
-        imgLoad.on(
-            "always",
-            function () {
-                if (!this.msnry) {
-                    this.initMasonry();
-                }
-                this.layout();
-            }.bind(this)
-        );
+        // Re-layout whenever an image or video within has been loaded.
+        // This also catches elements which are added later.
+        dom.on_media_loaded(this.el, () => this.quicklayout());
+        // When all images are loaded, do a full layout which sets the
+        // ``masonry-ready`` class.
+        dom.images_loaded(this.el).then(() => this.layout());
 
         // Update if something gets injected inside the pat-masonry
         this.$el
@@ -140,12 +127,9 @@ export default Base.extend({
 
     layout: function () {
         this.$el.removeClass("masonry-ready");
-        this.msnry.on(
-            "layoutComplete",
-            function () {
-                this.$el.addClass("masonry-ready");
-            }.bind(this)
-        );
+        this.msnry.once("layoutComplete", () => {
+            this.$el.addClass("masonry-ready");
+        });
         this.msnry.layout();
         this.quicklayout();
     },

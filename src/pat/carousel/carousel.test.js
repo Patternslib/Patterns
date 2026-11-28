@@ -84,5 +84,51 @@ describe("carousel-plugin", function () {
             expect(options.autoplaySpeed).toBe(345);
             expect(options.adaptiveHeight).toBe(true);
         });
+        it("Recalculates the dimensions after images have been loaded.", async () => {
+            $("#lab").html(
+                "<ul class='pat-carousel'>" +
+                    "  <li><img src='a.png' /></li>" +
+                    "  <li><img src='b.png' /></li>" +
+                    "</ul>"
+            );
+            const carousel = document.querySelector("#lab ul");
+            pattern.init($(carousel));
+            await utils.timeout(20); // wait a bit for all to settle.
+
+            // Initialized immediately, without waiting for images.
+            expect(carousel.classList.contains("slick-initialized")).toBe(true);
+
+            const spy_slick = jest.spyOn($.fn, "slick");
+            const images = carousel.querySelectorAll("img");
+            images[0].dispatchEvent(new Event("load"));
+            images[1].dispatchEvent(new Event("error"));
+            await utils.timeout(150); // debounce
+
+            // Debounced, only called once.
+            expect(spy_slick).toHaveBeenCalledTimes(1);
+            expect(spy_slick).toHaveBeenCalledWith("setPosition");
+        });
+        it("Recalculates the dimensions after a video has loaded its metadata, but not for other elements.", async () => {
+            $("#lab").html(
+                "<ul class='pat-carousel'>" +
+                    "  <li><video src='a.mp4'></video></li>" +
+                    "  <li><iframe src='about:blank'></iframe></li>" +
+                    "</ul>"
+            );
+            const carousel = document.querySelector("#lab ul");
+            pattern.init($(carousel));
+            await utils.timeout(20); // wait a bit for all to settle.
+
+            const spy_slick = jest.spyOn($.fn, "slick");
+
+            carousel.querySelector("iframe").dispatchEvent(new Event("load"));
+            await utils.timeout(150); // debounce
+            expect(spy_slick).not.toHaveBeenCalled();
+
+            carousel.querySelector("video").dispatchEvent(new Event("loadedmetadata"));
+            await utils.timeout(150); // debounce
+            expect(spy_slick).toHaveBeenCalledTimes(1);
+            expect(spy_slick).toHaveBeenCalledWith("setPosition");
+        });
     });
 });

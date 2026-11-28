@@ -5,8 +5,10 @@
  */
 import $ from "jquery";
 import Base from "../../core/base";
+import dom from "../../core/dom";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
+import utils from "../../core/utils";
 
 const log = logging.getLogger("pat.carousel");
 
@@ -31,7 +33,6 @@ export default Base.extend({
             import("slick-carousel/slick/slick.scss");
         }
         await import("slick-carousel");
-        const ImagesLoaded = (await import("imagesloaded")).default;
 
         this.options = parser.parse(this.el, this.options);
         this.settings = {
@@ -49,7 +50,17 @@ export default Base.extend({
             this.settings.appendDots = this.options.appendDots;
         }
 
-        ImagesLoaded(this.el, () => this.setup());
+        this.setup();
+
+        // Recalculate the carousel dimensions whenever an image or video
+        // within has been loaded. This also catches elements which are added
+        // later.
+        const update = utils.debounce(() => {
+            if (this.el.classList.contains("slick-initialized")) {
+                $(this.el).slick("setPosition");
+            }
+        }, 100);
+        dom.on_media_loaded(this.el, update);
     },
 
     setup() {

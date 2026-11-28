@@ -1403,3 +1403,189 @@ describe("find_inputs", () => {
         done();
     });
 });
+
+describe("on_media_loaded", () => {
+    afterEach(() => {
+        document.body.innerHTML = "";
+    });
+
+    it("calls back when an image has been loaded or failed loading.", () => {
+        document.body.innerHTML = `
+            <div class="container">
+                <div><img src="a.png" /></div>
+                <img src="b.png" />
+            </div>
+        `;
+        const container = document.querySelector(".container");
+        const [img1, img2] = container.querySelectorAll("img");
+        const callback = jest.fn();
+        dom.on_media_loaded(container, callback);
+
+        img1.dispatchEvent(new Event("load"));
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback.mock.calls[0][0].target).toBe(img1);
+
+        img2.dispatchEvent(new Event("error"));
+        expect(callback).toHaveBeenCalledTimes(2);
+    });
+
+    it("also calls back for images which are added later.", () => {
+        document.body.innerHTML = `<div class="container"></div>`;
+        const container = document.querySelector(".container");
+        const callback = jest.fn();
+        dom.on_media_loaded(container, callback);
+
+        container.innerHTML = `<p><img src="a.png" /></p>`;
+        container.querySelector("img").dispatchEvent(new Event("load"));
+        expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    it("calls back when a video has loaded its metadata.", () => {
+        document.body.innerHTML = `
+            <div class="container">
+                <video src="a.mp4"></video>
+            </div>
+        `;
+        const container = document.querySelector(".container");
+        const callback = jest.fn();
+        dom.on_media_loaded(container, callback);
+
+        container.querySelector("video").dispatchEvent(new Event("loadedmetadata"));
+        expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    it("ignores elements whose size does not change when loaded.", () => {
+        document.body.innerHTML = `
+            <div class="container">
+                <audio src="a.mp3"></audio>
+                <iframe src="about:blank"></iframe>
+                <script src="a.js"></script>
+                <link rel="stylesheet" href="a.css" />
+                <video><source src="a.mp4" /></video>
+            </div>
+        `;
+        const container = document.querySelector(".container");
+        const callback = jest.fn();
+        dom.on_media_loaded(container, callback);
+
+        container.querySelector("audio").dispatchEvent(new Event("loadedmetadata"));
+        container.querySelector("iframe").dispatchEvent(new Event("load"));
+        container.querySelector("script").dispatchEvent(new Event("load"));
+        container.querySelector("link").dispatchEvent(new Event("load"));
+        container.querySelector("source").dispatchEvent(new Event("error"));
+        expect(callback).not.toHaveBeenCalled();
+    });
+
+    it("stops listening when the signal is aborted.", () => {
+        document.body.innerHTML = `
+            <div class="container">
+                <img src="a.png" />
+                <video src="a.mp4"></video>
+            </div>
+        `;
+        const container = document.querySelector(".container");
+        const callback = jest.fn();
+        const controller = new AbortController();
+        dom.on_media_loaded(container, callback, { signal: controller.signal });
+
+        controller.abort();
+        container.querySelector("img").dispatchEvent(new Event("load"));
+        container.querySelector("img").dispatchEvent(new Event("error"));
+        container.querySelector("video").dispatchEvent(new Event("loadedmetadata"));
+        expect(callback).not.toHaveBeenCalled();
+    });
+});
+
+describe("images_loaded", () => {
+    // jsdom does not load images. Images with a src are not complete.
+    const set_complete = (img) => {
+        Object.defineProperty(img, "complete", { value: true });
+    };
+
+    // Return the state of a Promise without waiting for it.
+    const promise_state = async (promise) => {
+        const pending = {};
+        try {
+            const result = await Promise.race([
+                promise,
+                utils.timeout(1).then(() => pending),
+            ]);
+            return result === pending ? "pending" : "resolved";
+        } catch {
+            return "rejected";
+        }
+    };
+
+    afterEach(() => {
+        document.body.innerHTML = "";
+    });
+
+    it("resolves immediately if there are no images to wait for.", async () => {
+        document.body.innerHTML = `
+            <div class="container">
+                <img />
+                <img src="done.png" />
+                <img src="lazy.png" loading="lazy" />
+            </div>
+        `;
+        set_complete(document.querySelector("img[src='done.png']"));
+
+        const promise = dom.images_loaded(document.querySelector(".container"));
+        expect(await promise_state(promise)).toBe("resolved");
+    });
+
+    it("waits for all images to be loaded or failed loading.", async () => {
+        document.body.innerHTML = `
+            <div class="container">
+                <img src="a.png" />
+                <p><img src="b.png" /></p>
+            </div>
+        `;
+        const [img1, img2] = document.querySelectorAll("img");
+
+        const promise = dom.images_loaded(document.querySelector(".container"));
+        expect(await promise_state(promise)).toBe("pending");
+
+        img1.dispatchEvent(new Event("load"));
+        // A second event on the same image does not count twice.
+        img1.dispatchEvent(new Event("error"));
+        expect(await promise_state(promise)).toBe("pending");
+
+        img2.dispatchEvent(new Event("error"));
+        expect(await promise_state(promise)).toBe("resolved");
+    });
+
+    it("includes the element itself.", async () => {
+        document.body.innerHTML = `<img src="a.png" />`;
+        const img = document.querySelector("img");
+
+        const promise = dom.images_loaded(img);
+        expect(await promise_state(promise)).toBe("pending");
+
+        img.dispatchEvent(new Event("load"));
+        expect(await promise_state(promise)).toBe("resolved");
+    });
+
+    it("rejects when the signal is aborted.", async () => {
+        document.body.innerHTML = `<img src="a.png" />`;
+        const img = document.querySelector("img");
+        const controller = new AbortController();
+
+        const promise = dom.images_loaded(img, { signal: controller.signal });
+        expect(await promise_state(promise)).toBe("pending");
+
+        controller.abort();
+        await expect(promise).rejects.toThrow();
+    });
+
+    it("rejects immediately when the signal is already aborted.", async () => {
+        document.body.innerHTML = `<img src="a.png" />`;
+        const controller = new AbortController();
+        controller.abort();
+
+        const promise = dom.images_loaded(document.querySelector("img"), {
+            signal: controller.signal,
+        });
+        expect(await promise_state(promise)).toBe("rejected");
+    });
+});
