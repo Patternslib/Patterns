@@ -27,27 +27,47 @@ class Pattern extends BasePattern {
             this.options.delay = utils.parseTime(this.options.delay);
         }
         if (this.options.trigger === "auto") {
-            // Only calculate the offset when the page including all images
-            // is loaded.
-            // The listener is removed when the pattern is destroyed, so that
-            // removed elements do not scroll anymore.
-            if (document.readyState === "complete") {
-                this.scrollTo();
-            } else {
-                this.add_event_listener(
-                    window,
-                    "load",
-                    "scroll-on-load",
-                    () => this.scrollTo(),
-                    { once: true }
-                );
-            }
+            // Only calculate the offset when all images are loaded.
+            this.scroll_when_images_loaded();
         }
         if (this.options.trigger === "auto" || this.options.trigger === "click") {
             this.add_event_listener(this.el, "click", "scroll-on-click", () =>
                 this.scrollTo()
             );
         }
+    }
+
+    /**
+     * Scroll after all images in the document are loaded or failed loading.
+     *
+     * Images which are added later - e.g. via injection - and which are
+     * above the target would otherwise move the target out of view.
+     *
+     * Lazy loading images are not waited for, as they might only be loaded
+     * when scrolled into view.
+     */
+    async scroll_when_images_loaded() {
+        const pending_images = [...document.images].filter(
+            (img) => !img.complete && img.getAttribute("loading") !== "lazy"
+        );
+        await Promise.all(
+            pending_images.map(
+                (img) =>
+                    new Promise((resolve) => {
+                        const done = () => {
+                            this.remove_event_listener(img, "scroll-image-*");
+                            resolve();
+                        };
+                        // Listeners are removed when the pattern is destroyed.
+                        this.add_event_listener(img, "load", "scroll-image-load", done);
+                        this.add_event_listener(img, "error", "scroll-image-error", done);
+                    })
+            )
+        );
+        if (this.destroyed) {
+            return;
+        }
+        this.scrollTo();
     }
 
     get_target() {

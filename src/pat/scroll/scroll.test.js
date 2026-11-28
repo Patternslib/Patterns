@@ -34,48 +34,52 @@ describe("pat-scroll", function () {
         expect(this.spy_scrollTo).toHaveBeenCalledTimes(2);
     });
 
-    it("1.1 - with trigger 'auto' waits for the page to be loaded before scrolling", async function () {
-        const spy_ready_state = jest
-            .spyOn(document, "readyState", "get")
-            .mockReturnValue("interactive");
-
+    it("1.1 - with trigger 'auto' waits for all images to be loaded before scrolling", async function () {
+        // jsdom does not load images. Images with a src are not complete.
         document.body.innerHTML = `
+            <img src="a.png" />
+            <img src="b.png" />
+            <img src="lazy.png" loading="lazy" />
+            <img src="done.png" />
             <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>
             <p id="p1"></p>
         `;
+        const [img1, img2, , img_done] = document.querySelectorAll("img");
+        // Already loaded.
+        Object.defineProperty(img_done, "complete", { value: true });
         const el = document.querySelector(".pat-scroll");
 
         const instance = new Pattern(el);
         await events.await_pattern_init(instance);
         await utils.timeout(1); // wait a tick for async to settle.
 
-        // Page not loaded yet - no scrolling.
+        // Images not loaded yet - no scrolling.
         expect(this.spy_scrollTo).toHaveBeenCalledTimes(0);
 
-        spy_ready_state.mockReturnValue("complete");
-        window.dispatchEvent(new Event("load"));
+        img1.dispatchEvent(new Event("load"));
         await utils.timeout(1); // wait a tick for async to settle.
+        expect(this.spy_scrollTo).toHaveBeenCalledTimes(0);
 
+        // Failed images count as done too. The lazy image is not waited for.
+        img2.dispatchEvent(new Event("error"));
+        await utils.timeout(1); // wait a tick for async to settle.
         expect(this.spy_scrollTo).toHaveBeenCalledTimes(1);
 
         // Only once.
-        window.dispatchEvent(new Event("load"));
+        img1.dispatchEvent(new Event("load"));
         await utils.timeout(1); // wait a tick for async to settle.
-
         expect(this.spy_scrollTo).toHaveBeenCalledTimes(1);
     });
 
-    it("1.2 - with trigger 'auto' does not scroll if the element was removed before the page was loaded", async function () {
-        const spy_ready_state = jest
-            .spyOn(document, "readyState", "get")
-            .mockReturnValue("interactive");
-
+    it("1.2 - with trigger 'auto' does not scroll if the element was removed before the images were loaded", async function () {
         document.body.innerHTML = `
+            <img src="a.png" />
             <div id="section">
                 <a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>
                 <p id="p1"></p>
             </div>
         `;
+        const img = document.querySelector("img");
         const el = document.querySelector(".pat-scroll");
 
         const instance = new Pattern(el);
@@ -86,8 +90,7 @@ describe("pat-scroll", function () {
         await utils.timeout(1); // wait a tick for the lifecycle observer.
         expect(instance.destroyed).toBe(true);
 
-        spy_ready_state.mockReturnValue("complete");
-        window.dispatchEvent(new Event("load"));
+        img.dispatchEvent(new Event("load"));
         await utils.timeout(1); // wait a tick for async to settle.
 
         expect(this.spy_scrollTo).toHaveBeenCalledTimes(0);
