@@ -2,8 +2,10 @@
 <html lang="de">
   <head>
     <title>Form validation</title>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="/style/common.css" />
+    <meta charset="utf-8" />
+    <link href="/style/common.css"
+          rel="stylesheet"
+    />
     <script src="/bundle.min.js"></script>
     <style>
           input:required {
@@ -41,7 +43,8 @@
                  name="name"
                  required
                  type="text"
-          /></label>
+          />
+        </label>
 
         <label>Age
           <input autocomplete="off"
@@ -50,7 +53,8 @@
                  name="age"
                  required
                  type="number"
-          /></label>
+          />
+        </label>
 
         <label>Real number, limited between 10.0 and 10.9, with a step of 0.1.
           <input autocomplete="off"
@@ -59,7 +63,8 @@
                  name="real"
                  step="0.1"
                  type="number"
-          /></label>
+          />
+        </label>
 
         <label>Real number, limited between 10.0 and 10.9, with a step of ``any``.
           <input autocomplete="off"
@@ -68,54 +73,63 @@
                  name="real"
                  step="any"
                  type="number"
-          /></label>
+          />
+        </label>
 
         <label>URL
           <input autocomplete="off"
                  name="url"
-                 type="url"
                  placeholder="https://example.com"
-          /></label>
+                 type="url"
+          />
+        </label>
 
         <label>E-mail
           <input autocomplete="off"
                  name="email"
                  type="email"
-          /></label>
+          />
+        </label>
 
         <fieldset class="group pat-checklist radio">
           <legend>Favourite colour</legend>
-          <label><input autocomplete="off"
+          <label>
+            <input autocomplete="off"
                    name="colour"
                    required
                    type="radio"
                    value="blue"
             />
-            Blue</label>
-          <label><input autocomplete="off"
+            Blue
+          </label>
+          <label>
+            <input autocomplete="off"
                    name="colour"
                    required
                    type="radio"
                    value="pink"
             />
-            Pink</label>
-          <label><input autocomplete="off"
+            Pink
+          </label>
+          <label>
+            <input autocomplete="off"
                    name="colour"
                    required
                    type="radio"
                    value="red"
             />
-            Red</label>
-          <label><input autocomplete="off"
+            Red
+          </label>
+          <label>
+            <input autocomplete="off"
                    name="colour"
                    required
                    type="radio"
                    value="yellow"
             />
-            yellow</label>
+            yellow
+          </label>
         </fieldset>
-
-        <hr />
 
         <label>Planning start
           <input class="pat-date-picker"
@@ -134,8 +148,7 @@
                  autocomplete="off"
                  name="measure.planning_end:records"
                  type="date"
-                 value="2015-09-10"
-                 data-pat-date-picker="after: #planning-start"
+                 value="2015-09-09"
                  data-pat-validation="not-before: #planning-start; message-date: This date must be on or after the start date."
           />
         </label>
@@ -182,8 +195,7 @@
         <hr />
 
         <label>Date/Time start
-          <input
-                 id="datetime-start"
+          <input id="datetime-start"
                  autocomplete="off"
                  name="datetime-start"
                  type="datetime-local"
@@ -193,8 +205,7 @@
         </label>
 
         <label>Date/Time end
-          <input
-                 id="datetime-end"
+          <input id="datetime-end"
                  autocomplete="off"
                  name="datetime-end"
                  type="datetime-local"
@@ -250,6 +261,159 @@
       </fieldset>
     </form>
 
+    <h2>Demo with max-values / min-values support</h2>
+
+    <label>
+        Note: input outside form.
+      <input form="form-min-max-1"
+             name="outside"
+             value="1"
+             data-pat-validation="min-values: 1"
+      />
+    </label>
+
+
+    <form class="pat-validation pat-checklist"
+          id="form-min-max-1"
+          action="."
+          method="post"
+    >
+      <fieldset>
+        <legend>Multi select</legend>
+        name: select, type: select
+        <select multiple
+                name="select"
+                required
+                data-pat-validation="
+                min-values: 2;
+                max-values: 3;
+              "
+        >
+          <option value="a">a</option>
+          <option value="b">b</option>
+          <option value="c">c</option>
+          <option value="d">d</option>
+        </select>
+      </fieldset>
+
+      <fieldset>
+        <legend>Multiple checkboxes</legend>
+        <label>
+            name: checkbox[], type: checkbox, value: a
+          <input name="checkbox[]"
+                 type="checkbox"
+                 value="a"
+                 data-pat-validation="
+                  min-values: 1;
+                  max-values: 3;
+                "
+          />
+        </label>
+        <label>
+            name: checkbox[], type: checkbox, value: b
+          <input name="checkbox[]"
+                 type="checkbox"
+                 value="b"
+                 data-pat-validation="
+                  min-values: 1;
+                  max-values: 3;
+                "
+          />
+        </label>
+        <label>
+            name: checkbox[], type: checkbox, value: c
+          <input name="checkbox[]"
+                 type="checkbox"
+                 value="c"
+                 data-pat-validation="
+                  min-values: 1;
+                  max-values: 3;
+                "
+          />
+        </label>
+        <label>
+            name: checkbox[], type: checkbox, value: d
+          <input name="checkbox[]"
+                 type="checkbox"
+                 value="d"
+                 data-pat-validation="
+                  min-values: 1;
+                  max-values: 3;
+                "
+          />
+        </label>
+      </fieldset>
+
+      <fieldset data-pat-validation="
+                min-values: 2;
+                max-values: 3;
+            ">
+        <legend>
+          <h3>Demo with mixed inputs and max/min values support.</h3>
+          <p>min-values: 2, max-values: 3</p>
+        </legend>
+        <fieldset>
+          name: multiple, select
+          <select multiple
+                  name="multiple"
+          >
+            <option value="a">a</option>
+            <option value="b">b</option>
+            <option value="c">c</option>
+            <option value="d">d</option>
+          </select>
+        </fieldset>
+        <fieldset>
+          <label>
+              name: multiple, value: a
+            <input name="multiple"
+                   type="checkbox"
+                   value="a"
+            />
+          </label>
+          <label>
+              name: multiple, value: b
+            <input name="multiple"
+                   type="checkbox"
+                   value="b"
+            />
+          </label>
+          <label>
+              name: multiple, value: c
+            <input name="multiple"
+                   type="checkbox"
+                   value="c"
+            />
+          </label>
+          <label>
+              name: multiple, value: d
+            <input name="multiple"
+                   type="checkbox"
+                   value="d"
+            />
+          </label>
+        </fieldset>
+        <fieldset>
+          <label>
+              name: multiple, input 1
+            <input name="multiple" />
+          </label>
+          <label>
+              name: multiple, input 2
+            <input name="multiple" />
+          </label>
+          <label>
+              name: multiple, input 3
+            <input name="multiple" />
+          </label>
+        </fieldset>
+      </fieldset>
+      <fieldset class="buttons">
+        <button>Submit</button>
+        <button formnovalidate>Cancel</button>
+      </fieldset>
+    </form>
+
     <div class="pat-modal">
       <form class="pat-inject vertical pat-validation"
             action="."
@@ -258,32 +422,32 @@
       >
         <fieldset class="horizontal">
           <label>First of all!
-            <input name="first"
+            <input autocomplete="off"
+                   name="first"
                    required
-                   autocomplete="off"
             /></label>
 
           <label>Optional subtext
-            <input name="optional"
-                   autocomplete="off"
+            <input autocomplete="off"
+                   name="optional"
             /></label>
 
           <label>Start
             <input class="pat-date-picker"
-                   name="mod-3"
-                   type="date"
-                   required
                    autocomplete="off"
+                   name="mod-3"
+                   required
+                   type="date"
                    data-pat-validation="not-after: [name=mod-4]"
             />
           </label>
 
           <label>End
             <input class="pat-date-picker"
-                   name="mod-4"
-                   type="date"
-                   required
                    autocomplete="off"
+                   name="mod-4"
+                   required
+                   type="date"
                    data-pat-date-picker="after: [name=mod-3]"
                    data-pat-validation="not-before: [name=mod-3]"
             />
@@ -291,17 +455,22 @@
 
           <label>Preference
             <input class="pat-autosuggest"
+                   autocomplete="off"
                    name="mod-5"
                    required
-                   autocomplete="off"
                    data-pat-autosuggest="words: Gibson, Fender, Washburn, Strandberg"
             />
           </label>
 
         </fieldset>
         <fieldset class="buttons">
-          <button class="close-panel" type="submit">Submit</button>
-          <button class="close-panel" type="button" formnovalidate>Cancel</button>
+          <button class="close-panel"
+                  type="submit"
+          >Submit</button>
+          <button class="close-panel"
+                  formnovalidate
+                  type="button"
+          >Cancel</button>
         </fieldset>
       </form>
     </div>

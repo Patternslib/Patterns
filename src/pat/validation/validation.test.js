@@ -1,4 +1,3 @@
-import $ from "jquery";
 import Pattern, { parser } from "./validation";
 import events, { event_listener_map } from "../../core/events";
 import utils from "../../core/utils";
@@ -206,7 +205,7 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "This value must be an integer."
+                "This value must be an integer.",
             );
             expect(el.querySelector("#form-buttons-create").disabled).toBe(true);
 
@@ -241,7 +240,7 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("div.validation-error").length).toBe(1);
             expect(el.querySelectorAll("div.validation-error")[0].textContent).toBe(
-                "need this"
+                "need this",
             );
         });
 
@@ -479,7 +478,7 @@ describe("pat-validation", function () {
             const instance = new Pattern(el);
             await events.await_pattern_init(instance);
 
-            document.querySelector("[name=i1]").dispatchEvent(events.blur_event());
+            document.querySelector("[name=i1]").dispatchEvent(events.focusout_event());
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect(el.querySelectorAll("em.warning").length).toBe(2);
@@ -500,7 +499,7 @@ describe("pat-validation", function () {
             const instance = new Pattern(el);
             await events.await_pattern_init(instance);
 
-            document.querySelector("[name=i1]").dispatchEvent(events.blur_event());
+            document.querySelector("[name=i1]").dispatchEvent(events.focusout_event());
             await utils.timeout(1); // wait a tick for async to settle.
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
@@ -539,6 +538,292 @@ describe("pat-validation", function () {
             expect(event.detail.pattern).toBe("validation");
             expect(event.detail.dom).toBe(el);
             expect(event.detail.action).toBe("valid");
+        });
+
+        it("1.22 - Supports validation of inputs outside forms.", async function () {
+            document.body.innerHTML = `
+                <input name="outside" form="form" required/>
+                <form class="pat-validation" id="form">
+                </form>
+                <button form="form">submit</button>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const input = document.querySelector("[name=outside]");
+            const button = document.querySelector("button");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            input.value = "";
+            input.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+            // Skip, as jsDOM does not support the `:invalid` or `:valid`
+            // pseudo selectors on forms.
+            //expect(form.matches(":invalid")).toBe(true);
+            expect(input.matches(":invalid")).toBe(true);
+            expect(button.matches(":disabled")).toBe(true);
+        });
+
+        it("1.22.1 - Supports equality checks with inputs outside forms.", async function () {
+            document.body.innerHTML = `
+                <input name="outside" form="form" value="secret"/>
+                <form class="pat-validation" id="form">
+                    <input
+                        name="inside"
+                        value="other"
+                        data-pat-validation="equality: outside; message-equality: not equal"
+                    />
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const inside = document.querySelector("[name=inside]");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            inside.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(inside.matches(":invalid")).toBe(true);
+            expect(document.querySelector("em.warning").textContent).toBe("not equal");
+
+            inside.value = "secret";
+            inside.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(inside.matches(":invalid")).toBe(false);
+            expect(document.querySelectorAll("em.warning").length).toBe(0);
+        });
+
+        it("1.23 - Puts the warning at the end of same-name inputs.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation" id="form">
+                   <input name="group" type="radio" required/>
+                   <input name="group" type="radio" required/>
+                   <input name="group" type="radio" required/>
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            const warning = form.querySelector("em.warning");
+            expect(warning).toBeTruthy();
+            expect(warning.matches("input:nth-child(3) + em.warning")).toBe(true);
+        });
+
+        it("1.23.1 - Puts the warning after the label of label-wrapped inputs.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation" id="form">
+                    <fieldset>
+                        <label><input name="group" type="radio" required/> One</label>
+                        <label><input name="group" type="radio" required/> Two</label>
+                    </fieldset>
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            const warnings = form.querySelectorAll("em.warning");
+            expect(warnings.length).toBe(1);
+            expect(warnings[0].parentElement.tagName).toBe("FIELDSET");
+            expect(warnings[0].matches("label:nth-child(2) + em.warning")).toBe(true);
+        });
+
+        it("1.24 - Supports dynamic forms.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation" id="form">
+                   <input name="input1" required/>
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const input1 = form.querySelector("[name=input1]");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+
+            input1.value = "ok";
+            input1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelectorAll("em.warning").length).toBe(0);
+
+            const input2 = document.createElement("input");
+            input2.name = "input2";
+            input2.required = true;
+            form.appendChild(input2);
+
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+            expect(document.querySelector("em.warning").matches("input[name=input2] + em.warning")).toBe(true);
+        });
+
+        it("1.24.1 - Passes the triggering event to check_input.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation" id="form">
+                   <input name="input1" required/>
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const input1 = form.querySelector("[name=input1]");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            const spy = jest.spyOn(instance, "check_input");
+            const event = events.change_event();
+            input1.dispatchEvent(event);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(spy).toHaveBeenCalledTimes(1);
+            expect(spy.mock.calls[0][0].input).toBe(input1);
+            expect(spy.mock.calls[0][0].event).toBe(event);
+        });
+
+        it("1.24.2 - Removes the event listeners on destroy.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation" id="form">
+                   <input name="input1" required/>
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const input1 = form.querySelector("[name=input1]");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            instance.destroy();
+
+            const spy = jest.spyOn(instance, "check_input");
+            input1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(spy).not.toHaveBeenCalled();
+            expect(document.querySelectorAll("em.warning").length).toBe(0);
+
+            // Submit is not validated anymore.
+            const submit_event = events.submit_event();
+            form.dispatchEvent(submit_event);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(spy).not.toHaveBeenCalled();
+            expect(submit_event.defaultPrevented).toBe(false);
+            expect(document.querySelectorAll("em.warning").length).toBe(0);
+        });
+
+        it("1.25 - Can combine multiple custom validation rules.", async function () {
+            document.body.innerHTML = `
+                <form
+                    class="pat-validation"
+                    data-pat-validation="
+                        message-required: is required;
+                        message-equality: not equal;
+                        message-min-values: too few;
+                    "
+                >
+                    <fieldset data-pat-validation="min-values: 2">
+                        <input id="i1" name="textinput" data-pat-validation="equality: extrainput" required>
+                        <input id="i2" name="textinput">
+                    </fieldset>
+                    <input id="i3" name="extrainput">
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const input1 = document.querySelector("#i1");
+            const input2 = document.querySelector("#i2");
+            const input3 = document.querySelector("#i3");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            input1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // form is invalid due to input1's required attribute
+            expect(input1.matches(":invalid")).toBe(true);
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+            expect(document.querySelectorAll("em.warning")[0].textContent).toBe(
+                "is required"
+            );
+
+            input1.value = "ok";
+            input1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // form is invalid due to input1's equality constraint
+            expect(input1.matches(":invalid")).toBe(true);
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+            expect(document.querySelectorAll("em.warning")[0].textContent).toBe(
+                "not equal"
+            );
+
+            input3.value = "ok";
+            input1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // form is invalid due to input1's equality constraint
+            expect(input1.matches(":invalid")).toBe(true);
+            expect(document.querySelectorAll("em.warning").length).toBe(1);
+            expect(document.querySelectorAll("em.warning")[0].textContent).toBe(
+                "too few"
+            );
+
+            input2.value = "ok";
+            form.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            // form is now valid.
+            expect(input1.matches(":invalid")).toBe(false);
+            expect(document.querySelectorAll("em.warning").length).toBe(0);
+        });
+
+        it("1.25.1 - Does not overwrite a previous custom validation error.", async function () {
+            document.body.innerHTML = `
+                <form class="pat-validation">
+                    <input
+                        name="a"
+                        value="x"
+                        data-pat-validation="
+                            equality: b;
+                            message-equality: not equal;
+                            not-before: 2000-01-01;
+                            max-values: 0;
+                            message-max-values: too many;
+                        "
+                    >
+                    <input name="b" value="y">
+                </form>
+            `;
+            const form = document.querySelector(".pat-validation");
+            const input_a = form.querySelector("[name=a]");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            input_a.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(input_a.matches(":invalid")).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+            expect(form.querySelector("em.warning").textContent).toBe("not equal");
         });
     });
 
@@ -637,7 +922,7 @@ describe("pat-validation", function () {
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelector("em.warning").textContent).toBe(
-                "I'm sorry Dave, I can't let you do that."
+                "I'm sorry Dave, I can't let you do that.",
             );
         });
 
@@ -684,7 +969,7 @@ describe("pat-validation", function () {
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelector("em.warning").textContent).toBe(
-                "This value must be a valid email address."
+                "This value must be a valid email address.",
             );
 
             inp.value = "person@mail.com";
@@ -722,7 +1007,7 @@ describe("pat-validation", function () {
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelector("em.warning").textContent).toBe(
-                "This value must be greater than or equal to 5"
+                "This value must be greater than or equal to 5",
             );
 
             inp_min.value = 6;
@@ -739,7 +1024,7 @@ describe("pat-validation", function () {
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelector("em.warning").textContent).toBe(
-                "This value must be less than or equal to 5"
+                "This value must be less than or equal to 5",
             );
 
             inp_max.value = 5;
@@ -862,7 +1147,7 @@ describe("pat-validation", function () {
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The value must be an integer."
+                "The value must be an integer.",
             );
 
             inp.value = 5;
@@ -892,7 +1177,7 @@ describe("pat-validation", function () {
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The value must be an integer."
+                "The value must be an integer.",
             );
 
             inp.value = 5;
@@ -1076,7 +1361,7 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The date must be after 2011-11-11"
+                "The date must be after 2011-11-11",
             );
 
             inp.value = "2023-02-23";
@@ -1084,7 +1369,7 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The date must be before 2022-02-22"
+                "The date must be before 2022-02-22",
             );
 
             inp.value = "2022-01-01";
@@ -1131,11 +1416,11 @@ describe("pat-validation", function () {
             expect(el.querySelectorAll("em.warning").length).toBe(2);
 
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The date must be before woo date"
+                "The date must be before woo date",
             );
 
             expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
-                "The date must be after ye date"
+                "The date must be after ye date",
             );
         });
 
@@ -1172,11 +1457,11 @@ describe("pat-validation", function () {
             expect(el.querySelectorAll("em.warning").length).toBe(2);
 
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The date must be before date2"
+                "The date must be before date2",
             );
 
             expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
-                "The date must be after date1"
+                "The date must be after date1",
             );
         });
 
@@ -1222,10 +1507,10 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(2);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The start date must on or before the end date."
+                "The start date must on or before the end date.",
             );
             expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
-                "The end date must on or before the start date."
+                "The end date must on or before the start date.",
             );
 
             // Fulfill the before/after constraint - same date
@@ -1242,10 +1527,10 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(2);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The start date must on or before the end date."
+                "The start date must on or before the end date.",
             );
             expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
-                "The end date must on or before the start date."
+                "The end date must on or before the start date.",
             );
 
             // Fulfill the before/after constraint - start before end
@@ -1316,7 +1601,7 @@ describe("pat-validation", function () {
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "This field is required"
+                "This field is required",
             );
         });
 
@@ -1362,10 +1647,10 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(2);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The start date/time must on or before the end date/time."
+                "The start date/time must on or before the end date/time.",
             );
             expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
-                "The end date/time must on or before the start date/time."
+                "The end date/time must on or before the start date/time.",
             );
 
             // Fulfill the before/after constraint - same date
@@ -1382,10 +1667,10 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(2);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "The start date/time must on or before the end date/time."
+                "The start date/time must on or before the end date/time.",
             );
             expect(el.querySelectorAll("em.warning")[1].textContent).toBe(
-                "The end date/time must on or before the start date/time."
+                "The end date/time must on or before the start date/time.",
             );
 
             // Fulfill the before/after constraint - start before end
@@ -1454,7 +1739,7 @@ describe("pat-validation", function () {
 
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "This field is required"
+                "This field is required",
             );
 
             inps[0].checked = true;
@@ -1500,7 +1785,7 @@ describe("pat-validation", function () {
             await utils.timeout(1); // wait a tick for async to settle.
             expect(el.querySelectorAll("em.warning").length).toBe(1);
             expect(el.querySelectorAll("em.warning")[0].textContent).toBe(
-                "I would like this to be equal to password"
+                "I would like this to be equal to password",
             );
             expect(el.querySelector("#form-buttons-create").disabled).toBe(true);
 
@@ -1624,7 +1909,7 @@ describe("pat-validation", function () {
 
             // The text content should contain the message without HTML tags
             expect(warning_text).toContain(
-                "This field is required and must be filled out."
+                "This field is required and must be filled out.",
             );
 
             // The innerHTML should contain the safe HTML (DOMPurify allows <strong> by default)
@@ -1758,6 +2043,11 @@ describe("pat-validation", function () {
             document.body.innerHTML = "";
         });
 
+        const document_listener_ids = (instance) =>
+            [...(event_listener_map.get(document)?.keys() || [])].filter((id) =>
+                id.startsWith(`validation--${instance.uuid}--`),
+            );
+
         it("9.1 - Removing the form removes all listeners.", async function () {
             document.body.innerHTML = `
                 <form class="pat-validation">
@@ -1770,42 +2060,459 @@ describe("pat-validation", function () {
             const instance = new Pattern(el);
             await events.await_pattern_init(instance);
 
+            // The submit listener on the form.
             expect(event_listener_map.get(el).size).toBe(1);
-            expect(event_listener_map.get(i1).size).toBe(3);
-            expect(event_listener_map.get(i2).size).toBe(3);
+            // No listeners on the inputs - events are delegated.
+            expect(event_listener_map.has(i1)).toBe(false);
+            expect(event_listener_map.has(i2)).toBe(false);
+            // The input, change and focusout listeners on the document.
+            expect(document_listener_ids(instance).length).toBe(3);
 
             el.remove();
             await utils.timeout(1);
 
             expect(instance.destroyed).toBe(true);
             expect(event_listener_map.has(el)).toBe(false);
-            expect(event_listener_map.has(i1)).toBe(false);
-            expect(event_listener_map.has(i2)).toBe(false);
+            expect(document_listener_ids(instance).length).toBe(0);
         });
 
-        it("9.2 - Re-initializing the inputs does not duplicate listeners and removes them from removed inputs.", async function () {
+        it("9.2 - Inputs added later are validated without own listeners.", async function () {
             document.body.innerHTML = `
                 <form class="pat-validation">
                     <input name="i1" required />
-                    <input name="i2" required />
                 </form>
             `;
             const el = document.querySelector(".pat-validation");
-            const [i1, i2] = el.querySelectorAll("[name]");
             const instance = new Pattern(el);
             await events.await_pattern_init(instance);
 
-            // Remove the first input, so that the second one changes its position.
-            i1.remove();
-            $(el).trigger("pat-update");
-
-            expect(event_listener_map.has(i1)).toBe(false);
-            expect(event_listener_map.get(i2).size).toBe(3);
+            const i2 = document.createElement("input");
+            i2.name = "i2";
+            i2.required = true;
+            el.appendChild(i2);
 
             const spy_check_input = jest.spyOn(instance, "check_input");
-            i2.dispatchEvent(new Event("input"));
+            i2.dispatchEvent(events.input_event());
             await utils.timeout(instance.options.delay + 1); // wait for the debouncer.
+
             expect(spy_check_input).toHaveBeenCalledTimes(1);
+            expect(spy_check_input.mock.calls[0][0].input).toBe(i2);
+            expect(event_listener_map.has(i2)).toBe(false);
+        });
+    });
+
+    describe("10 - min/max value validation", function () {
+        it("10.1 - validate min and max number of checked checkboxes", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <fieldset
+                    data-pat-validation="
+                        min-values: 2;
+                        max-values: 3;
+                        message-min-values: Please select at least 2 options;
+                        message-max-values: Please select at most 3 options;
+                    "
+                  >
+                    <input type="checkbox" name="check" value="1">
+                    <input type="checkbox" name="check" value="2">
+                    <input type="checkbox" name="check" value="3">
+                    <input type="checkbox" name="check" value="4">
+                </fieldset>
+              </form>
+            `;
+
+            const form = document.querySelector("form");
+            const check1 = form.querySelector("[name=check][value='1']");
+            const check2 = form.querySelector("[name=check][value='2']");
+            const check3 = form.querySelector("[name=check][value='3']");
+            const check4 = form.querySelector("[name=check][value='4']");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            check1.checked = true;
+            check1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(check1.matches(":invalid")).toBe(true);
+            expect(check2.matches(":invalid")).toBe(true);
+            expect(check3.matches(":invalid")).toBe(true);
+            expect(check4.matches(":invalid")).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+            expect(form.querySelectorAll("em.warning")[0].textContent).toBe(
+                "Please select at least 2 options"
+            );
+
+            check2.checked = true;
+            check2.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(check1.matches(":invalid")).toBe(false);
+            expect(check2.matches(":invalid")).toBe(false);
+            expect(check3.matches(":invalid")).toBe(false);
+            expect(check4.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+
+            check3.checked = true;
+            check3.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(check1.matches(":invalid")).toBe(false);
+            expect(check2.matches(":invalid")).toBe(false);
+            expect(check3.matches(":invalid")).toBe(false);
+            expect(check4.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+
+            check4.checked = true;
+            check4.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(check1.matches(":invalid")).toBe(true);
+            expect(check2.matches(":invalid")).toBe(true);
+            expect(check3.matches(":invalid")).toBe(true);
+            expect(check4.matches(":invalid")).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+            expect(form.querySelectorAll("em.warning")[0].textContent).toBe(
+                "Please select at most 3 options"
+            );
+
+            check4.checked = false;
+            check4.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(check1.matches(":invalid")).toBe(false);
+            expect(check2.matches(":invalid")).toBe(false);
+            expect(check3.matches(":invalid")).toBe(false);
+            expect(check4.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+        });
+
+        it("10.2 - validate min and max number with mixed inputs", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <fieldset
+                    data-pat-validation="
+                        min-values: 2;
+                        max-values: 3;
+                        message-min-values: Please select at least 2 options;
+                        message-max-values: Please select at most 3 options;
+                    "
+                  >
+                    <input id="i1" name="multiple" type="radio" value="1">
+                    <input id="i2" name="multiple" type="checkbox" value="4">
+                    <select id="i3" name="multiple" multiple>
+                        <option id="i31" value="5">1</option>
+                    </select>
+                    <input id="i4" name="multiple">
+                    <textarea id="i5" name="multiple"></textarea>
+                </fieldset>
+              </form>
+            `;
+
+            const form = document.querySelector("form");
+            const id1 = form.querySelector("#i1");
+            const id2 = form.querySelector("#i2");
+            const id3 = form.querySelector("#i3");
+            const id31 = form.querySelector("#i31");
+            const id4 = form.querySelector("#i4");
+            const id5 = form.querySelector("#i5");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            id1.checked = true;
+            id1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(id1.matches(":invalid")).toBe(true);
+            expect(id2.matches(":invalid")).toBe(true);
+            expect(id3.matches(":invalid")).toBe(true);
+            expect(id4.matches(":invalid")).toBe(true);
+            expect(id5.matches(":invalid")).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+            expect(form.querySelectorAll("em.warning")[0].textContent).toBe(
+                "Please select at least 2 options"
+            );
+
+            id2.checked = true;
+            id2.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(id1.matches(":invalid")).toBe(false);
+            expect(id2.matches(":invalid")).toBe(false);
+            expect(id3.matches(":invalid")).toBe(false);
+            expect(id4.matches(":invalid")).toBe(false);
+            expect(id5.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+
+            id31.selected = true;
+            id3.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(id1.matches(":invalid")).toBe(false);
+            expect(id2.matches(":invalid")).toBe(false);
+            expect(id3.matches(":invalid")).toBe(false);
+            expect(id4.matches(":invalid")).toBe(false);
+            expect(id5.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+
+            id4.value = "okay";
+            id4.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(id1.matches(":invalid")).toBe(true);
+            expect(id2.matches(":invalid")).toBe(true);
+            expect(id3.matches(":invalid")).toBe(true);
+            expect(id4.matches(":invalid")).toBe(true);
+            expect(id5.matches(":invalid")).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+            expect(form.querySelectorAll("em.warning")[0].textContent).toBe(
+                "Please select at most 3 options"
+            );
+
+            id2.checked = false;
+            id2.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(id1.matches(":invalid")).toBe(false);
+            expect(id2.matches(":invalid")).toBe(false);
+            expect(id3.matches(":invalid")).toBe(false);
+            expect(id4.matches(":invalid")).toBe(false);
+            expect(id5.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+
+            id5.value = "okay";
+            id4.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(id1.matches(":invalid")).toBe(true);
+            expect(id2.matches(":invalid")).toBe(true);
+            expect(id3.matches(":invalid")).toBe(true);
+            expect(id4.matches(":invalid")).toBe(true);
+            expect(id5.matches(":invalid")).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+            expect(form.querySelectorAll("em.warning")[0].textContent).toBe(
+                "Please select at most 3 options"
+            );
+
+            id4.value = "";
+            id4.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(id1.matches(":invalid")).toBe(false);
+            expect(id2.matches(":invalid")).toBe(false);
+            expect(id3.matches(":invalid")).toBe(false);
+            expect(id4.matches(":invalid")).toBe(false);
+            expect(id5.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+        });
+
+        it("10.3 - supports a value of 0 and replaces %{count}", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <fieldset data-pat-validation="max-values: 0">
+                    <input type="checkbox" name="check" value="1">
+                    <input type="checkbox" name="check" value="2">
+                </fieldset>
+              </form>
+            `;
+
+            const form = document.querySelector("form");
+            const check1 = form.querySelector("[name=check][value='1']");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            check1.checked = true;
+            check1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(check1.matches(":invalid")).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+            expect(form.querySelector("em.warning").textContent).toBe(
+                "You need to select at most 0 item(s)."
+            );
+
+            check1.checked = false;
+            check1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(check1.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+        });
+
+        it("10.4 - does not count hidden inputs, disabled inputs and buttons", async function () {
+            // A hidden input with the same name as the checkboxes is a common
+            // pattern to submit a default value if no checkbox is checked.
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <fieldset
+                    data-pat-validation="
+                        min-values: 1;
+                        max-values: 1;
+                        message-min-values: too few;
+                        message-max-values: too many;
+                    "
+                  >
+                    <input type="hidden" name="check" value="0">
+                    <input id="c1" type="checkbox" name="check" value="1">
+                    <input id="c2" type="checkbox" name="check" value="2" checked disabled>
+                    <input type="submit" name="check" value="3">
+                    <input type="button" name="check" value="4">
+                    <input type="reset" name="check" value="5">
+                    <input type="image" name="check" value="6" alt="go">
+                </fieldset>
+              </form>
+            `;
+
+            const form = document.querySelector("form");
+            const c1 = form.querySelector("#c1");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            // No enabled checkbox is checked.
+            const submit_event = events.submit_event();
+            form.dispatchEvent(submit_event);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(submit_event.defaultPrevented).toBe(true);
+            expect(c1.matches(":invalid")).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+            expect(form.querySelector("em.warning").textContent).toBe("too few");
+
+            // One enabled checkbox is checked. The disabled checked one does
+            // not count towards max-values.
+            c1.checked = true;
+            c1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(c1.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+        });
+    });
+
+    describe("11 - min/max values do not hide errors of other inputs", function () {
+        it("11.1 - keeps the error of a required input in a fieldset with min-values", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <fieldset data-pat-validation="min-values: 1">
+                  <input name="name" required>
+                  <label><input type="checkbox" name="agree" checked> Agree</label>
+                </fieldset>
+                <button>Submit</button>
+              </form>
+            `;
+            const el = document.querySelector(".pat-validation");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            el.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(el.querySelector("[name=name]").validity.valid).toBe(false);
+            expect(el.querySelectorAll("em.warning").length).toBe(1);
+        });
+
+        it("11.2 - keeps the error of a required input with min-values on the form", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation" data-pat-validation="min-values: 1">
+                <input name="name" required>
+                <input name="city" value="Innsbruck">
+                <button>Submit</button>
+              </form>
+            `;
+            const el = document.querySelector(".pat-validation");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            el.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(el.querySelectorAll("em.warning").length).toBe(1);
+        });
+
+        it("11.3 - keeps the equality error of an input in a fieldset with min-values", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <input name="password" value="secret">
+                <fieldset data-pat-validation="min-values: 1">
+                  <input name="confirm" value="other"
+                         data-pat-validation="equality: password">
+                  <input name="hint" value="a hint">
+                </fieldset>
+                <button>Submit</button>
+              </form>
+            `;
+            const el = document.querySelector(".pat-validation");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            el.dispatchEvent(events.submit_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(el.querySelector("[name=confirm]").validity.valid).toBe(false);
+            expect(el.querySelectorAll("em.warning").length).toBe(1);
+        });
+    });
+
+    describe("12 - siblings", function () {
+        it("12.1 - returns the inputs with the same name, also outside the form", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation" id="form">
+                <input type="checkbox" name="a" id="a1">
+                <input type="checkbox" name="b" id="a">
+                <fieldset>
+                  <input type="checkbox" name="a" id="a2">
+                </fieldset>
+                <button name="a">Submit</button>
+              </form>
+              <input type="checkbox" name="a" id="a3" form="form">
+              <input type="checkbox" name="a" id="a4">
+            `;
+            const el = document.querySelector(".pat-validation");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            // Not the input with the id "a", not the button with the name "a"
+            // and not the input which is not associated with the form.
+            const siblings = instance.siblings(document.querySelector("#a1"));
+            expect(siblings.map((it) => it.id)).toEqual(["a1", "a2", "a3"]);
+        });
+
+        it("12.2 - returns a single input or select", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <input name="a" id="a">
+                <select name="s" id="s" multiple>
+                  <option>1</option>
+                  <option>2</option>
+                </select>
+              </form>
+            `;
+            const el = document.querySelector(".pat-validation");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            const input = document.querySelector("#a");
+            const select = document.querySelector("#s");
+            expect(instance.siblings(input)).toEqual([input]);
+            expect(instance.siblings(select)).toEqual([select]);
+        });
+
+        it("12.3 - returns only the input itself if it has no name", async function () {
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <input id="a">
+                <input id="b">
+              </form>
+            `;
+            const el = document.querySelector(".pat-validation");
+            const instance = new Pattern(el);
+            await events.await_pattern_init(instance);
+
+            const input = document.querySelector("#a");
+            expect(instance.siblings(input)).toEqual([input]);
         });
     });
 });

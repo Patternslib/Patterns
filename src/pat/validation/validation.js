@@ -1,6 +1,5 @@
 // Patterns validate - Form vlidation
 import "../../core/polyfills"; // SubmitEvent.submitter for Safari < 15.4 and jsDOM
-import $ from "jquery";
 import { BasePattern } from "../../core/basepattern";
 import Parser from "../../core/parser";
 import dom from "../../core/dom";
@@ -20,9 +19,16 @@ parser.addArgument("message-min", ""); // "This value must be greater than or eq
 parser.addArgument("message-number", ""); // "This value must be a number"
 parser.addArgument("message-required", ""); // "This field is required"
 parser.addArgument("message-equality", "is not equal to %{attribute}.");
+parser.addArgument(
+    "message-min-values",
+    "You need to select at least %{count} item(s).",
+);
+parser.addArgument("message-max-values", "You need to select at most %{count} item(s).");
 parser.addArgument("not-after", null);
 parser.addArgument("not-before", null);
 parser.addArgument("equality", null);
+parser.addArgument("min-values", null);
+parser.addArgument("max-values", null);
 parser.addArgument("delay", 100); // Delay before validation is done to avoid validating while typing.
 
 // Aliases
@@ -42,70 +48,127 @@ class Pattern extends BasePattern {
     static order = 100;
 
     init() {
+        // The element is the form - make it clearer in the code what we're
+        // referring to.
+        this.form = this.el;
+
         this.add_event_listener(
-            this.el,
+            this.form,
             "submit",
             "submit",
-            async (e) => {
+            async (event) => {
                 // On submit, check all.
                 // Immediate, non-debounced check with submit. Otherwise submit
                 // is not cancelable.
-                for (const input of this.inputs) {
-                    logger.debug("Checking input for submit", input, e);
-                    await this.check_input({ input: input, event: e });
-                }
+                await this.validate_all(event);
             },
             // Make sure this event handler is run early, in the capturing
             // phase in order to be able to cancel later non-capturing submit
             // events.
-            { capture: true }
+            { capture: true },
         );
 
-        this.initialize_inputs();
-        $(this.el).on("pat-update", () => {
-            this.initialize_inputs();
-        });
+        // Input debouncer map:
+        // - key: input element
+        // - value: debouncer function
+        // 1) We want do debounce the validation checks to avoid validating
+        //    while typing.
+        // 2) We want to debounce the input events individually, so that we can
+        //    do multiple checks in parallel and show multiple errors at once.
+        // A WeakMap does not keep inputs alive which were removed from the
+        // form.
+        const input_debouncer_map = new WeakMap();
+        const debounce_filter = (e) => {
+            const input = e.target;
+            if (input?.form !== this.form || !this.inputs.includes(input)) {
+                // Ignore events from other forms or from elements which are
+                // not inputs.
+                return;
+            }
+
+            if (!input_debouncer_map.has(input)) {
+                // Create a new cancelable debouncer for this input.
+                input_debouncer_map.set(
+                    input,
+                    utils.debounce((e) => {
+                        logger.debug("Checking input for event", input, e);
+                        this.check_input({ input: input, event: e });
+                    }, this.options.delay),
+                );
+            }
+
+            // Get the debouncer for this input.
+            const debouncer = input_debouncer_map.get(input);
+            // Debounce the validation check.
+            debouncer(e);
+        };
+
+        this.add_event_listener(document, "input", "input--validator", debounce_filter);
+
+        this.add_event_listener(
+            document,
+            "change",
+            "change--validator",
+            debounce_filter,
+        );
+
+        this.add_event_listener(
+            document,
+            "focusout",
+            "focusout--validator",
+            debounce_filter,
+        );
 
         // Set ``novalidate`` attribute to disable the browser's validation
         // bubbles but not disable the validation API.
-        this.el.setAttribute("novalidate", "");
+        this.form.setAttribute("novalidate", "");
     }
 
-    initialize_inputs() {
-        const previous_inputs = this.inputs || [];
-        this.inputs = [
-            ...this.el.querySelectorAll("input[name], select[name], textarea[name]"),
-        ];
+    get inputs() {
+        // Return all inputs elements
+        return [...this.form.elements].filter((input) =>
+            input.matches("input[name], select[name], textarea[name]"),
+        );
+    }
 
-        // Remove the listeners from inputs which are gone.
-        for (const input of previous_inputs) {
-            if (!this.inputs.includes(input)) {
-                for (const event_type of ["input", "change", "blur"]) {
-                    this.remove_event_listener(input, event_type);
-                }
-            }
+    get disableables() {
+        // Return all elements, which should be disabled when there are errors.
+        return [...this.form.elements].filter((input) =>
+            input.matches(this.options.disableSelector),
+        );
+    }
+
+    siblings(input) {
+        // Get all siblings of an input with the same name, including the
+        // input itself.
+        if (!input.name) {
+            return [input];
         }
-        this.disabled_elements = [
-            ...this.el.querySelectorAll(this.options.disableSelector),
-        ];
+        // Use the form's named lookup instead of filtering all form
+        // elements. It returns the elements with this name or id - also
+        // those outside the form which are associated via the ``form``
+        // attribute - as a single element or a ``RadioNodeList``.
+        const named = this.form.elements.namedItem(input.name);
+        const candidates = named instanceof Element ? [named] : [...(named || [])];
+        return candidates.filter(
+            (_input) =>
+                _input.name === input.name &&
+                _input.matches("input[name], select[name], textarea[name]"),
+        );
+    }
 
+    async validate_all(event) {
+        // Check all inputs.
         for (const input of this.inputs) {
-            // Cancelable debouncer.
-            const debouncer = utils.debounce((e) => {
-                logger.debug("Checking input for event", input, e);
-                this.check_input({ input: input, event: e });
-            }, this.options.delay);
-
-            // Registering again under the same name replaces the listener.
-            for (const event_type of ["input", "change", "blur"]) {
-                this.add_event_listener(input, event_type, event_type, (e) =>
-                    debouncer(e)
-                );
-            }
+            await this.check_input({ input: input, event: event, stop: true });
         }
     }
 
-    async check_input({ input, event, stop = false }) {
+    async check_input({
+        input, // Input to check.
+        event = null, // Optional event which triggered the check.
+        stop = false, // Stop flag to avoid infinite loops. Will not check dependent inputs.
+    }) {
         if (input.disabled) {
             // No need to check disabled inputs.
             return;
@@ -129,8 +192,8 @@ class Pattern extends BasePattern {
 
             if (
                 input_options.equality &&
-                this.el.querySelector(`[name=${input_options.equality}]`)?.value !==
-                    input.value
+                this.inputs.find((_input) => _input.name === input_options.equality)
+                    ?.value !== input.value
             ) {
                 const message =
                     input_options.message.equality ||
@@ -140,7 +203,12 @@ class Pattern extends BasePattern {
                     msg: message,
                     attribute: input_options.equality,
                 });
-            } else if (input_options.not.after || input_options.not.before) {
+            }
+
+            if (
+                !validity_state.customError && // No error from previous checks.
+                (input_options.not.after || input_options.not.before)
+            ) {
                 const msg = input_options.message.date || input_options.message.datetime;
                 const msg_default_not_before = "The date must be after %{attribute}";
                 const msg_default_not_after = "The date must be before %{attribute}";
@@ -199,7 +267,7 @@ class Pattern extends BasePattern {
                             // with a single space.
                             msg_attr = not_after_el?.labels?.[0]?.textContent.replace(
                                 /\s\s+/g, // replace all whitespace
-                                " " // with a single space
+                                " ", // with a single space
                             );
                             msg_attr = msg_attr || not_after_el.name;
                         }
@@ -220,7 +288,7 @@ class Pattern extends BasePattern {
                             // with a single space.
                             msg_attr = not_before_el?.labels?.[0]?.textContent.replace(
                                 /\s\s+/g, // replace all whitespace
-                                " " // with a single space
+                                " ", // with a single space
                             );
                             msg_attr = msg_attr || not_before_el.name;
                         }
@@ -244,10 +312,67 @@ class Pattern extends BasePattern {
                 }
             }
 
-            if (!validity_state.customError) {
-                // No error to handle. Return.
-                this.remove_error(input, true);
-                return;
+            if (
+                !validity_state.customError && // No error from previous checks.
+                (input_options.minValues || input_options.maxValues)
+            ) {
+                const min_values =
+                    input_options.minValues === null
+                        ? null
+                        : parseInt(input_options.minValues, 10);
+                const max_values =
+                    input_options.maxValues === null
+                        ? null
+                        : parseInt(input_options.maxValues, 10);
+
+                let number_values = 0;
+                for (const _input of this.siblings(input)) {
+                    // Do not count inputs which the user cannot change -
+                    // hidden and disabled inputs, e.g. a hidden input which
+                    // submits a default value - and buttons.
+                    if (
+                        _input.disabled ||
+                        ["hidden", "submit", "button", "reset", "image"].includes(
+                            _input.type,
+                        )
+                    ) {
+                        continue;
+                    }
+
+                    // Check if checkboxes or radios are checked ...
+                    if (_input.type === "checkbox" || _input.type === "radio") {
+                        if (_input.checked) {
+                            number_values++;
+                        }
+                        continue;
+                    }
+
+                    // Select, if select is selected.
+                    if (_input.tagName === "SELECT") {
+                        number_values += _input.selectedOptions.length;
+                        continue;
+                    }
+
+                    // For the rest a value must be set.
+                    if (_input.value === 0 || _input.value) {
+                        number_values++;
+                    }
+                }
+
+                if (max_values !== null && number_values > max_values) {
+                    this.set_error({
+                        input: input,
+                        msg: input_options.message["max-values"],
+                        max: max_values,
+                    });
+                }
+                if (min_values !== null && number_values < min_values) {
+                    this.set_error({
+                        input: input,
+                        msg: input_options.message["min-values"],
+                        min: min_values,
+                    });
+                }
             }
         } else {
             // Default error cases with custom messages.
@@ -309,6 +434,12 @@ class Pattern extends BasePattern {
             }
         }
 
+        if (validity_state.valid) {
+            // No error to handle. Remove eventual error and return.
+            this.remove_error({ input });
+            return;
+        }
+
         if (event?.type === "submit") {
             // Do not submit in error case and prevent other handlers to take action.
             event.preventDefault();
@@ -330,15 +461,18 @@ class Pattern extends BasePattern {
         if (attribute) {
             msg = msg.replace(/%{attribute}/g, attribute);
         }
-        if (min) {
+        if (min !== null) {
             msg = msg.replace(/%{count}/g, min);
         }
-        if (max) {
+        if (max !== null) {
             msg = msg.replace(/%{count}/g, max);
         }
         msg = msg.replace(/%{value}/g, JSON.stringify(input.value));
 
-        input.setCustomValidity(msg);
+        // Set the error state the input itself and on all siblings, if any.
+        for (const _input of this.siblings(input)) {
+            _input.setCustomValidity(msg);
+        }
         // Store the error message on the input.
         // Hidden inputs do not participate in validation but we need this
         // (e.g. styled date input).
@@ -349,26 +483,38 @@ class Pattern extends BasePattern {
         }
     }
 
-    remove_error(input, all_of_group = false, skip_event = false) {
-        // Remove error message and related referencesfrom input.
+    remove_error({
+        input,
+        all_of_group = true,
+        clear_state = true,
+        skip_event = false,
+    }) {
+        // Remove error message and related references from input.
 
         let inputs = [input];
         if (all_of_group) {
             // Get all inputs with the same name - e.g. radio buttons, checkboxes.
-            inputs = this.inputs.filter((it) => it.name === input.name);
+            inputs = this.siblings(input);
         }
-        for (const it of inputs) {
-            const error_node = it[KEY_ERROR_EL];
-            it[KEY_ERROR_EL] = null;
+        for (const _input of inputs) {
+            if (clear_state) {
+                // Clear the error state directly instead of via
+                // ``set_error``, which would get the siblings of each sibling
+                // again.
+                _input.setCustomValidity("");
+                _input[KEY_ERROR_MSG] = "";
+            }
+            const error_node = _input[KEY_ERROR_EL];
+            _input[KEY_ERROR_EL] = null;
             error_node?.remove();
         }
 
         // disable selector
-        if (this.el.checkValidity()) {
-            for (const it of this.disabled_elements) {
-                if (it.disabled) {
-                    it.removeAttribute("disabled");
-                    it.classList.remove("disabled");
+        if (this.form.checkValidity()) {
+            for (const _input of this.disableables) {
+                if (_input.disabled) {
+                    _input.removeAttribute("disabled");
+                    _input.classList.remove("disabled");
                 }
             }
         }
@@ -380,12 +526,17 @@ class Pattern extends BasePattern {
 
     async set_error_message(input) {
         // First, remove the old error message.
-        this.remove_error(input, false, true);
+        this.remove_error({
+            input,
+            all_of_group: false,
+            clear_state: false,
+            skip_event: true,
+        });
 
         // Do not set a error message for a input group like radio buttons or
         // checkboxes where one has already been set.
-        const inputs = this.inputs.filter((it) => it.name === input.name);
-        if (inputs.length > 1 && inputs.some((it) => !!it[KEY_ERROR_EL])) {
+        const inputs = this.siblings(input);
+        if (inputs.length > 1 && inputs.some((_input) => !!_input[KEY_ERROR_EL])) {
             // error message for input group already set.
             return;
         }
@@ -397,47 +548,40 @@ class Pattern extends BasePattern {
         // executed within the web page context.
         const dompurify = (await import("dompurify")).default;
         const validation_message = dompurify.sanitize(
-            input.validationMessage || input[KEY_ERROR_MSG]
+            input.validationMessage || input[KEY_ERROR_MSG],
         );
 
         const error_node = dom.create_from_string(
-            this.error_template(validation_message)
+            this.error_template(validation_message),
         ).firstChild;
 
-        let fieldset;
-        if (input.type === "radio" || input.type === "checkbox") {
-            fieldset = input.closest("fieldset.pat-checklist");
-        }
-        if (fieldset) {
-            fieldset.append(error_node);
-        } else {
-            input.after(error_node);
-        }
+        // Put error message after the erroneous input or - in case of
+        // multiple inputs with the same name - after the last one of the
+        // group. If the input is wrapped in a label, put the error message
+        // after the label.
+        const last_input = inputs.pop();
+        (last_input.closest("label") || last_input).after(error_node);
         input[KEY_ERROR_EL] = error_node;
 
         let did_disable = false;
-        for (const it of this.disabled_elements) {
+        for (const _input of this.disableables) {
             // Disable for melements if they are not already disabled and which
             // do not have set the `formnovalidate` attribute, e.g.
             // `<button formnovalidate>cancel</button>`.
-            if (!it.disabled && !it.formNoValidate) {
+            if (!_input.disabled && !_input.formNoValidate) {
                 did_disable = true;
-                it.setAttribute("disabled", "disabled");
-                it.classList.add("disabled");
-                logger.debug("Disable element", it);
+                _input.setAttribute("disabled", "disabled");
+                _input.classList.add("disabled");
+                logger.debug("Disable element", _input);
             }
         }
 
-        // Do an initial check of the whole form when a form element (e.g. the
-        // submit button) was disabled. We want to show the user all possible
-        // errors at once and after the submit button is disabled there is no
-        // way to check the whole form at once. ... well we also do not want to
-        // check the whole form when one input was changed....
+        // Check the whole form when a form element (e.g. the submit button)
+        // was disabled. We want to show the user all possible errors at once
+        // and after the submit button is disabled there is no way for the user
+        // to check the whole form at once.
         if (did_disable) {
-            logger.debug("Checking whole form after element was disabled.");
-            for (const _input of this.inputs.filter((it) => it !== input)) {
-                await this.check_input({ input: _input, stop: true });
-            }
+            await this.validate_all();
         }
     }
 

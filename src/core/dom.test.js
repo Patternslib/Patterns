@@ -10,6 +10,24 @@ describe("core.dom tests", () => {
         jest.restoreAllMocks();
     });
 
+    describe("jsDOM tests", () => {
+        it("jsDOM supports input elements outside forms.", () => {
+            document.body.innerHTML = `
+                <input name="outside" form="a_form"/>
+                <form id="a_form">
+                    <input name="inside"/>
+                </form>
+            `;
+
+            const outside = document.querySelector("input[name=outside]");
+            const inside = document.querySelector("input[name=inside]");
+            const form = document.querySelector("form");
+
+            expect(outside.form).toBe(form);
+            expect(inside.form).toBe(form);
+        });
+    });
+
     describe("document_ready", () => {
         it("calls the callback, once the document is ready.", async () => {
             let cnt = 0;

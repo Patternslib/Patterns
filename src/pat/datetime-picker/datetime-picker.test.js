@@ -285,4 +285,29 @@ describe("pat-datetime-picker", function () {
             expect(end.value).toBe("2021-03-15T12:34");
         },
     );
+
+    it("dispatches a bubbling focusout event on the original input when focus leaves the widget", async () => {
+        // We mocking as if we're not supporting input type date.
+        jest.spyOn(utils, "checkInputSupport").mockImplementation(() => false);
+
+        document.body.innerHTML = `
+            <input type="datetime-local" class="pat-datetime-picker" name="dt"/>
+            <button id="outside">outside</button>
+        `;
+        const el = document.querySelector(".pat-datetime-picker");
+        pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        const targets = [];
+        document.addEventListener("focusout", (e) => targets.push(e.target));
+
+        const el_time = document.querySelector("input[type=time]");
+        el_time.dispatchEvent(
+            new FocusEvent("blur", {
+                relatedTarget: document.querySelector("#outside"),
+            }),
+        );
+
+        expect(targets).toContain(el);
+    });
 });
