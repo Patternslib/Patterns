@@ -262,7 +262,19 @@
     </form>
 
     <h2>Demo with max-values / min-values support</h2>
+
+    <label>
+        Note: input outside form.
+      <input form="form-min-max-1"
+             name="outside"
+             value="1"
+             data-pat-validation="min-values: 1"
+      />
+    </label>
+
+
     <form class="pat-validation pat-checklist"
+          id="form-min-max-1"
           action="."
           method="post"
     >
