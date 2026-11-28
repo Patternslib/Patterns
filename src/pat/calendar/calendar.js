@@ -154,9 +154,19 @@ export default Base.extend({
         // we don't support any country-specific language variants, always use first 2 letters
         lang = lang.substr(0, 2).toLowerCase();
         if (lang !== "en") {
-            const locale = await import(`@fullcalendar/core/locales/${lang}.js`);
-            config.locale = locale.default;
-            log.debug(`Loaded locale for ${lang}`);
+            try {
+                // Only 2-letter locales can be requested. Every file which
+                // could match becomes a chunk listed in the entry point's
+                // runtime.
+                const locale = await import(
+                    /* webpackInclude: /locales\/[a-z]{2}\.js$/ */
+                    `@fullcalendar/core/locales/${lang}.js`
+                );
+                config.locale = locale.default;
+                log.debug(`Loaded locale for ${lang}`);
+            } catch {
+                log.warn(`No locale for ${lang}, falling back to English.`);
+            }
         }
         if (this.options.first.day !== null) {
             config.firstDay = this.options.first.day;

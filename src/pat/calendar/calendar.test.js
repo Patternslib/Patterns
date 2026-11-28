@@ -455,6 +455,17 @@ describe("1 - Calendar tests", () => {
         const title_el = el.querySelector(".cal-title");
         expect(title_el.innerHTML).toEqual("März 2020");
     });
+
+    it("Falls back to English if no locale exists for the language", async () => {
+        const el = document.querySelector(".pat-calendar");
+        // There is only zh-cn and zh-tw, but the language is cut to 2 letters.
+        el.setAttribute("data-pat-calendar", "initial-date: 2020-03-01; lang: zh");
+        pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        const title_el = el.querySelector(".cal-title");
+        expect(title_el.innerHTML).toEqual("March 2020");
+    });
 });
 
 describe("2 - Calendar tests with calendar controls outside pat-calendar", () => {
