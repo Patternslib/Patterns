@@ -280,6 +280,7 @@
     >
       <fieldset>
         <legend>Multi select</legend>
+        name: select, type: select
         <select multiple
                 name="select"
                 required
@@ -298,7 +299,7 @@
       <fieldset>
         <legend>Multiple checkboxes</legend>
         <label>
-            a
+            name: checkbox[], type: checkbox, value: a
           <input name="checkbox[]"
                  type="checkbox"
                  value="a"
@@ -309,7 +310,7 @@
           />
         </label>
         <label>
-            b
+            name: checkbox[], type: checkbox, value: b
           <input name="checkbox[]"
                  type="checkbox"
                  value="b"
@@ -320,7 +321,7 @@
           />
         </label>
         <label>
-            c
+            name: checkbox[], type: checkbox, value: c
           <input name="checkbox[]"
                  type="checkbox"
                  value="c"
@@ -331,7 +332,7 @@
           />
         </label>
         <label>
-            d
+            name: checkbox[], type: checkbox, value: d
           <input name="checkbox[]"
                  type="checkbox"
                  value="d"
@@ -347,8 +348,12 @@
                 min-values: 2;
                 max-values: 3;
             ">
-        <legend>Demo with mixed inputs and max/min values support.</legend>
+        <legend>
+          <h3>Demo with mixed inputs and max/min values support.</h3>
+          <p>min-values: 2, max-values: 3</p>
+        </legend>
         <fieldset>
+          name: multiple, select
           <select multiple
                   name="multiple"
           >
@@ -360,28 +365,28 @@
         </fieldset>
         <fieldset>
           <label>
-              a
+              name: multiple, value: a
             <input name="multiple"
                    type="checkbox"
                    value="a"
             />
           </label>
           <label>
-              b
+              name: multiple, value: b
             <input name="multiple"
                    type="checkbox"
                    value="b"
             />
           </label>
           <label>
-              c
+              name: multiple, value: c
             <input name="multiple"
                    type="checkbox"
                    value="c"
             />
           </label>
           <label>
-              d
+              name: multiple, value: d
             <input name="multiple"
                    type="checkbox"
                    value="d"
@@ -390,15 +395,15 @@
         </fieldset>
         <fieldset>
           <label>
-              input 1
+              name: multiple, input 1
             <input name="multiple" />
           </label>
           <label>
-              input 2
+              name: multiple, input 2
             <input name="multiple" />
           </label>
           <label>
-              input 3
+              name: multiple, input 3
             <input name="multiple" />
           </label>
         </fieldset>
