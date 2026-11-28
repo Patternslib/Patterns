@@ -635,6 +635,99 @@ const find_inputs = (el) => {
     return querySelectorAllAndMe(el, INPUT_SELECTOR);
 };
 
+/**
+ * Call back whenever an element within a container has been loaded which
+ * might have changed its size.
+ *
+ * These are images which have been loaded or failed loading and videos which
+ * have loaded their metadata, including their dimensions.
+ *
+ * The ``load``, ``error`` and ``loadedmetadata`` events do not bubble, but
+ * can be captured on the container. This also catches elements which are
+ * added later.
+ *
+ * @param {Node} el - The container element.
+ * @param {Function} callback - Called with the event as argument.
+ * @param {Object} [options] - Options.
+ * @param {AbortSignal} [options.signal] - Stop listening when aborted.
+ *
+ * @example
+ * const controller = new AbortController();
+ * dom.on_media_loaded(el, () => relayout(), { signal: controller.signal });
+ * // Stop listening.
+ * controller.abort();
+ */
+const on_media_loaded = (el, callback, { signal } = {}) => {
+    const handler = (event) => {
+        const is_media =
+            event.type === "loadedmetadata"
+                ? event.target instanceof HTMLVideoElement
+                : event.target instanceof HTMLImageElement;
+        if (is_media) {
+            callback(event);
+        }
+    };
+    for (const event_type of ["load", "error", "loadedmetadata"]) {
+        el.addEventListener(event_type, handler, { capture: true, signal });
+    }
+};
+
+/**
+ * Wait for all images within an element to be loaded or failed loading.
+ *
+ * Lazy loading images which are not loaded yet are not waited for, as they
+ * might only be loaded when scrolled into view.
+ *
+ * @param {Node} el - The element to search for images. Included in the search.
+ * @param {Object} [options] - Options.
+ * @param {AbortSignal} [options.signal] - Stop waiting when aborted. The
+ *                                         Promise is then rejected with the
+ *                                         abort reason.
+ * @returns {Promise} - Resolved when all images are loaded or failed loading.
+ *
+ * @example
+ * await dom.images_loaded(el);
+ */
+const images_loaded = (el, { signal } = {}) => {
+    return new Promise((resolve, reject) => {
+        if (signal?.aborted) {
+            reject(signal.reason);
+            return;
+        }
+        const pending = new Set(
+            querySelectorAllAndMe(el, "img").filter(
+                (img) => !img.complete && img.getAttribute("loading") !== "lazy"
+            )
+        );
+        if (!pending.size) {
+            resolve();
+            return;
+        }
+
+        // Removes all listeners of this function.
+        const listeners = new AbortController();
+        const on_abort = () => {
+            listeners.abort();
+            reject(signal.reason);
+        };
+        signal?.addEventListener("abort", on_abort, {
+            signal: listeners.signal,
+        });
+
+        const on_done = (event) => {
+            pending.delete(event.target);
+            if (!pending.size) {
+                listeners.abort();
+                resolve();
+            }
+        };
+        for (const img of pending) {
+            img.addEventListener("load", on_done, { signal: listeners.signal });
+            img.addEventListener("error", on_done, { signal: listeners.signal });
+        }
+    });
+};
+
 const dom = {
     document_ready: document_ready,
     to_element_array: to_element_array,
@@ -669,6 +762,8 @@ const dom = {
     escape_css_id: escape_css_id,
     element_uuid: element_uuid,
     find_form: find_form,
+    on_media_loaded: on_media_loaded,
+    images_loaded: images_loaded,
 };
 
 export default dom;
