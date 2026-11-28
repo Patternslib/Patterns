@@ -89,6 +89,8 @@ describe("pat-scroll", function () {
         document.querySelector("#section").remove();
         await utils.timeout(1); // wait a tick for the lifecycle observer.
         expect(instance.destroyed).toBe(true);
+        // Waiting for the images was stopped.
+        expect(instance.abort_controller.signal.aborted).toBe(true);
 
         img.dispatchEvent(new Event("load"));
         await utils.timeout(1); // wait a tick for async to settle.

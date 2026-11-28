@@ -21,6 +21,7 @@ class Pattern extends BasePattern {
     static parser = parser;
 
     parser_group_options = false;
+    abort_controller = null;
 
     init() {
         if (this.options.delay) {
@@ -47,27 +48,25 @@ class Pattern extends BasePattern {
      * when scrolled into view.
      */
     async scroll_when_images_loaded() {
-        const pending_images = [...document.images].filter(
-            (img) => !img.complete && img.getAttribute("loading") !== "lazy"
-        );
-        await Promise.all(
-            pending_images.map(
-                (img) =>
-                    new Promise((resolve) => {
-                        const done = () => {
-                            this.remove_event_listener(img, "scroll-image-*");
-                            resolve();
-                        };
-                        // Listeners are removed when the pattern is destroyed.
-                        this.add_event_listener(img, "load", "scroll-image-load", done);
-                        this.add_event_listener(img, "error", "scroll-image-error", done);
-                    })
-            )
-        );
+        // Stop waiting when the pattern is destroyed.
+        this.abort_controller = new AbortController();
+        try {
+            await dom.images_loaded(document.body, {
+                signal: this.abort_controller.signal,
+            });
+        } catch {
+            // Aborted, the pattern was destroyed.
+            return;
+        }
         if (this.destroyed) {
             return;
         }
         this.scrollTo();
+    }
+
+    destroy() {
+        this.abort_controller?.abort();
+        super.destroy();
     }
 
     get_target() {
