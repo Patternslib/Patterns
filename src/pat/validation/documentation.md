@@ -111,6 +111,25 @@ ValidationPattern.prototype.error_template = (message) =>
 ```
 
 
+### Minimum and maximum number of values
+
+With `min-values` and `max-values` you can define how many inputs with the same name must be checked, selected or filled out.
+This is most useful for checkboxes, but also works for text inputs, selects and other form elements.
+
+Checkboxes and radio buttons count if they are checked, selects count their selected options and all other inputs count if they have a value.
+Hidden inputs, disabled inputs and buttons are not counted.
+This allows a hidden input with the same name to submit a default value if no checkbox is checked.
+
+```html
+<fieldset data-pat-validation="min-values: 1; max-values: 2">
+    <input type="hidden" name="topics" value="" />
+    <label><input type="checkbox" name="topics" value="news" /> News</label>
+    <label><input type="checkbox" name="topics" value="updates" /> Updates</label>
+    <label><input type="checkbox" name="topics" value="events" /> Events</label>
+</fieldset>
+```
+
+
 ### Form elements outside the form
 
 Input elements outside of form elements are fully supported.

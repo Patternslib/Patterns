@@ -327,6 +327,18 @@ class Pattern extends BasePattern {
 
                 let number_values = 0;
                 for (const _input of this.siblings(input)) {
+                    // Do not count inputs which the user cannot change -
+                    // hidden and disabled inputs, e.g. a hidden input which
+                    // submits a default value - and buttons.
+                    if (
+                        _input.disabled ||
+                        ["hidden", "submit", "button", "reset", "image"].includes(
+                            _input.type,
+                        )
+                    ) {
+                        continue;
+                    }
+
                     // Check if checkboxes or radios are checked ...
                     if (_input.type === "checkbox" || _input.type === "radio") {
                         if (_input.checked) {

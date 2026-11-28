@@ -2340,6 +2340,56 @@ describe("pat-validation", function () {
             expect(check1.matches(":invalid")).toBe(false);
             expect(form.querySelectorAll("em.warning").length).toBe(0);
         });
+
+        it("10.4 - does not count hidden inputs, disabled inputs and buttons", async function () {
+            // A hidden input with the same name as the checkboxes is a common
+            // pattern to submit a default value if no checkbox is checked.
+            document.body.innerHTML = `
+              <form class="pat-validation">
+                <fieldset
+                    data-pat-validation="
+                        min-values: 1;
+                        max-values: 1;
+                        message-min-values: too few;
+                        message-max-values: too many;
+                    "
+                  >
+                    <input type="hidden" name="check" value="0">
+                    <input id="c1" type="checkbox" name="check" value="1">
+                    <input id="c2" type="checkbox" name="check" value="2" checked disabled>
+                    <input type="submit" name="check" value="3">
+                    <input type="button" name="check" value="4">
+                    <input type="reset" name="check" value="5">
+                    <input type="image" name="check" value="6" alt="go">
+                </fieldset>
+              </form>
+            `;
+
+            const form = document.querySelector("form");
+            const c1 = form.querySelector("#c1");
+
+            const instance = new Pattern(form);
+            await events.await_pattern_init(instance);
+
+            // No enabled checkbox is checked.
+            const submit_event = events.submit_event();
+            form.dispatchEvent(submit_event);
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(submit_event.defaultPrevented).toBe(true);
+            expect(c1.matches(":invalid")).toBe(true);
+            expect(form.querySelectorAll("em.warning").length).toBe(1);
+            expect(form.querySelector("em.warning").textContent).toBe("too few");
+
+            // One enabled checkbox is checked. The disabled checked one does
+            // not count towards max-values.
+            c1.checked = true;
+            c1.dispatchEvent(events.change_event());
+            await utils.timeout(1); // wait a tick for async to settle.
+
+            expect(c1.matches(":invalid")).toBe(false);
+            expect(form.querySelectorAll("em.warning").length).toBe(0);
+        });
     });
 
     describe("11 - min/max values do not hide errors of other inputs", function () {
