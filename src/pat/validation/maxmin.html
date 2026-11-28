@@ -52,7 +52,7 @@
             form.addEventListener("change", (e) =>
                 console.log("change: ", e.target.name)
             );
-            form.addEventListener("blur", (e) => console.log("blur: ", e.target.name));
+            form.addEventListener("focusout", (e) => console.log("focusout: ", e.target.name));
 
             document.addEventListener("input", (e) => console.log("input: ", e.target));
         </script>
