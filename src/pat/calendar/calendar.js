@@ -155,7 +155,13 @@ export default Base.extend({
         lang = lang.substr(0, 2).toLowerCase();
         if (lang !== "en") {
             try {
-                const locale = await import(`@fullcalendar/core/locales/${lang}.js`);
+                // Only 2-letter locales can be requested. Every file which
+                // could match becomes a chunk listed in the entry point's
+                // runtime.
+                const locale = await import(
+                    /* webpackInclude: /locales\/[a-z]{2}\.js$/ */
+                    `@fullcalendar/core/locales/${lang}.js`
+                );
                 config.locale = locale.default;
                 log.debug(`Loaded locale for ${lang}`);
             } catch {
