@@ -159,6 +159,66 @@ describe("pat-equaliser", function () {
             expect(spy_update).toHaveBeenCalledTimes(1);
         });
 
+        it("Re-equalises when other code changes the class of a direct child.", async function () {
+            // E.g. a column which is opened by a class on itself.
+            document.body.innerHTML = `
+                <div class="pat-equaliser" data-pat-equaliser="transition: none">
+                    <div></div>
+                    <div></div>
+                </div>
+            `;
+            const pattern_el = document.querySelector(".pat-equaliser");
+            const instance = new Pattern(pattern_el);
+            await events.await_pattern_init(instance);
+            await utils.timeout(150); // wait for the debounced observer.
+
+            const spy_update = jest.spyOn(instance, "update");
+
+            pattern_el.children[0].classList.add("open");
+            await utils.timeout(150); // debounce
+            expect(spy_update).toHaveBeenCalledTimes(1);
+        });
+
+        it("Re-equalises when other code changes the style of a direct child.", async function () {
+            document.body.innerHTML = `
+                <div class="pat-equaliser" data-pat-equaliser="transition: none">
+                    <div></div>
+                    <div></div>
+                </div>
+            `;
+            const pattern_el = document.querySelector(".pat-equaliser");
+            const instance = new Pattern(pattern_el);
+            await events.await_pattern_init(instance);
+            await utils.timeout(150); // wait for the debounced observer.
+
+            const spy_update = jest.spyOn(instance, "update");
+
+            pattern_el.children[0].style.padding = "20px";
+            await utils.timeout(150); // debounce
+            expect(spy_update).toHaveBeenCalledTimes(1);
+        });
+
+        it("Does not re-equalise because of its own changes with the grow transition.", async function () {
+            document.body.innerHTML = `
+                <div class="pat-equaliser" data-pat-equaliser="transition: grow; effect-duration: 50">
+                    <div class="small"></div>
+                    <div class="large"></div>
+                </div>
+            `;
+            const spy_update = jest.spyOn(Pattern.prototype, "update");
+            const pattern_el = document.querySelector(".pat-equaliser");
+            const instance = new Pattern(pattern_el);
+            await events.await_pattern_init(instance);
+
+            await utils.timeout(500);
+            // Animation done.
+            expect(
+                pattern_el.querySelector(".small").classList.contains("equalised"),
+            ).toBe(true);
+            // Only the initial update.
+            expect(spy_update).toHaveBeenCalledTimes(1);
+        });
+
         it("Does not re-equalise because of its own changes.", async function () {
             document.body.innerHTML = `
                 <div class="pat-equaliser" data-pat-equaliser="transition: none">
