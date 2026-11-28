@@ -5,6 +5,7 @@
  */
 import $ from "jquery";
 import Base from "../../core/base";
+import dom from "../../core/dom";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";
@@ -51,17 +52,15 @@ export default Base.extend({
 
         this.setup();
 
-        // Recalculate the carousel dimensions whenever an image within has
-        // been loaded or failed loading. The load and error events do not
-        // bubble, but can be captured. This also catches images which are
-        // added later.
+        // Recalculate the carousel dimensions whenever an image or video
+        // within has been loaded. This also catches elements which are added
+        // later.
         const update = utils.debounce(() => {
             if (this.el.classList.contains("slick-initialized")) {
                 $(this.el).slick("setPosition");
             }
         }, 100);
-        this.el.addEventListener("load", update, true);
-        this.el.addEventListener("error", update, true);
+        dom.on_media_loaded(this.el, update);
     },
 
     setup() {

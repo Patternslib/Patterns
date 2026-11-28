@@ -108,5 +108,27 @@ describe("carousel-plugin", function () {
             expect(spy_slick).toHaveBeenCalledTimes(1);
             expect(spy_slick).toHaveBeenCalledWith("setPosition");
         });
+        it("Recalculates the dimensions after a video has loaded its metadata, but not for other elements.", async () => {
+            $("#lab").html(
+                "<ul class='pat-carousel'>" +
+                    "  <li><video src='a.mp4'></video></li>" +
+                    "  <li><iframe src='about:blank'></iframe></li>" +
+                    "</ul>"
+            );
+            const carousel = document.querySelector("#lab ul");
+            pattern.init($(carousel));
+            await utils.timeout(20); // wait a bit for all to settle.
+
+            const spy_slick = jest.spyOn($.fn, "slick");
+
+            carousel.querySelector("iframe").dispatchEvent(new Event("load"));
+            await utils.timeout(150); // debounce
+            expect(spy_slick).not.toHaveBeenCalled();
+
+            carousel.querySelector("video").dispatchEvent(new Event("loadedmetadata"));
+            await utils.timeout(150); // debounce
+            expect(spy_slick).toHaveBeenCalledTimes(1);
+            expect(spy_slick).toHaveBeenCalledWith("setPosition");
+        });
     });
 });
