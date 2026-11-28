@@ -5,6 +5,7 @@
  */
 import $ from "jquery";
 import { BasePattern } from "../../core/basepattern";
+import dom from "../../core/dom";
 import registry from "../../core/registry";
 import Parser from "../../core/parser";
 import utils from "../../core/utils";
@@ -84,6 +85,7 @@ class Pattern extends BasePattern {
     static parser = parser;
 
     observer = null;
+    abort_controller = null;
 
     init() {
         const debounced_update = utils.debounce(() => {
@@ -94,14 +96,11 @@ class Pattern extends BasePattern {
 
         this.add_event_listener(window, "resize", "update-on-resize", debounced_update);
 
-        // Re-equalise when images within the container have been loaded.
-        // The load and error events do not bubble, but can be captured.
-        // This also catches images which are added later.
-        this.add_event_listener(this.el, "load", "update-on-load", debounced_update, {
-            capture: true,
-        });
-        this.add_event_listener(this.el, "error", "update-on-error", debounced_update, {
-            capture: true,
+        // Re-equalise when images or videos within the container have been
+        // loaded. This also catches elements which are added later.
+        this.abort_controller = new AbortController();
+        dom.on_media_loaded(this.el, debounced_update, {
+            signal: this.abort_controller.signal,
         });
 
         this.observer = new MutationObserver((mutations) => {
@@ -123,6 +122,7 @@ class Pattern extends BasePattern {
     }
 
     destroy() {
+        this.abort_controller?.abort();
         this.observer?.disconnect();
         super.destroy();
     }

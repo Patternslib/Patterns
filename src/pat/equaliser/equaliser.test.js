@@ -121,6 +121,29 @@ describe("pat-equaliser", function () {
             expect(spy_update).toHaveBeenCalledTimes(2);
         });
 
+        it("Re-equalises when a video has loaded its metadata, but not for other elements.", async function () {
+            document.body.innerHTML = `
+                <div class="pat-equaliser" data-pat-equaliser="transition: none">
+                    <div><video src="a.mp4"></video></div>
+                    <div><iframe src="about:blank"></iframe></div>
+                </div>
+            `;
+            const pattern_el = document.querySelector(".pat-equaliser");
+            const instance = new Pattern(pattern_el);
+            await events.await_pattern_init(instance);
+            await utils.timeout(150); // wait for the debounced observer.
+
+            const spy_update = jest.spyOn(instance, "update");
+
+            pattern_el.querySelector("iframe").dispatchEvent(new Event("load"));
+            await utils.timeout(150); // debounce
+            expect(spy_update).not.toHaveBeenCalled();
+
+            pattern_el.querySelector("video").dispatchEvent(new Event("loadedmetadata"));
+            await utils.timeout(150); // debounce
+            expect(spy_update).toHaveBeenCalledTimes(1);
+        });
+
         it("Re-equalises when the window is resized.", async function () {
             document.body.innerHTML = `
                 <div class="pat-equaliser" data-pat-equaliser="transition: none">
@@ -264,12 +287,14 @@ describe("pat-equaliser", function () {
 
             const spy_update = jest.spyOn(instance, "update");
             const spy_disconnect = jest.spyOn(instance.observer, "disconnect");
+            const spy_abort = jest.spyOn(instance.abort_controller, "abort");
 
             document.querySelector("#section").remove();
             await utils.timeout(1); // wait a tick for the lifecycle observer.
 
             expect(instance.destroyed).toBe(true);
             expect(spy_disconnect).toHaveBeenCalled();
+            expect(spy_abort).toHaveBeenCalled();
 
             window.dispatchEvent(new Event("resize"));
             img.dispatchEvent(new Event("load"));
